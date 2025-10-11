@@ -5,12 +5,11 @@ import TextInput from '@/UI/TextInput'
 import CmsImage from '@/cms/CmsImage/CmsImage'
 import CmsImageClient from '@/cms/CmsImage/CmsImageClient'
 import Form from '@/components/Form/Form'
-import { updateComanyAction } from '@/actions/career/companies/update'
-import { destroyCompanyAction } from '@/actions/career/companies/destroy'
-import { CompanyAuthers } from '@/services/career/companies/authers'
-import { configureAction } from '@/actions/configureAction'
-import type { CompanyExpanded } from '@/services/career/companies/Types'
-import type { SessionMaybeUser } from '@/auth/Session'
+import { companyAuth } from '@/services/career/companies/auth'
+import { destroyCompanyAction, updateComanyAction } from '@/services/career/companies/actions'
+import { configureAction } from '@/services/configureAction'
+import type { CompanyExpanded } from '@/services/career/companies/types'
+import type { SessionMaybeUser } from '@/auth/session/Session'
 
 type PropTypes = {
     company: CompanyExpanded,
@@ -39,8 +38,8 @@ export default function Company({
     logoWidth = 300,
     squareLogo = true,
 }: PropTypes) {
-    const canUpdate = CompanyAuthers.update.dynamicFields({}).auth(session)
-    const canDestroy = CompanyAuthers.destroy.dynamicFields({}).auth(session)
+    const canUpdate = companyAuth.update.dynamicFields({}).auth(session)
+    const canDestroy = companyAuth.destroy.dynamicFields({}).auth(session)
     return (
         <div className={styles.Company}>
             {asClient ?

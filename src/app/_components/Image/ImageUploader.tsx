@@ -1,15 +1,15 @@
 import Form from '@/components/Form/Form'
-import { createImageAction } from '@/actions/images/create'
 import TextInput from '@/components/UI/TextInput'
 import FileInput from '@/components/UI/FileInput'
 import LicenseChooser from '@/components/LicenseChooser/LicenseChooser'
-import { configureAction } from '@/actions/configureAction'
+import { createImageAction } from '@/services/images/actions'
+import { configureAction } from '@/services/configureAction'
 import type { PropTypes as FormPropTypes } from '@/components/Form/Form'
 
 type ResponseType = Awaited<ReturnType<typeof createImageAction>>;
 type T = Pick<ResponseType & { success: true }, 'data'>['data']
 
-type PropTypes = Omit<FormPropTypes<T, true>, 'action' | 'submitText' | 'title'> & {
+type PropTypes = Omit<FormPropTypes<T>, 'action' | 'submitText' | 'title'> & {
     collectionId: number,
 }
 

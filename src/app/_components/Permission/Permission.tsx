@@ -1,5 +1,5 @@
 import styles from './Permission.module.scss'
-import { PermissionConfig } from '@/services/permissions/config'
+import { permissionConfig } from '@/services/permissions/constants'
 import type { ReactNode } from 'react'
 import type { Permission as PermissionT } from '@prisma/client'
 
@@ -18,7 +18,7 @@ type PropTypes = {
  * @returns
  */
 export default function Permission({ permission, children, displayCategory = true, className }: PropTypes) {
-    const permissionInfo = PermissionConfig[permission]
+    const permissionInfo = permissionConfig[permission]
 
     return (
         <div className={`${styles.Permission} ${className}`}>

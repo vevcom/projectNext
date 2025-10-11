@@ -1,8 +1,8 @@
 import styles from './page.module.scss'
 import Countdown from './Countdown'
-import { readApplicationPeriodAction } from '@/actions/applications/periods/read'
+import { readApplicationPeriodAction } from '@/services/applications/periods/actions'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
-import { readSpecialImageAction } from '@/images/read'
+import { readSpecialImageAction } from '@/services/images/actions'
 import type { PropTypes } from '@/app/applications/[periodName]/page'
 
 export default async function ApplicationPeriodCountdown({ params }: PropTypes) {

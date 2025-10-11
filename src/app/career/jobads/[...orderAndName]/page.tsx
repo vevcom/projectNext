@@ -1,14 +1,14 @@
 
 import styles from './page.module.scss'
 import EditJobAd from './EditJobAd'
-import { readJobAdAction } from '@/actions/career/jobAds/read'
 import Article from '@/components/Cms/Article/Article'
 import CompanySelectionProvider from '@/contexts/CompanySelection'
-import CompanyPagingProvider from '@/contexts/paging/CompanyPaging'
+import { CompanyPagingProvider } from '@/contexts/paging/CompanyPaging'
 import Company from '@/components/Company/Company'
 import Date from '@/components/Date/Date'
-import { Session } from '@/auth/Session'
-import { JobAdConfig } from '@/services/career/jobAds/config'
+import { Session } from '@/auth/session/Session'
+import { readJobAdAction } from '@/services/career/jobAds/actions'
+import { jobAdType } from '@/services/career/jobAds/constants'
 import { notFound } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -48,7 +48,7 @@ export default async function JobAd({ params }: PropTypes) {
                             <li>
                                 <FontAwesomeIcon icon={faSuitcase} />
                                 <h3>Stillingstype</h3>
-                                <p>{JobAdConfig.type[jobAd.type].label}</p>
+                                <p>{jobAdType[jobAd.type].label}</p>
                             </li>
                             <li>
                                 <FontAwesomeIcon icon={jobAd.active ? faCheckCircle : faXmarkCircle} />

@@ -1,11 +1,11 @@
 'use client'
 
 import styles from './registration.module.scss'
-import { createAdmissionTrialAction } from '@/actions/admission/create'
 import Form from '@/components/Form/Form'
 import OmegaIdReader from '@/components/OmegaId/reader/OmegaIdReader'
 import TextInput from '@/components/UI/TextInput'
-import { configureAction } from '@/actions/configureAction'
+import { createAdmissionTrialAction } from '@/services/admission/actions'
+import { configureAction } from '@/services/configureAction'
 import type { Admission } from '@prisma/client'
 
 

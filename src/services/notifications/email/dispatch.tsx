@@ -1,14 +1,14 @@
 import { sendBulkMail } from './send'
-import { DEFAULT_NOTIFICATION_ALIAS } from './config'
+import { DEFAULT_NOTIFICATION_ALIAS } from './constants'
 import { sendEmailValidation } from './validation'
 import { DefaultEmailTemplate } from './templates/default'
-import { NotificationMethods } from '@/services/notifications/methods'
+import { repalceSpecialSymbols } from '@/services/notifications/operations'
 import { prismaCall } from '@/services/prismaCall'
-import prisma from '@/prisma'
+import { prisma } from '@/prisma/client'
 import { render } from '@react-email/render'
-import type { ExpandedNotificationChannel } from '@/services/notifications/Types'
+import type { ExpandedNotificationChannel } from '@/services/notifications/types'
 import type { Notification } from '@prisma/client'
-import type { UserFiltered } from '@/services/users/Types'
+import type { UserFiltered } from '@/services/users/types'
 
 
 export async function dispatchEmailNotifications(
@@ -39,8 +39,8 @@ export async function dispatchEmailNotifications(
         const parsed = sendEmailValidation.detailedValidate({
             from: senderAlias,
             to: user.email,
-            subject: NotificationMethods.repalceSpecialSymbols(notificaion.title, user),
-            text: NotificationMethods.repalceSpecialSymbols(notificaion.message, user),
+            subject: repalceSpecialSymbols(notificaion.title, user),
+            text: repalceSpecialSymbols(notificaion.message, user),
         })
 
         return {
@@ -63,5 +63,7 @@ export async function dispatchEmailNotifications(
 }
 
 async function wrapInHTML(user: UserFiltered, text: string): Promise<string> {
+    // TODO: Would it be possible to do React.createElement here?
+    // It feels cursed to write TSX in backend code.
     return render(<DefaultEmailTemplate user={user} text={text} />)
 }

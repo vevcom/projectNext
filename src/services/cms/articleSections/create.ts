@@ -1,10 +1,10 @@
 import '@pn-server-only'
 import { articleSectionsRealtionsIncluder } from './ConfigVars'
 import { createArticleSectionValidation } from './validation'
-import prisma from '@/prisma'
+import { prisma } from '@/prisma/client'
 import { prismaCall } from '@/services/prismaCall'
 import type { CreateArticleSectionTypes } from './validation'
-import type { ExpandedArticleSection } from './Types'
+import type { ExpandedArticleSection } from './types'
 
 /**
  * A function to create a new articleSection

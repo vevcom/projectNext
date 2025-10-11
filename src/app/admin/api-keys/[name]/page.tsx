@@ -1,16 +1,15 @@
 import styles from './page.module.scss'
 import UpdateApiKeyForm from './UpdateApiKeyForm'
-import { readApiKeyAction } from '@/actions/api-keys/read'
+import { readApiKeyAction, destroyApiKeyAction } from '@/services/apiKeys/actions'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import Form from '@/components/Form/Form'
 import DateInput from '@/components/UI/DateInput'
 import TextInput from '@/components/UI/TextInput'
 import DisplayAllPermissions from '@/components/Permission/DisplayAllPermissions'
 import Slider from '@/components/UI/Slider'
-import { destroyApiKeyAction } from '@/actions/api-keys/destroy'
 import Date from '@/app/_components/Date/Date'
 import Checkbox from '@/app/_components/UI/Checkbox'
-import { configureAction } from '@/actions/configureAction'
+import { configureAction } from '@/services/configureAction'
 
 type PropTypes = {
     params: Promise<{

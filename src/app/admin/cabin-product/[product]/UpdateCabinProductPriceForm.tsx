@@ -1,6 +1,6 @@
 'use client'
-import { createCabinProductPriceAction } from '@/actions/cabin'
-import { configureAction } from '@/actions/configureAction'
+import { createCabinProductPriceAction } from '@/services/cabin/actions'
+import { configureAction } from '@/services/configureAction'
 import Form from '@/app/_components/Form/Form'
 import NumberInput from '@/app/_components/UI/NumberInput'
 import { SelectNumber } from '@/app/_components/UI/Select'

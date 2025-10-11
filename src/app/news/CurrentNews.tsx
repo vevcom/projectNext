@@ -1,5 +1,5 @@
 import NewsCard from './NewsCard'
-import { readNewsCurrentAction } from '@/actions/news/read'
+import { readNewsCurrentAction } from '@/services/news/actions'
 import React from 'react'
 
 type PropTypes = {

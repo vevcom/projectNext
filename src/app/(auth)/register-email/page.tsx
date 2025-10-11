@@ -1,6 +1,6 @@
 import EmailRegistrationForm from './EmailregistrationForm'
-import { getUser } from '@/auth/getUser'
-import { readUserAction } from '@/actions/users/read'
+import { getUser } from '@/auth/session/getUser'
+import { readUserAction } from '@/services/users/actions'
 import { notFound, redirect } from 'next/navigation'
 
 export default async function Registeremail() {

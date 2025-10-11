@@ -3,11 +3,10 @@ import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
 import ArticleSection from '@/components/Cms/ArticleSection/ArticleSection'
 import { SettingsHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
-import { updateInterestGroupAction } from '@/actions/groups/interestGroups/update'
-import { destroyInterestGroupAction } from '@/actions/groups/interestGroups/destroy'
-import { InterestGroupAuthers } from '@/services/groups/interestGroups/authers'
-import type { SessionMaybeUser } from '@/auth/Session'
-import type { ExpandedInterestGroup } from '@/services/groups/interestGroups/Types'
+import { updateInterestGroupAction, destroyInterestGroupAction } from '@/services/groups/interestGroups/actions'
+import { interestGroupAuth } from '@/services/groups/interestGroups/auth'
+import type { SessionMaybeUser } from '@/auth/session/Session'
+import type { ExpandedInterestGroup } from '@/services/groups/interestGroups/types'
 
 type PropTypes = {
     interestGroup: ExpandedInterestGroup
@@ -15,8 +14,8 @@ type PropTypes = {
 }
 
 export default function InterestGroup({ interestGroup, session }: PropTypes) {
-    const canUpdate = InterestGroupAuthers.update.dynamicFields({ groupId: interestGroup.groupId }).auth(session)
-    const canDestroy = InterestGroupAuthers.destroy.dynamicFields({}).auth(session)
+    const canUpdate = interestGroupAuth.update.dynamicFields({ groupId: interestGroup.groupId }).auth(session)
+    const canDestroy = interestGroupAuth.destroy.dynamicFields({}).auth(session)
 
     const PopUpKey = `Update interest group ${interestGroup.name}`
 

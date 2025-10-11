@@ -2,8 +2,6 @@
 import styles from './EditJobAd.module.scss'
 import SelectedCompany from '@/career/jobads/SelectedCompany'
 import Form from '@/components/Form/Form'
-import { updateJobAdAction } from '@/career/jobAds/update'
-import { destroyJobAdAction } from '@/career/jobAds/destroy'
 import TextInput from '@/components/UI/TextInput'
 import Textarea from '@/components/UI/Textarea'
 import useEditing from '@/hooks/useEditing'
@@ -12,11 +10,12 @@ import DateInput from '@/components/UI/DateInput'
 import Slider from '@/app/_components/UI/Slider'
 import { CompanyPagingContext } from '@/contexts/paging/CompanyPaging'
 import CompanyChooser from '@/app/career/jobads/CompanyChooser'
-import { JobAdConfig } from '@/services/career/jobAds/config'
-import { configureAction } from '@/actions/configureAction'
+import { destroyJobAdAction, updateJobAdAction } from '@/career/jobAds/actions'
+import { jobAdOptions } from '@/services/career/jobAds/constants'
+import { configureAction } from '@/services/configureAction'
 import { v4 as uuid } from 'uuid'
 import { useContext, type ReactNode } from 'react'
-import type { ExpandedJobAd } from '@/career/jobAds/Types'
+import type { ExpandedJobAd } from '@/services/career/jobAds/types'
 
 type PropTypes = {
     jobAd: ExpandedJobAd
@@ -61,7 +60,7 @@ export default function EditJobAd({ jobAd, children }: PropTypes) {
                     />
                     <SelectedCompany />
                     <SelectString
-                        options={JobAdConfig.options}
+                        options={jobAdOptions}
                         label="Type"
                         name="type"
                         key={uuid()}

@@ -8,11 +8,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencil } from '@fortawesome/free-solid-svg-icons'
 import type { PropTypes as FormPropTypes } from '@/components/Form/Form'
 
-type PropTypes<ReturnType, DataGuaratee extends boolean> = {
+type PropTypes<ReturnType> = {
     props?: Omit<React.HTMLAttributes<HTMLElement>, 'children' | 'contentEditable'>
     editable: boolean,
     children: React.ReactNode,
-    formProps: Omit<FormPropTypes<ReturnType, DataGuaratee>, 'title' | 'children' | 'submitText'>
+    formProps: Omit<FormPropTypes<ReturnType>, 'title' | 'children' | 'submitText'>
     inputName: string,
     submitButton: {
         text: string,
@@ -28,14 +28,14 @@ type PropTypes<ReturnType, DataGuaratee extends boolean> = {
  * @param submitButton - The props to pass to the submit button
  * @param props - further props to pass to the text element
  */
-export default function EditableTextField<ReturnType, DataGuaratee extends boolean>({
+export default function EditableTextField<ReturnType>({
     editable,
     children,
     formProps,
     submitButton,
     inputName,
     ...props
-}: PropTypes<ReturnType, DataGuaratee>
+}: PropTypes<ReturnType>
 ) {
     const [value, setValue] = useState('')
     const [noChange, setNoChange] = useState(true)

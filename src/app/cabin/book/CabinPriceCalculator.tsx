@@ -1,9 +1,9 @@
 import SimpleTable from '@/app/_components/Table/SimpleTable'
 import { displayPrice } from '@/lib/money/convert'
 import { calculateCabinBookingPrice, calculateTotalCabinBookingPrice } from '@/services/cabin/booking/cabinPriceCalculator'
+import type { CabinProductExtended } from '@/services/cabin/product/constants'
 import type { CabinPriceCalculatorReturnType } from '@/services/cabin/booking/cabinPriceCalculator'
 import type { PricePeriod } from '@prisma/client'
-import type { CabinProductConfig } from '@/services/cabin/product/config'
 
 
 export default function CabinPriceCalculator({
@@ -16,7 +16,7 @@ export default function CabinPriceCalculator({
     numberOfNonMembers,
 }: {
     pricePeriods: PricePeriod[],
-    products: CabinProductConfig.CabinProductExtended[],
+    products: CabinProductExtended[],
     productAmounts: number[],
     startDate?: Date,
     endDate?: Date,

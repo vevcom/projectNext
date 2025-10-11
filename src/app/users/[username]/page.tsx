@@ -1,15 +1,15 @@
 import styles from './page.module.scss'
-import { readSpecialImageAction } from '@/actions/images/read'
 import BorderButton from '@/components/UI/BorderButton'
 import { readCommitteesFromGroupIds } from '@/services/groups/committees/read'
-import { readUserProfileAction } from '@/actions/users/read'
 import OmegaId from '@/components/OmegaId/identification/OmegaId'
 import PopUp from '@/components/PopUp/PopUp'
-import { Session } from '@/auth/Session'
-import { UserAuthers } from '@/services/users/authers'
+import { Session } from '@/auth/session/Session'
+import { userAuth } from '@/services/users/auth'
 import ProfilePicture from '@/components/User/ProfilePicture'
-import { UserConfig } from '@/services/users/config'
 import UserDisplayName from '@/components/User/UserDisplayName'
+import { readUserProfileAction } from '@/services/users/actions'
+import { readSpecialImageAction } from '@/services/images/actions'
+import { sexConfig } from '@/services/users/constants'
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { v4 as uuid } from 'uuid'
@@ -49,7 +49,7 @@ export default async function User({ params }: PropTypes) {
         return res.data
     })
 
-    const { authorized: canAdministrate } = UserAuthers.updateProfile.dynamicFields(
+    const { authorized: canAdministrate } = userAuth.updateProfile.dynamicFields(
         { username: profile.user.username }
     ).auth(session)
 
@@ -96,7 +96,7 @@ export default async function User({ params }: PropTypes) {
                         </div>
                         <hr />
                         <p className={styles.orderText}>
-                            {UserConfig.sexConfig[profile.user.sex ?? 'OTHER'].title}
+                            {sexConfig[profile.user.sex ?? 'OTHER'].title}
                             uudaf {order}´dis orden i Sanctus Omega Broderskab
                         </p>
                     </div>

@@ -1,24 +1,16 @@
 'use client'
-import generatePagingProvider, { generatePagingContext } from './PagingGenerator'
-import { readCompanyPageAction } from '@/actions/career/companies/read'
-import type { CompanyCursor, CompanyDetails, CompanyExpanded } from '@/services/career/companies/Types'
-import type { ReadPageInput } from '@/lib/paging/Types'
+import { generatePaging } from './PagingGenerator'
+import { readCompanyPageAction } from '@/services/career/companies/actions'
+import type { CompanyCursor, CompanyDetails, CompanyExpanded } from '@/services/career/companies/types'
 
 export type PageSizeCompany = 10
-const fetcher = async (x: ReadPageInput<PageSizeCompany, CompanyCursor, CompanyDetails>) => {
-    const ret = await readCompanyPageAction({ params: { paging: x } })
-    return ret
-}
 
-export const CompanyPagingContext = generatePagingContext<
+export const [CompanyPagingContext, CompanyPagingProvider] = generatePaging<
     CompanyExpanded,
     CompanyCursor,
     PageSizeCompany,
     CompanyDetails
->()
-const CompanyPagingProvider = generatePagingProvider({
-    Context: CompanyPagingContext,
-    fetcher,
-    getCursorAfterFetch: data => (data.length ? { id: data[data.length - 1].id } : null),
+>({
+    fetcher: async ({ paging }) => await readCompanyPageAction({ params: { paging } }),
+    getCursor: ({ lastElement }) => ({ id: lastElement.id }),
 })
-export default CompanyPagingProvider

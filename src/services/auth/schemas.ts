@@ -1,8 +1,7 @@
-import { UserSchemas } from '@/services/users/schemas'
+import { userSchema } from '@/services/users/schemas'
 
-export namespace AuthSchemas {
-
-    export const sendResetPasswordEmail = UserSchemas.fields.pick({
+export const authSchemas = {
+    sendResetPasswordEmail: userSchema.pick({
         email: true,
     })
 }

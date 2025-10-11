@@ -1,5 +1,5 @@
 import CmsParagraph from './CmsParagraph'
-import { readSpecialCmsParagraphAction } from '@/actions/cms/paragraphs/read'
+import { readSpecialCmsParagraphAction } from '@/services/cms/paragraphs/actions'
 import React from 'react'
 import type { PropTypes as PropTypesCmsParapraph } from './CmsParagraph'
 import type { SpecialCmsParagraph as SpecialCmsParagraphT } from '@prisma/client'

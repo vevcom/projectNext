@@ -1,7 +1,7 @@
 import styles from './UserRow.module.scss'
 import UserDisplayName from '@/components/User/UserDisplayName'
 import { useRouter } from 'next/navigation'
-import type { UserPagingReturn } from '@/services/users/Types'
+import type { UserPagingReturn } from '@/services/users/types'
 
 type PropTypes = {
     user: UserPagingReturn

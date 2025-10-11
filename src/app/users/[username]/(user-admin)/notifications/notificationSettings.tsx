@@ -4,20 +4,20 @@ import SubscriptionItem from './subscriptionItem'
 import styles from './notificationSettings.module.scss'
 import { booleanOperationOnMethods, newAllMethodsOff } from '@/services/notifications/notificationMethodOperations'
 import SubmitButton from '@/components/UI/SubmitButton'
-import { SUCCESS_FEEDBACK_TIME } from '@/components/Form/ConfigVars'
-import { updateNotificationSubscriptionsAction } from '@/actions/notifications'
-import { NotificationConfig } from '@/services/notifications/config'
+import { SUCCESS_FEEDBACK_TIME } from '@/components/Form/constants'
+import { updateNotificationSubscriptionsAction } from '@/services/notifications/actions'
+import { notificationMethodsArray, notificationMethodsDisplayMap } from '@/services/notifications/constants'
 import { v4 as uuid } from 'uuid'
 import { useState } from 'react'
-import type { UserFiltered } from '@/services/users/Types'
-import type { MinimizedSubscription, Subscription } from '@/services/notifications/subscription/Types'
-import type { NotificationBranch } from './Types'
+import type { UserFiltered } from '@/services/users/types'
+import type { MinimizedSubscription, Subscription } from '@/services/notifications/subscription/types'
+import type { NotificationBranch } from './types'
 import type { ErrorMessage } from '@/services/error'
 import type {
     ExpandedNotificationChannel,
     NotificationMethodGeneral,
     NotificationMethods
-} from '@/services/notifications/Types'
+} from '@/services/notifications/types'
 
 function generateChannelTree(channels: ExpandedNotificationChannel[], subscriptions: Subscription[]): NotificationBranch {
     const rootChannel = channels.find(channel => channel.special === 'ROOT')
@@ -229,12 +229,12 @@ export default function NotificationSettings({
             <thead className={styles.tableHead}>
                 <tr>
                     <th>Kanal</th>
-                    {NotificationConfig.methods.map(method =>
+                    {notificationMethodsArray.map(method =>
                         <th
                             key={uuid()}
                             className={styles.notificationMethodsTH}
                         >
-                            <span>{NotificationConfig.methodsDisplayMap[method]}</span>
+                            <span>{notificationMethodsDisplayMap[method]}</span>
                         </th>
                     )}
                 </tr>

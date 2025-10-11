@@ -1,5 +1,5 @@
 import { generateJWT } from '@/jwt/jwt'
-import type { UserFiltered } from '@/services/users/Types'
+import type { UserFiltered } from '@/services/users/types'
 import '@pn-server-only'
 import { userInvitationExpiration } from './ConfigVars'
 import { sendSystemMail } from '@/services/notifications/email/send'

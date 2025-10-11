@@ -1,11 +1,11 @@
 import styles from './page.module.scss'
 import AddUsersToGroup from './AddUsersToGroup'
 import GroupMembers from './GroupMembers'
-import UserPagingProvider from '@/contexts/paging/UserPaging'
+import { UserPagingProvider } from '@/contexts/paging/UserPaging'
 import { CanEasilyManageMembership } from '@/services/groups/memberships/ConfigVars'
 import PopUp from '@/components/PopUp/PopUp'
 import UsersSelectionProvider from '@/contexts/UsersSelection'
-import { readGroupExpandedAction } from '@/actions/groups/read'
+import { readGroupExpandedAction } from '@/services/groups/actions'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import Link from 'next/link'
 

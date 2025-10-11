@@ -1,14 +1,14 @@
 import '@pn-server-only'
 import { updateArticleValidation } from './validation'
 import { articleRealtionsIncluder, maxSections } from '@/cms/articles/ConfigVars'
-import prisma from '@/prisma'
+import { prisma } from '@/prisma/client'
 import { addArticleSectionPart } from '@/services/cms/articleSections/update'
 import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
 import type { UpdateArticleTypes } from './validation'
-import type { ArticleSectionPart } from '@/services/cms/articleSections/Types'
+import type { ArticleSectionPart } from '@/cms/articleSections/types'
 import type { ArticleSection } from '@prisma/client'
-import type { ExpandedArticle } from '@/cms/articles/Types'
+import type { ExpandedArticle } from '@/cms/articles/types'
 
 /**
  * A function to update metadata of an article. This includes for ex. name.

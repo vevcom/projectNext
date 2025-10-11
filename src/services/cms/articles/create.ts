@@ -1,10 +1,10 @@
 import '@pn-server-only'
 import { articleRealtionsIncluder } from './ConfigVars'
 import { createArticleValidation } from './validation'
-import prisma from '@/prisma'
+import { prisma } from '@/prisma/client'
 import { prismaCall } from '@/services/prismaCall'
 import type { CreateArticleTypes } from './validation'
-import type { ExpandedArticle } from './Types'
+import type { ExpandedArticle } from './types'
 
 /**
  * A function to create a new article. It will have no content (sections) and cover image will relate

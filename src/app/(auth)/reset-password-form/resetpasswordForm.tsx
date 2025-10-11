@@ -1,6 +1,6 @@
 'use client'
-import { resetPasswordAction } from '@/actions/auth/auth'
-import { configureAction } from '@/actions/configureAction'
+import { resetPasswordAction } from '@/services/auth/actions'
+import { configureAction } from '@/services/configureAction'
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
 

@@ -1,12 +1,12 @@
 'use client'
-import { configureAction } from '@/actions/configureAction'
-import { createProductForShopAction, updateProductForShopAction } from '@/actions/shop/product'
+import { createProductForShopAction, updateProductForShopAction } from '@/services/shop/actions'
+import { configureAction } from '@/services/configureAction'
 import Form from '@/app/_components/Form/Form'
 import Checkbox from '@/app/_components/UI/Checkbox'
 import NumberInput from '@/app/_components/UI/NumberInput'
 import TextInput from '@/app/_components/UI/TextInput'
 import { displayPrice } from '@/lib/money/convert'
-import type { ExtendedProduct } from '@/services/shop/product/Types'
+import type { ExtendedProduct } from '@/services/shop/product/types'
 
 
 export function EditProductForShopForm({

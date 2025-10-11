@@ -4,7 +4,7 @@ import ImageCard from '@/components/ImageCard/ImageCard'
 import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCalendar, faLocationDot, faUsers } from '@fortawesome/free-solid-svg-icons'
-import type { EventExpanded } from '@/services/events/Types'
+import type { EventExpanded } from '@/services/events/types'
 
 export default function EventCard({ event }: {
     event: EventExpanded,

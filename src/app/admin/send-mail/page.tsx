@@ -1,6 +1,6 @@
 import MailForm from './mailForm'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
-import { getUser } from '@/auth/getUser'
+import { getUser } from '@/auth/session/getUser'
 import { notFound } from 'next/navigation'
 
 export default async function SendMail() {

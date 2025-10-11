@@ -1,10 +1,10 @@
 import '@pn-server-only'
-import { SpecialVisibilityConfig } from './ConfigVars'
+import { specialVisibilityConfig } from './ConfigVars'
 import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
-import prisma from '@/prisma'
+import { prisma } from '@/prisma/client'
 import type { SpecialVisibilityPurpose, VisibilityRequirmenetGroup } from '@prisma/client'
-import type { VisibilityCollapsed } from './Types'
+import type { VisibilityCollapsed } from './types'
 
 const levelSelector = {
     select: {
@@ -75,12 +75,12 @@ export async function readSpecialVisibility(specialPurpose: SpecialVisibilityPur
                 published: true,
                 regularLevel: {
                     create: {
-                        permission: SpecialVisibilityConfig[specialPurpose].regularLevel
+                        permission: specialVisibilityConfig[specialPurpose].regularLevel
                     }
                 },
                 adminLevel: {
                     create: {
-                        permission: SpecialVisibilityConfig[specialPurpose].adminLevel
+                        permission: specialVisibilityConfig[specialPurpose].adminLevel
                     }
                 },
             },

@@ -1,5 +1,5 @@
 import styles from './page.module.scss'
-import { readCommitteeMembersAction, readCommitteeParagraphAction } from '@/actions/groups/committees/read'
+import { readCommitteeMembersAction, readCommitteeParagraphAction } from '@/services/groups/committees/actions'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import CmsParagraph from '@/components/Cms/CmsParagraph/CmsParagraph'
 import UserCard from '@/components/User/UserCard'

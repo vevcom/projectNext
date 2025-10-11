@@ -1,28 +1,33 @@
 import styles from './page.module.scss'
 import Reprioritize from './Reprioritize'
-import { readApplicationPeriodAction } from '@/actions/applications/periods/read'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { default as DateComponent } from '@/components/Date/Date'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import CountDown from '@/components/countDown/CountDown'
-import { readSpecialImageAction } from '@/images/read'
 import BackdropImage from '@/components/BackdropImage/BackdropImage'
 import CmsParagraph from '@/components/Cms/CmsParagraph/CmsParagraph'
 import PopUp from '@/components/PopUp/PopUp'
-import { readApplicationsForUserAction } from '@/actions/applications/read'
-import { Session } from '@/auth/Session'
+import { Session } from '@/auth/session/Session'
 import Textarea from '@/components/UI/Textarea'
 import Form from '@/components/Form/Form'
-import { createApplicationAction } from '@/actions/applications/create'
-import { updateApplicationAction } from '@/actions/applications/update'
 import { SettingsHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import CreateUpdateApplicationPeriodForm from '@/app/applications/CreateUpdateApplicationPeriodForm'
-import { readCommitteesAction } from '@/actions/groups/committees/read'
-import { destroyApplicationAction } from '@/actions/applications/destroy'
-import { destroyApplicationPeriodAction, removeAllApplicationTextsAction } from '@/actions/applications/periods/destroy'
-import Link from 'next/link'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {
+    createApplicationAction,
+    updateApplicationAction,
+    destroyApplicationAction,
+    readApplicationsForUserAction
+} from '@/services/applications/actions'
+import { readCommitteesAction } from '@/services/groups/committees/actions'
+import {
+    destroyApplicationPeriodAction,
+    removeAllApplicationTextsAction,
+    readApplicationPeriodAction
+} from '@/services/applications/periods/actions'
+import { readSpecialImageAction } from '@/services/images/actions'
 import { faVideo } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import Link from 'next/link'
 
 export type PropTypes = {
     params: Promise<{

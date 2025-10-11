@@ -2,7 +2,7 @@
 
 import Checkbox from '@/components/UI/Checkbox'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
-import { updateGroupPermissionAction } from '@/actions/permissions'
+import { updateGroupPermissionAction } from '@/services/permissions/actions'
 import { useState } from 'react'
 import type { Permission } from '@prisma/client'
 

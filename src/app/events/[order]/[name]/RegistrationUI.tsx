@@ -1,18 +1,18 @@
 'use client'
 import styles from './RegistrationUI.module.scss'
-import {
-    createEventRegistrationAction,
-    eventRegistrationDestroyAction,
-    eventRegistrationUpdateNotesAction
-} from '@/actions/events/registration'
 import CountDown from '@/components/countDown/CountDown'
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
 import SubmitButton from '@/components/UI/SubmitButton'
-import { configureAction } from '@/actions/configureAction'
+import {
+    createEventRegistrationAction,
+    eventRegistrationDestroyAction,
+    eventRegistrationUpdateNotesAction
+} from '@/services/events/registration/actions'
+import { configureAction } from '@/services/configureAction'
 import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
-import type { EventExpanded } from '@/services/events/Types'
+import type { EventExpanded } from '@/services/events/types'
 import type { EventRegistration } from '@prisma/client'
 
 enum RegistrationButtonState {

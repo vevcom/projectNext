@@ -2,10 +2,10 @@ import '@pn-server-only'
 import { canEasilyManageMembershipOfGroup } from './canEasilyManageMembership'
 import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
-import prisma from '@/prisma'
+import { prisma } from '@/prisma/client'
 import { invalidateManyUserSessionData, invalidateOneUserSessionData } from '@/services/auth/invalidateSession'
-import { GroupMethods } from '@/services/groups/methods'
-import type { ExpandedMembership } from './Types'
+import { groupOperations } from '@/services/groups/operations'
+import type { ExpandedMembership } from './types'
 
 export async function destoryMembershipOfUser({
     groupId,
@@ -19,9 +19,8 @@ export async function destoryMembershipOfUser({
     if (!await canEasilyManageMembershipOfGroup(groupId)) {
         throw new ServerError('BAD PARAMETERS', 'Denne Gruppetypen kan ikke enkelt opprette medlemskap')
     }
-    const order = orderArg ?? await GroupMethods.readCurrentGroupOrder.newClient().execute({
+    const order = orderArg ?? await groupOperations.readCurrentGroupOrder({
         bypassAuth: true,
-        session: null,
         params: {
             id: groupId
         }
@@ -48,8 +47,7 @@ export async function destroyMembershipOfUsers(
     if (!await canEasilyManageMembershipOfGroup(groupId)) {
         throw new ServerError('BAD PARAMETERS', 'Denne Gruppetypen kan ikke enkelt opprette medlemskap')
     }
-    const order = orderArg ?? await GroupMethods.readCurrentGroupOrder.newClient().execute({
-        session: null,
+    const order = orderArg ?? await groupOperations.readCurrentGroupOrder({
         bypassAuth: true,
         params: {
             id: groupId,

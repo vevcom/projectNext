@@ -2,7 +2,7 @@
 import styles from './CommitteeLogoRoll.module.scss'
 import Image from '@/app/_components/Image/Image'
 import useInterval from '@/hooks/useInterval'
-import { readNumberOfApplicationsAction } from '@/actions/applications/periods/read'
+import { readNumberOfApplicationsAction } from '@/services/applications/periods/actions'
 import { useRef, useState } from 'react'
 import type { Image as ImageT } from '@prisma/client'
 

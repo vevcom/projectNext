@@ -8,18 +8,18 @@ import Form from '@/app/_components/Form/Form'
 import TextInput from '@/app/_components/UI/TextInput'
 import NumberInput from '@/app/_components/UI/NumberInput'
 import Checkbox from '@/app/_components/UI/Checkbox'
-import { useUser } from '@/auth/useUser'
+import { useUser } from '@/auth/session/useUser'
 import {
     createBedBookingNoUserAction,
     createBedBookingUserAttachedAction,
     createCabinBookingNoUserAction,
     createCabinBookingUserAttachedAction
-} from '@/actions/cabin'
+} from '@/services/cabin/actions'
 import { getZodDateString } from '@/lib/dates/formatting'
-import { configureAction } from '@/actions/configureAction'
+import { configureAction } from '@/services/configureAction'
 import { useMemo, useState } from 'react'
-import type { CabinProductConfig } from '@/services/cabin/product/config'
-import type { BookingFiltered } from '@/services/cabin/booking/Types'
+import type { CabinProductExtended } from '@/services/cabin/product/constants'
+import type { BookingFiltered } from '@/services/cabin/booking/types'
 import type { DateRange } from './CabinCalendar'
 import type { BookingType, PricePeriod } from '@prisma/client'
 
@@ -33,7 +33,7 @@ export default function StateWrapper({
 }: {
     cabinAvailability: BookingFiltered[],
     releaseUntil: Date,
-    cabinProducts: CabinProductConfig.CabinProductExtended[],
+    cabinProducts: CabinProductExtended[],
     canBookCabin: boolean,
     canBookBed: boolean,
     pricePeriods: PricePeriod[]
@@ -50,7 +50,7 @@ export default function StateWrapper({
     const [bookingType, setBookingType] = useState<BookingType>(canBookCabin ? 'CABIN' : 'BED')
     const [dateRange, setDateRange] = useState<DateRange>({})
 
-    const [selectedProducts, setSelectedProducts] = useState<CabinProductConfig.CabinProductExtended[]>(
+    const [selectedProducts, setSelectedProducts] = useState<CabinProductExtended[]>(
         canBookCabin ? [cabinProduct] : bedProducts
     )
     const [bedAmounts, setBedAmounts] = useState<number[]>(Array(bedProducts.length).fill(0))
@@ -217,29 +217,29 @@ export default function StateWrapper({
                 name="firstname"
                 label="Fornavn"
                 defaultValue={user.user?.firstname ?? ''}
-                disabled={!!user.user}
-                readOnly={!!user.user}
+                disabled={Boolean(user.user)}
+                readOnly={Boolean(user.user)}
             />
             <TextInput
                 name="lastname"
                 label="Etternavn"
                 defaultValue={user.user?.lastname ?? ''}
-                disabled={!!user.user}
-                readOnly={!!user.user}
+                disabled={Boolean(user.user)}
+                readOnly={Boolean(user.user)}
             />
             <TextInput
                 name="email"
                 label="E-post"
                 defaultValue={user.user?.email ?? ''}
-                disabled={!!user.user}
-                readOnly={!!user.user}
+                disabled={Boolean(user.user)}
+                readOnly={Boolean(user.user)}
             />
             <TextInput
                 name="mobile"
                 label="Telefonnummer"
                 defaultValue={user.user?.mobile ?? ''}
-                disabled={!!user.user}
-                readOnly={!!user.user}
+                disabled={Boolean(user.user)}
+                readOnly={Boolean(user.user)}
             />
 
             <TextInput name="tenantNotes" label="Notater til utleier" />

@@ -1,5 +1,5 @@
 import styles from './page.module.scss'
-import { readSpecialImageAction } from '@/actions/images/read'
+import { readSpecialImageAction } from '@/services/images/actions'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import ImageCard from '@/components/ImageCard/ImageCard'
 

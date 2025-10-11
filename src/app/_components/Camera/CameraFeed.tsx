@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useRef, useCallback } from 'react'
-import type { CameraFeedProps } from './Types'
+import type { CameraFeedProps } from './types'
 
 
 export default function CameraFeed(props: CameraFeedProps) {

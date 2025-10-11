@@ -1,6 +1,6 @@
 import Company from './Company'
-import type { SessionMaybeUser } from '@/auth/Session'
-import type { CompanyExpanded } from '@/services/career/companies/Types'
+import type { SessionMaybeUser } from '@/auth/session/Session'
+import type { CompanyExpanded } from '@/services/career/companies/types'
 
 /**
  * Used to render schools server side and client side in consistent way

@@ -1,9 +1,9 @@
 import '@pn-server-only'
 import { createArticleCategoryValidation } from './validation'
-import prisma from '@/prisma'
+import { prisma } from '@/prisma/client'
 import { prismaCall } from '@/services/prismaCall'
 import type { CreateArticleCategoryTypes } from './validation'
-import type { ExpandedArticleCategory } from './Types'
+import type { ExpandedArticleCategory } from './types'
 
 export async function createArticleCategory(
     rawData: CreateArticleCategoryTypes['Detailed']

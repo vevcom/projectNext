@@ -1,5 +1,5 @@
 'use client'
-import { updateCmsImageAction } from '@/actions/cms/images/update'
+import { updateCmsImageAction } from '@/services/cms/images/actions'
 import Form from '@/components/Form/Form'
 import { ImageSelectionContext } from '@/contexts/ImageSelection'
 import { useContext } from 'react'

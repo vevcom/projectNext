@@ -1,6 +1,6 @@
 import { apiHandler } from '@/app/api/apiHandler'
-import { PurchaseMethods } from '@/services/shop/purchase/methods'
+import { purchaseOperations } from '@/services/shop/purchase/operations'
 
 export const POST = apiHandler({
-    serviceMethod: PurchaseMethods.createByStudentCard,
+    serviceOperation: purchaseOperations.createByStudentCard,
 })

@@ -3,11 +3,11 @@ import { createStandardSchool } from './create'
 import { SchoolFilteredSelection, SchoolRelationIncluder } from './ConfigVars'
 import { prismaCall } from '@/services/prismaCall'
 import logger from '@/lib/logger'
-import prisma from '@/prisma'
+import { prisma } from '@/prisma/client'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { StandardSchool } from '@prisma/client'
-import type { ExpandedSchool, SchoolCursor, SchoolFiltered } from './Types'
-import type { ReadPageInput } from '@/lib/paging/Types'
+import type { ExpandedSchool, SchoolCursor, SchoolFiltered } from './types'
+import type { ReadPageInput } from '@/lib/paging/types'
 
 export async function readSchoolsPage<const PageSize extends number>({
     page,

@@ -1,6 +1,6 @@
-import prisma from '@/prisma'
+import { prisma } from '@/prisma/client'
 import { prismaCall } from '@/services/prismaCall'
-import type { ExpandedCommittee } from './Types'
+import type { ExpandedCommittee } from './types'
 
 export async function destroyCommittee(id: number): Promise<ExpandedCommittee> {
     return await prismaCall(() => prisma.committee.delete({

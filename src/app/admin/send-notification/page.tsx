@@ -1,7 +1,7 @@
 'use server'
 import NotificaionForm from './notificationForm'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
-import { readNotificationChannelsAction } from '@/actions/notifications'
+import { readNotificationChannelsAction } from '@/services/notifications/actions'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 
 

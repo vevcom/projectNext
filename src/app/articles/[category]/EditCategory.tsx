@@ -3,13 +3,12 @@ import Form from '@/components/Form/Form'
 import PopUp from '@/components/PopUp/PopUp'
 import Textarea from '@/components/UI/Textarea'
 import TextInput from '@/components/UI/TextInput'
-import { updateArticleCategoryAction } from '@/actions/cms/articleCategories/update'
-import { createArticleAction } from '@/actions/cms/articles/create'
-import { destroyArticleCategoryAction } from '@/actions/cms/articleCategories/destroy'
+import { updateArticleCategoryAction, destroyArticleCategoryAction } from '@/services/cms/articleCategories/actions'
+import { createArticleAction } from '@/services/cms/articles/actions'
 import { useRouter } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCog } from '@fortawesome/free-solid-svg-icons'
-import type { ExpandedArticleCategory } from '@/cms/articleCategories/Types'
+import type { ExpandedArticleCategory } from '@/cms/articleCategories/types'
 
 type PropTypes = {
     category: ExpandedArticleCategory

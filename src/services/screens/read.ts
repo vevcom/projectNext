@@ -1,7 +1,7 @@
 import { screenPageIncluder } from './pages/ConfigVars'
 import { prismaCall } from '@/services/prismaCall'
-import prisma from '@/prisma'
-import type { ExpandedScreen } from './Types'
+import { prisma } from '@/prisma/client'
+import type { ExpandedScreen } from './types'
 import type { Screen } from '@prisma/client'
 
 export async function readScreen(id: number): Promise<ExpandedScreen> {

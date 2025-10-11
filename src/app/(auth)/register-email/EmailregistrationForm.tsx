@@ -1,11 +1,11 @@
 'use client'
-import { registerNewEmailAction } from '@/actions/users/update'
+import { registerNewEmailAction } from '@/services/users/actions'
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
-import { configureAction } from '@/actions/configureAction'
+import { configureAction } from '@/services/configureAction'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { useState } from 'react'
-import type { UserFiltered } from '@/services/users/Types'
+import type { UserFiltered } from '@/services/users/types'
 
 export default function EmailRegistrationForm({
     user

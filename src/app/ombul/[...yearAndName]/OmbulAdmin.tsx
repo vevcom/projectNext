@@ -2,14 +2,13 @@
 
 import styles from './OmbulAdmin.module.scss'
 import Form from '@/components/Form/Form'
-import { updateOmbulAction, updateOmbulFileAction } from '@/actions/ombul/update'
+import { updateOmbulAction, updateOmbulFileAction, destroyOmbulAction } from '@/services/ombul/actions'
 import NumberInput from '@/components/UI/NumberInput'
 import FileInput from '@/components/UI/FileInput'
-import { destroyOmbulAction } from '@/actions/ombul/destroy'
 import useEditing from '@/hooks/useEditing'
 import { useRouter } from 'next/navigation'
 import type { ReactNode } from 'react'
-import type { ExpandedOmbul } from '@/services/ombul/Types'
+import type { ExpandedOmbul } from '@/services/ombul/types'
 
 type PropTypes = {
     ombul: ExpandedOmbul
