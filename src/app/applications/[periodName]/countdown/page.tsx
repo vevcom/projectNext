@@ -7,9 +7,13 @@ import type { PropTypes } from '@/app/applications/[periodName]/page'
 
 export default async function ApplicationPeriodCountdown({ params }: PropTypes) {
     const period = unwrapActionReturn(await readApplicationPeriodAction({
-        name: decodeURIComponent((await params).periodName)
+        params: {
+            name: decodeURIComponent((await params).periodName)
+        }
     }))
-    const defaultCommitteeLogo = unwrapActionReturn(await readSpecialImageAction({ special: 'DAFAULT_COMMITTEE_LOGO' }))
+    const defaultCommitteeLogo = unwrapActionReturn(
+        await readSpecialImageAction({ params: { special: 'DAFAULT_COMMITTEE_LOGO' } })
+    )
 
     return (
         <div className={styles.wrapper}>

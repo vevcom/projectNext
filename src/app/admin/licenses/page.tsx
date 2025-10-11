@@ -9,6 +9,7 @@ import {
     readAllLicensesAction
 } from '@/services/licenses/actions'
 import TextInput from '@/UI/TextInput'
+import { configureAction } from '@/services/configureAction'
 import Link from 'next/link'
 
 export default async function Licenses() {
@@ -40,7 +41,7 @@ export default async function Licenses() {
                             <td>
                                 <SettingsHeaderItemPopUp PopUpKey={`LicenseSettings ${license.id}`}>
                                     <Form
-                                        action={updateLicenseAction.bind(null, { id: license.id })}
+                                        action={configureAction(updateLicenseAction, { params: { id: license.id } })}
                                         title="Endre lisens"
                                         submitText="Endre"
                                     >
@@ -49,7 +50,7 @@ export default async function Licenses() {
                                     </Form>
 
                                     <Form
-                                        action={destroyLicenseAction.bind(null, { id: license.id })}
+                                        action={configureAction(destroyLicenseAction, { params: { id: license.id } })}
                                         submitText="Slett"
                                         submitColor="red"
                                         refreshOnSuccess

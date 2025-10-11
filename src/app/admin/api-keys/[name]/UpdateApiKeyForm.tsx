@@ -1,5 +1,6 @@
 'use client'
 import { updateApiKeyAction } from '@/services/apiKeys/actions'
+import { configureAction } from '@/services/configureAction'
 import Form from '@/app/_components/Form/Form'
 import type { ReactNode } from 'react'
 
@@ -14,7 +15,7 @@ type PropTypes = {
  * On success navigates to the updated api key by name.
  */
 export default function UpdateApiKeyForm({ id, children }: PropTypes) {
-    const updateAction = updateApiKeyAction.bind(null, { id })
+    const updateAction = configureAction(updateApiKeyAction, { params: { id } })
 
     return (
         <Form

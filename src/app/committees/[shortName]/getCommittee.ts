@@ -9,7 +9,11 @@ import type { PropTypes } from './page'
  */
 export default async function getCommittee(params: PropTypes['params']) {
     const name = decodeURIComponent((await params).shortName)
-    const res = await readCommitteeAction({ shortName: name })
+    const res = await readCommitteeAction({
+        params: {
+            shortName: name
+        },
+    })
     if (!res.success) notFound()
     return res.data
 }

@@ -12,6 +12,6 @@ export const [ImagePagingContext, ImagePagingProvider] = generatePaging<
     PageSizeImage,
     ImageDetails
 >({
-    fetcher: async ({ paging }) => await readImagesPageAction({ paging }),
+    fetcher: async ({ paging }) => await readImagesPageAction({ params: { paging } }),
     getCursor: ({ lastElement }) => ({ id: lastElement.id }),
 })

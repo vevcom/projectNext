@@ -11,10 +11,12 @@ export const [EventRegistrationPagingContext, EventRegistrationPagingProvider] =
     EventRegistrationFetcherDetails
 >({
     fetcher: async ({ paging }) => await readManyEventRegistrationAction({
-        eventId: paging.details.eventId,
-        take: paging.page.pageSize,
-        skip: (paging.page.page * paging.page.pageSize) || undefined,
-        type: paging.details.type,
+        params: {
+            eventId: paging.details.eventId,
+            take: paging.page.pageSize,
+            skip: (paging.page.page * paging.page.pageSize) || undefined,
+            type: paging.details.type,
+        }
     }),
     getCursor: ({ fetchedCount }) => (fetchedCount),
 })

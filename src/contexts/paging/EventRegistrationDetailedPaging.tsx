@@ -16,10 +16,12 @@ export const [EventRegistrationDetailedPagingContext, EventRegistrationDetailedP
     fetcher: async ({ paging }) =>
         // TODO: These calculations should be done inside the function.
         await eventRegistrationReadManyDetailedAction({
-            eventId: paging.details.eventId,
-            take: paging.page.pageSize,
-            skip: (paging.page.page * paging.page.pageSize) || undefined,
-            type: paging.details.type,
+            params: {
+                eventId: paging.details.eventId,
+                take: paging.page.pageSize,
+                skip: (paging.page.page * paging.page.pageSize) || undefined,
+                type: paging.details.type,
+            }
         }),
     getCursor: ({ fetchedCount }) => fetchedCount,
 })

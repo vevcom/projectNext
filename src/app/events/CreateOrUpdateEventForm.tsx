@@ -8,10 +8,10 @@ import NumberInput from '@/components/UI/NumberInput'
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
 import EventTag from '@/components/Event/EventTag'
-import { bindParams } from '@/services/actionBind'
-import { FIELD_IS_PRESENT_VALUE } from '@/lib/fields/constants'
 import { createEventAction, updateEventAction } from '@/services/events/actions'
 import { eventCanBeViewdByOptions } from '@/services/events/constants'
+import { FIELD_IS_PRESENT_VALUE } from '@/lib/fields/constants'
+import { configureAction } from '@/services/configureAction'
 import { useState } from 'react'
 import type { Event, EventTag as EventTagT } from '@prisma/client'
 import type { ChangeEvent } from 'react'
@@ -30,7 +30,7 @@ type PropTypes = {
  */
 export default function CreateOrUpdateEventForm({ event, eventTags }: PropTypes) {
     const [showRegistrationOptions, setShowRegistrationOptions] = useState(event?.takesRegistration ?? false)
-    const action = event ? bindParams(updateEventAction, { id: event.id }) : createEventAction
+    const action = event ? configureAction(updateEventAction, { params: { id: event.id } }) : createEventAction
 
     const handleShowRegistration = (changeEvent: ChangeEvent<HTMLInputElement>) => {
         setShowRegistrationOptions(changeEvent.target.checked)

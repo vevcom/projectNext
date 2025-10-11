@@ -58,7 +58,7 @@ export function apiHandler<
                 }
             }
 
-            return serviceOperation<'UNCHECKED'>({
+            return serviceOperation<'UNSAFE'>({
                 params: params ? params(await rawParams) : undefined,
                 data,
                 session,

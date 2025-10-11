@@ -32,7 +32,7 @@ export default async function JobAd({ params }: PropTypes) {
     const order = parseInt(decodeURIComponent((await params).orderAndName[0]), 10)
     const name = decodeURIComponent((await params).orderAndName[1])
     const session = await Session.fromNextAuth()
-    const jobAdRes = await readJobAdAction({ idOrName: { articleName: name, order } })
+    const jobAdRes = await readJobAdAction({ params: { idOrName: { articleName: name, order } } })
     if (!jobAdRes.success) {
         //TODO: Handle error in idiomatic way
         if (jobAdRes.errorCode === 'NOT FOUND') notFound()

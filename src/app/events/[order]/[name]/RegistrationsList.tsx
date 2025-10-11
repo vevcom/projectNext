@@ -10,10 +10,10 @@ import {
 import UserDisplayName from '@/components/User/UserDisplayName'
 import Slider from '@/components/UI/Slider'
 import Form from '@/components/Form/Form'
-import { bindParams } from '@/services/actionBind'
 import ContactCard from '@/components/User/ContactCard'
 import { eventRegistrationDestroyAction } from '@/services/events/registration/actions'
 import { REGISTRATION_READER_TYPE } from '@/services/events/registration/constants'
+import { configureAction } from '@/services/configureAction'
 import Link from 'next/link'
 import { useState } from 'react'
 import type { EventFiltered } from '@/services/events/types'
@@ -61,7 +61,10 @@ function DetailedTable({
                                 <td>{row.note}</td>
                                 <td>
                                     <Form
-                                        action={bindParams(eventRegistrationDestroyAction, { registrationId: row.id })}
+                                        action={configureAction(
+                                            eventRegistrationDestroyAction,
+                                            { params: { registrationId: row.id } }
+                                        )}
                                         submitText="Slett"
                                         submitColor="red"
                                         confirmation={{

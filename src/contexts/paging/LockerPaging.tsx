@@ -10,6 +10,6 @@ export const [LockerPagingContext, LockerPagingProvider] = generatePaging<
     LockerCursor,
     PageSizeLocker
 >({
-    fetcher: async ({ paging }) => await readLockerPageAction({ paging }),
+    fetcher: async ({ paging }) => await readLockerPageAction({ params: { paging } }),
     getCursor: ({ lastElement }) => ({ id: lastElement.id }),
 })

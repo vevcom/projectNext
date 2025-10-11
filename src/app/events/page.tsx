@@ -19,7 +19,7 @@ export default async function Events({
 }: PropTypes) {
     const tagNames = QueryParams.eventTags.decode(await searchParams)
 
-    const currentEventsResponse = await readCurrentEventsAction({ tags: tagNames })
+    const currentEventsResponse = await readCurrentEventsAction({ params: { tags: tagNames } })
     const eventTagsResponse = await readEventTagsAction()
 
     if (!currentEventsResponse.success) {

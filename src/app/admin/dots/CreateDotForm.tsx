@@ -9,6 +9,7 @@ import UserList from '@/components/User/UserList/UserList'
 import { useUser } from '@/auth/session/useUser'
 import { PopUpContext } from '@/contexts/PopUp'
 import { UserSelectionContext } from '@/contexts/UserSelection'
+import { configureAction } from '@/services/configureAction'
 import { useContext } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
@@ -45,7 +46,7 @@ export default function CreateDotForm() {
                 </PopUp>
             </div>
             <Form
-                action={createDotAction.bind(null, ({ accuserId: session.user.id }))}
+                action={configureAction(createDotAction, { params: { accuserId: session.user.id } })}
                 submitText="Lag prikk"
                 refreshOnSuccess
             >

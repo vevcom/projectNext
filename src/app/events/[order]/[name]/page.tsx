@@ -11,10 +11,10 @@ import Form from '@/components/Form/Form'
 import EventTag from '@/components/Event/EventTag'
 import { SettingsHeaderItemPopUp, UsersHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import { QueryParams } from '@/lib/queryParams/queryParams'
-import { bindParams } from '@/services/actionBind'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { readEventTagsAction } from '@/services/events/tags/actions'
 import { destroyEventAction, readEventAction } from '@/services/events/actions'
+import { configureAction } from '@/services/configureAction'
 import Link from 'next/link'
 import { faCalendar, faExclamation, faLocationDot, faUsers } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -28,8 +28,10 @@ type PropTypes = {
 
 export default async function Event({ params }: PropTypes) {
     const event = unwrapActionReturn(await readEventAction({
-        name: decodeURIComponent((await params).name),
-        order: parseInt((await params).order, 10),
+        params: {
+            name: decodeURIComponent((await params).name),
+            order: parseInt((await params).order, 10),
+        }
     }))
 
     const tags = unwrapActionReturn(await readEventTagsAction())
@@ -60,7 +62,7 @@ export default async function Event({ params }: PropTypes) {
                         <CreateOrUpdateEventForm event={event} eventTags={tags} />
                         {/*TODO: Use auther to only display if it can be destroy*/}
                         <Form
-                            action={bindParams(destroyEventAction, { id: event.id })}
+                            action={configureAction(destroyEventAction, { params: { id: event.id } })}
                             navigateOnSuccess="/events"
                             className={styles.destroyForm}
                             buttonClassName={styles.destroyButton}

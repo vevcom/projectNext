@@ -288,6 +288,7 @@ export const eventOperations = {
             return eventUpdate
         }
     }),
+
     destroy: defineOperation({
         paramsSchema: z.object({
             id: z.number()

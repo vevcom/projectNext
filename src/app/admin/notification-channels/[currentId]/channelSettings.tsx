@@ -6,10 +6,10 @@ import TextInput from '@/components/UI/TextInput'
 import { SelectNumber } from '@/components/UI/Select'
 import Form from '@/components/Form/Form'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
-import { bindParams } from '@/services/actionBind'
 import { booleanOperationOnMethods } from '@/services/notifications/notificationMethodOperations'
 import { updateNotificationChannelAction } from '@/services/notifications/actions'
 import { findValidParents } from '@/services/notifications/channel/schemas'
+import { configureAction } from '@/services/configureAction'
 import { useState } from 'react'
 import type { ExpandedNotificationChannel } from '@/services/notifications/types'
 import type { MailAlias } from '@prisma/client'
@@ -33,14 +33,16 @@ export default function ChannelSettings({
         <div className={styles.channelSettings}>
             {currentChannelState.special ? <p>Spesiell: {currentChannelState.special}</p> : null}
             <Form
-                action={bindParams(updateNotificationChannelAction, {
-                    id: currentChannelState.id,
-                    availableMethods: currentChannelState.availableMethods,
-                    defaultMethods: booleanOperationOnMethods(
-                        currentChannelState.defaultMethods,
-                        currentChannelState.availableMethods,
-                        'AND'
-                    )
+                action={configureAction(updateNotificationChannelAction, {
+                    params: {
+                        id: currentChannelState.id,
+                        availableMethods: currentChannelState.availableMethods,
+                        defaultMethods: booleanOperationOnMethods(
+                            currentChannelState.defaultMethods,
+                            currentChannelState.availableMethods,
+                            'AND'
+                        )
+                    }
                 })}
                 submitText="Lagre"
             >

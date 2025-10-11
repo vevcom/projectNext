@@ -12,6 +12,6 @@ export const [DotPagingContext, DotPagingProvider] = generatePaging<
     PageSizeDots,
     DotDetails
 >({
-    fetcher: async ({ paging }) => await readDotPageAction({ paging }),
+    fetcher: async ({ paging }) => await readDotPageAction({ params: { paging } }),
     getCursor: ({ lastElement }) => ({ id: lastElement.id }),
 })

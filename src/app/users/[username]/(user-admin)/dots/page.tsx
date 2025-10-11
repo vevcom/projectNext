@@ -14,7 +14,7 @@ type PropTypes = {
 export default async function UserDotAdmin({ params }: PropTypes) {
     const { profile } = await getProfileForAdmin(await params, 'dots')
     const dotWrappers = unwrapActionReturn(
-        await readDotWrappersForUserAction({ userId: profile.user.id })
+        await readDotWrappersForUserAction({ params: { userId: profile.user.id } })
     )
 
     return (

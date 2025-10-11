@@ -14,7 +14,7 @@ export default async function adminCommittee() {
     const { id: collectionId } = committeeLogoCollectionRes.data
 
     const defaultCommitteeLogoRes = await readSpecialImageAction.bind(
-        null, { special: 'DAFAULT_COMMITTEE_LOGO' }
+        null, { params: { special: 'DAFAULT_COMMITTEE_LOGO' } }
     )()
     if (!defaultCommitteeLogoRes.success) throw new Error('Kunne ikke finne standard komitelogo')
     const defaultCommitteeLogo = defaultCommitteeLogoRes.data

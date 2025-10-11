@@ -9,6 +9,7 @@ import DisplayAllPermissions from '@/components/Permission/DisplayAllPermissions
 import Slider from '@/components/UI/Slider'
 import Date from '@/app/_components/Date/Date'
 import Checkbox from '@/app/_components/UI/Checkbox'
+import { configureAction } from '@/services/configureAction'
 
 type PropTypes = {
     params: Promise<{
@@ -17,7 +18,7 @@ type PropTypes = {
 }
 
 export default async function ApiKeyAdmin({ params }: PropTypes) {
-    const res = await readApiKeyAction({ name: decodeURIComponent((await params).name) })
+    const res = await readApiKeyAction({ params: { name: decodeURIComponent((await params).name) } })
     if (!res.success) throw new Error(res.error?.length ? res.error[0].message : 'En feil har oppstått')
     const apiKey = res.data
 
@@ -54,7 +55,7 @@ export default async function ApiKeyAdmin({ params }: PropTypes) {
                     </UpdateApiKeyForm>
                     <Form
                         submitText="Slett nøkkel"
-                        action={destroyApiKeyAction.bind(null, { id: apiKey.id })}
+                        action={configureAction(destroyApiKeyAction, { params: { id: apiKey.id } })}
                         confirmation={{
                             text: 'Er du sikker på at du vil slette denne nøkkelen? Heller anbefaler vi å deaktivere den.',
                             confirm: true,

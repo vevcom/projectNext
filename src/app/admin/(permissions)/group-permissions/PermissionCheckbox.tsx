@@ -22,10 +22,14 @@ export default function PermissionCheckbox({
     async function onClick() {
         setWorking(true)
         const result = unwrapActionReturn(await updateGroupPermissionAction({
-            groupId,
-            permission,
+            params: {
+                groupId,
+                permission,
+            },
         }, {
-            value: !hasPermission,
+            data: {
+                value: !hasPermission,
+            },
         }))
 
         setHasPermission(result)

@@ -11,6 +11,6 @@ export const [CompanyPagingContext, CompanyPagingProvider] = generatePaging<
     PageSizeCompany,
     CompanyDetails
 >({
-    fetcher: async ({ paging }) => await readCompanyPageAction({ paging }),
+    fetcher: async ({ paging }) => await readCompanyPageAction({ params: { paging } }),
     getCursor: ({ lastElement }) => ({ id: lastElement.id }),
 })

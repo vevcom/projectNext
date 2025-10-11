@@ -3,8 +3,8 @@ import Form from '@/components/Form/Form'
 import { SelectString } from '@/components/UI/Select'
 import DateInput from '@/components/UI/DateInput'
 import Checkbox from '@/components/UI/Checkbox'
-import { bindParams } from '@/services/actionBind'
 import { createLockerReservationAction } from '@/services/lockers/actions'
+import { configureAction } from '@/services/configureAction'
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
@@ -30,7 +30,7 @@ export default function LockerReservationForm({ lockerId, groupsFormData }: Prop
             successCallback={refresh}
             title="Reserver skap"
             submitText="Reserver"
-            action={bindParams(createLockerReservationAction, { lockerId })}
+            action={configureAction(createLockerReservationAction, { params: { lockerId } })}
         >
             <SelectString
                 label="Reserver for"

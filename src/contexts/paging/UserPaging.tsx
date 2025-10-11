@@ -11,6 +11,6 @@ export const [UserPagingContext, UserPagingProvider] = generatePaging<
     PageSizeUsers,
     UserDetails
 >({
-    fetcher: async ({ paging }) => await readUserPageAction({ paging }),
+    fetcher: async ({ paging }) => await readUserPageAction({ params: { paging } }),
     getCursor: ({ lastElement }) => ({ id: lastElement.id }),
 })

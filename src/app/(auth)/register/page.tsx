@@ -21,7 +21,9 @@ export default async function Register({ searchParams }: PropTypes) {
     }
 
     const updatedUser = unwrapActionReturn(await readUserAction({
-        id: user.id
+        params: {
+            id: user.id
+        }
     }))
 
     if (updatedUser.acceptedTerms) {

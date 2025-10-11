@@ -21,7 +21,9 @@ export default async function CabinBooking({
     }>
 }) {
     const booking = unwrapActionReturn(await readCabinBookingAction({
-        id: parseInt(decodeURIComponent((await params).booking), 10)
+        params: {
+            id: parseInt(decodeURIComponent((await params).booking), 10)
+        }
     }))
 
     return <PageWrapper

@@ -11,6 +11,6 @@ export const [EventArchivePagingContext, EventArchivePagingProvider] = generateP
     PageSizeEventArchive,
     EventArchiveDetails
 >({
-    fetcher: async ({ paging }) => await readArchivedEventsPageAction({ paging }),
+    fetcher: async ({ paging }) => await readArchivedEventsPageAction({ params: { paging } }),
     getCursor: ({ lastElement }) => ({ id: lastElement.id }),
 })

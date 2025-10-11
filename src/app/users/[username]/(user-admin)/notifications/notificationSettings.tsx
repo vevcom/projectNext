@@ -184,9 +184,13 @@ export default function NotificationSettings({
         })
         const data = prepareDataForDelivery(channelTree)
         const results = await updateNotificationSubscriptionsAction({
-            userId: user.id
+            params: {
+                userId: user.id
+            },
         }, {
-            subscriptions: data
+            data: {
+                subscriptions: data
+            },
         })
 
         if (results.success) {

@@ -21,7 +21,7 @@ export default async function Register({ searchParams }: PropTypes) {
     })
 
     const userId = user?.id
-    const updatedUser = unwrapActionReturn(await verifyEmailAction({ token }))
+    const updatedUser = unwrapActionReturn(await verifyEmailAction({ params: { token } }))
 
     if (!userId) {
         // TODO: If the user arrives here by an invitation email

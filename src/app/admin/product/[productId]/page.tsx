@@ -14,7 +14,7 @@ type PropTypes = {
 }
 
 export default async function ProductPage({ params }: PropTypes) {
-    const product = unwrapActionReturn(await readProductAction({ productId: Number((await params).productId) }))
+    const product = unwrapActionReturn(await readProductAction({ params: { productId: Number((await params).productId) } }))
 
     return <PageWrapper
         title={product.name}

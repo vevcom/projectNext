@@ -5,9 +5,9 @@ import TextInput from '@/UI/TextInput'
 import CmsImage from '@/cms/CmsImage/CmsImage'
 import CmsImageClient from '@/cms/CmsImage/CmsImageClient'
 import Form from '@/components/Form/Form'
-import { bindParams } from '@/services/actionBind'
 import { companyAuth } from '@/services/career/companies/auth'
 import { destroyCompanyAction, updateComanyAction } from '@/services/career/companies/actions'
+import { configureAction } from '@/services/configureAction'
 import type { CompanyExpanded } from '@/services/career/companies/types'
 import type { SessionMaybeUser } from '@/auth/session/Session'
 
@@ -64,7 +64,7 @@ export default function Company({
                         <SettingsHeaderItemPopUp showButtonClass={styles.showSettings} PopUpKey={`Edit ${company.id}`}>
                             <Form
                                 title="Rediger Bedrift"
-                                action={bindParams(updateComanyAction, { id: company.id })}
+                                action={configureAction(updateComanyAction, { params: { id: company.id } })}
                                 refreshOnSuccess
                                 closePopUpOnSuccess={`Edit ${company.id}`}
                                 submitText="Lagre"
@@ -73,7 +73,7 @@ export default function Company({
                                 <TextInput name="description" label="Beskrivelse" defaultValue={company.description} />
                             </Form>
                             <Form
-                                action={bindParams(destroyCompanyAction, { id: company.id })}
+                                action={configureAction(destroyCompanyAction, { params: { id: company.id } })}
                                 refreshOnSuccess
                                 closePopUpOnSuccess={`Edit ${company.id}`}
                                 submitText="Slett"

@@ -11,6 +11,6 @@ export const [JobAdInactivePagingContext, JobAdInactivePagingProvider] = generat
     PageSizeJobAdInactive,
     JobAdInactiveDetails
 >({
-    fetcher: async ({ paging }) => await readInactiveJobAdsPageAction({ paging }),
+    fetcher: async ({ paging }) => await readInactiveJobAdsPageAction({ params: { paging } }),
     getCursor: ({ lastElement }) => ({ id: lastElement.id }),
 })

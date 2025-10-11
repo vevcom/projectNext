@@ -9,6 +9,7 @@ import { companyListRenderer } from '@/components/Company/CompanyListRenderer'
 import { QueryParams } from '@/lib/queryParams/queryParams'
 import CompanyListFilter from '@/app/_components/Company/CompanyListFilter'
 import { Session } from '@/auth/session/Session'
+import { configureAction } from '@/services/configureAction'
 import type { SearchParamsServerSide } from '@/lib/queryParams/types'
 import type { PageSizeCompany } from '@/contexts/paging/CompanyPaging'
 
@@ -19,18 +20,21 @@ export default async function page({ searchParams }: PropTypes) {
     const name = QueryParams.companyName.decode(await searchParams) ?? undefined
 
     const session = await Session.fromNextAuth()
-    const res = await readCompanyPageAction.bind(null, {
-        paging: {
-            page: {
-                page: 0,
-                pageSize,
-                cursor: null
+    const res = await configureAction(readCompanyPageAction, {
+        params: {
+            paging: {
+                page: {
+                    page: 0,
+                    pageSize,
+                    cursor: null
+                },
+                details: {
+                    name
+                },
             },
-            details: {
-                name
-            },
-        },
+        }
     })()
+
     const serverRenderedData = res.success ? res.data : []
 
     return (

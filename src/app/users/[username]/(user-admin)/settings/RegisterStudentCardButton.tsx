@@ -1,5 +1,6 @@
 'use client'
 import { registerStudentCardInQueueAction } from '@/services/users/actions'
+import { configureAction } from '@/services/configureAction'
 import Form from '@/app/_components/Form/Form'
 import { studentCardRegistrationExpiry } from '@/services/users/constants'
 
@@ -10,7 +11,7 @@ export default function RegisterStudentCardButton({
     userId: number,
 }) {
     return <Form
-        action={registerStudentCardInQueueAction.bind(null, { userId })}
+        action={configureAction(registerStudentCardInQueueAction, { params: { userId } })}
         submitText="Registrer Studentkort"
     >
         <p>

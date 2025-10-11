@@ -16,6 +16,7 @@ import {
     createCabinBookingUserAttachedAction
 } from '@/services/cabin/actions'
 import { getZodDateString } from '@/lib/dates/formatting'
+import { configureAction } from '@/services/configureAction'
 import { useMemo, useState } from 'react'
 import type { CabinProductExtended } from '@/services/cabin/product/constants'
 import type { BookingFiltered } from '@/services/cabin/booking/types'
@@ -94,38 +95,46 @@ export default function StateWrapper({
 
         if (!user.user) {
             if (bookingType === 'CABIN') {
-                return createCabinBookingNoUserAction.bind(null, {
-                    bookingProducts: [{
-                        cabinProductId: cabinProduct.id,
-                        quantity: 1,
-                    }]
+                return configureAction(createCabinBookingNoUserAction, {
+                    params: {
+                        bookingProducts: [{
+                            cabinProductId: cabinProduct.id,
+                            quantity: 1,
+                        }]
+                    },
                 })
             }
 
-            return createBedBookingNoUserAction.bind(null, {
-                bookingProducts: bedProducts.map((product, index) => ({
-                    cabinProductId: product.id,
-                    quantity: bedAmounts[index],
-                })).filter(product => product.quantity > 0)
+            return configureAction(createBedBookingNoUserAction, {
+                params: {
+                    bookingProducts: bedProducts.map((product, index) => ({
+                        cabinProductId: product.id,
+                        quantity: bedAmounts[index],
+                    })).filter(product => product.quantity > 0)
+                }
             })
         }
 
         if (bookingType === 'CABIN') {
-            return createCabinBookingUserAttachedAction.bind(null, {
-                userId: user.user?.id ?? -1,
-                bookingProducts: [{
-                    cabinProductId: cabinProduct.id,
-                    quantity: 1,
-                }]
+            return configureAction(createCabinBookingUserAttachedAction, {
+                params: {
+                    userId: user.user?.id ?? -1,
+                    bookingProducts: [{
+                        cabinProductId: cabinProduct.id,
+                        quantity: 1,
+                    }]
+                }
             })
         }
 
-        return createBedBookingUserAttachedAction.bind(null, {
-            userId: user.user?.id ?? -1,
-            bookingProducts: bedProducts.map((product, index) => ({
-                cabinProductId: product.id,
-                quantity: bedAmounts[index],
-            })).filter(product => product.quantity > 0)
+        return configureAction(createBedBookingUserAttachedAction, {
+            params: {
+                userId: user.user?.id ?? -1,
+                bookingProducts: bedProducts.map((product, index) => ({
+                    cabinProductId: product.id,
+                    quantity: bedAmounts[index],
+                })).filter(product => product.quantity > 0)
+            }
         })
     }
 
