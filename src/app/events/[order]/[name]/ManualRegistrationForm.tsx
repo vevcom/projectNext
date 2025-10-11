@@ -6,7 +6,7 @@ import UserList from '@/components/User/UserList/UserList'
 import UserPagingProvider from '@/contexts/paging/UserPaging'
 import UserSelectionProvider, { UserSelectionContext } from '@/contexts/UserSelection'
 import TextInput from '@/components/UI/TextInput'
-import { bindParams } from '@/actions/bind'
+import { configureAction } from '@/actions/configureAction'
 import { useContext } from 'react'
 import type { EventRegistration } from '@prisma/client'
 import type { ActionReturn } from '@/actions/Types'
@@ -36,10 +36,14 @@ function ManualRegistrationFormInner({
         console.log(eventId)
         console.log(userSelectionContext.user.id)
 
-        return await createEventRegistrationAction({
-            eventId,
-            userId: userSelectionContext.user.id,
-        })
+        return await createEventRegistrationAction(
+            {
+                params: {
+                    eventId,
+                    userId: userSelectionContext.user.id,
+                }
+            }
+        )
     }
 
     return <Form
@@ -59,7 +63,7 @@ export default function ManualRegistrationForm({
         <Form
             submitText="Registrer gjest"
             title="Register gjest uten bruker"
-            action={bindParams(createGuestEventRegistrationAction, { eventId })}
+            action={configureAction(createGuestEventRegistrationAction, { params: { eventId } })}
         >
             <TextInput name="name" label="Navn" />
             <TextInput name="note" label="Notat" />

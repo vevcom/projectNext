@@ -12,8 +12,8 @@ import DateInput from '@/components/UI/DateInput'
 import Slider from '@/app/_components/UI/Slider'
 import { CompanyPagingContext } from '@/contexts/paging/CompanyPaging'
 import CompanyChooser from '@/app/career/jobads/CompanyChooser'
-import { bindParams } from '@/actions/bind'
 import { JobAdConfig } from '@/services/career/jobAds/config'
+import { configureAction } from '@/actions/configureAction'
 import { v4 as uuid } from 'uuid'
 import { useContext, type ReactNode } from 'react'
 import type { ExpandedJobAd } from '@/career/jobAds/Types'
@@ -38,7 +38,7 @@ export default function EditJobAd({ jobAd, children }: PropTypes) {
         throw new Error('CompanySelectionContext or companyPaging is not defined')
     }
 
-    const updateAction = bindParams(updateJobAdAction, ({ id: jobAd.id }))
+    const updateAction = configureAction(updateJobAdAction, { params: { id: jobAd.id } })
 
     return (
         <div className={styles.EditJobAd}>
@@ -82,7 +82,7 @@ export default function EditJobAd({ jobAd, children }: PropTypes) {
                     />
                 </Form>
                 <Form
-                    action={bindParams(destroyJobAdAction, ({ id: jobAd.id }))}
+                    action={configureAction(destroyJobAdAction, { params: { id: jobAd.id } })}
                     navigateOnSuccess="/career/jobads"
                     submitText="slett annonse"
                     confirmation={{

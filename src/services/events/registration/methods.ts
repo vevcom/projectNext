@@ -1,13 +1,13 @@
+import '@pn-server-only'
 import { EventRegistrationAuthers } from './authers'
 import { EventRegistrationConfig } from './config'
+import { EventRegistrationSchemas } from './schemas'
 import { ServiceMethod } from '@/services/ServiceMethod'
-import '@pn-server-only'
 import { Smorekopp } from '@/services/error'
 import { ImageMethods } from '@/services/images/methods'
 import { z } from 'zod'
 import type { Prisma } from '@prisma/client'
 import type { EventRegistrationExpanded } from './Types'
-import { EventRegistrationSchemas } from './schemas'
 
 async function preValidateRegistration(
     prisma: Prisma.TransactionClient,
@@ -121,7 +121,6 @@ async function calculateTakeSkip(prisma: Prisma.TransactionClient, params: {
 }
 
 export namespace EventRegistrationMethods {
-
     export const create = ServiceMethod({
         paramsSchema: z.object({
             userId: z.number().min(0),

@@ -9,10 +9,10 @@ import EventRegistrationDetailedPagingProvider, {
 import UserDisplayName from '@/components/User/UserDisplayName'
 import Slider from '@/components/UI/Slider'
 import Form from '@/components/Form/Form'
-import { bindParams } from '@/actions/bind'
 import { eventRegistrationDestroyAction } from '@/actions/events/registration'
 import { EventRegistrationConfig } from '@/services/events/registration/config'
 import ContactCard from '@/components/User/ContactCard'
+import { configureAction } from '@/actions/configureAction'
 import Link from 'next/link'
 import { useState } from 'react'
 import type { EventFiltered } from '@/services/events/Types'
@@ -60,7 +60,10 @@ function DetailedTable({
                                 <td>{row.note}</td>
                                 <td>
                                     <Form
-                                        action={bindParams(eventRegistrationDestroyAction, { registrationId: row.id })}
+                                        action={configureAction(
+                                            eventRegistrationDestroyAction,
+                                            { params: { registrationId: row.id } }
+                                        )}
                                         submitText="Slett"
                                         submitColor="red"
                                         confirmation={{

@@ -17,7 +17,7 @@ export function action<
 >(
     serviceMethod: ServiceMethodType<boolean, Return, undefined, undefined, ImplementationParamsSchema>
 ): (
-    implementationParams: { implementationParams?: z.input<NonNullable<ImplementationParamsSchema>> },
+    implementationParams: { implementationParams: z.input<ImplementationParamsSchema> },
 ) => Promise<ActionReturn<Return>>
 
 export function action<
@@ -26,7 +26,7 @@ export function action<
 >(
     serviceMethod: ServiceMethodType<boolean, Return, ParamsSchema, undefined, undefined>
 ): (
-    params: { params?: z.input<NonNullable<ParamsSchema>> },
+    params: { params: z.input<ParamsSchema> },
 ) => Promise<ActionReturn<Return>>
 
 export function action<
@@ -35,7 +35,7 @@ export function action<
 >(
     serviceMethod: ServiceMethodType<boolean, Return, undefined, DataSchema, undefined>
 ): (
-    data: { data?: z.input<NonNullable<DataSchema>> } | FormData
+    data: { data: z.input<DataSchema> } | FormData
 ) => Promise<ActionReturn<Return>>
 
 export function action<
@@ -45,8 +45,8 @@ export function action<
 >(
     serviceMethod: ServiceMethodType<boolean, Return, ParamsSchema, undefined, ImplementationParamsSchema>
 ): (
-    implementationParams: { implementationParams?: z.input<ImplementationParamsSchema> },
-    params: { params?: z.input<ParamsSchema> },
+    implementationParams: { implementationParams: z.input<ImplementationParamsSchema> },
+    params: { params: z.input<ParamsSchema> },
 ) => Promise<ActionReturn<Return>>
 
 export function action<
@@ -56,8 +56,8 @@ export function action<
 >(
     serviceMethod: ServiceMethodType<boolean, Return, ParamsSchema, DataSchema, undefined>
 ): (
-    params: { params?: z.input<ParamsSchema> },
-    data: { data?: z.input<DataSchema> } | FormData
+    params: { params: z.input<ParamsSchema> },
+    data: { data: z.input<DataSchema> } | FormData
 ) => Promise<ActionReturn<Return>>
 
 export function action<
@@ -67,9 +67,9 @@ export function action<
 >(
     serviceMethod: ServiceMethodType<boolean, Return, undefined, DataSchema, ImplementationParamsSchema>
 ): (
-    implementationParams: { implementationParams?: z.input<ImplementationParamsSchema> },
-    params: { params?: unknown },
-    data: { data?: z.input<DataSchema> } | FormData
+    implementationParams: { implementationParams: z.input<ImplementationParamsSchema> },
+    params: { params: unknown },
+    data: { data: z.input<DataSchema> } | FormData
 ) => Promise<ActionReturn<Return>>
 
 export function action<
@@ -80,9 +80,9 @@ export function action<
 >(
     serviceMethod: ServiceMethodType<boolean, Return, ParamsSchema, DataSchema, ImplementationParamsSchema>
 ): (
-    implementationParams: { implementationParams?: z.input<ImplementationParamsSchema> },
-    params: { params?: z.input<ParamsSchema> },
-    data: { data?: z.input<DataSchema> } | FormData
+    implementationParams: { implementationParams: z.input<ImplementationParamsSchema> },
+    params: { params: z.input<ParamsSchema> },
+    data: { data: z.input<DataSchema> } | FormData
 ) => Promise<ActionReturn<Return>>
 
 
@@ -107,9 +107,9 @@ export function action<
     // has arguments witch match the underlying service method. This makes programming easier as intellisesne can
     // help and errors are caught at compile time.
     const actionUnsafe = async (
-        implementationParams: { implementationParams?: unknown },
-        params: { params?: unknown },
-        data: { data?: unknown } | FormData
+        implementationParams: { implementationParams: unknown },
+        params: { params: unknown },
+        data: { data: unknown } | FormData
     ) => {
         const session = await Session.fromNextAuth()
 
