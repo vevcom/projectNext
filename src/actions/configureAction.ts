@@ -1,6 +1,6 @@
 export function configureAction<
-    PP, P extends { params: PP } | { implementationParams: PP },
-    D extends unknown[], R>(action: (p: P, ...d: D) => R, paramsOrImplementationParams: P
-) {
+    P, O extends { params: P } | { implementationParams: P },
+    D extends unknown[], R
+>(action: (params: O, ...rest: D) => R, paramsOrImplementationParams: O) {
     return action.bind(null, paramsOrImplementationParams)
 }

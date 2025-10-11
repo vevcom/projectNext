@@ -17,7 +17,9 @@ type PropTypes = {
 
 export default async function GroupAdmin({ params }: PropTypes) {
     const group = unwrapActionReturn(await readGroupExpandedAction({
-        id: parseInt((await params).id, 10)
+        params: {
+            id: parseInt((await params).id, 10),
+        },
     }))
 
     const canEasilyManageMembership = CanEasilyManageMembership[group.groupType]

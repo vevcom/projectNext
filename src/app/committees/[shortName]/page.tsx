@@ -12,11 +12,13 @@ export type PropTypes = {
 
 export default async function Committee({ params }: PropTypes) {
     const paramsAwaited = (await params)
-    const paragraphRes = await readCommitteeParagraphAction(paramsAwaited)
+    const paragraphRes = await readCommitteeParagraphAction({ params: paramsAwaited })
     if (!paragraphRes.success) throw new Error('Kunne ikke hente komitéparagraph')
     const members = unwrapActionReturn(await readCommitteeMembersAction({
-        shortName: paramsAwaited.shortName,
-        active: true
+        params: {
+            shortName: paramsAwaited.shortName,
+            active: true,
+        },
     }))
 
     const paragraph = paragraphRes.data
