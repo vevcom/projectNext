@@ -1,5 +1,5 @@
 import '@pn-server-only'
-import { authOptions } from '../nextAuth/authOptions'
+import { authOptions } from '@/auth/nextAuth/authOptions'
 import checkMatrix from '@/lib/checkMatrix'
 import { permissionOperations } from '@/services/permissions/operations'
 import { getServerSession } from 'next-auth'

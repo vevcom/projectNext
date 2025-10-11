@@ -1,5 +1,5 @@
 'use client'
-import { updateApiKeyAction } from '@/services/api-keys/actions'
+import { updateApiKeyAction } from '@/services/apiKeys/actions'
 import Form from '@/app/_components/Form/Form'
 import type { ReactNode } from 'react'
 

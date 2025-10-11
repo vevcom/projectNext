@@ -1,7 +1,7 @@
 'use server'
 
 import { makeAction } from '@/services/serverAction'
-import { apiKeyOperations } from '@/services/api-keys/operations'
+import { apiKeyOperations } from '@/services/apiKeys/operations'
 
 export const createApiKeyAction = makeAction(apiKeyOperations.create)
 

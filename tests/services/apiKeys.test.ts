@@ -1,7 +1,7 @@
 import { Session } from '@/auth/session/Session'
 import { Smorekopp } from '@/services/error'
 import { prisma } from '@/prisma/client'
-import { apiKeyOperations } from '@/services/api-keys/operations'
+import { apiKeyOperations } from '@/services/apiKeys/operations'
 import { afterEach, describe, expect, test } from '@jest/globals'
 
 afterEach(async () => {

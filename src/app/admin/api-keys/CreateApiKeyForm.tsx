@@ -1,7 +1,7 @@
 'use client'
 import styles from './CreateApiKeyForm.module.scss'
 import Form from '@/components/Form/Form'
-import { createApiKeyAction } from '@/services/api-keys/actions'
+import { createApiKeyAction } from '@/services/apiKeys/actions'
 import TextInput from '@/components/UI/TextInput'
 import { PopUpContext } from '@/contexts/PopUp'
 import { useContext, useState } from 'react'

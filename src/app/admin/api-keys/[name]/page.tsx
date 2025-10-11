@@ -1,6 +1,6 @@
 import styles from './page.module.scss'
 import UpdateApiKeyForm from './UpdateApiKeyForm'
-import { readApiKeyAction, destroyApiKeyAction } from '@/services/api-keys/actions'
+import { readApiKeyAction, destroyApiKeyAction } from '@/services/apiKeys/actions'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import Form from '@/components/Form/Form'
 import DateInput from '@/components/UI/DateInput'
