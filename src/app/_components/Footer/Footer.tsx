@@ -48,9 +48,7 @@ function Footer() {
                 <SpecialCmsImage special="FOOTER_3" width={100}>
                     <Link href="http://www.kongsberg.com" target="_blank" />
                 </SpecialCmsImage>
-                <SpecialCmsImage special="FOOTER_3" width={100}>
-                    <Link href="http://www.kongsberg.com" target="_blank" />
-                </SpecialCmsImage>
+                
                 
                 
             </div>
