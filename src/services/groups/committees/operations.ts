@@ -1,4 +1,4 @@
-import { committeeAuthers } from './authers'
+import { committeeAuth } from './auth'
 import { committeeExpandedIncluder, committeeLogoIncluder, membershipIncluder } from './constants'
 import { ServerOnlyAuther } from '@/auth/auther/RequireServer'
 import { articleRealtionsIncluder } from '@/cms/articles/ConfigVars'
@@ -9,14 +9,14 @@ import { z } from 'zod'
 export const committeeOperations = {
 
     readCommittees: defineOperation({
-        authorizer: () => committeeAuthers.read.dynamicFields({}),
+        authorizer: () => committeeAuth.read.dynamicFields({}),
         operation: async ({ prisma }) => prisma.committee.findMany({
             include: committeeLogoIncluder,
         })
     }),
 
     readCommittee: defineOperation({
-        authorizer: () => committeeAuthers.read.dynamicFields({}),
+        authorizer: () => committeeAuth.read.dynamicFields({}),
         paramsSchema: z.union([
             z.object({ id: z.number() }),
             z.object({ shortName: z.string() })
@@ -50,7 +50,7 @@ export const committeeOperations = {
     }),
 
     readCommitteArticle: defineOperation({
-        authorizer: () => committeeAuthers.read.dynamicFields({}),
+        authorizer: () => committeeAuth.read.dynamicFields({}),
         paramsSchema: z.object({
             shortName: z.string(),
         }),
@@ -80,7 +80,7 @@ export const committeeOperations = {
     }),
 
     readCommitteeParagraph: defineOperation({
-        authorizer: () => committeeAuthers.read.dynamicFields({}),
+        authorizer: () => committeeAuth.read.dynamicFields({}),
         paramsSchema: z.object({
             shortName: z.string(),
         }),
@@ -93,7 +93,7 @@ export const committeeOperations = {
     }),
 
     readCommitteeMembers: defineOperation({
-        authorizer: () => committeeAuthers.read.dynamicFields({}),
+        authorizer: () => committeeAuth.read.dynamicFields({}),
         paramsSchema: z.object({
             shortName: z.string(),
             active: z.boolean().optional(),

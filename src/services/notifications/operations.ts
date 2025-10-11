@@ -1,6 +1,6 @@
 import '@pn-server-only'
 import { dispatchEmailNotifications } from './email/dispatch'
-import { notificationAuthers } from './authers'
+import { notificationAuth } from './auth'
 import { notificationSchemas } from './schemas'
 import { allNotificationMethodsOn, notificationMethodsArray } from './constants'
 import { availableNotificationMethodIncluder } from './channel/constants'
@@ -36,7 +36,7 @@ export const notificationOperations = {
      * @returns A promise that resolves with an object containing the dispatched notification and the number of recipients.
      */
     create: defineOperation({
-        authorizer: () => notificationAuthers.create.dynamicFields({}),
+        authorizer: () => notificationAuth.create.dynamicFields({}),
         dataSchema: notificationSchemas.create,
         operation: async ({ prisma, data }): Promise<NotificationResult> => {
             // This prevent notifications from beeing sent during seeding

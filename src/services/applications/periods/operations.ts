@@ -1,5 +1,5 @@
 import '@pn-server-only'
-import { applicationPeriodAuthers } from './authers'
+import { applicationPeriodAuth } from './auth'
 import { applicationPeriodSchemas } from './schemas'
 import { committeesParticipatingincluder } from './constants'
 import { applicationOperations } from '@/services/applications/operations'
@@ -9,12 +9,12 @@ import { z } from 'zod'
 
 export const applicationPeriodOperations = {
     readAll: defineOperation({
-        authorizer: () => applicationPeriodAuthers.readAll.dynamicFields({}),
+        authorizer: () => applicationPeriodAuth.readAll.dynamicFields({}),
         operation: async ({ prisma }) => prisma.applicationPeriod.findMany()
     }),
 
     read: defineOperation({
-        authorizer: () => applicationPeriodAuthers.read.dynamicFields({}),
+        authorizer: () => applicationPeriodAuth.read.dynamicFields({}),
         paramsSchema: z.object({
             name: z.string()
         }),
@@ -25,7 +25,7 @@ export const applicationPeriodOperations = {
     }),
 
     create: defineOperation({
-        authorizer: () => applicationPeriodAuthers.create.dynamicFields({}),
+        authorizer: () => applicationPeriodAuth.create.dynamicFields({}),
         dataSchema: applicationPeriodSchemas.create,
         operation: async ({ prisma, data }) => {
             await prisma.applicationPeriod.create({
@@ -44,7 +44,7 @@ export const applicationPeriodOperations = {
     }),
 
     update: defineOperation({
-        authorizer: () => applicationPeriodAuthers.update.dynamicFields({}),
+        authorizer: () => applicationPeriodAuth.update.dynamicFields({}),
         dataSchema: applicationPeriodSchemas.update,
         paramsSchema: z.object({
             name: z.string()
@@ -126,7 +126,7 @@ export const applicationPeriodOperations = {
         paramsSchema: z.object({
             name: z.string()
         }),
-        authorizer: () => applicationPeriodAuthers.removeAllApplicationTexts.dynamicFields({}),
+        authorizer: () => applicationPeriodAuth.removeAllApplicationTexts.dynamicFields({}),
         operation: async ({ prisma, params, session }) => {
             const period = await applicationPeriodOperations.read({
                 params: { name: params.name },
@@ -149,7 +149,7 @@ export const applicationPeriodOperations = {
     }),
 
     destroy: defineOperation({
-        authorizer: () => applicationPeriodAuthers.destroy.dynamicFields({}),
+        authorizer: () => applicationPeriodAuth.destroy.dynamicFields({}),
         paramsSchema: z.object({
             name: z.string()
         }),
@@ -161,7 +161,7 @@ export const applicationPeriodOperations = {
     }),
 
     readNumberOfApplications: defineOperation({
-        authorizer: () => applicationPeriodAuthers.readNumberOfApplications.dynamicFields({}),
+        authorizer: () => applicationPeriodAuth.readNumberOfApplications.dynamicFields({}),
         paramsSchema: z.object({
             name: z.string()
         }),

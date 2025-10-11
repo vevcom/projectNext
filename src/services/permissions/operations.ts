@@ -1,5 +1,5 @@
 import '@pn-server-only'
-import { permissionAuthers } from './auther'
+import { permissionsAuth } from './auth'
 import { defineOperation } from '@/services/serviceOperation'
 import { ServerOnlyAuther } from '@/auth/auther/RequireServer'
 import { invalidateAllUserSessionData, invalidateManyUserSessionData } from '@/services/auth/invalidateSession'
@@ -11,7 +11,7 @@ import { z } from 'zod'
 
 export const permissionOperations = {
     readDefaultPermissions: defineOperation({
-        authorizer: () => permissionAuthers.readDefaultPermissions.dynamicFields({}),
+        authorizer: () => permissionsAuth.readDefaultPermissions.dynamicFields({}),
         operation: async ({ prisma }) =>
             (await prisma.defaultPermission.findMany()).map(perm => perm.permission)
     }),
@@ -50,7 +50,7 @@ export const permissionOperations = {
     }),
 
     readPermissionsOfGroup: defineOperation({
-        authorizer: () => permissionAuthers.readGroupPermissions.dynamicFields({}),
+        authorizer: () => permissionsAuth.readGroupPermissions.dynamicFields({}),
         paramsSchema: z.object({
             groupId: z.number()
         }),
@@ -62,7 +62,7 @@ export const permissionOperations = {
     }),
 
     readPermissionMatrix: defineOperation({
-        authorizer: () => permissionAuthers.readPermissionMatrix.dynamicFields({}),
+        authorizer: () => permissionsAuth.readPermissionMatrix.dynamicFields({}),
         operation: async ({ prisma }) => {
             const groupsPermission = await prisma.group.findMany({
                 include: {
@@ -80,7 +80,7 @@ export const permissionOperations = {
     }),
 
     updateDefaultPermissions: defineOperation({
-        authorizer: () => permissionAuthers.updateDefaultPermissions.dynamicFields({}),
+        authorizer: () => permissionsAuth.updateDefaultPermissions.dynamicFields({}),
         dataSchema: z.object({
             permissions: z.nativeEnum(Permission).array(),
         }),
@@ -108,7 +108,7 @@ export const permissionOperations = {
     }),
 
     updateGroupPermission: defineOperation({
-        authorizer: () => permissionAuthers.updateGroupPermission.dynamicFields({}),
+        authorizer: () => permissionsAuth.updateGroupPermission.dynamicFields({}),
         paramsSchema: z.object({
             groupId: z.number(),
             permission: z.nativeEnum(Permission),

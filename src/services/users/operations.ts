@@ -1,6 +1,6 @@
 import '@pn-server-only'
 import { userSchemas } from './schemas'
-import { userAuthers } from './authers'
+import { userAuth } from './auth'
 import {
     maxNumberOfGroupsInFilter,
     standardMembershipSelection,
@@ -33,7 +33,7 @@ export const userOperations = {
      */
     create: defineOperation({
         dataSchema: userSchemas.create,
-        authorizer: () => userAuthers.create.dynamicFields({}),
+        authorizer: () => userAuth.create.dynamicFields({}),
         operation: async ({ prisma, data }) => {
             const omegaMembership = await readOmegaMembershipGroup('EXTERNAL')
             const omegaOrder = await readCurrentOmegaOrder()
@@ -68,7 +68,7 @@ export const userOperations = {
             email: z.string().optional(),
             studentCard: z.string().optional(),
         }),
-        authorizer: ({ params }) => userAuthers.read.dynamicFields(params),
+        authorizer: ({ params }) => userAuth.read.dynamicFields(params),
         operation: async ({ prisma, params }) => await prisma.user.findUniqueOrThrow({
             where: {
                 id: params.id,
@@ -85,7 +85,7 @@ export const userOperations = {
             email: z.string().optional(),
             studentCard: z.string().optional(),
         }),
-        authorizer: ({ params }) => userAuthers.read.dynamicFields(params),
+        authorizer: ({ params }) => userAuth.read.dynamicFields(params),
         operation: async ({ prisma, params }) => await prisma.user.findUnique({
             where: {
                 id: params.id, // This is a bit wierd, but now ts is satisfied.
@@ -99,7 +99,7 @@ export const userOperations = {
         paramsSchema: z.object({
             username: z.string(),
         }),
-        authorizer: ({ params }) => userAuthers.readProfile.dynamicFields({ username: params.username }),
+        authorizer: ({ params }) => userAuth.readProfile.dynamicFields({ username: params.username }),
         operation: async ({ prisma, params }) => {
             const defaultProfileImage = await imageOperations.readSpecial({
                 params: { special: 'DEFAULT_PROFILE_IMAGE' },
@@ -146,7 +146,7 @@ export const userOperations = {
                 }).nullable().optional()
             })
         ),
-        authorizer: () => userAuthers.readPage.dynamicFields({}),
+        authorizer: () => userAuth.readPage.dynamicFields({}),
         operation: async ({ prisma, params }): Promise<UserPagingReturn[]> => {
             const { page, details } = params.paging
             const words = details.partOfName.split(' ')
@@ -256,7 +256,7 @@ export const userOperations = {
     }),
 
     connectStudentCard: defineOperation({
-        authorizer: () => userAuthers.connectStudentCard.dynamicFields({}),
+        authorizer: () => userAuth.connectStudentCard.dynamicFields({}),
         dataSchema: userSchemas.connectStudentCard,
         opensTransaction: true,
         operation: async ({ prisma, data }) => {
@@ -305,7 +305,7 @@ export const userOperations = {
         paramsSchema: z.object({
             userId: z.number(),
         }),
-        authorizer: ({ params }) => userAuthers.registerStudentCardInQueue.dynamicFields(params),
+        authorizer: ({ params }) => userAuth.registerStudentCardInQueue.dynamicFields(params),
         operation: async (args) => {
             const expiry = (new Date()).getTime() + studentCardRegistrationExpiry * 60 * 1000
             await args.prisma.registerStudentCardQueue.upsert({
@@ -330,7 +330,7 @@ export const userOperations = {
     update: defineOperation({
         paramsSchema: z.union([z.object({ id: z.number() }), z.object({ username: z.string() })]),
         dataSchema: userSchemas.update,
-        authorizer: () => userAuthers.update.dynamicFields({}),
+        authorizer: () => userAuth.update.dynamicFields({}),
         operation: async ({ prisma: prisma_, params, data }) => prisma_.user.update({
             where: params,
             data
@@ -343,7 +343,7 @@ export const userOperations = {
             id: z.number(),
         }),
         dataSchema: userSchemas.updatePassword,
-        authorizer: ({ params }) => userAuthers.updatePassword.dynamicFields({ userId: params.id }),
+        authorizer: ({ params }) => userAuth.updatePassword.dynamicFields({ userId: params.id }),
         operation: async ({ prisma, data, params }) => {
             const passwordHash = await hashAndEncryptPassword(data.password)
 
@@ -364,7 +364,7 @@ export const userOperations = {
         paramsSchema: z.object({
             id: z.number(),
         }),
-        authorizer: ({ params }) => userAuthers.registerNewEmail.dynamicFields({ userId: params.id }),
+        authorizer: ({ params }) => userAuth.registerNewEmail.dynamicFields({ userId: params.id }),
         dataSchema: userSchemas.registerNewEmail,
         operation: async ({ prisma, params, data }) => {
             const storedUser = await prisma.user.findUniqueOrThrow({
@@ -429,7 +429,7 @@ export const userOperations = {
             id: z.number(),
         }),
         dataSchema: userSchemas.register,
-        authorizer: ({ params }) => userAuthers.register.dynamicFields({ userId: params.id }),
+        authorizer: ({ params }) => userAuth.register.dynamicFields({ userId: params.id }),
         opensTransaction: true,
         operation: async ({ prisma, data, params }) => {
             const { sex, password, mobile, allergies } = data
@@ -531,7 +531,7 @@ export const userOperations = {
     }),
 
     readUserWithBalance: defineOperation({
-        authorizer: ({ params }) => userAuthers.read.dynamicFields({
+        authorizer: ({ params }) => userAuth.read.dynamicFields({
             username: params.username || '',
         }),
         paramsSchema: z.object({
@@ -563,7 +563,7 @@ export const userOperations = {
         paramsSchema: z.object({
             id: z.number(),
         }),
-        authorizer: () => userAuthers.destroy.dynamicFields({}),
+        authorizer: () => userAuth.destroy.dynamicFields({}),
         operation: async ({ prisma, params }) => {
             await prisma.user.delete({
                 where: {

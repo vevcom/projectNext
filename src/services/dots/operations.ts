@@ -1,5 +1,5 @@
 import '@pn-server-only'
-import { dotAuthers } from './authers'
+import { dotAuth } from './auth'
 import { dotSchemas } from './schemas'
 import { dotBaseDuration, dotsIncluder } from './constants'
 import { defineOperation } from '@/services/serviceOperation'
@@ -13,7 +13,7 @@ import { z } from 'zod'
  * @returns All dots for the user in ascending order of expiration. i.e the dot that expires first will be first in the list
  */
 const readForUser = defineOperation({
-    authorizer: ({ params }) => dotAuthers.readForUser.dynamicFields({ userId: params.userId }),
+    authorizer: ({ params }) => dotAuth.readForUser.dynamicFields({ userId: params.userId }),
     paramsSchema: z.object({
         userId: z.number(),
         onlyActive: z.boolean(),
@@ -35,7 +35,7 @@ const readForUser = defineOperation({
 
 const create = defineOperation({
     dataSchema: dotSchemas.create,
-    authorizer: ({ data }) => dotAuthers.create.dynamicFields({ userId: data.userId }),
+    authorizer: ({ data }) => dotAuth.create.dynamicFields({ userId: data.userId }),
     paramsSchema: z.object({
         accuserId: z.number(),
     }),
@@ -71,7 +71,7 @@ const create = defineOperation({
 })
 
 const readWrappersForUser = defineOperation({
-    authorizer: ({ params }) => dotAuthers.readWrapperForUser.dynamicFields({ userId: params.userId }),
+    authorizer: ({ params }) => dotAuth.readWrapperForUser.dynamicFields({ userId: params.userId }),
     paramsSchema: z.object({
         userId: z.number(),
     }),
@@ -95,7 +95,7 @@ const readWrappersForUser = defineOperation({
 })
 
 const readPage = defineOperation({
-    authorizer: () => dotAuthers.readPage.dynamicFields({}),
+    authorizer: () => dotAuth.readPage.dynamicFields({}),
     paramsSchema: readPageInputSchemaObject(
         z.number(),
         z.object({

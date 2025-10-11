@@ -1,7 +1,7 @@
 import 'server-only'
 import { calculateCabinBookingPrice, calculateTotalCabinBookingPrice } from './cabinPriceCalculator'
 import { cabinBookingSchemas } from './schemas'
-import { cabinBookingAuthers } from './authers'
+import { cabinBookingAuth } from './auth'
 import { cabinBookingFilerSelection, cabinBookingIncluder } from './constants'
 import { cabinPricePeriodOperations } from '@/services/cabin/pricePeriod/operations'
 import { cabinProductPriceIncluder } from '@/services/cabin/product/constants'
@@ -245,7 +245,7 @@ export const cabinBookingOperations = {
             userId: z.number(),
             bookingProducts: bookingProductParams,
         }),
-        authorizer: ({ params }) => cabinBookingAuthers.createCabinBookingUserAttached.dynamicFields({
+        authorizer: ({ params }) => cabinBookingAuth.createCabinBookingUserAttached.dynamicFields({
             userId: params.userId,
         }),
         dataSchema: cabinBookingSchemas.createBookingUserAttached,
@@ -266,7 +266,7 @@ export const cabinBookingOperations = {
             userId: z.number(),
             bookingProducts: bookingProductParams,
         }),
-        authorizer: ({ params }) => cabinBookingAuthers.createBedBookingUserAttached.dynamicFields({
+        authorizer: ({ params }) => cabinBookingAuth.createBedBookingUserAttached.dynamicFields({
             userId: params.userId,
         }),
         dataSchema: cabinBookingSchemas.createBookingUserAttached,
@@ -286,7 +286,7 @@ export const cabinBookingOperations = {
         paramsSchema: z.object({
             bookingProducts: bookingProductParams,
         }),
-        authorizer: () => cabinBookingAuthers.createCabinBookingNoUser.dynamicFields({}),
+        authorizer: () => cabinBookingAuth.createCabinBookingNoUser.dynamicFields({}),
         dataSchema: cabinBookingSchemas.createBookingNoUser,
         operation: async ({ params, data }) => createBookingNoUser({
             params: {
@@ -302,7 +302,7 @@ export const cabinBookingOperations = {
         paramsSchema: z.object({
             bookingProducts: bookingProductParams,
         }),
-        authorizer: () => cabinBookingAuthers.createBedBookingNoUser.dynamicFields({}),
+        authorizer: () => cabinBookingAuth.createBedBookingNoUser.dynamicFields({}),
         dataSchema: cabinBookingSchemas.createBookingNoUser,
         operation: async ({ params, data }) => createBookingNoUser({
             params: {
@@ -315,7 +315,7 @@ export const cabinBookingOperations = {
     }),
 
     readAvailability: defineOperation({
-        authorizer: () => cabinBookingAuthers.readAvailability.dynamicFields({}),
+        authorizer: () => cabinBookingAuth.readAvailability.dynamicFields({}),
         operation: async ({ prisma }) => {
             const results = await prisma.booking.findMany({
                 select: cabinBookingFilerSelection,
@@ -343,7 +343,7 @@ export const cabinBookingOperations = {
     }),
 
     readMany: defineOperation({
-        authorizer: () => cabinBookingAuthers.readMany.dynamicFields({}),
+        authorizer: () => cabinBookingAuth.readMany.dynamicFields({}),
         operation: ({ prisma }) => prisma.booking.findMany({
             orderBy: {
                 start: 'asc',
@@ -353,7 +353,7 @@ export const cabinBookingOperations = {
     }),
 
     read: defineOperation({
-        authorizer: () => cabinBookingAuthers.read.dynamicFields({}),
+        authorizer: () => cabinBookingAuth.read.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),

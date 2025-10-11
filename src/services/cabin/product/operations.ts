@@ -1,6 +1,6 @@
 import 'server-only'
 
-import { cabinProductAuthers } from './authers'
+import { cabinProductAuth } from './auth'
 import { cabinProductSchemas } from './schemas'
 import { cabinProductPriceIncluder } from './constants'
 import { cabinReleasePeriodOperations } from '@/services/cabin/releasePeriod/operations'
@@ -12,7 +12,7 @@ import { z } from 'zod'
 export const cabinProductOperations = {
 
     create: defineOperation({
-        authorizer: () => cabinProductAuthers.create.dynamicFields({}),
+        authorizer: () => cabinProductAuth.create.dynamicFields({}),
         dataSchema: cabinProductSchemas.createProduct,
         operation: ({ prisma, data }) => prisma.cabinProduct.create({
             data,
@@ -20,7 +20,7 @@ export const cabinProductOperations = {
     }),
 
     createPrice: defineOperation({
-        authorizer: () => cabinProductAuthers.createPrice.dynamicFields({}),
+        authorizer: () => cabinProductAuth.createPrice.dynamicFields({}),
         paramsSchema: z.object({
             cabinProductId: z.number(),
         }),
@@ -54,14 +54,14 @@ export const cabinProductOperations = {
     }),
 
     readMany: defineOperation({
-        authorizer: () => cabinProductAuthers.read.dynamicFields({}),
+        authorizer: () => cabinProductAuth.read.dynamicFields({}),
         operation: ({ prisma }) => prisma.cabinProduct.findMany({
             include: cabinProductPriceIncluder,
         }),
     }),
 
     readActive: defineOperation({
-        authorizer: () => cabinProductAuthers.read.dynamicFields({}),
+        authorizer: () => cabinProductAuth.read.dynamicFields({}),
         operation: async ({ prisma }) => {
             const pricePeriods = await cabinPricePeriodOperations.readPublicPeriods({ bypassAuth: true })
 
@@ -81,7 +81,7 @@ export const cabinProductOperations = {
     }),
 
     read: defineOperation({
-        authorizer: () => cabinProductAuthers.read.dynamicFields({}),
+        authorizer: () => cabinProductAuth.read.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),

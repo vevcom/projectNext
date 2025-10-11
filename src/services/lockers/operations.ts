@@ -1,7 +1,7 @@
 import '@pn-server-only'
 import { lockerReservationIncluder } from './reservations/constants'
 import { lockersSchemas } from './schemas'
-import { lockerAuthers } from './authers'
+import { lockerAuth } from './auth'
 import { defineOperation } from '@/services/serviceOperation'
 import { ServerError } from '@/services/error'
 import { readPageInputSchemaObject } from '@/lib/paging/schema'
@@ -41,7 +41,7 @@ export const lockerOperations = {
      * @returns The newly created locker object.
      */
     create: defineOperation({
-        authorizer: () => lockerAuthers.create.dynamicFields({}),
+        authorizer: () => lockerAuth.create.dynamicFields({}),
         dataSchema: lockersSchemas.create,
         operation: async ({ prisma, data }) => {
             console.log(data)
@@ -59,7 +59,7 @@ export const lockerOperations = {
      * @returns The locker object.
      */
     read: defineOperation({
-        authorizer: () => lockerAuthers.read.dynamicFields({}),
+        authorizer: () => lockerAuth.read.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),
@@ -85,7 +85,7 @@ export const lockerOperations = {
      * @returns A list of locker objects.
      */
     readPage: defineOperation({
-        authorizer: () => lockerAuthers.readPage.dynamicFields({}),
+        authorizer: () => lockerAuth.readPage.dynamicFields({}),
         paramsSchema: readPageInputSchemaObject(
             z.number(),
             z.object({

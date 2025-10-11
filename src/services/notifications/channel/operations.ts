@@ -1,5 +1,5 @@
 import '@pn-server-only'
-import { notificationChannelAuthers } from './authers'
+import { notificationChannelAuth } from './auth'
 import { notificationChannelSchemas, validateMethods, validateNewParent } from './schemas'
 import { availableNotificationMethodIncluder } from './constants'
 import {
@@ -17,7 +17,7 @@ import type { ExpandedNotificationChannel, NotificationMethodGeneral } from '@/s
 
 export const notificationChannelOperations = {
     create: defineOperation({
-        authorizer: () => notificationChannelAuthers.create.dynamicFields({}),
+        authorizer: () => notificationChannelAuth.create.dynamicFields({}),
         dataSchema: notificationChannelSchemas.create,
         opensTransaction: true,
         paramsSchema: z.object({
@@ -105,14 +105,14 @@ export const notificationChannelOperations = {
     }),
 
     readMany: defineOperation({
-        authorizer: () => notificationChannelAuthers.read.dynamicFields({}),
+        authorizer: () => notificationChannelAuth.read.dynamicFields({}),
         operation: async ({ prisma }) => await prisma.notificationChannel.findMany({
             include: availableNotificationMethodIncluder,
         })
     }),
 
     readDefault: defineOperation({
-        authorizer: () => notificationChannelAuthers.read.dynamicFields({}),
+        authorizer: () => notificationChannelAuth.read.dynamicFields({}),
         operation: async ({ prisma }) => await prisma.notificationChannel.findMany({
             where: {
                 defaultMethods: {
@@ -126,7 +126,7 @@ export const notificationChannelOperations = {
     }),
 
     update: defineOperation({
-        authorizer: () => notificationChannelAuthers.update.dynamicFields({}),
+        authorizer: () => notificationChannelAuth.update.dynamicFields({}),
         dataSchema: notificationChannelSchemas.update,
         paramsSchema: z.object({
             id: z.number(),
@@ -219,7 +219,7 @@ export const notificationChannelOperations = {
 
     // It doesn't seem that this function is used yet. -Theodor
     destroy: defineOperation({
-        authorizer: () => notificationChannelAuthers.destroy.dynamicFields({}),
+        authorizer: () => notificationChannelAuth.destroy.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),

@@ -3,24 +3,24 @@ import '@pn-server-only'
 import { z } from 'zod'
 import type { ExtendedShop } from './Types'
 import { shopSchemas } from './schema'
-import { shopAuthers } from './authers'
+import { shopAuth } from './auth'
 
 export const shopOperations = {
     create: defineOperation({
         dataSchema: shopSchemas.create,
-        authorizer: () => shopAuthers.create.dynamicFields({}),
+        authorizer: () => shopAuth.create.dynamicFields({}),
         operation: async ({ prisma, data }) => prisma.shop.create({
             data
         })
     }),
 
     readMany: defineOperation({
-        authorizer: () => shopAuthers.read.dynamicFields({}),
+        authorizer: () => shopAuth.read.dynamicFields({}),
         operation: ({ prisma }) => prisma.shop.findMany(),
     }),
 
     read: defineOperation({
-        authorizer: () => shopAuthers.read.dynamicFields({}),
+        authorizer: () => shopAuth.read.dynamicFields({}),
         paramsSchema: z.object({
             shopId: z.number(),
         }),

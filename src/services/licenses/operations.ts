@@ -1,27 +1,27 @@
 import '@pn-server-only'
 import { licenseSchemas } from './schemas'
-import { licenseAuthers } from './authers'
+import { licenseAuth } from './auth'
 import { ServerError } from '@/services/error'
 import { defineOperation } from '@/services/serviceOperation'
 import { z } from 'zod'
 
 export const licenseOperations = {
     create: defineOperation({
-        authorizer: () => licenseAuthers.create.dynamicFields({}),
+        authorizer: () => licenseAuth.create.dynamicFields({}),
         dataSchema: licenseSchemas.create,
         operation: async ({ prisma, data }) => await prisma.license.create({
             data,
         }),
     }),
     readAll: defineOperation({
-        authorizer: () => licenseAuthers.destroy.dynamicFields({}),
+        authorizer: () => licenseAuth.destroy.dynamicFields({}),
         operation: async ({ prisma }) => await prisma.license.findMany()
     }),
     destroy: defineOperation({
         paramsSchema: z.object({
             id: z.number(),
         }),
-        authorizer: () => licenseAuthers.destroy.dynamicFields({}),
+        authorizer: () => licenseAuth.destroy.dynamicFields({}),
         operation: async ({ prisma, params }) => {
             const { name: licenseName } = await prisma.license.findUniqueOrThrow({
                 where: { id: params.id },
@@ -49,7 +49,7 @@ export const licenseOperations = {
             id: z.number(),
         }),
         dataSchema: licenseSchemas.update,
-        authorizer: () => licenseAuthers.update.dynamicFields({}),
+        authorizer: () => licenseAuth.update.dynamicFields({}),
         operation: async ({ prisma, params, data }) => {
             await prisma.license.update({
                 where: {

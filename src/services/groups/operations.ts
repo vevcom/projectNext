@@ -1,6 +1,6 @@
 import '@pn-server-only'
 import { groupsExpandedIncluder, groupTypesConfig, OmegaMembershipLevelConfig, readGroupsOfUserIncluder } from './constants'
-import { groupAuthers } from './authers'
+import { groupAuth } from './auth'
 import { userFilterSelection } from '@/services/users/constants'
 import { ServerError } from '@/services/error'
 import { defineOperation } from '@/services/serviceOperation'
@@ -189,7 +189,7 @@ export function checkGroupValidity<
 
 export const groupOperations = {
     readGroups: defineOperation({
-        authorizer: () => groupAuthers.read.dynamicFields({}),
+        authorizer: () => groupAuth.read.dynamicFields({}),
         operation: async ({ prisma }) => prisma.group.findMany()
     }),
 
@@ -239,7 +239,7 @@ export const groupOperations = {
     }),
 
     readGroupExpanded: defineOperation({
-        authorizer: () => groupAuthers.read.dynamicFields({}),
+        authorizer: () => groupAuth.read.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),
@@ -255,7 +255,7 @@ export const groupOperations = {
     }),
 
     readGroupsExpanded: defineOperation({
-        authorizer: () => groupAuthers.read.dynamicFields({}),
+        authorizer: () => groupAuth.read.dynamicFields({}),
         operation: async ({ prisma }) => {
             const groups = (await prisma.group.findMany({
                 include: groupsExpandedIncluder,
@@ -266,7 +266,7 @@ export const groupOperations = {
     }),
 
     readGroupsStructured: defineOperation({
-        authorizer: () => groupAuthers.read.dynamicFields({}),
+        authorizer: () => groupAuth.read.dynamicFields({}),
         operation: async () => {
             const groupsStructured: GroupsStructured = {
                 CLASS: {

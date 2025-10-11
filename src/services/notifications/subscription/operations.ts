@@ -1,5 +1,5 @@
 import { notificationMethodIncluder } from './constants'
-import { notificationSubscriptionAuthers } from './authers'
+import { notificationSubscriptionAuth } from './auth'
 import { subscriptionSchemas } from './schemas'
 import { validateMethods } from '@/services/notifications/channel/schemas'
 import { allNotificationMethodsOff, allNotificationMethodsOn } from '@/services/notifications/constants'
@@ -113,7 +113,7 @@ export const notificationSubscriptionOperations = {
         paramsSchema: z.object({
             userId: z.number(),
         }),
-        authorizer: ({ params }) => notificationSubscriptionAuthers.read.dynamicFields(params),
+        authorizer: ({ params }) => notificationSubscriptionAuth.read.dynamicFields(params),
         operation: async ({ prisma, params }) => await prisma.notificationSubscription.findMany({
             where: {
                 userId: params.userId,
@@ -158,7 +158,7 @@ export const notificationSubscriptionOperations = {
 
 
     update: defineOperation({
-        authorizer: ({ params }) => notificationSubscriptionAuthers.update.dynamicFields(params),
+        authorizer: ({ params }) => notificationSubscriptionAuth.update.dynamicFields(params),
         paramsSchema: z.object({
             userId: z.number(),
         }),

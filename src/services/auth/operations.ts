@@ -1,4 +1,4 @@
-import { authAuthers } from './authers'
+import { authAuth } from './auth'
 import { authSchemas } from './schemas'
 import { userFilterSelection } from '@/services/users/constants'
 import { userSchemas } from '@/services/users/schemas'
@@ -15,7 +15,7 @@ export const authOperations = {
         paramsSchema: z.object({
             token: z.string(),
         }),
-        authorizer: ({ params }) => authAuthers.verifyEmail.dynamicFields(params),
+        authorizer: ({ params }) => authAuth.verifyEmail.dynamicFields(params),
         operation: async ({ prisma, params }) => {
             // INFO: Safe to parse unsafe since the auther has verified the token.
             const payload = readJWTPayload(params.token)
@@ -57,7 +57,7 @@ export const authOperations = {
         paramsSchema: z.object({
             token: z.string()
         }),
-        authorizer: ({ params }) => authAuthers.resetPassword.dynamicFields(params),
+        authorizer: ({ params }) => authAuth.resetPassword.dynamicFields(params),
         operation: async ({ prisma, params }) => {
             // INFO: Safe to parse unsafe since the auther has verified the token.
             const payload = readJWTPayload(params.token)
@@ -90,7 +90,7 @@ export const authOperations = {
             token: z.string()
         }),
         dataSchema: userSchemas.updatePassword,
-        authorizer: ({ params }) => authAuthers.resetPassword.dynamicFields(params),
+        authorizer: ({ params }) => authAuth.resetPassword.dynamicFields(params),
         operation: async ({ params, data }) => {
             const userId = await authOperations.verifyResetPasswordToken({ params })
 
@@ -106,7 +106,7 @@ export const authOperations = {
 
     sendResetPasswordEmail: defineOperation({
         dataSchema: authSchemas.sendResetPasswordEmail,
-        authorizer: () => authAuthers.sendResetPasswordEmail.dynamicFields({}),
+        authorizer: () => authAuth.sendResetPasswordEmail.dynamicFields({}),
         operation: async ({ data }) => {
             console.log(data)
             try {

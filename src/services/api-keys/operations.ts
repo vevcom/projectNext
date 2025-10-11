@@ -1,5 +1,5 @@
 import '@pn-server-only'
-import { apiKeyAuthers } from './authers'
+import { apiKeyAuth } from './auth'
 import { apiKeySchemas } from './schemas'
 import { apiKeyHashAndEncrypt } from './hashEncryptKey'
 import { encodeApiKey } from './apiKeyEncoder'
@@ -18,7 +18,7 @@ import type { ApiKeyFiltered, ApiKeyFilteredWithKey } from './Types'
  * Note: This operaiton is only used internally.
  */
 const updateIfExpired = defineOperation({
-    authorizer: () => apiKeyAuthers.updateIfExpired.dynamicFields({}),
+    authorizer: () => apiKeyAuth.updateIfExpired.dynamicFields({}),
     paramsSchema: z.object({
         id: z.number(),
         expiresAt: z.date().nullable(),
@@ -45,7 +45,7 @@ const updateIfExpired = defineOperation({
 
 export const apiKeyOperations = {
     create: defineOperation({
-        authorizer: () => apiKeyAuthers.create.dynamicFields({}),
+        authorizer: () => apiKeyAuth.create.dynamicFields({}),
         dataSchema: apiKeySchemas.create,
         operation: async ({ prisma, data }): Promise<ApiKeyFilteredWithKey> => {
             const NODE_ENV = process.env.NODE_ENV
@@ -66,7 +66,7 @@ export const apiKeyOperations = {
         }
     }),
     read: defineOperation({
-        authorizer: () => apiKeyAuthers.read.dynamicFields({}),
+        authorizer: () => apiKeyAuth.read.dynamicFields({}),
         paramsSchema: z.union([z.object({ id: z.number() }), z.object({ name: z.string() })]),
         operation: async ({ prisma, params }): Promise<ApiKeyFiltered> => {
             const apiKey = await prisma.apiKey.findUnique({
@@ -88,7 +88,7 @@ export const apiKeyOperations = {
         }
     }),
     readMany: defineOperation({
-        authorizer: () => apiKeyAuthers.readMany.dynamicFields({}),
+        authorizer: () => apiKeyAuth.readMany.dynamicFields({}),
         operation: async ({ prisma }): Promise<ApiKeyFiltered[]> => {
             const apiKeys = await prisma.apiKey.findMany({
                 select: apiFilterSelection,
@@ -108,7 +108,7 @@ export const apiKeyOperations = {
         }
     }),
     readWithHash: defineOperation({
-        authorizer: () => apiKeyAuthers.readWithHash.dynamicFields({}),
+        authorizer: () => apiKeyAuth.readWithHash.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),
@@ -134,7 +134,7 @@ export const apiKeyOperations = {
         }
     }),
     update: defineOperation({
-        authorizer: () => apiKeyAuthers.update.dynamicFields({}),
+        authorizer: () => apiKeyAuth.update.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),
@@ -152,7 +152,7 @@ export const apiKeyOperations = {
         },
     }),
     destroy: defineOperation({
-        authorizer: () => apiKeyAuthers.destroy.dynamicFields({}),
+        authorizer: () => apiKeyAuth.destroy.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),

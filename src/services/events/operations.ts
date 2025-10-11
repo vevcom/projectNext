@@ -1,5 +1,5 @@
 import '@pn-server-only'
-import { eventAuthers } from './authers'
+import { eventAuth } from './auth'
 import { eventSchemas } from './schemas'
 import { eventFilterSelection } from './constants'
 import { notificationOperations } from '@/services/notifications/operations'
@@ -19,7 +19,7 @@ import type { EventExpanded } from './Types'
 export const eventOperations = {
     create: defineOperation({
         dataSchema: eventSchemas.create,
-        authorizer: () => eventAuthers.create.dynamicFields({}),
+        authorizer: () => eventAuth.create.dynamicFields({}),
         operation: async ({ prisma, data, session }) => {
             const cmsParagraph = await createCmsParagraph({ name: uuid() })
             const cmsImage = await createCmsImage({ name: uuid() })
@@ -97,7 +97,7 @@ export const eventOperations = {
             order: z.number(),
             name: z.string(),
         }),
-        authorizer: () => eventAuthers.read.dynamicFields({}),
+        authorizer: () => eventAuth.read.dynamicFields({}),
         operation: async ({ prisma, params, session }) => {
             const event = await prisma.event.findUniqueOrThrow({
                 where: {
@@ -159,7 +159,7 @@ export const eventOperations = {
         paramsSchema: z.object({
             tags: z.array(z.string()).nullable(),
         }),
-        authorizer: () => eventAuthers.readManyCurrent.dynamicFields({}),
+        authorizer: () => eventAuth.readManyCurrent.dynamicFields({}),
         operation: async ({ prisma, params }): Promise<EventExpanded[]> => {
             const events = await prisma.event.findMany({
                 select: {
@@ -201,7 +201,7 @@ export const eventOperations = {
                 tags: z.array(z.string()).nullable(),
             }),
         ), // Converted from ReadPageInput<number, EventArchiveCursor, EventArchiveDetails>
-        authorizer: () => eventAuthers.readManyArchivedPage.dynamicFields({}),
+        authorizer: () => eventAuth.readManyArchivedPage.dynamicFields({}),
         operation: async ({ prisma, params }): Promise<EventExpanded[]> => {
             const events = await prisma.event.findMany({
                 ...cursorPageingSelection(params.paging.page),
@@ -242,7 +242,7 @@ export const eventOperations = {
             id: z.number(),
         }),
         dataSchema: eventSchemas.update,
-        authorizer: () => eventAuthers.update.dynamicFields({}),
+        authorizer: () => eventAuth.update.dynamicFields({}),
         operation: async ({ prisma, params, data: { tagIds, ...data } }) => {
             const event = await prisma.event.findUniqueOrThrow({
                 where: { id: params.id }
@@ -292,7 +292,7 @@ export const eventOperations = {
         paramsSchema: z.object({
             id: z.number()
         }),
-        authorizer: () => eventAuthers.destroy.dynamicFields({}),
+        authorizer: () => eventAuth.destroy.dynamicFields({}),
         operation: async ({ prisma, params }) => {
             await prisma.event.delete({
                 where: {

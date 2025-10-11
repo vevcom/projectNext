@@ -1,5 +1,5 @@
 import '@pn-server-only'
-import { purchaseAuthers } from './authers'
+import { purchaseAuth } from './auth'
 import { purchaseSchemas } from './schemas'
 import { ServerError } from '@/services/error'
 import { defineOperation } from '@/services/serviceOperation'
@@ -33,7 +33,7 @@ export const purchaseOperations = {
                 },
             })
 
-            return purchaseAuthers.createByStudentCard.dynamicFields({
+            return purchaseAuth.createByStudentCard.dynamicFields({
                 permissions,
             })
         },

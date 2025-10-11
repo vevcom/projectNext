@@ -4,7 +4,7 @@ import { readCommitteesFromGroupIds } from '@/services/groups/committees/read'
 import OmegaId from '@/components/OmegaId/identification/OmegaId'
 import PopUp from '@/components/PopUp/PopUp'
 import { Session } from '@/auth/Session'
-import { userAuthers } from '@/services/users/authers'
+import { userAuth } from '@/services/users/auth'
 import ProfilePicture from '@/components/User/ProfilePicture'
 import UserDisplayName from '@/components/User/UserDisplayName'
 import { readUserProfileAction } from '@/services/users/actions'
@@ -49,7 +49,7 @@ export default async function User({ params }: PropTypes) {
         return res.data
     })
 
-    const { authorized: canAdministrate } = userAuthers.updateProfile.dynamicFields(
+    const { authorized: canAdministrate } = userAuth.updateProfile.dynamicFields(
         { username: profile.user.username }
     ).auth(session)
 

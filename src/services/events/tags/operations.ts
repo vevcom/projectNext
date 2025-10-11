@@ -1,8 +1,8 @@
 import '@pn-server-only'
-import { eventTagAuthers } from './authers'
+import { eventTagAuth } from './auth'
 import { specialEventTags } from './constants'
 import { eventTagSchemas } from './schemas'
-import { eventAuthers } from '@/services/events/authers'
+import { eventAuth } from '@/services/events/auth'
 import logger from '@/lib/logger'
 import { defineOperation } from '@/services/serviceOperation'
 import { ServerError } from '@/services/error'
@@ -14,7 +14,7 @@ export const eventTagOperations = {
         paramsSchema: z.object({
             id: z.number(),
         }),
-        authorizer: () => eventTagAuthers.read.dynamicFields({}),
+        authorizer: () => eventTagAuth.read.dynamicFields({}),
         operation: async ({ prisma, params: { id } }) => await prisma.eventTag.findUniqueOrThrow({
             where: {
                 id
@@ -25,7 +25,7 @@ export const eventTagOperations = {
         paramsSchema: z.object({
             special: z.nativeEnum(SpecialEventTags),
         }),
-        authorizer: () => eventTagAuthers.readSpecial.dynamicFields({}),
+        authorizer: () => eventTagAuth.readSpecial.dynamicFields({}),
         operation: async ({ prisma, params: { special } }) => {
             const tag = await prisma.eventTag.findUnique({
                 where: {
@@ -45,12 +45,12 @@ export const eventTagOperations = {
         }
     }),
     readAll: defineOperation({
-        authorizer: () => eventTagAuthers.readAll.dynamicFields({}),
+        authorizer: () => eventTagAuth.readAll.dynamicFields({}),
         operation: async ({ prisma }) => await prisma.eventTag.findMany()
     }),
     create: defineOperation({
         dataSchema: eventTagSchemas.create,
-        authorizer: () => eventTagAuthers.create.dynamicFields({}),
+        authorizer: () => eventTagAuth.create.dynamicFields({}),
         operation: async ({ prisma, data: { color, ...data } }) => {
             const colorR = parseInt(color.slice(1, 3), 16)
             const colorG = parseInt(color.slice(3, 5), 16)
@@ -70,7 +70,7 @@ export const eventTagOperations = {
             id: z.number(),
         }),
         dataSchema: eventTagSchemas.update,
-        authorizer: () => eventAuthers.update.dynamicFields({}),
+        authorizer: () => eventAuth.update.dynamicFields({}),
         operation: async ({ prisma, params: { id }, data: { color, ...data } }) => {
             const colorR = color ? parseInt(color.slice(1, 3), 16) : undefined
             const colorG = color ? parseInt(color.slice(3, 5), 16) : undefined
@@ -92,7 +92,7 @@ export const eventTagOperations = {
         paramsSchema: z.object({
             id: z.number(),
         }),
-        authorizer: () => eventAuthers.destroy.dynamicFields({}),
+        authorizer: () => eventAuth.destroy.dynamicFields({}),
         operation: async ({ prisma, params }) => {
             const tag = await prisma.eventTag.findUniqueOrThrow({
                 where: { id: params.id }

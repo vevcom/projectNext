@@ -1,5 +1,5 @@
 import '@pn-server-only'
-import { interestGroupAuthers } from './authers'
+import { interestGroupAuth } from './auth'
 import { interestGroupSchemas } from './schemas'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import { articleSectionsRealtionsIncluder } from '@/services/cms/articleSections/ConfigVars'
@@ -10,7 +10,7 @@ import type { ExpandedInterestGroup } from './Types'
 export const interestGroupOperations = {
     create: defineOperation({
         dataSchema: interestGroupSchemas.create,
-        authorizer: () => interestGroupAuthers.create.dynamicFields({}),
+        authorizer: () => interestGroupAuth.create.dynamicFields({}),
         operation: async ({ prisma, data }) => {
             const { order } = await readCurrentOmegaOrder()
 
@@ -36,7 +36,7 @@ export const interestGroupOperations = {
     }),
 
     readMany: defineOperation({
-        authorizer: () => interestGroupAuthers.readMany.dynamicFields({}),
+        authorizer: () => interestGroupAuth.readMany.dynamicFields({}),
         operation: async ({ prisma }): Promise<ExpandedInterestGroup[]> => prisma.interestGroup.findMany({
             include: {
                 articleSection: {
@@ -55,7 +55,7 @@ export const interestGroupOperations = {
             id: z.number().optional(),
             shortName: z.string().optional(),
         }),
-        authorizer: () => interestGroupAuthers.read.dynamicFields({}),
+        authorizer: () => interestGroupAuth.read.dynamicFields({}),
         operation: async ({ prisma, params: { id, shortName } }) => await prisma.interestGroup.findUniqueOrThrow({
             where: {
                 id,
@@ -80,7 +80,7 @@ export const interestGroupOperations = {
                 select: { groupId: true },
             })
 
-            return interestGroupAuthers.update.dynamicFields({
+            return interestGroupAuth.update.dynamicFields({
                 groupId,
             })
         },
@@ -94,7 +94,7 @@ export const interestGroupOperations = {
         paramsSchema: z.object({
             id: z.number(),
         }),
-        authorizer: () => interestGroupAuthers.destroy.dynamicFields({}),
+        authorizer: () => interestGroupAuth.destroy.dynamicFields({}),
         opensTransaction: true,
         operation: async ({ prisma, params: { id } }) => {
             await prisma.$transaction(async tx => {

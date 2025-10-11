@@ -4,7 +4,7 @@ import TextInput from '@/components/UI/TextInput'
 import ArticleSection from '@/components/Cms/ArticleSection/ArticleSection'
 import { SettingsHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import { updateInterestGroupAction, destroyInterestGroupAction } from '@/services/groups/interestGroups/actions'
-import { interestGroupAuthers } from '@/services/groups/interestGroups/authers'
+import { interestGroupAuth } from '@/services/groups/interestGroups/auth'
 import type { SessionMaybeUser } from '@/auth/Session'
 import type { ExpandedInterestGroup } from '@/services/groups/interestGroups/Types'
 
@@ -14,8 +14,8 @@ type PropTypes = {
 }
 
 export default function InterestGroup({ interestGroup, session }: PropTypes) {
-    const canUpdate = interestGroupAuthers.update.dynamicFields({ groupId: interestGroup.groupId }).auth(session)
-    const canDestroy = interestGroupAuthers.destroy.dynamicFields({}).auth(session)
+    const canUpdate = interestGroupAuth.update.dynamicFields({ groupId: interestGroup.groupId }).auth(session)
+    const canDestroy = interestGroupAuth.destroy.dynamicFields({}).auth(session)
 
     const PopUpKey = `Update interest group ${interestGroup.name}`
 

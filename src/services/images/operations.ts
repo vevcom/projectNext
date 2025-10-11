@@ -1,6 +1,6 @@
 import '@pn-server-only'
 import { readSpecialImageCollection } from './collections/read'
-import { imageAuthers } from './authers'
+import { imageAuth } from './auth'
 import { imageSchemas } from './schemas'
 import { allowedExtensions, avifConvertionOptions, imageSizes } from './constants'
 import { defineOperation } from '@/services/serviceOperation'
@@ -37,7 +37,7 @@ async function createOneInStore(file: File, allowedExt: string[], size: number) 
  * @param config - the config for the image (special)
  */
 const createSourceless = defineOperation({
-    authorizer: () => imageAuthers.createSourcelessImage.dynamicFields({}),
+    authorizer: () => imageAuth.createSourcelessImage.dynamicFields({}),
     paramsSchema: z.object({
         name: z.string(),
         special: z.nativeEnum(SpecialImage),
@@ -77,7 +77,7 @@ export const imageOperations = {
      * @param collectionId - The id of the collection to add the image to
      */
     create: defineOperation({
-        authorizer: () => imageAuthers.create.dynamicFields({}),
+        authorizer: () => imageAuth.create.dynamicFields({}),
         paramsSchema: z.object({
             collectionId: z.number(),
         }),
@@ -126,7 +126,7 @@ export const imageOperations = {
      * The method will resize the images to the correct sizes and save them to the store.
      */
     createMany: defineOperation({
-        authorizer: () => imageAuthers.createMany.dynamicFields({}),
+        authorizer: () => imageAuth.createMany.dynamicFields({}),
         paramsSchema: z.object({
             useFileName: z.boolean(),
             collectionId: z.number(),
@@ -152,7 +152,7 @@ export const imageOperations = {
      * Reads an image by id.
      */
     read: defineOperation({
-        authorizer: () => imageAuthers.read.dynamicFields({}),
+        authorizer: () => imageAuth.read.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),
@@ -172,7 +172,7 @@ export const imageOperations = {
      * Reads a page of images in a collection by collectionId.
      */
     readPage: defineOperation({
-        authorizer: () => imageAuthers.readPage.dynamicFields({}),
+        authorizer: () => imageAuth.readPage.dynamicFields({}),
         paramsSchema: readPageInputSchemaObject(
             z.number(),
             z.object({
@@ -198,7 +198,7 @@ export const imageOperations = {
      * In the case that the special image does not exist (bad state) a "bad" image will be created.
      */
     readSpecial: defineOperation({
-        authorizer: () => imageAuthers.readSpecial.dynamicFields({}),
+        authorizer: () => imageAuth.readSpecial.dynamicFields({}),
         paramsSchema: z.object({
             special: z.nativeEnum(SpecialImage)
         }),
@@ -222,7 +222,7 @@ export const imageOperations = {
      * Update a image by id and data. Also can give the image a new license by data.licenseId.
      */
     update: defineOperation({
-        authorizer: () => imageAuthers.update.dynamicFields({}),
+        authorizer: () => imageAuth.update.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),
@@ -244,7 +244,7 @@ export const imageOperations = {
     }),
 
     destroy: defineOperation({
-        authorizer: () => imageAuthers.destroy.dynamicFields({}),
+        authorizer: () => imageAuth.destroy.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),

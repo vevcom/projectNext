@@ -1,5 +1,5 @@
 import '@pn-server-only'
-import { applicationAuthers } from './authers'
+import { applicationAuth } from './auth'
 import { applicationSchemas } from './schemas'
 import { ServerError } from '@/services/error'
 import { defineOperation } from '@/services/serviceOperation'
@@ -11,7 +11,7 @@ export const applicationOperations = {
             userId: z.number(),
             periodId: z.number()
         }),
-        authorizer: ({ params }) => applicationAuthers.readForUser.dynamicFields({ userId: params.userId }),
+        authorizer: ({ params }) => applicationAuth.readForUser.dynamicFields({ userId: params.userId }),
         operation: async ({ prisma, params }) => prisma.application.findMany({
             where: {
                 userId: params.userId,
@@ -26,7 +26,7 @@ export const applicationOperations = {
             userId: z.number(),
             commiteeParticipationId: z.number()
         }),
-        authorizer: ({ params }) => applicationAuthers.create.dynamicFields({ userId: params.userId }),
+        authorizer: ({ params }) => applicationAuth.create.dynamicFields({ userId: params.userId }),
         operation: async ({ prisma, data, params }) => {
             const commiteeParticipation = await prisma.committeeParticipationInApplicationPeriod.findUniqueOrThrow({
                 where: {
@@ -85,7 +85,7 @@ export const applicationOperations = {
             commiteeParticipationId: z.number()
         }),
         opensTransaction: true,
-        authorizer: ({ params }) => applicationAuthers.update.dynamicFields({ userId: params.userId }),
+        authorizer: ({ params }) => applicationAuth.update.dynamicFields({ userId: params.userId }),
         operation: async ({ prisma, data, params }) => {
             const application = await prisma.application.findUniqueOrThrow({
                 where: {
@@ -199,7 +199,7 @@ export const applicationOperations = {
             userId: z.number(),
             commiteeParticipationId: z.number()
         }),
-        authorizer: ({ params }) => applicationAuthers.destroy.dynamicFields({ userId: params.userId }),
+        authorizer: ({ params }) => applicationAuth.destroy.dynamicFields({ userId: params.userId }),
         opensTransaction: true,
         operation: async ({ prisma, params }) => {
             prisma.$transaction(async (tx) => {

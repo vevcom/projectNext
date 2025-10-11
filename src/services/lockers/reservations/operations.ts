@@ -1,6 +1,6 @@
 
 import '@pn-server-only'
-import { lockerReservationAuthers } from './authers'
+import { lockerReservationAuth } from './auth'
 import { lockerReservationSchemas } from './schemas'
 import { defineOperation } from '@/services/serviceOperation'
 import { Smorekopp } from '@/services/error'
@@ -17,7 +17,7 @@ export const lockerReservationOperations = {
      * @returns The newly created reservation object.
      */
     create: defineOperation({
-        authorizer: () => lockerReservationAuthers.create.dynamicFields({}),
+        authorizer: () => lockerReservationAuth.create.dynamicFields({}),
         paramsSchema: z.object({
             lockerId: z.number(),
         }),
@@ -64,7 +64,7 @@ export const lockerReservationOperations = {
      * @returns The updated reservation object.
      */
     read: defineOperation({
-        authorizer: () => lockerReservationAuthers.read.dynamicFields({}),
+        authorizer: () => lockerReservationAuth.read.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),
@@ -84,7 +84,7 @@ export const lockerReservationOperations = {
      * @returns The updated reservation object.
      */
     update: defineOperation({
-        authorizer: () => lockerReservationAuthers.update.dynamicFields({}),
+        authorizer: () => lockerReservationAuth.update.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),

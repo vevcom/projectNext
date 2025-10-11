@@ -1,6 +1,6 @@
 import '@pn-server-only'
 import { eventRegistrationIncluderDetailed, eventRegistrationSelection, REGISTRATION_READER_TYPE } from './constants'
-import { eventRegistrationAuthers } from './authers'
+import { eventRegistrationAuth } from './auth'
 import { eventRegistrationSchemas } from './schemas'
 import { Smorekopp } from '@/services/error'
 import { imageOperations } from '@/services/images/operations'
@@ -130,7 +130,7 @@ export const eventRegistrationOperations = {
             userId: z.number().min(0),
             eventId: z.number().min(0),
         }),
-        authorizer: ({ params }) => eventRegistrationAuthers.create.dynamicFields({
+        authorizer: ({ params }) => eventRegistrationAuth.create.dynamicFields({
             userId: params.userId,
         }),
         opensTransaction: true,
@@ -163,7 +163,7 @@ export const eventRegistrationOperations = {
     }),
 
     createGuest: defineOperation({
-        authorizer: () => eventRegistrationAuthers.createGuest.dynamicFields({}),
+        authorizer: () => eventRegistrationAuth.createGuest.dynamicFields({}),
         paramsSchema: z.object({
             eventId: z.number(),
         }),
@@ -197,7 +197,7 @@ export const eventRegistrationOperations = {
     }),
 
     readMany: defineOperation({
-        authorizer: () => eventRegistrationAuthers.readMany.dynamicFields({}),
+        authorizer: () => eventRegistrationAuth.readMany.dynamicFields({}),
         paramsSchema: z.object({
             eventId: z.number().min(0),
             skip: z.number().optional(),
@@ -231,7 +231,7 @@ export const eventRegistrationOperations = {
     }),
 
     readManyDetailed: defineOperation({
-        authorizer: () => eventRegistrationAuthers.readManyDetailed.dynamicFields({}),
+        authorizer: () => eventRegistrationAuth.readManyDetailed.dynamicFields({}),
         paramsSchema: z.object({
             eventId: z.number().min(0),
             skip: z.number().optional(),
@@ -256,7 +256,7 @@ export const eventRegistrationOperations = {
     }),
 
     updateNotes: defineOperation({
-        authorizer: () => eventRegistrationAuthers.updateRegistrationNotes.dynamicFields({}),
+        authorizer: () => eventRegistrationAuth.updateRegistrationNotes.dynamicFields({}),
         paramsSchema: z.object({
             registrationId: z.number().min(0),
         }),
@@ -292,7 +292,7 @@ export const eventRegistrationOperations = {
     }),
 
     destroy: defineOperation({
-        authorizer: () => eventRegistrationAuthers.destroy.dynamicFields({}),
+        authorizer: () => eventRegistrationAuth.destroy.dynamicFields({}),
         paramsSchema: z.object({
             registrationId: z.number().min(0),
         }),

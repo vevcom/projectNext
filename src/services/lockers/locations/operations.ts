@@ -1,4 +1,4 @@
-import { lockerLocationAuthers } from './authers'
+import { lockerLocationAuth } from './auth'
 import { lockersSchemas } from '@/services/lockers/schemas'
 import { defineOperation } from '@/services/serviceOperation'
 
@@ -11,7 +11,7 @@ export const lockerLocationOperations = {
      * @returns The newly created locker location object.
      */
     create: defineOperation({
-        authorizer: () => lockerLocationAuthers.create.dynamicFields({}),
+        authorizer: () => lockerLocationAuth.create.dynamicFields({}),
         dataSchema: lockersSchemas.createLocation,
         operation: async ({ prisma, data }) => prisma.lockerLocation.create({
             data: {
@@ -27,7 +27,7 @@ export const lockerLocationOperations = {
      * @returns All locker location objects.
      */
     readAll: defineOperation({
-        authorizer: () => lockerLocationAuthers.readAll.dynamicFields({}),
+        authorizer: () => lockerLocationAuth.readAll.dynamicFields({}),
         operation: async ({ prisma }) => prisma.lockerLocation.findMany()
     }),
 }

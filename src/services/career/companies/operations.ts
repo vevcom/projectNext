@@ -1,5 +1,5 @@
 import '@pn-server-only'
-import { companyAuthers } from './authers'
+import { companyAuth } from './auth'
 import { logoIncluder } from './constants'
 import { companySchemas } from './schemas'
 import { createCmsImage } from '@/services/cms/images/create'
@@ -12,7 +12,7 @@ import { z } from 'zod'
 export const companyOperations = {
     create: defineOperation({
         dataSchema: companySchemas.create,
-        authorizer: () => companyAuthers.create.dynamicFields({}),
+        authorizer: () => companyAuth.create.dynamicFields({}),
         operation: async ({ prisma, data }) => {
             //TODO: tranaction when createCmsImage is service method.
             const logo = await createCmsImage({ name: uuid() })
@@ -34,7 +34,7 @@ export const companyOperations = {
                 name: z.string().optional(),
             }),
         ),
-        authorizer: () => companyAuthers.readPage.dynamicFields({}),
+        authorizer: () => companyAuth.readPage.dynamicFields({}),
         operation: async ({ prisma, params }) => await prisma.company.findMany({
             ...cursorPageingSelection(params.paging.page),
             where: {
@@ -51,7 +51,7 @@ export const companyOperations = {
             id: z.number(),
         }),
         dataSchema: companySchemas.update,
-        authorizer: () => companyAuthers.update.dynamicFields({}),
+        authorizer: () => companyAuth.update.dynamicFields({}),
         operation: async ({ prisma, params: { id }, data }) => {
             await prisma.company.update({
                 where: { id },
@@ -63,7 +63,7 @@ export const companyOperations = {
         paramsSchema: z.object({
             id: z.number()
         }),
-        authorizer: () => companyAuthers.destroy.dynamicFields({}),
+        authorizer: () => companyAuth.destroy.dynamicFields({}),
         operation: async ({ prisma, params: { id } }) => {
             await prisma.company.delete({
                 where: {

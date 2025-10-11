@@ -1,6 +1,6 @@
 import '@pn-server-only'
 import { admissionSchemas } from './schemas'
-import { admissionAuthers } from './authers'
+import { admissionAuth } from './auth'
 import { userFilterSelection } from '@/services/users/constants'
 import { defineOperation } from '@/services/serviceOperation'
 import { updateUserOmegaMembershipGroup } from '@/services/groups/omegaMembershipGroups/update'
@@ -10,7 +10,7 @@ import type { ExpandedAdmissionTrail } from './Types'
 
 export const admissionOperations = {
     readTrial: defineOperation({
-        authorizer: () => admissionAuthers.readTrial.dynamicFields({}),
+        authorizer: () => admissionAuth.readTrial.dynamicFields({}),
         paramsSchema: z.object({
             userId: z.number(),
         }),
@@ -21,7 +21,7 @@ export const admissionOperations = {
         })
     }),
     createTrial: defineOperation({
-        authorizer: () => admissionAuthers.createTrial.dynamicFields({}),
+        authorizer: () => admissionAuth.createTrial.dynamicFields({}),
         paramsSchema: z.object({
             admission: z.nativeEnum(Admission),
         }),
