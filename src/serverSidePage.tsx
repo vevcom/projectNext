@@ -1,6 +1,8 @@
 import { Smorekopp } from './services/error'
 import type { ReactNode } from 'react'
 
+// WIP
+
 export function serverSidePage<Data>(
     serviceMethod: () => Promise<Data>,
     render: (data: Data) => ReactNode
