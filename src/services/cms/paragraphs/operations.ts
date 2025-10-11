@@ -1,18 +1,12 @@
-import { defineSubOperation } from '@/services/serviceOperation'
 import '@pn-server-only'
-import { z } from 'zod'
+import { defineSubOperation } from '@/services/serviceOperation'
+import { cmsParagraphSchemas } from './schemas'
 
 export namespace CmsParagraphMethods {
-
     export const create = defineSubOperation({
-        paramsSchema: () => z.object({ id: z.number() }),
-        dataSchema: () => z.object({
-            title: z.string().min(2).max(100),
-            content: z.string().min(2).max(10000),
-        }),
-        operation: () => ({ params, data, prisma }) => {
-            // Implementation for creating a CMS paragraph
-            console.log('Creating CMS paragraph with data:', { data, params, prisma })
+        dataSchema: () => cmsParagraphSchemas.create,
+        operation: () => ({ data, prisma }) => {
+            prisma.cmsParagraph.create({ data })
         }
     })
 }
