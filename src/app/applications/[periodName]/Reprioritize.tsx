@@ -25,9 +25,16 @@ export default function Reprioritize({ showUp, showDown, userId, commiteePartici
     }, [])
 
     const handleReprioritize = useCallback(async (direction: 'UP' | 'DOWN') => {
+        // TODO: Merge action arguments into one object?
         const res = await updateApplicationAction({
-            userId, commiteeParticipationId
-        }, { priority: direction })
+            params: {
+                userId, commiteeParticipationId
+            }
+        }, {
+            data: {
+                priority: direction,
+            },
+        })
         if (!res.success) {
             handleShowError(
                 res.error?.length ?

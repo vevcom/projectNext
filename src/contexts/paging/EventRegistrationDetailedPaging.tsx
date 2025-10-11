@@ -10,10 +10,12 @@ import type { ReadPageInput } from '@/lib/paging/Types'
 
 const fetcher = async (x: ReadPageInput<PageSizeUsers, number, EventRegistrationFetcherDetails>) => {
     const registrations = await eventRegistrationReadManyDetailedAction({
-        eventId: x.details.eventId,
-        take: x.page.pageSize,
-        skip: (x.page.page * x.page.pageSize) || undefined,
-        type: x.details.type,
+        params: {
+            eventId: x.details.eventId,
+            take: x.page.pageSize,
+            skip: (x.page.page * x.page.pageSize) || undefined,
+            type: x.details.type,
+        }
     })
     return registrations
 }

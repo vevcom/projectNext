@@ -6,7 +6,7 @@ import type { JobAdInactiveCursor, JobAdInactiveDetails, SimpleJobAd } from '@/s
 
 export type PageSizeJobAdInactive = 12
 const fetcher = async (x: ReadPageInput<PageSizeJobAdInactive, JobAdInactiveCursor, JobAdInactiveDetails>) =>
-    await readInactiveJobAdsPageAction({ paging: x })
+    await readInactiveJobAdsPageAction({ params: { paging: x } })
 
 export const JobAdInactivePagingContext = generatePagingContext<
     SimpleJobAd,

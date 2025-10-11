@@ -14,7 +14,7 @@ export default async function ResetPassword({ searchParams }: PropTypes) {
             <p>Token mangler</p>
         </>
     }
-    const verify = await verifyResetPasswordTokenAction({ token })
+    const verify = await verifyResetPasswordTokenAction({ params: { token } })
 
     if (!verify.success) {
         const errorMessage = verify.error?.map(e => e.message).join('\n') ?? 'JWT er ugyldig'

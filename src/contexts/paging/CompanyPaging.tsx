@@ -6,7 +6,7 @@ import type { ReadPageInput } from '@/lib/paging/Types'
 
 export type PageSizeCompany = 10
 const fetcher = async (x: ReadPageInput<PageSizeCompany, CompanyCursor, CompanyDetails>) => {
-    const ret = await readCompanyPageAction({ paging: x })
+    const ret = await readCompanyPageAction({ params: { paging: x } })
     return ret
 }
 

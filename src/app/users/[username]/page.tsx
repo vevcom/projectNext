@@ -28,7 +28,7 @@ export default async function User({ params }: PropTypes) {
         if (!session.user) return notFound()
         redirect(`/users/${session.user.username}`) //This throws.
     }
-    const profileRes = await readUserProfileAction({ username: (await params).username })
+    const profileRes = await readUserProfileAction({ params: { username: (await params).username } })
     if (!profileRes.success) return notFound()
     const profile = profileRes.data
 
@@ -43,7 +43,7 @@ export default async function User({ params }: PropTypes) {
     const order = 105
 
     const profileImage = profile.user.image ? profile.user.image : await readSpecialImageAction.bind(
-        null, { special: 'DEFAULT_PROFILE_IMAGE' }
+        null, { params: { special: 'DEFAULT_PROFILE_IMAGE' } }
     )().then(res => {
         if (!res.success) throw new Error('Kunne ikke finne standard profilbilde')
         return res.data

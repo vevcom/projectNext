@@ -1,4 +1,5 @@
 'use client'
+import { configureAction } from '@/actions/configureAction'
 import { createProductForShopAction, updateProductForShopAction } from '@/actions/shop/product'
 import Form from '@/app/_components/Form/Form'
 import Checkbox from '@/app/_components/UI/Checkbox'
@@ -16,8 +17,8 @@ export function EditProductForShopForm({
     product?: ExtendedProduct,
 }) {
     const submitAction = product
-        ? updateProductForShopAction.bind(null, { shopId, productId: product.id })
-        : createProductForShopAction.bind(null, { shopId })
+        ? configureAction(updateProductForShopAction, { params: { shopId, productId: product.id } })
+        : configureAction(createProductForShopAction, { params: { shopId } })
 
     return <Form
         action={submitAction}

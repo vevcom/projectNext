@@ -6,9 +6,7 @@ import type { UserDetails, UserPagingReturn, UserCursor } from '@/services/users
 
 export type PageSizeUsers = 50;
 const fetcher = async (x: ReadPageInput<PageSizeUsers, UserCursor, UserDetails>) => {
-    const users = await readUserPageAction({
-        paging: x
-    })
+    const users = await readUserPageAction({ params: { paging: x } })
     return users
 }
 

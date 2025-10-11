@@ -30,7 +30,7 @@ export default function CommitteeLogoRoll({ committees, periodName }: PropTypes)
     const sokere = useRef(0)
 
     useInterval(async () => {
-        const res = await readNumberOfApplicationsAction({ name: periodName })
+        const res = await readNumberOfApplicationsAction({ params: { name: periodName } })
         if (!res.success) return
         sokere.current = res.data
     }, 2000)

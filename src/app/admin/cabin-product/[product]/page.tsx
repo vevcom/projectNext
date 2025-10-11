@@ -17,7 +17,9 @@ export default async function CabinProduct({
     }>
 }) {
     const product = unwrapActionReturn(await readCabinProductAction({
-        id: parseInt(decodeURIComponent((await params).product), 10),
+        params: {
+            id: parseInt(decodeURIComponent((await params).product), 10),
+        }
     }))
     const pricePeriods = unwrapActionReturn(await readUnreleasedPricePeriodsAction())
 

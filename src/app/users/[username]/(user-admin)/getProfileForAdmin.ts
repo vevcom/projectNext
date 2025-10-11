@@ -24,7 +24,7 @@ export async function getProfileForAdmin({ username }: Params, adminPage: string
         .dynamicFields({ username })
         .auth(session)
         .requireAuthorized({ returnUrlIfFail: `/users/${username}/${adminPage}` })
-    const profileRes = await readUserProfileAction({ username })
+    const profileRes = await readUserProfileAction({ params: { username } })
     if (!profileRes.success) return notFound()
     const profile = profileRes.data
     return { profile, session }

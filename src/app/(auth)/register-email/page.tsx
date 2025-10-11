@@ -10,7 +10,7 @@ export default async function Registeremail() {
 
     if (!authorized) notFound()
 
-    const updatedUser = await readUserAction({ id: user.id })
+    const updatedUser = await readUserAction({ params: { id: user.id } })
 
     if (!updatedUser.success) {
         return notFound()

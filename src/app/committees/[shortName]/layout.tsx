@@ -20,7 +20,7 @@ export default async function Committee({ params, children }: PropTypes) {
     let committeeLogo = committee.logoImage.image
     if (!committeeLogo) {
         const res = await readSpecialImageAction.bind(
-            null, { special: 'DAFAULT_COMMITTEE_LOGO' }
+            null, { params: { special: 'DAFAULT_COMMITTEE_LOGO' } }
         )()
         if (!res.success) throw new Error('Kunne ikke finne standard komitelogo')
         committeeLogo = res.data
