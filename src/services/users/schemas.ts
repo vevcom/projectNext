@@ -19,6 +19,9 @@ export const userSchema = z.object({
         message: 'Passoret må minst ha 12 tegn, en stor og en liten bokstav, et tall, en rune, to emojier, en musikk note, en magisk sopp og en dråpe smørekopp-blod (avsky).'
     }),
     confirmPassword: z.string().max(50).min(12),
+    imageConsent: Zpn.checkboxOrBoolean({
+        label: 'Accepted images'
+    }),
     acceptedTerms: Zpn.checkboxOrBoolean({
         label: 'Accepted terms',
     }).refine(value => value, 'Du må godta vilkårene for å bruke siden.'),
@@ -50,6 +53,7 @@ export const userSchemas = {
         password: true,
         confirmPassword: true,
         sex: true,
+        imageConsent: true,
         acceptedTerms: true,
     }).refine(refinePassword.fcn, refinePassword.message),
 

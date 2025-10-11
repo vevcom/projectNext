@@ -13,6 +13,7 @@ model User {
   bio               String              @default("")
   archived          Boolean             @default(false)
   acceptedTerms     DateTime?
+  imageConsent      Boolean             @default(false) //if the user has consented to being photographed
   sex               SEX?
   allergies         String?
   mobile            String?

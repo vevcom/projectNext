@@ -432,7 +432,7 @@ export const userOperations = {
         authorizer: ({ params }) => userAuth.register.dynamicFields({ userId: params.id }),
         opensTransaction: true,
         operation: async ({ prisma, data, params }) => {
-            const { sex, password, mobile, allergies } = data
+            const { sex, password, mobile, allergies, imageConsent } = data
 
             if (!password) throw new ServerError('BAD PARAMETERS', 'Passord er obligatorisk.')
 
@@ -478,6 +478,7 @@ export const userOperations = {
                     },
                     data: {
                         acceptedTerms: new Date(),
+                        imageConsent,
                         sex,
                         mobile,
                         allergies,
