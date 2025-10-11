@@ -1,5 +1,5 @@
 'use client'
-import { generatePagingProvider, generatePagingContext } from './PagingGenerator'
+import { generatePaging } from './PagingGenerator'
 import { eventRegistrationReadManyDetailedAction } from '@/services/events/registration/actions'
 import type {
     EventRegistrationDetailedExpanded,
@@ -7,11 +7,12 @@ import type {
 } from '@/services/events/registration/types'
 import type { PageSizeUsers } from './UserPaging'
 
-export const EventRegistrationDetailedPagingContext =
-    generatePagingContext<EventRegistrationDetailedExpanded, number, PageSizeUsers, EventRegistrationFetcherDetails>()
-
-export const EventRegistrationDetailedPagingProvider = generatePagingProvider({
-    Context: EventRegistrationDetailedPagingContext,
+export const [EventRegistrationDetailedPagingContext, EventRegistrationDetailedPagingProvider] = generatePaging<
+    EventRegistrationDetailedExpanded,
+    number,
+    PageSizeUsers,
+    EventRegistrationFetcherDetails
+>({
     fetcher: async ({ paging }) =>
         // TODO: These calculations should be done inside the function.
         await eventRegistrationReadManyDetailedAction({

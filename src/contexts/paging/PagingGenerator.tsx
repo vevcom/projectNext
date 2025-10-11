@@ -34,31 +34,50 @@ export type PagingProviderProps<Data, Cursor, PageSize extends number, FetcherDe
 
 export type GeneratePagingProviderProps<Data, Cursor, PageSize extends number, FetcherDetails> = {
     fetcher: ({ paging }: { paging: ReadPageInput<PageSize, Cursor, FetcherDetails> }) => Promise<ActionReturn<Data[]>>,
-    Context: PagingContext<Data, Cursor, PageSize, FetcherDetails>,
     getCursor: ({ lastElement, fetchedCount }: { lastElement: Data, fetchedCount: number }) => Cursor,
 }
 
 /**
  * Generates a paging provider. Should be used in conjunction with generatePagingContext.
- * @param fetcher The fetcher function that fetches the data.
- * @param Context The context to use.
+ *
+ * Example usage:
+ * ```
+ * import { generatePaging } from './PagingGenerator'
+ * import { readItemsPageAction } from '@/services/items/actions'
+ * import type { Item, ItemCursor } from '@/services/items/types'
+ *
+ * export type PageSizeItems = 20
+ *
+ * export const [ItemPagingContext, ItemPagingProvider] = generatePaging<
+ *     Item,
+ *     ItemCursor,
+ *     PageSizeItems
+ * >({
+ *     fetcher: async ({ paging }) => await readItemsPageAction(paging),
+ *     getCursor: ({ lastElement }) => ({ id: lastElement.id }),
+ * })
+ * ```
+ *
+ * @param fetcher The function that fetches the data.
  * @param getCursor A function that returns the cursor after fetching data.
  * It is provided the last element fetched and the number of elements fetched.
  * In the case no data is fetched the function will not be called and the cursor will be unchanged.
- * @returns A react component that provides the paging context.
+ * @returns A tuple containing the paging context and a react component that provides the paging context.
  */
-export function generatePagingProvider<Data, Cursor, PageSize extends number, FetcherDetails>({
+export function generatePaging<Data, Cursor, PageSize extends number = number, FetcherDetails = undefined>({
     fetcher,
-    Context,
     getCursor,
 }: GeneratePagingProviderProps<Data, Cursor, PageSize, FetcherDetails>
 ) {
+    // Wrap `getCursor` to return null if no data is fetched.
     const getCursorAfterFetch = (data: Data[]) => {
         if (!data.length) return null
         return getCursor({ lastElement: data[data.length - 1], fetchedCount: data.length })
     }
 
-    return function PagingProvider({
+    const Context = createContext<PagingData<Data, Cursor, PageSize, FetcherDetails> | null>(null)
+
+    function Provider({
         serverRenderedData,
         startPage,
         children,
@@ -201,19 +220,12 @@ export function generatePagingProvider<Data, Cursor, PageSize extends number, Fe
                 startPage,
                 setDetails,
                 loading,
-                deatils: { ...details.current },
+                deatils: details.current,
             }}>
                 {children}
             </Context.Provider>
         )
     }
-}
 
-export function generatePagingContext<
-    Data,
-    Cursor,
-    const PageSize extends number,
-    FetcherDetails = undefined
->(): PagingContext<Data, Cursor, PageSize, FetcherDetails> {
-    return createContext<PagingData<Data, Cursor, PageSize, FetcherDetails> | null>(null)
+    return [Context, Provider] as const
 }

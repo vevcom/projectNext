@@ -1,7 +1,7 @@
 import styles from './page.module.scss'
 import JobAdInactiveList from './JobAdInactiveList'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
-import { JobAdInactiveProvider } from '@/contexts/paging/JobAdInactivePaging'
+import { JobAdInactivePagingProvider } from '@/contexts/paging/JobAdInactivePaging'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Link from 'next/link'
@@ -13,7 +13,7 @@ export default async function JobAdsArchive() {
                 <FontAwesomeIcon icon={faArrowLeft} />
             </Link>
         }>
-            <JobAdInactiveProvider
+            <JobAdInactivePagingProvider
                 startPage={{
                     page: 0,
                     pageSize: 12,
@@ -25,7 +25,7 @@ export default async function JobAdsArchive() {
                 serverRenderedData={[]}
             >
                 <JobAdInactiveList />
-            </JobAdInactiveProvider>
+            </JobAdInactivePagingProvider>
         </PageWrapper>
     )
 }

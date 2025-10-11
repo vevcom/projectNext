@@ -1,14 +1,15 @@
 'use client'
-import { generatePagingProvider, generatePagingContext } from './PagingGenerator'
+import { generatePaging } from './PagingGenerator'
 import { readManyEventRegistrationAction } from '@/services/events/registration/actions'
 import type { EventRegistrationExpanded, EventRegistrationFetcherDetails } from '@/services/events/registration/types'
 import type { PageSizeUsers } from './UserPaging'
 
-export const EventRegistrationPagingContext =
-    generatePagingContext<EventRegistrationExpanded, number, PageSizeUsers, EventRegistrationFetcherDetails>()
-
-export const EventRegistrationPagingProvider = generatePagingProvider({
-    Context: EventRegistrationPagingContext,
+export const [EventRegistrationPagingContext, EventRegistrationPagingProvider] = generatePaging<
+    EventRegistrationExpanded,
+    number,
+    PageSizeUsers,
+    EventRegistrationFetcherDetails
+>({
     fetcher: async ({ paging }) => await readManyEventRegistrationAction({
         eventId: paging.details.eventId,
         take: paging.page.pageSize,
