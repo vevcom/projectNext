@@ -1,6 +1,6 @@
 import styles from './layout.module.scss'
 import Nav from './Nav'
-import { Session } from '@/auth/Session'
+import { Session } from '@/auth/session/Session'
 import { readUserProfileAction } from '@/services/users/actions'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'

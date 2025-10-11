@@ -1,6 +1,6 @@
 import styles from './page.module.scss'
 import CreateOrder from './CreateOrder'
-import { getUser } from '@/auth/getUser'
+import { getUser } from '@/auth/session/getUser'
 import { readCurrentOmegaOrderAction } from '@/services/omegaOrder/actions'
 import { notFound } from 'next/navigation'
 

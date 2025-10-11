@@ -2,7 +2,7 @@
 
 import MailList from './mailList'
 import styles from './MailFlow.module.scss'
-import { useUser } from '@/auth/useUser'
+import { useUser } from '@/auth/session/useUser'
 import {
     destroyAliasMailingListRelationAction,
     destroyMailingListExternalRelationAction,

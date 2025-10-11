@@ -8,7 +8,7 @@ import Form from '@/app/_components/Form/Form'
 import TextInput from '@/app/_components/UI/TextInput'
 import NumberInput from '@/app/_components/UI/NumberInput'
 import Checkbox from '@/app/_components/UI/Checkbox'
-import { useUser } from '@/auth/useUser'
+import { useUser } from '@/auth/session/useUser'
 import {
     createBedBookingNoUserAction,
     createBedBookingUserAttachedAction,

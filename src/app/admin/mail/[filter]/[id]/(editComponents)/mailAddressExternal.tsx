@@ -4,7 +4,7 @@ import TextInput from '@/components/UI/TextInput'
 import Form from '@/components/Form/Form'
 import { SelectNumber } from '@/components/UI/Select'
 import { createMailingListExternalRelationAction } from '@/services/mail/actions'
-import { useUser } from '@/auth/useUser'
+import { useUser } from '@/auth/session/useUser'
 import {
     updateMailAddressExternalAction,
     destroyMailAddressExternalAction

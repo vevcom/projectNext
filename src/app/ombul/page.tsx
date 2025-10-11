@@ -4,7 +4,7 @@ import OmbulCover from './OmbulCover'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import { readLatestOmbulAction, readOmbulsAction } from '@/services/ombul/actions'
-import { getUser } from '@/auth/getUser'
+import { getUser } from '@/auth/session/getUser'
 import type { ExpandedOmbul } from '@/services/ombul/Types'
 
 export default async function Ombuls() {

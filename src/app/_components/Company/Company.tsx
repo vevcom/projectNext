@@ -9,7 +9,7 @@ import { bindParams } from '@/services/actionBind'
 import { companyAuth } from '@/services/career/companies/auth'
 import { destroyCompanyAction, updateComanyAction } from '@/services/career/companies/actions'
 import type { CompanyExpanded } from '@/services/career/companies/Types'
-import type { SessionMaybeUser } from '@/auth/Session'
+import type { SessionMaybeUser } from '@/auth/session/Session'
 
 type PropTypes = {
     company: CompanyExpanded,

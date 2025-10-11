@@ -5,7 +5,7 @@ import ArticleSection from '@/components/Cms/ArticleSection/ArticleSection'
 import { SettingsHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import { updateInterestGroupAction, destroyInterestGroupAction } from '@/services/groups/interestGroups/actions'
 import { interestGroupAuth } from '@/services/groups/interestGroups/auth'
-import type { SessionMaybeUser } from '@/auth/Session'
+import type { SessionMaybeUser } from '@/auth/session/Session'
 import type { ExpandedInterestGroup } from '@/services/groups/interestGroups/Types'
 
 type PropTypes = {

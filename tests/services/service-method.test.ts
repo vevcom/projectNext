@@ -1,6 +1,6 @@
 import { RequireNothing } from '@/auth/auther/RequireNothing'
 import { RequireServerOnly } from '@/auth/auther/ServerOnly'
-import { Session } from '@/auth/Session'
+import { Session } from '@/auth/session/Session'
 import { defineOperation } from '@/services/serviceOperation'
 import { prisma as globalPrisma } from '@/prisma/client'
 import { describe, expect, test } from '@jest/globals'

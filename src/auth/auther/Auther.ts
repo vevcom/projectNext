@@ -1,5 +1,5 @@
 import { AuthResult } from './AuthResult'
-import type { SessionMaybeUser, SessionUser } from '@/auth/Session'
+import type { SessionMaybeUser, SessionUser } from '@/auth/session/Session'
 
 export type UserRequieredOutOpt = 'USER_NOT_REQUIERED_FOR_AUTHORIZED' | 'USER_REQUIERED_FOR_AUTHORIZED'
 

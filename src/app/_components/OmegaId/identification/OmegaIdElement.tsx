@@ -1,6 +1,6 @@
 'use client'
 import styles from './OmegaIdElement.module.scss'
-import { useUser } from '@/auth/useUser'
+import { useUser } from '@/auth/session/useUser'
 import { generateOmegaIdAction } from '@/services/omegaid/actions'
 import { readJWTPayload } from '@/jwt/jwtReadUnsecure'
 import { compressOmegaId } from '@/services/omegaid/compress'

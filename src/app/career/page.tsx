@@ -1,7 +1,7 @@
 import styles from './page.module.scss'
 import SpecialCmsParagraph from '@/components/Cms/CmsParagraph/SpecialCmsParagraph'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
-import { Session } from '@/auth/Session'
+import { Session } from '@/auth/session/Session'
 import Image from '@/components/Image/Image'
 import CmsLink from '@/components/Cms/CmsLink/CmsLink'
 import { QueryParams } from '@/lib/query-params/queryParams'

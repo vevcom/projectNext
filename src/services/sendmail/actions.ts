@@ -1,7 +1,7 @@
 'use server'
 
 import { createActionError, createZodActionError, safeServerCall } from '@/services/actionError'
-import { getUser } from '@/auth/getUser'
+import { getUser } from '@/auth/session/getUser'
 import { sendMail as transportSendMail } from '@/services/notifications/email/send'
 import { sendEmailValidation } from '@/services/notifications/email/validation'
 import type { ActionReturn } from '@/services/actionTypes'

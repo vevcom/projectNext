@@ -1,5 +1,5 @@
 import Company from './Company'
-import type { SessionMaybeUser } from '@/auth/Session'
+import type { SessionMaybeUser } from '@/auth/session/Session'
 import type { CompanyExpanded } from '@/services/career/companies/Types'
 
 /**

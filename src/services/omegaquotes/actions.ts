@@ -1,7 +1,7 @@
 'use server'
 
 import { createActionError, createZodActionError, safeServerCall } from '@/services/actionError'
-import { getUser } from '@/auth/getUser'
+import { getUser } from '@/auth/session/getUser'
 import { createQuote } from '@/services/omegaquotes/create'
 import { readQuotesPage } from '@/services/omegaquotes/read'
 import { createOmegaquotesValidation } from '@/services/omegaquotes/validation'

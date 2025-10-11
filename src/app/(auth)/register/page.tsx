@@ -1,5 +1,5 @@
 import RegistrationForm from './RegistrationForm'
-import { getUser } from '@/auth/getUser'
+import { getUser } from '@/auth/session/getUser'
 import { QueryParams } from '@/lib/query-params/queryParams'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { readUserAction } from '@/services/users/actions'

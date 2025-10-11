@@ -9,7 +9,7 @@ import {
     readReleasePeriodsAction
 } from '@/services/cabin/actions'
 import { displayDate } from '@/lib/dates/displayDate'
-import { Session } from '@/auth/Session'
+import { Session } from '@/auth/session/Session'
 import { cabinBookingAuth } from '@/services/cabin/booking/auth'
 import type { ReleasePeriod } from '@prisma/client'
 

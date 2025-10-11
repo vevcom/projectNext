@@ -1,4 +1,4 @@
-import { Session } from '@/auth/Session'
+import { Session } from '@/auth/session/Session'
 import { Smorekopp } from '@/services/error'
 import { prisma } from '@/prisma/client'
 import { jobAdOperations } from '@/services/career/jobAds/operations'

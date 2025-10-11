@@ -2,7 +2,7 @@
 
 import { createActionError, safeServerCall } from '@/services/actionError'
 import { checkVisibility } from '@/auth/checkVisibility'
-import { getUser } from '@/auth/getUser'
+import { getUser } from '@/auth/session/getUser'
 import { groupTypesConfig } from '@/services/groups/constants'
 import { groupOperations } from '@/services/groups/operations'
 import { purposeTextsConfig } from '@/services/visibility/ConfigVars'

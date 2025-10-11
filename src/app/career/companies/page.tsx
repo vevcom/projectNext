@@ -8,7 +8,7 @@ import CompanyList from '@/components/Company/CompanyList'
 import { companyListRenderer } from '@/components/Company/CompanyListRenderer'
 import { QueryParams } from '@/lib/query-params/queryParams'
 import CompanyListFilter from '@/app/_components/Company/CompanyListFilter'
-import { Session } from '@/auth/Session'
+import { Session } from '@/auth/session/Session'
 import type { SearchParamsServerSide } from '@/lib/query-params/Types'
 import type { PageSizeCompany } from '@/contexts/paging/CompanyPaging'
 

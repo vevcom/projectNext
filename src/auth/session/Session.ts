@@ -1,4 +1,4 @@
-import { authOptions } from './authoptions'
+import { authOptions } from '../nextAuth/authOptions'
 import { apiKeyOperations } from '@/services/api-keys/operations'
 import { apiKeyDecryptAndCompare } from '@/services/api-keys/hashEncryptKey'
 import { decodeApiKey } from '@/services/api-keys/apiKeyEncoder'

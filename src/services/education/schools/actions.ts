@@ -1,7 +1,7 @@
 'use server'
 
 import { createActionError, createZodActionError, safeServerCall } from '@/services/actionError'
-import { getUser } from '@/auth/getUser'
+import { getUser } from '@/auth/session/getUser'
 import { createSchoolValidation, updateSchoolValidation } from '@/education/schools/validation'
 import { createSchool } from '@/services/education/schools/create'
 import { destroySchool } from '@/services/education/schools/destroy'

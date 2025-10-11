@@ -3,7 +3,7 @@ import MakeNewCollection from './MakeNewCollection'
 import ImageCollectionList from '@/components/Image/Collection/ImageCollectionList'
 import ImageCollectionPagingProvider from '@/contexts/paging/ImageCollectionPaging'
 import CollectionCard from '@/components/Image/Collection/CollectionCard'
-import { getUser } from '@/auth/getUser'
+import { getUser } from '@/auth/session/getUser'
 import { readImageCollectionsPageAction } from '@/services/images/collections/actions'
 import type { PageSizeImageCollection } from '@/contexts/paging/ImageCollectionPaging'
 

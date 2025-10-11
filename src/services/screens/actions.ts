@@ -2,7 +2,7 @@
 
 import { createActionError, createZodActionError, safeServerCall } from '@/services/actionError'
 import { RequirePermission } from '@/auth/auther/RequirePermission'
-import { Session } from '@/auth/Session'
+import { Session } from '@/auth/session/Session'
 import { createScreen } from '@/services/screens/create'
 import { destroyScreen } from '@/services/screens/destroy'
 import { readScreen, readScreens } from '@/services/screens/read'

@@ -1,5 +1,5 @@
 'use client'
-import { useUser } from '@/auth/useUser'
+import { useUser } from '@/auth/session/useUser'
 import { EditModeContext } from '@/contexts/EditMode'
 import { checkVisibility } from '@/auth/checkVisibility'
 import { useContext, useEffect, useRef, useState } from 'react'

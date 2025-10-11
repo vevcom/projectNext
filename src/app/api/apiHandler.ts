@@ -1,9 +1,9 @@
 import '@pn-server-only'
-import { Session } from '@/auth/Session'
+import { Session } from '@/auth/session/Session'
 import { getHttpErrorCode, ServerError, Smorekopp } from '@/services/error'
 import type { ServiceOperation } from '@/services/serviceOperation'
 import type { ErrorCode, ErrorMessage } from '@/services/error'
-import type { SessionNoUser } from '@/auth/Session'
+import type { SessionNoUser } from '@/auth/session/Session'
 import type { z } from 'zod'
 
 type APIHandler<

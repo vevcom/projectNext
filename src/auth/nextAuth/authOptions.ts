@@ -1,6 +1,6 @@
 import '@pn-server-only'
 import VevenAdapter from './VevenAdapter'
-import { decryptAndComparePassword } from './password'
+import { decryptAndComparePassword } from '../passwordHash'
 import FeideProvider from '@/lib/feide/FeideProvider'
 import { updateUserStudyProgrammes } from '@/lib/feide/userRoutines'
 import { prisma } from '@/prisma/client'

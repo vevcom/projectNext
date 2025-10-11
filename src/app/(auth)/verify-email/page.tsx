@@ -1,5 +1,5 @@
 import { EmailVerifiedWrapper } from './EmailVerifiedWrapper'
-import { getUser } from '@/auth/getUser'
+import { getUser } from '@/auth/session/getUser'
 import { QueryParams } from '@/lib/query-params/queryParams'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { verifyEmailAction } from '@/services/auth/actions'

@@ -1,5 +1,5 @@
 import { readUserProfileAction } from '@/services/users/actions'
-import { Session } from '@/auth/Session'
+import { Session } from '@/auth/session/Session'
 import { userAuth } from '@/services/users/auth'
 import { notFound, redirect } from 'next/navigation'
 

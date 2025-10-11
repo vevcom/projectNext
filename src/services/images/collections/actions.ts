@@ -2,7 +2,7 @@
 
 import { createActionError, createZodActionError, safeServerCall } from '@/services/actionError'
 import { checkVisibility } from '@/auth/checkVisibility'
-import { getUser } from '@/auth/getUser'
+import { getUser } from '@/auth/session/getUser'
 import { getVisibilityFilter } from '@/auth/getVisibilityFilter'
 import { createImageCollection } from '@/services/images/collections/create'
 import { destroyImageCollection } from '@/services/images/collections/destroy'

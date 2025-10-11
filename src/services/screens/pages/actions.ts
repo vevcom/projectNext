@@ -1,7 +1,7 @@
 'use server'
 
 import { createActionError, createZodActionError, safeServerCall } from '@/services/actionError'
-import { getUser } from '@/auth/getUser'
+import { getUser } from '@/auth/session/getUser'
 import { createPage } from '@/services/screens/pages/create'
 import { destroyPage } from '@/services/screens/pages/destroy'
 import { readPage, readPages } from '@/services/screens/pages/read'

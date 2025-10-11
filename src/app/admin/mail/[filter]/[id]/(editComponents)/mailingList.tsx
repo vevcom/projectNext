@@ -9,7 +9,7 @@ import {
     createMailingListGroupRelationAction,
     createMailingListUserRelationAction
 } from '@/services/mail/actions'
-import { useUser } from '@/auth/useUser'
+import { useUser } from '@/auth/session/useUser'
 import { updateMailingListAction, destroyMailingListAction } from '@/services/mail/list/actions'
 import { useRouter } from 'next/navigation'
 import type { MailAddressExternal, MailAlias } from '@prisma/client'

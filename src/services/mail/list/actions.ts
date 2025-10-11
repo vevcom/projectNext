@@ -1,7 +1,7 @@
 'use server'
 
 import { createActionError, createZodActionError, safeServerCall } from '@/services/actionError'
-import { getUser } from '@/auth/getUser'
+import { getUser } from '@/auth/session/getUser'
 import { createMailingList } from '@/services/mail/list/create'
 import { destroyMailingList } from '@/services/mail/list/destroy'
 import { updateMailingList } from '@/services/mail/list/update'

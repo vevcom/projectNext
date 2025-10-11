@@ -1,6 +1,6 @@
 import styles from './page.module.scss'
 import { readSchoolsPageAction } from '@/services/education/schools/actions'
-import { getUser } from '@/auth/getUser'
+import { getUser } from '@/auth/session/getUser'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import SchoolPagingProvider from '@/contexts/paging/SchoolPaging'
 import SchoolList from '@/components/School/SchoolList'

@@ -1,6 +1,6 @@
 import '@pn-server-only'
 import { safeServerCall } from './actionError'
-import { Session } from '@/auth/Session'
+import { Session } from '@/auth/session/Session'
 import type { ActionReturn } from './actionTypes'
 import type { ServiceOperation } from '@/services/serviceOperation'
 import type { z } from 'zod'

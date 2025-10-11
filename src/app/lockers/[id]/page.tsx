@@ -4,7 +4,7 @@ import CreateLockerReservationForm from './CreateLockerReservationForm'
 import UpdateLockerReservationForm from './UpdateLockerReservationForm'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { readLockerAction } from '@/services/lockers/actions'
-import { getUser } from '@/auth/getUser'
+import { getUser } from '@/auth/session/getUser'
 import { checkGroupValidity, groupOperations, inferGroupName } from '@/services/groups/operations'
 
 

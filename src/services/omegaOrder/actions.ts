@@ -1,7 +1,7 @@
 'use server'
 
 import { createActionError, safeServerCall } from '@/services/actionError'
-import { getUser } from '@/auth/getUser'
+import { getUser } from '@/auth/session/getUser'
 import { createOmegaOrder } from '@/services/omegaOrder/create'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import type { ActionReturn } from '@/services/actionTypes'

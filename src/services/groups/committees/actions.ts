@@ -2,7 +2,7 @@
 
 import { makeAction } from '@/services/serverAction'
 import { createActionError, createZodActionError, safeServerCall } from '@/services/actionError'
-import { getUser } from '@/auth/getUser'
+import { getUser } from '@/auth/session/getUser'
 import { createCommittee } from '@/services/groups/committees/create'
 import { committeeOperations } from '@/services/groups/committees/operations'
 import { updateCommittee } from '@/services/groups/committees/update'

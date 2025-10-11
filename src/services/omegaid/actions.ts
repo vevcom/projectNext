@@ -1,7 +1,7 @@
 'use server'
 
 import { createActionError } from '@/services/actionError'
-import { getUser } from '@/auth/getUser'
+import { getUser } from '@/auth/session/getUser'
 import { ServerError } from '@/services/error'
 import { generateOmegaId } from '@/services/omegaid/generate'
 import type { ActionReturn } from '@/services/actionTypes'

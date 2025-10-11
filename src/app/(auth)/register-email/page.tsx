@@ -1,5 +1,5 @@
 import EmailRegistrationForm from './EmailregistrationForm'
-import { getUser } from '@/auth/getUser'
+import { getUser } from '@/auth/session/getUser'
 import { readUserAction } from '@/services/users/actions'
 import { notFound, redirect } from 'next/navigation'
 

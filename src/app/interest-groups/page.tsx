@@ -3,7 +3,7 @@ import InterestGroup from './InterestGroup'
 import SpecialCmsParagraph from '@/cms/CmsParagraph/SpecialCmsParagraph'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
-import { Session } from '@/auth/Session'
+import { Session } from '@/auth/session/Session'
 import { interestGroupAuth } from '@/services/groups/interestGroups/auth'
 import { readInterestGroupsAction } from '@/services/groups/interestGroups/actions'
 
