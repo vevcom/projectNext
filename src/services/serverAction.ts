@@ -1,5 +1,5 @@
 import '@pn-server-only'
-import { prismaErrorWrapper } from './prismaCall'
+import { safeServerCall } from './actionError'
 import { Session } from '@/auth/session/Session'
 import type { ActionReturn } from './actionTypes'
 import type { ServiceOperation } from '@/services/serviceOperation'
@@ -126,7 +126,7 @@ export function makeAction<
             processedData = data?.data ?? undefined
         }
 
-        return prismaErrorWrapper(
+        return safeServerCall(
             () => serviceOperation<'UNSAFE'>({
                 session,
                 params: params?.params,
