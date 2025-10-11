@@ -1,25 +1,19 @@
 'use client'
-import generatePagingProvider, { generatePagingContext } from './PagingGenerator'
+import { generatePagingProvider, generatePagingContext } from './PagingGenerator'
 import { readManyEventRegistrationAction } from '@/services/events/registration/actions'
 import type { EventRegistrationExpanded, EventRegistrationFetcherDetails } from '@/services/events/registration/types'
 import type { PageSizeUsers } from './UserPaging'
-import type { ReadPageInput } from '@/lib/paging/types'
-
-const fetcher = async (x: ReadPageInput<PageSizeUsers, number, EventRegistrationFetcherDetails>) => {
-    const registrations = await readManyEventRegistrationAction({
-        eventId: x.details.eventId,
-        take: x.page.pageSize,
-        skip: (x.page.page * x.page.pageSize) || undefined,
-        type: x.details.type,
-    })
-    return registrations
-}
 
 export const EventRegistrationPagingContext =
     generatePagingContext<EventRegistrationExpanded, number, PageSizeUsers, EventRegistrationFetcherDetails>()
-const EventRegistrationPagingProvider = generatePagingProvider({
+
+export const EventRegistrationPagingProvider = generatePagingProvider({
     Context: EventRegistrationPagingContext,
-    fetcher,
-    getCursorAfterFetch: data => (data.length),
+    fetcher: async ({ paging }) => await readManyEventRegistrationAction({
+        eventId: paging.details.eventId,
+        take: paging.page.pageSize,
+        skip: (paging.page.page * paging.page.pageSize) || undefined,
+        type: paging.details.type,
+    }),
+    getCursor: ({ fetchedCount }) => (fetchedCount),
 })
-export default EventRegistrationPagingProvider

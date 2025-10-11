@@ -1,14 +1,9 @@
 'use client'
-import generatePagingProvider, { generatePagingContext } from './PagingGenerator'
+import { generatePagingProvider, generatePagingContext } from './PagingGenerator'
 import { readArchivedEventsPageAction } from '@/services/events/actions'
 import type { EventArchiveCursor, EventArchiveDetails, EventExpanded } from '@/services/events/types'
-import type { ReadPageInput } from '@/lib/paging/types'
 
 export type PageSizeEventArchive = 12
-const fetcher = async (x: ReadPageInput<PageSizeEventArchive, EventArchiveCursor, EventArchiveDetails>) => {
-    const ret = await readArchivedEventsPageAction({ paging: x })
-    return ret
-}
 
 export const EventArchivePagingContext = generatePagingContext<
     EventExpanded,
@@ -16,9 +11,9 @@ export const EventArchivePagingContext = generatePagingContext<
     PageSizeEventArchive,
     EventArchiveDetails
 >()
-const EventArchivePagingProvider = generatePagingProvider({
+
+export const EventArchivePagingProvider = generatePagingProvider({
     Context: EventArchivePagingContext,
-    fetcher,
-    getCursorAfterFetch: data => (data.length ? { id: data[data.length - 1].id } : null),
+    fetcher: async ({ paging }) => await readArchivedEventsPageAction({ paging }),
+    getCursor: ({ lastElement }) => ({ id: lastElement.id }),
 })
-export default EventArchivePagingProvider

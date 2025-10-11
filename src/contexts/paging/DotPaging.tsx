@@ -1,15 +1,10 @@
 'use client'
-import generatePagingProvider, { generatePagingContext } from './PagingGenerator'
+import { generatePagingProvider, generatePagingContext } from './PagingGenerator'
 
 import { readDotPageAction } from '@/services/dots/actions'
-import type { ReadPageInput } from '@/lib/paging/types'
 import type { DotDetails, DotCursor, DotWrapperWithDots } from '@/services/dots/types'
 
 export type PageSizeDots = 30
-const fetcher = async (x: ReadPageInput<PageSizeDots, DotCursor, DotDetails>) => {
-    const ret = await readDotPageAction({ paging: x })
-    return ret
-}
 
 export const DotPagingContext = generatePagingContext<
     DotWrapperWithDots,
@@ -17,9 +12,9 @@ export const DotPagingContext = generatePagingContext<
     PageSizeDots,
     DotDetails
 >()
-const DotPagingProvider = generatePagingProvider({
+
+export const DotPagingProvider = generatePagingProvider({
     Context: DotPagingContext,
-    fetcher,
-    getCursorAfterFetch: data => (data.length ? { id: data[data.length - 1].id } : null),
+    fetcher: async ({ paging }) => await readDotPageAction({ paging }),
+    getCursor: ({ lastElement }) => ({ id: lastElement.id }),
 })
-export default DotPagingProvider

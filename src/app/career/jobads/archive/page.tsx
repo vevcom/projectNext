@@ -1,7 +1,7 @@
 import styles from './page.module.scss'
 import JobAdInactiveList from './JobAdInactiveList'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
-import JobAdInactiveProvider from '@/contexts/paging/JobAdInactivePaging'
+import { JobAdInactiveProvider } from '@/contexts/paging/JobAdInactivePaging'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Link from 'next/link'

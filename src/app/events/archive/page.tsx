@@ -2,12 +2,12 @@ import EventArchiveList from './EventArchiveList'
 import TagHeaderItem from '@/app/events/TagHeaderItem'
 import { readEventTagsAction } from '@/services/events/tags/actions'
 import EventsLandingLayout from '@/app/events/EventsLandingLayout'
-import EventArchivePagingProvider from '@/contexts/paging/EventArchivePaging'
-import { QueryParams } from '@/lib/query-params/queryParams'
+import { EventArchivePagingProvider } from '@/contexts/paging/EventArchivePaging'
+import { QueryParams } from '@/lib/queryParams/queryParams'
 import { eventTagAuth } from '@/services/events/tags/auth'
 import { Session } from '@/auth/session/Session'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
-import type { SearchParamsServerSide } from '@/lib/query-params/types'
+import type { SearchParamsServerSide } from '@/lib/queryParams/types'
 
 type PropTypes = SearchParamsServerSide
 

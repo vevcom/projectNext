@@ -1,10 +1,11 @@
 'use client'
 import styles from './RegistrationsList.module.scss'
 import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
-import EventRegistrationPagingProvider, { EventRegistrationPagingContext } from '@/contexts/paging/EventRegistrationPaging'
+import { EventRegistrationPagingProvider, EventRegistrationPagingContext } from '@/contexts/paging/EventRegistrationPaging'
 import UserCard from '@/components/User/UserCard'
-import EventRegistrationDetailedPagingProvider, {
-    EventRegistrationDetailedPagingContext
+import {
+    EventRegistrationDetailedPagingProvider,
+    EventRegistrationDetailedPagingContext,
 } from '@/contexts/paging/EventRegistrationDetailedPaging'
 import UserDisplayName from '@/components/User/UserDisplayName'
 import Slider from '@/components/UI/Slider'

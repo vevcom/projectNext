@@ -2,11 +2,11 @@ import styles from './page.module.scss'
 import CreateDotForm from './CreateDotForm'
 import DotList from './DotList'
 import UserSelectionProvider from '@/contexts/UserSelection'
-import UserPagingProvider from '@/contexts/paging/UserPaging'
+import { UserPagingProvider } from '@/contexts/paging/UserPaging'
 import PopUpProvider from '@/contexts/PopUp'
-import DotPagingProvider from '@/contexts/paging/DotPaging'
-import { QueryParams } from '@/lib/query-params/queryParams'
-import type { SearchParamsServerSide } from '@/lib/query-params/types'
+import { DotPagingProvider } from '@/contexts/paging/DotPaging'
+import { QueryParams } from '@/lib/queryParams/queryParams'
+import type { SearchParamsServerSide } from '@/lib/queryParams/types'
 
 type PropTypes = SearchParamsServerSide
 

@@ -10,10 +10,10 @@ import React, {
     useRef
 } from 'react'
 import { useInView } from 'react-intersection-observer'
-import type { PagingContextType } from '@/contexts/paging/PagingGenerator'
+import type { PagingContext } from '@/contexts/paging/PagingGenerator'
 
 type PropTypes<Data, Cursor, PageSize extends number, FetcherDetails> = {
-    pagingContext: PagingContextType<Data, Cursor, PageSize, FetcherDetails>,
+    pagingContext: PagingContext<Data, Cursor, PageSize, FetcherDetails>,
     renderer: (data: Data, i: number) => React.ReactNode,
     loadingInfoClassName?: string,
 }

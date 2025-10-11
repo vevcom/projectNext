@@ -5,7 +5,7 @@ import { SettingsHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopU
 import TextInput from '@/UI/TextInput'
 import Textarea from '@/UI/Textarea'
 import ColorInput from '@/UI/ColorInput'
-import { QueryParams } from '@/lib/query-params/queryParams'
+import { QueryParams } from '@/lib/queryParams/queryParams'
 import { bindParams } from '@/services/actionBind'
 import { destroyEventTagAction, updateEventTagAction, createEventTagAction } from '@/services/events/tags/actions'
 import Link from 'next/link'

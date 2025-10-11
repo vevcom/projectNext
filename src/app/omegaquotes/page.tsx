@@ -1,7 +1,7 @@
 import OmegaquoteList from './OmegaquotesQuoteList'
 import OmegaquoteQuote from './OmegaquotesQuote'
 import CreateOmegaquoteForm from './CreateOmegaquoteForm'
-import OmegaquotePagingProvider from '@/contexts/paging/OmegaquotesPaging'
+import { OmegaquotePagingProvider } from '@/contexts/paging/OmegaquotesPaging'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { readQuotesPageAction } from '@/services/omegaquotes/actions'
 import { getUser } from '@/auth/session/getUser'

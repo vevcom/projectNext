@@ -1,7 +1,7 @@
 import styles from './page.module.scss'
 import CollectionAdmin from './CollectionAdmin'
 import ImageList from '@/components/Image/ImageList/ImageList'
-import ImagePagingProvider from '@/contexts/paging/ImagePaging'
+import { ImagePagingProvider } from '@/contexts/paging/ImagePaging'
 import ImageListImage from '@/components/Image/ImageList/ImageListImage'
 import ImageDisplayProvider from '@/contexts/ImageDisplayProvider'
 import { readImageCollectionAction } from '@/services/images/collections/actions'

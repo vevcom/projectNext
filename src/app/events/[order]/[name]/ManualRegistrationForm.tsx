@@ -2,7 +2,7 @@
 import styles from './ManualRegistrationForm.module.scss'
 import Form from '@/components/Form/Form'
 import UserList from '@/components/User/UserList/UserList'
-import UserPagingProvider from '@/contexts/paging/UserPaging'
+import { UserPagingProvider } from '@/contexts/paging/UserPaging'
 import UserSelectionProvider, { UserSelectionContext } from '@/contexts/UserSelection'
 import TextInput from '@/components/UI/TextInput'
 import { bindParams } from '@/services/actionBind'

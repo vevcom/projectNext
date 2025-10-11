@@ -7,10 +7,10 @@ import { readCurrentEventsAction } from '@/services/events/actions'
 import EventCard from '@/components/Event/EventCard'
 import { readEventTagsAction } from '@/services/events/tags/actions'
 import { eventTagAuth } from '@/services/events/tags/auth'
-import { QueryParams } from '@/lib/query-params/queryParams'
+import { QueryParams } from '@/lib/queryParams/queryParams'
 import { Session } from '@/auth/session/Session'
 import { faArchive } from '@fortawesome/free-solid-svg-icons'
-import type { SearchParamsServerSide } from '@/lib/query-params/types'
+import type { SearchParamsServerSide } from '@/lib/queryParams/types'
 
 type PropTypes = SearchParamsServerSide
 

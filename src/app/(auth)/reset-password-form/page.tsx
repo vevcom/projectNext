@@ -1,7 +1,7 @@
 import ResetPasswordForm from './resetpasswordForm'
 import { verifyResetPasswordTokenAction } from '@/services/auth/actions'
-import { QueryParams } from '@/lib/query-params/queryParams'
-import type { SearchParamsServerSide } from '@/lib/query-params/types'
+import { QueryParams } from '@/lib/queryParams/queryParams'
+import type { SearchParamsServerSide } from '@/lib/queryParams/types'
 
 type PropTypes = SearchParamsServerSide
 
