@@ -348,7 +348,7 @@ export const seedCmsConfig: CmsConfig = {
                         file: 'varsling_info/varsling_info.md'
                     },
                     cmsImage: {
-                        name: 'søknadsguide_1_image',
+                        name: 'varslingsside_1_image',
                         imageName: 'kappemann',
                         imageSize: 'MEDIUM'
                     }
