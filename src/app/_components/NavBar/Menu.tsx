@@ -1,5 +1,6 @@
 'use client'
 import styles from './Menu.module.scss'
+import stylesNav from './NavBar.module.scss'
 import useKeyPress from '@/hooks/useKeyPress'
 import useClickOutsideRef from '@/hooks/useClickOutsideRef'
 import useOnNavigation from '@/hooks/useOnNavigation'
@@ -49,6 +50,12 @@ export default function Menu({ items, openBtnContent }: PropTypes) {
             }
             <button className={styles.openBtn} onClick={() => setIsOpen(true)}>
                 {openBtnContent}
+                {!isOpen && // This is bad code and should be replaced...
+                    <p className={stylesNav.openMenu}>Mer</p>
+                }
+                {isOpen &&
+                    <p className={stylesNav.openMenu}>Mindre</p>
+                }
             </button>
         </>
     )
