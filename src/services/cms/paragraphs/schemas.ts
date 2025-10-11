@@ -3,7 +3,7 @@ import { z } from 'zod'
 
 
 const baseSchema = z.object({
-    name: z.string(),
+    name: z.string().optional(),
     special: z.nativeEnum(SpecialCmsParagraph).optional(),
 })
 
