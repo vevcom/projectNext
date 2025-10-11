@@ -1,6 +1,6 @@
 'use client'
 
-import styles from './channelSettings.module.scss'
+import styles from './ChannelSettings.module.scss'
 import NotificationMethodSelector from '@/components/NotificaionMethodSelector/NotificaionMethodSelector'
 import TextInput from '@/components/UI/TextInput'
 import { SelectNumber } from '@/components/UI/Select'

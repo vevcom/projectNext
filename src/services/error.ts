@@ -77,7 +77,11 @@ export const errorCodes = [
         httpCode: 403,
         defaultMessage: 'Du har ikke lov til å gjøre dette',
     }
-] as const
+] as const satisfies {
+    name: string
+    httpCode: number
+    defaultMessage: string
+}[]
 
 export type ErrorCode = typeof errorCodes[number]['name']
 
