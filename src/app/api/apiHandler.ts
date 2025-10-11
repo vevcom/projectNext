@@ -12,7 +12,7 @@ type APIHandler<
     ParamsSchema extends z.ZodTypeAny | undefined = undefined,
     DataSchema extends z.ZodTypeAny | undefined = undefined,
 > = {
-    serviceMethod: ServiceOperation<boolean, Return, ParamsSchema, DataSchema>,
+    serviceOperation: ServiceOperation<boolean, Return, ParamsSchema, DataSchema>,
 } & (ParamsSchema extends undefined ? {
     params?: undefined,
 } : {
@@ -41,13 +41,13 @@ export function apiHandler<
     Return,
     ParamsSchema extends z.ZodTypeAny | undefined = undefined,
     DataSchema extends z.ZodTypeAny | undefined = undefined,
->({ serviceMethod, params }: APIHandler<RawParams, Return, ParamsSchema, DataSchema>) {
+>({ serviceOperation, params }: APIHandler<RawParams, Return, ParamsSchema, DataSchema>) {
     // TODO: I think I will rewrite this to be easier to read
     return async (req: Request, { params: rawParams }: { params: Promise<RawParams> }) =>
         await apiHandlerGeneric<Return>(req, async session => {
             let data
 
-            if (serviceMethod.dataSchema) {
+            if (serviceOperation.dataSchema) {
                 try {
                     data = await req.json()
                 } catch (error) {
@@ -58,7 +58,7 @@ export function apiHandler<
                 }
             }
 
-            return serviceMethod<'UNCHECKED'>({
+            return serviceOperation<'UNCHECKED'>({
                 params: params ? params(await rawParams) : undefined,
                 data,
                 session,

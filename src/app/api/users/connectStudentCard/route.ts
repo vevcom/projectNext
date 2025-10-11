@@ -3,5 +3,5 @@ import { userOperations } from '@/services/users/operations'
 
 
 export const POST = apiHandler({
-    serviceMethod: userOperations.connectStudentCard
+    serviceOperation: userOperations.connectStudentCard
 })

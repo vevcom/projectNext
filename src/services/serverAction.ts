@@ -6,40 +6,40 @@ import type { ServiceOperation } from '@/services/serviceOperation'
 import type { z } from 'zod'
 
 export function makeAction<Return>(
-    serviceMethod: ServiceOperation<boolean, Return, undefined, undefined>
+    serviceOperation: ServiceOperation<boolean, Return, undefined, undefined>
 ): () => Promise<ActionReturn<Return>>
 
 export function makeAction<Return, ParamsSchema extends z.ZodTypeAny>(
-    serviceMethod: ServiceOperation<boolean, Return, ParamsSchema, undefined>
+    serviceOperation: ServiceOperation<boolean, Return, ParamsSchema, undefined>
 ): (params: z.input<ParamsSchema>) => Promise<ActionReturn<Return>>
 
 export function makeAction<Return, DataSchema extends z.ZodTypeAny>(
-    serviceMethod: ServiceOperation<boolean, Return, undefined, DataSchema>
+    serviceOperation: ServiceOperation<boolean, Return, undefined, DataSchema>
 ): (data: z.input<DataSchema> | FormData) => Promise<ActionReturn<Return>>
 
 // This function is overloaded to allow for different combinations of parameters and data.
 export function makeAction<Return, ParamsSchema extends z.ZodTypeAny, DataSchema extends z.ZodTypeAny>(
-    serviceMethod: ServiceOperation<boolean, Return, ParamsSchema, DataSchema>
+    serviceOperation: ServiceOperation<boolean, Return, ParamsSchema, DataSchema>
 ): (params: z.input<ParamsSchema>, data: z.input<DataSchema> | FormData) => Promise<ActionReturn<Return>>
 
 /**
- * Turn a service method into suitable function for an action.
+ * Turn a service operation into suitable function for an action.
  *
- * @param serviceMethod - The service method to create an action for.
- * @returns - A function that takes in data (which may be FormData) and/or/nor parameters and calls the service method.
+ * @param serviceOperation - The service operation to create an action for.
+ * @returns - A function that takes in data (which may be FormData) and/or/nor parameters and calls the service operation.
  */
 export function makeAction<
     Return,
     ParamsSchema extends z.ZodTypeAny | undefined = undefined,
     DataSchema extends z.ZodTypeAny | undefined = undefined,
 >(
-    serviceMethod: ServiceOperation<boolean, Return, ParamsSchema, DataSchema>
+    serviceOperation: ServiceOperation<boolean, Return, ParamsSchema, DataSchema>
 ) {
     // Letting the arguments to the actual function be unknown is safer as anything can be passed to it form the client.
-    // The action and service method will validate the parameter and data before it is used.
+    // The action and service operation will validate the parameter and data before it is used.
     //
     // For convenience this function is given a return type that is more specific. The return type is a function that
-    // has arguments witch match the underlying service method. This makes programming easier as Intellisense can
+    // has arguments witch match the underlying service operation. This makes programming easier as Intellisense can
     // help and errors are caught at compile time.
     const actionUnsafe = async (params?: unknown, data?: unknown) => {
         const session = await Session.fromNextAuth()
@@ -50,15 +50,15 @@ export function makeAction<
             data = undefined
         }
 
-        return safeServerCall(() => serviceMethod<'UNCHECKED'>({
+        return safeServerCall(() => serviceOperation<'UNCHECKED'>({
             params,
             data,
             session,
         }))
     }
 
-    // If the service method has a params schema, we require the params to be passed to the action.
-    if (serviceMethod.paramsSchema) {
+    // If the service operation has a params schema, we require the params to be passed to the action.
+    if (serviceOperation.paramsSchema) {
         return actionUnsafe
     }
 

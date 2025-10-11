@@ -14,7 +14,7 @@ export const companyOperations = {
         dataSchema: companySchemas.create,
         authorizer: () => companyAuth.create.dynamicFields({}),
         operation: async ({ prisma, data }) => {
-            //TODO: tranaction when createCmsImage is service method.
+            //TODO: tranaction when createCmsImage is service operation.
             const logo = await createCmsImage({ name: uuid() })
             return await prisma.company.create({
                 data: {

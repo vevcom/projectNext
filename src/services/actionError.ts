@@ -5,7 +5,7 @@ import type { SafeParseError } from 'zod'
 import type { ActionError, ActionReturn } from './actionTypes'
 
 /**
- * @deprecated With the "new" service method system this should not be called directly.
+ * @deprecated With the "new" service operation system this should not be called directly.
  * The action creation utility should handle this internally.
  */
 export function createActionError(errorCode: ErrorCode | AuthStatus, error?: string | ErrorMessage[]): ActionError {
@@ -26,7 +26,7 @@ export function createActionError(errorCode: ErrorCode | AuthStatus, error?: str
 }
 
 /**
- * @deprecated With the "new" service method system this should not be called directly.
+ * @deprecated With the "new" service operation system this should not be called directly.
  * The action creation utility should handle this internally.
  */
 export function createZodActionError<T>(parse: SafeParseError<T>): ActionError {

@@ -6,7 +6,7 @@ import { prisma as globalPrisma } from '@/prisma/client'
 import { describe, expect, test } from '@jest/globals'
 import { z } from 'zod'
 
-describe('service method', () => {
+describe('service operation', () => {
     describe('simple', () => {
         const addPositiveOnly = defineOperation({
             authorizer: ({ data: { a, b } }) => {
@@ -57,13 +57,13 @@ describe('service method', () => {
     })
 
     describe('nested', () => {
-        // Simple service method that just returns its own context
+        // Simple service operation that just returns its own context
         const inner = defineOperation({
             authorizer: () => RequireNothing.staticFields({}).dynamicFields({}),
             operation: async (context) => context,
         })
 
-        // Outer service method that calls the inner one and returns its context
+        // Outer service operation that calls the inner one and returns its context
         const outer = defineOperation({
             authorizer: () => RequireNothing.staticFields({}).dynamicFields({}),
             operation: async () => await inner({}),

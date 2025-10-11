@@ -5,5 +5,5 @@ export const GET = apiHandler({
     params: (rawparams: { studentCard: string }) => ({
         studentCard: rawparams.studentCard,
     }),
-    serviceMethod: userOperations.readUserWithBalance,
+    serviceOperation: userOperations.readUserWithBalance,
 })

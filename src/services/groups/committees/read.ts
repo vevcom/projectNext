@@ -88,7 +88,7 @@ export async function readCommitteeParagraph(shortName: string) : Promise<CmsPar
     return article.paragraph
 }
 
-// TODO: Create ServiceMethod
+// TODO: Create ServiceOperation
 export async function readCommitteeMembers(shortName: string) {
     const defaultImage = await imageOperations.readSpecial({
         params: { special: 'DEFAULT_PROFILE_IMAGE' },
