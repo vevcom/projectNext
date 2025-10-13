@@ -72,6 +72,16 @@ export const seedImageConfig: ImageSeedConfig = [
         credit: null,
         license: null,
     },
+
+    {
+        name: 'capgemini',
+        alt: 'Capgemini',
+        fsLocation: 'capgemini.png',
+        collection: defaultCollection,
+        credit: null,
+        license: null,
+    },
+
     {
         name: 'ohma',
         alt: 'Ohma',

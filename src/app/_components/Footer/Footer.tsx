@@ -42,12 +42,22 @@ function Footer() {
             </div>
            
             <div className={styles.sponsors}>
-                <SpecialCmsImage special="FOOTER_2" width={170}>
-                    <Link href="http://www.nordicsemi.com" target="_blank" />
-                </SpecialCmsImage>
-                <SpecialCmsImage special="FOOTER_3" width={100}>
-                    <Link href="http://www.kongsberg.com" target="_blank" />
-                </SpecialCmsImage>
+                <div className={styles.sponsor}>
+                    <SpecialCmsImage special="FOOTER_2" width={170}>
+                        <Link href="http://www.nordicsemi.com" target="_blank" />
+                    </SpecialCmsImage>
+                </div>
+                <div className={styles.sponsor}>
+                    <SpecialCmsImage special="FOOTER_3" width={100}>
+                        <Link href="http://www.kongsberg.com" target="_blank" />
+                    </SpecialCmsImage>
+                </div>
+                <div className={styles.sponsor}>
+                    <SpecialCmsImage special="FOOTER_4" width={100}>
+                        <Link href="https://www.capgemini.com/" target="_blank" />
+                    </SpecialCmsImage>
+                </div>
+                
                 
                 
                 
