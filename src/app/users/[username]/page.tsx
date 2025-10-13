@@ -1,7 +1,6 @@
 import styles from './page.module.scss'
 import { readSpecialImageAction } from '@/actions/images/read'
 import BorderButton from '@/components/UI/BorderButton'
-import { readCommitteesFromGroupIds } from '@/services/groups/committees/read'
 import { readUserProfileAction } from '@/actions/users/read'
 import { Session } from '@/auth/Session'
 import { UserAuthers } from '@/services/users/authers'
@@ -28,15 +27,20 @@ export default async function User({ params }: PropTypes) {
     if (!profileRes.success) return notFound()
     const profile = profileRes.data
 
-    // TODO: REFACTOR THIS PART, THE ORDER IS BASED ON ORDER OF MEMBERSHIP NOT STUDYPROGRAMME ALSO I THINK
-    const groupIds = profile.memberships.map(group => group.groupId)
-    const committees = await readCommitteesFromGroupIds(groupIds)
+    const committeeMemberships = profile.user.memberships.filter(membership => membership.group.groupType === 'COMMITTEE')
+        .map(membership => ({
+            title: membership.title,
+            committee: membership.group.committee
+        })).filter(membership => membership.committee !== null)
 
-    //TODO: Basic user info will exist on the profile object
-    const studyProgramme = { name: 'Kybernetikk', code: 'MTTK' }
+    const studyProgrammes = profile.user.memberships.filter(membership => membership.group.groupType === 'STUDY_PROGRAMME')
+        .map(membership => membership.group.studyProgramme).filter(membership => membership !== null)
 
-    // TODO: Change to the correct order
-    const order = 105
+    const omegaMembership = profile.user.memberships
+        .find(membership => membership.group.groupType === 'OMEGA_MEMBERSHIP_GROUP')
+    if (!omegaMembership) {
+        throw new Error('Failed to load the omega membership level')
+    }
 
     const profileImage = profile.user.image ? profile.user.image : await readSpecialImageAction.bind(
         null, { special: 'DEFAULT_PROFILE_IMAGE' }
@@ -60,17 +64,17 @@ export default async function User({ params }: PropTypes) {
                         <div className={styles.nameAndId}>
                             <h1><UserDisplayName user={profile.user} /></h1>
                         </div>
-                        {
-                            studyProgramme && (
-                                <p className={styles.studyProgramme}>{studyProgramme.name} {`(${studyProgramme.code})`}</p>
-                            )
-                        }
+                        { studyProgrammes.map((studyProgramme, i) =>
+                            <p key={i} className={styles.studyProgramme}>
+                                {studyProgramme.name} {`(${studyProgramme.code})`}
+                            </p>
+                        )}
                         <div className={styles.committeesWrapper}>
                             {
-                                committees.map(committee =>
+                                committeeMemberships.map(membership =>
                                     <div className={styles.committee} key={uuid()}>
-                                        <Link href={`/committees/${committee.shortName}`}>
-                                            <p>{committee.name}</p>
+                                        <Link href={`/committees/${membership.committee?.shortName}`}>
+                                            <p>{membership.title} i {membership.committee?.name}</p>
                                         </Link>
                                     </div>
                                 )
@@ -80,7 +84,7 @@ export default async function User({ params }: PropTypes) {
                         <hr />
                         <p className={styles.orderText}>
                             {UserConfig.sexConfig[profile.user.sex ?? 'OTHER'].title}
-                            uudaf {order}´dis orden i Sanctus Omega Broderskab
+                            uudaf {omegaMembership.order}´dis orden i Sanctus Omega Broderskab
                         </p>
                     </div>
                     <div className={styles.leftSection}>
@@ -115,6 +119,10 @@ export default async function User({ params }: PropTypes) {
                         <p>
                             <span className={styles.username}>Brukernavn:</span>
                             {profile.user.username}
+                        </p>
+                        <p>
+                            <span className={styles.username}>Mobilnummer:</span>
+                            {profile.user.mobile}
                         </p>
                     </div>
                 </div>

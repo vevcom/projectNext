@@ -106,6 +106,45 @@ export namespace UserMethods {
                     ...UserConfig.filterSelection,
                     bio: true,
                     image: true,
+                    memberships: {
+                        where: {
+                            OR: [
+                                {
+                                    group: {
+                                        groupType: 'CLASS',
+                                    },
+                                    active: true,
+                                },
+                                {
+                                    group: {
+                                        groupType: 'COMMITTEE'
+                                    }
+                                },
+                                {
+                                    group: {
+                                        groupType: 'OMEGA_MEMBERSHIP_GROUP'
+                                    },
+                                    active: true,
+                                },
+                                {
+                                    group: {
+                                        groupType: 'STUDY_PROGRAMME'
+                                    },
+                                    active: true,
+                                },
+                            ]
+                        },
+                        include: {
+                            group: {
+                                include: {
+                                    class: true,
+                                    committee: true,
+                                    omegaMembershipGroup: true,
+                                    studyProgramme: true
+                                }
+                            }
+                        }
+                    }
                 },
             }).then(async userData => ({
                 ...userData,

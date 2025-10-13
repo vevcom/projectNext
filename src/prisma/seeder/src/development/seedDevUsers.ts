@@ -1,6 +1,7 @@
 import { hashAndEncryptPassword } from '@/auth/password'
 import { v4 as uuid } from 'uuid'
-import { Membership, OmegaMembershipLevel, Prisma, type PrismaClient } from '@prisma/client'
+import type { Prisma } from '@prisma/client'
+import { OmegaMembershipLevel, type PrismaClient } from '@prisma/client'
 import { randomInt } from 'crypto'
 
 export default async function seedDevUsers(prisma: PrismaClient) {

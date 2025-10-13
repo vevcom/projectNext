@@ -5,12 +5,11 @@ import BorderButton from '@/UI/BorderButton'
 import useClickOutsideRef from '@/hooks/useClickOutsideRef'
 import useOnNavigation from '@/hooks/useOnNavigation'
 import UserDisplayName from '@/components/User/UserDisplayName'
-import { faCog, faDotCircle, faMoneyBill, faQrcode, faSignOut, faUser } from '@fortawesome/free-solid-svg-icons'
+import { faCog, faMoneyBill, faQrcode, faSignOut, faUser } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Link from 'next/link'
 import { useState } from 'react'
 import type { Profile } from '@/services/users/Types'
-import PopUp from '../PopUp/PopUp'
 
 type PropTypes = {
     profile: Profile | null

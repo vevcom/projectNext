@@ -1,14 +1,14 @@
 'use server'
+import styles from './page.module.scss'
 import { Session } from '@/auth/Session'
+import OmegaId from '@/components/OmegaId/identification/OmegaId'
 import { forbidden, notFound, redirect } from 'next/navigation'
 import type { PropTypes } from '@/app/users/[username]/page'
-import OmegaId from '@/components/OmegaId/identification/OmegaId'
-import styles from './page.module.scss'
 
 
 export default async function OmegaIdPage({ params }: PropTypes) {
     const session = await Session.fromNextAuth()
-    let username = (await params).username
+    const username = (await params).username
 
     if (!session.user) return notFound()
 
@@ -17,7 +17,7 @@ export default async function OmegaIdPage({ params }: PropTypes) {
     }
 
     if (username !== session.user.username) {
-        forbidden();
+        forbidden()
     }
 
     return <div className={styles.wrapper}>
