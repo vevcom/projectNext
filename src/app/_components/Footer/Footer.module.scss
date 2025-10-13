@@ -1,139 +1,141 @@
 @use "@/styles/ohma";
-
 .Footer {
     font-weight: ohma.$fonts-weight-s;
     background-color: ohma.$colors-gray-800;
     color: ohma.$colors-white;
-    display: grid;
-    padding: 10*ohma.$gap 20*ohma.$gap;
-    > * {
-        p {
-            margin-bottom: ohma.$gap;
-            line-height: ohma.$fonts-line-height-m;
-        }
-        padding: 0 5*ohma.$gap 0 2*ohma.$gap;
-        &:nth-child(1) {
-            padding-left: 0;
-            grid-area: logos;
-        }
-        &:nth-child(2) {
-            grid-area: info1;
-        }
-        &:nth-child(3) {
-            grid-area: info2;
-        }
-        &:nth-child(4) {
-            grid-area: nordic;
-        }
-    }
-    > .info {
-        > *:first-child {
-            color: ohma.$colors-primary;
-            font-weight: ohma.$fonts-weight-m;
-            font-size: ohma.$fonts-l
-        }
-        border-left: solid 1px ohma.$colors-gray-700;
-        a {
-            text-decoration: none;
-            color: ohma.$colors-white;
-            &:hover {
-                text-decoration: underline;
-            }
-        }
-    }
-    .pwa {
-        @include ohma.yellowIconLink;
-        padding-left: 0;
-        width: 100%;
-        height: 100%;
-    }
-    .icons {
-        display: flex;
-        justify-content: flex-start;
-        a > * {
-            @include ohma.yellowIconLink;
-            > *:first-child {
-                padding-left: 0;
-            }
-        }
-
-    }
-}
-
-.sponsors {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    > * {
-        margin: ohma.$gap;
+    
+    
+    flex-direction: column;
+    
+    >.FooterInfo {
+        display: grid;
+        padding: 10*ohma.$gap 20*ohma.$gap;
+        > * {
+            p {
+                margin-bottom: ohma.$gap;      
+                line-height: ohma.$fonts-line-height-m;
+            }
+            padding: 0 5*ohma.$gap 0 2*ohma.$gap;
+            &:nth-child(1) {
+                padding-left: 0;
+                grid-area: logos;
+            }
+            &:nth-child(2) {
+                grid-area: info1;
+            }
+            &:nth-child(3) {
+                grid-area: info2;
+            }
+        }
+        > .info {
+            > *:first-child {
+                color: ohma.$colors-primary;
+                font-weight: ohma.$fonts-weight-m;
+                font-size: ohma.$fonts-l
+            }
+            border-left: solid 1px ohma.$colors-gray-700;
+            a {
+                text-decoration: none;
+                color: ohma.$colors-white;
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+        }
+        .pwa {
+            @include ohma.yellowIconLink;
+            padding-left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .icons {
+            display: flex;
+            justify-content: flex-start;
+            a > * {
+                @include ohma.yellowIconLink;
+                > *:first-child {
+                    padding-left: 0;
+                }
+            }
+    
+        }
     }
-    a {
+    .sponsors {
+        display: flex;
+        justify-content:center;
+        align-items: center;
+        
+                
         width: 100%;
         height: 100%;
+        > * {
+            margin: ohma.$gap;
+        }
+        a {
+            width: 100%;
+            height: 100%;
+        }
+    }
+    .sponsor {
+        margin-left: 3%;
+        margin-right: 3%;
+        margin-bottom: 2%;
     }
 }
 
 @media (min-width: 1100px) {
     .Footer {
-        grid-template-columns: 2fr 1fr 1fr 1fr;
-        grid-template-areas: 
-            "logos info1 info2 nordic";
-    }
-    .sponsors {
-        flex-direction: column;
+        .FooterInfo {
+            grid-template-columns: 2fr 1fr 1fr;
+            grid-template-areas: 
+                "logos info1 info2";
+        }
     }
 }
 
 @media (min-width: ohma.$mobileBreakpoint) and (max-width: 1100px) {
-    .Footer {
+    .FooterInfo {
         grid-template-columns: 2fr 1fr 1fr;
         grid-template-rows: auto auto;
         grid-template-areas: 
             "logos info1 info2"
-            "nordic nordic nordic"
         ;
-    }
-    .sponsors {
-        margin-top: 2*ohma.$gap
     }
 }
 
 @media (max-width: ohma.$mobileBreakpoint) {
     .Footer {
-        padding: ohma.$gap 2*ohma.$gap;
-        padding-bottom: 4*ohma.$gap;
-        grid-template-rows: repeat(auto, 4);
-        grid-template-areas: 
-            "logos"
-            "info1"
-            "info2"
-            "nordic"
-        ;
-        place-items: center;
-        > .info {
-            border-left: none;
-        }
-        > * {
-            padding: 0;
-            margin-top: 5*ohma.$gap;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            :nth-child(1) {
-                padding-left: none;
+        > .FooterInfo {
+            padding: ohma.$gap 2*ohma.$gap;
+            padding-bottom: 4*ohma.$gap;
+            grid-template-rows: repeat(auto, 4);
+            grid-template-areas: 
+                "logos"
+                "info1"
+                "info2"
+            ;
+            place-items: center;
+            > .info {
+                border-left: none;
             }
-        }
-        .icons {
-            justify-content: center;
-        }
-        p {
-            text-align: center;
-            max-width: 400px;
-        }
-        .sponsors {
-            flex-direction: column;
+            > * {
+                padding: 0;
+                margin-top: 5*ohma.$gap;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                :nth-child(1) {
+                    padding-left: none;
+                }
+            }
+            .icons {
+                justify-content: center;
+            }
+            p {
+                text-align: center;
+                max-width: 400px;
+            }
         }
     }
 }
