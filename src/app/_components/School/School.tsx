@@ -3,7 +3,7 @@ import CmsImageClient from '@/cms/CmsImage/CmsImageClient'
 import CmsLink from '@/cms/CmsLink/CmsLink'
 import CmsImage from '@/cms/CmsImage/CmsImage'
 import CmsParagraph from '@/cms/CmsParagraph/CmsParagraph'
-import type { ExpandedSchool } from '@/education/schools/Types'
+import type { ExpandedSchool } from '@/services/education/schools/types'
 
 type PropTypes = {
     school: ExpandedSchool

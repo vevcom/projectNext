@@ -1,6 +1,6 @@
 import styles from './layout.module.scss'
 import SideBar from './SideBar'
-import { readArticleCategoryAction } from '@/cms/articleCategories/read'
+import { readArticleCategoryAction } from '@/cms/articleCategories/actions'
 import { notFound } from 'next/navigation'
 import type { ReactNode } from 'react'
 

@@ -4,13 +4,13 @@ import EditCategory from './EditCategory'
 import useScroll from '@/hooks/useScroll'
 import useOnNavigation from '@/hooks/useOnNavigation'
 import useViewPort from '@/hooks/useViewPort'
-import { destroyArticleAction } from '@/actions/cms/articles/destroy'
+import { destroyArticleAction } from '@/services/cms/articles/actions'
 import React, { useRef, useState } from 'react'
 import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronUp, faX } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/navigation'
-import type { ExpandedArticleCategory } from '@/cms/articleCategories/Types'
+import type { ExpandedArticleCategory } from '@/cms/articleCategories/types'
 
 type PropTypes = {
     category: ExpandedArticleCategory

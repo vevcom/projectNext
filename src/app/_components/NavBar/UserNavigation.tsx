@@ -9,7 +9,7 @@ import { faCog, faMoneyBill, faQrcode, faSignOut, faUser } from '@fortawesome/fr
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Link from 'next/link'
 import { useState } from 'react'
-import type { Profile } from '@/services/users/Types'
+import type { Profile } from '@/services/users/types'
 
 type PropTypes = {
     profile: Profile | null

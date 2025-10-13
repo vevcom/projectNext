@@ -1,12 +1,12 @@
 import styles from './page.module.scss'
-import { readSpecialImageAction } from '@/actions/images/read'
 import BorderButton from '@/components/UI/BorderButton'
-import { readUserProfileAction } from '@/actions/users/read'
-import { Session } from '@/auth/Session'
-import { UserAuthers } from '@/services/users/authers'
+import { Session } from '@/auth/session/Session'
+import { userAuth } from '@/services/users/auth'
 import ProfilePicture from '@/components/User/ProfilePicture'
-import { UserConfig } from '@/services/users/config'
 import UserDisplayName from '@/components/User/UserDisplayName'
+import { readUserProfileAction } from '@/services/users/actions'
+import { readSpecialImageAction } from '@/services/images/actions'
+import { sexConfig } from '@/services/users/constants'
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { v4 as uuid } from 'uuid'
@@ -23,7 +23,7 @@ export default async function User({ params }: PropTypes) {
         if (!session.user) return notFound()
         redirect(`/users/${session.user.username}`) //This throws.
     }
-    const profileRes = await readUserProfileAction({ username: (await params).username })
+    const profileRes = await readUserProfileAction({ params: { username: (await params).username } })
     if (!profileRes.success) return notFound()
     const profile = profileRes.data
 
@@ -43,13 +43,13 @@ export default async function User({ params }: PropTypes) {
     }
 
     const profileImage = profile.user.image ? profile.user.image : await readSpecialImageAction.bind(
-        null, { special: 'DEFAULT_PROFILE_IMAGE' }
+        null, { params: { special: 'DEFAULT_PROFILE_IMAGE' } }
     )().then(res => {
         if (!res.success) throw new Error('Kunne ikke finne standard profilbilde')
         return res.data
     })
 
-    const { authorized: canAdministrate } = UserAuthers.updateProfile.dynamicFields(
+    const { authorized: canAdministrate } = userAuth.updateProfile.dynamicFields(
         { username: profile.user.username }
     ).auth(session)
 
@@ -83,7 +83,7 @@ export default async function User({ params }: PropTypes) {
                         </div>
                         <hr />
                         <p className={styles.orderText}>
-                            {UserConfig.sexConfig[profile.user.sex ?? 'OTHER'].title}
+                            {sexConfig[profile.user.sex ?? 'OTHER'].title}
                             uudaf {omegaMembership.order}´dis orden i Sanctus Omega Broderskab
                         </p>
                     </div>

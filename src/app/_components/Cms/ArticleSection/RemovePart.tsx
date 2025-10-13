@@ -1,6 +1,6 @@
 'use client'
 import styles from './RemovePart.module.scss'
-import { removeArticleSectionPartAction } from '@/cms/articleSections/update'
+import { removeArticleSectionPartAction } from '@/cms/articleSections/actions'
 import Form from '@/components/Form/Form'
 import useClickOutsideRef from '@/hooks/useClickOutsideRef'
 import useEditing from '@/hooks/useEditing'
@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { faX } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import type { ArticleSectionPart } from '@/cms/articleSections/Types'
+import type { ArticleSectionPart } from '@/cms/articleSections/types'
 
 type PropTypes = {
     part: ArticleSectionPart,

@@ -1,7 +1,7 @@
 'use server'
 
 import OmegaIdElement from './OmegaIdElement'
-import { generateOmegaIdAction } from '@/actions/omegaid/generate'
+import { generateOmegaIdAction } from '@/services/omegaid/actions'
 
 
 export default async function OmegaId() {

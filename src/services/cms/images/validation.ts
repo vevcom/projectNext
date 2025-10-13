@@ -20,3 +20,10 @@ export const createCmsImageValidation = baseCmsImageValidation.createValidation(
 })
 
 export type CreateCmsImageTypes = ValidationTypes<typeof createCmsImageValidation>
+
+export const createCmsImageActionValidation = baseCmsImageValidation.createValidation({
+    keys: ['name'],
+    transformer: data => data,
+})
+
+export type CreateCmsImageActionTypes = ValidationTypes<typeof createCmsImageActionValidation>

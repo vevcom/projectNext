@@ -1,13 +1,13 @@
 import EventArchiveList from './EventArchiveList'
 import TagHeaderItem from '@/app/events/TagHeaderItem'
-import { readEventTagsAction } from '@/actions/events/tags/read'
+import { readEventTagsAction } from '@/services/events/tags/actions'
 import EventsLandingLayout from '@/app/events/EventsLandingLayout'
-import EventArchivePagingProvider from '@/contexts/paging/EventArchivePaging'
-import { QueryParams } from '@/lib/query-params/queryParams'
-import { EventTagAuthers } from '@/services/events/tags/authers'
-import { Session } from '@/auth/Session'
+import { EventArchivePagingProvider } from '@/contexts/paging/EventArchivePaging'
+import { QueryParams } from '@/lib/queryParams/queryParams'
+import { eventTagAuth } from '@/services/events/tags/auth'
+import { Session } from '@/auth/session/Session'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
-import type { SearchParamsServerSide } from '@/lib/query-params/Types'
+import type { SearchParamsServerSide } from '@/lib/queryParams/types'
 
 type PropTypes = SearchParamsServerSide
 
@@ -24,9 +24,9 @@ export default async function EventArchive({
 
     const session = await Session.fromNextAuth()
 
-    const canUpdate = EventTagAuthers.update.dynamicFields({}).auth(session)
-    const canCreate = EventTagAuthers.create.dynamicFields({}).auth(session)
-    const canDestroy = EventTagAuthers.destroy.dynamicFields({}).auth(session)
+    const canUpdate = eventTagAuth.update.dynamicFields({}).auth(session)
+    const canCreate = eventTagAuth.create.dynamicFields({}).auth(session)
+    const canDestroy = eventTagAuth.destroy.dynamicFields({}).auth(session)
 
     return (
         <EventsLandingLayout page="EVENT_ARCHIVE" title="Hvad Der Har Hendt" headerLinks={[

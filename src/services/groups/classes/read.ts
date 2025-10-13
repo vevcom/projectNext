@@ -1,6 +1,6 @@
 import { prismaCall } from '@/services/prismaCall'
-import prisma from '@/prisma'
-import type { ExpandedClass } from './Types'
+import { prisma } from '@/prisma/client'
+import type { ExpandedClass } from './types'
 
 export async function readClasses(): Promise<ExpandedClass[]> {
     return await prismaCall(() => prisma.class.findMany({}))

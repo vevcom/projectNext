@@ -1,6 +1,6 @@
 import styles from './EventsLandingLayout.module.scss'
 import EventTag from '@/components/Event/EventTag'
-import { QueryParams } from '@/lib/query-params/queryParams'
+import { QueryParams } from '@/lib/queryParams/queryParams'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Link from 'next/link'
 import type { EventTag as EventTagT } from '@prisma/client'

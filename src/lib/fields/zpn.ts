@@ -1,10 +1,10 @@
-import { FIELD_IS_PRESENT_VALUE } from './config'
+import { FIELD_IS_PRESENT_VALUE } from './constants'
 import { dateMatchCron } from '@/lib/dates/cron'
 import { z } from 'zod'
 import { zfd } from 'zod-form-data'
 import type { EnumLike } from 'zod'
 
-export namespace zpn {
+export namespace Zpn {
     /**
      * This field is used to represent a boolean that could be a checkbox in frontend with no specified value
      * That is: the value is 'on' or not present at all (default behavior of checkboxes)

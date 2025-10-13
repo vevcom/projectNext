@@ -1,6 +1,6 @@
 'use client'
 import CmsImageClient from './CmsImageClient'
-import { readSpecialCmsImageAction } from '@/actions/cms/images/read'
+import { readSpecialCmsImageAction } from '@/services/cms/images/actions'
 import useActionCall from '@/hooks/useActionCall'
 import { useCallback } from 'react'
 import type { PropTypes } from './SpecialCmsImage'

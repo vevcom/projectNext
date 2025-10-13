@@ -1,7 +1,7 @@
 import styles from './page.module.scss'
 import GroupSelector from './GroupSelector'
-import { readGroupsStructuredAction } from '@/actions/groups/read'
-import { GroupTypeOrdering } from '@/services/groups/config'
+import { GroupTypeOrdering } from '@/services/groups/constants'
+import { readGroupsStructuredAction } from '@/services/groups/actions'
 import { notFound } from 'next/navigation'
 
 /**

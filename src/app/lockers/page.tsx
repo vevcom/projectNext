@@ -2,8 +2,8 @@ import LockerIdForm from './LockerIdForm'
 import LockerList from './LockerList'
 import QRButton from './QRButton'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
-import { getUser } from '@/auth/getUser'
-import LockerPagingProvider from '@/contexts/paging/LockerPaging'
+import { getUser } from '@/auth/session/getUser'
+import { LockerPagingProvider } from '@/contexts/paging/LockerPaging'
 
 export default async function Lockers() {
     await getUser({

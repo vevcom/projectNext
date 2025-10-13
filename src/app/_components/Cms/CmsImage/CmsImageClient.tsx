@@ -3,7 +3,7 @@ import CmsImageEditor from './CmsImageEditor'
 import styles from './CmsImage.module.scss'
 import { fallbackImage } from './CmsImage'
 import Image, { SrcImage } from '@/components/Image/Image'
-import { readSpecialImageAction } from '@/actions/images/read'
+import { readSpecialImageAction } from '@/services/images/actions'
 import { useState, useEffect } from 'react'
 import type { PropTypes } from './CmsImage'
 import type { Image as ImageT } from '@prisma/client'
@@ -30,7 +30,7 @@ export default function CmsImageClient({
 
     useEffect(() => {
         if (image) return
-        readSpecialImageAction({ special: 'DEFAULT_IMAGE' }).then(res => {
+        readSpecialImageAction({ params: { special: 'DEFAULT_IMAGE' } }).then(res => {
             if (!res.success) return setFallback(true)
             return setCmsImage(res.data)
         })

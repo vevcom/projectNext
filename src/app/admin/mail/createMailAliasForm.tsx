@@ -1,6 +1,6 @@
 'use client'
 
-import { createMailAliasAction } from '@/actions/mail/alias/create'
+import { createMailAliasAction } from '@/services/mail/alias/actions'
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
 import { useRouter } from 'next/navigation'

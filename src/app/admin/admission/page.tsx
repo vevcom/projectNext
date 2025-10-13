@@ -1,7 +1,7 @@
 'use server'
 
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
-import { AdmissionConfig } from '@/services/admission/config'
+import { admissionDisplayNames, allAdmissions } from '@/services/admission/constants'
 import Link from 'next/link'
 import { v4 as uuid } from 'uuid'
 
@@ -10,9 +10,9 @@ export default async function AdmissionTrials() {
     return (
         <PageWrapper title="Registrer opptak">
             <ul>
-                {AdmissionConfig.array.map(trial =>
+                {allAdmissions.map(trial =>
                     <li key={uuid()}>
-                        <Link href={`admission/${trial}`}>{AdmissionConfig.displayNames[trial]}</Link>
+                        <Link href={`admission/${trial}`}>{admissionDisplayNames[trial]}</Link>
                     </li>
                 )}
             </ul>

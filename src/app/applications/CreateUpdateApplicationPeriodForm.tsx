@@ -1,13 +1,13 @@
 'use client'
 import styles from './CreateUpdateApplicationPeriodForm.module.scss'
-import { createApplicationPeriodAction } from '@/actions/applications/periods/create'
-import { updateApplicationPeriodAction } from '@/actions/applications/periods/update'
+import { createApplicationPeriodAction, updateApplicationPeriodAction } from '@/services/applications/periods/actions'
+import { configureAction } from '@/services/configureAction'
 import Form from '@/components/Form/Form'
 import Checkbox from '@/components/UI/Checkbox'
 import DateInput from '@/components/UI/DateInput'
 import TextInput from '@/components/UI/TextInput'
-import type { ExpandedApplicationPeriod } from '@/services/applications/periods/Types'
-import type { ExpandedCommittee } from '@/services/groups/committees/Types'
+import type { ExpandedApplicationPeriod } from '@/services/applications/periods/types'
+import type { ExpandedCommittee } from '@/services/groups/committees/types'
 
 type PropTypes = {
     committees: ExpandedCommittee[]
@@ -19,7 +19,11 @@ export default function CreateUpdateApplicationPeriodForm({ committees, period, 
     return (
         <Form
             title={period ? `Oppdater søknadsperiode: ${period.name}` : 'Legg til ny søknadsperiode'}
-            action={period ? updateApplicationPeriodAction.bind(null, { name: period.name }) : createApplicationPeriodAction}
+            action={
+                period
+                    ? configureAction(updateApplicationPeriodAction, { params: { name: period.name } })
+                    : createApplicationPeriodAction
+            }
             submitText={period ? 'Oppdater' : 'Lag'}
             refreshOnSuccess
             className={styles.CreateUpdateApplicationPeriodForm}

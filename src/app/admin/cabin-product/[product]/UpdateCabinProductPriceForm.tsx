@@ -1,5 +1,6 @@
 'use client'
-import { createCabinProductPriceAction } from '@/actions/cabin'
+import { createCabinProductPriceAction } from '@/services/cabin/actions'
+import { configureAction } from '@/services/configureAction'
 import Form from '@/app/_components/Form/Form'
 import NumberInput from '@/app/_components/UI/NumberInput'
 import { SelectNumber } from '@/app/_components/UI/Select'
@@ -21,7 +22,7 @@ export function UpdateCabinProductPriceForm({
         return <p>Det er ingen prisperioder som ikke er sluppet enda. Lag en ny pris periode før du oppdaterer prisene.</p>
     }
     return <Form
-        action={createCabinProductPriceAction.bind(null, { cabinProductId: productId })}
+        action={configureAction(createCabinProductPriceAction, { params: { cabinProductId: productId } })}
         submitText="Legg til pris"
     >
         <TextInput name="description" label="Beskrivelse" />

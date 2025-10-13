@@ -1,28 +1,29 @@
 'use client'
 import styles from './RegistrationsList.module.scss'
 import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
-import EventRegistrationPagingProvider, { EventRegistrationPagingContext } from '@/contexts/paging/EventRegistrationPaging'
+import { EventRegistrationPagingProvider, EventRegistrationPagingContext } from '@/contexts/paging/EventRegistrationPaging'
 import UserCard from '@/components/User/UserCard'
-import EventRegistrationDetailedPagingProvider, {
-    EventRegistrationDetailedPagingContext
+import {
+    EventRegistrationDetailedPagingProvider,
+    EventRegistrationDetailedPagingContext,
 } from '@/contexts/paging/EventRegistrationDetailedPaging'
 import UserDisplayName from '@/components/User/UserDisplayName'
 import Slider from '@/components/UI/Slider'
 import Form from '@/components/Form/Form'
-import { bindParams } from '@/actions/bind'
-import { eventRegistrationDestroyAction } from '@/actions/events/registration'
-import { EventRegistrationConfig } from '@/services/events/registration/config'
 import ContactCard from '@/components/User/ContactCard'
+import { eventRegistrationDestroyAction } from '@/services/events/registration/actions'
+import { REGISTRATION_READER_TYPE } from '@/services/events/registration/constants'
+import { configureAction } from '@/services/configureAction'
 import Link from 'next/link'
 import { useState } from 'react'
-import type { EventFiltered } from '@/services/events/Types'
+import type { EventFiltered } from '@/services/events/types'
 
 function DetailedTable({
     event,
     type,
 }: {
     event: EventFiltered,
-    type: EventRegistrationConfig.REGISTRATION_READER_TYPE
+    type: REGISTRATION_READER_TYPE,
 }) {
     return <EventRegistrationDetailedPagingProvider
         serverRenderedData={[]}
@@ -60,7 +61,10 @@ function DetailedTable({
                                 <td>{row.note}</td>
                                 <td>
                                     <Form
-                                        action={bindParams(eventRegistrationDestroyAction, { registrationId: row.id })}
+                                        action={configureAction(
+                                            eventRegistrationDestroyAction,
+                                            { params: { registrationId: row.id } }
+                                        )}
                                         submitText="Slett"
                                         submitColor="red"
                                         confirmation={{
@@ -83,7 +87,7 @@ function DefaultList({
     type,
 }: {
     event: EventFiltered,
-    type: EventRegistrationConfig.REGISTRATION_READER_TYPE
+    type: REGISTRATION_READER_TYPE
 }) {
     return <EventRegistrationPagingProvider
         serverRenderedData={[]}
@@ -131,20 +135,20 @@ export default function RegistrationsList({
         />}
         {detailedView ? <DetailedTable
             event={event}
-            type={EventRegistrationConfig.REGISTRATION_READER_TYPE.REGISTRATIONS}
+            type={REGISTRATION_READER_TYPE.REGISTRATIONS}
         /> : <DefaultList
             event={event}
-            type={EventRegistrationConfig.REGISTRATION_READER_TYPE.REGISTRATIONS}
+            type={REGISTRATION_READER_TYPE.REGISTRATIONS}
         />}
 
         {event.waitingList && <>
             <h4>Venteliste</h4>
             {detailedView ? <DetailedTable
                 event={event}
-                type={EventRegistrationConfig.REGISTRATION_READER_TYPE.WAITING_LIST}
+                type={REGISTRATION_READER_TYPE.WAITING_LIST}
             /> : <DefaultList
                 event={event}
-                type={EventRegistrationConfig.REGISTRATION_READER_TYPE.WAITING_LIST}
+                type={REGISTRATION_READER_TYPE.WAITING_LIST}
             />}
         </>}
     </>

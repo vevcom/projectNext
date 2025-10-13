@@ -4,9 +4,9 @@ import { SelectNumber } from '@/components/UI/Select'
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
 import Textarea from '@/components/UI/Textarea'
-import { createNotificationAction } from '@/actions/notifications'
+import { createNotificationAction } from '@/services/notifications/actions'
 import { useState } from 'react'
-import type { ExpandedNotificationChannel } from '@/services/notifications/Types'
+import type { ExpandedNotificationChannel } from '@/services/notifications/types'
 
 
 export default function NotificaionForm({

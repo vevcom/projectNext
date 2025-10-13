@@ -1,5 +1,5 @@
 'use client'
-import { createMailingListAction } from '@/actions/mail/list/create'
+import { createMailingListAction } from '@/services/mail/list/actions'
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
 import { useRouter } from 'next/navigation'

@@ -1,7 +1,7 @@
 import '@pn-server-only'
 import { updateMailAddressExternalValidation } from './validation'
 import { prismaCall } from '@/services/prismaCall'
-import prisma from '@/prisma'
+import { prisma } from '@/prisma/client'
 import type { MailAddressExternal } from '@prisma/client'
 import type { UpdatemailAddressExternalTypes } from './validation'
 

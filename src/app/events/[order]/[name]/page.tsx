@@ -5,17 +5,16 @@ import RegistrationsList from './RegistrationsList'
 import ManualRegistrationForm from './ManualRegistrationForm'
 import Date from '@/components/Date/Date'
 import CreateOrUpdateEventForm from '@/app/events/CreateOrUpdateEventForm'
-import { readEventAction } from '@/actions/events/read'
 import CmsImage from '@/components/Cms/CmsImage/CmsImage'
 import CmsParagraph from '@/components/Cms/CmsParagraph/CmsParagraph'
 import Form from '@/components/Form/Form'
 import EventTag from '@/components/Event/EventTag'
-import { destroyEventAction } from '@/actions/events/destroy'
 import { SettingsHeaderItemPopUp, UsersHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
-import { readEventTagsAction } from '@/actions/events/tags/read'
-import { QueryParams } from '@/lib/query-params/queryParams'
-import { bindParams } from '@/actions/bind'
+import { QueryParams } from '@/lib/queryParams/queryParams'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
+import { readEventTagsAction } from '@/services/events/tags/actions'
+import { destroyEventAction, readEventAction } from '@/services/events/actions'
+import { configureAction } from '@/services/configureAction'
 import Link from 'next/link'
 import { faCalendar, faExclamation, faLocationDot, faUsers } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -29,8 +28,10 @@ type PropTypes = {
 
 export default async function Event({ params }: PropTypes) {
     const event = unwrapActionReturn(await readEventAction({
-        name: decodeURIComponent((await params).name),
-        order: parseInt((await params).order, 10),
+        params: {
+            name: decodeURIComponent((await params).name),
+            order: parseInt((await params).order, 10),
+        }
     }))
 
     const tags = unwrapActionReturn(await readEventTagsAction())
@@ -61,7 +62,7 @@ export default async function Event({ params }: PropTypes) {
                         <CreateOrUpdateEventForm event={event} eventTags={tags} />
                         {/*TODO: Use auther to only display if it can be destroy*/}
                         <Form
-                            action={bindParams(destroyEventAction, { id: event.id })}
+                            action={configureAction(destroyEventAction, { params: { id: event.id } })}
                             navigateOnSuccess="/events"
                             className={styles.destroyForm}
                             buttonClassName={styles.destroyButton}

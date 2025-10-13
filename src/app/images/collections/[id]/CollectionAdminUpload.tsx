@@ -1,16 +1,16 @@
 'use client'
 import styles from './CollectionAdminUpload.module.scss'
 import Dropzone from '@/components/UI/Dropzone'
-import { createImagesAction } from '@/actions/images/create'
 import Form from '@/components/Form/Form'
 import Slider from '@/components/UI/Slider'
 import ProgressBar from '@/components/ProgressBar/ProgressBar'
 import TextInput from '@/app/_components/UI/TextInput'
 import LicenseChooser from '@/app/_components/LicenseChooser/LicenseChooser'
-import { ImageConfig } from '@/services/images/config'
+import { createImagesAction } from '@/services/images/actions'
+import { maxImageCountInOneBatch } from '@/services/images/constants'
 import { useCallback, useState } from 'react'
 import type { FileWithStatus } from '@/components/UI/Dropzone'
-import type { ActionReturn } from '@/actions/Types'
+import type { ActionReturn } from '@/services/actionTypes'
 
 type PropTypes = {
     collectionId: number
@@ -24,7 +24,7 @@ export default function CollectionAdminUpload({ collectionId, refreshImages }: P
     const handleBatchedUpload = useCallback(async (data: FormData) => {
         // split files into batches of maxNumberOfImagesInOneBatch
         const batches = files.reduce((acc, file, index) => {
-            if (index % ImageConfig.maxNumberInOneBatch === 0) {
+            if (index % maxImageCountInOneBatch === 0) {
                 acc.push([])
             }
             acc[acc.length - 1].push(file)
@@ -52,7 +52,7 @@ export default function CollectionAdminUpload({ collectionId, refreshImages }: P
                 }
                 return file
             }))
-            res = await createImagesAction({ useFileName, collectionId }, formData)
+            res = await createImagesAction({ params: { useFileName, collectionId } }, formData)
             if (res.success) {
                 doneFiles.push(...batch)
                 setFiles(files.map(file => {

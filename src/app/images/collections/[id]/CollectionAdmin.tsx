@@ -1,10 +1,9 @@
 'use client'
 import styles from './CollectionAdmin.module.scss'
 import CollectionAdminUpload from './CollectionAdminUpload'
-import { updateImageCollectionAction } from '@/actions/images/collections/update'
+import { updateImageCollectionAction, destroyImageCollectionAction } from '@/services/images/collections/actions'
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
-import { destroyImageCollectionAction } from '@/actions/images/collections/destroy'
 import { ImagePagingContext } from '@/contexts/paging/ImagePaging'
 import ImageUploader from '@/components/Image/ImageUploader'
 import useEditing from '@/hooks/useEditing'
@@ -15,8 +14,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCog, faEye, faUpload } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/navigation'
 import { useContext, useState } from 'react'
-import type { VisibilityCollapsed } from '@/services/visibility/Types'
-import type { ExpandedImageCollection } from '@/services/images/collections/Types'
+import type { VisibilityCollapsed } from '@/services/visibility/types'
+import type { ExpandedImageCollection } from '@/services/images/collections/types'
 
 type PropTypes = {
     collection: ExpandedImageCollection

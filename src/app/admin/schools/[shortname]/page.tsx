@@ -1,7 +1,6 @@
 import styles from './page.module.scss'
 import UpdateSchool from './UpdateSchool'
-import { destroySchoolAction } from '@/education/schools/destroy'
-import { readSchoolAction } from '@/education/schools/read'
+import { destroySchoolAction, readSchoolAction } from '@/education/schools/actions'
 import Form from '@/components/Form/Form'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import School from '@/components/School/School'

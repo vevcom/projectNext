@@ -1,12 +1,12 @@
 'use client'
 import styles from './AddPartToArticleSection.module.scss'
-import { addArticleSectionPartAction } from '@/cms/articleSections/update'
+import { addArticleSectionPartAction } from '@/cms/articleSections/actions'
 import AddParts from '@/cms/AddParts'
 import useEditing from '@/hooks/useEditing'
 import { useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import type { PropTypes as AddPartsPropTypes } from '@/cms/AddParts'
-import type { ArticleSectionPart } from '@/cms/articleSections/Types'
+import type { ArticleSectionPart } from '@/cms/articleSections/types'
 import type { ReactNode } from 'react'
 
 type PropTypes = Omit<AddPartsPropTypes, 'onClick'> & {

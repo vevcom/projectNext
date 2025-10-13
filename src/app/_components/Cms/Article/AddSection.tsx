@@ -2,11 +2,11 @@
 
 import styles from './AddSection.module.scss'
 import AddParts from '@/cms/AddParts'
-import { addSectionToArticleAction } from '@/cms/articles/update'
+import { addSectionToArticleAction } from '@/cms/articles/actions'
 import { maxSections } from '@/cms/articles/ConfigVars'
 import useEditing from '@/hooks/useEditing'
 import { useRouter } from 'next/navigation'
-import type { ArticleSectionPart } from '@/services/cms/articleSections/Types'
+import type { ArticleSectionPart } from '@/cms/articleSections/types'
 
 type PropTypes = {
     articleId: number,

@@ -5,11 +5,11 @@ import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
 import { createCmsImage } from '@/services/cms/images/create'
 import { createCmsParagraph } from '@/services/cms/paragraphs/create'
-import prisma from '@/prisma'
+import { prisma } from '@/prisma/client'
 import { createCmsLink } from '@/services/cms/links/create'
 import { v4 as uuid } from 'uuid'
 import { StandardSchool } from '@prisma/client'
-import type { SchoolFiltered } from './Types'
+import type { SchoolFiltered } from './types'
 import type { CreateSchoolTypes } from './validation'
 
 export async function createSchool(rawdata: CreateSchoolTypes['Detailed']): Promise<SchoolFiltered> {

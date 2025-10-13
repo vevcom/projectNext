@@ -3,7 +3,7 @@ import { companyListRenderer } from './CompanyListRenderer'
 import styles from './CompanyList.module.scss'
 import { CompanyPagingContext } from '@/contexts/paging/CompanyPaging'
 import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
-import { useUser } from '@/auth/useUser'
+import { useUser } from '@/auth/session/useUser'
 import type { ReactNode } from 'react'
 
 type PropTypes = {

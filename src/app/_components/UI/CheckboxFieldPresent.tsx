@@ -1,6 +1,6 @@
 'use client'
 import styles from './CheckboxFieldPresent.module.scss'
-import { FIELD_IS_PRESENT_VALUE } from '@/lib/fields/config'
+import { FIELD_IS_PRESENT_VALUE } from '@/lib/fields/constants'
 
 type PropTypes = {
     name: string

@@ -1,9 +1,9 @@
 import 'next-auth'
 import 'next-auth/adapters'
 
-import type { MembershipFiltered } from '@/services/groups/Types'
+import type { MembershipFiltered } from '@/services/groups/types'
 import type { Permission } from '@prisma/client'
-import type { UserFiltered } from '@/services/users/Types'
+import type { UserFiltered } from '@/services/users/types'
 
 declare module 'next-auth' {
     // Normally we dissallow typing with empty objects, but in this case we

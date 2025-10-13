@@ -5,7 +5,7 @@ import UserList from '@/components/User/UserList/UserList'
 import PopUp from '@/components/PopUp/PopUp'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCog } from '@fortawesome/free-solid-svg-icons'
-import type { ExpandedGroup } from '@/services/groups/Types'
+import type { ExpandedGroup } from '@/services/groups/types'
 
 type PropTypes = {
     group: ExpandedGroup

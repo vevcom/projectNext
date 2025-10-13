@@ -3,10 +3,10 @@ import { canEasilyManageMembershipOfGroup, canEasilyManageMembershipOfGroups } f
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
-import prisma from '@/prisma'
+import { prisma } from '@/prisma/client'
 import { invalidateManyUserSessionData, invalidateOneUserSessionData } from '@/services/auth/invalidateSession'
-import { GroupMethods } from '@/services/groups/methods'
-import type { ExpandedMembership } from './Types'
+import { groupOperations } from '@/services/groups/operations'
+import type { ExpandedMembership } from './types'
 
 export async function createMembershipForUser(
     groupId: number,
@@ -18,8 +18,7 @@ export async function createMembershipForUser(
         throw new ServerError('BAD PARAMETERS', 'Denne Gruppetypen kan ikke enkelt opprette medlemskap')
     }
 
-    const order = orderArg ?? await GroupMethods.readCurrentGroupOrder.newClient().execute({
-        session: null,
+    const order = orderArg ?? await groupOperations.readCurrentGroupOrder({
         bypassAuth: true,
         params: {
             id: groupId,
@@ -65,8 +64,7 @@ export async function createMembershipsForGroup(
     if (!await canEasilyManageMembershipOfGroup(groupId)) {
         throw new ServerError('BAD PARAMETERS', 'Denne Gruppetypen kan ikke enkelt opprette medlemskap')
     }
-    const order = orderArg ?? await GroupMethods.readCurrentGroupOrder.newClient().execute({
-        session: null,
+    const order = orderArg ?? await groupOperations.readCurrentGroupOrder({
         bypassAuth: true,
         params: {
             id: groupId,
@@ -113,8 +111,7 @@ export async function createMembershipsForUser(
     if (!await canEasilyManageMembershipOfGroups(data.map(group => group.groupId))) {
         throw new ServerError('BAD PARAMETERS', 'Denne Gruppetypen kan ikke enkelt opprette medlemskap')
     }
-    const ordersMap = await GroupMethods.readCurrentGroupOrders.newClient().execute({
-        session: null,
+    const ordersMap = await groupOperations.readCurrentGroupOrders({
         bypassAuth: true,
         params: {
             ids: data.map(group => group.groupId)

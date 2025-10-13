@@ -6,8 +6,7 @@ import PopUp from '@/app/_components/PopUp/PopUp'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { displayPrice } from '@/lib/money/convert'
 import { sortObjectsByName } from '@/lib/sortObjects'
-import { readShopAction } from '@/actions/shop/shop'
-import { readProductsAction } from '@/actions/shop/product'
+import { readShopAction, readProductsAction } from '@/services/shop/actions'
 import { faPencil } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { notFound } from 'next/navigation'
@@ -25,7 +24,9 @@ export default async function Shop({ params }: PropTypes) {
     if (isNaN(shopId)) notFound()
 
     const shopData = unwrapActionReturn(await readShopAction({
-        shopId,
+        params: {
+            shopId,
+        },
     }))
 
     if (!shopData) notFound()

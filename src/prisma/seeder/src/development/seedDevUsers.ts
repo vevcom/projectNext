@@ -1,4 +1,4 @@
-import { hashAndEncryptPassword } from '@/auth/password'
+import { hashAndEncryptPassword } from '@/auth/passwordHash'
 import { v4 as uuid } from 'uuid'
 import type { Prisma } from '@prisma/client'
 import { OmegaMembershipLevel, type PrismaClient } from '@prisma/client'

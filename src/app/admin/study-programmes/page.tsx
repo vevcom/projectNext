@@ -3,10 +3,10 @@
 import UpdateStudyProgrammeForm from './updateStudyProgrammeForm'
 import StudyProgrammeTableBody from './studyProgrammeTable'
 import styles from './page.module.scss'
-import { readStudyProgrammesAction } from '@/actions/groups/studyProgrammes/read'
+import { readStudyProgrammesAction } from '@/services/groups/studyProgrammes/actions'
 import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
-import { getUser } from '@/auth/getUser'
+import { getUser } from '@/auth/session/getUser'
 
 
 export default async function StudyProgrammes() {

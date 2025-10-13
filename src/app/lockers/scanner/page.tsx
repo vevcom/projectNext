@@ -5,7 +5,7 @@ import CameraFeed from '@/components/Camera/CameraFeed'
 import { useRouter } from 'next/navigation'
 import jsQR from 'jsqr'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import type { CameraState } from '@/components/Camera/Types'
+import type { CameraState } from '@/components/Camera/types'
 
 const WIDTH = 400
 const HEIGHT = 400

@@ -1,7 +1,7 @@
 import styles from './page.module.scss'
 import CreateOrder from './CreateOrder'
-import { getUser } from '@/auth/getUser'
-import { readCurrentOmegaOrderAction } from '@/actions/omegaOrder/read'
+import { getUser } from '@/auth/session/getUser'
+import { readCurrentOmegaOrderAction } from '@/services/omegaOrder/actions'
 import { notFound } from 'next/navigation'
 
 export default async function stateOfOmega() {

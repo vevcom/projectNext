@@ -1,17 +1,17 @@
 import '@pn-server-only'
 import { z } from 'zod'
 
-export namespace EventRegistrationSchemas {
-    const fields = z.object({
-        note: z.string().max(200, 'Merknader kan ha maks 200 tegn'),
-        name: z.string().min(2),
-    })
+const baseSchema = z.object({
+    note: z.string().max(200, 'Merknader kan ha maks 200 tegn'),
+    name: z.string().min(2),
+})
 
-    export const updateNotes = fields.pick({
+export const eventRegistrationSchemas = {
+    updateNotes: baseSchema.pick({
         note: true,
-    })
+    }),
 
-    export const createGuest = fields.pick({
+    createGuest: baseSchema.pick({
         name: true,
         note: true,
     })

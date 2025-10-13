@@ -1,4 +1,4 @@
-import { readCabinBookingAction } from '@/actions/cabin'
+import { readCabinBookingAction } from '@/services/cabin/actions'
 import PageWrapper from '@/app/_components/PageWrapper/PageWrapper'
 import SimpleTable from '@/app/_components/Table/SimpleTable'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
@@ -21,7 +21,9 @@ export default async function CabinBooking({
     }>
 }) {
     const booking = unwrapActionReturn(await readCabinBookingAction({
-        id: parseInt(decodeURIComponent((await params).booking), 10)
+        params: {
+            id: parseInt(decodeURIComponent((await params).booking), 10)
+        }
     }))
 
     return <PageWrapper

@@ -6,12 +6,12 @@ import Image from '@/components/Image/Image'
 import useKeyPress from '@/hooks/useKeyPress'
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
-import { updateImageAction } from '@/actions/images/update'
-import { destroyImageAction } from '@/actions/images/destroy'
 import { ImagePagingContext } from '@/contexts/paging/ImagePaging'
 import { ImageDisplayContext } from '@/contexts/ImageDisplayProvider'
-import { updateImageCollectionAction } from '@/actions/images/collections/update'
 import LicenseChooser from '@/components/LicenseChooser/LicenseChooser'
+import { updateImageCollectionAction } from '@/services/images/collections/actions'
+import { destroyImageAction, updateImageAction } from '@/services/images/actions'
+import { configureAction } from '@/services/configureAction'
 import { useRouter } from 'next/navigation'
 import { faChevronRight, faChevronLeft, faX, faCog } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -216,7 +216,7 @@ export default function ImageDisplay() {
                                 title="Rediger metadata"
                                 successCallback={reload}
                                 submitText="oppdater"
-                                action={updateImageAction.bind(null, { id: image.id })}
+                                action={configureAction(updateImageAction, { params: { id: image.id } })}
                                 closePopUpOnSuccess="EditImage"
                             >
                                 <TextInput name="name" label="navn" defaultValue={image.name} />
@@ -227,7 +227,7 @@ export default function ImageDisplay() {
                             <Form
                                 className={styles.deleteImage}
                                 successCallback={reload}
-                                action={destroyImageAction.bind(null, { id: image.id })}
+                                action={configureAction(destroyImageAction, { params: { id: image.id } })}
                                 submitText="slett"
                                 submitColor="red"
                                 confirmation={{

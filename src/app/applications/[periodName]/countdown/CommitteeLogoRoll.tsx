@@ -2,7 +2,7 @@
 import styles from './CommitteeLogoRoll.module.scss'
 import Image from '@/app/_components/Image/Image'
 import useInterval from '@/hooks/useInterval'
-import { readNumberOfApplicationsAction } from '@/actions/applications/periods/read'
+import { readNumberOfApplicationsAction } from '@/services/applications/periods/actions'
 import { useRef, useState } from 'react'
 import type { Image as ImageT } from '@prisma/client'
 
@@ -30,7 +30,7 @@ export default function CommitteeLogoRoll({ committees, periodName }: PropTypes)
     const sokere = useRef(0)
 
     useInterval(async () => {
-        const res = await readNumberOfApplicationsAction({ name: periodName })
+        const res = await readNumberOfApplicationsAction({ params: { name: periodName } })
         if (!res.success) return
         sokere.current = res.data
     }, 2000)

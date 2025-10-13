@@ -3,7 +3,7 @@
 import styles from './CreateOmegaquoteFrom.module.scss'
 import PopUp from '@/components/PopUp/PopUp'
 import Form from '@/components/Form/Form'
-import { createQuoteAction } from '@/actions/omegaquotes/create'
+import { createQuoteAction } from '@/services/omegaquotes/actions'
 import TextInput from '@/components/UI/TextInput'
 import Textarea from '@/components/UI/Textarea'
 import { useRouter } from 'next/navigation'

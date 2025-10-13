@@ -1,5 +1,5 @@
 'use client'
-import { createCabinProductAction } from '@/actions/cabin'
+import { createCabinProductAction } from '@/services/cabin/actions'
 import Form from '@/app/_components/Form/Form'
 import NumberInput from '@/app/_components/UI/NumberInput'
 import TextInput from '@/app/_components/UI/TextInput'

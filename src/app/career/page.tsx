@@ -1,22 +1,22 @@
 import styles from './page.module.scss'
 import SpecialCmsParagraph from '@/components/Cms/CmsParagraph/SpecialCmsParagraph'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
-import { Session } from '@/auth/Session'
+import { Session } from '@/auth/session/Session'
 import Image from '@/components/Image/Image'
-import { readSpecialImageAction } from '@/actions/images/read'
-import { readSpecialCmsLinkAction } from '@/actions/cms/links/read'
 import CmsLink from '@/components/Cms/CmsLink/CmsLink'
-import { readSpecialEventTagAction } from '@/actions/events/tags/read'
-import { QueryParams } from '@/lib/query-params/queryParams'
+import { QueryParams } from '@/lib/queryParams/queryParams'
+import { readSpecialImageAction } from '@/services/images/actions'
+import { readSpecialCmsLinkAction } from '@/services/cms/links/actions'
+import { readSpecialEventTagAction } from '@/services/events/tags/actions'
 import Link from 'next/link'
 
 export default async function CareerLandingPage() {
     const session = await Session.fromNextAuth()
-    const jobAdImageRes = await readSpecialImageAction({ special: 'MACHINE' })
-    const eventImageRes = await readSpecialImageAction({ special: 'FAIR' })
-    const comanyImageRes = await readSpecialImageAction({ special: 'REALFAGSBYGGET' })
-    const conactorCmsLinkRes = await readSpecialCmsLinkAction({ special: 'CAREER_LINK_TO_CONTACTOR' })
-    const companyPresentationEventTagRes = await readSpecialEventTagAction({ special: 'COMPANY_PRESENTATION' })
+    const jobAdImageRes = await readSpecialImageAction({ params: { special: 'MACHINE' } })
+    const eventImageRes = await readSpecialImageAction({ params: { special: 'FAIR' } })
+    const comanyImageRes = await readSpecialImageAction({ params: { special: 'REALFAGSBYGGET' } })
+    const conactorCmsLinkRes = await readSpecialCmsLinkAction({ params: { special: 'CAREER_LINK_TO_CONTACTOR' } })
+    const companyPresentationEventTagRes = await readSpecialEventTagAction({ params: { special: 'COMPANY_PRESENTATION' } })
 
     const jobAdImage = jobAdImageRes.success ? jobAdImageRes.data : null
     const eventImage = eventImageRes.success ? eventImageRes.data : null

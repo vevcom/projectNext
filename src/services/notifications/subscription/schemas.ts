@@ -1,17 +1,15 @@
-import { NotificationSchemas } from '@/services/notifications/schemas'
+import { notificationMethodSchema } from '@/services/notifications/schemas'
 import { z } from 'zod'
 
+const baseSchema = z.object({
+    subscriptions: z.array(z.object({
+        channelId: z.number().min(1),
+        methods: notificationMethodSchema,
+    })),
+})
 
-export namespace SubscriptionSchemas {
-
-    const fields = z.object({
-        subscriptions: z.array(z.object({
-            channelId: z.number().min(1),
-            methods: NotificationSchemas.notificationMethodFields,
-        })),
-    })
-
-    export const update = fields.pick({
+export const subscriptionSchemas = {
+    update: baseSchema.pick({
         subscriptions: true,
-    })
+    }),
 }

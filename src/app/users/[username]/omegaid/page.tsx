@@ -1,6 +1,6 @@
 'use server'
 import styles from './page.module.scss'
-import { Session } from '@/auth/Session'
+import { Session } from '@/auth/session/Session'
 import OmegaId from '@/components/OmegaId/identification/OmegaId'
 import { forbidden, notFound, redirect } from 'next/navigation'
 import type { PropTypes } from '@/app/users/[username]/page'

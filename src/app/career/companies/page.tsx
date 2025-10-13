@@ -1,16 +1,16 @@
-import { createCompanyAction } from '@/actions/career/companies/create'
+import { createCompanyAction, readCompanyPageAction } from '@/services/career/companies/actions'
 import Form from '@/components/Form/Form'
 import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import TextInput from '@/components/UI/TextInput'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
-import CompanyPagingProvider from '@/contexts/paging/CompanyPaging'
-import { readCompanyPageAction } from '@/actions/career/companies/read'
+import { CompanyPagingProvider } from '@/contexts/paging/CompanyPaging'
 import CompanyList from '@/components/Company/CompanyList'
 import { companyListRenderer } from '@/components/Company/CompanyListRenderer'
-import { QueryParams } from '@/lib/query-params/queryParams'
+import { QueryParams } from '@/lib/queryParams/queryParams'
 import CompanyListFilter from '@/app/_components/Company/CompanyListFilter'
-import { Session } from '@/auth/Session'
-import type { SearchParamsServerSide } from '@/lib/query-params/Types'
+import { Session } from '@/auth/session/Session'
+import { configureAction } from '@/services/configureAction'
+import type { SearchParamsServerSide } from '@/lib/queryParams/types'
 import type { PageSizeCompany } from '@/contexts/paging/CompanyPaging'
 
 type PropTypes = SearchParamsServerSide
@@ -20,18 +20,21 @@ export default async function page({ searchParams }: PropTypes) {
     const name = QueryParams.companyName.decode(await searchParams) ?? undefined
 
     const session = await Session.fromNextAuth()
-    const res = await readCompanyPageAction.bind(null, {
-        paging: {
-            page: {
-                page: 0,
-                pageSize,
-                cursor: null
+    const res = await configureAction(readCompanyPageAction, {
+        params: {
+            paging: {
+                page: {
+                    page: 0,
+                    pageSize,
+                    cursor: null
+                },
+                details: {
+                    name
+                },
             },
-            details: {
-                name
-            },
-        },
+        }
     })()
+
     const serverRenderedData = res.success ? res.data : []
 
     return (

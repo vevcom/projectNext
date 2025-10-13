@@ -1,19 +1,20 @@
 import { z } from 'zod'
 
-export namespace LockersSchemas {
-    const fields = z.object({
-        building: z.string(),
-        floor: z.coerce.number(),
-        id: z.coerce.number()
-    })
-    export const create = fields.pick({
+const baseSchema = z.object({
+    building: z.string(),
+    floor: z.coerce.number(),
+    id: z.coerce.number()
+})
+
+export const lockersSchemas = {
+    create: baseSchema.pick({
         building: true,
         floor: true,
         id: true
-    })
+    }),
 
-    export const createLocation = fields.pick({
+    createLocation: baseSchema.pick({
         building: true,
         floor: true,
-    })
+    }),
 }

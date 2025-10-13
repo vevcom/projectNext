@@ -1,5 +1,5 @@
 import { prismaCall } from '@/services/prismaCall'
-import prisma from '@/prisma'
+import { prisma } from '@/prisma/client'
 
 type UpdateManualGroupArgs = {
     name?: string,

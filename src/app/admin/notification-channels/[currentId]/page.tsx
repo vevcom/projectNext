@@ -1,7 +1,7 @@
 
-import ChannelSettings from './channelSettings'
-import { readNotificationChannelsAction } from '@/actions/notifications'
-import { readMailAliasesAction } from '@/actions/mail/alias/read'
+import ChannelSettings from './ChannelSettings'
+import { readNotificationChannelsAction } from '@/services/notifications/actions'
+import { readMailAliasesAction } from '@/services/mail/alias/actions'
 import { notFound } from 'next/navigation'
 
 type PropTypes = {
