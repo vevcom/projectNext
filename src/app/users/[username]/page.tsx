@@ -28,10 +28,7 @@ export default async function User({ params }: PropTypes) {
     const profile = profileRes.data
 
     const committeeMemberships = profile.user.memberships.filter(membership => membership.group.groupType === 'COMMITTEE')
-        .map(membership => ({
-            title: membership.title,
-            committee: membership.group.committee
-        })).filter(membership => membership.committee !== null)
+        .filter(membership => membership.group.committee !== null)
 
     const studyProgrammes = profile.user.memberships.filter(membership => membership.group.groupType === 'STUDY_PROGRAMME')
         .map(membership => membership.group.studyProgramme).filter(membership => membership !== null)
@@ -71,10 +68,10 @@ export default async function User({ params }: PropTypes) {
                         )}
                         <div className={styles.committeesWrapper}>
                             {
-                                committeeMemberships.map(membership =>
+                                committeeMemberships.filter(membership => membership.active).map(membership =>
                                     <div className={styles.committee} key={uuid()}>
-                                        <Link href={`/committees/${membership.committee?.shortName}`}>
-                                            <p>{membership.title} i {membership.committee?.name}</p>
+                                        <Link href={`/committees/${membership.group.committee?.shortName}`}>
+                                            <p>{membership.title}</p>
                                         </Link>
                                     </div>
                                 )
@@ -124,6 +121,18 @@ export default async function User({ params }: PropTypes) {
                             <span className={styles.username}>Mobilnummer:</span>
                             {profile.user.mobile}
                         </p>
+
+                        { (committeeMemberships.length > 0) && <div>
+                            <h2>Medlemsskap</h2>
+                            {committeeMemberships.map((membership, i) => (
+                                <Link
+                                    href={`/committees/${membership.group.committee?.shortName}`}
+                                    key={i}
+                                >
+                                    <p>{membership.title} i {membership.group.committee?.name}</p>
+                                </Link>
+                            ))}
+                        </div> }
                     </div>
                 </div>
             </div>
