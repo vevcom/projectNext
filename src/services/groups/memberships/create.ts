@@ -1,12 +1,12 @@
-import 'server-only'
+import '@pn-server-only'
 import { canEasilyManageMembershipOfGroup, canEasilyManageMembershipOfGroups } from './canEasilyManageMembership'
-import { readCurrentGroupOrder, readCurrentGroupOrders } from '@/services/groups/read'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
-import prisma from '@/prisma'
+import { prisma } from '@/prisma/client'
 import { invalidateManyUserSessionData, invalidateOneUserSessionData } from '@/services/auth/invalidateSession'
-import type { ExpandedMembership } from './Types'
+import { groupOperations } from '@/services/groups/operations'
+import type { ExpandedMembership } from './types'
 
 export async function createMembershipForUser(
     groupId: number,
@@ -17,7 +17,13 @@ export async function createMembershipForUser(
     if (!await canEasilyManageMembershipOfGroup(groupId)) {
         throw new ServerError('BAD PARAMETERS', 'Denne Gruppetypen kan ikke enkelt opprette medlemskap')
     }
-    const order = orderArg ?? await readCurrentGroupOrder(groupId)
+
+    const order = orderArg ?? await groupOperations.readCurrentGroupOrder({
+        bypassAuth: true,
+        params: {
+            id: groupId,
+        }
+    })
 
     const membership = await prismaCall(() => prisma.membership.create({
         data: {
@@ -58,7 +64,12 @@ export async function createMembershipsForGroup(
     if (!await canEasilyManageMembershipOfGroup(groupId)) {
         throw new ServerError('BAD PARAMETERS', 'Denne Gruppetypen kan ikke enkelt opprette medlemskap')
     }
-    const order = orderArg ?? await readCurrentGroupOrder(groupId)
+    const order = orderArg ?? await groupOperations.readCurrentGroupOrder({
+        bypassAuth: true,
+        params: {
+            id: groupId,
+        }
+    })
 
     await prismaCall(() => prisma.membership.updateMany({
         where: {
@@ -100,7 +111,13 @@ export async function createMembershipsForUser(
     if (!await canEasilyManageMembershipOfGroups(data.map(group => group.groupId))) {
         throw new ServerError('BAD PARAMETERS', 'Denne Gruppetypen kan ikke enkelt opprette medlemskap')
     }
-    const ordersMap = await readCurrentGroupOrders(data.map(group => group.groupId))
+    const ordersMap = await groupOperations.readCurrentGroupOrders({
+        bypassAuth: true,
+        params: {
+            ids: data.map(group => group.groupId)
+        }
+    })
+
     const { order: fallbackOrder } = await readCurrentOmegaOrder()
 
     await prismaCall(() => prisma.membership.updateMany({

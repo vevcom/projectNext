@@ -1,5 +1,5 @@
 import type { SafeParseError } from 'zod'
-import type { AuthStatus } from '@/auth/getUser'
+import type { AuthStatus } from '@/auth/session/getUser'
 
 export const errorCodes = [
     {
@@ -71,8 +71,17 @@ export const errorCodes = [
         name: 'UNPERMITTED CASCADE',
         httpCode: 400,
         defaultMessage: 'Du kan ikke slette denne ressursen fordi den er tilknyttet andre ressurser',
+    },
+    {
+        name: 'DISSALLOWED',
+        httpCode: 403,
+        defaultMessage: 'Du har ikke lov til å gjøre dette',
     }
-] as const
+] as const satisfies {
+    name: string
+    httpCode: number
+    defaultMessage: string
+}[]
 
 export type ErrorCode = typeof errorCodes[number]['name']
 

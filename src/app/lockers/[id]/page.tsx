@@ -3,9 +3,9 @@ import LockerNotFound from './LockerNotFound'
 import CreateLockerReservationForm from './CreateLockerReservationForm'
 import UpdateLockerReservationForm from './UpdateLockerReservationForm'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
-import { readLockerAction } from '@/actions/lockers/lockers'
-import { getUser } from '@/auth/getUser'
-import { checkGroupValidity, inferGroupName, readGroupsOfUser } from '@/services/groups/read'
+import { readLockerAction } from '@/services/lockers/actions'
+import { getUser } from '@/auth/session/getUser'
+import { checkGroupValidity, groupOperations, inferGroupName } from '@/services/groups/operations'
 
 
 type PropTypes = {
@@ -24,7 +24,7 @@ export default async function Locker({ params }: PropTypes) {
 
     const lockerId = parseInt((await params).id, 10)
 
-    const locker = await readLockerAction({ id: lockerId })
+    const locker = await readLockerAction({ params: { id: lockerId } })
     if (!locker.success) {
         return <LockerNotFound />
     }
@@ -33,7 +33,12 @@ export default async function Locker({ params }: PropTypes) {
     const reservation = locker.data.LockerReservation[0]
     const groupName = (isReserved && reservation.group) ? inferGroupName(checkGroupValidity(reservation.group)) : ''
 
-    const groups = await readGroupsOfUser(user.id)
+    const groups = await groupOperations.readGroupsOfUser({
+        bypassAuth: true,
+        params: {
+            userId: user.id,
+        },
+    })
 
     const groupsFormData = groups.map(group => {
         const name = inferGroupName(group)

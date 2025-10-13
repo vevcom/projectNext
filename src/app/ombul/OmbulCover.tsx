@@ -1,7 +1,7 @@
 import styles from './OmbulCover.module.scss'
 import Image from '@/components/Image/Image'
 import Link from 'next/link'
-import type { ExpandedOmbul } from '@/services/ombul/Types'
+import type { ExpandedOmbul } from '@/services/ombul/types'
 
 export type PropTypesPreview = {
     pImage: File,

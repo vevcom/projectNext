@@ -1,22 +1,22 @@
-import 'server-only'
-import { Session } from '@/auth/Session'
+import '@pn-server-only'
+import { Session } from '@/auth/session/Session'
 import { getHttpErrorCode, ServerError, Smorekopp } from '@/services/error'
+import type { ServiceOperation } from '@/services/serviceOperation'
 import type { ErrorCode, ErrorMessage } from '@/services/error'
-import type { ServiceMethodType } from '@/services/ServiceMethod'
-import type { SessionNoUser } from '@/auth/Session'
+import type { SessionNoUser } from '@/auth/session/Session'
 import type { z } from 'zod'
 
 type APIHandler<
     RawParams,
     Return,
-    ParamsSchema extends z.ZodTypeAny | undefined,
-    DataSchema extends z.ZodTypeAny | undefined,
+    ParamsSchema extends z.ZodTypeAny | undefined = undefined,
+    DataSchema extends z.ZodTypeAny | undefined = undefined,
 > = {
-    serviceMethod: ServiceMethodType<boolean, Return, ParamsSchema, DataSchema>,
+    serviceOperation: ServiceOperation<boolean, Return, ParamsSchema, DataSchema>,
 } & (ParamsSchema extends undefined ? {
     params?: undefined,
 } : {
-    params: (rawparams: RawParams) => z.infer<NonNullable<ParamsSchema>>,
+    params: (rawParams: RawParams) => z.input<NonNullable<ParamsSchema>>,
 })
 
 async function apiHandlerGeneric<Return>(req: Request, handle: (session: SessionNoUser) => Promise<Return>) {
@@ -41,19 +41,15 @@ export function apiHandler<
     Return,
     ParamsSchema extends z.ZodTypeAny | undefined = undefined,
     DataSchema extends z.ZodTypeAny | undefined = undefined,
->({ serviceMethod, params }: APIHandler<RawParams, Return, ParamsSchema, DataSchema>) {
+>({ serviceOperation, params }: APIHandler<RawParams, Return, ParamsSchema, DataSchema>) {
     // TODO: I think I will rewrite this to be easier to read
     return async (req: Request, { params: rawParams }: { params: Promise<RawParams> }) =>
         await apiHandlerGeneric<Return>(req, async session => {
-            if (serviceMethod.dataSchema) {
-                try {
-                    const rawdata = await req.json()
+            let data
 
-                    return serviceMethod.newClient().executeUnsafe({
-                        params: params ? params(await rawParams) : undefined,
-                        data: rawdata,
-                        session,
-                    })
+            if (serviceOperation.dataSchema) {
+                try {
+                    data = await req.json()
                 } catch (error) {
                     if (error instanceof SyntaxError) {
                         throw new ServerError('BAD DATA', 'The API only accepts valid json data.')
@@ -62,9 +58,9 @@ export function apiHandler<
                 }
             }
 
-            return serviceMethod.newClient().executeUnsafe({
+            return serviceOperation<'UNSAFE'>({
                 params: params ? params(await rawParams) : undefined,
-                data: undefined,
+                data,
                 session,
             })
         })

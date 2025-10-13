@@ -14,7 +14,7 @@ function Footer() {
                     og Innovasjon (MTELSYS) og Kybernetikk og
                     Robotikk (MTTK) ved Norges Tekniske-Naturvitenskapelige Universitet (NTNU)
                     </p>
-                    <p>Org nr. 890 384 692</p>
+                    <p>Org Nr. 890 384 692</p>
                     
                     <div>
                         <SpecialCmsImage special="FOOTER_1" width={200} >

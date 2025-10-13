@@ -2,14 +2,12 @@ import EventTag from './EventTag'
 import styles from './EventTagsAdmin.module.scss'
 import Form from '@/components/Form/Form'
 import { SettingsHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
-import { createEventTagAction } from '@/actions/events/tags/create'
 import TextInput from '@/UI/TextInput'
 import Textarea from '@/UI/Textarea'
 import ColorInput from '@/UI/ColorInput'
-import { updateEventTagAction } from '@/actions/events/tags/update'
-import { QueryParams } from '@/lib/query-params/queryParams'
-import { destroyEventTagAction } from '@/actions/events/tags/destroy'
-import { bindParams } from '@/actions/bind'
+import { QueryParams } from '@/lib/queryParams/queryParams'
+import { destroyEventTagAction, updateEventTagAction, createEventTagAction } from '@/services/events/tags/actions'
+import { configureAction } from '@/services/configureAction'
 import Link from 'next/link'
 import type { EventTag as EventTagT } from '@prisma/client'
 
@@ -42,10 +40,10 @@ export default function EventTagsAdmin({
     const removeFromUrl = (tag: string) => (selectedTags.length === 1 ?
         baseUrl :
         `${baseUrl}?${QueryParams.eventTags.encodeUrl(
-            selectedTags.filter(t => t.name !== tag).map(t => t.name)
+            selectedTags.filter(tagItem => tagItem.name !== tag).map(tagItem => tagItem.name)
         )}`)
     const addToUrl = (tag: string) => `${baseUrl}?${QueryParams.eventTags.encodeUrl(
-        [...selectedTags.map(t => t.name), tag]
+        [...selectedTags.map(tagItem => tagItem.name), tag]
     )}`
     return (
         <div className={styles.EventTagsAdmin}>
@@ -66,9 +64,11 @@ export default function EventTagsAdmin({
                     eventTags.map((tag, index) => (
                         <li key={index} >
                             <Link
-                                className={selectedTags.map(t => t.name).includes(tag.name) ? styles.selected : ''}
+                                className={
+                                    selectedTags.map(tagItem => tagItem.name).includes(tag.name) ? styles.selected : ''
+                                }
                                 href={
-                                    selectedTags.map(t => t.name).includes(tag.name) ?
+                                    selectedTags.map(tagItem => tagItem.name).includes(tag.name) ?
                                         removeFromUrl(tag.name) : addToUrl(tag.name)
                                 }
                             >
@@ -80,7 +80,7 @@ export default function EventTagsAdmin({
                                         {canUpdate && <span className={styles.update}>
                                             <Form
                                                 refreshOnSuccess
-                                                action={bindParams(updateEventTagAction, ({ id: tag.id }))}
+                                                action={configureAction(updateEventTagAction, { params: { id: tag.id } })}
                                                 submitText="Oppdater"
                                             >
                                                 <TextInput
@@ -97,9 +97,9 @@ export default function EventTagsAdmin({
                                                     name="color"
                                                     label="Farge"
                                                     defaultValueRGB={{
-                                                        r: tag.colorR,
-                                                        g: tag.colorG,
-                                                        b: tag.colorB
+                                                        red: tag.colorR,
+                                                        green: tag.colorG,
+                                                        blue: tag.colorB
                                                     }}
                                                 />
                                             </Form>
@@ -109,7 +109,7 @@ export default function EventTagsAdmin({
                                             <Form
                                                 closePopUpOnSuccess={`EventTagPopUp${tag.id}`}
                                                 refreshOnSuccess
-                                                action={bindParams(destroyEventTagAction, ({ id: tag.id }))}
+                                                action={configureAction(destroyEventTagAction, { params: { id: tag.id } })}
                                                 submitColor="red"
                                                 confirmation={{
                                                     confirm: true,

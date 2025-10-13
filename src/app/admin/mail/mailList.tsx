@@ -1,7 +1,7 @@
 
 import Link from 'next/link'
 import { v4 as uuid } from 'uuid'
-import type { MailListTypes } from '@/services/mail/Types'
+import type { MailListTypes } from '@/services/mail/types'
 
 
 export default function MailList({

@@ -1,10 +1,12 @@
-import prisma from '@/prisma'
+import { prisma } from '@/prisma/client'
 import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
 import { articleRealtionsIncluder } from '@/services/cms/articles/ConfigVars'
-import type { ExpandedArticle } from '@/services/cms/articles/Types'
+import { imageOperations } from '@/services/images/operations'
+import { userFilterSelection } from '@/services/users/constants'
+import type { ExpandedArticle } from '@/cms/articles/types'
 import type { CmsParagraph } from '@prisma/client'
-import type { ExpandedCommittee, ExpandedCommitteeWithCover } from './Types'
+import type { ExpandedCommittee, ExpandedCommitteeWithCover } from './types'
 
 export async function readCommittees(): Promise<ExpandedCommittee[]> {
     return await prismaCall(() => prisma.committee.findMany({
@@ -66,10 +68,10 @@ export async function readCommitteeArticle(shortName: string) : Promise<Expanded
     return article.committeeArticle
 }
 
-export async function readCommitteesFromIds(ids: number[]) {
+export async function readCommitteesFromGroupIds(ids: number[]) {
     return await prismaCall(() => prisma.committee.findMany({
         where: {
-            id: {
+            groupId: {
                 in: ids
             }
         }
@@ -84,4 +86,39 @@ export async function readCommitteeParagraph(shortName: string) : Promise<CmsPar
         }
     }))
     return article.paragraph
+}
+
+// TODO: Create ServiceOperation
+export async function readCommitteeMembers(shortName: string) {
+    const defaultImage = await imageOperations.readSpecial({
+        params: { special: 'DEFAULT_PROFILE_IMAGE' },
+        bypassAuth: true
+    })
+
+    const com = await prismaCall(() => prisma.committee.findUniqueOrThrow({
+        where: { shortName },
+        select: {
+            group: {
+                select: {
+                    memberships: {
+                        include: {
+                            user: {
+                                select: {
+                                    ...userFilterSelection,
+                                    image: true
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }))
+    return com.group.memberships.map(member => ({
+        ...member,
+        user: {
+            ...member.user,
+            image: member.user.image ?? defaultImage
+        }
+    }))
 }

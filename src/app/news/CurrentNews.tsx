@@ -1,5 +1,5 @@
 import NewsCard from './NewsCard'
-import { readNewsCurrentAction } from '@/actions/news/read'
+import { readNewsCurrentAction } from '@/services/news/actions'
 import React from 'react'
 
 type PropTypes = {
@@ -17,11 +17,11 @@ export default async function CurrentNews({ not }: PropTypes) {
             new Error('unknown error reading news')
     }
 
-    const news = res.data.filter(n => n.id !== not)
+    const news = res.data.filter(newsItem => newsItem.id !== not)
 
     return (
         news.length ? (
-            news.map(n => <NewsCard key={n.id} news={n} />)
+            news.map(newsItem => <NewsCard key={newsItem.id} news={newsItem} />)
         ) : (
             <i>Det er for tiden ingen nyheter</i>
         )

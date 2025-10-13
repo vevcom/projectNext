@@ -1,5 +1,5 @@
-import 'server-only'
-import prisma from '@/prisma'
+import '@pn-server-only'
+import { prisma } from '@/prisma/client'
 import { ServerError } from '@/services/error'
 import { prismaCall } from '@/services/prismaCall'
 import type { SpecialCmsParagraph, CmsParagraph } from '@prisma/client'

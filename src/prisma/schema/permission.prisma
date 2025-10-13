@@ -78,6 +78,11 @@ enum Permission {
 
   EVENT_CREATE
   EVENT_ADMIN
+  EVENT_READ
+  EVENT_REGISTRATION_CREATE
+  EVENT_REGISTRATION_DESROY
+  EVENT_REGISTRATION_READ
+
   // Notifications
   NOTIFICATION_CHANNEL_CREATE
   NOTIFICATION_CHANNEL_READ
@@ -143,6 +148,14 @@ enum Permission {
   // Dots
   DOTS_ADMIN
 
+  // Cabin
+  CABIN_CALENDAR_READ
+  CABIN_BOOKING_CABIN_CREATE
+  CABIN_BOOKING_BED_CREATE
+  CABIN_BOOKING_ADMIN
+  CABIN_ADMIN
+  CABIN_PRODUCTS_ADMIN
+
   // Shop
   SHOP_READ
   SHOP_ADMIN
@@ -155,33 +168,26 @@ enum Permission {
 
   // Image licenses
   LICENSE_ADMIN
+
+  // Permission admin
+  PERMISSION_GROUP_READ
+  PERMISSION_GROUP_ADMIN
+  PERMISSION_DEFAULT_ADMIN
+
+  // Applications
+  APPLICATION_ADMIN
+  APPLICATION_WRITE
 }
 
-model Role {
-  id          Int              @id @default(autoincrement())
-  name        String           @unique
-  groups      RolesGroups[]
-  permissions RolePermission[]
-}
-
-model RolePermission {
-  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  roleId     Int
+model GroupPermission {
+  group      Group      @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId    Int
   permission Permission
 
-  @@unique([roleId, permission])
+  @@unique([groupId, permission])
 }
 
 model DefaultPermission {
   permission Permission @unique
 }
 
-model RolesGroups {
-  group         Group   @relation(fields: [groupId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  groupId       Int
-  role          Role    @relation(fields: [roleId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  roleId        Int
-  forAdminsOnly Boolean
-
-  @@unique([groupId, roleId])
-}

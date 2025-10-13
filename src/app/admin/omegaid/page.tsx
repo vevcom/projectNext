@@ -1,7 +1,7 @@
 'use server'
 
 import OmegaIdContainer from './container'
-import { readOmegaJWTPublicKey } from '@/actions/omegaid/read'
+import { readOmegaJWTPublicKey } from '@/services/omegaid/actions'
 
 
 export default async function OmegaId() {

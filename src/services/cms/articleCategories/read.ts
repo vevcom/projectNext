@@ -1,5 +1,5 @@
-import 'server-only'
-import prisma from '@/prisma'
+import '@pn-server-only'
+import { prisma } from '@/prisma/client'
 import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
 import type { Image } from '@prisma/client'
@@ -7,7 +7,7 @@ import type {
     ExpandedArticleCategory,
     ExpandedArticleCategoryWithCover,
     ArticleCategoryWithCover,
-} from '@/cms/articleCategories/Types'
+} from '@/cms/articleCategories/types'
 
 /**
  * Reads all article categories, and assaigs each of them a cover based on the cover of first article

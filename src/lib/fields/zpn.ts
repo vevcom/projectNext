@@ -1,16 +1,19 @@
-import { FIELD_IS_PRESENT_VALUE } from './config'
+import { FIELD_IS_PRESENT_VALUE } from './constants'
+import { dateMatchCron } from '@/lib/dates/cron'
 import { z } from 'zod'
 import { zfd } from 'zod-form-data'
 import type { EnumLike } from 'zod'
 
-export namespace zpn {
+export namespace Zpn {
     /**
      * This field is used to represent a boolean that could be a checkbox in frontend with no specified value
      * That is: the value is 'on' or not present at all (default behavior of checkboxes)
      */
-    export const checkboxOrBoolean = ({ }: { label: string }) => z.union([
+    export const checkboxOrBoolean = ({ message }: { label: string, message?: string }) => z.union([
         z.boolean(), // mosltly for the backend
-        zfd.repeatable(z.literal('on').or(z.literal(FIELD_IS_PRESENT_VALUE)).array()) // mostly for the frontend (forms)
+        zfd.repeatable(z.literal('on', {
+            errorMap: message ? () => ({ message }) : undefined,
+        }).or(z.literal(FIELD_IS_PRESENT_VALUE)).array()) // mostly for the frontend (forms)
     ]).transform(value => {
         if (typeof value === 'boolean') return value
         if (value.includes('on')) return true
@@ -66,4 +69,22 @@ export namespace zpn {
                 }),
             z.date()
         ])
+
+    export const simpleCronExpression = () => z.string().superRefine((inp, ctx) => {
+        try {
+            dateMatchCron(new Date(), inp)
+        } catch (e) {
+            if (e instanceof Error) {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: e.message,
+                })
+            } else {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: 'En uventet feil oppsto under parsing av cron uttrykket.',
+                })
+            }
+        }
+    })
 }

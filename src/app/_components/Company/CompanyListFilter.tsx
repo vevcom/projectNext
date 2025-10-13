@@ -2,7 +2,7 @@
 import styles from './CompanyListFilter.module.scss'
 import TextInput from '@/UI/TextInput'
 import { useDebounce } from '@/hooks/useDebounce'
-import { QueryParams } from '@/lib/query-params/queryParams'
+import { QueryParams } from '@/lib/queryParams/queryParams'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/navigation'

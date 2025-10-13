@@ -1,6 +1,6 @@
-import 'server-only'
+import '@pn-server-only'
 import { updateCmsLinkValidation } from './validation'
-import prisma from '@/prisma'
+import { prisma } from '@/prisma/client'
 import { prismaCall } from '@/services/prismaCall'
 import type { UpdateCmsLinkTypes } from './validation'
 import type { CmsLink } from '@prisma/client'

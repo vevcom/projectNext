@@ -1,5 +1,5 @@
 'use client'
-import { QRCodeReaderConfig } from './ConfigVars'
+import { qrCodeReaderConfig } from './ConfigVars'
 import styles from './OmegaIdReader.module.scss'
 import { parseJWT } from '@/jwt/parseJWTClient'
 import { decompressOmegaId } from '@/services/omegaid/compress'
@@ -46,7 +46,7 @@ export default function OmegaIdReader({
     const qrcodeRegionId = uuid()
 
     useEffect(() => {
-        const html5QrcodeScanner = new Html5QrcodeScanner(qrcodeRegionId, QRCodeReaderConfig, false)
+        const html5QrcodeScanner = new Html5QrcodeScanner(qrcodeRegionId, qrCodeReaderConfig, false)
 
         let lastReadTime = 0
         let lastReadUserId = -1

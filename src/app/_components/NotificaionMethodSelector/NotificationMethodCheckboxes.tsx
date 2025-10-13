@@ -1,9 +1,9 @@
 'use client'
 import Checkbox from '@/components/UI/Checkbox'
-import { notificationMethodsDisplayMap } from '@/services/notifications/ConfigVars'
+import { notificationMethodsDisplayMap } from '@/services/notifications/constants'
 import { v4 as uuid } from 'uuid'
 import React, { useState } from 'react'
-import type { NotificationMethodGeneral, NotificationMethodTypes } from '@/services/notifications/Types'
+import type { NotificationMethodGeneral, NotificationMethodTypes } from '@/services/notifications/types'
 
 export default function NotificationMethodCheckboxes({
     formPrefix,
@@ -20,7 +20,7 @@ export default function NotificationMethodCheckboxes({
 }) {
     const [state, setState] = useState(methods)
 
-    function handleChange(this: keyof(NotificationMethodGeneral), event: React.ChangeEvent<HTMLInputElement>) {
+    function handleChange(this: keyof (NotificationMethodGeneral), event: React.ChangeEvent<HTMLInputElement>) {
         const newState = { ...state }
         newState[this] = event.target.checked
         if (onChange) onChange(newState)

@@ -1,5 +1,5 @@
 'use client'
-import { createOmegaOrderAction } from '@/actions/omegaOrder/create'
+import { createOmegaOrderAction } from '@/services/omegaOrder/actions'
 import Form from '@/components/Form/Form'
 import { useRouter } from 'next/navigation'
 import React from 'react'

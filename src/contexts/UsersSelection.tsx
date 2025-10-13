@@ -2,7 +2,7 @@
 
 import { createContext, useState } from 'react'
 import type { ReactNode } from 'react'
-import type { UserFiltered } from '@/services/users/Types'
+import type { UserFiltered } from '@/services/users/types'
 
 type PropTypes = {
     children: ReactNode
@@ -27,7 +27,7 @@ export default function UsesrSelectionProvider({ children }: PropTypes) {
         setUsers([...users, user])
     }
     const removeUser = (user: UserFiltered) => {
-        setUsers(users.filter(u => u !== user))
+        setUsers(users.filter(userItem => userItem !== user))
     }
     const toggle = (user: UserFiltered) => {
         if (users.includes(user)) {

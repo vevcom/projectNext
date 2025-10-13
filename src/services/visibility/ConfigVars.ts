@@ -14,7 +14,7 @@ export const BypassPermissions = {
 
 export type BypassPermissions = typeof BypassPermissions[keyof typeof BypassPermissions]
 
-export const PurposeTextsConfig = {
+export const purposeTextsConfig = {
     IMAGE: 'Bilder',
     NEWS_ARTICLE: 'Nyheter',
     ARTICLE_CATEGORY: 'Artikkelkategorier',
@@ -26,7 +26,7 @@ export const PurposeTextsConfig = {
  * Which permissions link to special visibility purposes
  * If the special visibility were to disappear, it will be regenerated from this.
  */
-export const SpecialVisibilityConfig = {
+export const specialVisibilityConfig = {
     OMBUL: {
         regularLevel: 'OMBUL_READ',
         adminLevel: 'OMBUL_CREATE'

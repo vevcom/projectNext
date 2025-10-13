@@ -1,8 +1,8 @@
-import 'server-only'
+import '@pn-server-only'
 import { readCurrentOmegaOrder } from './read'
 import { AutomaticallyIncreaseOrder } from './ConfigVars'
 import { prismaCall } from '@/services/prismaCall'
-import prisma from '@/prisma'
+import { prisma } from '@/prisma/client'
 import { GroupType } from '@prisma/client'
 import type { PrismaPromise } from '@prisma/client'
 

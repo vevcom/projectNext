@@ -1,7 +1,7 @@
 import styles from './JobAd.module.scss'
 import ImageCard from '@/components/ImageCard/ImageCard'
-import { JobAdConfig } from '@/services/career/jobAds/config'
-import type { SimpleJobAd } from '@/services/career/jobAds/Types'
+import { jobAdType } from '@/services/career/jobAds/constants'
+import type { SimpleJobAd } from '@/services/career/jobAds/types'
 
 type PropTypes = {
     jobAd: SimpleJobAd
@@ -16,7 +16,7 @@ export default function JobAd({ jobAd }: PropTypes) {
             key={jobAd.id}
         >
             {!jobAd.active ? <p className={styles.inactive}>Inaktiv</p> : <></>}
-            <p>{jobAd.companyName} - {JobAdConfig.type[jobAd.type].label}</p>
+            <p>{jobAd.companyName} - {jobAdType[jobAd.type].label}</p>
             <i>{jobAd.description}</i>
         </ImageCard>
     )

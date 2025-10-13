@@ -1,7 +1,7 @@
-import 'server-only'
+import '@pn-server-only'
 import { updateMailingListValidation } from './validation'
 import { prismaCall } from '@/services/prismaCall'
-import prisma from '@/prisma'
+import { prisma } from '@/prisma/client'
 import type { UpdateMailingListTypes } from './validation'
 import type { MailingList } from '@prisma/client'
 

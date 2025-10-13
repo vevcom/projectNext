@@ -1,18 +1,17 @@
-import 'server-only'
+import '@pn-server-only'
 import { sendSystemMail } from '@/services/notifications/email/send'
 import { ResetPasswordTemplate } from '@/services/notifications/email/templates/resetPassword'
 import { generateJWT } from '@/jwt/jwt'
-import { UserMethods } from '@/services/users/methods'
+import { userOperations } from '@/services/users/operations'
 import { ServerError } from '@/services/error'
-import { emailValidation } from '@/services/notifications/validation'
+import { z } from 'zod'
 
 export async function sendResetPasswordMail(email: string) {
-    const parse = emailValidation.detailedValidate({ email })
+    const emailParsed = z.string().email().parse(email)
 
     try {
-        const user = await UserMethods.read.newClient().execute({
-            params: { email: parse.email },
-            session: null,
+        const user = await userOperations.read({
+            params: { email: emailParsed },
             bypassAuth: true,
         })
 

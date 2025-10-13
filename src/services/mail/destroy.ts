@@ -1,4 +1,4 @@
-import 'server-only'
+import '@pn-server-only'
 import {
     createAliasMailingListValidation,
     createMailingListExternalValidation,
@@ -6,7 +6,7 @@ import {
     createMailingListUserValidation
 } from './validation'
 import { prismaCall } from '@/services/prismaCall'
-import prisma from '@/prisma'
+import { prisma } from '@/prisma/client'
 import type {
     MailAliasMailingList,
     MailingListGroup,

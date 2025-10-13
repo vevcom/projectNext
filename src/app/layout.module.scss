@@ -24,11 +24,11 @@ $nav-height: 60px;
 .content {
     flex: 1 0 auto;
     max-width: 100vw;
-    overflow-x: hidden;
     position: relative;
     width: 100%;
     display: flex;
     flex-direction: column;
+    overflow: visible;
 }
 
 .footer {

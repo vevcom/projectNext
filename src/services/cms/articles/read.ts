@@ -1,9 +1,9 @@
-import 'server-only'
+import '@pn-server-only'
 import { articleRealtionsIncluder } from './ConfigVars'
-import prisma from '@/prisma'
+import { prisma } from '@/prisma/client'
 import { ServerError } from '@/services/error'
 import { prismaCall } from '@/services/prismaCall'
-import type { ExpandedArticle } from './Types'
+import type { ExpandedArticle } from './types'
 
 /**
  * A function that reads an article with all the neccessary data included like paragraphs, images, etc...

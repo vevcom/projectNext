@@ -1,14 +1,14 @@
 import { sendBulkMail } from './send'
-import { DEFAULT_NOTIFICATION_ALIAS } from './ConfigVars'
+import { DEFAULT_NOTIFICATION_ALIAS } from './constants'
 import { sendEmailValidation } from './validation'
 import { DefaultEmailTemplate } from './templates/default'
-import { repalceSpecialSymbols } from '@/services/notifications/dispatch'
+import { repalceSpecialSymbols } from '@/services/notifications/operations'
 import { prismaCall } from '@/services/prismaCall'
-import prisma from '@/prisma'
+import { prisma } from '@/prisma/client'
 import { render } from '@react-email/render'
-import type { ExpandedNotificationChannel } from '@/services/notifications/Types'
+import type { ExpandedNotificationChannel } from '@/services/notifications/types'
 import type { Notification } from '@prisma/client'
-import type { UserFiltered } from '@/services/users/Types'
+import type { UserFiltered } from '@/services/users/types'
 
 
 export async function dispatchEmailNotifications(
@@ -35,22 +35,22 @@ export async function dispatchEmailNotifications(
 
     const senderAlias = results.mailAlias ? results.mailAlias.address : DEFAULT_NOTIFICATION_ALIAS
 
-    const mails = await Promise.all(users.map(async u => {
+    const mails = await Promise.all(users.map(async user => {
         const parsed = sendEmailValidation.detailedValidate({
             from: senderAlias,
-            to: u.email,
-            subject: repalceSpecialSymbols(notificaion.title, u),
-            text: repalceSpecialSymbols(notificaion.message, u),
+            to: user.email,
+            subject: repalceSpecialSymbols(notificaion.title, user),
+            text: repalceSpecialSymbols(notificaion.message, user),
         })
 
         return {
             from: parsed.from,
             to: parsed.to,
             subject: parsed.subject,
-            html: await wrapInHTML(u, parsed.text),
+            html: await wrapInHTML(user, parsed.text),
             list: {
                 unsubscribe: {
-                    url: `https://${process.env.DOMAIN}/users/${u.username}/unsubscribe`,
+                    url: `https://${process.env.DOMAIN}/users/${user.username}/unsubscribe`,
                     comment: 'Comment'
                 },
             }
@@ -63,5 +63,7 @@ export async function dispatchEmailNotifications(
 }
 
 async function wrapInHTML(user: UserFiltered, text: string): Promise<string> {
+    // TODO: Would it be possible to do React.createElement here?
+    // It feels cursed to write TSX in backend code.
     return render(<DefaultEmailTemplate user={user} text={text} />)
 }

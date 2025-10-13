@@ -1,6 +1,6 @@
 import styles from './EventsLandingLayout.module.scss'
 import EventTag from '@/components/Event/EventTag'
-import { QueryParams } from '@/lib/query-params/queryParams'
+import { QueryParams } from '@/lib/queryParams/queryParams'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Link from 'next/link'
 import type { EventTag as EventTagT } from '@prisma/client'
@@ -37,7 +37,7 @@ export default function EventsLandingLayout({
                         selectedTags?.map(tag =>
                             <Link key={tag.name} href={selectedTags.length === 1 ? baseUrl :
                                 `${baseUrl}?${QueryParams.eventTags.encodeUrl(
-                                    selectedTags.filter(t => t.name !== tag.name).map(t => t.name)
+                                    selectedTags.filter(tagItem => tagItem.name !== tag.name).map(tagItem => tagItem.name)
                                 )}`
                             }>
                                 <EventTag eventTag={tag} />

@@ -91,7 +91,7 @@ export default function Dropzone({ label, name, files, setFiles, ...props }: Pro
 
     const handleRemove = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>, file: File) => {
         event.preventDefault()
-        setFiles(prev => prev.filter(f => f.file !== file))
+        setFiles(prev => prev.filter(fileItem => fileItem.file !== file))
     }
     const handleRemoveAll = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         event.preventDefault()

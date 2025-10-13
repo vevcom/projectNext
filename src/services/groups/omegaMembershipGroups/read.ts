@@ -1,8 +1,8 @@
 import { prismaCall } from '@/services/prismaCall'
-import prisma from '@/prisma'
+import { prisma } from '@/prisma/client'
 import { ServerError } from '@/services/error'
 import type { OmegaMembershipLevel } from '@prisma/client'
-import type { ExpandedOmegaMembershipGroup } from './Types'
+import type { ExpandedOmegaMembershipGroup } from './types'
 
 export async function readOmegaMembershipGroups(): Promise<ExpandedOmegaMembershipGroup[]> {
     return await prismaCall(() => prisma.omegaMembershipGroup.findMany())
@@ -36,7 +36,7 @@ export async function readUserOmegaMembershipLevel(userId: number): Promise<Omeg
         where: {
             userId,
             groupId: {
-                in: omegaMembershipGroups.map(g => g.groupId),
+                in: omegaMembershipGroups.map(group => group.groupId),
             }
         }
     }))

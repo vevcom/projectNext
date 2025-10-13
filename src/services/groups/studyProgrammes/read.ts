@@ -1,6 +1,6 @@
 import { prismaCall } from '@/services/prismaCall'
-import prisma from '@/prisma'
-import type { ExpandedStudyProgramme } from './Types'
+import { prisma } from '@/prisma/client'
+import type { ExpandedStudyProgramme } from './types'
 
 export async function readStudyProgrammes(): Promise<ExpandedStudyProgramme[]> {
     return await prismaCall(() => prisma.studyProgramme.findMany())

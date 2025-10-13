@@ -1,6 +1,6 @@
-import 'server-only'
+import '@pn-server-only'
 import { createImageCollectionValidation } from './validation'
-import prisma from '@/prisma'
+import { prisma } from '@/prisma/client'
 import { prismaCall } from '@/services/prismaCall'
 import { createVisibility } from '@/services/visibility/create'
 import type { CreateImageCollectionTypes } from './validation'

@@ -2,11 +2,14 @@ import styles from './page.module.scss'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { SettingsHeaderItemPopUp } from '@/app/_components/HeaderItems/HeaderItemPopUp'
 import Form from '@/app/_components/Form/Form'
-import { destroyLicenseAction } from '@/actions/licenses/destroy'
-import { createLicenseAction } from '@/actions/licenses/create'
+import {
+    destroyLicenseAction,
+    createLicenseAction,
+    updateLicenseAction,
+    readAllLicensesAction
+} from '@/services/licenses/actions'
 import TextInput from '@/UI/TextInput'
-import { updateLicenseAction } from '@/actions/licenses/update'
-import { readAllLicensesAction } from '@/actions/licenses/read'
+import { configureAction } from '@/services/configureAction'
 import Link from 'next/link'
 
 export default async function Licenses() {
@@ -38,7 +41,7 @@ export default async function Licenses() {
                             <td>
                                 <SettingsHeaderItemPopUp PopUpKey={`LicenseSettings ${license.id}`}>
                                     <Form
-                                        action={updateLicenseAction.bind(null, { id: license.id })}
+                                        action={configureAction(updateLicenseAction, { params: { id: license.id } })}
                                         title="Endre lisens"
                                         submitText="Endre"
                                     >
@@ -47,7 +50,7 @@ export default async function Licenses() {
                                     </Form>
 
                                     <Form
-                                        action={destroyLicenseAction.bind(null, { id: license.id })}
+                                        action={configureAction(destroyLicenseAction, { params: { id: license.id } })}
                                         submitText="Slett"
                                         submitColor="red"
                                         refreshOnSuccess

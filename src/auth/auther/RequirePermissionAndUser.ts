@@ -1,7 +1,7 @@
 import { AutherFactory } from './Auther'
 import type { Permission } from '@prisma/client'
 
-export const RequirePermissioAndUser = AutherFactory<
+export const RequirePermissionAndUser = AutherFactory<
     { permission: Permission },
     Record<string, never>,
     'USER_REQUIERED_FOR_AUTHORIZED'

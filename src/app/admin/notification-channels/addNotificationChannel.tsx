@@ -3,13 +3,13 @@ import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
 import { SelectNumber } from '@/components/UI/Select'
 import NotificationMethodSelector from '@/components/NotificaionMethodSelector/NotificaionMethodSelector'
-import { allMethodsOff, allMethodsOn } from '@/services/notifications/Types'
-import { createNotificationChannelAction } from '@/actions/notifications/channel/create'
 import { booleanOperationOnMethods } from '@/services/notifications/notificationMethodOperations'
+import { createNotificationChannelAction } from '@/services/notifications/actions'
+import { allNotificationMethodsOff, allNotificationMethodsOn } from '@/services/notifications/constants'
+import { configureAction } from '@/services/configureAction'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import type { ExpandedNotificationChannel, NotificationMethodGeneral } from '@/services/notifications/Types'
-
+import type { ExpandedNotificationChannel, NotificationMethodGeneral } from '@/services/notifications/types'
 
 export default function AddNotificationChannel({
     channels
@@ -18,25 +18,30 @@ export default function AddNotificationChannel({
 }) {
     const { push } = useRouter()
 
-    const [availableMethods, setAvailableMethods] = useState(allMethodsOn as NotificationMethodGeneral)
-    const [defaultMethods, setDefaultMethods] = useState(allMethodsOff as NotificationMethodGeneral)
-    const [selectedParentId, setSelectedParentId] = useState(channels.find(c => c.special === 'ROOT')?.id)
+    const [availableMethods, setAvailableMethods] = useState<NotificationMethodGeneral>(allNotificationMethodsOn)
+    const [defaultMethods, setDefaultMethods] = useState<NotificationMethodGeneral>(allNotificationMethodsOn)
+    const [selectedParentId, setSelectedParentId] = useState(channels.find(channel => channel.special === 'ROOT')?.id)
     const [editableMethods, setEditableMethods] = useState(
-        channels.find(c => c.id === selectedParentId)?.availableMethods ?? allMethodsOn
+        channels.find(channel => channel.id === selectedParentId)?.availableMethods ?? allNotificationMethodsOn
     )
 
     function handleNewParent(id: number) {
         setSelectedParentId(id)
-        setEditableMethods(channels.find(c => c.id === id)?.availableMethods ?? allMethodsOn)
+        setEditableMethods(channels.find(channel => channel.id === id)?.availableMethods ?? allNotificationMethodsOff)
     }
 
     return <Form
         title="Legg til varslingskanal"
         submitText="Legg til"
-        action={createNotificationChannelAction}
-        successCallback={(data) => {
+        action={configureAction(createNotificationChannelAction, {
+            params: {
+                availableMethods,
+                defaultMethods,
+            }
+        })}
+        successCallback={(data?: ExpandedNotificationChannel) => {
             if (data) {
-                push(`notificationchannels/${data.id}`)
+                push(`notification-channels/${data.id}`)
             }
         }}
     >

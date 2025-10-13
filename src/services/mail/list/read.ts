@@ -1,7 +1,7 @@
-import 'server-only'
+import '@pn-server-only'
 
 import { prismaCall } from '@/services/prismaCall'
-import prisma from '@/prisma'
+import { prisma } from '@/prisma/client'
 import type { MailingList } from '@prisma/client'
 
 export async function readMailingLists(): Promise<MailingList[]> {

@@ -1,9 +1,0 @@
-/node_modules
-/.pnp
-.pnp.js
-/store
-/dist
-
-.DS_Store
-
-/generated

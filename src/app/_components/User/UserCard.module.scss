@@ -1,0 +1,25 @@
+@use '@/styles/ohma';
+
+.UserCard {
+    @include ohma.round;
+    @include ohma.boxShadow;
+    color: ohma.$colors-black;
+    text-decoration: none;
+    margin: 1rem;
+    background-color: ohma.$colors-white;
+    box-sizing: border-box;
+
+    display: flex;
+    align-items: center;
+    gap: calc(2 * ohma.$gap);
+
+    > div {
+        > h6 {
+            font-size: ohma.$fonts-m;
+        }
+
+        > p {
+            font-size: ohma.$fonts-s;
+        }
+    }
+}

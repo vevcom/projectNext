@@ -7,11 +7,11 @@ import Slider from '@/components/UI/Slider'
 import NumberInput from '@/components/UI/NumberInput'
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
-import { EventConfig } from '@/services/events/config'
-import { updateEventAction } from '@/actions/events/update'
-import { createEventAction } from '@/actions/events/create'
 import EventTag from '@/components/Event/EventTag'
-import { bindParams } from '@/actions/bind'
+import { createEventAction, updateEventAction } from '@/services/events/actions'
+import { eventCanBeViewdByOptions } from '@/services/events/constants'
+import { FIELD_IS_PRESENT_VALUE } from '@/lib/fields/constants'
+import { configureAction } from '@/services/configureAction'
 import { useState } from 'react'
 import type { Event, EventTag as EventTagT } from '@prisma/client'
 import type { ChangeEvent } from 'react'
@@ -30,7 +30,7 @@ type PropTypes = {
  */
 export default function CreateOrUpdateEventForm({ event, eventTags }: PropTypes) {
     const [showRegistrationOptions, setShowRegistrationOptions] = useState(event?.takesRegistration ?? false)
-    const action = event ? bindParams(updateEventAction, { id: event.id }) : createEventAction
+    const action = event ? configureAction(updateEventAction, { params: { id: event.id } }) : createEventAction
 
     const handleShowRegistration = (changeEvent: ChangeEvent<HTMLInputElement>) => {
         setShowRegistrationOptions(changeEvent.target.checked)
@@ -49,15 +49,16 @@ export default function CreateOrUpdateEventForm({ event, eventTags }: PropTypes)
                 }
             >
                 <TextInput label="Navn" name="name" defaultValue={event?.name} />
+                <TextInput label="Sted" name="location" defaultValue={event?.location ?? ''} />
                 <SelectString
                     className={styles.canBeViewdBy}
                     label="Hvem kan se"
                     name="canBeViewdBy"
-                    options={EventConfig.canBeViewdByOptions}
+                    options={eventCanBeViewdByOptions}
                     defaultValue={event?.canBeViewdBy}
                 />
-                <DateInput label="Start" name="eventStart" includeTime defaultValue={event?.eventStart}/>
-                <DateInput label="Slutt" name="eventEnd" includeTime defaultValue={event?.eventEnd}/>
+                <DateInput label="Start" name="eventStart" includeTime defaultValue={event?.eventStart} />
+                <DateInput label="Slutt" name="eventEnd" includeTime defaultValue={event?.eventEnd} />
                 <ul className={styles.tags}>
                     <h2>Tags</h2>
                     {
@@ -66,7 +67,11 @@ export default function CreateOrUpdateEventForm({ event, eventTags }: PropTypes)
                                 <Checkbox
                                     name="tagIds"
                                     value={tag.id}
-                                    defaultChecked={event ? event.tags.map(t => t.name).includes(tag.name) : false}
+                                    defaultChecked={
+                                        event
+                                            ? event.tags.map(tagItem => tagItem.name).includes(tag.name)
+                                            : false
+                                    }
                                 >
                                     <EventTag eventTag={tag} />
                                 </Checkbox>
@@ -80,29 +85,33 @@ export default function CreateOrUpdateEventForm({ event, eventTags }: PropTypes)
                     onChange={handleShowRegistration}
                     defaultChecked={event?.takesRegistration}
                 />
-                {
-                    showRegistrationOptions ? (
-                        <>
-                            <NumberInput
-                                label="plasser"
-                                name="places"
-                                defaultValue={event?.places}
-                            />
-                            <DateInput
-                                label="Registrering Start"
-                                name="registrationStart"
-                                defaultValue={event?.registrationStart}
-                                includeTime
-                            />
-                            <DateInput
-                                label="Registrering Slutt"
-                                name="registrationEnd"
-                                defaultValue={event?.registrationEnd}
-                                includeTime
-                            />
-                        </>
-                    ) : <></>
-                }
+
+                {showRegistrationOptions ? <>
+                    <Slider
+                        label="Venteliste"
+                        name="waitingList"
+                        defaultChecked={event?.waitingList}
+                    />
+                    <NumberInput
+                        label="plasser"
+                        name="places"
+                        defaultValue={event?.places}
+                    />
+                    <DateInput
+                        label="Registrering Start"
+                        name="registrationStart"
+                        defaultValue={event?.registrationStart}
+                        includeTime
+                    />
+                    <DateInput
+                        label="Registrering Slutt"
+                        name="registrationEnd"
+                        defaultValue={event?.registrationEnd}
+                        includeTime
+                    />
+                </> : <>
+                    <input type="hidden" name="waitingList" value={FIELD_IS_PRESENT_VALUE} />
+                </>}
             </Form>
         </div>
     )

@@ -1,9 +1,9 @@
-import 'server-only'
+import '@pn-server-only'
+import { userFilterSelection } from '@/services/users/constants'
 import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
-import prisma from '@/prisma'
-import { UserConfig } from '@/services/users/config'
-import type { MailFlowObject, MailListTypes, ViaArrayType, ViaType } from './Types'
+import { prisma } from '@/prisma/client'
+import type { MailFlowObject, MailListTypes, ViaArrayType, ViaType } from './types'
 
 
 /**
@@ -89,7 +89,7 @@ async function readAliasTraversal(id: number): Promise<MailFlowObject> {
                                                 // TODO: only find valid memberships
                                                 include: {
                                                     user: {
-                                                        select: UserConfig.filterSelection,
+                                                        select: userFilterSelection,
                                                     }
                                                 }
                                             }
@@ -100,7 +100,7 @@ async function readAliasTraversal(id: number): Promise<MailFlowObject> {
                             users: {
                                 include: {
                                     user: {
-                                        select: UserConfig.filterSelection,
+                                        select: userFilterSelection,
                                     },
                                 },
                             },
@@ -120,56 +120,56 @@ async function readAliasTraversal(id: number): Promise<MailFlowObject> {
 
     const mailingList = results.mailingLists.map(list => list.mailingList)
 
-    const group = results.mailingLists.map(l => l.mailingList.groups.map(g => {
+    const group = results.mailingLists.map(list => list.mailingList.groups.map(groupItem => {
         const via: ViaType = {
             type: 'mailingList',
-            id: l.mailingListId,
-            label: l.mailingList.name
+            id: list.mailingListId,
+            label: list.mailingList.name
         }
 
         return {
-            ...g.group,
+            ...groupItem.group,
             via: [via]
         }
     })).flat()
 
-    const user = results.mailingLists.map(l => l.mailingList.users.map(u => {
+    const user = results.mailingLists.map(list => list.mailingList.users.map(userItem => {
         const via: ViaType = {
             type: 'mailingList',
-            id: l.mailingListId,
-            label: l.mailingList.name
+            id: list.mailingListId,
+            label: list.mailingList.name
         }
 
         return {
-            ...u.user,
+            ...userItem.user,
             via: [via],
         }
     }))
-        .concat(results.mailingLists.map(l =>
-            l.mailingList.groups.map(g => g.group.memberships.map(m => {
+        .concat(results.mailingLists.map(list =>
+            list.mailingList.groups.map(groupItem => groupItem.group.memberships.map(membership => {
                 const via: ViaType = {
                     type: 'group',
-                    id: g.groupId,
-                    label: g.groupId.toString()
+                    id: groupItem.groupId,
+                    label: groupItem.groupId.toString()
                 }
 
                 return {
-                    ...m.user,
+                    ...membership.user,
                     via: [via]
                 }
             })).flat()
         )).flat()
 
     const mailaddressExternal = results.mailingLists
-        .map(l => l.mailingList.mailAddressExternal.map(a => {
+        .map(list => list.mailingList.mailAddressExternal.map(address => {
             const via: ViaType = {
                 type: 'mailingList',
-                id: l.mailingListId,
-                label: l.mailingList.name
+                id: list.mailingListId,
+                label: list.mailingList.name
             }
 
             return {
-                ...a.mailAddressExternal,
+                ...address.mailAddressExternal,
                 via: [via]
             }
         })).flat()
@@ -185,9 +185,9 @@ async function readAliasTraversal(id: number): Promise<MailFlowObject> {
             Reflect.deleteProperty(list, 'mailAddressExternal')
             return list
         }),
-        group: removeDuplicates(group.map(g => {
-            Reflect.deleteProperty(g, 'memberships')
-            return g
+        group: removeDuplicates(group.map(groupItem => {
+            Reflect.deleteProperty(groupItem, 'memberships')
+            return groupItem
         })),
         user: removeDuplicates(user),
         mailaddressExternal: removeDuplicates(mailaddressExternal),
@@ -220,7 +220,7 @@ async function readMailingListTraversal(id: number): Promise<MailFlowObject> {
                                 },*/
                                 include: {
                                     user: {
-                                        select: UserConfig.filterSelection,
+                                        select: userFilterSelection,
                                     }
                                 }
                             }
@@ -231,7 +231,7 @@ async function readMailingListTraversal(id: number): Promise<MailFlowObject> {
             users: {
                 include: {
                     user: {
-                        select: UserConfig.filterSelection,
+                        select: userFilterSelection,
                     },
                 },
             },
@@ -244,21 +244,21 @@ async function readMailingListTraversal(id: number): Promise<MailFlowObject> {
     }))
 
     const mailingList = results
-    const alias = mailingList.mailAliases.map(a => a.mailAlias)
-    const group = mailingList.groups.map(g => g.group)
+    const alias = mailingList.mailAliases.map(aliasItem => aliasItem.mailAlias)
+    const group = mailingList.groups.map(groupItem => groupItem.group)
     const user = mailingList.users
-        .map(u => u.user)
+        .map(userItem => userItem.user)
         .concat(
             mailingList.groups
-                .map(g => g.group.memberships.map(m => {
+                .map(groupItem => groupItem.group.memberships.map(membership => {
                     const via: ViaType = {
                         type: 'group',
-                        id: g.groupId,
-                        label: String(g.groupId)
+                        id: groupItem.groupId,
+                        label: String(groupItem.groupId)
                     }
 
                     return {
-                        ...m.user,
+                        ...membership.user,
                         via: [via],
                     }
                 }))
@@ -274,9 +274,9 @@ async function readMailingListTraversal(id: number): Promise<MailFlowObject> {
     return {
         mailingList: [mailingList],
         alias,
-        group: group.map(g => {
-            Reflect.deleteProperty(g, 'memberships')
-            return g
+        group: group.map(groupItem => {
+            Reflect.deleteProperty(groupItem, 'memberships')
+            return groupItem
         }),
         user: removeDuplicates(user),
         mailaddressExternal,
@@ -313,7 +313,7 @@ async function readMailaddressExternalTraversal(id: number): Promise<MailFlowObj
     const mailAddressExternal = results
     const mailingList = results.mailingLists.map(list => list.mailingList)
     const aliases = results.mailingLists.map(
-        list => list.mailingList.mailAliases.map(a => {
+        list => list.mailingList.mailAliases.map(aliasItem => {
             const via: ViaType = {
                 type: 'mailingList',
                 id: list.mailingListId,
@@ -321,7 +321,7 @@ async function readMailaddressExternalTraversal(id: number): Promise<MailFlowObj
             }
 
             return {
-                ...a.mailAlias,
+                ...aliasItem.mailAlias,
                 via: [via],
             }
         }),
@@ -331,9 +331,9 @@ async function readMailaddressExternalTraversal(id: number): Promise<MailFlowObj
 
     return {
         mailaddressExternal: [mailAddressExternal],
-        mailingList: mailingList.map(l => {
+        mailingList: mailingList.map(list => {
             Reflect.deleteProperty(mailingList, 'mailAliases')
-            return l
+            return list
         }),
         alias: removeDuplicates(aliases),
         user: [],
@@ -355,7 +355,7 @@ async function readGroupTraversal(id: number): Promise<MailFlowObject> {
             memberships: {
                 include: {
                     user: {
-                        select: UserConfig.filterSelection,
+                        select: userFilterSelection,
                     }
                 }
             },
@@ -378,30 +378,30 @@ async function readGroupTraversal(id: number): Promise<MailFlowObject> {
     const group = results
     const mailingList = results.mailingLists.map(list => list.mailingList)
     const alias = mailingList
-        .map(list => list.mailAliases.map(a => {
+        .map(mlist => mlist.mailAliases.map(aliasItem => {
             const via: ViaType = {
                 type: 'mailingList',
-                id: list.id,
-                label: list.name
+                id: mlist.id,
+                label: mlist.name
             }
 
             return {
-                ...a.mailAlias,
+                ...aliasItem.mailAlias,
                 via: [via]
             }
         }))
         .flat()
 
-    const user = results.memberships.map(m => m.user)
+    const user = results.memberships.map(membership => membership.user)
 
     Reflect.deleteProperty(group, 'memberships')
     Reflect.deleteProperty(group, 'mailingLists')
 
     return {
         mailaddressExternal: [],
-        mailingList: mailingList.map(l => {
-            Reflect.deleteProperty(l, 'mailAliases')
-            return l
+        mailingList: mailingList.map(mlist => {
+            Reflect.deleteProperty(mlist, 'mailAliases')
+            return mlist
         }),
         alias: removeDuplicates(alias),
         user,
@@ -459,69 +459,69 @@ async function readUserTraversal(id: number): Promise<MailFlowObject> {
 
     const user = results
     const mailingList = results.mailingLists
-        .map(list => list.mailingList)
+        .map(mlist => mlist.mailingList)
         .concat(
-            results.memberships.map(m => m.group.mailingLists.map(l => {
+            results.memberships.map(membership => membership.group.mailingLists.map(mlist => {
                 const via: ViaType = {
                     type: 'group',
-                    id: m.groupId,
-                    label: m.groupId.toString()
+                    id: membership.groupId,
+                    label: membership.groupId.toString()
                 }
 
                 return {
-                    ...l.mailingList,
+                    ...mlist.mailingList,
                     via: [via]
                 }
             })).flat()
         )
 
     const alias = results.mailingLists
-        .map(l => l.mailingList.mailAliases.map(a => {
+        .map(list => list.mailingList.mailAliases.map(aliasItem => {
             const via: ViaType = {
                 type: 'mailingList',
-                id: l.mailingListId,
-                label: l.mailingList.name
+                id: list.mailingListId,
+                label: list.mailingList.name
             }
 
             return {
-                ...a.mailAlias,
+                ...aliasItem.mailAlias,
                 via: [via]
             }
         }))
         .concat(
             results.memberships
-                .map(m => m.group.mailingLists
-                    .map(l => l.mailingList.mailAliases.map(a => {
+                .map(membership => membership.group.mailingLists
+                    .map(listItem => listItem.mailingList.mailAliases.map(aliasItem => {
                         const via: ViaType = {
                             type: 'mailingList',
-                            id: l.mailingListId,
-                            label: l.mailingList.name
+                            id: listItem.mailingListId,
+                            label: listItem.mailingList.name
                         }
 
                         return {
-                            ...a.mailAlias,
+                            ...aliasItem.mailAlias,
                             via: [via]
                         }
                     })).flat()
                 )
         ).flat()
 
-    const group = results.memberships.map(m => m.group)
+    const group = results.memberships.map(membership => membership.group)
 
     Reflect.deleteProperty(user, 'mailingLists')
     Reflect.deleteProperty(user, 'memberships')
 
     return {
         mailaddressExternal: [],
-        mailingList: removeDuplicates(mailingList.map(l => {
-            Reflect.deleteProperty(l, 'mailAlases')
-            return l
+        mailingList: removeDuplicates(mailingList.map(mlist => {
+            Reflect.deleteProperty(mlist, 'mailAlases')
+            return mlist
         })),
         alias: removeDuplicates(alias),
         user: [user],
-        group: group.map(g => {
-            Reflect.deleteProperty(g, 'mailingLists')
-            return g
+        group: group.map(groupItem => {
+            Reflect.deleteProperty(groupItem, 'mailingLists')
+            return groupItem
         }),
     }
 }

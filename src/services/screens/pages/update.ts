@@ -1,5 +1,5 @@
-import 'server-only'
-import prisma from '@/prisma'
+import '@pn-server-only'
+import { prisma } from '@/prisma/client'
 import { prismaCall } from '@/services/prismaCall'
 import { updatePageValidation } from '@/services/screens/pages/validation'
 import type { UpdatePageTypes } from '@/services/screens/pages/validation'

@@ -1,9 +1,9 @@
-import 'server-only'
+import '@pn-server-only'
 import { screenPageIncluder } from './ConfigVars'
 import { prismaCall } from '@/services/prismaCall'
-import prisma from '@/prisma'
+import { prisma } from '@/prisma/client'
 import type { ScreenPage } from '@prisma/client'
-import type { ExpandedScreenPage } from './Types'
+import type { ExpandedScreenPage } from './types'
 
 export async function readPage(id: number): Promise<ExpandedScreenPage> {
     return await prismaCall(() => prisma.screenPage.findUniqueOrThrow({

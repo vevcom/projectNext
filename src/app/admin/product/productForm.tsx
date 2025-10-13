@@ -1,4 +1,4 @@
-import { createProductAction, updateProductAction } from '@/actions/shop/product'
+import { createProductAction, updateProductAction } from '@/services/shop/actions'
 import Form from '@/app/_components/Form/Form'
 import TextInput from '@/app/_components/UI/TextInput'
 import type { Product } from '@prisma/client'

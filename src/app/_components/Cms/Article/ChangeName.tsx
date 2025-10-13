@@ -1,10 +1,10 @@
 'use client'
 import styles from './ChangeName.module.scss'
 import EditableTextField from '@/components/EditableTextField/EditableTextField'
-import { updateArticleAction } from '@/actions/cms/articles/update'
+import { updateArticleAction } from '@/services/cms/articles/actions'
 import React, { useState } from 'react'
 import { usePathname } from 'next/navigation'
-import type { ExpandedArticle } from '@/cms/articles/Types'
+import type { ExpandedArticle } from '@/cms/articles/types'
 
 type PropTypes = {
     article: ExpandedArticle

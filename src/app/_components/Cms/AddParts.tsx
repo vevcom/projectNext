@@ -2,7 +2,7 @@ import styles from './AddParts.module.scss'
 import BorderButton from '@/components/UI/BorderButton'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
-import type { ArticleSectionPart } from '@/services/cms/articleSections/Types'
+import type { ArticleSectionPart } from '@/cms/articleSections/types'
 
 /**
  * Component for adding parts to an article and article section.

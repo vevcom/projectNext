@@ -1,20 +1,20 @@
-import 'server-only'
+import '@pn-server-only'
 import { specialCollectionsSpecialVisibilityMap } from './ConfigVars'
-import prisma from '@/prisma'
+import { prisma } from '@/prisma/client'
 import logger from '@/lib/logger'
 import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
 import { readSpecialVisibility } from '@/services/visibility/read'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
-import { ImageMethods } from '@/services/images/methods'
+import { imageOperations } from '@/services/images/operations'
 import type { SpecialCollection, ImageCollection, Image } from '@prisma/client'
 import type {
     ExpandedImageCollection,
     ImageCollectionCursor,
     ImageCollectionPageReturn
-} from '@/services/images/collections/Types'
+} from '@/services/images/collections/types'
 import type { VisibilityFilter } from '@/auth/getVisibilityFilter'
-import type { ReadPageInput } from '@/lib/paging/Types'
+import type { ReadPageInput } from '@/lib/paging/types'
 
 
 /**
@@ -68,11 +68,10 @@ export async function readImageCollectionsPage<const PageSize extends number>(
         ...cursorPageingSelection(page)
     }))
 
-    const lensCamera = await ImageMethods.readSpecial.client(prisma).execute({
+    const lensCamera = await imageOperations.readSpecial({
         params: {
             special: 'DEFAULT_IMAGE_COLLECTION_COVER'
         },
-        session: null //TODO: pass session
     })
 
     const chooseCoverImage = (collection: {

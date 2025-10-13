@@ -1,5 +1,5 @@
-import 'server-only'
-import type { Page } from '@/lib/paging/Types'
+import '@pn-server-only'
+import type { Page } from '@/lib/paging/types'
 
 /**
  * A function to generate the cursor-paging selection for a given page

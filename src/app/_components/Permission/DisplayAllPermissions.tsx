@@ -1,5 +1,5 @@
 import PermissionCategory from './PermissionCategory'
-import { permissionCategories } from '@/services/permissionRoles/ConfigVars'
+import { permissionCategories } from '@/services/permissions/constants'
 import type { PropTypes as PropTypesCategory } from './PermissionCategory'
 
 type PropTypes = Pick<PropTypesCategory, 'renderBesidePermission'>

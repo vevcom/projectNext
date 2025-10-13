@@ -1,5 +1,5 @@
 import styles from './page.module.scss'
-import { readCommitteeArticleAction } from '@/actions/groups/committees/read'
+import { readCommitteeArticleAction } from '@/services/groups/committees/actions'
 import Article from '@/components/Cms/Article/Article'
 
 export type PropTypes = {
@@ -9,7 +9,7 @@ export type PropTypes = {
 }
 
 export default async function committeeArticle({ params }: PropTypes) {
-    const committeeArticleRes = await readCommitteeArticleAction((await params).shortName)
+    const committeeArticleRes = await readCommitteeArticleAction({ params: await params })
     if (!committeeArticleRes.success) throw new Error('Kunne ikke hente komitéartikkel')
     const article = committeeArticleRes.data
 

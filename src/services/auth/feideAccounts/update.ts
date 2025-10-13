@@ -1,5 +1,5 @@
-import 'server-only'
-import prisma from '@/prisma'
+import '@pn-server-only'
+import { prisma } from '@/prisma/client'
 import { prismaCall } from '@/services/prismaCall'
 import { readJWTPayload } from '@/jwt/jwtReadUnsecure'
 import { ServerError } from '@/services/error'

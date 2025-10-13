@@ -6,7 +6,7 @@ import { AddHeaderItemPopUp } from '@/app/_components/HeaderItems/HeaderItemPopU
 import PageWrapper from '@/app/_components/PageWrapper/PageWrapper'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { sortObjectsByName } from '@/lib/sortObjects'
-import { readProductsAction } from '@/actions/shop/product'
+import { readProductsAction } from '@/services/shop/actions'
 import { v4 as uuid } from 'uuid'
 import Link from 'next/link'
 

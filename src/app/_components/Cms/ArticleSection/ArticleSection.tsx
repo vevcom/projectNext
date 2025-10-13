@@ -5,7 +5,7 @@ import AddPartToArticleSection from './AddPartToArticleSection'
 import CmsLink from '@/cms/CmsLink/CmsLink'
 import CmsImage from '@/cms/CmsImage/CmsImage'
 import CmsParagraph from '@/cms/CmsParagraph/CmsParagraph'
-import type { ExpandedCmsImage } from '@/cms/images/Types'
+import type { ExpandedCmsImage } from '@/cms/images/types'
 import type {
     ArticleSection as ArticleSectionT,
     CmsParagraph as CmsParagraphT,

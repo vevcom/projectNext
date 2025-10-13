@@ -1,4 +1,3 @@
-import 'server-only'
 import { hasher } from './hasher'
 import { encrypter } from './encrypter'
 import { ServerError } from '@/services/error'

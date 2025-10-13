@@ -1,5 +1,5 @@
 import JobAd from './JobAd'
-import { readActiveJobAdsAction } from '@/actions/career/jobAds/read'
+import { readActiveJobAdsAction } from '@/services/career/jobAds/actions'
 
 type PropTypes = {
     not?: number
@@ -16,7 +16,7 @@ export default async function CurrentJobAds({ not }: PropTypes) {
             new Error('unknown error reading jobad')
     }
 
-    const jobAds = res.data.filter(n => n.id !== not)
+    const jobAds = res.data.filter(jobAd => jobAd.id !== not)
 
     return (
         jobAds.length ? (
