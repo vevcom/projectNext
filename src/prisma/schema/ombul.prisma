@@ -1,15 +1,27 @@
 model Ombul {
-  id           Int      @id @default(autoincrement())
+  id           Int            @id @default(autoincrement())
   name         String
   description  String?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  fsLocation   String   @unique //location in /store/ombul/[fsLocation]
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  fsLocation   String         @unique //location in /store/ombul/[fsLocation]
   year         Int
   issueNumber  Int
-  coverImage   CmsImage @relation(fields: [coverImageId], references: [id], onDelete: Cascade)
-  coverImageId Int      @unique
+  coverImage   CmsImage       @relation(fields: [coverImageId], references: [id], onDelete: Cascade)
+  coverImageId Int            @unique
+  OmbulComment OmbulComment[]
 
   @@unique([year, name])
   @@unique([year, issueNumber])
+}
+
+model OmbulComment {
+  commentId    Int      @id @default(autoincrement())
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       Int
+  comment      String
+  Ombul        Ombul    @relation(fields: [OmbulId], references: [id], onDelete: Cascade)
+  OmbulId      Int
+  CommentedAt  DateTime @default(now())
+  LastEditedAt DateTime @updatedAt
 }

@@ -14,9 +14,12 @@ export const userSchema = z.object({
     lastname: z.string().max(50).min(2),
     allergies: z.string().max(150).optional().nullable(),
     studentCard: studentCardSchema,
+    kioleskapLead: Zpn.checkboxOrBoolean({
+        label: 'leaderboard'
+    }),
     password: z.string().max(50).min(12, {
         // eslint-disable-next-line
-        message: 'Passoret må minst ha 12 tegn, en stor og en liten bokstav, et tall, en rune, to emojier, en musikk note, en magisk sopp og en dråpe smørekopp-blod (avsky).'
+        message: 'Passordet må minst ha 12 tegn, en stor og en liten bokstav, et tall, en rune, to emojier, en musikk note, en magisk sopp og en dråpe smørekopp-blod (avsky).'
     }),
     confirmPassword: z.string().max(50).min(12),
     acceptedTerms: Zpn.checkboxOrBoolean({
@@ -42,6 +45,8 @@ export const userSchemas = {
         firstname: true,
         lastname: true,
         username: true,
+        kioleskapLead: true,
+
     }),
 
     register: userSchema.pick({

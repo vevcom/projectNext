@@ -110,6 +110,7 @@ export const userOperations = {
                     ...userFilterSelection,
                     bio: true,
                     image: true,
+                    kioleskapLead: true,
                 },
             }).then(async userData => ({
                 ...userData,
