@@ -3,6 +3,7 @@ import type {
     ImageSize,
     SpecialCmsImage,
     SpecialCmsParagraph,
+    SpecialCmsArticle,
 } from '@prisma/client'
 
 
@@ -48,14 +49,14 @@ type Categories = typeof standardArticleCategories[number]['name']
 export type SeedArticle = {
     name: string,
     coverImage: SeedCmsImage,
-    articleSections: SeedArticleSection[]
+    articleSections: SeedArticleSection[],
 } & ({
     category: Categories
 } | {
     category: 'news',
     description: string,
     orderPublished: number
-})
+} | { category: 'special' })
 
 
 type CmsImageSeedSpecialConfig = {
@@ -332,28 +333,49 @@ export const seedCmsConfig: CmsConfig = {
                 }
             ]
         },
-        {
-            name: 'varslingside',
-            category: 'guider',
-            coverImage: {
-                name: 'prikkreglement_cover',
-                imageName: 'ov',
-                imageSize: 'MEDIUM'
-            },
-            articleSections: [
-                {
-                    name: 'varsling_info',
-                    cmsParagraph: {
-                        name: 'varsling_info_paragraph',
-                        file: 'varsling_info/varsling_info.md'
-                    },
-                    cmsImage: {
-                        name: 'varslingsside_1_image',
-                        imageName: 'kappemann',
-                        imageSize: 'MEDIUM'
-                    }
-                }
-            ]
-        }
     ]
+}
+
+
+type ArticleSeedSpecialConfig = {
+    [T in SpecialCmsArticle]: SeedArticle;
+}
+
+export const seedSpecialCmsArticleConfig: ArticleSeedSpecialConfig = {
+    REPORT_PAGE: {
+        category: 'special',
+        name: 'Varslingside',
+        coverImage: {
+            name: 'varslingside_cover',
+            imageName: 'ov',
+            imageSize: 'MEDIUM'
+        },
+        articleSections: [
+            {
+                name: 'varsling_info_1',
+                cmsParagraph: {
+                    name: 'varsling_info_1_paragraph',
+                    file: 'varsling_info/varsling_info_1.md'
+                }
+            }
+        ]
+    },
+    NEW_STUDENT_PAGE: {
+        category: 'special',
+        name: 'New Student',
+        coverImage: {
+            name: 'newStudentPage_cover',
+            imageName: 'ov',
+            imageSize: 'MEDIUM'
+        },
+        articleSections: [
+            {
+                name: 'new_student_info',
+                cmsParagraph: {
+                    name: 'new_student_1_paragraph',
+                    file: 'new_student/new_student_1.md'
+                }
+            }
+        ]
+    },
 }
