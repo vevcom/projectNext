@@ -2,6 +2,7 @@ import '@pn-server-only'
 import { ParseError, Smorekopp } from './error'
 import { prismaErrorWrapper } from './prismaCall'
 import { prisma as globalPrisma } from '@/prisma/client'
+import { RequireNothing } from '@/auth/auther/RequireNothing'
 import { Session } from '@/auth/session/Session'
 import { zfd } from 'zod-form-data'
 import { AsyncLocalStorage } from 'async_hooks'
@@ -9,7 +10,6 @@ import type { AutherResult } from '@/auth/auther/Auther'
 import type { z } from 'zod'
 import type { SessionMaybeUser } from '@/auth/session/Session'
 import type { Prisma, PrismaClient } from '@prisma/client'
-import { RequireNothing } from '@/auth/auther/RequireNothing'
 
 export type InferedOrInput<Schema extends z.ZodTypeAny | undefined, InferedOfInput extends 'INFERED' | 'INPUT'> =
     Schema extends undefined
@@ -483,3 +483,22 @@ export function defineOperation<
         operationImplementationFields: undefined,
     })
 }
+
+export type SubServiceOperation<
+    Return,
+    OpensTransaction extends boolean = false,
+    ParamsSchema extends z.ZodTypeAny | undefined = undefined,
+    DataSchema extends z.ZodTypeAny | undefined = undefined,
+    ParamsSchemaImplementationFields extends object | undefined = undefined,
+    DataSchemaImplementationFields extends object | undefined = undefined,
+    OperationImplementationFields extends object | undefined = undefined,
+> = ReturnType<typeof defineSubOperation<
+    Return,
+    OpensTransaction,
+    ParamsSchema,
+    DataSchema,
+    ParamsSchemaImplementationFields,
+    DataSchemaImplementationFields,
+    OperationImplementationFields
+>>
+

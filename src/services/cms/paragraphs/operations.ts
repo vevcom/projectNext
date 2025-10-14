@@ -1,9 +1,14 @@
 import '@pn-server-only'
-import { defineSubOperation } from '@/services/serviceOperation'
 import { cmsParagraphSchemas } from './schemas'
+import { defineSubOperation } from '@/services/serviceOperation'
+import { ServerError } from '@/services/error'
 import { z } from 'zod'
 import { SpecialCmsParagraph } from '@prisma/client'
-import { ServerError } from '@/services/error'
+import rehypeFormat from 'rehype-format'
+import rehypeStringify from 'rehype-stringify'
+import remarkParse from 'remark-parse'
+import remarkRehype from 'remark-rehype'
+import { unified } from 'unified'
 
 const create = defineSubOperation({
     dataSchema: () => cmsParagraphSchemas.create,
@@ -34,6 +39,50 @@ export const cmsParagraphOperations = {
                 return await create.internalCall({ data: { special: params.special } })
             }
             return paragraph
+        }
+    }),
+
+    update: defineSubOperation({
+        paramsSchema: () => z.object({
+            id: z.number(),
+        }),
+        dataSchema: () => cmsParagraphSchemas.update,
+        operation: () => async ({ params, prisma, data }) => {
+            const paragraph = await prisma.cmsParagraph.findUniqueOrThrow({ where: { id: params.id } })
+            if (paragraph.special) {
+                throw new ServerError('BAD PARAMETERS', 'Special paragraphs cannot have their meta data updated')
+            }
+            await prisma.cmsParagraph.update({ where: { id: params.id }, data })
+        }
+    }),
+
+    updateContent: defineSubOperation({
+        paramsSchema: () => z.object({
+            id: z.number(),
+        }),
+        dataSchema: () => cmsParagraphSchemas.updateContent,
+        operation: () => async ({ params, prisma, data }) => {
+            try {
+                const contentHtml = (await unified()
+                    .use(remarkParse)
+                    .use(remarkRehype)
+                    .use(rehypeFormat)
+                    .use(rehypeStringify)
+                    .process(data.markdown)).value.toString()
+                    .replace(/<img[^>]*>/g, 'Bilder i markdown er ikke støttet. Bruk det innebygde bildeverktøyet.')
+                //TODO: Final sanitization of html!!!
+                return await prisma.cmsParagraph.update({
+                    where: {
+                        id: params.id
+                    },
+                    data: {
+                        contentMd: data.markdown,
+                        contentHtml,
+                    }
+                })
+            } catch {
+                throw new ServerError('BAD PARAMETERS', 'Invalid markdown')
+            }
         }
     })
 }

@@ -1,11 +1,13 @@
 import CmsParagraph from './CmsParagraph'
-import { readSpecialCmsParagraphAction } from '@/services/cms/paragraphs/actions'
 import React from 'react'
 import type { PropTypes as PropTypesCmsParapraph } from './CmsParagraph'
 import type { SpecialCmsParagraph as SpecialCmsParagraphT } from '@prisma/client'
+import type { ReadSpecialCmsParagraphAction } from '@/cms/paragraphs/types'
+import { configureAction } from '@/services/configureAction'
 
 type PropTypes = Omit<PropTypesCmsParapraph, 'cmsParagraph'> & {
-    special: SpecialCmsParagraphT
+    special: SpecialCmsParagraphT,
+    readSpecialCmsParagraphAction: ReadSpecialCmsParagraphAction
 }
 
 /**
@@ -16,10 +18,12 @@ type PropTypes = Omit<PropTypesCmsParapraph, 'cmsParagraph'> & {
  * A component that reads a special type of paragraph using readSpecialCmsParagraphAction
  * then renders it using standard CmsParagraph
  * @param special - the special type of the paragraph to read
+ * @param readSpecialCmsParagraphAction - the action to read the special paragraph - this should be the specific
+ * implementation of the readSpecial service.
  * @returns
  */
-export default async function SpecialCmsParagraph({ special, ...props }: PropTypes) {
-    const res = await readSpecialCmsParagraphAction(special)
+export default async function SpecialCmsParagraph({ special, readSpecialCmsParagraphAction, ...props }: PropTypes) {
+    const res = await configureAction(readSpecialCmsParagraphAction, { params: { special } })()
     if (!res.success) return <i>Error: {res.error && res.error[0].message}</i>
 
     return (
