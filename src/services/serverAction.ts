@@ -9,66 +9,54 @@ import type { z } from 'zod'
 
 export function makeAction<
     Return,
-    ImplementationParamsSchema extends undefined,
-    ParamsSchema extends undefined,
-    DataSchema extends undefined
 >(
-    serviceOperation: ServiceOperation<boolean, Return, ParamsSchema, DataSchema, ImplementationParamsSchema>
-): Action<Return, ImplementationParamsSchema, ParamsSchema, DataSchema>
+    serviceOperation: ServiceOperation<boolean, Return, undefined, undefined, undefined>
+): Action<Return, undefined, undefined, undefined>
 
 export function makeAction<
     Return,
     ImplementationParamsSchema extends z.ZodTypeAny,
-    ParamsSchema extends undefined,
-    DataSchema extends undefined
 >(
-    serviceOperation: ServiceOperation<boolean, Return, ParamsSchema, DataSchema, ImplementationParamsSchema>
-): Action<Return, ImplementationParamsSchema, ParamsSchema, DataSchema>
+    serviceOperation: ServiceOperation<boolean, Return, undefined, undefined, ImplementationParamsSchema>
+): Action<Return, ImplementationParamsSchema, undefined, undefined>
 
 export function makeAction<
     Return,
-    ImplementationParamsSchema extends undefined,
     ParamsSchema extends z.ZodTypeAny,
-    DataSchema extends undefined
 >(
-    serviceOperation: ServiceOperation<boolean, Return, ParamsSchema, DataSchema, ImplementationParamsSchema>
-): Action<Return, ImplementationParamsSchema, ParamsSchema, DataSchema>
+    serviceOperation: ServiceOperation<boolean, Return, ParamsSchema, undefined, undefined>
+): Action<Return, undefined, ParamsSchema, undefined>
 
 export function makeAction<
     Return,
-    ImplementationParamsSchema extends undefined,
-    ParamsSchema extends undefined,
     DataSchema extends z.ZodTypeAny
 >(
-    serviceOperation: ServiceOperation<boolean, Return, ParamsSchema, DataSchema, ImplementationParamsSchema>
-): Action<Return, ImplementationParamsSchema, ParamsSchema, DataSchema>
+    serviceOperation: ServiceOperation<boolean, Return, undefined, DataSchema, undefined>
+): Action<Return, undefined, undefined, DataSchema>
 
 export function makeAction<
     Return,
     ImplementationParamsSchema extends z.ZodTypeAny,
     ParamsSchema extends z.ZodTypeAny,
-    DataSchema extends undefined
 >(
-    serviceOperation: ServiceOperation<boolean, Return, ParamsSchema, DataSchema, ImplementationParamsSchema>
-): Action<Return, ImplementationParamsSchema, ParamsSchema, DataSchema>
+    serviceOperation: ServiceOperation<boolean, Return, ParamsSchema, undefined, ImplementationParamsSchema>
+): Action<Return, ImplementationParamsSchema, ParamsSchema, undefined>
 
 export function makeAction<
     Return,
-    ImplementationParamsSchema extends undefined,
     ParamsSchema extends z.ZodTypeAny,
     DataSchema extends z.ZodTypeAny
 >(
-    serviceOperation: ServiceOperation<boolean, Return, ParamsSchema, DataSchema, ImplementationParamsSchema>
-): Action<Return, ImplementationParamsSchema, ParamsSchema, DataSchema>
+    serviceOperation: ServiceOperation<boolean, Return, ParamsSchema, DataSchema, undefined>
+): Action<Return, undefined, ParamsSchema, DataSchema>
 
 export function makeAction<
     Return,
     ImplementationParamsSchema extends z.ZodTypeAny,
-    ParamsSchema extends undefined,
     DataSchema extends z.ZodTypeAny
 >(
-    serviceOperation: ServiceOperation<boolean, Return, ParamsSchema, DataSchema, ImplementationParamsSchema>
-): Action<Return, ImplementationParamsSchema, ParamsSchema, DataSchema>
+    serviceOperation: ServiceOperation<boolean, Return, undefined, DataSchema, ImplementationParamsSchema>
+): Action<Return, ImplementationParamsSchema, undefined, DataSchema>
 
 export function makeAction<
     Return,

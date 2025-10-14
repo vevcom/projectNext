@@ -7,6 +7,7 @@ import type {
     SpecialCmsImage as SpecialCmsImageT,
     SpecialCmsParagraph as SpecialCmsParagraphT
 } from '@prisma/client'
+import { readSpecialCmsParagraphFrontpageSection } from '@/services/frontpage/actions'
 
 type PropTypes = {
     specialCmsImage: SpecialCmsImageT,
@@ -27,7 +28,11 @@ function Section({ specialCmsImage, specialCmsParagraph, lesMer, right, imgWidth
         <div id={id} className={`${styles.section} ${right && styles.blue}`}>
             {!right && imgContainer}
             <div>
-                <SpecialCmsParagraph className={styles.paragraph} special={specialCmsParagraph} />
+                <SpecialCmsParagraph 
+                    className={styles.paragraph}
+                    special={specialCmsParagraph}
+                    readSpecialCmsParagraphAction={readSpecialCmsParagraphFrontpageSection}
+                />
                 <Link className={styles.readMore} href={lesMer}>Les mer</Link>
             </div>
             {right && imgContainer}

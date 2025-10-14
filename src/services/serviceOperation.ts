@@ -255,7 +255,7 @@ export function defineSubOperation<
         OpensTransaction
     >
 ) {
-    const implement = <ImplementationParamsSchema extends z.ZodTypeAny | undefined>(
+    const implement = <ImplementationParamsSchema extends z.ZodTypeAny | undefined = undefined>(
         implementationArgs: ServiceOperationImplementationConfig<
             OpensTransaction,
             ImplementationParamsSchema,
