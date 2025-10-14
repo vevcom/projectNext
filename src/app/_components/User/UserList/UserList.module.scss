@@ -11,14 +11,15 @@ $selectionBtnSize: 25px;
         display: flex;
         flex-flow: row wrap;
         margin-bottom: ohma.$gap;
+        gap: ohma.$gap;
         .name {
             display: flex;
             flex-direction: column;
         }
-        gap: ohma.$gap;
         .group {
             display: flex;
             flex-direction: column;
+            min-width: 150px;
             > * {
                 display: flex;
                 flex-direction: column;
@@ -28,7 +29,6 @@ $selectionBtnSize: 25px;
                     width: 100%;
                 }
             }
-            min-width: 150px;
         }
     }
     > .list {
@@ -53,10 +53,10 @@ $selectionBtnSize: 25px;
                 display: grid;
                 place-items: center;
                 border-radius: ohma.$rounding;
+                margin-right: 1em;
                 &.selected {
                     background-color: ohma.$colors-primary;                
                 }
-                margin-right: 1em;
             }
         }
         > .head {

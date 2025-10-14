@@ -9,7 +9,7 @@ services:
             - store:/usr/src/app/store
             - logs:/usr/src/app/logs
         deploy:
-            replicas: 8
+            replicas: 2
 
     db:
         extends:

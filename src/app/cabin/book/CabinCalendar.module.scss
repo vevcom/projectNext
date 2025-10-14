@@ -1,5 +1,7 @@
 @use '@/styles/ohma';
 
+@use 'sass:color';
+
 @mixin rangeStyles($color, $width, $border-radius) {
 
   &.start {
@@ -71,7 +73,7 @@
         @include rangeStyles(ohma.$colors-primary, 100%, 10px);
 
         &.inRange {
-          background-color: lighten(ohma.$colors-primary, 30);
+          background-color: color.adjust(ohma.$colors-primary, $lightness: 30%);
         }
 
         >.dateNumber {

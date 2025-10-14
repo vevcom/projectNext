@@ -106,17 +106,21 @@ async function seedCmsImage(
     })
 }
 
-async function seedCmsParagraph(
-    cmssparagraph: SeedCmsParagraph & { special?: SpecialCmsParagraph | null },
-    prisma: PrismaClient
-) {
-    const contentMd = await readFile(join(directoryName, '..', 'cms_paragraphs', cmssparagraph.file), 'utf-8')
-    const contentHtml = (await unified()
+export async function convertMdToHtml(contentMd: string) {
+    return (await unified()
         .use(remarkParse)
         .use(remarkRehype)
         .use(rehypeFormat)
         .use(rehypeStringify)
         .process(contentMd)).value.toString()
+}
+
+async function seedCmsParagraph(
+    cmssparagraph: SeedCmsParagraph & { special?: SpecialCmsParagraph | null },
+    prisma: PrismaClient
+) {
+    const contentMd = await readFile(join(directoryName, '..', 'cms_paragraphs', cmssparagraph.file), 'utf-8')
+    const contentHtml = await convertMdToHtml(contentMd)
 
     return prisma.cmsParagraph.upsert({
         where: {
