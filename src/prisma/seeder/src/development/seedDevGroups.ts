@@ -1,16 +1,6 @@
 import type { PrismaClient } from '@prisma/client'
 
 export default async function seedDevGroups(prisma: PrismaClient) {
-    const user = await prisma.user.findUnique({
-        where: {
-            username: 'harambe'
-        }
-    })
-
-    if (!user) {
-        throw new Error('Failed to seed groups because Harambe is dead')
-    }
-
     const order = await prisma.omegaOrder.findFirst({
         orderBy: {
             order: 'desc'
@@ -21,40 +11,16 @@ export default async function seedDevGroups(prisma: PrismaClient) {
         throw new Error('Failed to seed groups because no omega order exists')
     }
 
-    // Only create haramebe's committee if it doesn't already exist
-    const harambeMembershipCount = await prisma.membership.count({
-        where: {
-            userId: user.id,
-        },
-    })
-
-    if (harambeMembershipCount > 0) return
-
-    const memberships = {
-        create: {
-            user: {
-                connect: {
-                    id: user.id,
-                },
-            },
-            omegaOrder: {
-                connect: order
-            },
-            admin: true,
-            active: true,
-        },
-    }
-
     await prisma.committee.create({
         data: {
-            name: `${user.firstname}'s komité`,
-            shortName: `${user.username.slice(0, 3)}com`,
+            name: 'Harambe\'s komité',
+            shortName: 'harcom',
             committeeArticle: {
                 create: {
-                    name: `${user.firstname}'s komité`,
+                    name: 'Harambe\'s komité',
                     coverImage: {
                         create: {
-                            name: `${user.firstname}'s bilde`
+                            name: 'Harambe\'s bilde'
                         }
                     }
                 }
@@ -68,13 +34,12 @@ export default async function seedDevGroups(prisma: PrismaClient) {
             group: {
                 create: {
                     groupType: 'COMMITTEE',
-                    memberships,
                     order: order.order,
                 },
             },
             logoImage: {
                 create: {
-                    name: `Logoen til ${user.firstname}'s komité`
+                    name: 'Logoen til Harambe\'s komité'
                 }
             },
         },

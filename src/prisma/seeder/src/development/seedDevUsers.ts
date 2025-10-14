@@ -1,6 +1,8 @@
 import { hashAndEncryptPassword } from '@/auth/passwordHash'
 import { v4 as uuid } from 'uuid'
-import type { PrismaClient } from '@prisma/client'
+import type { Prisma } from '@prisma/client'
+import { OmegaMembershipLevel, type PrismaClient } from '@prisma/client'
+import { randomInt } from 'crypto'
 
 export default async function seedDevUsers(prisma: PrismaClient) {
     const fn = [
@@ -31,9 +33,24 @@ export default async function seedDevUsers(prisma: PrismaClient) {
 
     const passwordHash = await hashAndEncryptPassword('password')
 
+    const latestOrder = await prisma.omegaOrder.findFirstOrThrow({
+        orderBy: {
+            order: 'desc',
+        },
+    })
+
+    const memberGroup = await prisma.omegaMembershipGroup.findUniqueOrThrow({
+        where: {
+            omegaMembershipLevel: OmegaMembershipLevel.MEMBER
+        }
+    })
+
+    const allStudyProgrammes = await prisma.studyProgramme.findMany()
+    const allCommittees = await prisma.committee.findMany()
+
     Promise.all(fn.map(async (firstName, i) => {
         await Promise.all(ln.map(async (lastName, j) => {
-            await prisma.user.upsert({
+            const user = await prisma.user.upsert({
                 where: {
                     username: `${firstName}${i}${j}`
                 },
@@ -53,6 +70,42 @@ export default async function seedDevUsers(prisma: PrismaClient) {
                     },
                     acceptedTerms: new Date(),
                 },
+            })
+
+            const memberships: Prisma.MembershipCreateManyInput[] = [
+                {
+                    groupId: memberGroup.groupId,
+                    userId: user.id,
+                    admin: false,
+                    active: true,
+                    order: latestOrder.order
+                },
+            ]
+
+            const studyProgram = allStudyProgrammes[randomInt(allStudyProgrammes.length)]
+
+            memberships.push({
+                groupId: studyProgram.groupId,
+                userId: user.id,
+                admin: false,
+                active: true,
+                order: latestOrder.order
+            })
+
+            if (Math.random() > 0.9) {
+                const committee = allCommittees[randomInt(allCommittees.length)]
+
+                memberships.push({
+                    groupId: committee.groupId,
+                    userId: user.id,
+                    admin: false,
+                    active: true,
+                    order: latestOrder.order
+                })
+            }
+
+            await prisma.membership.createMany({
+                data: memberships
             })
         }))
     }))
@@ -94,6 +147,44 @@ export default async function seedDevUsers(prisma: PrismaClient) {
             emailVerified: new Date(),
             acceptedTerms: new Date(),
         },
+    })
+
+    const studyProgrammeMTTK = await prisma.studyProgramme.findUniqueOrThrow({
+        where: {
+            code: 'MTTK',
+        },
+    })
+
+    const harambecom = await prisma.committee.findUniqueOrThrow({
+        where: {
+            shortName: 'harcom'
+        }
+    })
+
+    await prisma.membership.createMany({
+        data: [
+            {
+                groupId: memberGroup.groupId,
+                userId: harambe.id,
+                admin: false,
+                active: true,
+                order: latestOrder.order
+            },
+            {
+                groupId: studyProgrammeMTTK.groupId,
+                userId: harambe.id,
+                admin: false,
+                active: true,
+                order: latestOrder.order
+            },
+            {
+                groupId: harambecom.groupId,
+                userId: harambe.id,
+                admin: false,
+                active: true,
+                order: latestOrder.order
+            }
+        ]
     })
 
     const vever = await prisma.user.upsert({
