@@ -1,7 +1,10 @@
 import styles from './Section.module.scss'
 import SpecialCmsParagraph from '@/components/Cms/CmsParagraph/SpecialCmsParagraph'
 import SpecialCmsImage from '@/components/Cms/CmsImage/SpecialCmsImage'
-import { readSpecialCmsParagraphFrontpageSection } from '@/services/frontpage/actions'
+import {
+    readSpecialCmsParagraphFrontpageSection,
+    updateSpecialCmsParagraphFrontpageSection
+} from '@/services/frontpage/actions'
 import React from 'react'
 import Link from 'next/link'
 import type {
@@ -32,7 +35,7 @@ function Section({ specialCmsImage, specialCmsParagraph, lesMer, position, imgWi
                     className={styles.paragraph}
                     special={specialCmsParagraph}
                     readSpecialCmsParagraphAction={readSpecialCmsParagraphFrontpageSection}
-                    updateCmsParagraphAction={}
+                    updateCmsParagraphAction={updateSpecialCmsParagraphFrontpageSection}
                 />
                 <Link className={styles.readMore} href={lesMer}>Les mer</Link>
             </div>
