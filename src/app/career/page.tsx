@@ -9,6 +9,7 @@ import { readSpecialImageAction } from '@/services/images/actions'
 import { readSpecialCmsLinkAction } from '@/services/cms/links/actions'
 import { readSpecialEventTagAction } from '@/services/events/tags/actions'
 import Link from 'next/link'
+import { readSpecialCmsParagraphCareerInfo, updateSpecialCmsParagraphContentCareerInfo } from '@/services/career/actions'
 
 export default async function CareerLandingPage() {
     const session = await Session.fromNextAuth()
@@ -30,9 +31,11 @@ export default async function CareerLandingPage() {
                 className={styles.conactorLink} cmsLink={contactorCmsLink} /> : <></>
         }>
             <div className={styles.wrapper}>
-                <SpecialCmsParagraph 
+                <SpecialCmsParagraph
                     className={styles.info}
                     special="CAREER_INFO"
+                    readSpecialCmsParagraphAction={readSpecialCmsParagraphCareerInfo}
+                    updateCmsParagraphAction={updateSpecialCmsParagraphContentCareerInfo}
                 />
                 <span className={styles.links}>
                     <Link href="/career/jobads">

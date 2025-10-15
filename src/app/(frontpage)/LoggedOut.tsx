@@ -30,6 +30,7 @@ export default async function LoggedOutLandingPage() {
                     </div>
                 </div>
                 <Section
+                    position="left"
                     specialCmsImage="FRONTPAGE_1"
                     specialCmsParagraph="FRONTPAGE_1"
                     lesMer="/articles"
@@ -39,7 +40,7 @@ export default async function LoggedOutLandingPage() {
 
                 <InfoBubbles />
                 <Section
-                    right
+                    position="right"
                     specialCmsImage="FRONTPAGE_2"
                     specialCmsParagraph="FRONTPAGE_2"
                     lesMer="/articles"
@@ -52,13 +53,14 @@ export default async function LoggedOutLandingPage() {
                 <YouTube src="https://www.youtube.com/watch?v=I-zNLW4ILu4" />
                 <div className={styles.emptyPart} />
                 <Section
+                    position="left"
                     specialCmsImage="FRONTPAGE_3"
                     specialCmsParagraph="FRONTPAGE_3"
                     lesMer="/career"
                     imgWidth={550}
                 />
                 <Section
-                    right
+                    position="right"
                     specialCmsImage="FRONTPAGE_4"
                     specialCmsParagraph="FRONTPAGE_4"
                     lesMer="infopages/loccom"

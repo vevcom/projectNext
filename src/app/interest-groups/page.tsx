@@ -23,7 +23,9 @@ export default async function InterestGroups() {
                 </AddHeaderItemPopUp>
             )
         }>
-            <SpecialCmsParagraph special="INTEREST_GROUP_GENERAL_INFO" />
+            <SpecialCmsParagraph
+                special="INTEREST_GROUP_GENERAL_INFO"
+            />
             <main>
                 {
                     interestGroups.map(interestGroup => (
