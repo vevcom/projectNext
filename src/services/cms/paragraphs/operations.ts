@@ -1,6 +1,6 @@
 import '@pn-server-only'
 import { cmsParagraphSchemas } from './schemas'
-import { defineSubOperation } from '@/services/serviceOperation'
+import { defineOperation, defineSubOperation } from '@/services/serviceOperation'
 import { ServerError } from '@/services/error'
 import { z } from 'zod'
 import { SpecialCmsParagraph } from '@prisma/client'
@@ -9,6 +9,7 @@ import rehypeStringify from 'rehype-stringify'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import { unified } from 'unified'
+import { ServerOnly } from '@/auth/auther/ServerOnly'
 
 const create = defineSubOperation({
     dataSchema: () => cmsParagraphSchemas.create,
@@ -83,6 +84,32 @@ export const cmsParagraphOperations = {
             } catch {
                 throw new ServerError('BAD PARAMETERS', 'Invalid markdown')
             }
+        }
+    }),
+
+    /**
+     * Check if a paragraph with id is special with special atribute
+     * in the provided special array
+     * This is useful to do ownership checks for services using special paragraphs.
+     */
+    isParagraphSpecial: defineOperation({
+        authorizer: ServerOnly,
+        paramsSchema: z.object({
+            id: z.number(),
+            special: z.array(z.nativeEnum(SpecialCmsParagraph))
+        }),
+        operation: async ({ params, prisma }) => {
+            const paragraph = await prisma.cmsParagraph.findUnique({
+                where: {
+                    id: params.id,
+                },
+                select: {
+                    special: true
+                }
+            })
+            if (!paragraph) throw new ServerError('NOT FOUND', 'Paragraph not found')
+            if (!paragraph.special) return false
+            return params.special.includes(paragraph.special)
         }
     })
 }

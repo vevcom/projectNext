@@ -19,14 +19,13 @@ export const frontpageOperations = {
 
     updateSpecialCmsParagraphContentFrontpageSection: cmsParagraphOperations.updateContent.implement({
         authorizer: () => frontpageAuth.updateSpecialCmsParagraphContentFrontpageSection.dynamicFields({}),
-        ownershipCheck: async ({ params, prisma }) => {
-            const paragraph = await prisma.cmsParagraph.findUnique({
-                where: { id: params.id },
-                select: { special: true }
+        ownershipCheck: async ({ params }) =>
+            await cmsParagraphOperations.isParagraphSpecial({
+                params: {
+                    id: params.id,
+                    special: [...ownedCmsParagraphs],
+                },
+                bypassAuth: true
             })
-            if (!paragraph) return false
-            if (!paragraph.special) return false
-            return ownershipCheck(paragraph.special)
-        }
     })
 } as const

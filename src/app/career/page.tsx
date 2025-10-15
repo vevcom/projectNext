@@ -30,7 +30,10 @@ export default async function CareerLandingPage() {
                 className={styles.conactorLink} cmsLink={contactorCmsLink} /> : <></>
         }>
             <div className={styles.wrapper}>
-                <SpecialCmsParagraph className={styles.info} special="CAREER_INFO" />
+                <SpecialCmsParagraph 
+                    className={styles.info}
+                    special="CAREER_INFO"
+                />
                 <span className={styles.links}>
                     <Link href="/career/jobads">
                         { jobAdImage ? <Image

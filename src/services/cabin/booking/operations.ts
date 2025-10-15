@@ -14,6 +14,7 @@ import { notificationOperations } from '@/services/notifications/operations'
 import { z } from 'zod'
 import { BookingType } from '@prisma/client'
 import type { CabinProductExtended } from '@/services/cabin/product/constants'
+import { cmsParagraphOperations } from '@/cms/paragraphs/operations'
 
 const mailData = {
     title: 'Bekreftelse på hyttebooking',
@@ -361,5 +362,26 @@ export const cabinBookingOperations = {
             where: params,
             include: cabinBookingIncluder,
         })
+    }),
+
+    readSpecialCmsParagraphCabinContract: cmsParagraphOperations.readSpecial.implement({
+        authorizer: () => cabinBookingAuth
+            .readSpecialCmsParagraphCabinContract
+            .dynamicFields({}),
+        ownershipCheck: ({ params }) => params.special === 'CABIN_CONTRACT'
+    }),
+
+    updateSpecialCmsParagraphContentCabinContract: cmsParagraphOperations.updateContent.implement({
+        authorizer: () => cabinBookingAuth
+            .updateSpecialCmsParagraphContentCabinContract
+            .dynamicFields({}),
+        ownershipCheck: async ({ params }) =>
+            await cmsParagraphOperations.isParagraphSpecial({
+                params: {
+                    id: params.id,
+                    special: ['CABIN_CONTRACT']
+                },
+                bypassAuth: true
+            })
     })
 }
