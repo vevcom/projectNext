@@ -27,11 +27,11 @@ export async function createCommitteeAction(
     return await safeServerCall(() => createCommittee(parse.data))
 }
 
-export const readCommitteesAction = makeAction(committeeOperations.readCommittees)
-export const readCommitteeAction = makeAction(committeeOperations.readCommittee)
-export const readCommitteeArticleAction = makeAction(committeeOperations.readCommitteArticle)
-export const readCommitteeParagraphAction = makeAction(committeeOperations.readCommitteeParagraph)
-export const readCommitteeMembersAction = makeAction(committeeOperations.readCommitteeMembers)
+export const readAllCommitteesAction = makeAction(committeeOperations.readAll)
+export const readCommitteeAction = makeAction(committeeOperations.read)
+export const readCommitteeArticleAction = makeAction(committeeOperations.readArticle)
+export const readCommitteeParagraphAction = makeAction(committeeOperations.readParagraph)
+export const readCommitteeMembersAction = makeAction(committeeOperations.readMembers)
 
 export async function updateCommitteeAction(
     id: number,

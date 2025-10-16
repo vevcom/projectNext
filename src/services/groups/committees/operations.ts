@@ -2,20 +2,20 @@ import { committeeAuth } from './auth'
 import { committeeExpandedIncluder, committeeLogoIncluder, membershipIncluder } from './constants'
 import { ServerOnlyAuther } from '@/auth/auther/RequireServer'
 import { articleRealtionsIncluder } from '@/cms/articles/ConfigVars'
+import { cmsParagraphOperations } from '@/cms/paragraphs/operations'
 import { imageOperations } from '@/services/images/operations'
 import { defineOperation } from '@/services/serviceOperation'
 import { z } from 'zod'
 
 export const committeeOperations = {
-
-    readCommittees: defineOperation({
+    readAll: defineOperation({
         authorizer: () => committeeAuth.read.dynamicFields({}),
         operation: async ({ prisma }) => prisma.committee.findMany({
             include: committeeLogoIncluder,
         })
     }),
 
-    readCommittee: defineOperation({
+    read: defineOperation({
         authorizer: () => committeeAuth.read.dynamicFields({}),
         paramsSchema: z.union([
             z.object({ id: z.number() }),
@@ -48,23 +48,8 @@ export const committeeOperations = {
             }
         }
     }),
-
-    readCommitteArticle: defineOperation({
-        authorizer: () => committeeAuth.read.dynamicFields({}),
-        paramsSchema: z.object({
-            shortName: z.string(),
-        }),
-        operation: async ({ prisma, params }) => (await prisma.committee.findUniqueOrThrow({
-            where: params,
-            select: {
-                committeeArticle: {
-                    include: articleRealtionsIncluder,
-                }
-            }
-        })).committeeArticle
-    }),
-
-    readCommitteesFromGroupIds: defineOperation({
+    
+    readFromGroupIds: defineOperation({
         authorizer: ServerOnlyAuther,
         paramsSchema: z.object({
             ids: z.number().int().array()
@@ -78,21 +63,8 @@ export const committeeOperations = {
             include: committeeLogoIncluder,
         })
     }),
-
-    readCommitteeParagraph: defineOperation({
-        authorizer: () => committeeAuth.read.dynamicFields({}),
-        paramsSchema: z.object({
-            shortName: z.string(),
-        }),
-        operation: async ({ prisma, params }) => (await prisma.committee.findUniqueOrThrow({
-            where: params,
-            select: {
-                paragraph: true,
-            }
-        })).paragraph
-    }),
-
-    readCommitteeMembers: defineOperation({
+    
+    readMembers: defineOperation({
         authorizer: () => committeeAuth.read.dynamicFields({}),
         paramsSchema: z.object({
             shortName: z.string(),
@@ -102,9 +74,9 @@ export const committeeOperations = {
             const defaultImage = await imageOperations.readSpecial({
                 params: { special: 'DEFAULT_PROFILE_IMAGE' },
             })
-
-
-            const com = await prisma.committee.findUniqueOrThrow({
+            
+            
+            const commitee = await prisma.committee.findUniqueOrThrow({
                 where: {
                     shortName: params.shortName
                 },
@@ -121,9 +93,9 @@ export const committeeOperations = {
                     }
                 }
             })
-
-
-            return com.group.memberships.map(member => ({
+            
+            
+            return commitee.group.memberships.map(member => ({
                 ...member,
                 user: {
                     ...member.user,
@@ -132,4 +104,39 @@ export const committeeOperations = {
             }))
         }
     }),
+    
+    readArticle: defineOperation({
+        authorizer: () => committeeAuth.read.dynamicFields({}),
+        paramsSchema: z.object({
+            shortName: z.string(),
+        }),
+        operation: async ({ prisma, params }) => (await prisma.committee.findUniqueOrThrow({
+            where: params,
+            select: {
+                committeeArticle: {
+                    include: articleRealtionsIncluder,
+                }
+            }
+        })).committeeArticle
+    }),
+    
+    updateArticle: undefined, //TODO
+
+    readParagraph: defineOperation({
+        authorizer: () => committeeAuth.read.dynamicFields({}),
+        paramsSchema: z.object({
+            shortName: z.string(),
+        }),
+        operation: async ({ prisma, params }) => (await prisma.committee.findUniqueOrThrow({
+            where: params,
+            select: {
+                paragraph: true,
+            }
+        })).paragraph
+    }),
+
+    updateCmsParagraphContent: cmsParagraphOperations.updateContent.implement({
+        authorizer: ({  }) => committeeAuth.updateCmsParagraphContent.dynamicFields({ groupId:  })
+    }),
+
 }

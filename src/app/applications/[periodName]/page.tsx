@@ -18,7 +18,7 @@ import {
     destroyApplicationAction,
     readApplicationsForUserAction
 } from '@/services/applications/actions'
-import { readCommitteesAction } from '@/services/groups/committees/actions'
+import { readAllCommitteesAction } from '@/services/groups/committees/actions'
 import {
     destroyApplicationPeriodAction,
     removeAllApplicationTextsAction,
@@ -46,7 +46,7 @@ export default async function ApplicationPeriod({ params }: PropTypes) {
     const applications = userId ? unwrapActionReturn(
         await readApplicationsForUserAction({ params: { userId, periodId: period.id } })
     ) : []
-    const committees = unwrapActionReturn(await readCommitteesAction())
+    const committees = unwrapActionReturn(await readAllCommitteesAction())
 
     const periodWithApplications = {
         ...period,
