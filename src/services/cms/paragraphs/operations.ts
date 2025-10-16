@@ -113,4 +113,4 @@ export const cmsParagraphOperations = {
             return params.special.includes(paragraph.special)
         }
     })
-}
+} as const
