@@ -13,7 +13,7 @@ import { SettingsHeaderItemPopUp, UsersHeaderItemPopUp } from '@/components/Head
 import { QueryParams } from '@/lib/queryParams/queryParams'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { readEventTagsAction } from '@/services/events/tags/actions'
-import { destroyEventAction, readEventAction } from '@/services/events/actions'
+import { destroyEventAction, readEventAction, updateEventParagraphContentAction } from '@/services/events/actions'
 import { configureAction } from '@/services/configureAction'
 import Link from 'next/link'
 import { faCalendar, faExclamation, faLocationDot, faUsers } from '@fortawesome/free-solid-svg-icons'
@@ -107,7 +107,15 @@ export default async function Event({ params }: PropTypes) {
 
             </aside>
             <main>
-                <CmsParagraph cmsParagraph={event.paragraph} />
+                <CmsParagraph
+                    cmsParagraph={event.paragraph}
+                    updateCmsParagraphAction={
+                        configureAction(
+                            updateEventParagraphContentAction,
+                            { implementationParams: { eventId: event.id } }
+                        )
+                    }
+                />
             </main>
 
             {event.takesRegistration && (

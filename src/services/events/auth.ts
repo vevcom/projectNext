@@ -9,4 +9,5 @@ export const eventAuth = {
     readManyArchivedPage: RequireNothing.staticFields({}),
     update: RequireNothing.staticFields({}),
     destroy: RequireNothing.staticFields({}),
+    updateParagraphContent: RequireNothing.staticFields({}),
 }
