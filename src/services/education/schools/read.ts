@@ -50,15 +50,3 @@ export async function readStandardSchools(): Promise<SchoolFiltered[]> {
         return school
     }))
 }
-
-export async function readSchool(shortname: string): Promise<ExpandedSchool> {
-    return await prismaCall(() => prisma.school.findUniqueOrThrow({
-        where: {
-            shortname,
-        },
-        select: {
-            ...SchoolFilteredSelection,
-            ...SchoolRelationIncluder,
-        },
-    }))
-}

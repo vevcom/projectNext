@@ -1,17 +1,39 @@
 import '@pn-server-only'
 import { schoolAuth } from './auth'
+import { SchoolFilteredSelection, SchoolRelationIncluder } from './ConfigVars'
 import { cmsParagraphOperations } from '@/cms/paragraphs/operations'
+import { defineOperation } from '@/services/serviceOperation'
 import { z } from 'zod'
 
+const read = defineOperation({
+    authorizer: () => schoolAuth.read.dynamicFields({}),
+    paramsSchema: z.object({
+        shortname: z.string()
+    }),
+    operation: ({ params, prisma }) =>
+        prisma.school.findUniqueOrThrow({
+            where: {
+                shortname: params.shortname
+            },
+            select: {
+                ...SchoolFilteredSelection,
+                ...SchoolRelationIncluder,
+            },
+        })
+})
+
+const updateCmsParagraphContent = cmsParagraphOperations.updateContent.implement({
+    authorizer: () => schoolAuth.updateSchoolCmsParagraph.dynamicFields({}),
+    implementationParamsSchema: z.object({
+        shortname: z.string()
+    }),
+    ownershipCheck: async ({ params, implementationParams }) => {
+        const school = await read({ params: implementationParams })
+        return school.cmsParagraph.id === params.id
+    }
+})
+
 export const schoolOperations = {
-    updateSchoolCmsParagraphContent: cmsParagraphOperations.updateContent.implement({
-        authorizer: () => schoolAuth.updateSchoolCmsParagraph.dynamicFields({}),
-        implementationParamsSchema: z.object({
-            schoolId: z.number()
-        }),
-        ownershipCheck: ({ params, implementationParams }) => {
-            console.log(params, implementationParams)
-            return true
-        }
-    })
+    read,
+    updateCmsParagraphContent,
 } as const
