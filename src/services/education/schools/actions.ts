@@ -11,6 +11,8 @@ import type { ReadPageInput } from '@/lib/paging/types'
 import type { CreateSchoolTypes, UpdateSchoolTypes } from '@/education/schools/validation'
 import type { ExpandedSchool, SchoolCursor, SchoolFiltered } from '@/services/education/schools/types'
 import type { ActionReturn } from '@/services/actionTypes'
+import { makeAction } from '@/services/serverAction'
+import { schoolOperations } from './operations'
 
 export async function createSchoolAction(
     rawdata: FormData | CreateSchoolTypes['Type']
@@ -93,3 +95,7 @@ export async function updateSchoolAction(
 
     return await safeServerCall(() => updateSchool(id, data))
 }
+
+export const updateSchoolCmsParagraphContentAction = makeAction(
+    schoolOperations.updateSchoolCmsParagraphContent
+)
