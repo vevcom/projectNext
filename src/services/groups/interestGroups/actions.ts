@@ -10,3 +10,11 @@ export const destroyInterestGroupAction = makeAction(interestGroupOperations.des
 export const readInterestGroupsAction = makeAction(interestGroupOperations.readMany)
 
 export const updateInterestGroupAction = makeAction(interestGroupOperations.update)
+
+export const readSpecialCmsParagraphGeneralInfoAction = makeAction(
+    interestGroupOperations.readSpecialCmsParagraphGeneralInfo
+)
+
+export const updateSpecialCmsParagraphContentGeneralInfoAction = makeAction(
+    interestGroupOperations.updateSpecialCmsParagraphContentGeneralInfo
+)

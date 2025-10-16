@@ -4,6 +4,7 @@ import { interestGroupSchemas } from './schemas'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import { articleSectionsRealtionsIncluder } from '@/services/cms/articleSections/ConfigVars'
 import { defineOperation } from '@/services/serviceOperation'
+import { cmsParagraphOperations } from '@/cms/paragraphs/operations'
 import { z } from 'zod'
 import type { ExpandedInterestGroup } from './types'
 
@@ -107,4 +108,20 @@ export const interestGroupOperations = {
             })
         }
     }),
+
+    readSpecialCmsParagraphGeneralInfo: cmsParagraphOperations.readSpecial.implement({
+        authorizer: () => interestGroupAuth.readSpecialCmsParagraphGeneralInfo.dynamicFields({}),
+        ownershipCheck: ({ params }) => params.special === 'INTEREST_GROUP_GENERAL_INFO'
+    }),
+
+    updateSpecialCmsParagraphContentGeneralInfo: cmsParagraphOperations.updateContent.implement({
+        authorizer: () => interestGroupAuth.updateSpecialCmsParagraphContentGeneralInfo.dynamicFields({}),
+        ownershipCheck: async ({ params }) =>
+            await cmsParagraphOperations.isParagraphSpecial({
+                params: {
+                    id: params.id,
+                    special: ['INTEREST_GROUP_GENERAL_INFO']
+                }
+            })
+    })
 }
