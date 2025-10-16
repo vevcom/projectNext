@@ -18,7 +18,7 @@ import {
     destroyApplicationAction,
     readApplicationsForUserAction
 } from '@/services/applications/actions'
-import { readAllCommitteesAction } from '@/services/groups/committees/actions'
+import { readAllCommitteesAction, updateCommitteeParagraphAction } from '@/services/groups/committees/actions'
 import {
     destroyApplicationPeriodAction,
     removeAllApplicationTextsAction,
@@ -28,6 +28,7 @@ import { readSpecialImageAction } from '@/services/images/actions'
 import { faVideo } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Link from 'next/link'
+import { configureAction } from '@/services/configureAction'
 
 export type PropTypes = {
     params: Promise<{
@@ -162,6 +163,12 @@ export default async function ApplicationPeriod({ params }: PropTypes) {
                                     <h1>{part.committee.name}</h1>
                                     <CmsParagraph
                                         cmsParagraph={part.committee.paragraph}
+                                        updateCmsParagraphAction={
+                                            configureAction(
+                                                updateCommitteeParagraphAction,
+                                                { implementationParams: { shortName: part.committee.shortName } }
+                                            )
+                                        }
                                     />
                                     <div className={styles.navigation}>
                                         {

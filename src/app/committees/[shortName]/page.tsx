@@ -1,8 +1,13 @@
 import styles from './page.module.scss'
-import { readCommitteeMembersAction, readCommitteeParagraphAction } from '@/services/groups/committees/actions'
+import {
+    readCommitteeMembersAction,
+    readCommitteeParagraphAction,
+    updateCommitteeParagraphAction
+} from '@/services/groups/committees/actions'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import CmsParagraph from '@/components/Cms/CmsParagraph/CmsParagraph'
 import UserCard from '@/components/User/UserCard'
+import { configureAction } from '@/services/configureAction'
 
 export type PropTypes = {
     params: Promise<{
@@ -24,7 +29,13 @@ export default async function Committee({ params }: PropTypes) {
 
     return (
         <div className={styles.wrapper}>
-            <CmsParagraph cmsParagraph={paragraph} />
+            <CmsParagraph
+                cmsParagraph={paragraph}
+                updateCmsParagraphAction={configureAction(
+                    updateCommitteeParagraphAction,
+                    { implementationParams: { shortName: (await params).shortName } }
+                )}
+            />
 
             <h2>Komitémedlemmer</h2>
             <div className={styles.memberList}>

@@ -30,8 +30,10 @@ export async function createCommitteeAction(
 export const readAllCommitteesAction = makeAction(committeeOperations.readAll)
 export const readCommitteeAction = makeAction(committeeOperations.read)
 export const readCommitteeArticleAction = makeAction(committeeOperations.readArticle)
+
 export const readCommitteeParagraphAction = makeAction(committeeOperations.readParagraph)
 export const readCommitteeMembersAction = makeAction(committeeOperations.readMembers)
+export const updateCommitteeParagraphAction = makeAction(committeeOperations.updateParagraphContent)
 
 export async function updateCommitteeAction(
     id: number,

@@ -7,136 +7,154 @@ import { imageOperations } from '@/services/images/operations'
 import { defineOperation } from '@/services/serviceOperation'
 import { z } from 'zod'
 
-export const committeeOperations = {
-    readAll: defineOperation({
-        authorizer: () => committeeAuth.read.dynamicFields({}),
-        operation: async ({ prisma }) => prisma.committee.findMany({
-            include: committeeLogoIncluder,
+
+const readAll = defineOperation({
+    authorizer: () => committeeAuth.readAll.dynamicFields({}),
+    operation: async ({ prisma }) => prisma.committee.findMany({
+        include: committeeLogoIncluder,
+    })
+})
+
+const read = defineOperation({
+    authorizer: () => committeeAuth.read.dynamicFields({}),
+    paramsSchema: z.union([
+        z.object({ id: z.number() }),
+        z.object({ shortName: z.string() })
+    ]),
+    operation: async ({ prisma, params }) => {
+        const defaultImage = await imageOperations.readSpecial({
+            params: { special: 'DEFAULT_PROFILE_IMAGE' },
+            bypassAuth: true
         })
-    }),
 
-    read: defineOperation({
-        authorizer: () => committeeAuth.read.dynamicFields({}),
-        paramsSchema: z.union([
-            z.object({ id: z.number() }),
-            z.object({ shortName: z.string() })
-        ]),
-        operation: async ({ prisma, params }) => {
-            const defaultImage = await imageOperations.readSpecial({
-                params: { special: 'DEFAULT_PROFILE_IMAGE' },
-                bypassAuth: true
-            })
+        const result = await prisma.committee.findUniqueOrThrow({
+            where: params,
+            include: committeeExpandedIncluder,
+        })
 
-            const result = await prisma.committee.findUniqueOrThrow({
-                where: params,
-                include: committeeExpandedIncluder,
-            })
-
-            return {
-                ...result,
-                coverImage: result.committeeArticle.coverImage,
-                group: {
-                    ...result.group,
-                    memberships: result.group.memberships.map(membership => ({
-                        ...membership,
-                        user: {
-                            ...membership.user,
-                            image: membership.user.image ?? defaultImage
-                        }
-                    }))
-                }
+        return {
+            ...result,
+            coverImage: result.committeeArticle.coverImage,
+            group: {
+                ...result.group,
+                memberships: result.group.memberships.map(membership => ({
+                    ...membership,
+                    user: {
+                        ...membership.user,
+                        image: membership.user.image ?? defaultImage
+                    }
+                }))
             }
         }
+    }
+})
+
+const readFromGroupIds = defineOperation({
+    authorizer: ServerOnlyAuther,
+    paramsSchema: z.object({
+        ids: z.number().int().array()
     }),
-    
-    readFromGroupIds: defineOperation({
-        authorizer: ServerOnlyAuther,
-        paramsSchema: z.object({
-            ids: z.number().int().array()
-        }),
-        operation: async ({ prisma, params }) => await prisma.committee.findMany({
-            where: {
-                groupId: {
-                    in: params.ids
-                }
-            },
-            include: committeeLogoIncluder,
+    operation: async ({ prisma, params }) => await prisma.committee.findMany({
+        where: {
+            groupId: {
+                in: params.ids
+            }
+        },
+        include: committeeLogoIncluder,
+    })
+})
+
+const readMembers = defineOperation({
+    authorizer: () => committeeAuth.readMembers.dynamicFields({}),
+    paramsSchema: z.object({
+        shortName: z.string(),
+        active: z.boolean().optional(),
+    }),
+    operation: async ({ prisma, params }) => {
+        const defaultImage = await imageOperations.readSpecial({
+            params: { special: 'DEFAULT_PROFILE_IMAGE' },
         })
-    }),
-    
-    readMembers: defineOperation({
-        authorizer: () => committeeAuth.read.dynamicFields({}),
-        paramsSchema: z.object({
-            shortName: z.string(),
-            active: z.boolean().optional(),
-        }),
-        operation: async ({ prisma, params }) => {
-            const defaultImage = await imageOperations.readSpecial({
-                params: { special: 'DEFAULT_PROFILE_IMAGE' },
-            })
-            
-            
-            const commitee = await prisma.committee.findUniqueOrThrow({
-                where: {
-                    shortName: params.shortName
-                },
-                select: {
-                    group: {
-                        select: {
-                            memberships: {
-                                include: membershipIncluder,
-                                where: {
-                                    active: params.active
-                                }
+
+        const commitee = await prisma.committee.findUniqueOrThrow({
+            where: {
+                shortName: params.shortName
+            },
+            select: {
+                group: {
+                    select: {
+                        memberships: {
+                            include: membershipIncluder,
+                            where: {
+                                active: params.active
                             }
                         }
                     }
                 }
-            })
-            
-            
-            return commitee.group.memberships.map(member => ({
-                ...member,
-                user: {
-                    ...member.user,
-                    image: member.user.image ?? defaultImage
-                }
-            }))
+            }
+        })
+
+        return commitee.group.memberships.map(member => ({
+            ...member,
+            user: {
+                ...member.user,
+                image: member.user.image ?? defaultImage
+            }
+        }))
+    }
+})
+
+const readArticle = defineOperation({
+    authorizer: () => committeeAuth.readArticle.dynamicFields({}),
+    paramsSchema: z.object({
+        shortName: z.string(),
+    }),
+    operation: async ({ prisma, params }) => (await prisma.committee.findUniqueOrThrow({
+        where: params,
+        select: {
+            committeeArticle: {
+                include: articleRealtionsIncluder,
+            }
         }
+    })).committeeArticle
+})
+
+const updateArticle = undefined //TODO
+
+const readParagraph = defineOperation({
+    authorizer: () => committeeAuth.readParagraph.dynamicFields({}),
+    paramsSchema: z.object({
+        shortName: z.string(),
     }),
-    
-    readArticle: defineOperation({
-        authorizer: () => committeeAuth.read.dynamicFields({}),
-        paramsSchema: z.object({
-            shortName: z.string(),
+    operation: async ({ prisma, params }) => (await prisma.committee.findUniqueOrThrow({
+        where: params,
+        select: {
+            paragraph: true,
+        }
+    })).paragraph
+})
+
+const updateParagraphContent = cmsParagraphOperations.updateContent.implement({
+    implementationParamsSchema: z.object({
+        shortName: z.string(),
+    }),
+    authorizer: async ({ implementationParams }) =>
+        committeeAuth.updateParagraphContent.dynamicFields({
+            groupId: (await read({
+                params: { shortName: implementationParams.shortName },
+                bypassAuth: true
+            })).groupId
         }),
-        operation: async ({ prisma, params }) => (await prisma.committee.findUniqueOrThrow({
-            where: params,
-            select: {
-                committeeArticle: {
-                    include: articleRealtionsIncluder,
-                }
-            }
-        })).committeeArticle
-    }),
-    
-    updateArticle: undefined, //TODO
+    ownershipCheck: async ({ implementationParams, params }) =>
+        (await readParagraph({ params: { shortName: implementationParams.shortName }, bypassAuth: true })).id === params.id
+})
 
-    readParagraph: defineOperation({
-        authorizer: () => committeeAuth.read.dynamicFields({}),
-        paramsSchema: z.object({
-            shortName: z.string(),
-        }),
-        operation: async ({ prisma, params }) => (await prisma.committee.findUniqueOrThrow({
-            where: params,
-            select: {
-                paragraph: true,
-            }
-        })).paragraph
-    }),
-
-    updateCmsParagraphContent: cmsParagraphOperations.updateContent.implement({
-        authorizer: ({  }) => committeeAuth.updateCmsParagraphContent.dynamicFields({ groupId:  })
-    }),
-
+export const committeeOperations = {
+    readAll,
+    read,
+    readFromGroupIds,
+    readMembers,
+    readArticle,
+    updateArticle,
+    readParagraph,
+    updateParagraphContent,
 }
