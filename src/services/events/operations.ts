@@ -93,7 +93,7 @@ export const eventOperations = {
         dataSchema: eventSchemas.create,
         authorizer: () => eventAuth.create.dynamicFields({}),
         operation: async ({ prisma, data, session }) => {
-            const cmsParagraph = await cmsParagraphOperations.create.internalCall({ data: {} })
+            const cmsParagraph = await cmsParagraphOperations.create({ data: {}, bypassAuth: true })
             const cmsImage = await createCmsImage({ name: uuid() })
 
             if (data.eventStart > data.eventEnd) {

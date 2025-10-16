@@ -11,9 +11,10 @@ import remarkRehype from 'remark-rehype'
 import { unified } from 'unified'
 import { ServerOnly } from '@/auth/auther/ServerOnly'
 
-const create = defineSubOperation({
-    dataSchema: () => cmsParagraphSchemas.create,
-    operation: () => async ({ data, prisma }) => await prisma.cmsParagraph.create({ data })
+const create = defineOperation({
+    dataSchema: cmsParagraphSchemas.create,
+    authorizer: ServerOnly,
+    operation: async ({ data, prisma }) => await prisma.cmsParagraph.create({ data })
 })
 
 export const cmsParagraphOperations = {
@@ -37,7 +38,7 @@ export const cmsParagraphOperations = {
         operation: () => async ({ params, prisma }) => {
             const paragraph = await prisma.cmsParagraph.findUnique({ where: { special: params.special } })
             if (!paragraph) {
-                return await create.internalCall({ data: { special: params.special } })
+                return await create({ data: { special: params.special }, bypassAuth: true })
             }
             return paragraph
         }
