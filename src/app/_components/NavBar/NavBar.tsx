@@ -7,6 +7,7 @@ import EditModeSwitch from '@/components/EditModeSwitch/EditModeSwitch'
 import SpecialCmsImage from '@/components/Cms/CmsImage/SpecialCmsImage'
 import Link from 'next/link'
 import type { Profile } from '@/services/users/types'
+import { readSpecialCmsImageFrontpage, updateSpecialCmsImageFrontpage } from '@/services/frontpage/actions'
 
 export type PropTypes = {
     profile: Profile | null
@@ -33,6 +34,8 @@ export default async function NavBar({ profile }: PropTypes) {
                         special="NAV_PRIMARY_BUTTON"
                         width={30}
                         alt="omega logo"
+                        readSpecialCmsImageAction={readSpecialCmsImageFrontpage}
+                        updateCmsImageAction={updateSpecialCmsImageFrontpage}
                     >
                         <Link href="/" />
                     </SpecialCmsImage>
@@ -56,6 +59,8 @@ export default async function NavBar({ profile }: PropTypes) {
                             width={25}
                             height={25}
                             alt="log in button"
+                            readSpecialCmsImageAction={readSpecialCmsImageFrontpage}
+                            updateCmsImageAction={updateSpecialCmsImageFrontpage}
                         />
                         <UserNavigation profile={profile} />
                     </div>

@@ -5,6 +5,7 @@ import MazeMap from '@/components/MazeMap/MazeMap'
 import SocialIcons from '@/components/SocialIcons/SocialIcons'
 import SpecialCmsImage from '@/components/Cms/CmsImage/SpecialCmsImage'
 import YouTube from '@/components/YouTube/YouTube'
+import { readSpecialCmsImageFrontpage, updateSpecialCmsImageFrontpage } from '@/services/frontpage/actions'
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Link from 'next/link'
@@ -15,7 +16,12 @@ export default async function LoggedOutLandingPage() {
             <div className={`${styles.part} ${styles.frontImg}`}>
                 <div className={styles.frontInfo}>
                     <div>
-                        <SpecialCmsImage special="FRONTPAGE_LOGO" width={300}/>
+                        <SpecialCmsImage
+                            special="FRONTPAGE_LOGO"
+                            width={300}
+                            readSpecialCmsImageAction={readSpecialCmsImageFrontpage}
+                            updateCmsImageAction={updateSpecialCmsImageFrontpage}
+                        />
 
                         <Link href="login">Logg inn</Link>
                         <Link href="infopages/nystudent">Ny student</Link>

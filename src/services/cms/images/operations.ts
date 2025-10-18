@@ -91,11 +91,11 @@ export const cmsImageOperations = {
      * in the provided special array
      * This is useful to do ownership checks for services using special cms images.
      */
-    isCmsImageSpecial: defineOperation({
+    isSpecial: defineOperation({
         authorizer: ServerOnly,
         paramsSchema: z.object({
             id: z.number(),
-            special: z.nativeEnum(SpecialCmsImage)
+            special: z.array(z.nativeEnum(SpecialCmsImage))
         }),
         operation: async ({ prisma, params }) => {
             const image = await prisma.cmsImage.findUnique({

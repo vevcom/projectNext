@@ -10,6 +10,7 @@ import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { readNewsCurrentAction } from '@/services/news/actions'
 import { readActiveJobAdsAction } from '@/services/career/jobAds/actions'
 import { readCurrentEventsAction } from '@/services/events/actions'
+import { readSpecialCmsImageFrontpage, updateSpecialCmsImageFrontpage } from '@/services/frontpage/actions'
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Link from 'next/link'
@@ -28,7 +29,12 @@ export default async function LoggedInLandingPage() {
             <div className={`${styles.part} ${styles.frontImg}`}>
                 <div className={styles.frontInfo}>
                     <div>
-                        <SpecialCmsImage special="FRONTPAGE_LOGO" width={300} />
+                        <SpecialCmsImage
+                            special="FRONTPAGE_LOGO"
+                            width={300}
+                            readSpecialCmsImageAction={readSpecialCmsImageFrontpage}
+                            updateCmsImageAction={updateSpecialCmsImageFrontpage}
+                        />
                         <div className={styles.socials}>
                             <SocialIcons />
                         </div>

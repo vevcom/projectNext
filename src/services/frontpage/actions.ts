@@ -9,3 +9,11 @@ export const readSpecialCmsParagraphFrontpageSection = makeAction(
 export const updateSpecialCmsParagraphFrontpageSection = makeAction(
     frontpageOperations.updateSpecialCmsParagraphContentFrontpageSection
 )
+
+export const readSpecialCmsImageFrontpage = makeAction(
+    frontpageOperations.readSpecialCmsImage
+)
+
+export const updateSpecialCmsImageFrontpage = makeAction(
+    frontpageOperations.updateSpecialCmsImage
+)

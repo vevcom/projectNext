@@ -1,5 +1,6 @@
 import styles from './layout.module.scss'
 import SpecialCmsImage from '@/components/Cms/CmsImage/SpecialCmsImage'
+import { readSpecialCmsImageFrontpage, updateSpecialCmsImageFrontpage } from '@/services/frontpage/actions'
 import React from 'react'
 
 type PropTypes = {
@@ -14,7 +15,14 @@ export default function AuthLayout({ children }: PropTypes) {
                     {children}
                 </div>
                 <div className={styles.image}>
-                    <SpecialCmsImage special="AUTH_ICON" alt="en kappemann sin hatt" width={200}/>
+                    <SpecialCmsImage
+                        special="AUTH_ICON"
+                        alt="en kappemann sin hatt"
+                        width={200}
+                        //TODO: Probably call through other service see comments in frontpage operations
+                        readSpecialCmsImageAction={readSpecialCmsImageFrontpage}
+                        updateCmsImageAction={updateSpecialCmsImageFrontpage}
+                    />
                 </div>
             </div>
         </div>
