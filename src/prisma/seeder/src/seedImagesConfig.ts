@@ -18,7 +18,7 @@ export const seedLicenseConfig = [
 
 type licenseName = typeof seedLicenseConfig[number]['name']
 
-type ImageSeedConfigBase = {
+export type ImageSeedConfigBase = {
     name: string,
     alt: string,
     fsLocation: string, //location in standard_store/images

@@ -54,6 +54,24 @@ export default async function seedDevEvents(prisma: PrismaClient) {
         }
     })
 
+    const ohmaBirthday = await eventOperations.create({
+        prisma,
+        bypassAuth: true,
+        data: {
+            name: 'Ohma sin bursdag',
+            location: 'Ohma',
+            eventStart: startDate,
+            eventEnd: endDate,
+            canBeViewdBy: 'ALL',
+            takesRegistration: true,
+            waitingList: true,
+            places: 50,
+            registrationStart: today,
+            registrationEnd: tomorrow,
+            tagIds: [],
+        }
+    })
+
     const someUsers = await prisma.user.findMany({
         take: 10,
         select: {
@@ -64,6 +82,20 @@ export default async function seedDevEvents(prisma: PrismaClient) {
     await prisma.eventRegistration.createMany({
         data: someUsers.map(user => ({
             eventId: bedpres.id,
+            userId: user.id
+        }))
+    })
+
+    const aLotOfUsers = await prisma.user.findMany({
+        take: 70,
+        select: {
+            id: true
+        }
+    })
+
+    await prisma.eventRegistration.createMany({
+        data: aLotOfUsers.map(user => ({
+            eventId: ohmaBirthday.id,
             userId: user.id
         }))
     })
