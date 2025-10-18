@@ -1,10 +1,11 @@
-import { SpecialCmsImage } from '@prisma/client'
+import { ImageSize, SpecialCmsImage } from '@prisma/client'
 import { z } from 'zod'
 
 const baseSchema = z.object({
     name: z.string().max(200, 'Maks lengde er 20 tegn.'),
     special: z.nativeEnum(SpecialCmsImage).optional(),
-    imageId: z.number().optional()
+    imageId: z.number().optional(),
+    imageSize: z.nativeEnum(ImageSize).optional()
 })
 
 export const cmsImageSchemas = {
@@ -16,5 +17,6 @@ export const cmsImageSchemas = {
     update: baseSchema.pick({
         name: true,
         imageId: true,
-    })
+        imageSize: true
+    }).partial()
 }

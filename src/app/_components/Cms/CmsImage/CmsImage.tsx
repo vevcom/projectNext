@@ -3,13 +3,14 @@ import styles from './CmsImage.module.scss'
 import Image, { SrcImage } from '@/components/Image/Image'
 import { readSpecialImageAction } from '@/services/images/actions'
 import React from 'react'
-import type { ExpandedCmsImage } from '@/cms/images/types'
+import type { ExpandedCmsImage, UpdateCmsImageAction } from '@/cms/images/types'
 import type { PropTypes as ImagePropTypes } from '@/components/Image/Image'
 
 export type PropTypes = Omit<
     ImagePropTypes, 'className' | 'imageSize' | 'smallSize' | 'largeSize' | 'image' | 'children'
 > & {
     cmsImage: ExpandedCmsImage,
+    updateCmsImageAction: UpdateCmsImageAction,
     children?: React.ReactNode
     className?: string
     classNameImage?: string
@@ -29,6 +30,7 @@ export const fallbackImage = '/images/fallback.jpg'
  */
 export default async function CmsImage({
     cmsImage,
+    updateCmsImageAction,
     children,
     className = '',
     classNameImage,
@@ -44,7 +46,10 @@ export default async function CmsImage({
 
     return (
         <div className={`${styles.CmsImage} ${className}`}>
-            {!disableEditor && <CmsImageEditor cmsImage={{ ...cmsImage, image }}/> }
+            {!disableEditor && <CmsImageEditor
+                cmsImage={{ ...cmsImage, image }}
+                updateCmsImageAction={updateCmsImageAction}
+            />}
             <Image className={classNameImage} imageSize={cmsImage.imageSize} image={image} {...props}/>
             <div className={styles.children}>{children}</div>
         </div>
