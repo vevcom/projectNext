@@ -5,6 +5,7 @@ import { createNewsAction } from '@/services/news/actions'
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
 import { EditModeContext } from '@/contexts/EditMode'
+import { formatVevenUri } from '@/lib/urlEncoding'
 import { useRouter } from 'next/navigation'
 import { useContext } from 'react'
 import type { ExpandedNewsArticle } from '@/services/news/types'
@@ -14,7 +15,7 @@ export default function AddNews() {
     const editModeCtx = useContext(EditModeContext)
     const handleCreate = (data?: ExpandedNewsArticle) => {
         editModeCtx?.setEditMode(true)
-        push(`/news/${data?.orderPublished}/${data?.articleName}`)
+        push(`/news/${data ? formatVevenUri(data.articleName, data.id) : ''}`)
     }
 
     return (

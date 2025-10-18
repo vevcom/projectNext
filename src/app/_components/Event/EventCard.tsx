@@ -5,13 +5,13 @@ import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCalendar, faLocationDot, faUsers } from '@fortawesome/free-solid-svg-icons'
 import type { EventExpanded } from '@/services/events/types'
-import { formatVevnUri } from '@/lib/urlEncoding'
+import { formatVevenUri } from '@/lib/urlEncoding'
 
 export default function EventCard({ event }: {
     event: EventExpanded,
 }) {
     return <ImageCard
-        href={`/events/${formatVevnUri(event.name, event.id)}`}
+        href={`/events/${formatVevenUri(event.name, event.id)}`}
         title={event.name}
         image={event.coverImage.image}
     >

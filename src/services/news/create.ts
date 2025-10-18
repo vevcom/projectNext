@@ -3,7 +3,6 @@ import { defaultNewsArticleOldCutoff, newsArticleRealtionsIncluder } from './Con
 import { createNewsArticleValidation } from './validation'
 import { prismaCall } from '@/services/prismaCall'
 import { prisma } from '@/prisma/client'
-import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import { createArticle } from '@/services/cms/articles/create'
 import type { CreateNewsArticleTypes } from './validation'
 import type { ExpandedNewsArticle } from './types'
@@ -23,8 +22,6 @@ export async function createNews(rawdata: CreateNewsArticleTypes['Detailed']): P
     const backupEndDateTime = new Date()
     backupEndDateTime.setDate(backupEndDateTime.getDate() + defaultNewsArticleOldCutoff)
 
-    const currentOrder = await readCurrentOmegaOrder()
-
     const article = await createArticle({ name })
 
     const news = await prismaCall(() => prisma.newsArticle.create({
@@ -36,9 +33,6 @@ export async function createNews(rawdata: CreateNewsArticleTypes['Detailed']): P
                 }
             },
             endDateTime: endDateTime || backupEndDateTime,
-            omegaOrder: {
-                connect: currentOrder,
-            }
         },
         include: newsArticleRealtionsIncluder,
     }))

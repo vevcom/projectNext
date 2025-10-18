@@ -8,7 +8,7 @@ import { notFound } from 'next/navigation'
  * @param id The numeric identifier to prepend
  * @returns The encoded string in the format "id-hyphenated-name"
  */
-export function formatVevnUri(name: string, id: number): string {
+export function formatVevenUri(name: string, id: number): string {
     return `${encodeURIComponent(name).replaceAll('%20', '-').toLowerCase()}-${id}`
 }
 

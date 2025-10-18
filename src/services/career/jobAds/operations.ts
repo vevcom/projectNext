@@ -5,7 +5,6 @@ import { articleAndCompanyIncluder, simpleArticleAndCompanyIncluder } from './co
 import { logoIncluder } from '@/services/career/companies/constants'
 import { defineOperation } from '@/services/serviceOperation'
 import { createArticle } from '@/services/cms/articles/create'
-import { ServerError } from '@/services/error'
 import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { destroyArticle } from '@/services/cms/articles/destroy'
