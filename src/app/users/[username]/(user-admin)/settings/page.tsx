@@ -8,7 +8,7 @@ export default async function UserSettings({ params }: PropTypes) {
 
     return (
         <div>
-            <h2>Generelle Instillinger</h2>
+            <h2>Generelle innstillinger</h2>
             <Image width={300} image={profile.user.image} />
             <RegisterStudentCardButton userId={profile.user.id} />
         </div>

@@ -1,19 +1,19 @@
 @use "@/styles/ohma";
 
 .primary {
-    @include ohma.btn(ohma.$colors-primary);
+    @include ohma.btn(ohma.$colors-primary, ohma.$colors-black);
 }
 
 .secondary {
-    @include ohma.btn(ohma.$colors-secondary);
+    @include ohma.btn(ohma.$colors-secondary, ohma.$colors-black);
 }
 
 .green {
-    @include ohma.btn(ohma.$colors-green);
+    @include ohma.btn(ohma.$colors-green, ohma.$colors-white);
 }
 
 .red {
-    @include ohma.btn(ohma.$colors-red);
+    @include ohma.btn(ohma.$colors-red, ohma.$colors-white);
 }
 
 .button:disabled {

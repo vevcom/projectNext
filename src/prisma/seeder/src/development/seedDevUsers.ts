@@ -144,6 +144,11 @@ export default async function seedDevUsers(prisma: PrismaClient) {
                     id: harambeImage.id
                 }
             },
+            ledgerAccount: {
+                create: {
+                    type: 'USER',
+                },
+            },
             emailVerified: new Date(),
             acceptedTerms: new Date(),
         },
@@ -203,7 +208,12 @@ export default async function seedDevUsers(prisma: PrismaClient) {
             studentCard: 'vever',
             credentials: {
                 create: {
-                    passwordHash: 'password',
+                    passwordHash,
+                },
+            },
+            ledgerAccount: {
+                create: {
+                    type: 'USER',
                 },
             },
             emailVerified: new Date(),
