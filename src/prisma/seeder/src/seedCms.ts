@@ -79,7 +79,6 @@ export default async function seedCms(prisma: PrismaClient) {
 
     const allCmsArticles = [...seedCmsArticlesTransformed, ...seedSpecialCmsArticlesTransformed]
 
-    console.log(allCmsArticles)
 
     await Promise.all(allCmsArticles.map(async (article, i) => {
         await seedArticle({ ...article, id: i }, prisma)
@@ -210,7 +209,6 @@ async function seedArticleSection(
 async function seedArticle(article: SeedArticle & { id: number, special: SpecialCmsArticle | null }, prisma: PrismaClient) {
     console.log('seeding', article.name)
     const coverImage = await seedCmsImage(article.coverImage, prisma)
-    console.log('cover image seeded for ', article.name, coverImage)
     const articleSections = await Promise.all(article.articleSections.map(
         async (articleSection, i) =>
             seedArticleSection({ ...articleSection, order: i }, prisma)
