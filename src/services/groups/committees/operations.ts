@@ -2,6 +2,7 @@ import { committeeAuth } from './auth'
 import { committeeExpandedIncluder, committeeLogoIncluder, membershipIncluder } from './constants'
 import { ServerOnlyAuther } from '@/auth/auther/RequireServer'
 import { articleRealtionsIncluder } from '@/cms/articles/ConfigVars'
+import { cmsImageOperations } from '@/cms/images/operations'
 import { cmsParagraphOperations } from '@/cms/paragraphs/operations'
 import { imageOperations } from '@/services/images/operations'
 import { defineOperation } from '@/services/serviceOperation'
@@ -148,6 +149,49 @@ const updateParagraphContent = cmsParagraphOperations.updateContent.implement({
         (await readParagraph({ params: { shortName: implementationParams.shortName }, bypassAuth: true })).id === params.id
 })
 
+/**
+ * The coverImage is the image in the committee article
+ */
+const updateCoverImage = cmsImageOperations.update.implement({
+    implementationParamsSchema: z.object({
+        shortname: z.string(),
+    }),
+    authorizer: async ({ implementationParams }) =>
+        committeeAuth.updateCoverImage.dynamicFields({
+            groupId: (await read({
+                params: { shortName: implementationParams.shortname },
+                bypassAuth: true
+            })).groupId
+        }),
+    ownershipCheck: async ({ implementationParams, params }) => {
+        const article = await readArticle({
+            params: { shortName: implementationParams.shortname },
+            bypassAuth: true
+        })
+        return article.coverImage.id === params.id
+    }
+})
+
+const updateLogo = cmsImageOperations.update.implement({
+    implementationParamsSchema: z.object({
+        shortname: z.string(),
+    }),
+    authorizer: async ({ implementationParams }) =>
+        committeeAuth.updateLogo.dynamicFields({
+            groupId: (await read({
+                params: { shortName: implementationParams.shortname },
+                bypassAuth: true
+            })).groupId
+        }),
+    ownershipCheck: async ({ implementationParams, params }) => {
+        const committee = await read({
+            params: { shortName: implementationParams.shortname },
+            bypassAuth: true
+        })
+        return committee.logoImage.id === params.id
+    }
+})
+
 export const committeeOperations = {
     readAll,
     read,
@@ -157,4 +201,6 @@ export const committeeOperations = {
     updateArticle,
     readParagraph,
     updateParagraphContent,
+    updateCoverImage,
+    updateLogo,
 }

@@ -35,6 +35,9 @@ export const readCommitteeParagraphAction = makeAction(committeeOperations.readP
 export const readCommitteeMembersAction = makeAction(committeeOperations.readMembers)
 export const updateCommitteeParagraphAction = makeAction(committeeOperations.updateParagraphContent)
 
+export const updateCommitteeCoverImageAction = makeAction(committeeOperations.updateCoverImage)
+export const updateCommitteeLogoAction = makeAction(committeeOperations.updateLogo)
+
 export async function updateCommitteeAction(
     id: number,
     rawdata: FormData | UpdateCommitteeTypes['Type']

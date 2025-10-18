@@ -17,6 +17,7 @@ export default function ErrorBoundary({ error, reset }: {error: unknown, reset: 
                     <SpecialCmsImageClient
                         width={70}
                         special="SERVER_ERROR"
+                        //TODO: Probably call through other service see comments in frontpage operations
                         readSpecialCmsImageAction={readSpecialCmsImageFrontpage}
                         updateCmsImageAction={updateSpecialCmsImageFrontpage}
                     />
