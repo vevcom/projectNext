@@ -54,12 +54,6 @@ export const eventOperations = {
                             id: session.user.id
                         }
                     } : undefined,
-
-                    omegaOrder: {
-                        connect: {
-                            order: data.order || (await readCurrentOmegaOrder()).order
-                        }
-                    },
                     paragraph: {
                         connect: {
                             id: cmsParagraph.id
@@ -94,17 +88,13 @@ export const eventOperations = {
     }),
     read: defineOperation({
         paramsSchema: z.object({
-            order: z.number(),
-            name: z.string(),
+            id: z.number(),
         }),
         authorizer: () => eventAuth.read.dynamicFields({}),
         operation: async ({ prisma, params, session }) => {
             const event = await prisma.event.findUniqueOrThrow({
                 where: {
-                    order_name: {
-                        order: params.order,
-                        name: params.name
-                    }
+                    id: params.id,
                 },
                 include: {
                     coverImage: {

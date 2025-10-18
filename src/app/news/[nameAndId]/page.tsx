@@ -4,22 +4,19 @@ import CurrentNews from '@/app/news/CurrentNews'
 import Article from '@/cms/Article/Article'
 import { readNewsAction } from '@/services/news/actions'
 import SlideInOnView from '@/components/SlideInOnView/SlideInOnView'
+import { decodeVevenUriHandleError } from '@/lib/urlEncoding'
 import { notFound } from 'next/navigation'
 
 type PropTypes = {
     params: Promise<{
-        orderAndName: string[]
+        nameAndId: string
     }>
 }
 
 export default async function NewsArticle({ params }: PropTypes) {
-    const order = parseInt(decodeURIComponent((await params).orderAndName[0]), 10)
-    const name = decodeURIComponent((await params).orderAndName[1])
-    if (!order || !name || (await params).orderAndName.length > 2) notFound()
-    const res = await readNewsAction({
-        articleName: name,
-        order,
-    })
+    const idAndName = (await params).nameAndId
+    const res = await readNewsAction(decodeVevenUriHandleError(idAndName))
+
     if (!res.success) notFound()
     const news = res.data
 

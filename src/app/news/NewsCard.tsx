@@ -1,4 +1,5 @@
 import ImageCard from '@/components/ImageCard/ImageCard'
+import { formatVevnUri } from '@/lib/urlEncoding'
 import type { SimpleNewsArticle } from '@/services/news/types'
 
 type PropTypes = {
@@ -8,7 +9,7 @@ type PropTypes = {
 export default function NewsCard({ news }: PropTypes) {
     return (
         <ImageCard
-            href={`/news/${news.orderPublished}/${news.articleName}`}
+            href={`/news/${formatVevnUri(news.articleName, news.id)}`}
             title={news.articleName}
             image={news.coverImage}
         >

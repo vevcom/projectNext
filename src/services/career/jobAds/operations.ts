@@ -4,7 +4,6 @@ import { jobAdSchemas } from './schemas'
 import { articleAndCompanyIncluder, simpleArticleAndCompanyIncluder } from './constants'
 import { logoIncluder } from '@/services/career/companies/constants'
 import { defineOperation } from '@/services/serviceOperation'
-import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import { createArticle } from '@/services/cms/articles/create'
 import { ServerError } from '@/services/error'
 import { readPageInputSchemaObject } from '@/lib/paging/schema'
@@ -21,17 +20,12 @@ export const jobAdOperations = {
         operation: async ({ prisma, data: { articleName, companyId, ...data } }) => {
             const article = await createArticle({ name: articleName })
 
-            const currentOrder = await readCurrentOmegaOrder()
-
             return await prisma.jobAd.create({
                 data: {
                     article: {
                         connect: {
                             id: article.id
                         }
-                    },
-                    omegaOrder: {
-                        connect: currentOrder,
                     },
                     company: {
                         connect: {
@@ -50,35 +44,20 @@ export const jobAdOperations = {
      */
     read: defineOperation({
         paramsSchema: z.object({
-            idOrName: z.union([
-                z.number(),
-                z.object({
-                    articleName: z.string(),
-                    order: z.number(),
-                }),
-            ]),
+            id: z.number()
         }),
         authorizer: () => jobAdAuth.read.dynamicFields({}),
-        operation: async ({ prisma, params: { idOrName } }): Promise<ExpandedJobAd> => {
-            const jobAd = await prisma.jobAd.findUnique({
-                where: typeof idOrName === 'number' ? {
-                    id: idOrName
-                } : {
-                    articleName_orderPublished: {
-                        articleName: idOrName.articleName,
-                        orderPublished: idOrName.order
-                    }
-                },
-                include: {
-                    ...articleAndCompanyIncluder,
-                    company: {
-                        include: logoIncluder,
-                    }
+        operation: async ({ prisma, params }): Promise<ExpandedJobAd> => await prisma.jobAd.findUniqueOrThrow({
+            where: {
+                id: params.id,
+            },
+            include: {
+                ...articleAndCompanyIncluder,
+                company: {
+                    include: logoIncluder,
                 }
-            })
-            if (!jobAd) throw new ServerError('NOT FOUND', `job ad ${idOrName} not found`)
-            return jobAd
-        }
+            }
+        })
     }),
     /**
      * This handler reads all active jobAds

@@ -1,5 +1,6 @@
 import styles from './JobAd.module.scss'
 import ImageCard from '@/components/ImageCard/ImageCard'
+import { formatVevnUri } from '@/lib/urlEncoding'
 import { jobAdType } from '@/services/career/jobAds/constants'
 import type { SimpleJobAd } from '@/services/career/jobAds/types'
 
@@ -10,7 +11,7 @@ type PropTypes = {
 export default function JobAd({ jobAd }: PropTypes) {
     return (
         <ImageCard
-            href={`/career/jobads/${jobAd.orderPublished}/${jobAd.articleName}`}
+            href={`/career/jobads/${formatVevnUri(jobAd.articleName, jobAd.id)}`}
             title={jobAd.articleName}
             image={jobAd.coverImage}
             key={jobAd.id}
