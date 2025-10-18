@@ -33,6 +33,9 @@ export default async function User({ params }: PropTypes) {
     const studyProgrammes = profile.user.memberships.filter(membership => membership.group.groupType === 'STUDY_PROGRAMME')
         .map(membership => membership.group.studyProgramme).filter(membership => membership !== null)
 
+    const classes = profile.user.memberships.filter(membership => membership.group.groupType === 'CLASS')
+        .map(membership => membership.group.class).filter(membership => membership !== null)
+
     const omegaMembership = profile.user.memberships
         .find(membership => membership.group.groupType === 'OMEGA_MEMBERSHIP_GROUP')
     if (!omegaMembership) {
@@ -65,6 +68,9 @@ export default async function User({ params }: PropTypes) {
                             <p key={i} className={styles.studyProgramme}>
                                 {studyProgramme.name} {`(${studyProgramme.code})`}
                             </p>
+                        )}
+                        { classes.map((cls, i) =>
+                            <p key={i} className={styles.studyProgramme}>{cls.year}. årstrinn</p>
                         )}
                         <div className={styles.committeesWrapper}>
                             {
