@@ -11,9 +11,10 @@ export const cmsImageSchemas = {
     create: baseSchema.pick({
         name: true,
         special: true,
+        imageId: true,
     }),
     update: baseSchema.pick({
         name: true,
-        imageId: true
+        imageId: true,
     })
 }
