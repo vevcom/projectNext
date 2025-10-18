@@ -12,8 +12,6 @@ model JobAd {
   articleId           Int
   articleName         String
   description         String?
-  omegaOrder          OmegaOrder   @relation(fields: [orderPublished], references: [order])
-  orderPublished      Int
   ScreenPage          ScreenPage[]
   company             Company      @relation(fields: [companyId], references: [id])
   companyId           Int
@@ -26,7 +24,6 @@ model JobAd {
   updatedAt DateTime @updatedAt
 
   @@unique([articleId, articleName])
-  @@unique([articleName, orderPublished])
 }
 
 model Company {

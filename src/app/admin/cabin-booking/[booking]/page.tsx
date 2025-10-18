@@ -5,6 +5,7 @@ import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { displayDate } from '@/lib/dates/displayDate'
 import Link from 'next/link'
 import React from 'react'
+import { formatVevenUri } from '@/lib/urlEncoding'
 
 function trHelper(key: string, value: React.ReactNode) {
     return <tr>
@@ -49,7 +50,7 @@ export default async function CabinBooking({
                 }
                 {booking.event &&
                     trHelper('Arrangement', <Link
-                        href={`/event/${booking.event.order}/${booking.event.name}`}
+                        href={`/event/${formatVevenUri(booking.event.name, booking.event.id)}`}
                     >
                         {booking.event.name}
                     </Link>)

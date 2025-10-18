@@ -19,20 +19,20 @@ import {
     faSuitcase,
     faXmarkCircle
 } from '@fortawesome/free-solid-svg-icons'
+import { decodeVevenUriHandleError } from '@/lib/urlEncoding'
 
 type PropTypes = {
     params: Promise<{
-        orderAndName: string[]
+        nameAndId: string
     }>
 }
 
 
 export default async function JobAd({ params }: PropTypes) {
-    if ((await params).orderAndName.length !== 2) notFound()
-    const order = parseInt(decodeURIComponent((await params).orderAndName[0]), 10)
-    const name = decodeURIComponent((await params).orderAndName[1])
+    const nameAndId = (await params).nameAndId
+
     const session = await Session.fromNextAuth()
-    const jobAdRes = await readJobAdAction({ params: { idOrName: { articleName: name, order } } })
+    const jobAdRes = await readJobAdAction({ params: { id: decodeVevenUriHandleError(nameAndId) } })
     if (!jobAdRes.success) {
         //TODO: Handle error in idiomatic way
         if (jobAdRes.errorCode === 'NOT FOUND') notFound()

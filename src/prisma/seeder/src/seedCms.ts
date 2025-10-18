@@ -230,7 +230,6 @@ async function seedArticle(article: SeedArticle & { id: number }, prisma: Prisma
                             date.setDate(date.getDate() + 7)
                             return date
                         })(),
-                        orderPublished: article.orderPublished,
                     }
                 } : undefined,
             articleCategory:

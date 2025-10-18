@@ -82,7 +82,7 @@ describe('job ads', () => {
             bypassAuth: true
         })
 
-        expect(jobAdOperations.read({ params: { idOrName: createRes.id }, session: Session.empty() }))
+        expect(jobAdOperations.read({ params: { id: createRes.id }, session: Session.empty() }))
             .rejects.toThrow(new Smorekopp('UNAUTHENTICATED'))
     })
 
@@ -99,7 +99,7 @@ describe('job ads', () => {
             user: null,
         })
 
-        const readRes = await jobAdOperations.read({ params: { idOrName: createRes.id }, session })
+        const readRes = await jobAdOperations.read({ params: { id: createRes.id }, session })
         expect(readRes).toMatchObject(CREATE_JOB_AD)
     })
 

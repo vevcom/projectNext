@@ -18,19 +18,18 @@ import { configureAction } from '@/services/configureAction'
 import Link from 'next/link'
 import { faCalendar, faExclamation, faLocationDot, faUsers } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { decodeVevenUriHandleError } from '@/lib/urlEncoding'
 
 type PropTypes = {
     params: Promise<{
-        order: string,
-        name: string
+        nameAndId: string
     }>
 }
 
 export default async function Event({ params }: PropTypes) {
     const event = unwrapActionReturn(await readEventAction({
         params: {
-            name: decodeURIComponent((await params).name),
-            order: parseInt((await params).order, 10),
+            id: decodeVevenUriHandleError((await params).nameAndId)
         }
     }))
 

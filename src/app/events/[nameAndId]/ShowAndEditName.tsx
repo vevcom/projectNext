@@ -3,6 +3,7 @@ import styles from './ShowAndEditName.module.scss'
 import EditableTextField from '@/components/EditableTextField/EditableTextField'
 import { updateEventAction } from '@/services/events/actions'
 import { configureAction } from '@/services/configureAction'
+import { formatVevenUri } from '@/lib/urlEncoding'
 import type { Event } from '@prisma/client'
 
 type PropTypes = {
@@ -17,7 +18,7 @@ export default function ShowAndEditName({ event }: PropTypes) {
             formProps={{
                 action: updateAction,
                 navigateOnSuccess: data => (data?.name
-                    ? `/events/${event.order}/${encodeURIComponent(data.name)}`
+                    ? `/events/${formatVevenUri(data.name, data.id)}`
                     : '/events'),
             }}
             editable={true} //TODO: auther

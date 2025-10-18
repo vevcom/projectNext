@@ -16,6 +16,7 @@ import { configureAction } from '@/services/configureAction'
 import { v4 as uuid } from 'uuid'
 import { useContext, type ReactNode } from 'react'
 import type { ExpandedJobAd } from '@/services/career/jobAds/types'
+import { formatVevenUri } from '@/lib/urlEncoding'
 
 type PropTypes = {
     jobAd: ExpandedJobAd
@@ -44,7 +45,7 @@ export default function EditJobAd({ jobAd, children }: PropTypes) {
             <div className={styles.update}>
                 <Form
                     action={updateAction}
-                    navigateOnSuccess={(data) => `/career/jobads/${data?.orderPublished}/${data?.articleName}`}
+                    navigateOnSuccess={(data) => `/career/jobads/${data ? formatVevenUri(data.articleName, data.id) : ''}`}
                     submitText="oppdater"
                 >
                     <Textarea
