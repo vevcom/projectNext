@@ -1,35 +1,75 @@
 import { hashAndEncryptPassword } from '@/auth/passwordHash'
+import { type SeederImage, seedImage } from '@/seeder/src/seedImages'
 import { v4 as uuid } from 'uuid'
-import type { Prisma } from '@prisma/client'
-import { OmegaMembershipLevel, type PrismaClient } from '@prisma/client'
+import { OmegaMembershipLevel, type PrismaClient, type Prisma } from '@prisma/client'
 import { randomInt } from 'crypto'
+import { readdir } from 'fs/promises'
+import { join, dirname } from 'path'
+import { fileURLToPath } from 'url'
+
+const fileName = fileURLToPath(import.meta.url)
+const directoryName = dirname(fileName)
+const profileImageFSLocation = join(directoryName, '..', '..', 'standard_store', 'images', 'dev_profile_images')
+
+async function seedDevProfileImages(prisma: PrismaClient) {
+    let files = await readdir(profileImageFSLocation)
+
+    files = files.filter(file => {
+        const filenameS = file.split('.')
+        const ext = filenameS[filenameS.length - 1]
+        return ext === 'jpg'
+    })
+
+    return await Promise.all(files.map(async file => {
+        const fileS = file.split('.')
+
+        const name = fileS[0]
+
+        const imageConfig: SeederImage = {
+            special: null,
+            name,
+            alt: `Bilde av ${name}`,
+            credit: null,
+            license: null,
+            collection: 'PROFILEIMAGES',
+            fsLocation: file,
+        }
+
+        return await seedImage(prisma, profileImageFSLocation, files, imageConfig)
+    }))
+}
 
 export default async function seedDevUsers(prisma: PrismaClient) {
     const fn = [
-        'anne', 'johan', 'pål', 'lars', 'lasse', 'leo', 'noa',
-        'trude', 'andreas', 'nora', 'knut', 'anne', 'sara', 'frikk', 'merete', 'klara',
-        'britt helen', 'fiola', 'mika', 'helle', 'jesper'
+        'Anne', 'Johan', 'Pål', 'Lars', 'Lasse', 'Leo', 'Noa',
+        'Trude', 'Andreas', 'Nora', 'Knut', 'Anne', 'Sara', 'Frikk', 'Merete', 'Klara',
+        'Britt Helen', 'Fiola', 'Mika', 'Helle', 'Jesper'
     ]
 
-    const ln = [
-        'hansen', 'johansen', 'olsen', 'larsen', 'larsen', 'leosdatter',
-        'noasdatter', 'trudesdatter', 'lien', 'svendsen',
-        'mattisen', 'mørk', 'ruud', 'hansen', 'johansen', 'olsen',
-        'larsen', 'larsen', 'leosdatter', 'noasdatter', 'trudesdatter',
-        'lien', 'svendsen', 'mattisen', 'mørk', 'ruud', 'hansen', 'johansen', 'olsen', 'larsen',
-        'larsen', 'leosdatter', 'noasdatter', 'trudesdatter', 'lien',
-        'svendsen', 'mattisen', 'mørk', 'ruud', 'hansen', 'johansen', 'olsen', 'larsen', 'larsen',
-        // 'leosdatter', 'noasdatter', 'trudesdatter', 'lien', 'svendsen', 'mattisen',
-        // 'mørk', 'ruud', 'hansen', 'johansen', 'olsen', 'larsen', 'larsen', 'leosdatter',
-        // 'noasdatter', 'trudesdatter', 'lien', 'svendsen', 'mattisen', 'mørk',
-        // 'ruud', 'hansen', 'johansen', 'olsen', 'larsen', 'larsen', 'leosdatter',
-        // 'noasdatter', 'trudesdatter', 'lien', 'svendsen', 'mattisen', 'mørk', 'ruud', 'hansen', 'johansen',
-        // 'olsen', 'larsen', 'larsen', 'leosdatter', 'noasdatter', 'trudesdatter',
-        // 'lien', 'svendsen', 'mattisen', 'mørk', 'ruud', 'hansen', 'johansen', 'olsen', 'larsen', 'larsen', 'leosdatter',
-        // 'noasdatter', 'trudesdatter', 'lien', 'svendsen', 'mattisen', 'mørk', 'ruud',
-        // 'hansen', 'johansen', 'olsen', 'larsen', 'larsen', 'leosdatter',
-        // 'noasdatter', 'trudesdatter', 'lien', 'svendsen', 'mattisen', 'mørk', 'ruud'
-    ]
+    // const ln = [
+    //     'hansen', 'johansen', 'olsen', 'larsen', 'larsen', 'leosdatter',
+    //     'noasdatter', 'trudesdatter', 'lien', 'svendsen',
+    //     'mattisen', 'mørk', 'ruud', 'hansen', 'johansen', 'olsen',
+    //     'larsen', 'larsen', 'leosdatter', 'noasdatter', 'trudesdatter',
+    //     'lien', 'svendsen', 'mattisen', 'mørk', 'ruud', 'hansen', 'johansen', 'olsen', 'larsen',
+    //     'larsen', 'leosdatter', 'noasdatter', 'trudesdatter', 'lien',
+    //     'svendsen', 'mattisen', 'mørk', 'ruud', 'hansen', 'johansen', 'olsen', 'larsen', 'larsen',
+    //     // 'leosdatter', 'noasdatter', 'trudesdatter', 'lien', 'svendsen', 'mattisen',
+    //     // 'mørk', 'ruud', 'hansen', 'johansen', 'olsen', 'larsen', 'larsen', 'leosdatter',
+    //     // 'noasdatter', 'trudesdatter', 'lien', 'svendsen', 'mattisen', 'mørk',
+    //     // 'ruud', 'hansen', 'johansen', 'olsen', 'larsen', 'larsen', 'leosdatter',
+    //     // 'noasdatter', 'trudesdatter', 'lien', 'svendsen', 'mattisen', 'mørk', 'ruud', 'hansen', 'johansen',
+    //     // 'olsen', 'larsen', 'larsen', 'leosdatter', 'noasdatter', 'trudesdatter',
+    //     // 'lien', 'svendsen', 'mattisen', 'mørk', 'ruud', 'hansen', 'johansen',
+    //     // 'olsen', 'larsen', 'larsen', 'leosdatter',
+    //     // 'noasdatter', 'trudesdatter', 'lien', 'svendsen', 'mattisen', 'mørk', 'ruud',
+    //     // 'hansen', 'johansen', 'olsen', 'larsen', 'larsen', 'leosdatter',
+    //     // 'noasdatter', 'trudesdatter', 'lien', 'svendsen', 'mattisen', 'mørk', 'ruud'
+    // ]
+
+    const profileImages = await seedDevProfileImages(prisma)
+
+    const ln = profileImages.map(image => (image ? image.name.replaceAll('-', ' ') : 'Navnløs'))
 
     const passwordHash = await hashAndEncryptPassword('password')
 
@@ -50,9 +90,13 @@ export default async function seedDevUsers(prisma: PrismaClient) {
 
     Promise.all(fn.map(async (firstName, i) => {
         await Promise.all(ln.map(async (lastName, j) => {
+            const image = (Math.random() < 0.95) ? profileImages.find(img => (img?.name === lastName)) : undefined
+
+            const username = `${firstName.toLowerCase()}${i}${j}`
+
             const user = await prisma.user.upsert({
                 where: {
-                    username: `${firstName}${i}${j}`
+                    username,
                 },
                 update: {
 
@@ -61,14 +105,21 @@ export default async function seedDevUsers(prisma: PrismaClient) {
                     firstname: firstName,
                     lastname: lastName,
                     email: uuid(),
-                    username: `${firstName}${i}${j}`,
-                    studentCard: `${firstName}-${i}-${j}`,
+                    username,
+                    studentCard: username,
                     credentials: {
                         create: {
                             passwordHash,
                         },
                     },
                     acceptedTerms: new Date(),
+                    ...(image ? {
+                        image: {
+                            connect: {
+                                id: image.id,
+                            },
+                        },
+                    } : {}),
                 },
             })
 
@@ -203,7 +254,7 @@ export default async function seedDevUsers(prisma: PrismaClient) {
             studentCard: 'vever',
             credentials: {
                 create: {
-                    passwordHash: 'password',
+                    passwordHash,
                 },
             },
             emailVerified: new Date(),

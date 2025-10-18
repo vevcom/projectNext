@@ -20,7 +20,7 @@ export type PropTypes = {
 export default async function User({ params }: PropTypes) {
     const session = await Session.fromNextAuth()
     if ((await params).username === 'me') {
-        if (!session.user) return notFound()
+        if (!session.user) redirect('/login')
         redirect(`/users/${session.user.username}`) //This throws.
     }
     const profileRes = await readUserProfileAction({ params: { username: (await params).username } })
