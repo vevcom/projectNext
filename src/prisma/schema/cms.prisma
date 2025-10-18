@@ -112,6 +112,11 @@ model ArticleSection {
   @@unique([articleId, order]) //There can only be one article section with a given order in an article
 }
 
+enum SpecialCmsArticle{
+  REPORT_PAGE
+  NEW_STUDENT_PAGE
+}
+
 model Article {
   id                  Int              @id @default(autoincrement())
   name                String
@@ -126,6 +131,7 @@ model Article {
   coverImageId        Int              @unique
   JobAd               JobAd?
   Committee           Committee?
+  special SpecialCmsArticle? @unique
 
   @@unique([name, id])
   @@unique([articleCategoryName, name])

@@ -4,7 +4,6 @@ import { prisma } from '@/prisma/client'
 import { ServerError } from '@/services/error'
 import { prismaCall } from '@/services/prismaCall'
 import type { ExpandedArticle } from './types'
-
 /**
  * A function that reads an article with all the neccessary data included like paragraphs, images, etc...
  * @param idOrName - The id or name + category of the article to read
