@@ -40,13 +40,14 @@ async function seedDevProfileImages(prisma: PrismaClient) {
 }
 
 export default async function seedDevUsers(prisma: PrismaClient) {
-    const fn = [
+    const firstNames = [
         'Anne', 'Johan', 'Pål', 'Lars', 'Lasse', 'Leo', 'Noa',
-        'Trude', 'Andreas', 'Nora', 'Knut', 'Anne', 'Sara', 'Frikk', 'Merete', 'Klara',
-        'Britt Helen', 'Fiola', 'Mika', 'Helle', 'Jesper'
+        'Trude', 'Andreas', 'Nora', 'Knut', 'Anne', 'Sara',
+        'Frikk', 'Merete', 'Klara', 'Britt Helen', 'Fiola', 
+        'Mika', 'Helle', 'Jesper',
     ]
 
-    // const ln = [
+    // const lastNames = [
     //     'hansen', 'johansen', 'olsen', 'larsen', 'larsen', 'leosdatter',
     //     'noasdatter', 'trudesdatter', 'lien', 'svendsen',
     //     'mattisen', 'mørk', 'ruud', 'hansen', 'johansen', 'olsen',
@@ -54,22 +55,22 @@ export default async function seedDevUsers(prisma: PrismaClient) {
     //     'lien', 'svendsen', 'mattisen', 'mørk', 'ruud', 'hansen', 'johansen', 'olsen', 'larsen',
     //     'larsen', 'leosdatter', 'noasdatter', 'trudesdatter', 'lien',
     //     'svendsen', 'mattisen', 'mørk', 'ruud', 'hansen', 'johansen', 'olsen', 'larsen', 'larsen',
-    //     // 'leosdatter', 'noasdatter', 'trudesdatter', 'lien', 'svendsen', 'mattisen',
-    //     // 'mørk', 'ruud', 'hansen', 'johansen', 'olsen', 'larsen', 'larsen', 'leosdatter',
-    //     // 'noasdatter', 'trudesdatter', 'lien', 'svendsen', 'mattisen', 'mørk',
-    //     // 'ruud', 'hansen', 'johansen', 'olsen', 'larsen', 'larsen', 'leosdatter',
-    //     // 'noasdatter', 'trudesdatter', 'lien', 'svendsen', 'mattisen', 'mørk', 'ruud', 'hansen', 'johansen',
-    //     // 'olsen', 'larsen', 'larsen', 'leosdatter', 'noasdatter', 'trudesdatter',
-    //     // 'lien', 'svendsen', 'mattisen', 'mørk', 'ruud', 'hansen', 'johansen',
-    //     // 'olsen', 'larsen', 'larsen', 'leosdatter',
-    //     // 'noasdatter', 'trudesdatter', 'lien', 'svendsen', 'mattisen', 'mørk', 'ruud',
-    //     // 'hansen', 'johansen', 'olsen', 'larsen', 'larsen', 'leosdatter',
-    //     // 'noasdatter', 'trudesdatter', 'lien', 'svendsen', 'mattisen', 'mørk', 'ruud'
+    //     'leosdatter', 'noasdatter', 'trudesdatter', 'lien', 'svendsen', 'mattisen',
+    //     'mørk', 'ruud', 'hansen', 'johansen', 'olsen', 'larsen', 'larsen', 'leosdatter',
+    //     'noasdatter', 'trudesdatter', 'lien', 'svendsen', 'mattisen', 'mørk',
+    //     'ruud', 'hansen', 'johansen', 'olsen', 'larsen', 'larsen', 'leosdatter',
+    //     'noasdatter', 'trudesdatter', 'lien', 'svendsen', 'mattisen', 'mørk', 'ruud', 'hansen', 'johansen',
+    //     'olsen', 'larsen', 'larsen', 'leosdatter', 'noasdatter', 'trudesdatter',
+    //     'lien', 'svendsen', 'mattisen', 'mørk', 'ruud', 'hansen', 'johansen',
+    //     'olsen', 'larsen', 'larsen', 'leosdatter',
+    //     'noasdatter', 'trudesdatter', 'lien', 'svendsen', 'mattisen', 'mørk', 'ruud',
+    //     'hansen', 'johansen', 'olsen', 'larsen', 'larsen', 'leosdatter',
+    //     'noasdatter', 'trudesdatter', 'lien', 'svendsen', 'mattisen', 'mørk', 'ruud'
     // ]
 
     const profileImages = await seedDevProfileImages(prisma)
 
-    const ln = profileImages.map(image => (image ? image.name.replaceAll('-', ' ') : 'Navnløs'))
+    const lastNames = profileImages.map(image => (image ? image.name.replaceAll('-', ' ') : 'Navnløs'))
 
     const passwordHash = await hashAndEncryptPassword('password')
 
@@ -89,11 +90,20 @@ export default async function seedDevUsers(prisma: PrismaClient) {
     const allCommittees = await prisma.committee.findMany()
     const allClasses = await prisma.class.findMany()
 
-    Promise.all(fn.map(async (firstName, i) => {
-        await Promise.all(ln.map(async (lastName, j) => {
+    let userNames = new Set<string>()
+
+    Promise.all(firstNames.map(async (firstName, i) => {
+        await Promise.all(lastNames.map(async (lastName, j) => {
+            // Randomly remove profile images for 5% of users.
             const image = (Math.random() < 0.95) ? profileImages.find(img => (img?.name === lastName)) : undefined
 
-            const username = `${firstName.toLowerCase()}${i}${j}`
+            const username = `${firstName}${lastName}${i+1}${j}`
+                .toLowerCase()
+                .replace(/å/g, "aa") // special cases for norwegian letters
+                .replace(/æ/g, "ae")
+                .replace(/ø/g, "oe")
+                .normalize('NFD') // decompose into letter + diacritics, i.e. 'é' -> 'e´'
+                .replace(/[^a-zA-Z0-9]/g, ""); // only keep ASCII alphanumeric characters
 
             const user = await prisma.user.upsert({
                 where: {
@@ -107,7 +117,7 @@ export default async function seedDevUsers(prisma: PrismaClient) {
                     lastname: lastName,
                     email: uuid(),
                     username,
-                    studentCard: username,
+                    studentCard: `${username}s studentkort`,
                     credentials: {
                         create: {
                             passwordHash,
