@@ -8,7 +8,6 @@ import {
     faShoppingCart,
     faComment,
     faCamera,
-    faList,
     faCircleInfo,
     faNewspaper,
     faCalendar,
