@@ -43,7 +43,7 @@ export default async function seedDevUsers(prisma: PrismaClient) {
     const firstNames = [
         'Anne', 'Johan', 'Pål', 'Lars', 'Lasse', 'Leo', 'Noa',
         'Trude', 'Andreas', 'Nora', 'Knut', 'Anne', 'Sara',
-        'Frikk', 'Merete', 'Klara', 'Britt Helen', 'Fiola', 
+        'Frikk', 'Merete', 'Klara', 'Britt Helen', 'Fiola',
         'Mika', 'Helle', 'Jesper',
     ]
 
@@ -90,20 +90,18 @@ export default async function seedDevUsers(prisma: PrismaClient) {
     const allCommittees = await prisma.committee.findMany()
     const allClasses = await prisma.class.findMany()
 
-    let userNames = new Set<string>()
-
     Promise.all(firstNames.map(async (firstName, i) => {
         await Promise.all(lastNames.map(async (lastName, j) => {
             // Randomly remove profile images for 5% of users.
             const image = (Math.random() < 0.95) ? profileImages.find(img => (img?.name === lastName)) : undefined
 
-            const username = `${firstName}${lastName}${i+1}${j}`
+            const username = `${firstName}${lastName}${i + 1}${j}`
                 .toLowerCase()
-                .replace(/å/g, "aa") // special cases for norwegian letters
-                .replace(/æ/g, "ae")
-                .replace(/ø/g, "oe")
+                .replace(/å/g, 'aa') // special cases for norwegian letters
+                .replace(/æ/g, 'ae')
+                .replace(/ø/g, 'oe')
                 .normalize('NFD') // decompose into letter + diacritics, i.e. 'é' -> 'e´'
-                .replace(/[^a-zA-Z0-9]/g, ""); // only keep ASCII alphanumeric characters
+                .replace(/[^a-zA-Z0-9]/g, '') // only keep ASCII alphanumeric characters
 
             const user = await prisma.user.upsert({
                 where: {
