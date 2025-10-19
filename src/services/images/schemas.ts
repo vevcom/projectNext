@@ -1,6 +1,7 @@
 import { allowedExtensions, maxImageCountInOneBatch, maxImageFileSize } from './constants'
 import { z } from 'zod'
 import { zfd } from 'zod-form-data'
+import { File } from 'node:buffer'
 
 const maxFileSizeMb = Math.round(maxImageFileSize / 1024 / 1024)
 
