@@ -25,7 +25,7 @@ export default async function seedDevNews(prisma: PrismaClient) {
                 description: 'hei gå til helvete',
                 article: {
                     create: {
-                        name: `test_article_${i}`,
+                        name: 'Test artikkel',
                         coverImage: {
                             create: {
                                 image: {
@@ -38,9 +38,6 @@ export default async function seedDevNews(prisma: PrismaClient) {
                     }
                 },
                 endDateTime: date,
-                omegaOrder: {
-                    connect: order,
-                },
             }
         })
     }
@@ -59,7 +56,7 @@ export default async function seedDevNews(prisma: PrismaClient) {
                 description: 'hei gå til helvete',
                 article: {
                     create: {
-                        name: `test_article_${i}`,
+                        name: 'En aktiv nyhet',
                         coverImage: {
                             create: {
                                 image: {
@@ -72,9 +69,6 @@ export default async function seedDevNews(prisma: PrismaClient) {
                     }
                 },
                 endDateTime: activeDate,
-                omegaOrder: {
-                    connect: order,
-                }
             }
         })
     }

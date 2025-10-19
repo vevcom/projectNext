@@ -138,11 +138,8 @@ model NewsArticle {
   article        Article    @relation(fields: [articleId, articleName], references: [id, name], onDelete: Cascade) //This should always be set, but it is not required by schema (prisma limitation)
   articleId      Int        @unique
   articleName    String
-  omegaOrder     OmegaOrder @relation(fields: [orderPublished], references: [order], onDelete: Restrict)
-  orderPublished Int
 
   @@unique([articleId, articleName])
-  @@unique([articleName, orderPublished])
 }
 
 model ArticleCategory {
