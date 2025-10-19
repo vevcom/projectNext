@@ -128,12 +128,6 @@ export const itemsForMenu: NavItem[] = [
         icon: faCamera,
     },
     {
-        name: 'Klasselister',
-        href: '/users',
-        show: 'loggedIn',
-        icon: faList,
-    },
-    {
         name: 'Om Omega',
         href: '/articles/om%20omega',
         show: 'all',
