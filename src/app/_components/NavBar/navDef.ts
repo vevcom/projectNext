@@ -129,7 +129,7 @@ export const itemsForMenu: NavItem[] = [
     },
     {
         name: 'Klasselister',
-        href: '/userlist',
+        href: '/users',
         show: 'loggedIn',
         icon: faList,
     },
