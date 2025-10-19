@@ -10,8 +10,8 @@ import { UserMigrator } from './migrateUsers'
 import migrateCommittees from './migrateCommittees'
 import seedProdPermissions from './seedProdPermissions'
 import manifest from '@/seeder/src/logger'
-import type { PrismaClient as PrismaClientPn } from '@prisma/client'
 import { PrismaClient as PrismaClientVeven } from '@/prisma-dobbel-omega/client'
+import type { PrismaClient as PrismaClientPn } from '@prisma/client'
 
 /**
  * !DobbelOmega!
