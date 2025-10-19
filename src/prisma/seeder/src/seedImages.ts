@@ -23,14 +23,19 @@ export const imageStoreLocation = join(directoryName, '..', '..', '..', '..', 's
 
 export type SeederImage = ImageSeedConfigBase & Pick<Image, 'special'>
 
-export async function seedImage(prisma: PrismaClient, fileLocation: string, files: string[], image: SeederImage) {
+export async function seedImage(
+    prisma: PrismaClient,
+    fileLocation: string,
+    files: string[],
+    image: SeederImage
+): Promise<Image | null> {
     const file = files.find(file_ => file_ === image.fsLocation)
     if (!file) throw new Error(`File ${image.fsLocation} not found in standard_store/images`)
 
     const ext = file.split('.')[1]
     if (!['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext)) {
         console.log(`skipping image ${file}`)
-        return
+        return null
     }
 
     const bigPath = path.join(fileLocation, file)
