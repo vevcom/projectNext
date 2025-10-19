@@ -15,7 +15,7 @@ export default function NumberInput({
 }: PropTypes) {
     return (
         <div id={props.name} className={`${styles.NumberInput} ${styles[color]} ${className}`}>
-            <input {...props} type="number" className={styles.field} placeholder={label}/>
+            <input {...props} type="number" className={styles.field} placeholder={label} />
             <label className={styles.labe}>{label}</label>
         </div>
     )
