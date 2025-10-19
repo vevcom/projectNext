@@ -6,6 +6,7 @@ import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { readLockerAction } from '@/services/lockers/actions'
 import { getUser } from '@/auth/session/getUser'
 import { checkGroupValidity, groupOperations, inferGroupName } from '@/services/groups/operations'
+import { notFound } from 'next/navigation'
 
 
 type PropTypes = {
@@ -15,12 +16,12 @@ type PropTypes = {
 }
 
 export default async function Locker({ params }: PropTypes) {
-    const { user, status, authorized } = await getUser({
+    const { user, authorized } = await getUser({
         userRequired: true,
         shouldRedirect: true,
         requiredPermissions: [['LOCKER_USE']],
     })
-    if (!authorized) return Error(status)
+    if (!authorized) notFound()
 
     const lockerId = parseInt((await params).id, 10)
 
