@@ -1,8 +1,8 @@
 import '@pn-server-only'
-import { destroyCmsImage } from '@/cms/images/destoy'
 import { prisma } from '@/prisma/client'
 import { prismaCall } from '@/services/prismaCall'
 import type { Article } from '@prisma/client'
+import { cmsImageOperations } from '../images/operations'
 
 /**
  * A function that destroys an article and its cover image (must be deleted to to avoid
@@ -16,7 +16,10 @@ export async function destroyArticle(id: number): Promise<Article> {
     }))
 
     // delete coverimage to avoid orphaned cmsimages
-    await destroyCmsImage(article.coverImageId)
+    await cmsImageOperations.destroy({
+        params: { id: article.coverImageId },
+        bypassAuth: true
+    })
 
     return article
 }

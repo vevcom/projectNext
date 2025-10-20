@@ -1,6 +1,5 @@
 import styles from './page.module.scss'
 import BorderButton from '@/components/UI/BorderButton'
-import { readCommitteesFromGroupIds } from '@/services/groups/committees/read'
 import OmegaId from '@/components/OmegaId/identification/OmegaId'
 import PopUp from '@/components/PopUp/PopUp'
 import { Session } from '@/auth/session/Session'
@@ -10,6 +9,7 @@ import UserDisplayName from '@/components/User/UserDisplayName'
 import { readUserProfileAction } from '@/services/users/actions'
 import { readSpecialImageAction } from '@/services/images/actions'
 import { sexConfig } from '@/services/users/constants'
+import { committeeOperations } from '@/services/groups/committees/operations'
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { v4 as uuid } from 'uuid'
@@ -32,9 +32,9 @@ export default async function User({ params }: PropTypes) {
     if (!profileRes.success) return notFound()
     const profile = profileRes.data
 
-    // REFACTOR THIS PART, THE ORDER IS BASED ON ORDER OF MEMBERSHIP NOT STUDYPROGRAMME ALSO I THINK
+    //TODO: REFACTOR THIS PART, THE ORDER IS BASED ON ORDER OF MEMBERSHIP NOT STUDYPROGRAMME ALSO I THINK
     const groupIds = profile.memberships.map(group => group.groupId)
-    const committees = await readCommitteesFromGroupIds(groupIds)
+    const committees = await committeeOperations.readFromGroupIds({ params: { ids: groupIds }, bypassAuth: true })
 
     //TODO: Basic user info will exist on the profile object
     const studyProgramme = { name: 'Kybernetikk', code: 'MTTK' }

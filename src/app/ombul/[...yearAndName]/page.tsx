@@ -7,9 +7,9 @@ import SlideInOnView from '@/components/SlideInOnView/SlideInOnView'
 import EditableTextField from '@/components/EditableTextField/EditableTextField'
 import { getUser } from '@/auth/session/getUser'
 import CmsImage from '@/components/Cms/CmsImage/CmsImage'
+import { configureAction } from '@/services/configureAction'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { configureAction } from '@/services/configureAction'
 
 type PropTypes = {
     params: Promise<{
@@ -78,7 +78,7 @@ export default async function Ombul({ params }: PropTypes) {
             </div>
             <div className={styles.admin}>
                 <OmbulAdmin ombul={ombul}>
-                    <CmsImage 
+                    <CmsImage
                         cmsImage={ombul.coverImage}
                         width={400}
                         updateCmsImageAction={

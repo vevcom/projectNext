@@ -1,9 +1,8 @@
 import '@pn-server-only'
-import { defineOperation } from '../serviceOperation'
 import { ombulAuth } from './auth'
-import { z } from 'zod'
-import { ServerError } from '../error'
+import { defineOperation } from '@/services/serviceOperation'
 import { cmsImageOperations } from '@/cms/images/operations'
+import { z } from 'zod'
 
 const read = defineOperation({
     authorizer: () => ombulAuth.read.dynamicFields({}),

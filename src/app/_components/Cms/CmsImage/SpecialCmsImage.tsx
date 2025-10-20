@@ -1,8 +1,8 @@
 import CmsImage from './CmsImage'
+import { configureAction } from '@/services/configureAction'
 import type { SpecialCmsImage as SpecialCmsImageT } from '@prisma/client'
 import type { PropTypes as CmsImageProps } from './CmsImage'
 import type { ReadSpecialCmsImageAction } from '@/cms/images/types'
-import { configureAction } from '@/services/configureAction'
 
 export type PropTypes = Omit<CmsImageProps, 'cmsImage'> & {
     special: SpecialCmsImageT,

@@ -55,6 +55,7 @@ export async function createOmbul(
 
     const cmsCoverImage = await cmsImageOperations.create({
         data: { imageId: coverImage.id },
+        bypassAuth: true
     })
 
     const ombul = await prismaCall(() => prisma.ombul.create({

@@ -2,6 +2,7 @@ import '@pn-server-only'
 import { cmsParagraphSchemas } from './schemas'
 import { defineOperation, defineSubOperation } from '@/services/serviceOperation'
 import { ServerError } from '@/services/error'
+import { ServerOnly } from '@/auth/auther/ServerOnly'
 import { z } from 'zod'
 import { SpecialCmsParagraph } from '@prisma/client'
 import rehypeFormat from 'rehype-format'
@@ -9,7 +10,6 @@ import rehypeStringify from 'rehype-stringify'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import { unified } from 'unified'
-import { ServerOnly } from '@/auth/auther/ServerOnly'
 
 const create = defineOperation({
     dataSchema: cmsParagraphSchemas.create,
@@ -20,9 +20,10 @@ const create = defineOperation({
 export const cmsParagraphOperations = {
     create,
 
-    destroy: defineSubOperation({
-        paramsSchema: () => z.object({ id: z.number() }),
-        operation: () => async ({ params, prisma }) => {
+    destroy: defineOperation({
+        paramsSchema: z.object({ id: z.number() }),
+        authorizer: ServerOnly,
+        operation: async ({ params, prisma }) => {
             const paragraph = await prisma.cmsParagraph.findUniqueOrThrow({ where: { id: params.id } })
             if (paragraph.special) {
                 throw new ServerError('BAD PARAMETERS', 'Special paragraphs cannot be deleted')

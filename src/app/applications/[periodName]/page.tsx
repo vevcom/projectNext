@@ -25,10 +25,10 @@ import {
     readApplicationPeriodAction
 } from '@/services/applications/periods/actions'
 import { readSpecialImageAction } from '@/services/images/actions'
+import { configureAction } from '@/services/configureAction'
 import { faVideo } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Link from 'next/link'
-import { configureAction } from '@/services/configureAction'
 
 export type PropTypes = {
     params: Promise<{

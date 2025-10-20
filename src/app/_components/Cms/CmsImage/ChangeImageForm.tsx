@@ -1,9 +1,9 @@
 'use client'
 import Form from '@/components/Form/Form'
 import { ImageSelectionContext } from '@/contexts/ImageSelection'
+import { configureAction } from '@/services/configureAction'
 import { useContext } from 'react'
 import type { UpdateCmsImageAction } from '@/cms/images/types'
-import { configureAction } from '@/services/configureAction'
 
 type PropTypes = {
     cmsImageId: number

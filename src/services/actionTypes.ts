@@ -1,6 +1,5 @@
-import type { SubServiceOperation } from '@/services/serviceOperation'
+import type { SubServiceOperation, ServiceOperation } from '@/services/serviceOperation'
 import type { ErrorMessage, ErrorCode } from '@/services/error'
-import type { ServiceOperation } from '@/services/serviceOperation'
 import type { z } from 'zod'
 
 /**

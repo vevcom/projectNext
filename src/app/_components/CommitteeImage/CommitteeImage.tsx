@@ -1,11 +1,11 @@
 import styles from './CommitteeImage.module.scss'
 import CmsImage from '@/cms/CmsImage/CmsImage'
 import Image from '@/components/Image/Image'
+import { configureAction } from '@/services/configureAction'
+import { updateCommitteeCoverImageAction } from '@/services/groups/committees/actions'
 import type { ReactNode } from 'react'
 import type { Image as ImageT } from '@prisma/client'
 import type { ExpandedCmsImage } from '@/cms/images/types'
-import { configureAction } from '@/services/configureAction'
-import { updateCommitteeCoverImageAction } from '@/services/groups/committees/actions'
 
 type PropTypes = {
     children?: ReactNode

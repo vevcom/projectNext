@@ -1,5 +1,5 @@
-import { readSpecialCmsImageFrontpage, updateSpecialCmsImageFrontpage } from '@/services/frontpage/actions'
 import styles from './not-found.module.scss'
+import { readSpecialCmsImageFrontpage, updateSpecialCmsImageFrontpage } from '@/services/frontpage/actions'
 import SpecialCmsImage from '@/components/Cms/CmsImage/SpecialCmsImage'
 
 export default function Error404() {

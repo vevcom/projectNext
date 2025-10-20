@@ -11,10 +11,10 @@ import { ServerError } from '@/services/error'
 import { cabinReleasePeriodOperations } from '@/services/cabin/releasePeriod/operations'
 import { sendSystemMail } from '@/services/notifications/email/send'
 import { notificationOperations } from '@/services/notifications/operations'
+import { cmsParagraphOperations } from '@/cms/paragraphs/operations'
 import { z } from 'zod'
 import { BookingType } from '@prisma/client'
 import type { CabinProductExtended } from '@/services/cabin/product/constants'
-import { cmsParagraphOperations } from '@/cms/paragraphs/operations'
 
 const mailData = {
     title: 'Bekreftelse på hyttebooking',

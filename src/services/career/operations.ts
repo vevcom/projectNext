@@ -1,6 +1,6 @@
 import '@pn-server-only'
-import { cmsParagraphOperations } from '@/cms/paragraphs/operations'
 import { careerAuth } from './auth'
+import { cmsParagraphOperations } from '@/cms/paragraphs/operations'
 
 export const careerOperations = {
     readSpecialCmsParagraphCareerInfo: cmsParagraphOperations.readSpecial.implement({

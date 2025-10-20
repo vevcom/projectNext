@@ -1,9 +1,9 @@
 'use client'
 import CmsImageClient from './CmsImageClient'
 import useActionCall from '@/hooks/useActionCall'
+import { configureAction } from '@/services/configureAction'
 import { useCallback } from 'react'
 import type { PropTypes } from './SpecialCmsImage'
-import { configureAction } from '@/services/configureAction'
 
 /**
  * WARNING: This component is only meant for the client - use SpecialCmsImageClient for the server

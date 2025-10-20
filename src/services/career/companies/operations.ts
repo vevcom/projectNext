@@ -5,9 +5,8 @@ import { companySchemas } from './schemas'
 import { defineOperation } from '@/services/serviceOperation'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { readPageInputSchemaObject } from '@/lib/paging/schema'
-import { v4 as uuid } from 'uuid'
-import { z } from 'zod'
 import { cmsImageOperations } from '@/cms/images/operations'
+import { z } from 'zod'
 
 export const companyOperations = {
     create: defineOperation({

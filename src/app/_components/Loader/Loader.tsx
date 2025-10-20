@@ -1,5 +1,5 @@
-import { readSpecialCmsImageFrontpage, updateSpecialCmsImageFrontpage } from '@/services/frontpage/actions'
 import styles from './Loader.module.scss'
+import { readSpecialCmsImageFrontpage, updateSpecialCmsImageFrontpage } from '@/services/frontpage/actions'
 import SpecialCmsImage from '@/components/Cms/CmsImage/SpecialCmsImage'
 
 function Loader() {

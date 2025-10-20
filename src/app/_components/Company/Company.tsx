@@ -57,7 +57,7 @@ export default function Company({
                     cmsImage={company.logo}
                     width={logoWidth}
                     updateCmsImageAction={updateCmsImageAction}
-                    
+
                 /> :
                 <CmsImage
                     disableEditor={disableEdit}

@@ -11,10 +11,9 @@ import { defineOperation } from '@/services/serviceOperation'
 import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { displayDate } from '@/lib/dates/displayDate'
-import { v4 as uuid } from 'uuid'
+import { cmsImageOperations } from '@/cms/images/operations'
 import { z } from 'zod'
 import type { EventExpanded } from './types'
-import { cmsImageOperations } from '@/cms/images/operations'
 
 const read = defineOperation({
     paramsSchema: z.union([

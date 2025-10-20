@@ -1,10 +1,10 @@
 import '@pn-server-only'
+import { cmsImageSchemas } from './schemas'
 import { ServerOnly } from '@/auth/auther/ServerOnly'
 import { defineOperation, defineSubOperation } from '@/services/serviceOperation'
-import { cmsImageSchemas } from './schemas'
+import { ServerError } from '@/services/error'
 import { z } from 'zod'
 import { SpecialCmsImage } from '@prisma/client'
-import { ServerError } from '@/services/error'
 
 const create = defineOperation({
     authorizer: ServerOnly,
@@ -75,11 +75,12 @@ export const cmsImageOperations = {
         })
     }),
 
-    destroy: defineSubOperation({
-        paramsSchema: () => z.object({
+    destroy: defineOperation({
+        authorizer: ServerOnly,
+        paramsSchema: z.object({
             id: z.number()
         }),
-        operation: () => ({ prisma, params }) => prisma.cmsImage.delete({
+        operation: ({ prisma, params }) => prisma.cmsImage.delete({
             where: {
                 id: params.id
             }

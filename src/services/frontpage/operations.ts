@@ -1,8 +1,8 @@
 import '@pn-server-only'
 import { frontpageAuth } from './auth'
 import { cmsParagraphOperations } from '@/cms/paragraphs/operations'
-import type { SpecialCmsImage, SpecialCmsParagraph } from '@prisma/client'
 import { cmsImageOperations } from '@/cms/images/operations'
+import type { SpecialCmsImage, SpecialCmsParagraph } from '@prisma/client'
 
 const ownedCmsParagraphs: Readonly<SpecialCmsParagraph[]> = [
     'FRONTPAGE_1',

@@ -8,8 +8,8 @@ import { QueryParams } from '@/lib/queryParams/queryParams'
 import { readSpecialImageAction } from '@/services/images/actions'
 import { readSpecialCmsLinkAction } from '@/services/cms/links/actions'
 import { readSpecialEventTagAction } from '@/services/events/tags/actions'
-import Link from 'next/link'
 import { readSpecialCmsParagraphCareerInfo, updateSpecialCmsParagraphContentCareerInfo } from '@/services/career/actions'
+import Link from 'next/link'
 
 export default async function CareerLandingPage() {
     const session = await Session.fromNextAuth()
