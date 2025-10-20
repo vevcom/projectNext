@@ -5,6 +5,7 @@ import { cmsParagraphOperations } from '@/cms/paragraphs/operations'
 import { defineOperation } from '@/services/serviceOperation'
 import { cmsImageOperations } from '@/cms/images/operations'
 import { z } from 'zod'
+import { cmsLinkOperations } from '@/cms/links/operations'
 
 const read = defineOperation({
     authorizer: () => schoolAuth.read.dynamicFields({}),
@@ -45,8 +46,20 @@ const updateCmsImage = cmsImageOperations.update.implement({
     }
 })
 
+const updateCmsLink = cmsLinkOperations.update.implement({
+    authorizer: () => schoolAuth.updateCmsLink.dynamicFields({}),
+    implementationParamsSchema: z.object({
+        shortname: z.string()
+    }),
+    ownershipCheck: async ({ params, implementationParams }) => {
+        const school = await read({ params: implementationParams })
+        return school.cmsLink.id === params.id
+    }
+})
+
 export const schoolOperations = {
     read,
     updateCmsParagraphContent,
     updateCmsImage,
+    updateCmsLink
 } as const

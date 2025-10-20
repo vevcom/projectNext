@@ -95,3 +95,7 @@ export const updateSchoolCmsParagraphContentAction = makeAction(
 export const updateSchoolCmsImageAction = makeAction(
     schoolOperations.updateCmsImage
 )
+
+export const updateSchoolCmsLinkAction = makeAction(
+    schoolOperations.updateCmsLink
+)

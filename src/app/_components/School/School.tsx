@@ -3,7 +3,11 @@ import CmsImageClient from '@/cms/CmsImage/CmsImageClient'
 import CmsLink from '@/cms/CmsLink/CmsLink'
 import CmsImage from '@/cms/CmsImage/CmsImage'
 import CmsParagraph from '@/cms/CmsParagraph/CmsParagraph'
-import { updateSchoolCmsImageAction, updateSchoolCmsParagraphContentAction } from '@/services/education/schools/actions'
+import {
+    updateSchoolCmsImageAction,
+    updateSchoolCmsLinkAction,
+    updateSchoolCmsParagraphContentAction
+} from '@/services/education/schools/actions'
 import { configureAction } from '@/services/configureAction'
 import type { ExpandedSchool } from '@/services/education/schools/types'
 
@@ -51,7 +55,17 @@ export default function School({ school, asClient = false }: PropTypes) {
                         )
                     }
                 />
-                <CmsLink cmsLink={school.cmsLink} className={styles.cmsLink} color="primary"/>
+                <CmsLink
+                    cmsLink={school.cmsLink}
+                    className={styles.cmsLink}
+                    color="primary"
+                    updateCmsLinkAction={
+                        configureAction(
+                            updateSchoolCmsLinkAction,
+                            { implementationParams: { shortname: school.shortname } }
+                        )
+                    }
+                />
             </div>
         </div>
     )

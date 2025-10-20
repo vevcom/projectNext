@@ -6,6 +6,7 @@ import { defineOperation } from '@/services/serviceOperation'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { cmsImageOperations } from '@/cms/images/operations'
+import { cmsLinkOperations } from '@/cms/links/operations'
 import { z } from 'zod'
 
 export const companyOperations = {
@@ -68,6 +69,20 @@ export const companyOperations = {
                 where: { id: implementationParams.companyId },
                 select: { logoId: true }
             }))?.logoId === params.id
+    }),
+    readSpecialCmsLink: cmsLinkOperations.readSpecial.implement({
+        authorizer: () => companyAuth.readSpecialCmsLink.dynamicFields({}),
+        ownershipCheck: ({ params }) => params.special === 'CAREER_LINK_TO_CONTACTOR'
+    }),
+    updateSpecialCmsLink: cmsLinkOperations.update.implement({
+        authorizer: () => companyAuth.updateSpecialCmsLink.dynamicFields({}),
+        ownershipCheck: ({ params }) =>
+            cmsLinkOperations.isSpecial({
+                params: {
+                    id: params.id,
+                    special: ['CAREER_LINK_TO_CONTACTOR']
+                }
+            })
     }),
     destroy: defineOperation({
         paramsSchema: z.object({
