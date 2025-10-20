@@ -47,27 +47,6 @@ export default async function seedDevUsers(prisma: PrismaClient) {
         'Mika', 'Helle', 'Jesper',
     ]
 
-    // const lastNames = [
-    //     'hansen', 'johansen', 'olsen', 'larsen', 'larsen', 'leosdatter',
-    //     'noasdatter', 'trudesdatter', 'lien', 'svendsen',
-    //     'mattisen', 'mørk', 'ruud', 'hansen', 'johansen', 'olsen',
-    //     'larsen', 'larsen', 'leosdatter', 'noasdatter', 'trudesdatter',
-    //     'lien', 'svendsen', 'mattisen', 'mørk', 'ruud', 'hansen', 'johansen', 'olsen', 'larsen',
-    //     'larsen', 'leosdatter', 'noasdatter', 'trudesdatter', 'lien',
-    //     'svendsen', 'mattisen', 'mørk', 'ruud', 'hansen', 'johansen', 'olsen', 'larsen', 'larsen',
-    //     'leosdatter', 'noasdatter', 'trudesdatter', 'lien', 'svendsen', 'mattisen',
-    //     'mørk', 'ruud', 'hansen', 'johansen', 'olsen', 'larsen', 'larsen', 'leosdatter',
-    //     'noasdatter', 'trudesdatter', 'lien', 'svendsen', 'mattisen', 'mørk',
-    //     'ruud', 'hansen', 'johansen', 'olsen', 'larsen', 'larsen', 'leosdatter',
-    //     'noasdatter', 'trudesdatter', 'lien', 'svendsen', 'mattisen', 'mørk', 'ruud', 'hansen', 'johansen',
-    //     'olsen', 'larsen', 'larsen', 'leosdatter', 'noasdatter', 'trudesdatter',
-    //     'lien', 'svendsen', 'mattisen', 'mørk', 'ruud', 'hansen', 'johansen',
-    //     'olsen', 'larsen', 'larsen', 'leosdatter',
-    //     'noasdatter', 'trudesdatter', 'lien', 'svendsen', 'mattisen', 'mørk', 'ruud',
-    //     'hansen', 'johansen', 'olsen', 'larsen', 'larsen', 'leosdatter',
-    //     'noasdatter', 'trudesdatter', 'lien', 'svendsen', 'mattisen', 'mørk', 'ruud'
-    // ]
-
     const profileImages = await seedDevProfileImages(prisma)
 
     const lastNames = profileImages.map(image => (image ? image.name.replaceAll('-', ' ') : 'Navnløs'))
