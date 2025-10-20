@@ -386,7 +386,9 @@ export function defineSubOperation<
                         )
                     }
 
-                    const authorizer = await implementationArgs.authorizer({ ...args, prisma, bypassAuth, session })
+                    const authorizer = await prismaErrorWrapper(
+                        () => implementationArgs.authorizer({ ...args, prisma, bypassAuth, session })
+                    )
                     const authResult = authorizer.auth(session)
 
                     if (!authResult.authorized) {
@@ -394,12 +396,14 @@ export function defineSubOperation<
                     }
                 }
 
-                const ownershipCheckResult = await implementationArgs.ownershipCheck({
-                    ...args,
-                    prisma,
-                    bypassAuth,
-                    session
-                })
+                const ownershipCheckResult = await prismaErrorWrapper(
+                    () => implementationArgs.ownershipCheck({
+                        ...args,
+                        prisma,
+                        bypassAuth,
+                        session
+                    })
+                )
                 if (!ownershipCheckResult) {
                     throw new Smorekopp('DISSALLOWED', `
                         This resource cannot be accessed through this implementation
