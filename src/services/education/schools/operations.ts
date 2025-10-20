@@ -4,8 +4,8 @@ import { SchoolFilteredSelection, SchoolRelationIncluder } from './ConfigVars'
 import { cmsParagraphOperations } from '@/cms/paragraphs/operations'
 import { defineOperation } from '@/services/serviceOperation'
 import { cmsImageOperations } from '@/cms/images/operations'
-import { z } from 'zod'
 import { cmsLinkOperations } from '@/cms/links/operations'
+import { z } from 'zod'
 
 const read = defineOperation({
     authorizer: () => schoolAuth.read.dynamicFields({}),

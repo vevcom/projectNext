@@ -20,7 +20,7 @@ const baseSchema = z.object({
     url: z.string().refine(cmsLinkRefiner.fcn, {
         message: cmsLinkRefiner.message
     }),
-    special: z.nativeEnum(SpecialCmsLink),
+    special: z.nativeEnum(SpecialCmsLink).optional(),
 })
 
 export const cmsLinkSchemas = {

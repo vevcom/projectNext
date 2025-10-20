@@ -102,8 +102,6 @@ model ArticleSection {
   articleId     Int?
   order         Int      @default(autoincrement()) //The order "position" of the article section in the article
 
-  //If true, the article section will be deleted if it is empty, ie has no relation to paragraph, link or image
-  destroyOnEmpty Boolean        @default(true)
   cmsImage       CmsImage?
   cmsParagraph   CmsParagraph?
   cmsLink        CmsLink?
