@@ -2,7 +2,7 @@ import '@pn-server-only'
 import { createOmbulValidation } from './validation'
 import { prismaCall } from '@/services/prismaCall'
 import { readSpecialImageCollection } from '@/services/images/collections/read'
-import { createCmsImage } from '@/services/cms/images/create'
+import { cmsImageOperations } from '@/cms/images/operations'
 import { prisma } from '@/prisma/client'
 import { createFile } from '@/services/store/createFile'
 import { imageOperations } from '@/services/images/operations'
@@ -42,7 +42,6 @@ export async function createOmbul(
 
     // create coverimage
     const ombulCoverCollection = await readSpecialImageCollection('OMBULCOVERS')
-
     const coverImage = await imageOperations.create({
         params: {
             collectionId: ombulCoverCollection.id,
@@ -54,7 +53,9 @@ export async function createOmbul(
         },
     })
 
-    const cmsCoverImage = await createCmsImage({ name: fsLocation }, coverImage)
+    const cmsCoverImage = await cmsImageOperations.create({
+        data: { imageId: coverImage.id },
+    })
 
     const ombul = await prismaCall(() => prisma.ombul.create({
         data: {
