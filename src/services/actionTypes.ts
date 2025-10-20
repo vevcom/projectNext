@@ -118,9 +118,25 @@ export type ActionFromServiceOperation<T> =
  * It will not include the implementation params as first argument as it is not known from a sub-service operation.
  * It is assumed to be undefined
  */
-export type ActionFromSubServiceOperation<T> = T extends SubServiceOperation<
+export type ActionFromSubServiceOperation<
+    T,
+> = T extends SubServiceOperation<
     infer Return,
     boolean,
     infer ParamsSchema,
-    infer DataSchema
+    infer DataSchema,
+    //eslint-disable-next-line @typescript-eslint/no-unused-vars
+    infer ParamsSchemaImplementationFields,
+    //eslint-disable-next-line @typescript-eslint/no-unused-vars
+    infer DataSchemaImplementationFields,
+    //eslint-disable-next-line @typescript-eslint/no-unused-vars
+    infer OperationImplementationFields
 > ? Action<Return, undefined, ParamsSchema, DataSchema> : 'FAILED_SUBSERVICE_MATCH'
+
+export type ConfiguredAction<
+    ActionFcn
+> = ActionFcn extends (
+        p: infer P extends { params: infer Params } | { implementationParams: infer ImplementationParams },
+        ...rest: infer D) => infer R ? (
+    (...rest: D) => R
+) : 'FAILED_ACTION_MATCH'

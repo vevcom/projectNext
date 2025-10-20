@@ -20,7 +20,7 @@ export const articleSectionSchemas = {
     update: baseSchema.pick({
         imageSize: true,
         position: true
-    }),
+    }).partial(),
     addPart: baseSchema.pick({
         part: true
     }),
