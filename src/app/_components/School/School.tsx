@@ -3,7 +3,7 @@ import CmsImageClient from '@/cms/CmsImage/CmsImageClient'
 import CmsLink from '@/cms/CmsLink/CmsLink'
 import CmsImage from '@/cms/CmsImage/CmsImage'
 import CmsParagraph from '@/cms/CmsParagraph/CmsParagraph'
-import { updateCmsParagraphContentAction } from '@/services/education/schools/actions'
+import { updateSchoolCmsImageAction, updateSchoolCmsParagraphContentAction } from '@/services/education/schools/actions'
 import { configureAction } from '@/services/configureAction'
 import type { ExpandedSchool } from '@/services/education/schools/types'
 
@@ -13,6 +13,11 @@ type PropTypes = {
 }
 
 export default function School({ school, asClient = false }: PropTypes) {
+    const updateCmsImageAction = configureAction(
+        updateSchoolCmsImageAction,
+        { implementationParams: { shortname: school.shortname } }
+    )
+
     return (
         <div className={styles.School}>
             {
@@ -22,12 +27,14 @@ export default function School({ school, asClient = false }: PropTypes) {
                         classNameImage={styles.image}
                         cmsImage={school.cmsImage}
                         width={200}
+                        updateCmsImageAction={updateCmsImageAction}
                     />
                 ) : <CmsImage
                     className={styles.cmsImage}
                     classNameImage={styles.image}
                     cmsImage={school.cmsImage}
                     width={200}
+                    updateCmsImageAction={updateCmsImageAction}
                 />
             }
 
@@ -39,7 +46,7 @@ export default function School({ school, asClient = false }: PropTypes) {
                     cmsParagraph={school.cmsParagraph}
                     updateCmsParagraphAction={
                         configureAction(
-                            updateCmsParagraphContentAction,
+                            updateSchoolCmsParagraphContentAction,
                             { implementationParams: { shortname: school.shortname } }
                         )
                     }

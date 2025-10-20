@@ -88,6 +88,10 @@ export async function updateSchoolAction(
     return await safeServerCall(() => updateSchool(id, data))
 }
 
-export const updateCmsParagraphContentAction = makeAction(
+export const updateSchoolCmsParagraphContentAction = makeAction(
     schoolOperations.updateCmsParagraphContent
+)
+
+export const updateSchoolCmsImageAction = makeAction(
+    schoolOperations.updateCmsImage
 )

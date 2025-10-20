@@ -4,6 +4,7 @@ import { SchoolFilteredSelection, SchoolRelationIncluder } from './ConfigVars'
 import { cmsParagraphOperations } from '@/cms/paragraphs/operations'
 import { defineOperation } from '@/services/serviceOperation'
 import { z } from 'zod'
+import { cmsImageOperations } from '@/cms/images/operations'
 
 const read = defineOperation({
     authorizer: () => schoolAuth.read.dynamicFields({}),
@@ -23,7 +24,7 @@ const read = defineOperation({
 })
 
 const updateCmsParagraphContent = cmsParagraphOperations.updateContent.implement({
-    authorizer: () => schoolAuth.updateSchoolCmsParagraph.dynamicFields({}),
+    authorizer: () => schoolAuth.updateCmsParagraph.dynamicFields({}),
     implementationParamsSchema: z.object({
         shortname: z.string()
     }),
@@ -33,7 +34,19 @@ const updateCmsParagraphContent = cmsParagraphOperations.updateContent.implement
     }
 })
 
+const updateCmsImage = cmsImageOperations.update.implement({
+    authorizer: () => schoolAuth.updateCmsImage.dynamicFields({}),
+    implementationParamsSchema: z.object({
+        shortname: z.string()
+    }),
+    ownershipCheck: async ({ params, implementationParams }) => {
+        const school = await read({ params: implementationParams })
+        return school.cmsImage.id === params.id
+    }
+})
+
 export const schoolOperations = {
     read,
     updateCmsParagraphContent,
+    updateCmsImage,
 } as const
