@@ -6,7 +6,11 @@ import CmsImage from '@/cms/CmsImage/CmsImage'
 import CmsImageClient from '@/cms/CmsImage/CmsImageClient'
 import Form from '@/components/Form/Form'
 import { companyAuth } from '@/services/career/companies/auth'
-import { destroyCompanyAction, updateComanyAction } from '@/services/career/companies/actions'
+import {
+    destroyCompanyAction,
+    updateCompanyAction,
+    updateCompanyCmsLogoAction
+} from '@/services/career/companies/actions'
 import { configureAction } from '@/services/configureAction'
 import type { CompanyExpanded } from '@/services/career/companies/types'
 import type { SessionMaybeUser } from '@/auth/session/Session'
@@ -40,6 +44,10 @@ export default function Company({
 }: PropTypes) {
     const canUpdate = companyAuth.update.dynamicFields({}).auth(session)
     const canDestroy = companyAuth.destroy.dynamicFields({}).auth(session)
+    const updateCmsImageAction = configureAction(
+        updateCompanyCmsLogoAction,
+        { implementationParams: { companyId: company.id } }
+    )
     return (
         <div className={styles.Company}>
             {asClient ?
@@ -48,12 +56,15 @@ export default function Company({
                     className={squareLogo ? styles.logoSq : styles.logo}
                     cmsImage={company.logo}
                     width={logoWidth}
+                    updateCmsImageAction={updateCmsImageAction}
+                    
                 /> :
                 <CmsImage
                     disableEditor={disableEdit}
                     className={squareLogo ? styles.logoSq : styles.logo}
                     cmsImage={company.logo}
                     width={logoWidth}
+                    updateCmsImageAction={updateCmsImageAction}
                 />
             }
             <div className={styles.info}>
@@ -64,7 +75,7 @@ export default function Company({
                         <SettingsHeaderItemPopUp showButtonClass={styles.showSettings} PopUpKey={`Edit ${company.id}`}>
                             <Form
                                 title="Rediger Bedrift"
-                                action={configureAction(updateComanyAction, { params: { id: company.id } })}
+                                action={configureAction(updateCompanyAction, { params: { id: company.id } })}
                                 refreshOnSuccess
                                 closePopUpOnSuccess={`Edit ${company.id}`}
                                 submitText="Lagre"

@@ -2,12 +2,12 @@ import '@pn-server-only'
 import { companyAuth } from './auth'
 import { logoIncluder } from './constants'
 import { companySchemas } from './schemas'
-import { createCmsImage } from '@/services/cms/images/create'
 import { defineOperation } from '@/services/serviceOperation'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { v4 as uuid } from 'uuid'
 import { z } from 'zod'
+import { cmsImageOperations } from '@/cms/images/operations'
 
 export const companyOperations = {
     create: defineOperation({
@@ -15,7 +15,7 @@ export const companyOperations = {
         authorizer: () => companyAuth.create.dynamicFields({}),
         operation: async ({ prisma, data }) => {
             //TODO: tranaction when createCmsImage is service operation.
-            const logo = await createCmsImage({ name: uuid() })
+            const logo = await cmsImageOperations.create({ data: {}, bypassAuth: true })
             return await prisma.company.create({
                 data: {
                     ...data,
@@ -58,6 +58,17 @@ export const companyOperations = {
                 data,
             })
         },
+    }),
+    updateCmsImageLogo: cmsImageOperations.update.implement({
+        implementationParamsSchema: z.object({
+            companyId: z.number(),
+        }),
+        authorizer: () => companyAuth.updateCmsImageLogo.dynamicFields({}),
+        ownershipCheck: async ({ implementationParams, params, prisma }) =>
+            (await prisma.company.findUniqueOrThrow({
+                where: { id: implementationParams.companyId },
+                select: { logoId: true }
+            }))?.logoId === params.id
     }),
     destroy: defineOperation({
         paramsSchema: z.object({
