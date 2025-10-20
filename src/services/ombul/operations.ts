@@ -3,6 +3,7 @@ import { defineOperation } from '../serviceOperation'
 import { ombulAuth } from './auth'
 import { z } from 'zod'
 import { ServerError } from '../error'
+import { cmsImageOperations } from '@/cms/images/operations'
 
 const read = defineOperation({
     authorizer: () => ombulAuth.read.dynamicFields({}),
@@ -57,7 +58,7 @@ const readAll = defineOperation({
 })
 
 const readLatest = defineOperation({
-    authorizer: () => ombulAuth.readAll.dynamicFields({}),
+    authorizer: () => ombulAuth.readLatest.dynamicFields({}),
     operation: async ({ prisma }) => {
         const ombul = await prisma.ombul.findMany({
             orderBy: [
@@ -70,8 +71,20 @@ const readLatest = defineOperation({
     }
 })
 
+const updateCmsCoverImage = cmsImageOperations.update.implement({
+    implementationParamsSchema: z.object({
+        ombulId: z.number()
+    }),
+    authorizer: () => ombulAuth.updateCmsCoverImage.dynamicFields({}),
+    ownershipCheck: async ({ params, implementationParams }) => {
+        const ombul = await read({ params: { id: implementationParams.ombulId } })
+        return ombul.coverImage.id === params.id
+    }
+})
+
 export const ombulOperations = {
     read,
     readAll,
-    readLatest
+    readLatest,
+    updateCmsCoverImage
 } as const

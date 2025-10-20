@@ -46,6 +46,8 @@ export const readOmbulAction = makeAction(ombulOperations.read)
 export const readLatestOmbulAction = makeAction(ombulOperations.readLatest)
 export const readOmbulsAction = makeAction(ombulOperations.readAll)
 
+export const updateOmbulCmsCoverImageAction = makeAction(ombulOperations.updateCmsCoverImage)
+
 /**
  * A action to update an ombul
  * @param id - The id of the ombul to update
