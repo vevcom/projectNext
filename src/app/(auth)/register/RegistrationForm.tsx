@@ -48,7 +48,7 @@ export default function RegistrationForm({
             options={sexOptions}
             value={sexValue}
             onChange={(e) => setSexValue(e as SEX)} />
-        <Checkbox label="Jeg samtykker til å bli tatt bilde av" name="acceptedImage" />
+        <Checkbox label="Jeg samtykker til å bli tatt bilde av" name="imageConsent" />
         <Checkbox label="Jeg godtar vilkårene" name="acceptedTerms" />
     </Form>
 }

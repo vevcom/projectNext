@@ -13,6 +13,7 @@ export const userSchema = z.object({
     firstname: z.string().max(50).min(2),
     lastname: z.string().max(50).min(2),
     allergies: z.string().max(150).optional().nullable(),
+    bio:z.string().max(2047).optional(),
     studentCard: studentCardSchema,
     password: z.string().max(50).min(12, {
         // eslint-disable-next-line
@@ -21,7 +22,7 @@ export const userSchema = z.object({
     confirmPassword: z.string().max(50).min(12),
     imageConsent: Zpn.checkboxOrBoolean({
         label: 'Accepted images'
-    }),
+    }).optional(),
     acceptedTerms: Zpn.checkboxOrBoolean({
         label: 'Accepted terms',
     }).refine(value => value, 'Du må godta vilkårene for å bruke siden.'),
@@ -45,6 +46,11 @@ export const userSchemas = {
         firstname: true,
         lastname: true,
         username: true,
+        mobile:true,
+        allergies:true,
+        sex:true,
+        bio:true,
+        imageConsent:true
     }),
 
     register: userSchema.pick({
