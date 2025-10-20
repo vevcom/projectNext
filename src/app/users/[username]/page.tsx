@@ -20,7 +20,7 @@ export type PropTypes = {
 export default async function User({ params }: PropTypes) {
     const session = await Session.fromNextAuth()
     if ((await params).username === 'me') {
-        if (!session.user) return notFound()
+        if (!session.user) redirect('/login')
         redirect(`/users/${session.user.username}`) //This throws.
     }
     const profileRes = await readUserProfileAction({ params: { username: (await params).username } })
@@ -32,6 +32,9 @@ export default async function User({ params }: PropTypes) {
 
     const studyProgrammes = profile.user.memberships.filter(membership => membership.group.groupType === 'STUDY_PROGRAMME')
         .map(membership => membership.group.studyProgramme).filter(membership => membership !== null)
+
+    const classes = profile.user.memberships.filter(membership => membership.group.groupType === 'CLASS')
+        .map(membership => membership.group.class).filter(membership => membership !== null)
 
     const omegaMembership = profile.user.memberships
         .find(membership => membership.group.groupType === 'OMEGA_MEMBERSHIP_GROUP')
@@ -65,6 +68,9 @@ export default async function User({ params }: PropTypes) {
                             <p key={i} className={styles.studyProgramme}>
                                 {studyProgramme.name} {`(${studyProgramme.code})`}
                             </p>
+                        )}
+                        { classes.map((classGroup, i) =>
+                            <p key={i} className={styles.studyProgramme}>{classGroup.year}. årstrinn</p>
                         )}
                         <div className={styles.committeesWrapper}>
                             {
