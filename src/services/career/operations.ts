@@ -11,7 +11,7 @@ export const careerOperations = {
     updateSpecialCmsParagraphContentCareerInfo: cmsParagraphOperations.updateContent.implement({
         authorizer: () => careerAuth.updateSpecialCmsParagraphContentCareerInfo.dynamicFields({}),
         ownershipCheck: async ({ params }) =>
-            await cmsParagraphOperations.isParagraphSpecial({
+            await cmsParagraphOperations.isSpecial({
                 params: { id: params.id, special: ['CAREER_INFO'] },
                 bypassAuth: true,
             })

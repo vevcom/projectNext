@@ -43,7 +43,7 @@ export const frontpageOperations = {
     updateSpecialCmsParagraphContentFrontpageSection: cmsParagraphOperations.updateContent.implement({
         authorizer: () => frontpageAuth.updateSpecialCmsParagraphContentFrontpageSection.dynamicFields({}),
         ownershipCheck: async ({ params }) =>
-            await cmsParagraphOperations.isParagraphSpecial({
+            await cmsParagraphOperations.isSpecial({
                 params: {
                     id: params.id,
                     special: [...ownedCmsParagraphs],

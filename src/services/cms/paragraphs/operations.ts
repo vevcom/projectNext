@@ -94,7 +94,7 @@ export const cmsParagraphOperations = {
      * in the provided special array
      * This is useful to do ownership checks for services using special paragraphs.
      */
-    isParagraphSpecial: defineOperation({
+    isSpecial: defineOperation({
         authorizer: ServerOnly,
         paramsSchema: z.object({
             id: z.number(),

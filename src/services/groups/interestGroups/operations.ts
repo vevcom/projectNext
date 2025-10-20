@@ -117,7 +117,7 @@ export const interestGroupOperations = {
     updateSpecialCmsParagraphContentGeneralInfo: cmsParagraphOperations.updateContent.implement({
         authorizer: () => interestGroupAuth.updateSpecialCmsParagraphContentGeneralInfo.dynamicFields({}),
         ownershipCheck: async ({ params }) =>
-            await cmsParagraphOperations.isParagraphSpecial({
+            await cmsParagraphOperations.isSpecial({
                 params: {
                     id: params.id,
                     special: ['INTEREST_GROUP_GENERAL_INFO']

@@ -80,11 +80,19 @@ export const cmsImageOperations = {
         paramsSchema: z.object({
             id: z.number()
         }),
-        operation: ({ prisma, params }) => prisma.cmsImage.delete({
-            where: {
-                id: params.id
-            }
-        })
+        operation: async ({ prisma, params }) => {
+            const cmsImage = await prisma.cmsImage.findUniqueOrThrow({
+                where: {
+                    id: params.id
+                }
+            })
+            if (cmsImage.special) throw new ServerError('BAD PARAMETERS', 'Cannot delete special CMS image')
+            await prisma.cmsImage.delete({
+                where: {
+                    id: params.id
+                }
+            })
+        }
     }),
 
     /**

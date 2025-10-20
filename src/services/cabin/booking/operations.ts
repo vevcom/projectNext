@@ -376,7 +376,7 @@ export const cabinBookingOperations = {
             .updateSpecialCmsParagraphContentCabinContract
             .dynamicFields({}),
         ownershipCheck: async ({ params }) =>
-            await cmsParagraphOperations.isParagraphSpecial({
+            await cmsParagraphOperations.isSpecial({
                 params: {
                     id: params.id,
                     special: ['CABIN_CONTRACT']
