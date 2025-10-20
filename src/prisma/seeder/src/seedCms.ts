@@ -207,15 +207,12 @@ async function seedArticleSection(
 }
 
 async function seedArticle(article: SeedArticle & { id: number, special: SpecialCmsArticle | null }, prisma: PrismaClient) {
-    console.log('seeding', article.name)
     const coverImage = await seedCmsImage(article.coverImage, prisma)
     const articleSections = await Promise.all(article.articleSections.map(
         async (articleSection, i) =>
             seedArticleSection({ ...articleSection, order: i }, prisma)
     ))
-    console.log('seeded article sections for', article.name, articleSections)
 
-    console.log('seeding article', article)
     const articles = prisma.article.upsert({
         where: {
             id: article.id
