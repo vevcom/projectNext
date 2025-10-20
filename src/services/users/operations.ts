@@ -333,15 +333,7 @@ export const userOperations = {
         authorizer: () => userAuth.update.dynamicFields({}),
         operation: ({ prisma, params, data }) => prisma.user.update({
             where: params,
-            data: {
-                mobile: data.mobile,
-                allergies: data.allergies,
-                email: data.email,
-                sex: data.sex,
-                firstname: data.firstname,
-                lastname: data.lastname,
-                bio: data.bio
-            }
+            data,
         })
     }),
 
