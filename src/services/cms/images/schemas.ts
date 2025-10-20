@@ -2,7 +2,7 @@ import { ImageSize, SpecialCmsImage } from '@prisma/client'
 import { z } from 'zod'
 
 const baseSchema = z.object({
-    name: z.string().max(200, 'Maks lengde er 20 tegn.'),
+    name: z.string().max(200, 'Maks lengde er 200 tegn.').optional(),
     special: z.nativeEnum(SpecialCmsImage).optional(),
     imageId: z.number().optional(),
     imageSize: z.nativeEnum(ImageSize).optional()

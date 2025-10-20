@@ -8,6 +8,7 @@ export const eventAuth = {
     readManyCurrent: RequireNothing.staticFields({}),
     readManyArchivedPage: RequireNothing.staticFields({}),
     update: RequireNothing.staticFields({}),
+    updateCmsCoverImage: RequireNothing.staticFields({}),
     destroy: RequireNothing.staticFields({}),
     updateParagraphContent: RequireNothing.staticFields({}),
 }

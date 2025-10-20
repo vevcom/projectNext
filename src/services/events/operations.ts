@@ -5,7 +5,6 @@ import { eventFilterSelection } from './constants'
 import { notificationOperations } from '@/services/notifications/operations'
 import { cmsParagraphOperations } from '@/cms/paragraphs/operations'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
-import { createCmsImage } from '@/services/cms/images/create'
 import { getOsloTime } from '@/lib/dates/getOsloTime'
 import { ServerError } from '@/services/error'
 import { defineOperation } from '@/services/serviceOperation'
@@ -15,6 +14,7 @@ import { displayDate } from '@/lib/dates/displayDate'
 import { v4 as uuid } from 'uuid'
 import { z } from 'zod'
 import type { EventExpanded } from './types'
+import { cmsImageOperations } from '@/cms/images/operations'
 
 const read = defineOperation({
     paramsSchema: z.union([
@@ -94,7 +94,7 @@ export const eventOperations = {
         authorizer: () => eventAuth.create.dynamicFields({}),
         operation: async ({ prisma, data, session }) => {
             const cmsParagraph = await cmsParagraphOperations.create({ data: {}, bypassAuth: true })
-            const cmsImage = await createCmsImage({ name: uuid() })
+            const cmsImage = await cmsImageOperations.create({ data: {}, bypassAuth: true })
 
             if (data.eventStart > data.eventEnd) {
                 throw new ServerError('BAD PARAMETERS', 'Event må jo strate før den slutter')
@@ -299,6 +299,18 @@ export const eventOperations = {
             // TODO: Send email to users that get promoted from waiting list
             return eventUpdate
         }
+    }),
+
+    updateCmsCoverImage: cmsImageOperations.update.implement({
+        implementationParamsSchema: z.object({
+            eventId: z.number()
+        }),
+        authorizer: () => eventAuth.updateCmsCoverImage.dynamicFields({}),
+        ownershipCheck: async ({ implementationParams, params }) =>
+            (await read({
+                params: { id: implementationParams.eventId },
+                bypassAuth: true,
+            })).coverImage.id === params.id
     }),
 
     destroy: defineOperation({

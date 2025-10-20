@@ -13,7 +13,7 @@ import { SettingsHeaderItemPopUp, UsersHeaderItemPopUp } from '@/components/Head
 import { QueryParams } from '@/lib/queryParams/queryParams'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { readEventTagsAction } from '@/services/events/tags/actions'
-import { destroyEventAction, readEventAction, updateEventParagraphContentAction } from '@/services/events/actions'
+import { destroyEventAction, readEventAction, updateEventCmsCoverImageAction, updateEventParagraphContentAction } from '@/services/events/actions'
 import { configureAction } from '@/services/configureAction'
 import Link from 'next/link'
 import { faCalendar, faExclamation, faLocationDot, faUsers } from '@fortawesome/free-solid-svg-icons'
@@ -41,7 +41,15 @@ export default async function Event({ params }: PropTypes) {
     return (
         <div className={styles.wrapper}>
             <span className={styles.coverImage}>
-                <CmsImage cmsImage={event.coverImage} width={900} />
+                <CmsImage   
+                    cmsImage={event.coverImage}
+                    width={900}
+                    updateCmsImageAction={
+                        configureAction(
+                            updateEventCmsCoverImageAction,
+                            { implementationParams: { eventId: event.id } }
+                        )}
+                />
                 <div className={styles.infoInImage}>
                     <ShowAndEditName event={event} />
                     <ul className={styles.tags}>
