@@ -4,13 +4,14 @@ import { createActionError, createZodActionError, safeServerCall } from '@/servi
 import { getUser } from '@/auth/session/getUser'
 import { createOmbul } from '@/services/ombul/create'
 import { destroyOmbul } from '@/services/ombul/destroy'
-import { readLatestOmbul, readOmbul, readOmbuls } from '@/services/ombul/read'
 import { updateOmbul, updateOmbulFile } from '@/services/ombul/update'
 import { createOmbulValidation, updateOmbulFileValidation, updateOmbulValidation } from '@/services/ombul/validation'
 import type { ExpandedOmbul } from '@/services/ombul/types'
 import type { ActionReturn } from '@/services/actionTypes'
 import type { CreateOmbulTypes, UpdateOmbulFileTypes, UpdateOmbulTypes } from '@/services/ombul/validation'
 import type { Ombul } from '@prisma/client'
+import { makeAction } from '../serverAction'
+import { ombulOperations } from './operations'
 
 /**
  * Create a new Ombul.
@@ -41,39 +42,9 @@ export async function destroyOmbulAction(id: number): Promise<ActionReturn<Expan
     return await safeServerCall(() => destroyOmbul(id))
 }
 
-export async function readLatestOmbulAction(): Promise<ActionReturn<Ombul>> {
-    //Auth route
-    const { status, authorized } = await getUser({
-        requiredPermissions: [['OMBUL_READ']]
-    })
-    if (!authorized) return createActionError(status)
-
-    return await safeServerCall(() => readLatestOmbul())
-}
-
-export async function readOmbulAction(idOrNameAndYear: number | {
-    name: string,
-    year: number,
-}): Promise<ActionReturn<ExpandedOmbul>> {
-    //Auth route
-    const { status, authorized } = await getUser({
-        requiredPermissions: [['OMBUL_READ']]
-    })
-    if (!authorized) return createActionError(status)
-
-    return await safeServerCall(() => readOmbul(idOrNameAndYear))
-}
-
-export async function readOmbulsAction(): Promise<ActionReturn<ExpandedOmbul[]>> {
-    //Auth route
-    const { status, authorized } = await getUser({
-        requiredPermissions: [['OMBUL_READ']]
-    })
-    if (!authorized) {
-        return createActionError(status)
-    }
-    return await safeServerCall(() => readOmbuls())
-}
+export const readOmbulAction = makeAction(ombulOperations.read)
+export const readLatestOmbulAction = makeAction(ombulOperations.readLatest)
+export const readOmbulsAction = makeAction(ombulOperations.readAll)
 
 /**
  * A action to update an ombul
