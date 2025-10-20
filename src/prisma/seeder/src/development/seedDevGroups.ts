@@ -58,39 +58,51 @@ export default async function seedDevGroups(prisma: PrismaClient) {
         }
     })))
 
-    await Promise.all([1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(i => prisma.committee.create({
-        data: {
-            name: `Testkomité ${i}`,
-            shortName: `TK${i}`,
-            committeeArticle: {
-                create: {
-                    name: `Testkomité ${i}`,
-                    coverImage: {
-                        create: {
-                            name: `Bilde for testkomité ${i}`
+    await Promise.all([1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(async i => {
+        const group = await prisma.committee.create({
+            data: {
+                name: `Testkomité ${i}`,
+                shortName: `TK${i}`,
+                committeeArticle: {
+                    create: {
+                        name: `Testkomité ${i}`,
+                        coverImage: {
+                            create: {
+                                name: `Bilde for testkomité ${i}`
+                            }
                         }
                     }
-                }
-            },
-            paragraph: {
-                create: {}
-            },
-            applicationParagraph: {
-                create: {}
-            },
-            group: {
-                create: {
-                    groupType: 'COMMITTEE',
-                    order: order.order,
                 },
-            },
-            logoImage: {
-                create: {
-                    name: `Logoen til testkomité ${i}`
-                }
-            },
-        }
-    })))
+                paragraph: {
+                    create: {}
+                },
+                applicationParagraph: {
+                    create: {}
+                },
+                group: {
+                    create: {
+                        groupType: 'COMMITTEE',
+                        order: order.order,
+                    },
+                },
+                logoImage: {
+                    create: {
+                        name: `Logoen til testkomité ${i}`
+                    }
+                },
+            }
+        })
+
+        await prisma.membership.createMany({
+            data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(i => ({
+                groupId: group.id,
+                userId: i,
+                admin: false, 
+                order: 106,
+                active: true,
+            }))
+        })
+    }))
 
     await Promise.all([1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(i => prisma.interestGroup.create({
         data: {

@@ -7,3 +7,5 @@ export const readGroupsAction = makeAction(groupOperations.readGroups)
 export const readGroupExpandedAction = makeAction(groupOperations.readGroupExpanded)
 export const readGroupsExpandedAction = makeAction(groupOperations.readGroupsExpanded)
 export const readGroupsStructuredAction = makeAction(groupOperations.readGroupsStructured)
+export const readUsersOfGroupsAction = makeAction(groupOperations.readUsersOfGroups)
+

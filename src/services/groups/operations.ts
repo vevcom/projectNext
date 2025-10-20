@@ -25,6 +25,7 @@ import type {
     GroupWithRelationsNameInferencer
 } from './types'
 import type { UserFiltered } from '@/services/users/types'
+import { RequireNothing } from '@/auth/auther/RequireNothing'
 
 async function expandGroup(group: GroupWithRelationsNameInferencer & {
     membershipsToInferFirstOrder: { order: number }[]
@@ -306,7 +307,7 @@ export const groupOperations = {
     }),
 
     readUsersOfGroups: defineOperation({
-        authorizer: ServerOnlyAuthorizer,
+        authorizer: () => RequireNothing.staticFields({}).dynamicFields({}),
         paramsSchema: z.object({
             groups: z.array(z.object({
                 groupId: z.number(),
