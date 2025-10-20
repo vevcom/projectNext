@@ -69,8 +69,8 @@ export default async function User({ params }: PropTypes) {
                                 {studyProgramme.name} {`(${studyProgramme.code})`}
                             </p>
                         )}
-                        { classes.map((cls, i) =>
-                            <p key={i} className={styles.studyProgramme}>{cls.year}. årstrinn</p>
+                        { classes.map((classGroup, i) =>
+                            <p key={i} className={styles.studyProgramme}>{classGroup.year}. årstrinn</p>
                         )}
                         <div className={styles.committeesWrapper}>
                             {
