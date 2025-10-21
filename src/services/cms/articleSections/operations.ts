@@ -2,14 +2,18 @@ import '@pn-server-only'
 import { articleSectionSchemas } from './schemas'
 import { articleSectionsRealtionsIncluder } from './constants'
 import { ServerOnly } from '@/auth/auther/ServerOnly'
-import { ArgsAuthGetterAndOwnershipCheck, AutherGetter, DataObject, defineOperation, defineSubOperation, ImplementationParamsObject, OwnerhipCheck, ParamsObject } from '@/services/serviceOperation'
 import { ServerError } from '@/services/error'
 import { cmsImageOperations } from '@/cms/images/operations'
 import { cmsParagraphOperations } from '@/cms/paragraphs/operations'
 import { cmsLinkOperations } from '@/cms/links/operations'
-import { TypeOf, z } from 'zod'
-import { AutherResult } from '@/auth/auther/Auther'
-import { Prisma } from '@prisma/client'
+import {
+    defineOperation,
+    defineSubOperation,
+    type ArgsAuthGetterAndOwnershipCheck,
+} from '@/services/serviceOperation'
+import type { AutherResult } from '@/auth/auther/Auther'
+import type { Prisma } from '@prisma/client'
+import type { z } from 'zod'
 
 const create = defineOperation({
     authorizer: ServerOnly,
@@ -204,14 +208,16 @@ export const articleSectionOperations = {
 
 
 type ParamsSchema = typeof articleSectionSchemas.params
-const ownedRelationsIncluder = {
-    cmsImage: true,
-    cmsParagraph: true,
-    cmsLink: true,
-} as const satisfies Prisma.ArticleSectionInclude
 type OwnedArticleSections = Prisma.ArticleSectionGetPayload<{
-    include: typeof ownedRelationsIncluder
+    include: {
+        cmsImage: true,
+        cmsParagraph: true,
+        cmsLink: true,
+    }
 }>
+/**
+ * This utility implements all the needed update operations for an article section.
+ */
 export function implementUpdateArticleSection<
     ImplementationParamsSchema extends z.ZodTypeAny
 >({
