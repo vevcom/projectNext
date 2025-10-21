@@ -2,11 +2,11 @@ import '@pn-server-only'
 import { interestGroupAuth } from './auth'
 import { interestGroupSchemas } from './schemas'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
-import { articleSectionsRealtionsIncluder } from '@/services/cms/articleSections/ConfigVars'
+import { articleSectionsRealtionsIncluder } from '@/services/cms/articleSections/constants'
 import { defineOperation } from '@/services/serviceOperation'
 import { cmsParagraphOperations } from '@/cms/paragraphs/operations'
 import { z } from 'zod'
-import type { ExpandedInterestGroup } from './types'
+import { implementUpdateArticleSection } from '@/cms/articleSections/operations'
 
 export const interestGroupOperations = {
     create: defineOperation({
@@ -38,7 +38,7 @@ export const interestGroupOperations = {
 
     readMany: defineOperation({
         authorizer: () => interestGroupAuth.readMany.dynamicFields({}),
-        operation: async ({ prisma }): Promise<ExpandedInterestGroup[]> => prisma.interestGroup.findMany({
+        operation: ({ prisma }) => prisma.interestGroup.findMany({
             include: {
                 articleSection: {
                     include: articleSectionsRealtionsIncluder,
@@ -91,6 +91,7 @@ export const interestGroupOperations = {
         }),
     }),
 
+    
     destroy: defineOperation({
         paramsSchema: z.object({
             id: z.number(),
@@ -108,12 +109,12 @@ export const interestGroupOperations = {
             })
         }
     }),
-
+    
     readSpecialCmsParagraphGeneralInfo: cmsParagraphOperations.readSpecial.implement({
         authorizer: () => interestGroupAuth.readSpecialCmsParagraphGeneralInfo.dynamicFields({}),
         ownershipCheck: ({ params }) => params.special === 'INTEREST_GROUP_GENERAL_INFO'
     }),
-
+    
     updateSpecialCmsParagraphContentGeneralInfo: cmsParagraphOperations.updateContent.implement({
         authorizer: () => interestGroupAuth.updateSpecialCmsParagraphContentGeneralInfo.dynamicFields({}),
         ownershipCheck: async ({ params }) =>
@@ -123,5 +124,36 @@ export const interestGroupOperations = {
                     special: ['INTEREST_GROUP_GENERAL_INFO']
                 }
             })
-    })
+    }),
+    updateArticleSection: implementUpdateArticleSection({
+        implementationParamsSchema: z.object({
+            interestGroupId: z.number()
+        }),
+        authorizer: async ({ implementationParams, prisma }) => {
+            const { groupId } = await prisma.interestGroup.findUniqueOrThrow({
+                where: { id: implementationParams.interestGroupId },
+                select: { groupId: true }
+            })
+            return interestGroupAuth.updateArticleSection.dynamicFields({
+                groupId
+            })
+        },
+        ownedCmsArticleSections: ({ prisma, implementationParams }) => {
+            return prisma.interestGroup.findUniqueOrThrow({
+                where: { id: implementationParams.interestGroupId },
+                include: {
+                    articleSection: {
+                        include: {
+                            cmsImage: true,
+                            cmsParagraph: true,
+                            cmsLink: true
+                        }
+                    }
+                }
+            }).then(articleGroup => [articleGroup.articleSection])
+        },
+        destroyOnEmpty: false,
+    }),
 }
+
+    

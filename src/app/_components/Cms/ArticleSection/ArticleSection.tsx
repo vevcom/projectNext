@@ -5,6 +5,7 @@ import AddPartToArticleSection from './AddPartToArticleSection'
 import CmsLink from '@/cms/CmsLink/CmsLink'
 import CmsImage from '@/cms/CmsImage/CmsImage'
 import CmsParagraph from '@/cms/CmsParagraph/CmsParagraph'
+import { configureAction } from '@/services/configureAction'
 import type {
     ExpandedArticleSection,
     AddPartToArticleSectionAction,
@@ -14,7 +15,6 @@ import type {
 import type { UpdateCmsParagraphAction } from '@/cms/paragraphs/types'
 import type { UpdateCmsImageAction } from '@/cms/images/types'
 import type { UpdateCmsLinkAction } from '@/cms/links/types'
-import { configureAction } from '@/services/configureAction'
 
 type PropTypes = {
     articleSection: ExpandedArticleSection

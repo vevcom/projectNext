@@ -9,4 +9,5 @@ export const interestGroupAuth = {
     destroy: RequirePermission.staticFields({ permission: 'INTEREST_GROUP_ADMIN' }),
     readSpecialCmsParagraphGeneralInfo: RequirePermission.staticFields({ permission: 'INTEREST_GROUP_READ' }),
     updateSpecialCmsParagraphContentGeneralInfo: RequirePermission.staticFields({ permission: 'INTEREST_GROUP_ADMIN' }),
+    updateArticleSection: RequirePermissionOrGroupAdmin.staticFields({ permission: 'INTEREST_GROUP_ADMIN' }),
 }

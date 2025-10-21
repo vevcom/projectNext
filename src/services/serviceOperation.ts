@@ -82,17 +82,24 @@ export type SubServiceOperationConfig<
         ServiceOperationOperation<OpensTransaction, ParamsSchema, DataSchema, Return>
 }
 
+export type ArgsAuthGetterAndOwnershipCheck<
+    OpensTransaction extends boolean,
+    ParamsSchema extends z.ZodTypeAny | undefined,
+    DataSchema extends z.ZodTypeAny | undefined,
+    ImplementationParamsSchema extends z.ZodTypeAny | undefined
+> =
+    & ParamsObject<ParamsSchema, 'INFERED'>
+    & ImplementationParamsObject<ImplementationParamsSchema, 'INFERED'>
+    & DataObject<DataSchema, 'INFERED'>
+    & Pick<ServiceOperationContext<OpensTransaction>, 'prisma'>
+
 export type AutherGetter<
     OpensTransaction extends boolean,
     ParamsSchema extends z.ZodTypeAny | undefined,
     DataSchema extends z.ZodTypeAny | undefined,
     ImplementationParamsSchema extends z.ZodTypeAny | undefined
 > = (
-    args:
-        & ParamsObject<ParamsSchema, 'INFERED'>
-        & ImplementationParamsObject<ImplementationParamsSchema, 'INFERED'>
-        & DataObject<DataSchema, 'INFERED'>
-        & ServiceOperationContext<OpensTransaction>
+    args: ArgsAuthGetterAndOwnershipCheck<OpensTransaction, ParamsSchema, DataSchema, ImplementationParamsSchema>
 ) => AutherResult | Promise<AutherResult>
 
 export type OwnerhipCheck<
@@ -101,11 +108,7 @@ export type OwnerhipCheck<
     DataSchema extends z.ZodTypeAny | undefined,
     ImplementationParamsSchema extends z.ZodTypeAny | undefined
 > = (
-    args:
-        & ParamsObject<ParamsSchema, 'INFERED'>
-        & ImplementationParamsObject<ImplementationParamsSchema, 'INFERED'>
-        & DataObject<DataSchema, 'INFERED'>
-        & ServiceOperationContext<OpensTransaction>
+    args: ArgsAuthGetterAndOwnershipCheck<OpensTransaction, ParamsSchema, DataSchema, ImplementationParamsSchema>
 ) => boolean | Promise<boolean>
 
 export type ServiceOperationImplementationConfigInternalCall<
@@ -387,7 +390,7 @@ export function defineSubOperation<
                     }
 
                     const authorizer = await prismaErrorWrapper(
-                        () => implementationArgs.authorizer({ ...args, prisma, bypassAuth, session })
+                        () => implementationArgs.authorizer({ ...args, prisma })
                     )
                     const authResult = authorizer.auth(session)
 
@@ -400,8 +403,6 @@ export function defineSubOperation<
                     () => implementationArgs.ownershipCheck({
                         ...args,
                         prisma,
-                        bypassAuth,
-                        session
                     })
                 )
                 if (!ownershipCheckResult) {
