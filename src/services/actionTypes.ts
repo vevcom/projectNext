@@ -122,7 +122,8 @@ export type ActionFromSubServiceOperation<
     T,
 > = T extends SubServiceOperation<
     infer Return,
-    boolean,
+    //eslint-disable-next-line @typescript-eslint/no-unused-vars
+    infer OpensTransaction,
     infer ParamsSchema,
     infer DataSchema,
     //eslint-disable-next-line @typescript-eslint/no-unused-vars

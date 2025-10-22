@@ -4,9 +4,18 @@ import SectionMover from './SectionMover'
 import ChangeName from './ChangeName'
 import CmsImage from '@/cms/CmsImage/CmsImage'
 import SlideInOnView from '@/components/SlideInOnView/SlideInOnView'
-import ArticleSection from '@/cms/ArticleSection/ArticleSection'
+import ArticleSection, {
+    type ArticleSectionActions
+} from '@/cms/ArticleSection/ArticleSection'
 import type { ReactNode } from 'react'
-import type { ExpandedArticle } from '@/cms/articles/types'
+import type {
+    AddSectionToArticleAction,
+    ExpandedArticle,
+    ReorderArticleSectionsAction,
+    UpdateArticleAction
+} from '@/cms/articles/types'
+import type { UpdateCmsImageAction } from '@/cms/images/types'
+import { configureAction } from '@/services/configureAction'
 
 export type PropTypes = {
     article: ExpandedArticle,
@@ -15,6 +24,13 @@ export type PropTypes = {
     noMargin?: boolean
     sideBarContent?: ReactNode
     sideBarClassName?: string
+    actions: {
+        updateCoverImageAction: UpdateCmsImageAction,
+        updateArticleAction: UpdateArticleAction,
+        addSectionToArticleAction: AddSectionToArticleAction,
+        reorderArticleSectionsAction: ReorderArticleSectionsAction,
+        articleSections: ArticleSectionActions
+    }
 }
 
 export default function Article({
@@ -24,14 +40,27 @@ export default function Article({
     noMargin = false,
     sideBarContent,
     sideBarClassName,
+    actions,
 }: PropTypes) {
     return (
         <span className={styles.Article}>
             {hideCoverImage ? <></> : (
                 <span className={`${coverImageClass} ${styles.coverImage}`}>
-                    <CmsImage width={500} cmsImage={article.coverImage} />
+                    <CmsImage
+                        width={500}
+                        cmsImage={article.coverImage}
+                        updateCmsImageAction={actions.updateCoverImageAction}
+                    />
                     <SlideInOnView direction="bottom">
-                        <ChangeName article={article} />
+                        <ChangeName
+                            article={article}
+                            updateArticleAction={
+                                configureAction(
+                                    actions.updateArticleAction,
+                                    { params: { articleId: article.id } }
+                                )
+                            }
+                        />
                     </SlideInOnView>
                 </span>
             )}
@@ -41,13 +70,22 @@ export default function Article({
                         article.articleSections.sort((a, b) => (a.order - b.order)).map((section, i) => (
                             <SlideInOnView direction="left" key={section.id}>
                                 <span className={styles.moveSection}>
-                                    <ArticleSection articleSection={section} />
+                                    <ArticleSection actions={actions.articleSections} articleSection={section} />
                                     <SectionMover
                                         showUp={i !== 0}
                                         showDown={i !== article.articleSections.length - 1}
-                                        articleId={article.id}
-                                        sectionId={section.id}
                                         className={styles.moverComponent}
+                                        reorderArticleSectionsAction={
+                                            configureAction(
+                                                actions.reorderArticleSectionsAction,
+                                                {
+                                                    params: {
+                                                        articleId: article.id,
+                                                        sectionId: section.id
+                                                    }
+                                                }
+                                            )
+                                        }
                                     />
                                 </span>
                             </SlideInOnView>
@@ -63,7 +101,15 @@ export default function Article({
                 </aside>
             )}
             <div className={styles.addSection}>
-                <AddSection articleId={article.id} currentNumberSections={article.articleSections.length} />
+                <AddSection
+                    currentNumberSections={article.articleSections.length}
+                    addSectionToArticleAction={
+                        configureAction(
+                            actions.addSectionToArticleAction,
+                            { params: { articleId: article.id } }
+                        )
+                    }
+                />
             </div>
         </span>
     )

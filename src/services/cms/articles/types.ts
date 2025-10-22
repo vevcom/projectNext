@@ -9,4 +9,4 @@ export type ExpandedArticle = Prisma.ArticleGetPayload<{
 
 export type UpdateArticleAction = ActionFromSubServiceOperation<typeof articleOperations.update>
 export type AddSectionToArticleAction = ActionFromSubServiceOperation<typeof articleOperations.addSection>
-export type ReorderSectionsAction = ActionFromSubServiceOperation<typeof articleOperations.reorderSections>
+export type ReorderArticleSectionsAction = ActionFromSubServiceOperation<typeof articleOperations.reorderSections>

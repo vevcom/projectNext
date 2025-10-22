@@ -28,6 +28,8 @@ type PropTypes = {
     }
 }
 
+export type ArticleSectionActions = PropTypes['actions']
+
 export default function ArticleSection({
     articleSection,
     actions
