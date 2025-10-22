@@ -5,8 +5,8 @@ import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import { articleSectionsRealtionsIncluder } from '@/services/cms/articleSections/constants'
 import { defineOperation } from '@/services/serviceOperation'
 import { cmsParagraphOperations } from '@/cms/paragraphs/operations'
+import { implementUpdateArticleSection } from '@/cms/articleSections/implement'
 import { z } from 'zod'
-import { implementUpdateArticleSection } from '@/cms/articleSections/operations'
 
 export const interestGroupOperations = {
     create: defineOperation({
@@ -91,7 +91,6 @@ export const interestGroupOperations = {
         }),
     }),
 
-    
     destroy: defineOperation({
         paramsSchema: z.object({
             id: z.number(),
@@ -109,12 +108,12 @@ export const interestGroupOperations = {
             })
         }
     }),
-    
+
     readSpecialCmsParagraphGeneralInfo: cmsParagraphOperations.readSpecial.implement({
         authorizer: () => interestGroupAuth.readSpecialCmsParagraphGeneralInfo.dynamicFields({}),
         ownershipCheck: ({ params }) => params.special === 'INTEREST_GROUP_GENERAL_INFO'
     }),
-    
+
     updateSpecialCmsParagraphContentGeneralInfo: cmsParagraphOperations.updateContent.implement({
         authorizer: () => interestGroupAuth.updateSpecialCmsParagraphContentGeneralInfo.dynamicFields({}),
         ownershipCheck: async ({ params }) =>
@@ -138,8 +137,8 @@ export const interestGroupOperations = {
                 groupId
             })
         },
-        ownedCmsArticleSections: ({ prisma, implementationParams }) => {
-            return prisma.interestGroup.findUniqueOrThrow({
+        ownedCmsArticleSections: ({ prisma, implementationParams }) =>
+            prisma.interestGroup.findUniqueOrThrow({
                 where: { id: implementationParams.interestGroupId },
                 include: {
                     articleSection: {
@@ -150,10 +149,7 @@ export const interestGroupOperations = {
                         }
                     }
                 }
-            }).then(articleGroup => [articleGroup.articleSection])
-        },
+            }).then(articleGroup => [articleGroup.articleSection]),
         destroyOnEmpty: false,
     }),
 }
-
-    
