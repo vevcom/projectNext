@@ -50,21 +50,13 @@ export async function readNewsCurrent(): Promise<SimpleNewsArticle[]> {
     }))
 }
 
-export async function readNews(idOrName: number | {
-    articleName: string
-    order: number
-}): Promise<ExpandedNewsArticle> {
+export async function readNews(id: number): Promise<ExpandedNewsArticle> {
     const news = await prismaCall(() => prisma.newsArticle.findUnique({
-        where: typeof idOrName === 'number' ? {
-            id: idOrName
-        } : {
-            articleName_orderPublished: {
-                articleName: idOrName.articleName,
-                orderPublished: idOrName.order
-            }
+        where: {
+            id,
         },
         include: newsArticleRealtionsIncluder
     }))
-    if (!news) throw new ServerError('NOT FOUND', `article ${idOrName} not found`)
+    if (!news) throw new ServerError('NOT FOUND', `article ${id} not found`)
     return news
 }

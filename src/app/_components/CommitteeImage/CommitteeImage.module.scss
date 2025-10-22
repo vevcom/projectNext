@@ -1,6 +1,8 @@
 @use "@/styles/ohma";
 
-$background: lighten(ohma.$colors-secondary, 15%);
+@use "sass:color";
+
+$background: color.adjust(ohma.$colors-secondary, $lightness: 15%);
 
 .CommitteeImage {
   position: relative;

@@ -2,6 +2,7 @@
 @use "_variables";
 @use "_fonts";
 
+@use "sass:color";
 
 @mixin round {
     border-radius: variables.$rounding;
@@ -50,14 +51,14 @@
     border: none;
     transition: .5s background;
     &:hover {
-        background-color: darken($color, 10%);
+        background-color: color.adjust($color, $lightness: -10%);
         cursor: pointer;
     }
     @include round;
 }
 
 //NOTE: also made to work for <Link /> (<a> tag)
-@mixin borderBtn($color: colors.$white, $hoverColor: darken($color, 40%)) { 
+@mixin borderBtn($color: colors.$white, $hoverColor: color.adjust($color, $lightness: 40%)) { 
     @include btn($color);
     background: transparent;
     border: solid $color 2px;
@@ -101,7 +102,7 @@
     justify-content: center;
     align-items: center;
     &:hover {
-        background-color: darken($color, 10%);
+        background-color: color.adjust($color, $lightness: -10%);
     }
 }
 
@@ -111,7 +112,7 @@
     width: 30px;
     height: 30px;
     &:hover {
-        color: darken(colors.$yellow, 10%);
+        color: color.adjust(colors.$yellow, $lightness: -10%);
         cursor: pointer;
     }
 }

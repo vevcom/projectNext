@@ -110,6 +110,11 @@ model ArticleSection {
   @@unique([articleId, order]) //There can only be one article section with a given order in an article
 }
 
+enum SpecialCmsArticle{
+  REPORT_PAGE
+  NEW_STUDENT_PAGE
+}
+
 model Article {
   id                  Int              @id @default(autoincrement())
   name                String
@@ -124,6 +129,7 @@ model Article {
   coverImageId        Int              @unique
   JobAd               JobAd?
   Committee           Committee?
+  special SpecialCmsArticle? @unique
 
   @@unique([name, id])
   @@unique([articleCategoryName, name])
@@ -136,11 +142,8 @@ model NewsArticle {
   article        Article    @relation(fields: [articleId, articleName], references: [id, name], onDelete: Cascade) //This should always be set, but it is not required by schema (prisma limitation)
   articleId      Int        @unique
   articleName    String
-  omegaOrder     OmegaOrder @relation(fields: [orderPublished], references: [order], onDelete: Restrict)
-  orderPublished Int
 
   @@unique([articleId, articleName])
-  @@unique([articleName, orderPublished])
 }
 
 model ArticleCategory {

@@ -3,8 +3,6 @@ import { eventAuth } from './auth'
 import { eventSchemas } from './schemas'
 import { eventFilterSelection } from './constants'
 import { notificationOperations } from '@/services/notifications/operations'
-import { cmsParagraphOperations } from '@/cms/paragraphs/operations'
-import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import { getOsloTime } from '@/lib/dates/getOsloTime'
 import { ServerError } from '@/services/error'
 import { defineOperation } from '@/services/serviceOperation'
@@ -12,30 +10,19 @@ import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { displayDate } from '@/lib/dates/displayDate'
 import { cmsImageOperations } from '@/cms/images/operations'
+import { cmsParagraphOperations } from '@/cms/paragraphs/operations'
 import { z } from 'zod'
 import type { EventExpanded } from './types'
 
 const read = defineOperation({
-    paramsSchema: z.union([
-        z.object({
-            id: z.undefined().optional(),
-            order: z.number(),
-            name: z.string(),
-        }),
-        z.object({
-            id: z.number(),
-            order: z.undefined().optional(),
-            name: z.undefined().optional()
-        }),
-    ]),
+    paramsSchema: z.object({
+        id: z.number(),
+    }),
     authorizer: () => eventAuth.read.dynamicFields({}),
     operation: async ({ prisma, params, session }) => {
         const event = await prisma.event.findUniqueOrThrow({
-            where: params.id !== undefined ? { id: params.id } : {
-                order_name: {
-                    order: params.order,
-                    name: params.name
-                }
+            where: {
+                id: params.id,
             },
             include: {
                 coverImage: {
@@ -125,12 +112,6 @@ export const eventOperations = {
                             id: session.user.id
                         }
                     } : undefined,
-
-                    omegaOrder: {
-                        connect: {
-                            order: data.order || (await readCurrentOmegaOrder()).order
-                        }
-                    },
                     paragraph: {
                         connect: {
                             id: cmsParagraph.id

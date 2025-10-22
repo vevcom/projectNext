@@ -9,6 +9,7 @@ import { destroyNewsAction, updateNewsAction } from '@/services/news/actions'
 import { useRouter } from 'next/navigation'
 import type { ExpandedNewsArticle } from '@/services/news/types'
 import type { ReactNode } from 'react'
+import { formatVevenUri } from '@/lib/urlEncoding'
 
 type PropTypes = {
     news: ExpandedNewsArticle
@@ -34,10 +35,7 @@ export default function EditNews({ news, children }: PropTypes) {
             <div className={styles.update}>
                 <Form
                     action={updateAction}
-                    successCallback={(data) => {
-                        push(`/news/${data?.orderPublished}/${data?.articleName}`)
-                        refresh()
-                    }}
+                    navigateOnSuccess={(data) => `/news/${data ? formatVevenUri(data.articleName, data.id) : ''}`}
                     submitText="oppdater"
                 >
                     <TextInput
