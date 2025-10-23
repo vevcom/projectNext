@@ -25,7 +25,7 @@ export default async function SchoolsAdmin() {
                     refreshOnSuccess
                 >
                     <TextInput label="Navn" name="name" />
-                    <TextInput label="Kortnavn" name="shortname" />
+                    <TextInput label="Kortnavn" name="shortName" />
                 </Form>
             </AddHeaderItemPopUp>
         }>

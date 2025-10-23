@@ -10,12 +10,12 @@ import { z } from 'zod'
 const read = defineOperation({
     authorizer: () => schoolAuth.read.dynamicFields({}),
     paramsSchema: z.object({
-        shortname: z.string()
+        shortName: z.string()
     }),
     operation: ({ params, prisma }) =>
         prisma.school.findUniqueOrThrow({
             where: {
-                shortname: params.shortname
+                shortName: params.shortName
             },
             select: {
                 ...SchoolFilteredSelection,
@@ -27,7 +27,7 @@ const read = defineOperation({
 const updateCmsParagraphContent = cmsParagraphOperations.updateContent.implement({
     authorizer: () => schoolAuth.updateCmsParagraph.dynamicFields({}),
     implementationParamsSchema: z.object({
-        shortname: z.string()
+        shortName: z.string()
     }),
     ownershipCheck: async ({ params, implementationParams }) => {
         const school = await read({ params: implementationParams })
@@ -38,7 +38,7 @@ const updateCmsParagraphContent = cmsParagraphOperations.updateContent.implement
 const updateCmsImage = cmsImageOperations.update.implement({
     authorizer: () => schoolAuth.updateCmsImage.dynamicFields({}),
     implementationParamsSchema: z.object({
-        shortname: z.string()
+        shortName: z.string()
     }),
     ownershipCheck: async ({ params, implementationParams }) => {
         const school = await read({ params: implementationParams })
@@ -49,7 +49,7 @@ const updateCmsImage = cmsImageOperations.update.implement({
 const updateCmsLink = cmsLinkOperations.update.implement({
     authorizer: () => schoolAuth.updateCmsLink.dynamicFields({}),
     implementationParamsSchema: z.object({
-        shortname: z.string()
+        shortName: z.string()
     }),
     ownershipCheck: async ({ params, implementationParams }) => {
         const school = await read({ params: implementationParams })

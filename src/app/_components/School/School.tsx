@@ -19,7 +19,7 @@ type PropTypes = {
 export default function School({ school, asClient = false }: PropTypes) {
     const updateCmsImageAction = configureAction(
         updateSchoolCmsImageAction,
-        { implementationParams: { shortname: school.shortname } }
+        { implementationParams: { shortName: school.shortName } }
     )
 
     return (
@@ -44,14 +44,14 @@ export default function School({ school, asClient = false }: PropTypes) {
 
             <div className={styles.text}>
                 <div className={styles.name}>
-                    <h2>{school.name}</h2> <p>({school.shortname})</p>
+                    <h2>{school.name}</h2> <p>({school.shortName})</p>
                 </div>
                 <CmsParagraph
                     cmsParagraph={school.cmsParagraph}
                     updateCmsParagraphAction={
                         configureAction(
                             updateSchoolCmsParagraphContentAction,
-                            { implementationParams: { shortname: school.shortname } }
+                            { implementationParams: { shortName: school.shortName } }
                         )
                     }
                 />
@@ -62,7 +62,7 @@ export default function School({ school, asClient = false }: PropTypes) {
                     updateCmsLinkAction={
                         configureAction(
                             updateSchoolCmsLinkAction,
-                            { implementationParams: { shortname: school.shortname } }
+                            { implementationParams: { shortName: school.shortName } }
                         )
                     }
                 />

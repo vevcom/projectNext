@@ -6,7 +6,8 @@ import { cmsParagraphOperations } from '@/cms/paragraphs/operations'
 import { imageOperations } from '@/services/images/operations'
 import { defineOperation } from '@/services/serviceOperation'
 import { z } from 'zod'
-import { articleRealtionsIncluder } from '@/cms/articles/ConfigVars'
+import { articleRealtionsIncluder } from '@/cms/articles/constants'
+import { implementUpdateArticleOperations } from '@/cms/articles/implement'
 
 
 const readAll = defineOperation({
@@ -119,8 +120,6 @@ const readArticle = defineOperation({
     })).committeeArticle
 })
 
-const updateArticle = undefined //TODO
-
 const readParagraph = defineOperation({
     authorizer: () => committeeAuth.readParagraph.dynamicFields({}),
     paramsSchema: z.object({
@@ -146,49 +145,29 @@ const updateParagraphContent = cmsParagraphOperations.updateContent.implement({
             })).groupId
         }),
     ownershipCheck: async ({ implementationParams, params }) =>
-        (await readParagraph({ params: { shortName: implementationParams.shortName }, bypassAuth: true })).id === params.id
-})
-
-/**
- * The coverImage is the image in the committee article
- */
-const updateCoverImage = cmsImageOperations.update.implement({
-    implementationParamsSchema: z.object({
-        shortname: z.string(),
-    }),
-    authorizer: async ({ implementationParams }) =>
-        committeeAuth.updateCoverImage.dynamicFields({
-            groupId: (await read({
-                params: { shortName: implementationParams.shortname },
-                bypassAuth: true
-            })).groupId
-        }),
-    ownershipCheck: async ({ implementationParams, params }) => {
-        const article = await readArticle({
-            params: { shortName: implementationParams.shortname },
+        (await readParagraph({
+            params: { shortName: implementationParams.shortName },
             bypassAuth: true
-        })
-        return article.coverImage.id === params.id
-    }
+        })).id === params.paragraphId
 })
 
 const updateLogo = cmsImageOperations.update.implement({
     implementationParamsSchema: z.object({
-        shortname: z.string(),
+        shortName: z.string(),
     }),
     authorizer: async ({ implementationParams }) =>
         committeeAuth.updateLogo.dynamicFields({
             groupId: (await read({
-                params: { shortName: implementationParams.shortname },
+                params: { shortName: implementationParams.shortName },
                 bypassAuth: true
             })).groupId
         }),
     ownershipCheck: async ({ implementationParams, params }) => {
         const committee = await read({
-            params: { shortName: implementationParams.shortname },
+            params: { shortName: implementationParams.shortName },
             bypassAuth: true
         })
-        return committee.logoImage.id === params.id
+        return committee.logoImage.id === params.cmsImageId
     }
 })
 
@@ -198,9 +177,22 @@ export const committeeOperations = {
     readFromGroupIds,
     readMembers,
     readArticle,
-    updateArticle,
     readParagraph,
     updateParagraphContent,
-    updateCoverImage,
     updateLogo,
+    updateArticle: implementUpdateArticleOperations({
+        authorizer: async ({ implementationParams }) => committeeAuth.updateArticle.dynamicFields({
+            groupId: (await read({
+                params: { shortName: implementationParams.shortName },
+                bypassAuth: true
+            })).groupId
+        }),
+        implementationParamsSchema: z.object({
+            shortName: z.string(),
+        }),
+        ownedArticles: async ({ implementationParams }) => {
+            const article = await readArticle({ params: { shortName: implementationParams.shortName }, bypassAuth: true })
+            return [article]
+        }
+    })
 }

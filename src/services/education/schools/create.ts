@@ -28,7 +28,7 @@ export async function createSchool(rawdata: CreateSchoolTypes['Detailed']): Prom
     return await prismaCall(() => prisma.school.create({
         data: {
             name: data.name,
-            shortname: data.shortname,
+            shortName: data.shortName,
             standardSchool: data.standardSchool,
             cmsImage: {
                 connect: {

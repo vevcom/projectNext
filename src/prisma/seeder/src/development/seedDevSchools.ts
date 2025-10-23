@@ -5,7 +5,7 @@ export default async function seedDevSchools(prisma: PrismaClient) {
         await prisma.school.create({
             data: {
                 name: `Skole ${i}`,
-                shortname: `sk${i}`,
+                shortName: `sk${i}`,
                 cmsImage: {
                     create: {
                         name: `Skole ${i} bilde`

@@ -109,7 +109,7 @@ model CommitteeMembersHist {
 model Committees {
   id                    Int                     @id @default(autoincrement())
   name                  String                  @db.VarChar(255)
-  shortname             String                  @unique @db.VarChar(255)
+  shortName             String                  @unique @db.VarChar(255)
   applicationLead       String?
   applicationVideo      String?                 @db.VarChar(255)
   applicationText       String?

@@ -35,8 +35,38 @@ export const readCommitteeParagraphAction = makeAction(committeeOperations.readP
 export const readCommitteeMembersAction = makeAction(committeeOperations.readMembers)
 export const updateCommitteeParagraphAction = makeAction(committeeOperations.updateParagraphContent)
 
-export const updateCommitteeCoverImageAction = makeAction(committeeOperations.updateCoverImage)
 export const updateCommitteeLogoAction = makeAction(committeeOperations.updateLogo)
+
+export const updateCommitteeArticleAction = makeAction(
+    committeeOperations.updateArticle.update
+)
+export const updateCommitteeArticleAddSectionAction = makeAction(
+    committeeOperations.updateArticle.addSection
+)
+export const updateCommitteeArticleReorderSectionsAction = makeAction(
+    committeeOperations.updateArticle.reorderSections
+)
+export const updateCommitteeArticleCoverImageAction = makeAction(
+    committeeOperations.updateArticle.coverImage
+)
+export const updateCommitteeArticleSectionAction = makeAction(
+    committeeOperations.updateArticle.articleSections.update
+)
+export const updateCommitteeArticleSectionsAddPartAction = makeAction(
+    committeeOperations.updateArticle.articleSections.addPart
+)
+export const updateCommitteeArticleSectionsRemovePartAction = makeAction(
+    committeeOperations.updateArticle.articleSections.removePart
+)
+export const updateCommitteeArticleCmsImageAction = makeAction(
+    committeeOperations.updateArticle.articleSections.cmsImage
+)
+export const updateCommitteeArticleCmsParagraphAction = makeAction(
+    committeeOperations.updateArticle.articleSections.cmsParagraph
+)
+export const updateCommitteeArticleCmsLinkAction = makeAction(
+    committeeOperations.updateArticle.articleSections.cmsLink
+)
 
 export async function updateCommitteeAction(
     id: number,

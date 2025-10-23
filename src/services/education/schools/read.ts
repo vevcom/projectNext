@@ -19,7 +19,7 @@ export async function readSchoolsPage<const PageSize extends number>({
         },
         orderBy: [
             { standardSchool: 'asc' },
-            { shortname: 'asc' },
+            { shortName: 'asc' },
             { id: 'asc' },
         ],
         ...cursorPageingSelection(page),

@@ -16,7 +16,7 @@ export default async function ComitteeAdmin({ params }: PropTypes) {
                 updateCmsImageAction={
                     configureAction(
                         updateCommitteeLogoAction,
-                        { implementationParams: { shortname: committee.shortName } }
+                        { implementationParams: { shortName: committee.shortName } }
                     )
                 }
             />

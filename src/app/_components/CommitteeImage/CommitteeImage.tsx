@@ -2,7 +2,7 @@ import styles from './CommitteeImage.module.scss'
 import CmsImage from '@/cms/CmsImage/CmsImage'
 import Image from '@/components/Image/Image'
 import { configureAction } from '@/services/configureAction'
-import { updateCommitteeCoverImageAction } from '@/services/groups/committees/actions'
+import { updateCommitteeArticleCoverImageAction } from '@/services/groups/committees/actions'
 import type { ReactNode } from 'react'
 import type { Image as ImageT } from '@prisma/client'
 import type { ExpandedCmsImage } from '@/cms/images/types'
@@ -12,7 +12,7 @@ type PropTypes = {
     logoImage: ImageT
     coverImage: ExpandedCmsImage
     grayScale?: boolean,
-    shortname: string
+    shortName: string
 }
 /**
  * A component that renders a backdrop image with a content div on top of it
@@ -24,7 +24,7 @@ export default function CommitteeImage({
     children,
     logoImage,
     coverImage,
-    shortname,
+    shortName,
     grayScale = false
 }: PropTypes) {
     return (
@@ -42,8 +42,8 @@ export default function CommitteeImage({
                 </div>
                 <CmsImage
                     updateCmsImageAction={configureAction(
-                        updateCommitteeCoverImageAction,
-                        { implementationParams: { shortname } }
+                        updateCommitteeArticleCoverImageAction,
+                        { implementationParams: { shortName } }
                     )}
                     className={styles.committeeImage}
                     cmsImage={coverImage}
