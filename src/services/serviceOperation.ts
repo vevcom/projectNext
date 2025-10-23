@@ -102,7 +102,7 @@ export type AutherGetter<
     args: ArgsAuthGetterAndOwnershipCheck<OpensTransaction, ParamsSchema, DataSchema, ImplementationParamsSchema>
 ) => AutherResult | Promise<AutherResult>
 
-export type OwnerhipCheck<
+export type OwnershipCheck<
     OpensTransaction extends boolean,
     ParamsSchema extends z.ZodTypeAny | undefined,
     DataSchema extends z.ZodTypeAny | undefined,
@@ -154,7 +154,7 @@ export type ServiceOperationImplementationConfig<
     OperationImplementationFields
     > & {
     authorizer: AutherGetter<OpensTransaction, ParamsSchema, DataSchema, ImplementationParamsSchema>,
-    ownershipCheck: OwnerhipCheck<OpensTransaction, ParamsSchema, DataSchema, ImplementationParamsSchema>,
+    ownershipCheck: OwnershipCheck<OpensTransaction, ParamsSchema, DataSchema, ImplementationParamsSchema>,
 }
 
 /**
