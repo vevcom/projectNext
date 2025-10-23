@@ -103,7 +103,7 @@ export const articleCategoryOperations = {
                 )
             }
 
-            await articleOperations.destroy({ params: { articleId: params.articleId } })
+            await articleOperations.destroy({ params: { articleId: params.articleId }, bypassAuth: true })
         }
     }),
 
