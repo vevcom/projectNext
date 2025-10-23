@@ -28,8 +28,20 @@ export const articleCategoryOperations = {
         paramsSchema: z.object({
             id: z.number()
         }),
-        operation: ({ prisma, params }) =>
-            prisma.articleCategory.delete({
+        operation: async ({ prisma, params }) => {
+            // There is onDelete cascade on articles when article category is deleted
+            // however coverImages of articles on articles are not cascade deleted when articles are
+            // Thus we call the destroy operation on all articles to fix this
+            const allArticles = await prisma.article.findMany({
+                where: {
+                    articleCategoryId: params.id
+                }
+            })
+            await Promise.all(allArticles.map(article =>
+                articleOperations.destroy({ params: { articleId: article.id }, bypassAuth: true })
+            ))
+
+            return await prisma.articleCategory.delete({
                 where: {
                     id: params.id
                 },
@@ -37,6 +49,7 @@ export const articleCategoryOperations = {
                     articles: true
                 }
             })
+        }
     }),
 
     update: defineOperation({

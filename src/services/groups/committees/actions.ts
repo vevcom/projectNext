@@ -83,3 +83,5 @@ export async function updateCommitteeAction(
 
     return await safeServerCall(() => updateCommittee(id, data))
 }
+
+export const destroyCommitteeAction = makeAction(committeeOperations.destroy)

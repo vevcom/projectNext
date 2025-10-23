@@ -7,6 +7,7 @@ export const committeeAuth = {
     readMembers: RequirePermission.staticFields({ permission: 'COMMITTEE_READ' }),
     readArticle: RequirePermission.staticFields({ permission: 'COMMITTEE_READ' }),
     readParagraph: RequirePermission.staticFields({ permission: 'COMMITTEE_READ' }),
+    destroy: RequirePermission.staticFields({ permission: 'COMMITTEE_DESTROY' }),
     updateParagraphContent: RequirePermissionOrGroupAdmin.staticFields({ permission: 'COMMITTEE_UPDATE' }),
     updateLogo: RequirePermissionOrGroupAdmin.staticFields({ permission: 'COMMITTEE_UPDATE' }),
     updateArticle: RequirePermissionOrGroupAdmin.staticFields({ permission: 'COMMITTEE_UPDATE' })

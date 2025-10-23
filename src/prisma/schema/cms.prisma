@@ -129,7 +129,7 @@ model Article {
   articleCategory     ArticleCategory? @relation(fields: [articleCategoryId, articleCategoryName], references: [id, name], onDelete: Cascade)
   articleCategoryId   Int?
   articleCategoryName String?
-  coverImage          CmsImage         @relation(fields: [coverImageId], references: [id], onDelete: Cascade)
+  coverImage          CmsImage         @relation(fields: [coverImageId], references: [id], onDelete: Restrict)
   coverImageId        Int              @unique
   JobAd               JobAd?
   Committee           Committee?
@@ -142,7 +142,7 @@ model NewsArticle {
   id             Int        @id @default(autoincrement())
   description    String?
   endDateTime    DateTime //when the article is no longer considered current
-  article        Article    @relation(fields: [articleId, articleName], references: [id, name], onDelete: Cascade) //This should always be set, but it is not required by schema (prisma limitation)
+  article        Article    @relation(fields: [articleId, articleName], references: [id, name], onDelete: Restrict)
   articleId      Int        @unique
   articleName    String
 

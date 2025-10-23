@@ -3,6 +3,7 @@ import { articleRealtionsIncluder, maxSections } from './constants'
 import { articleSchemas } from './schemas'
 import { defineOperation, defineSubOperation } from '@/services/serviceOperation'
 import { articleSectionOperations } from '@/cms/articleSections/operations'
+import { cmsImageOperations } from '@/cms/images/operations'
 import { ServerOnly } from '@/auth/auther/ServerOnly'
 import logger from '@/lib/logger'
 import { ServerError } from '@/services/error'
@@ -45,12 +46,14 @@ export const articleOperations = {
     destroy: defineOperation({
         authorizer: ServerOnly,
         paramsSchema: articleSchemas.params,
-        operation: ({ prisma, params }) =>
-            prisma.article.delete({
+        operation: async ({ prisma, params }) => {
+            const article = await prisma.article.delete({
                 where: {
                     id: params.articleId
                 }
             })
+            cmsImageOperations.destroy({ params: { cmsImageId: article.coverImageId }, bypassAuth: true })
+        }
     }),
     readSpecial: defineSubOperation({
         paramsSchema: () => z.object({

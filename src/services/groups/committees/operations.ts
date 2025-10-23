@@ -7,6 +7,7 @@ import { imageOperations } from '@/services/images/operations'
 import { defineOperation } from '@/services/serviceOperation'
 import { articleRealtionsIncluder } from '@/cms/articles/constants'
 import { implementUpdateArticleOperations } from '@/cms/articles/implement'
+import { articleOperations } from '@/cms/articles/operations'
 import { z } from 'zod'
 
 
@@ -171,6 +172,29 @@ const updateLogo = cmsImageOperations.update.implement({
     }
 })
 
+const destroy = defineOperation({
+    authorizer: () => committeeAuth.destroy.dynamicFields({}),
+    paramsSchema: z.object({
+        id: z.number()
+    }),
+    operation: async ({ prisma, params }) => {
+        const committee = await prisma.committee.delete({
+            where: {
+                id: params.id,
+            },
+            include: {
+                logoImage: {
+                    include: {
+                        image: true
+                    }
+                }
+            }
+        })
+        articleOperations.destroy({ params: { articleId: committee.committeeArticleId }, bypassAuth: true })
+        return committee
+    }
+})
+
 export const committeeOperations = {
     readAll,
     read,
@@ -180,6 +204,7 @@ export const committeeOperations = {
     readParagraph,
     updateParagraphContent,
     updateLogo,
+    destroy,
     updateArticle: implementUpdateArticleOperations({
         authorizer: async ({ implementationParams }) => committeeAuth.updateArticle.dynamicFields({
             groupId: (await read({
