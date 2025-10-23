@@ -103,7 +103,7 @@ export const articleCategoryOperations = {
                 )
             }
 
-            await articleOperations.destroy({ params: { articleId: params.articleId }, prisma })
+            await articleOperations.destroy({ params: { articleId: params.articleId } })
         }
     }),
 
