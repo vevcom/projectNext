@@ -9,15 +9,33 @@ import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { z } from 'zod'
 import { JobType } from '@prisma/client'
 import type { ExpandedJobAd, SimpleJobAd } from './types'
-import { destroyArticle } from '@/services/cms/articles/destroy'
-import { createArticle } from '@/services/cms/articles/create'
+import { articleOperations } from '@/cms/articles/operations'
+import { implementUpdateArticleOperations } from '@/cms/articles/implement'
+
+const read = defineOperation({
+    paramsSchema: z.object({
+        id: z.number()
+    }),
+    authorizer: () => jobAdAuth.read.dynamicFields({}),
+    operation: async ({ prisma, params }): Promise<ExpandedJobAd> => await prisma.jobAd.findUniqueOrThrow({
+        where: {
+            id: params.id,
+        },
+        include: {
+            ...articleAndCompanyIncluder,
+            company: {
+                include: logoIncluder,
+            }
+        }
+    })
+})
 
 export const jobAdOperations = {
     create: defineOperation({
         dataSchema: jobAdSchemas.create,
         authorizer: () => jobAdAuth.create.dynamicFields({}),
         operation: async ({ prisma, data: { articleName, companyId, ...data } }) => {
-            const article = await createArticle({ name: articleName })
+            const article = await articleOperations.create({ data: { name: articleName }, bypassAuth: true })
 
             return await prisma.jobAd.create({
                 data: {
@@ -41,23 +59,7 @@ export const jobAdOperations = {
      * @param idOrName - id or articleName and order of jobAd to read (id or {articleName: string, order: number})
      * @returns ExpandedJobAd - the jobAd and its article
      */
-    read: defineOperation({
-        paramsSchema: z.object({
-            id: z.number()
-        }),
-        authorizer: () => jobAdAuth.read.dynamicFields({}),
-        operation: async ({ prisma, params }): Promise<ExpandedJobAd> => await prisma.jobAd.findUniqueOrThrow({
-            where: {
-                id: params.id,
-            },
-            include: {
-                ...articleAndCompanyIncluder,
-                company: {
-                    include: logoIncluder,
-                }
-            }
-        })
-    }),
+    read,
     /**
      * This handler reads all active jobAds
      * @returns SimpleJobAd[] - all jobAds with coverImage
@@ -138,6 +140,16 @@ export const jobAdOperations = {
             data,
         })
     }),
+    updateArticle: implementUpdateArticleOperations({
+        authorizer: () => jobAdAuth.updateArticle.dynamicFields({}),
+        implementationParamsSchema: z.object({
+            jobAdId: z.number(),
+        }),
+        ownedArticles: async ({ implementationParams }) => {
+            const jobAd = await read({ params: { id: implementationParams.jobAdId }, bypassAuth: true })
+            return [jobAd.article]
+        }
+    }),
     destroy: defineOperation({
         paramsSchema: z.object({
             id: z.number(),
@@ -147,7 +159,7 @@ export const jobAdOperations = {
             const jobAd = await prisma.jobAd.delete({
                 where: { id },
             })
-            await destroyArticle(jobAd.articleId)
+            await articleOperations.destroy({ params: { articleId: jobAd.articleId }, bypassAuth: true })
         }
     }),
 }
