@@ -9,10 +9,10 @@ model Visibility {
 }
 
 model VisibilityRequirement {
-  id                          Int                          @id @default(autoincrement())
-  visibility                  Visibility                   @relation(fields: [visibilityId], references: [id], onDelete: Cascade)
-  visibilityId                Int
-  visibilityRequirementGroups VisibilityRequirementGroup[] //must be in one of these to fullfill this requirement
+  id           Int                          @id @default(autoincrement())
+  visibility   Visibility                   @relation(fields: [visibilityId], references: [id], onDelete: Cascade)
+  visibilityId Int
+  conditions   VisibilityRequirementGroup[] //must be in one of these to fullfill this requirement
 }
 
 enum VisibilityRequirementGroupType {

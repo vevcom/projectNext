@@ -10,7 +10,7 @@ import type { z } from 'zod'
 import type { ArgsAuthGetterAndOwnershipCheck, PrismaPossibleTransaction } from '@/services/serviceOperation'
 
 type ParamsSchema = typeof articleSectionSchemas.params
-type OwnedArticleSections = Prisma.ArticleSectionGetPayload<{
+type OwnedArticleSection = Prisma.ArticleSectionGetPayload<{
     include: {
         cmsImage: true,
         cmsParagraph: true,
@@ -41,7 +41,7 @@ export function implementUpdateArticleSectionOperations<
             prisma: PrismaPossibleTransaction<false>,
             implementationParams: z.infer<ImplementationParamsSchema>
         }
-    ) => Promise<OwnedArticleSections[]>
+    ) => Promise<OwnedArticleSection[]>
     destroyOnEmpty: boolean
 }) {
     const ownershipCheckArticleSection = async (
