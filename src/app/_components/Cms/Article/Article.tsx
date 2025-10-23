@@ -4,6 +4,7 @@ import SectionMover from './SectionMover'
 import ChangeName from './ChangeName'
 import CmsImage from '@/cms/CmsImage/CmsImage'
 import SlideInOnView from '@/components/SlideInOnView/SlideInOnView'
+import { configureAction } from '@/services/configureAction'
 import ArticleSection, {
     type ArticleSectionActions
 } from '@/cms/ArticleSection/ArticleSection'
@@ -15,7 +16,6 @@ import type {
     UpdateArticleAction
 } from '@/cms/articles/types'
 import type { UpdateCmsImageAction } from '@/cms/images/types'
-import { configureAction } from '@/services/configureAction'
 
 export type PropTypes = {
     article: ExpandedArticle,

@@ -22,18 +22,18 @@ export const cmsLinkOperations = {
     destroy: defineOperation({
         authorizer: ServerOnly,
         paramsSchema: z.object({
-            id: z.number()
+            linkId: z.number()
         }),
         operation: async ({ params, prisma }) => {
             const cmsLink = await prisma.cmsLink.findUniqueOrThrow({
                 where: {
-                    id: params.id
+                    id: params.linkId
                 }
             })
             if (cmsLink.special) throw new ServerError('BAD PARAMETERS', 'Cannot delete special CMS link')
             await prisma.cmsLink.delete({
                 where: {
-                    id: params.id
+                    id: params.linkId
                 }
             })
         }
@@ -41,13 +41,13 @@ export const cmsLinkOperations = {
 
     update: defineSubOperation({
         paramsSchema: () => z.object({
-            id: z.number()
+            linkId: z.number()
         }),
         dataSchema: () => cmsLinkSchemas.update,
         operation: () => ({ prisma, params, data }) =>
             prisma.cmsLink.update({
                 where: {
-                    id: params.id
+                    id: params.linkId
                 },
                 data: {
                     ...data,
@@ -80,13 +80,13 @@ export const cmsLinkOperations = {
     isSpecial: defineOperation({
         authorizer: ServerOnly,
         paramsSchema: z.object({
-            id: z.number(),
+            linkId: z.number(),
             special: z.array(z.nativeEnum(SpecialCmsLink))
         }),
         operation: async ({ params, prisma }) => {
             const link = await prisma.cmsLink.findUnique({
                 where: {
-                    id: params.id,
+                    id: params.linkId,
                 },
                 select: {
                     special: true

@@ -54,12 +54,12 @@ export const cmsImageOperations = {
 
     update: defineSubOperation({
         paramsSchema: () => z.object({
-            id: z.number()
+            cmsImageId: z.number()
         }),
         dataSchema: () => cmsImageSchemas.update,
         operation: () => ({ prisma, params, data: { imageId, ...data } }) => prisma.cmsImage.update({
             where: {
-                id: params.id,
+                id: params.cmsImageId,
             },
             data: {
                 ...data,
@@ -78,18 +78,18 @@ export const cmsImageOperations = {
     destroy: defineOperation({
         authorizer: ServerOnly,
         paramsSchema: z.object({
-            id: z.number()
+            cmsImageId: z.number()
         }),
         operation: async ({ prisma, params }) => {
             const cmsImage = await prisma.cmsImage.findUniqueOrThrow({
                 where: {
-                    id: params.id
+                    id: params.cmsImageId
                 }
             })
             if (cmsImage.special) throw new ServerError('BAD PARAMETERS', 'Cannot delete special CMS image')
             await prisma.cmsImage.delete({
                 where: {
-                    id: params.id
+                    id: params.cmsImageId
                 }
             })
         }
@@ -103,13 +103,13 @@ export const cmsImageOperations = {
     isSpecial: defineOperation({
         authorizer: ServerOnly,
         paramsSchema: z.object({
-            id: z.number(),
+            cmsImageId: z.number(),
             special: z.array(z.nativeEnum(SpecialCmsImage))
         }),
         operation: async ({ prisma, params }) => {
             const image = await prisma.cmsImage.findUnique({
                 where: {
-                    id: params.id,
+                    id: params.cmsImageId,
                 },
                 select: {
                     special: true,

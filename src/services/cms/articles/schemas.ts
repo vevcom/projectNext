@@ -23,4 +23,7 @@ export const articleSchemas = {
     reorderSections: baseSchema.pick({
         direction: true
     }),
+    params: z.object({
+        articleId: z.number()
+    })
 } as const

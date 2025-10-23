@@ -21,14 +21,14 @@ export const cmsParagraphOperations = {
     create,
 
     destroy: defineOperation({
-        paramsSchema: z.object({ id: z.number() }),
+        paramsSchema: z.object({ paragraphId: z.number() }),
         authorizer: ServerOnly,
         operation: async ({ params, prisma }) => {
-            const paragraph = await prisma.cmsParagraph.findUniqueOrThrow({ where: { id: params.id } })
+            const paragraph = await prisma.cmsParagraph.findUniqueOrThrow({ where: { id: params.paragraphId } })
             if (paragraph.special) {
                 throw new ServerError('BAD PARAMETERS', 'Special paragraphs cannot be deleted')
             }
-            await prisma.cmsParagraph.delete({ where: { id: params.id } })
+            await prisma.cmsParagraph.delete({ where: { id: params.paragraphId } })
         }
     }),
 
@@ -47,21 +47,21 @@ export const cmsParagraphOperations = {
 
     update: defineSubOperation({
         paramsSchema: () => z.object({
-            id: z.number(),
+            paragraphId: z.number(),
         }),
         dataSchema: () => cmsParagraphSchemas.update,
         operation: () => async ({ params, prisma, data }) => {
-            const paragraph = await prisma.cmsParagraph.findUniqueOrThrow({ where: { id: params.id } })
+            const paragraph = await prisma.cmsParagraph.findUniqueOrThrow({ where: { id: params.paragraphId } })
             if (paragraph.special) {
                 throw new ServerError('BAD PARAMETERS', 'Special paragraphs cannot have their meta data updated')
             }
-            await prisma.cmsParagraph.update({ where: { id: params.id }, data })
+            await prisma.cmsParagraph.update({ where: { id: params.paragraphId }, data })
         }
     }),
 
     updateContent: defineSubOperation({
         paramsSchema: () => z.object({
-            id: z.number(),
+            paragraphId: z.number(),
         }),
         dataSchema: () => cmsParagraphSchemas.updateContent,
         operation: () => async ({ params, prisma, data }) => {
@@ -76,7 +76,7 @@ export const cmsParagraphOperations = {
                 //TODO: Final sanitization of html!!!
                 return await prisma.cmsParagraph.update({
                     where: {
-                        id: params.id
+                        id: params.paragraphId
                     },
                     data: {
                         contentMd: data.markdown,
@@ -97,13 +97,13 @@ export const cmsParagraphOperations = {
     isSpecial: defineOperation({
         authorizer: ServerOnly,
         paramsSchema: z.object({
-            id: z.number(),
+            paragraphId: z.number(),
             special: z.array(z.nativeEnum(SpecialCmsParagraph))
         }),
         operation: async ({ params, prisma }) => {
             const paragraph = await prisma.cmsParagraph.findUnique({
                 where: {
-                    id: params.id,
+                    id: params.paragraphId,
                 },
                 select: {
                     special: true

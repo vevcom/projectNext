@@ -171,7 +171,7 @@ export type PrismaPossibleTransaction<
 /**
  * In addition to custom data arguments, every service operation receives a context object.
  */
-type ServiceOperationContext<OpensTransaction extends boolean = boolean> = {
+export type ServiceOperationContext<OpensTransaction extends boolean = boolean> = {
     prisma: PrismaPossibleTransaction<OpensTransaction>,
     session: SessionMaybeUser,
     bypassAuth: boolean,

@@ -5,7 +5,7 @@ import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import { articleSectionsRealtionsIncluder } from '@/services/cms/articleSections/constants'
 import { defineOperation } from '@/services/serviceOperation'
 import { cmsParagraphOperations } from '@/cms/paragraphs/operations'
-import { implementUpdateArticleSection } from '@/cms/articleSections/implement'
+import { implementUpdateArticleSectionOperations } from '@/cms/articleSections/implement'
 import { z } from 'zod'
 
 export const interestGroupOperations = {
@@ -119,12 +119,12 @@ export const interestGroupOperations = {
         ownershipCheck: async ({ params }) =>
             await cmsParagraphOperations.isSpecial({
                 params: {
-                    id: params.id,
+                    paragraphId: params.paragraphId,
                     special: ['INTEREST_GROUP_GENERAL_INFO']
                 }
             })
     }),
-    updateArticleSection: implementUpdateArticleSection({
+    updateArticleSection: implementUpdateArticleSectionOperations({
         implementationParamsSchema: z.object({
             interestGroupId: z.number()
         }),

@@ -29,12 +29,12 @@ export const articleSectionSchemas = {
     }),
     params: z.union([
         z.object({
-            id: z.number(),
-            name: z.undefined().optional()
+            articleSectionId: z.number(),
+            articleSectionName: z.undefined().optional()
         }),
         z.object({
-            id: z.undefined().optional(),
-            name: z.string()
+            articleSectionId: z.undefined().optional(),
+            articleSectionName: z.string()
         })
     ]),
 } as const

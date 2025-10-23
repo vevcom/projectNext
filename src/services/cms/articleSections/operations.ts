@@ -26,7 +26,7 @@ const destroy = defineOperation({
     paramsSchema: articleSectionSchemas.params,
     operation: ({ prisma, params }) =>
         prisma.articleSection.delete({
-            where: params.id ? { id: params.id } : { name: params.name },
+            where: params.articleSectionId ? { id: params.articleSectionId } : { name: params.articleSectionName },
             include: articleSectionsRealtionsIncluder
         })
 })
@@ -46,7 +46,7 @@ export const articleSectionOperations = {
         dataSchema: () => articleSectionSchemas.update,
         operation: () => ({ prisma, params, data }) =>
             prisma.articleSection.update({
-                where: params.id ? { id: params.id } : { name: params.name },
+                where: params.articleSectionId ? { id: params.articleSectionId } : { name: params.articleSectionName },
                 data: {
                     imageSize: data.imageSize,
                     imagePosition: data.position,
@@ -72,7 +72,7 @@ export const articleSectionOperations = {
         paramsSchema: () => articleSectionSchemas.params,
         dataSchema: () => articleSectionSchemas.addPart,
         operation: () => async ({ prisma, params, data }) => {
-            const where = params.id ? { id: params.id } : { name: params.name }
+            const where = params.articleSectionId ? { id: params.articleSectionId } : { name: params.articleSectionName }
 
             const articleSection = await prisma.articleSection.findUnique({
                 where,
@@ -135,7 +135,7 @@ export const articleSectionOperations = {
         paramsSchema: () => articleSectionSchemas.params,
         dataSchema: () => articleSectionSchemas.removePart,
         operation: ({ destroyOnEmpty }: { destroyOnEmpty: boolean }) => async ({ prisma, params, data }) => {
-            const where = params.id ? { id: params.id } : { name: params.name }
+            const where = params.articleSectionId ? { id: params.articleSectionId } : { name: params.articleSectionName }
             const articleSection = await prisma.articleSection.findUnique({
                 where,
                 include: { cmsLink: true, cmsParagraph: true, cmsImage: true }
@@ -151,7 +151,7 @@ export const articleSectionOperations = {
                 case 'cmsLink':
                     if (articleSection.cmsLink) {
                         await cmsLinkOperations.destroy({
-                            params: { id: articleSection.cmsLink.id },
+                            params: { linkId: articleSection.cmsLink.id },
                             bypassAuth: true
                         })
                     }
@@ -159,7 +159,7 @@ export const articleSectionOperations = {
                 case 'cmsParagraph':
                     if (articleSection.cmsParagraph) {
                         await cmsParagraphOperations.destroy({
-                            params: { id: articleSection.cmsParagraph.id },
+                            params: { paragraphId: articleSection.cmsParagraph.id },
                             bypassAuth: true
                         })
                     }
@@ -167,7 +167,7 @@ export const articleSectionOperations = {
                 case 'cmsImage':
                     if (articleSection.cmsImage) {
                         await cmsImageOperations.destroy({
-                            params: { id: articleSection.cmsImage.id },
+                            params: { cmsImageId: articleSection.cmsImage.id },
                             bypassAuth: true
                         })
                     }
@@ -192,7 +192,7 @@ export const articleSectionOperations = {
                 !afterDelete.cmsImage
             ) {
                 return await destroy({
-                    params: { id: articleSection.id },
+                    params: { articleSectionId: articleSection.id },
                     bypassAuth: true
                 })
             }

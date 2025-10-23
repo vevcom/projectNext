@@ -81,9 +81,7 @@ export const articleOperations = {
      * Update the article metadata like name
      */
     update: defineSubOperation({
-        paramsSchema: () => z.object({
-            articleId: z.number(),
-        }),
+        paramsSchema: () => articleSchemas.params,
         dataSchema: () => articleSchemas.update,
         operation: () => async ({ prisma, params, data }) =>
             prisma.article.update({
@@ -93,9 +91,7 @@ export const articleOperations = {
             })
     }),
     addSection: defineSubOperation({
-        paramsSchema: () => z.object({
-            articleId: z.number(),
-        }),
+        paramsSchema: () => articleSchemas.params,
         dataSchema: () => articleSchemas.addSection,
         operation: () => async ({ prisma, params, data }) => {
             const article = await prisma.article.findUnique({
@@ -158,9 +154,8 @@ export const articleOperations = {
         }
     }),
     reorderSections: defineSubOperation({
-        paramsSchema: () => z.object({
-            articleId: z.number(),
-            sectionId: z.number(),
+        paramsSchema: () => articleSchemas.params.extend({
+            sectionId: z.number()
         }),
         opensTransaction: true,
         dataSchema: () => articleSchemas.reorderSections,
