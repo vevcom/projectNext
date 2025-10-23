@@ -21,7 +21,6 @@ const ownedCmsImages: Readonly<SpecialCmsImage[]> = [
     'FOOTER_3',
     'FOOTER_LOGO',
     'FRONTPAGE_LOGO',
-    'FRONTPAGE_LOGO',
     'MOBILE_NAV_LOGIN_BUTTON',
     'MOBILE_NAV_PRIMARY_BUTTON',
     'LOADER_IMAGE',
