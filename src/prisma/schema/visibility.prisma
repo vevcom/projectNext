@@ -1,10 +1,11 @@
 model Visibility {
-  id              Int                     @id @default(autoincrement())
-  requirements    VisibilityRequirement[] // You must fullfill all requirements
-  createdAt       DateTime                @default(now())
-  updatedAt       DateTime                @updatedAt
-  
-  ImageCollection ImageCollection?
+  id           Int                     @id @default(autoincrement())
+  requirements VisibilityRequirement[] // You must fullfill all requirements
+  createdAt    DateTime                @default(now())
+  updatedAt    DateTime                @updatedAt
+
+  imageCollectionAdmin ImageCollection? @relation(name: "ImageCollectionAdminVisibility")
+  imageCollectionRead  ImageCollection? @relation(name: "ImageCollectionReadVisibility")
 }
 
 model VisibilityRequirement {
