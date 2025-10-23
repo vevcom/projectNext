@@ -9,11 +9,13 @@ export const RequirePermissionAndUser = AutherFactory<
     if (!session.user) {
         return {
             success: false,
-            session
+            session,
+            errorMessage: 'Du må være innlogget for å få tilgang'
         }
     }
     return {
         success: session.permissions.includes(staticFields.permission),
-        session
+        session,
+        errorMessage: `Du trenger tillatelse '${staticFields.permission}' for å få tilgang`
     }
 })

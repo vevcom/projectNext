@@ -9,10 +9,12 @@ export const RequireUsername = AutherFactory<
         return {
             success: false,
             session,
+            errorMessage: 'Du må være innlogget for å få tilgang'
         }
     }
     return {
         success: session.user?.username === dynamicFields.username,
         session,
+        errorMessage: 'Du har ikke tilgang til denne ressursen'
     }
 })
