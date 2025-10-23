@@ -30,7 +30,7 @@ const create = defineOperation({
         }
         return await prisma.article.create({
             data: {
-                name: name ?? newName,
+                name: data.name ?? newName,
                 coverImage: {
                     create: {},
                 }
