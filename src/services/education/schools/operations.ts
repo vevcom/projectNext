@@ -31,7 +31,7 @@ const updateCmsParagraphContent = cmsParagraphOperations.updateContent.implement
     }),
     ownershipCheck: async ({ params, implementationParams }) => {
         const school = await read({ params: implementationParams })
-        return school.cmsParagraph.id === params.id
+        return school.cmsParagraph.id === params.paragraphId
     }
 })
 
@@ -42,7 +42,7 @@ const updateCmsImage = cmsImageOperations.update.implement({
     }),
     ownershipCheck: async ({ params, implementationParams }) => {
         const school = await read({ params: implementationParams })
-        return school.cmsImage.id === params.id
+        return school.cmsImage.id === params.cmsImageId
     }
 })
 
@@ -53,7 +53,7 @@ const updateCmsLink = cmsLinkOperations.update.implement({
     }),
     ownershipCheck: async ({ params, implementationParams }) => {
         const school = await read({ params: implementationParams })
-        return school.cmsLink.id === params.id
+        return school.cmsLink.id === params.linkId
     }
 })
 

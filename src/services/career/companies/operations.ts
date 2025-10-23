@@ -68,7 +68,7 @@ export const companyOperations = {
             (await prisma.company.findUniqueOrThrow({
                 where: { id: implementationParams.companyId },
                 select: { logoId: true }
-            }))?.logoId === params.id
+            }))?.logoId === params.cmsImageId
     }),
     readSpecialCmsLink: cmsLinkOperations.readSpecial.implement({
         authorizer: () => companyAuth.readSpecialCmsLink.dynamicFields({}),
@@ -79,7 +79,7 @@ export const companyOperations = {
         ownershipCheck: ({ params }) =>
             cmsLinkOperations.isSpecial({
                 params: {
-                    id: params.id,
+                    linkId: params.linkId,
                     special: ['CAREER_LINK_TO_CONTACTOR']
                 }
             })

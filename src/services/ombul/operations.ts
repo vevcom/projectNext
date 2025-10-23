@@ -77,7 +77,7 @@ const updateCmsCoverImage = cmsImageOperations.update.implement({
     authorizer: () => ombulAuth.updateCmsCoverImage.dynamicFields({}),
     ownershipCheck: async ({ params, implementationParams }) => {
         const ombul = await read({ params: { id: implementationParams.ombulId } })
-        return ombul.coverImage.id === params.id
+        return ombul.coverImage.id === params.cmsImageId
     }
 })
 

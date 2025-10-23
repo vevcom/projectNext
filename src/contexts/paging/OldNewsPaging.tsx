@@ -10,6 +10,8 @@ export const [OldNewsPagingContext, OldNewsPagingProvider] = generatePaging<
     NewsCursor,
     PageSizeOldNews
 >({
-    fetcher: async ({ paging }) => await readOldNewsPageAction(paging),
+    fetcher: async ({ paging }) => await readOldNewsPageAction({
+        params: { paging }
+    }),
     getCursor: ({ lastElement }) => ({ id: lastElement.id }),
 })

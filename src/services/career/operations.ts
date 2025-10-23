@@ -12,7 +12,7 @@ export const careerOperations = {
         authorizer: () => careerAuth.updateSpecialCmsParagraphContentCareerInfo.dynamicFields({}),
         ownershipCheck: async ({ params }) =>
             await cmsParagraphOperations.isSpecial({
-                params: { id: params.id, special: ['CAREER_INFO'] },
+                params: { paragraphId: params.paragraphId, special: ['CAREER_INFO'] },
                 bypassAuth: true,
             })
     })

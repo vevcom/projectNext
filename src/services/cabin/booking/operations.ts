@@ -378,7 +378,7 @@ export const cabinBookingOperations = {
         ownershipCheck: async ({ params }) =>
             await cmsParagraphOperations.isSpecial({
                 params: {
-                    id: params.id,
+                    paragraphId: params.paragraphId,
                     special: ['CABIN_CONTRACT']
                 },
                 bypassAuth: true

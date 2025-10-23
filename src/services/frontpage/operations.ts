@@ -45,7 +45,7 @@ export const frontpageOperations = {
         ownershipCheck: async ({ params }) =>
             await cmsParagraphOperations.isSpecial({
                 params: {
-                    id: params.id,
+                    paragraphId: params.paragraphId,
                     special: [...ownedCmsParagraphs],
                 },
                 bypassAuth: true
@@ -62,8 +62,8 @@ export const frontpageOperations = {
         ownershipCheck: async ({ params }) =>
             await cmsImageOperations.isSpecial({
                 params: {
-                    id: params.id,
-                    special: [],
+                    cmsImageId: params.cmsImageId,
+                    special: [...ownedCmsImages],
                 },
                 bypassAuth: true
             })
