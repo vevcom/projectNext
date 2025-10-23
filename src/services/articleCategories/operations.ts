@@ -66,7 +66,7 @@ export const articleCategoryOperations = {
         operation: ({ prisma, params }) => {
             prisma.$transaction(async (tx) => {
                 const article = await articleOperations.create({ data: { }, prisma: tx, bypassAuth: true })
-                await prisma.articleCategory.update({
+                await tx.articleCategory.update({
                     where: {
                         id: params.id
                     },
