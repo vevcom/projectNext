@@ -21,7 +21,7 @@ type OwnedArticles = Prisma.ArticleGetPayload<{
     }
 }>
 /**
- * This utility implements all the needed update operations for an article section and
+ * This utility implements all the needed operations for an article section and
  * the assosiated cms: CmsLink, CmsParagraph, CmsImage
  */
 export function implementUpdateArticleOperations<
@@ -44,7 +44,6 @@ export function implementUpdateArticleOperations<
             implementationParams: z.infer<ImplementationParamsSchema>
         }
     ) => Promise<OwnedArticles[]>
-    destroyOnEmpty: boolean
 }) {
     const ownershipCheckArticle = async (
         args: Omit<ArgsAuthGetterAndOwnershipCheck<false, ParamsSchema, undefined, ImplementationParamsSchema>, 'data'>
@@ -69,7 +68,7 @@ export function implementUpdateArticleOperations<
             authorizer,
             ownershipCheck: ownershipCheckArticle
         }),
-        updateCoverImage: cmsImageOperations.update.implement({
+        coverImage: cmsImageOperations.update.implement({
             implementationParamsSchema,
             authorizer,
             ownershipCheck: async (args) => {

@@ -71,7 +71,7 @@ export function implementUpdateArticleSectionOperations<
     }
 
     return {
-        updateArticleSection: articleSectionOperations.update.implement({
+        update: articleSectionOperations.update.implement({
             implementationParamsSchema,
             authorizer,
             ownershipCheck: ownershipCheckArticleSection,

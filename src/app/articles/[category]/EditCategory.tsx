@@ -3,12 +3,12 @@ import Form from '@/components/Form/Form'
 import PopUp from '@/components/PopUp/PopUp'
 import Textarea from '@/components/UI/Textarea'
 import TextInput from '@/components/UI/TextInput'
-import { updateArticleCategoryAction, destroyArticleCategoryAction } from '@/services/cms/articleCategories/actions'
-import { createArticleAction } from '@/services/cms/articles/actions'
+import { updateArticleCategoryAction, destroyArticleCategoryAction, addArticleToCategoryAction } from '@/services/articleCategories/actions'
 import { useRouter } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCog } from '@fortawesome/free-solid-svg-icons'
-import type { ExpandedArticleCategory } from '@/cms/articleCategories/types'
+import type { ExpandedArticleCategory } from '@/services/articleCategories/types'
+import { configureAction } from '@/services/configureAction'
 
 type PropTypes = {
     category: ExpandedArticleCategory
@@ -33,13 +33,19 @@ export default function EditCategory({ category }: PropTypes) {
 
     if (!canEditCategory) return null
 
-    const updateCategory = updateArticleCategoryAction.bind(null, category.id)
+    const updateCategory = configureAction(
+        updateArticleCategoryAction,
+        { params: { id: category.id } }
+    )
 
     return (
         <>
             <li className={styles.newArticle}>
                 <Form
-                    action={createArticleAction.bind(null, {}).bind(null, category.id)}
+                    action={configureAction(
+                        addArticleToCategoryAction,
+                        { params: { id: category.id } }
+                    )}
                     successCallback={refresh}
                     submitText="Lag ny artikkel"
                 />
@@ -68,7 +74,10 @@ export default function EditCategory({ category }: PropTypes) {
             </PopUp>
             <li>
                 <Form
-                    action={destroyArticleCategoryAction.bind(null, category.id)}
+                    action={configureAction(
+                        destroyArticleCategoryAction,
+                        { params: { id: category.id } }
+                    )}
                     successCallback={handleSuccessDestroy}
                     submitText="Slett kategori"
                     submitColor="red"

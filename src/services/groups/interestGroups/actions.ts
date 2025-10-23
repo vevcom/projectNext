@@ -16,7 +16,7 @@ export const updateSpecialCmsParagraphContentGeneralInfoAction = makeAction(
 )
 
 export const updateInterestGroupArticleSectionAction = makeAction(
-    interestGroupOperations.updateArticleSection.updateArticleSection
+    interestGroupOperations.updateArticleSection.update
 )
 export const addPartToInterestGroupArticleSectionAction = makeAction(
     interestGroupOperations.updateArticleSection.addPart

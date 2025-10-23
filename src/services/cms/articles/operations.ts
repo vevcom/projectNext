@@ -11,7 +11,7 @@ import { z } from 'zod'
 import { v4 } from 'uuid'
 import type { ArticleSectionPart } from '@/cms/articleSections/types'
 
-const create = defineOperation({
+const create = defineOperation({    
     authorizer: ServerOnly,
     dataSchema: articleSchemas.create,
     operation: async ({ prisma, data }) => {
@@ -40,22 +40,18 @@ const create = defineOperation({
     }
 })
 
-const destroy = defineOperation({
-    authorizer: ServerOnly,
-    paramsSchema: z.object({
-        id: z.number()
-    }),
-    operation: ({ prisma, params }) =>
-        prisma.article.delete({
-            where: {
-                id: params.id
-            }
-        })
-})
-
 export const articleOperations = {
     create,
-    destroy,
+    destroy: defineOperation({
+        authorizer: ServerOnly,
+        paramsSchema: articleSchemas.params,
+        operation: ({ prisma, params }) =>
+            prisma.article.delete({
+                where: {
+                    id: params.articleId
+                }
+            })
+    }),
     readSpecial: defineSubOperation({
         paramsSchema: () => z.object({
             special: z.nativeEnum(SpecialCmsArticle),
@@ -69,7 +65,7 @@ export const articleOperations = {
             })
             if (!article) {
                 logger.error(`Special article ${params.special} not found - creating it`)
-                return create({ data: { special: params.special, name: `Regenerert spesiell ${params.special}` } })
+                return create({ data: { special: params.special, name: `Regenerert spesiell ${params.special}` }, bypassAuth: true })
             }
             return {
                 ...article,
@@ -145,7 +141,7 @@ export const articleOperations = {
                             part,
                         },
                         params: {
-                            id: addedArticleSectionId
+                            articleSectionId: addedArticleSectionId
                         }
                     })
                 }
@@ -221,6 +217,20 @@ export const articleOperations = {
 
                 return updatedSection
             })
+        }
+    }),
+
+    read: defineSubOperation({
+        paramsSchema: () => articleSchemas.params,
+        operation: () => async ({ prisma, params }) => {
+            const article = await prisma.article.findUnique({
+                where: {
+                    id: params.articleId
+                },
+                include: articleRealtionsIncluder
+            })
+            if (!article) throw new ServerError('NOT FOUND', 'Artikkel ikke funnet.')
+            return article
         }
     })
 }
