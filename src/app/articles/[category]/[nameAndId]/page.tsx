@@ -52,35 +52,45 @@ export default async function ArticleCategoryPage({ params }: PropTypes) {
                 article={article}
                 actions={{
                     updateArticleAction: configureAction(
-                        updateArticleCategoryArticleAction, { implementationParams: { articleCategoryId: articleCategory.id } }
+                        updateArticleCategoryArticleAction,
+                        { implementationParams: { articleCategoryId: articleCategory.id } }
                     ),
                     updateCoverImageAction: configureAction(
-                        updateArticleCategoryArticleCoverImageAction, { implementationParams: { articleCategoryId: articleCategory.id } }
+                        updateArticleCategoryArticleCoverImageAction,
+                        { implementationParams: { articleCategoryId: articleCategory.id } }
                     ),
                     addSectionToArticleAction: configureAction(
-                        updateArticleCategoryArticleAddSectionAction, { implementationParams: { articleCategoryId: articleCategory.id } }
+                        updateArticleCategoryArticleAddSectionAction,
+                        { implementationParams: { articleCategoryId: articleCategory.id } }
                     ),
                     reorderArticleSectionsAction: configureAction(
-                        updateArticleCategoryArticleReorderSectionsAction, { implementationParams: { articleCategoryId: articleCategory.id } }
+                        updateArticleCategoryArticleReorderSectionsAction,
+                        { implementationParams: { articleCategoryId: articleCategory.id } }
                     ),
                     articleSections: {
                         updateCmsParagraph: configureAction(
-                            updateArticleCategoryArticleCmsParagraphAction, { implementationParams: { articleCategoryId: articleCategory.id } }
+                            updateArticleCategoryArticleCmsParagraphAction,
+                            { implementationParams: { articleCategoryId: articleCategory.id } }
                         ),
                         updateCmsImage: configureAction(
-                            updateArticleCategoryArticleCmsImageAction, { implementationParams: { articleCategoryId: articleCategory.id } }
+                            updateArticleCategoryArticleCmsImageAction,
+                            { implementationParams: { articleCategoryId: articleCategory.id } }
                         ),
                         updateCmsLink: configureAction(
-                            updateArticleCategoryArticleCmsLinkAction, { implementationParams: { articleCategoryId: articleCategory.id } }
+                            updateArticleCategoryArticleCmsLinkAction,
+                            { implementationParams: { articleCategoryId: articleCategory.id } }
                         ),
                         updateArticleSection: configureAction(
-                            updateArticleCategoryArticleSectionAction, { implementationParams: { articleCategoryId: articleCategory.id } }
+                            updateArticleCategoryArticleSectionAction,
+                            { implementationParams: { articleCategoryId: articleCategory.id } }
                         ),
                         addPartToArticleSection: configureAction(
-                            updateArticleCategoryArticleSectionsAddPartAction, { implementationParams: { articleCategoryId: articleCategory.id } }
+                            updateArticleCategoryArticleSectionsAddPartAction,
+                            { implementationParams: { articleCategoryId: articleCategory.id } }
                         ),
                         removePartFromArticleSection: configureAction(
-                            updateArticleCategoryArticleSectionsRemovePartAction, { implementationParams: { articleCategoryId: articleCategory.id } }
+                            updateArticleCategoryArticleSectionsRemovePartAction,
+                            { implementationParams: { articleCategoryId: articleCategory.id } }
                         )
                     }
                 }}

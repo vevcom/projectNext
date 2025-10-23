@@ -5,13 +5,13 @@ import useScroll from '@/hooks/useScroll'
 import useOnNavigation from '@/hooks/useOnNavigation'
 import useViewPort from '@/hooks/useViewPort'
 import { removeArticleFromCategoryAction } from '@/services/articleCategories/actions'
+import { formatVevenUri } from '@/lib/urlEncoding'
 import React, { useRef, useState } from 'react'
 import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronUp, faX } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/navigation'
 import type { ExpandedArticleCategory } from '@/services/articleCategories/types'
-import { formatVevenUri } from '@/lib/urlEncoding'
 
 type PropTypes = {
     category: ExpandedArticleCategory

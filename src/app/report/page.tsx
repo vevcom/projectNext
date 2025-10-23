@@ -1,11 +1,11 @@
 import styles from './page.module.scss'
 import Article from '@/components/Cms/Article/Article'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
-import { readSpecialArticle } from '@/cms/articles/actions'
+import { readPublicArticle } from '@/services/publicArticles/actions'
 
 
 export default async function report() {
-    const reportArticleRes = await readSpecialArticle({ params: { specialCmsArticle: 'REPORT_PAGE' } })
+    const reportArticleRes = await readPublicArticle({ params: { special: 'REPORT_PAGE' } })
     const unwrappedArticle = unwrapActionReturn(reportArticleRes)
 
     return (

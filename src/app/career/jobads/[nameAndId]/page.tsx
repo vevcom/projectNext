@@ -1,4 +1,3 @@
-
 import styles from './page.module.scss'
 import EditJobAd from './EditJobAd'
 import Article from '@/components/Cms/Article/Article'
@@ -26,7 +25,6 @@ type PropTypes = {
         nameAndId: string
     }>
 }
-
 
 export default async function JobAd({ params }: PropTypes) {
     const nameAndId = (await params).nameAndId

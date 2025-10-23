@@ -290,7 +290,7 @@ export const eventOperations = {
             (await read({
                 params: { id: implementationParams.eventId },
                 bypassAuth: true,
-            })).coverImage.id === params.id
+            })).coverImage.id === params.cmsImageId
     }),
 
     destroy: defineOperation({
@@ -316,7 +316,7 @@ export const eventOperations = {
             (await read({
                 params: { id: implementationParams.eventId },
                 bypassAuth: true,
-            })).paragraph.id === params.id
+            })).paragraph.id === params.paragraphId
     })
 } as const
 

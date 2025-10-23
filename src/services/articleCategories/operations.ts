@@ -1,20 +1,21 @@
 import '@pn-server-only'
-import { defineOperation, PrismaPossibleTransaction } from '../serviceOperation'
 import { articleCategoryAuth } from './auth'
 import { articleCategorySchemas } from './schemas'
-import { z } from 'zod'
-import { implementUpdateArticleOperations } from '@/cms/articles/implement'
-import { ExpandedArticleCategory } from './types'
-import { Image } from '@prisma/client'
+import { defineOperation } from '../serviceOperation'
 import { ServerError } from '../error'
+import { implementUpdateArticleOperations } from '@/cms/articles/implement'
 import { articleOperations } from '@/cms/articles/operations'
 import user from '@/app/admin/mail/[filter]/[id]/(editComponents)/user'
+import { z } from 'zod'
+import type { ExpandedArticleCategory } from './types'
+import type { Image } from '@prisma/client'
+import type { PrismaPossibleTransaction } from '../serviceOperation'
 
 export const articleCategoryOperations = {
     create: defineOperation({
         authorizer: () => articleCategoryAuth.create.dynamicFields({}),
         dataSchema: articleCategorySchemas.create,
-        operation: ({ prisma, data }) => 
+        operation: ({ prisma, data }) =>
             prisma.articleCategory.create({
                 data,
                 include: {
@@ -28,7 +29,7 @@ export const articleCategoryOperations = {
         paramsSchema: z.object({
             id: z.number()
         }),
-        operation: ({ prisma, params }) => 
+        operation: ({ prisma, params }) =>
             prisma.articleCategory.delete({
                 where: {
                     id: params.id
@@ -107,23 +108,21 @@ export const articleCategoryOperations = {
         implementationParamsSchema: z.object({
             articleCategoryId: z.number(),
         }),
-        ownedArticles: ({ implementationParams, prisma }) => {
-            return prisma.article.findMany({
-                where: {
-                    articleCategoryId: implementationParams.articleCategoryId
-                },
-                include: {
-                    coverImage: true,
-                    articleSections: {
-                        include: {
-                            cmsImage: true,
-                            cmsLink: true,
-                            cmsParagraph: true
-                        }
+        ownedArticles: ({ implementationParams, prisma }) => prisma.article.findMany({
+            where: {
+                articleCategoryId: implementationParams.articleCategoryId
+            },
+            include: {
+                coverImage: true,
+                articleSections: {
+                    include: {
+                        cmsImage: true,
+                        cmsLink: true,
+                        cmsParagraph: true
                     }
                 }
-            })
             }
+        })
     }),
 
     readAll: defineOperation({
@@ -159,23 +158,23 @@ export const articleCategoryOperations = {
         }),
         operation: async ({ prisma, params }) => {
             const category = await prisma.articleCategory.findUnique({
-                    where: {
-                        name: params.name
-                    },
-                    include: {
-                        articles: {
-                            orderBy: {
-                                createdAt: 'desc'
-                            }
+                where: {
+                    name: params.name
+                },
+                include: {
+                    articles: {
+                        orderBy: {
+                            createdAt: 'desc'
                         }
-                    },
-                })
-                if (!category) throw new ServerError('NOT FOUND', `Category ${params.name} not found`)
-                const categoryWithCover = {
-                    ...category,
-                    coverImage: await getCoverImage(prisma, category)
-                }
-                return categoryWithCover
+                    }
+                },
+            })
+            if (!category) throw new ServerError('NOT FOUND', `Category ${params.name} not found`)
+            const categoryWithCover = {
+                ...category,
+                coverImage: await getCoverImage(prisma, category)
+            }
+            return categoryWithCover
         }
     }),
 
@@ -202,7 +201,7 @@ export const articleCategoryOperations = {
             return article.articleCategoryId ? article.articleCategoryId === articleCategoryId : false
         }
     })
-} as const 
+} as const
 
 /**
  * Get coverimage (not cmsImage just the image it relates to) for article category

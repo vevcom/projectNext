@@ -4,11 +4,11 @@ import PopUp from '@/components/PopUp/PopUp'
 import Textarea from '@/components/UI/Textarea'
 import TextInput from '@/components/UI/TextInput'
 import { updateArticleCategoryAction, destroyArticleCategoryAction, addArticleToCategoryAction } from '@/services/articleCategories/actions'
+import { configureAction } from '@/services/configureAction'
 import { useRouter } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCog } from '@fortawesome/free-solid-svg-icons'
 import type { ExpandedArticleCategory } from '@/services/articleCategories/types'
-import { configureAction } from '@/services/configureAction'
 
 type PropTypes = {
     category: ExpandedArticleCategory

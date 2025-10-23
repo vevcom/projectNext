@@ -11,7 +11,7 @@ import { z } from 'zod'
 import { v4 } from 'uuid'
 import type { ArticleSectionPart } from '@/cms/articleSections/types'
 
-const create = defineOperation({    
+const create = defineOperation({
     authorizer: ServerOnly,
     dataSchema: articleSchemas.create,
     operation: async ({ prisma, data }) => {

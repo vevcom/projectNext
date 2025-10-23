@@ -1,9 +1,9 @@
-import type { ExpandedArticle } from '@/cms/articles/types'
-import type { NewsArticle, Image } from '@prisma/client'
+import type { newsArticleRealtionsIncluder } from './constants'
+import type { NewsArticle, Image, Prisma } from '@prisma/client'
 
-export type ExpandedNewsArticle = NewsArticle & {
-    article: ExpandedArticle
-}
+export type ExpandedNewsArticle = Prisma.NewsArticleGetPayload<{
+    include: typeof newsArticleRealtionsIncluder
+}>
 
 //used for read many actions
 export type SimpleNewsArticle = NewsArticle & {

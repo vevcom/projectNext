@@ -1,60 +1,48 @@
 'use server'
-
-import { createActionError, createZodActionError, safeServerCall } from '@/services/actionError'
-import { createNews } from '@/services/news/create'
-import { destroyNews } from '@/services/news/destroy'
-import { readNews, readNewsCurrent, readOldNewsPage } from '@/services/news/read'
-import { updateNews } from '@/services/news/update'
-import { createNewsArticleValidation, updateNewsArticleValidation } from '@/services/news/validation'
+import { newsOperations } from './operations'
+import { createActionError } from '@/services/actionError'
 import { notificationOperations } from '@/services/notifications/operations'
-import type { CreateNewsArticleTypes, UpdateNewsArticleTypes } from '@/services/news/validation'
-import type { ExpandedNewsArticle, NewsCursor, SimpleNewsArticle } from '@/services/news/types'
-import type { ReadPageInput } from '@/lib/paging/types'
+import { makeAction } from '@/services/serverAction'
+import type { SimpleNewsArticle } from '@/services/news/types'
 import type { ActionReturn } from '@/services/actionTypes'
 
-export async function createNewsAction(
-    rawdata: FormData | CreateNewsArticleTypes['Type']
-): Promise<ActionReturn<ExpandedNewsArticle>> {
-    //TODO: check for can create news permission
-    const parse = createNewsArticleValidation.typeValidate(rawdata)
-    if (!parse.success) return createZodActionError(parse)
-    const data = parse.data
+export const createNewsAction = makeAction(newsOperations.create)
+export const destroyNewsAction = makeAction(newsOperations.destroy)
+export const readOldNewsPageAction = makeAction(newsOperations.readOldPage)
+export const readNewsCurrentAction = makeAction(newsOperations.readCurrent)
+export const readNewsAction = makeAction(newsOperations.read)
+export const updateNewsAction = makeAction(newsOperations.update)
 
-    return await safeServerCall(() => createNews(data))
-}
-
-export async function destroyNewsAction(id: number): Promise<ActionReturn<Omit<SimpleNewsArticle, 'coverImage'>>> {
-    //TODO: check auth
-    return await safeServerCall(() => destroyNews(id))
-}
-
-export async function readOldNewsPageAction<const PageSize extends number>(
-    readPageImput: ReadPageInput<PageSize, NewsCursor>
-): Promise<ActionReturn<SimpleNewsArticle[]>> {
-    //TODO: only read news with right visibility
-    return await safeServerCall(() => readOldNewsPage(readPageImput))
-}
-
-export async function readNewsCurrentAction(): Promise<ActionReturn<SimpleNewsArticle[]>> {
-    //TODO: only read news with right visibility
-    return await safeServerCall(() => readNewsCurrent())
-}
-
-export async function readNewsAction(id: number): Promise<ActionReturn<ExpandedNewsArticle>> {
-    //TODO: only read news if right visibility
-    return await safeServerCall(() => readNews(id))
-}
-
-export async function updateNewsAction(
-    id: number,
-    rawdata: FormData | UpdateNewsArticleTypes['Type']
-): Promise<ActionReturn<Omit<SimpleNewsArticle, 'coverImage'>>> {
-    //TODO: auth
-    const parse = updateNewsArticleValidation.typeValidate(rawdata)
-    if (!parse.success) return createZodActionError(parse)
-    const data = parse.data
-    return await safeServerCall(() => updateNews(id, data))
-}
+export const updateNewsArticleAction = makeAction(
+    newsOperations.updateArticle.update
+)
+export const updateNewsArticleAddSectionAction = makeAction(
+    newsOperations.updateArticle.addSection
+)
+export const updateNewsArticleReorderSectionsAction = makeAction(
+    newsOperations.updateArticle.reorderSections
+)
+export const updateNewsArticleCoverImageAction = makeAction(
+    newsOperations.updateArticle.coverImage
+)
+export const updateNewsArticleSectionAction = makeAction(
+    newsOperations.updateArticle.articleSections.update
+)
+export const updateNewsArticleSectionsAddPartAction = makeAction(
+    newsOperations.updateArticle.articleSections.addPart
+)
+export const updateNewsArticleSectionsRemovePartAction = makeAction(
+    newsOperations.updateArticle.articleSections.removePart
+)
+export const updateNewsArticleCmsImageAction = makeAction(
+    newsOperations.updateArticle.articleSections.cmsImage
+)
+export const updateNewsArticleCmsParagraphAction = makeAction(
+    newsOperations.updateArticle.articleSections.cmsParagraph
+)
+export const updateNewsArticleCmsLinkAction = makeAction(
+    newsOperations.updateArticle.articleSections.cmsLink
+)
 
 export async function publishNewsAction(
     // disable eslint rule temporarily until todo is resolved
