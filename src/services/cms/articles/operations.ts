@@ -206,7 +206,7 @@ export const articleOperations = {
                     data: { order: section.order },
                 })
                 // Finally, set the order of the section to the otherSection's original order
-                const updatedSection = prisma.articleSection.update({
+                const updatedSection = await tx.articleSection.update({
                     where: {
                         articleId: params.articleId,
                         id: section.id
