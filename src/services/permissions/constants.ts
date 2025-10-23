@@ -17,7 +17,7 @@ export const permissionCategories = [
     'cabin',
     'permission',
     'applications',
-    'frontpage'
+    'public'
 ] as const satisfies string[]
 
 export const permissionConfig = {
@@ -179,7 +179,12 @@ export const permissionConfig = {
     FRONTPAGE_ADMIN: {
         name: 'Frontpage administrator',
         description: 'kan administrere frontpage',
-        category: 'frontpage',
+        category: 'public',
+    },
+    PUBLIC_ARTICLE_ADMIN: {
+        name: 'Administrere offentlige artikler',
+        description: 'kan administrere offentlige artikler',
+        category: 'public',
     },
     USERS_CREATE: {
         name: 'Lage bruker',

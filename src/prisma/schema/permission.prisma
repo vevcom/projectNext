@@ -177,6 +177,9 @@ enum Permission {
   // Applications
   APPLICATION_ADMIN
   APPLICATION_WRITE
+
+  // Public articles
+  PUBLIC_ARTICLE_ADMIN
 }
 
 model GroupPermission {

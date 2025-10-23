@@ -1,7 +1,7 @@
 import styles from './page.module.scss'
-import Article from '@/components/Cms/Article/Article'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { readPublicArticle } from '@/services/publicArticles/actions'
+import PublicArticle from '@/components/Cms/PublicArticle/PublicArticle'
 
 
 export default async function report() {
@@ -10,7 +10,7 @@ export default async function report() {
 
     return (
         <div className={styles.wrapper}>
-            <Article article={unwrappedArticle} />
+            <PublicArticle article={unwrappedArticle} />
         </div>
     )
 }
