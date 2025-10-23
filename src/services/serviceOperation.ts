@@ -275,7 +275,7 @@ export function defineSubOperation<
             const paramsMatch = Boolean(args.params) === Boolean(serviceOperationConfig.paramsSchema)
             const dataMatches = Boolean(args.data) === Boolean(serviceOperationConfig.dataSchema)
             const implementationParamsMatch =
-                Boolean(args.implementationParams) === Boolean(implementationArgs.operationImplementationFields)
+            Boolean(args.implementationParams) === Boolean(implementationArgs.implementationParamsSchema)
             return paramsMatch && dataMatches && implementationParamsMatch
         }
 
