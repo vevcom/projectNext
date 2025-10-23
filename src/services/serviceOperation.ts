@@ -413,11 +413,11 @@ export function defineSubOperation<
                 }
 
                 // Finally, call the operation.
-                return prismaErrorWrapper(() => {
-                    const operation = serviceOperationConfig.operation(args.implementationParams)
-
-                    return operation({ ...args, prisma, bypassAuth, session })
-                })
+                return prismaErrorWrapper(() =>
+                    serviceOperationConfig.operation(
+                        implementationArgs.operationImplementationFields!
+                    )({ ...args, prisma, bypassAuth, session })
+                )
             })
         }
 
