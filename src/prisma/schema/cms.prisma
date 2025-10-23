@@ -64,8 +64,8 @@ model CmsParagraph {
   Course              Course[]
   School              School[]
   Event               Event[]
-  Committee           Committee? @relation(name: "committeeParagraph")
-  CommitteApplication Committee? @relation(name: "applicationParagraph")
+  Committee           Committee?           @relation(name: "committeeParagraph")
+  CommitteApplication Committee?           @relation(name: "applicationParagraph")
 }
 
 enum SpecialCmsLink {
@@ -103,48 +103,47 @@ model ArticleSection {
 
   //The order "position" of the article section in the article
   //This field is only used when articleSection is part of an article
-  order         Int      @default(autoincrement()) 
+  order Int @default(autoincrement())
 
-
-  cmsImage       CmsImage?
-  cmsParagraph   CmsParagraph?
-  cmsLink        CmsLink?
-  InterestGroup  InterestGroup?
+  cmsImage      CmsImage?
+  cmsParagraph  CmsParagraph?
+  cmsLink       CmsLink?
+  InterestGroup InterestGroup?
 
   @@unique([articleId, order]) //There can only be one article section with a given order in an article
 }
 
-enum SpecialCmsArticle{
+enum SpecialCmsArticle {
   REPORT_PAGE
   NEW_STUDENT_PAGE
 }
 
 model Article {
-  id                  Int              @id @default(autoincrement())
+  id                  Int                @id @default(autoincrement())
   name                String
-  createdAt           DateTime         @default(now())
-  updatedAt           DateTime         @updatedAt
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
   articleSections     ArticleSection[]
   newsArticle         NewsArticle?
-  articleCategory     ArticleCategory? @relation(fields: [articleCategoryId, articleCategoryName], references: [id, name], onDelete: Cascade)
+  articleCategory     ArticleCategory?   @relation(fields: [articleCategoryId, articleCategoryName], references: [id, name], onDelete: Cascade)
   articleCategoryId   Int?
   articleCategoryName String?
-  coverImage          CmsImage         @relation(fields: [coverImageId], references: [id], onDelete: Restrict)
-  coverImageId        Int              @unique
+  coverImage          CmsImage           @relation(fields: [coverImageId], references: [id], onDelete: Restrict)
+  coverImageId        Int                @unique
   JobAd               JobAd?
   Committee           Committee?
-  special SpecialCmsArticle? @unique
+  special             SpecialCmsArticle? @unique
 
   @@unique([name, id])
 }
 
 model NewsArticle {
-  id             Int        @id @default(autoincrement())
-  description    String?
-  endDateTime    DateTime //when the article is no longer considered current
-  article        Article    @relation(fields: [articleId, articleName], references: [id, name], onDelete: Restrict)
-  articleId      Int        @unique
-  articleName    String
+  id          Int      @id @default(autoincrement())
+  description String?
+  endDateTime DateTime //when the article is no longer considered current
+  article     Article  @relation(fields: [articleId, articleName], references: [id, name], onDelete: Restrict)
+  articleId   Int      @unique
+  articleName String
 
   @@unique([articleId, articleName])
 }

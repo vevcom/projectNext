@@ -193,4 +193,3 @@ model GroupPermission {
 model DefaultPermission {
   permission Permission @unique
 }
-
