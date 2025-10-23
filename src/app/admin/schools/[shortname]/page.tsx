@@ -14,7 +14,7 @@ type PropTypes = {
 export default async function SchoolAdmin({ params }: PropTypes) {
     const shortName = decodeURIComponent((await params).shortName)
 
-    const res = await readSchoolAction(shortName)
+    const res = await readSchoolAction({ params: { shortName } })
     if (!res.success) throw new Error(res.error?.length ? res.error[0].message : 'Unknown error')
     const school = res.data
 

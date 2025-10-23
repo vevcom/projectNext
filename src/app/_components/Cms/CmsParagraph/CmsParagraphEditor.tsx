@@ -39,7 +39,7 @@ export default function CmsParagraphEditor({ cmsParagraph, editorClassName, upda
         setContent(value)
     }
 
-    const action = configureAction(updateCmsParagraphAction, { params: { id: cmsParagraph.id } })
+    const action = configureAction(updateCmsParagraphAction, { params: { paragraphId: cmsParagraph.id } })
 
     return (
         <PopUp

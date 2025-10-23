@@ -5,12 +5,11 @@ import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
 import { prisma } from '@/prisma/client'
 import { cmsParagraphOperations } from '@/cms/paragraphs/operations'
+import { cmsLinkOperations } from '@/cms/links/operations'
 import { cmsImageOperations } from '@/cms/images/operations'
-import { v4 as uuid } from 'uuid'
 import { StandardSchool } from '@prisma/client'
 import type { SchoolFiltered } from './types'
 import type { CreateSchoolTypes } from './validation'
-import { createCmsLink } from '@/services/cms/links/create'
 
 export async function createSchool(rawdata: CreateSchoolTypes['Detailed']): Promise<SchoolFiltered> {
     const data = createSchoolValidation.detailedValidate(rawdata)
@@ -23,7 +22,7 @@ export async function createSchool(rawdata: CreateSchoolTypes['Detailed']): Prom
         data: {},
         bypassAuth: true
     })
-    const cmsLink = await createCmsLink({ name: uuid() })
+    const cmsLink = await cmsLinkOperations.create({ data: { text: 'link', url: './' }, bypassAuth: true })
 
     return await prismaCall(() => prisma.school.create({
         data: {

@@ -57,7 +57,7 @@ export default function ArticleSection({
                         removePartFromArticleSectionAction={
                             configureAction(
                                 actions.removePartFromArticleSection,
-                                { params: { name: articleSection.name } }
+                                { params: { articleSectionName: articleSection.name } }
                             )
                         }
                     />
@@ -75,7 +75,7 @@ export default function ArticleSection({
                 showLinkAdd={!cmsLink}
                 addPartToArticleSectionAction={configureAction(
                     actions.addPartToArticleSection,
-                    { params: { name: articleSection.name } }
+                    { params: { articleSectionName: articleSection.name } }
                 )}
             >
                 <span className={styles.content}>
@@ -93,7 +93,7 @@ export default function ArticleSection({
                                     removePartFromArticleSectionAction={
                                         configureAction(
                                             actions.removePartFromArticleSection,
-                                            { params: { name: articleSection.name } }
+                                            { params: { articleSectionName: articleSection.name } }
                                         )
                                     }
                                 />
@@ -114,7 +114,7 @@ export default function ArticleSection({
                                     removePartFromArticleSectionAction={
                                         configureAction(
                                             actions.removePartFromArticleSection,
-                                            { params: { name: articleSection.name } }
+                                            { params: { articleSectionName: articleSection.name } }
                                         )
                                     }
                                 />

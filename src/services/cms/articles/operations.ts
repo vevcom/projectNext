@@ -65,7 +65,10 @@ export const articleOperations = {
             })
             if (!article) {
                 logger.error(`Special article ${params.special} not found - creating it`)
-                return create({ data: { special: params.special, name: `Regenerert spesiell ${params.special}` }, bypassAuth: true })
+                return create({
+                    data: { special: params.special, name: `Regenerert spesiell ${params.special}` },
+                    bypassAuth: true
+                })
             }
             return {
                 ...article,

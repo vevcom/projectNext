@@ -29,18 +29,24 @@ export default function ImageControls({ articleSection, className, updateArticle
     if (!canEdit) return null
 
     const moveLeft = async () => {
-        await updateArticleSectionAction({ params: { name: articleSection.name } }, { data: { position: 'LEFT' } })
+        await updateArticleSectionAction(
+            { params: { articleSectionName: articleSection.name } },
+            { data: { position: 'LEFT' } }
+        )
         refresh()
     }
 
     const moveRight = async () => {
-        await updateArticleSectionAction({ params: { name: articleSection.name } }, { data: { position: 'RIGHT' } })
+        await updateArticleSectionAction(
+            { params: { articleSectionName: articleSection.name } },
+            { data: { position: 'RIGHT' } }
+        )
         refresh()
     }
 
     const increaseSize = async () => {
         await updateArticleSectionAction(
-            { params: { name: articleSection.name } },
+            { params: { articleSectionName: articleSection.name } },
             { data: { imageSize: articleSection.imageSize + imageSizeIncrement } }
         )
         refresh()
@@ -48,7 +54,7 @@ export default function ImageControls({ articleSection, className, updateArticle
 
     const decreaseSize = async () => {
         await updateArticleSectionAction(
-            { params: { name: articleSection.name } },
+            { params: { articleSectionName: articleSection.name } },
             { data: { imageSize: articleSection.imageSize - imageSizeIncrement } }
         )
         refresh()

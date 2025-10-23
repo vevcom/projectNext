@@ -1,4 +1,3 @@
-import React from 'react'
 import Article, { type PropTypes } from '@/cms/Article/Article'
 import { configureAction } from '@/services/configureAction'
 import {
@@ -13,6 +12,7 @@ import {
     updatePublicArticleSectionsAddPartAction,
     updatePublicArticleSectionsRemovePartAction
 } from '@/services/publicArticles/actions'
+import React from 'react'
 
 function PublicArticle(props: Omit<PropTypes, 'actions'>) {
     return (

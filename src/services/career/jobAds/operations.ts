@@ -6,11 +6,11 @@ import { logoIncluder } from '@/services/career/companies/constants'
 import { defineOperation } from '@/services/serviceOperation'
 import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
+import { articleOperations } from '@/cms/articles/operations'
+import { implementUpdateArticleOperations } from '@/cms/articles/implement'
 import { z } from 'zod'
 import { JobType } from '@prisma/client'
 import type { ExpandedJobAd, SimpleJobAd } from './types'
-import { articleOperations } from '@/cms/articles/operations'
-import { implementUpdateArticleOperations } from '@/cms/articles/implement'
 
 const read = defineOperation({
     paramsSchema: z.object({

@@ -5,9 +5,9 @@ import { cmsImageOperations } from '@/cms/images/operations'
 import { cmsParagraphOperations } from '@/cms/paragraphs/operations'
 import { imageOperations } from '@/services/images/operations'
 import { defineOperation } from '@/services/serviceOperation'
-import { z } from 'zod'
 import { articleRealtionsIncluder } from '@/cms/articles/constants'
 import { implementUpdateArticleOperations } from '@/cms/articles/implement'
+import { z } from 'zod'
 
 
 const readAll = defineOperation({

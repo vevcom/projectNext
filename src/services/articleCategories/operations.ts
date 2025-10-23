@@ -1,15 +1,14 @@
 import '@pn-server-only'
 import { articleCategoryAuth } from './auth'
 import { articleCategorySchemas } from './schemas'
-import { defineOperation } from '../serviceOperation'
-import { ServerError } from '../error'
+import { defineOperation } from '@/services/serviceOperation'
+import { ServerError } from '@/services/error'
 import { implementUpdateArticleOperations } from '@/cms/articles/implement'
 import { articleOperations } from '@/cms/articles/operations'
-import user from '@/app/admin/mail/[filter]/[id]/(editComponents)/user'
 import { z } from 'zod'
 import type { ExpandedArticleCategory } from './types'
 import type { Image } from '@prisma/client'
-import type { PrismaPossibleTransaction } from '../serviceOperation'
+import type { PrismaPossibleTransaction } from '@/services/serviceOperation'
 
 export const articleCategoryOperations = {
     create: defineOperation({
@@ -97,7 +96,12 @@ export const articleCategoryOperations = {
                 }
             })
             if (!article) throw new ServerError('NOT FOUND', `Article ${params.articleId} not found`)
-            if (article.articleCategoryId !== params.id) throw new ServerError('BAD PARAMETERS', `Article ${params.articleId} does not belong to category ${params.id}`)
+            if (article.articleCategoryId !== params.id) {
+                throw new ServerError(
+                    'BAD PARAMETERS',
+                    `Article ${params.articleId} does not belong to category ${params.id}`
+                )
+            }
 
             await articleOperations.destroy({ params: { articleId: params.articleId }, prisma })
         }
@@ -210,7 +214,10 @@ export const articleCategoryOperations = {
  * @param category - The category to get cover image for
  * @returns The cover image of the category
  */
-async function getCoverImage(prisma: PrismaPossibleTransaction<false>, category: ExpandedArticleCategory): Promise<Image | null> {
+async function getCoverImage(
+    prisma: PrismaPossibleTransaction<false>,
+    category: ExpandedArticleCategory
+): Promise<Image | null> {
     if (category.articles.length === 0) return null
     const coverImage = await prisma.cmsImage.findUnique({
         where: {

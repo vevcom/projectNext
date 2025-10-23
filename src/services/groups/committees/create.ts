@@ -4,20 +4,20 @@ import { prismaCall } from '@/services/prismaCall'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import { imageOperations } from '@/services/images/operations'
 import { cmsParagraphOperations } from '@/cms/paragraphs/operations'
+import { articleOperations } from '@/cms/articles/operations'
 import { GroupType } from '@prisma/client'
 import type { ExpandedCommittee } from './types'
 import type { CreateCommitteeTypes } from './validation'
-import { createArticle } from '@/services/cms/articles/create'
 
 export async function createCommittee(rawdata: CreateCommitteeTypes['Detailed']): Promise<ExpandedCommittee> {
     const { name, shortName, logoImageId } = createCommitteeValidation.detailedValidate(rawdata)
     let defaultLogoImageId: number
     if (!logoImageId) {
         defaultLogoImageId = await imageOperations.readSpecial({
-            params: { special: 'DAFAULT_COMMITTEE_LOGO' }, //TODO: pass session
+            params: { special: 'DAFAULT_COMMITTEE_LOGO' },
         }).then(res => res.id)
     }
-    const article = await createArticle({})
+    const article = await articleOperations.create({ data: {}, bypassAuth: true })
 
     const paragraph = await cmsParagraphOperations.create({
         data: { name: `Paragraph for ${name}` },

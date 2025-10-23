@@ -1,9 +1,9 @@
 import '@pn-server-only'
 import { publicArticleAuth } from './auth'
 import { articleOperations } from '@/services/cms/articles/operations'
-import type { SpecialCmsArticle } from '@prisma/client'
 import { implementUpdateArticleOperations } from '@/cms/articles/implement'
 import { z } from 'zod'
+import type { SpecialCmsArticle } from '@prisma/client'
 
 const publicSpecialArticles: SpecialCmsArticle[] = [
     'NEW_STUDENT_PAGE', 'REPORT_PAGE'

@@ -32,7 +32,7 @@ export default function CmsLinkEditor({ cmsLink, updateCmsLinkAction }: PropType
                 action={
                     configureAction(
                         updateCmsLinkAction,
-                        { params: { id: cmsLink.id } }
+                        { params: { linkId: cmsLink.id } }
                     )
                 }
                 submitText="Endre Lenke"

@@ -72,7 +72,7 @@ export default function ChangeImage({ currentImage, cmsImageId, currentImageSize
                             action={
                                 configureAction(
                                     updateCmsImageAction,
-                                    { params: { id: cmsImageId } }
+                                    { params: { cmsImageId } }
                                 ).bind(null, { data: { imageSize: changeToSize } })
                             }
                             submitText={`change to ${changeToSize.toLocaleLowerCase()}`}

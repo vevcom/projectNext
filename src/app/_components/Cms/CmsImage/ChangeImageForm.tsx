@@ -23,7 +23,7 @@ export default function ChangeImageForm({ cmsImageId, className, updateCmsImageA
             action={
                 configureAction(
                     updateCmsImageAction,
-                    { params: { id: cmsImageId } }
+                    { params: { cmsImageId } }
                 ).bind(null, { data: { imageId: selection?.selectedImage?.id } })
             }
             submitText="change"
