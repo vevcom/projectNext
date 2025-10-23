@@ -133,10 +133,6 @@ export type ServiceOperationImplementationConfigInternalCall<
     object
  : {
     operationImplementationFields: OperationImplementationFields
-}) & (OperationImplementationFields extends undefined ?
-    object
- : {
-    operationImplementationFields: OperationImplementationFields
 })
 
 export type ServiceOperationImplementationConfig<
