@@ -20,10 +20,9 @@ export default function AddSection({
 }: PropTypes) {
     const { refresh } = useRouter()
     const canEdit = useEditing({}) //TODO: check visibility of article for user and pass it to useEditing
-    if (!canEdit) return null
 
     const handleAdd = async (includePart: ArticleSectionPart) => {
-        addSectionToArticleAction({
+        await addSectionToArticleAction({
             data: {
                 includeParts: {
                     [includePart]: true,
@@ -32,6 +31,7 @@ export default function AddSection({
         })
         refresh()
     }
+    if (!canEdit) return null
     return (
         <span className={styles.AddSection}>
             {
