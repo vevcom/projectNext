@@ -189,7 +189,7 @@ export const articleSectionOperations = {
                 destroyOnEmpty &&
                 !afterDelete.cmsImage &&
                 !afterDelete.cmsParagraph &&
-                !afterDelete.cmsImage
+                !afterDelete.cmsLink
             ) {
                 return await destroy({
                     params: { articleSectionId: articleSection.id },
