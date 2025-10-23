@@ -20,10 +20,10 @@ import {
     updateEventParagraphContentAction
 } from '@/services/events/actions'
 import { configureAction } from '@/services/configureAction'
+import { decodeVevenUriHandleError } from '@/lib/urlEncoding'
 import Link from 'next/link'
 import { faCalendar, faExclamation, faLocationDot, faUsers } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { decodeVevenUriHandleError } from '@/lib/urlEncoding'
 
 type PropTypes = {
     params: Promise<{

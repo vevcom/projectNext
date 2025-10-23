@@ -12,10 +12,10 @@ import { createEventAction, updateEventAction } from '@/services/events/actions'
 import { eventCanBeViewdByOptions } from '@/services/events/constants'
 import { FIELD_IS_PRESENT_VALUE } from '@/lib/fields/constants'
 import { configureAction } from '@/services/configureAction'
+import { formatVevenUri } from '@/lib/urlEncoding'
 import { useState } from 'react'
 import type { Event, EventTag as EventTagT } from '@prisma/client'
 import type { ChangeEvent } from 'react'
-import { formatVevenUri } from '@/lib/urlEncoding'
 
 type PropTypes = {
     event?: Event & { tags: EventTagT[] }

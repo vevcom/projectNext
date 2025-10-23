@@ -14,9 +14,9 @@ import {
     updateInterestGroupCmsLinkAction
 } from '@/services/groups/interestGroups/actions'
 import { interestGroupAuth } from '@/services/groups/interestGroups/auth'
+import { configureAction } from '@/services/configureAction'
 import type { SessionMaybeUser } from '@/auth/session/Session'
 import type { ExpandedInterestGroup } from '@/services/groups/interestGroups/types'
-import { configureAction } from '@/services/configureAction'
 
 type PropTypes = {
     interestGroup: ExpandedInterestGroup

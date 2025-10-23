@@ -1,12 +1,12 @@
 import { committeeAuth } from './auth'
 import { committeeExpandedIncluder, committeeLogoIncluder, membershipIncluder } from './constants'
 import { ServerOnlyAuther } from '@/auth/auther/RequireServer'
-import { articleRealtionsIncluder } from '@/cms/articles/ConfigVars'
 import { cmsImageOperations } from '@/cms/images/operations'
 import { cmsParagraphOperations } from '@/cms/paragraphs/operations'
 import { imageOperations } from '@/services/images/operations'
 import { defineOperation } from '@/services/serviceOperation'
 import { z } from 'zod'
+import { articleRealtionsIncluder } from '@/cms/articles/ConfigVars'
 
 
 const readAll = defineOperation({

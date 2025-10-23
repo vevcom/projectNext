@@ -3,9 +3,9 @@ import { defaultNewsArticleOldCutoff, newsArticleRealtionsIncluder } from './Con
 import { createNewsArticleValidation } from './validation'
 import { prismaCall } from '@/services/prismaCall'
 import { prisma } from '@/prisma/client'
-import { createArticle } from '@/services/cms/articles/create'
 import type { CreateNewsArticleTypes } from './validation'
 import type { ExpandedNewsArticle } from './types'
+import { createArticle } from '@/services/cms/articles/create'
 
 /**
  * A function that creates a news article, it also creates a corresponding article in the CMS to

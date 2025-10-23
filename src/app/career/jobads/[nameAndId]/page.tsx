@@ -9,6 +9,7 @@ import Date from '@/components/Date/Date'
 import { Session } from '@/auth/session/Session'
 import { readJobAdAction } from '@/services/career/jobAds/actions'
 import { jobAdType } from '@/services/career/jobAds/constants'
+import { decodeVevenUriHandleError } from '@/lib/urlEncoding'
 import { notFound } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -19,7 +20,6 @@ import {
     faSuitcase,
     faXmarkCircle
 } from '@fortawesome/free-solid-svg-icons'
-import { decodeVevenUriHandleError } from '@/lib/urlEncoding'
 
 type PropTypes = {
     params: Promise<{

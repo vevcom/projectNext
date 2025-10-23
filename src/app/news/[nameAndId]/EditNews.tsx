@@ -6,10 +6,10 @@ import Textarea from '@/components/UI/Textarea'
 import DateInput from '@/components/UI/DateInput'
 import useEditing from '@/hooks/useEditing'
 import { destroyNewsAction, updateNewsAction } from '@/services/news/actions'
+import { formatVevenUri } from '@/lib/urlEncoding'
 import { useRouter } from 'next/navigation'
 import type { ExpandedNewsArticle } from '@/services/news/types'
 import type { ReactNode } from 'react'
-import { formatVevenUri } from '@/lib/urlEncoding'
 
 type PropTypes = {
     news: ExpandedNewsArticle

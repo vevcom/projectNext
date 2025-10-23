@@ -137,7 +137,7 @@ export const interestGroupOperations = {
                 groupId
             })
         },
-        ownedCmsArticleSections: ({ prisma, implementationParams }) =>
+        ownedArticleSections: ({ prisma, implementationParams }) =>
             prisma.interestGroup.findUniqueOrThrow({
                 where: { id: implementationParams.interestGroupId },
                 include: {

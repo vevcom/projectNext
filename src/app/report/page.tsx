@@ -1,7 +1,7 @@
 import styles from './page.module.scss'
 import Article from '@/components/Cms/Article/Article'
-import { readSpecialArticle } from '@/cms/articles/actions'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
+import { readSpecialArticle } from '@/cms/articles/actions'
 
 
 export default async function report() {

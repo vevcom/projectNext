@@ -4,13 +4,13 @@ import { SchoolFilteredSelection, StandardSchoolsConfig } from './ConfigVars'
 import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
 import { prisma } from '@/prisma/client'
-import { createCmsLink } from '@/services/cms/links/create'
 import { cmsParagraphOperations } from '@/cms/paragraphs/operations'
 import { cmsImageOperations } from '@/cms/images/operations'
 import { v4 as uuid } from 'uuid'
 import { StandardSchool } from '@prisma/client'
 import type { SchoolFiltered } from './types'
 import type { CreateSchoolTypes } from './validation'
+import { createCmsLink } from '@/services/cms/links/create'
 
 export async function createSchool(rawdata: CreateSchoolTypes['Detailed']): Promise<SchoolFiltered> {
     const data = createSchoolValidation.detailedValidate(rawdata)

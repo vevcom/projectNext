@@ -1,14 +1,14 @@
-import { z } from "zod";
-import { implementUpdateArticleSectionOperations } from "../articleSections/implement";
-import { ArgsAuthGetterAndOwnershipCheck } from "@/services/serviceOperation";
-import { AutherResult } from "@/auth/auther/Auther";
-import { articleSchemas } from "./schemas";
-import { Prisma } from "@prisma/client";
-import { articleOperations } from "./operations";
-import { cmsImageOperations } from "../images/operations";
+import { articleOperations } from './operations'
+import { implementUpdateArticleSectionOperations } from '@/cms/articleSections/implement'
+import { cmsImageOperations } from '@/cms/images/operations'
+import type { ArgsAuthGetterAndOwnershipCheck, PrismaPossibleTransaction } from '@/services/serviceOperation'
+import type { AutherResult } from '@/auth/auther/Auther'
+import type { Prisma } from '@prisma/client'
+import type { articleSchemas } from './schemas'
+import type { z } from 'zod'
 
 type ParamsSchema = typeof articleSchemas.params
-type OwnedArticleSections = Prisma.ArticleGetPayload<{
+type OwnedArticles = Prisma.ArticleGetPayload<{
     include: {
         coverImage: true,
         articleSections: {
@@ -24,43 +24,68 @@ type OwnedArticleSections = Prisma.ArticleGetPayload<{
  * This utility implements all the needed update operations for an article section and
  * the assosiated cms: CmsLink, CmsParagraph, CmsImage
  */
-export function implementUpdateArticleSectionOperations<
-    ImplementationParamsSchema extends z.ZodTypeAny
+export function implementUpdateArticleOperations<
+    const ImplementationParamsSchema extends z.ZodTypeAny
 >({
     implementationParamsSchema,
     authorizer,
-    ownedCmsArticleSections,
-    destroyOnEmpty
+    ownedArticles,
 }: {
     implementationParamsSchema: ImplementationParamsSchema,
     authorizer: (
-        args: Omit<ArgsAuthGetterAndOwnershipCheck<false, ParamsSchema, undefined, ImplementationParamsSchema>, 'data'>
+        args: {
+            prisma: PrismaPossibleTransaction<false>,
+            implementationParams: z.infer<ImplementationParamsSchema>
+        }
     ) => AutherResult | Promise<AutherResult>,
-    ownedCmsArticleSections: (
-        args: Omit<ArgsAuthGetterAndOwnershipCheck<false, ParamsSchema, undefined, ImplementationParamsSchema>, 'data'>
-    ) => Promise<OwnedArticleSections[]>
+    ownedArticles: (
+        args: {
+            prisma: PrismaPossibleTransaction<false>,
+            implementationParams: z.infer<ImplementationParamsSchema>
+        }
+    ) => Promise<OwnedArticles[]>
     destroyOnEmpty: boolean
 }) {
+    const ownershipCheckArticle = async (
+        args: Omit<ArgsAuthGetterAndOwnershipCheck<false, ParamsSchema, undefined, ImplementationParamsSchema>, 'data'>
+    ) => {
+        const ownedArticleIds = (await ownedArticles(args)).map(article => article.id)
+        return ownedArticleIds.includes(args.params.articleId)
+    }
+
     return {
         update: articleOperations.update.implement({
             implementationParamsSchema,
             authorizer,
-            ownershipCheck: () => true
+            ownershipCheck: ownershipCheckArticle
         }),
         addSection: articleOperations.addSection.implement({
             implementationParamsSchema,
             authorizer,
-            ownershipCheck: () => true
+            ownershipCheck: ownershipCheckArticle
         }),
         reorderSections: articleOperations.reorderSections.implement({
             implementationParamsSchema,
             authorizer,
-            ownershipCheck: () => true
+            ownershipCheck: ownershipCheckArticle
         }),
         updateCoverImage: cmsImageOperations.update.implement({
             implementationParamsSchema,
             authorizer,
-            ownershipCheck: () => true
+            ownershipCheck: async (args) => {
+                const coverCmsImagesIds = (await ownedArticles(args)).map(article => article.coverImage.id)
+                return coverCmsImagesIds.includes(args.params.cmsImageId)
+            }
+        }),
+        articleSections: implementUpdateArticleSectionOperations({
+            implementationParamsSchema,
+            authorizer,
+            ownedArticleSections: async (args) => {
+                const ownedArticlesComputed = await ownedArticles(args)
+                const ownedArticleSections = ownedArticlesComputed.flatMap(article => article.articleSections)
+                return ownedArticleSections
+            },
+            destroyOnEmpty: true,
         })
     } as const
 }

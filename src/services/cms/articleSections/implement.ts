@@ -26,7 +26,7 @@ export function implementUpdateArticleSectionOperations<
 >({
     implementationParamsSchema,
     authorizer,
-    ownedCmsArticleSections,
+    ownedArticleSections,
     destroyOnEmpty
 }: {
     implementationParamsSchema: ImplementationParamsSchema,
@@ -36,7 +36,7 @@ export function implementUpdateArticleSectionOperations<
             implementationParams: z.infer<ImplementationParamsSchema>
         }
     ) => AutherResult | Promise<AutherResult>,
-    ownedCmsArticleSections: (
+    ownedArticleSections: (
         args: {
             prisma: PrismaPossibleTransaction<false>,
             implementationParams: z.infer<ImplementationParamsSchema>
@@ -47,9 +47,9 @@ export function implementUpdateArticleSectionOperations<
     const ownershipCheckArticleSection = async (
         args: Omit<ArgsAuthGetterAndOwnershipCheck<false, ParamsSchema, undefined, ImplementationParamsSchema>, 'data'>
     ) => {
-        const ownedArticleSections = await ownedCmsArticleSections(args)
-        const ownedIds = ownedArticleSections.map(section => section.id)
-        const ownedNames = ownedArticleSections.map(section => section.name)
+        const ownedArticleSectionsComputed = await ownedArticleSections(args)
+        const ownedIds = ownedArticleSectionsComputed.map(section => section.id)
+        const ownedNames = ownedArticleSectionsComputed.map(section => section.name)
         if (args.params.articleSectionId) return ownedIds.includes(args.params.articleSectionId)
         if (args.params.articleSectionName) return ownedNames.includes(args.params.articleSectionName)
         return false //This should never happen
@@ -61,11 +61,12 @@ export function implementUpdateArticleSectionOperations<
             implementationParams: z.infer<ImplementationParamsSchema>
         }
     ) => {
-        const ownedArticleSections = await ownedCmsArticleSections(args)
+        const ownedArticleSectionsComputed = await ownedArticleSections(args)
         return {
-            paragraphIds: ownedArticleSections.map(section => section.cmsParagraph?.id).filter(id => id !== undefined),
-            cmsImageIds: ownedArticleSections.map(section => section.cmsImage?.id).filter(id => id !== undefined),
-            linkIds: ownedArticleSections.map(section => section.cmsLink?.id).filter(id => id !== undefined),
+            paragraphIds: ownedArticleSectionsComputed.map(
+                section => section.cmsParagraph?.id).filter(id => id !== undefined),
+            cmsImageIds: ownedArticleSectionsComputed.map(section => section.cmsImage?.id).filter(id => id !== undefined),
+            linkIds: ownedArticleSectionsComputed.map(section => section.cmsLink?.id).filter(id => id !== undefined),
         }
     }
 
