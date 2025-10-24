@@ -1,10 +1,8 @@
 import '@pn-server-only'
-import { specialCollectionsSpecialVisibilityMap } from './ConfigVars'
 import { prisma } from '@/prisma/client'
 import logger from '@/lib/logger'
 import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
-import { readSpecialVisibility } from '@/services/visibility/read'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { imageOperations } from '@/services/images/operations'
 import type { SpecialCollection, ImageCollection, Image } from '@prisma/client'
@@ -13,7 +11,6 @@ import type {
     ImageCollectionCursor,
     ImageCollectionPageReturn
 } from '@/services/images/collections/types'
-import type { VisibilityFilter } from '@/auth/getVisibilityFilter'
 import type { ReadPageInput } from '@/lib/paging/types'
 
 
@@ -46,10 +43,8 @@ export async function readImageCollection(
  */
 export async function readImageCollectionsPage<const PageSize extends number>(
     { page }: ReadPageInput<PageSize, ImageCollectionCursor>,
-    visibilityFilter: VisibilityFilter
 ): Promise<ImageCollectionPageReturn[]> {
     const collections = await prismaCall(() => prisma.imageCollection.findMany({
-        where: visibilityFilter,
         include: {
             coverImage: true,
             images: {
@@ -100,18 +95,11 @@ export async function readSpecialImageCollection(special: SpecialCollection): Pr
     }))
     if (!collection) {
         logger.warn(`Special collection ${special} did not exist, creating it`)
-        const permissionLevels = specialCollectionsSpecialVisibilityMap[special]
-        const visability = await readSpecialVisibility(permissionLevels.specialVisibility)
 
         const newCollection = await prismaCall(() => prisma.imageCollection.create({
             data: {
                 name: special,
                 special,
-                visibility: {
-                    connect: {
-                        id: visability.id
-                    }
-                }
             }
         }))
         return newCollection

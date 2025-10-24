@@ -14,12 +14,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCog, faEye, faUpload } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/navigation'
 import { useContext, useState } from 'react'
-import type { VisibilityCollapsed } from '@/services/visibility/types'
+import type { VisibilityMatrix } from '@/services/visibility/types'
 import type { ExpandedImageCollection } from '@/services/images/collections/types'
 
 type PropTypes = {
     collection: ExpandedImageCollection
-    visibility: VisibilityCollapsed
+    visibility: VisibilityMatrix
 }
 
 export default function CollectionAdmin({ collection, visibility }: PropTypes) {
@@ -112,7 +112,7 @@ export default function CollectionAdmin({ collection, visibility }: PropTypes) {
                     <FontAwesomeIcon icon={faEye} />
                 }>
                     <div className={styles.visibility}>
-                        <VisibilityAdmin visibilityId={visibility.id} />
+                        <VisibilityAdmin visibility={visibility} />
                     </div>
                 </PopUp>
             </div>
