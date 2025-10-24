@@ -39,6 +39,9 @@ export const RequireUserFieldOrPermission = AutherFactory<
     }
     return {
         success: false,
-        session
+        session,
+        errorMessage: `
+            Du har ikke tilgang til denne ressursen
+        `
     }
 })

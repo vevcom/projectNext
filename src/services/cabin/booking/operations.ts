@@ -11,6 +11,7 @@ import { ServerError } from '@/services/error'
 import { cabinReleasePeriodOperations } from '@/services/cabin/releasePeriod/operations'
 import { sendSystemMail } from '@/services/notifications/email/send'
 import { notificationOperations } from '@/services/notifications/operations'
+import { cmsParagraphOperations } from '@/cms/paragraphs/operations'
 import { z } from 'zod'
 import { BookingType } from '@prisma/client'
 import type { CabinProductExtended } from '@/services/cabin/product/constants'
@@ -361,5 +362,26 @@ export const cabinBookingOperations = {
             where: params,
             include: cabinBookingIncluder,
         })
+    }),
+
+    readSpecialCmsParagraphCabinContract: cmsParagraphOperations.readSpecial.implement({
+        authorizer: () => cabinBookingAuth
+            .readSpecialCmsParagraphCabinContract
+            .dynamicFields({}),
+        ownershipCheck: ({ params }) => params.special === 'CABIN_CONTRACT'
+    }),
+
+    updateSpecialCmsParagraphContentCabinContract: cmsParagraphOperations.updateContent.implement({
+        authorizer: () => cabinBookingAuth
+            .updateSpecialCmsParagraphContentCabinContract
+            .dynamicFields({}),
+        ownershipCheck: async ({ params }) =>
+            await cmsParagraphOperations.isSpecial({
+                params: {
+                    paragraphId: params.paragraphId,
+                    special: ['CABIN_CONTRACT']
+                },
+                bypassAuth: true
+            })
     })
 }

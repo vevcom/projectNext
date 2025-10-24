@@ -1,10 +1,10 @@
 import styles from './page.module.scss'
 import CommitteeCard from '@/components/CommitteeCard/CommitteeCard'
-import { readCommitteesAction } from '@/services/groups/committees/actions'
+import { readAllCommitteesAction } from '@/services/groups/committees/actions'
 import { readSpecialImageAction } from '@/services/images/actions'
 
 export default async function Committees() {
-    const res = await readCommitteesAction()
+    const res = await readAllCommitteesAction()
     if (!res.success) throw new Error(`Kunne ikke hente komiteer - ${res.errorCode}`)
     const committees = res.data
 

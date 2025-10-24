@@ -14,6 +14,7 @@ export const RequireUserIdOrPermission = AutherFactory<
     }
     return {
         success: session.user !== null && session.user.id === dynamicFields.userId,
-        session
+        session,
+        errorMessage: 'Du har ikke tilgang til denne ressursen'
     }
 })

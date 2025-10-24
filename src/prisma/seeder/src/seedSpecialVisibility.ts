@@ -7,7 +7,8 @@ const SpecialVisibilityConfig = {
     },
     PUBLIC: {
         regularLevel: null,
-        adminLevel: 'CMS_ADMIN'
+        adminLevel: 'FRONTPAGE_ADMIN' // just changed this to make ts happy
+        // bypass and purposes will be removed
     },
     COMMITTEE: {
         regularLevel: 'COMMITTEE_READ',

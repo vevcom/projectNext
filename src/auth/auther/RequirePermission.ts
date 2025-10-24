@@ -8,4 +8,5 @@ export const RequirePermission = AutherFactory<
 >(({ session, staticFields }) => ({
     success: session.permissions.includes(staticFields.permission),
     session,
+    errorMessage: `Du trenger tillatelse '${staticFields.permission}' for å få tilgang`
 }))

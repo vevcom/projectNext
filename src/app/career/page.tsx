@@ -6,8 +6,9 @@ import Image from '@/components/Image/Image'
 import CmsLink from '@/components/Cms/CmsLink/CmsLink'
 import { QueryParams } from '@/lib/queryParams/queryParams'
 import { readSpecialImageAction } from '@/services/images/actions'
-import { readSpecialCmsLinkAction } from '@/services/cms/links/actions'
 import { readSpecialEventTagAction } from '@/services/events/tags/actions'
+import { readSpecialCmsParagraphCareerInfo, updateSpecialCmsParagraphContentCareerInfo } from '@/services/career/actions'
+import { readCompanySpecialCmsLinkAction, updateCompanySpecialCmsLinkAction } from '@/services/career/companies/actions'
 import Link from 'next/link'
 
 export default async function CareerLandingPage() {
@@ -15,7 +16,7 @@ export default async function CareerLandingPage() {
     const jobAdImageRes = await readSpecialImageAction({ params: { special: 'MACHINE' } })
     const eventImageRes = await readSpecialImageAction({ params: { special: 'FAIR' } })
     const comanyImageRes = await readSpecialImageAction({ params: { special: 'REALFAGSBYGGET' } })
-    const conactorCmsLinkRes = await readSpecialCmsLinkAction({ params: { special: 'CAREER_LINK_TO_CONTACTOR' } })
+    const conactorCmsLinkRes = await readCompanySpecialCmsLinkAction({ params: { special: 'CAREER_LINK_TO_CONTACTOR' } })
     const companyPresentationEventTagRes = await readSpecialEventTagAction({ params: { special: 'COMPANY_PRESENTATION' } })
 
     const jobAdImage = jobAdImageRes.success ? jobAdImageRes.data : null
@@ -27,10 +28,18 @@ export default async function CareerLandingPage() {
     return (
         <PageWrapper title={session.user ? 'Karriere' : 'For bedrifter'} headerItem={
             contactorCmsLink ? <CmsLink
-                className={styles.conactorLink} cmsLink={contactorCmsLink} /> : <></>
+                className={styles.conactorLink}
+                cmsLink={contactorCmsLink}
+                updateCmsLinkAction={updateCompanySpecialCmsLinkAction}
+            /> : <></>
         }>
             <div className={styles.wrapper}>
-                <SpecialCmsParagraph className={styles.info} special="CAREER_INFO" />
+                <SpecialCmsParagraph
+                    className={styles.info}
+                    special="CAREER_INFO"
+                    readSpecialCmsParagraphAction={readSpecialCmsParagraphCareerInfo}
+                    updateCmsParagraphAction={updateSpecialCmsParagraphContentCareerInfo}
+                />
                 <span className={styles.links}>
                     <Link href="/career/jobads">
                         { jobAdImage ? <Image

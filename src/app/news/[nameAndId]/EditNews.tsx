@@ -6,10 +6,11 @@ import Textarea from '@/components/UI/Textarea'
 import DateInput from '@/components/UI/DateInput'
 import useEditing from '@/hooks/useEditing'
 import { destroyNewsAction, updateNewsAction } from '@/services/news/actions'
+import { formatVevenUri } from '@/lib/urlEncoding'
+import { configureAction } from '@/services/configureAction'
 import { useRouter } from 'next/navigation'
 import type { ExpandedNewsArticle } from '@/services/news/types'
 import type { ReactNode } from 'react'
-import { formatVevenUri } from '@/lib/urlEncoding'
 
 type PropTypes = {
     news: ExpandedNewsArticle
@@ -28,7 +29,10 @@ export default function EditNews({ news, children }: PropTypes) {
 
     // TODO: VISINILITY ADMIN
 
-    const updateAction = updateNewsAction.bind(null, news.id)
+    const updateAction = configureAction(
+        updateNewsAction,
+        { params: { id: news.id } }
+    )
 
     return (
         <div className={styles.EditNews}>
@@ -53,7 +57,12 @@ export default function EditNews({ news, children }: PropTypes) {
                     <Textarea defaultValue={news.description || ''} label="beskrivelse" name="description" />
                 </Form>
                 <Form
-                    action={destroyNewsAction.bind(null, news.id)}
+                    action={
+                        configureAction(
+                            destroyNewsAction,
+                            { params: { id: news.id } }
+                        )
+                    }
                     successCallback={() => {
                         push('/news')
                         refresh()

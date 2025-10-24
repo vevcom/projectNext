@@ -4,13 +4,14 @@ import EditCategory from './EditCategory'
 import useScroll from '@/hooks/useScroll'
 import useOnNavigation from '@/hooks/useOnNavigation'
 import useViewPort from '@/hooks/useViewPort'
-import { destroyArticleAction } from '@/services/cms/articles/actions'
+import { removeArticleFromCategoryAction } from '@/services/articleCategories/actions'
+import { formatVevenUri } from '@/lib/urlEncoding'
 import React, { useRef, useState } from 'react'
 import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronUp, faX } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/navigation'
-import type { ExpandedArticleCategory } from '@/cms/articleCategories/types'
+import type { ExpandedArticleCategory } from '@/services/articleCategories/types'
 
 type PropTypes = {
     category: ExpandedArticleCategory
@@ -78,7 +79,7 @@ function MainListContent({ category }: { category: ExpandedArticleCategory }) {
     const { push, refresh } = useRouter()
 
     const handleDestroy = async (id: number) => {
-        const res = await destroyArticleAction(id)
+        const res = await removeArticleFromCategoryAction({ params: { id: category.id, articleId: id } })
         if (!res.success) throw new Error('could not destroy article')
         push(`/articles/${category.name}`)
         refresh()
@@ -89,7 +90,7 @@ function MainListContent({ category }: { category: ExpandedArticleCategory }) {
             {
                 category.articles.map(article => (
                     <li key={article.id}>
-                        <Link href={`/articles/${category.name}/${article.name}`}>
+                        <Link href={`/articles/${category.name}/${formatVevenUri(article.name, article.id)}`}>
                             {article.name.toUpperCase()}
                         </Link>
                         {

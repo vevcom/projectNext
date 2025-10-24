@@ -6,8 +6,8 @@ import type { Permission, VisibilityPurpose, SpecialVisibilityPurpose } from '@p
  */
 export const BypassPermissions = {
     IMAGE: 'IMAGE_ADMIN',
-    NEWS_ARTICLE: 'CMS_ADMIN',
-    ARTICLE_CATEGORY: 'CMS_ADMIN',
+    NEWS_ARTICLE: 'FRONTPAGE_ADMIN', // just changed this to make ts happy - bypass and purposes will be removed
+    ARTICLE_CATEGORY: 'FRONTPAGE_ADMIN', // just changed this to make ts happy - bypass and purposes will be removed
     EVENT: 'EVENT_ADMIN',
     SPECIAL: null // null means there is no bypass permission
 } as const satisfies { [key in VisibilityPurpose]: Permission | null }
@@ -33,7 +33,7 @@ export const specialVisibilityConfig = {
     },
     PUBLIC: {
         regularLevel: null,
-        adminLevel: 'CMS_ADMIN'
+        adminLevel: 'FRONTPAGE_ADMIN' // just changed this to make ts happy
     },
     COMMITTEE: {
         regularLevel: 'COMMITTEE_READ',
