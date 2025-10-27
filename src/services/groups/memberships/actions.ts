@@ -1,12 +1,13 @@
 'use server'
 
-import { createActionError, safeServerCall } from '@/services/actionError'
-import { getUser } from '@/auth/session/getUser'
+import { safeServerCall } from '@/services/actionError'
 import { createMembershipsForGroup } from '@/services/groups/memberships/create'
 import { destoryMembershipOfUser } from '@/services/groups/memberships/destroy'
 import { updateMembership } from '@/services/groups/memberships/update'
 import type { ExpandedMembership } from '@/services/groups/memberships/types'
 import type { ActionReturn } from '@/services/actionTypes'
+
+// TODO: All the following actions should be authed on RequirePermissionOrGroupAdmin when refactored.
 
 /**
  * WARNING: This action will lead to error if used with group types not in CanEasalyManageMembership
@@ -21,11 +22,6 @@ export async function createMembershipsForGroupAction({
         admin: boolean
     }[]
 }): Promise<ActionReturn<void>> {
-    const { authorized, status } = await getUser({
-        requiredPermissions: [['GROUP_ADMIN']]
-    })
-    if (!authorized) return createActionError(status)
-
     return safeServerCall(() => createMembershipsForGroup(groupId, users))
 }
 
@@ -43,8 +39,6 @@ export async function destroyMembership({
     userId: number,
     orderArg: number
 }): Promise<ActionReturn<ExpandedMembership>> {
-    //TODO: make function to check that. user is admin of group
-
     return await safeServerCall(() => destoryMembershipOfUser({
         groupId,
         userId,
@@ -56,7 +50,6 @@ export async function updateMembershipAdminAcion(membership: {
     groupId: number
     userId: number
 }, admin: boolean): Promise<ActionReturn<ExpandedMembership>> {
-    //TODO: make function to check that user is admin of group
     return await safeServerCall(() => updateMembership({
         ...membership,
         orderArg: 'ACTIVE'
@@ -67,7 +60,6 @@ export async function updateMembershipActiveAction(membership: {
     groupId: number
     userId: number
 }, active: boolean): Promise<ActionReturn<ExpandedMembership>> {
-    //TODO: make function to check that user is admin of group
     return await safeServerCall(() => updateMembership({
         ...membership,
         orderArg: 'ACTIVE'
