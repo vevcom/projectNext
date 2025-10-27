@@ -100,6 +100,7 @@ export async function readSpecialImageCollection(special: SpecialCollection): Pr
         //Note: these visibilities do not actually do anything for special collections,
         //but the schema requires them to exist - believe this implementation to be better than for
         //regular collections to maybe be in invalid state with no visibility.
+        // TODO: use create method.
         const visibilityAdmin = await visibilityOperations.create({ bypassAuth: true })
         const visibilityRead = await visibilityOperations.create({ bypassAuth: false })
 
@@ -107,8 +108,16 @@ export async function readSpecialImageCollection(special: SpecialCollection): Pr
             data: {
                 name: special,
                 special,
-                visibilityAdminId: visibilityAdmin.id,
-                visibilityReadId: visibilityRead.id
+                visibilityRead: {
+                    connect: {
+                        id: visibilityRead.id
+                    }
+                },
+                visibilityAdmin: {
+                    connect: {
+                        id: visibilityAdmin.id
+                    }
+                }
             }
         }))
         return newCollection
