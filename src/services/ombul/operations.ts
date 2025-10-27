@@ -1,8 +1,15 @@
 import '@pn-server-only'
+import { z } from 'zod'
 import { ombulAuth } from './auth'
 import { defineOperation } from '@/services/serviceOperation'
 import { cmsImageOperations } from '@/cms/images/operations'
-import { z } from 'zod'
+import { ServerError } from '@/services/error'
+import { destroyFile } from '@/services/store/destroyFile'
+import { ombulSchemas } from './schemas'
+import { createFile } from '@/services/store/createFile'
+import { readSpecialImageCollection } from '@/services/images/collections/read'
+import { imageOperations } from '@/services/images/operations'
+import { notificationOperations } from '@/services/notifications/operations'
 
 const read = defineOperation({
     authorizer: () => ombulAuth.read.dynamicFields({}),
@@ -81,9 +88,188 @@ const updateCmsCoverImage = cmsImageOperations.update.implement({
     }
 })
 
+/**
+ * A function to destroy an ombul, also deletes the file from the store, and the cmsImage on cascade
+ * @param id - The id of the ombul to destroy
+ * @returns
+ */
+const destroy = defineOperation({
+    authorizer: () => ombulAuth.destroy.dynamicFields({}),
+    paramsSchema: z.object({
+        id: z.number()
+    }),
+    operation: async ({ params, prisma }) => {
+        const ombul = await prisma.ombul.findUnique({
+            where: {
+                id: params.id
+            },
+            include: {
+                coverImage: {
+                    include: {
+                        image: true
+                    }
+                }
+            }
+        })
+        if (!ombul) throw new ServerError('NOT FOUND', 'Ombul ikke funnet.')
+
+        await destroyFile('ombul', ombul.fsLocation)
+
+        await prisma.ombul.delete({
+            where: {
+                id: params.id
+            }
+        })
+
+        return ombul
+    }
+})
+
+const create = defineOperation({
+    authorizer: () => ombulAuth.create.dynamicFields({}),
+    dataSchema: ombulSchemas.create,
+    operation: async ({ data, prisma }) => {
+        // Get the latest issue number if not provided
+        const { ombulCoverImage, ombulFile, year, issueNumber: givenIssueNumber, ...restOfConf } = data
+
+        let latestIssueNumber = 1
+        if (!givenIssueNumber) {
+            const ombul = await prisma.ombul.findFirst({
+                where: {
+                    year
+                },
+                orderBy: {
+                    issueNumber: 'desc'
+                }
+            })
+            if (ombul) {
+                latestIssueNumber = ombul.issueNumber + 1
+            }
+        }
+        const issueNumber = givenIssueNumber || latestIssueNumber
+
+        //upload the file to the store volume
+        const ret = await createFile(ombulFile, 'ombul', ['pdf'])
+        const fsLocation = ret.fsLocation
+
+        // create coverimage
+        const ombulCoverCollection = await readSpecialImageCollection('OMBULCOVERS')
+        const coverImage = await imageOperations.create({
+            params: {
+                collectionId: ombulCoverCollection.id,
+            },
+            data: {
+                name: fsLocation,
+                alt: `cover of ${restOfConf.name}`,
+                file: ombulCoverImage,
+            },
+        })
+
+        const cmsCoverImage = await cmsImageOperations.create({
+            data: { imageId: coverImage.id },
+            bypassAuth: true
+        })
+
+        const ombul = await prisma.ombul.create({
+            data: {
+                ...restOfConf,
+                year,
+                issueNumber,
+                coverImage: {
+                    connect: {
+                        id: cmsCoverImage.id
+                    }
+                },
+                fsLocation,
+            }
+        })
+
+        notificationOperations.createSpecial({
+            params: {
+                special: 'NEW_OMBUL',
+            },
+            data: {
+                title: 'Ny ombul',
+                message: `Ny ombul er ute! ${ombul.name}`,
+            },
+            bypassAuth: true,
+        })
+
+        return ombul
+    }
+})
+
+const update = defineOperation({
+    authorizer: () => ombulAuth.update.dynamicFields({}),
+    dataSchema: ombulSchemas.update,
+    paramsSchema: z.object({
+        id: z.number()
+    }),
+    operation: ({ data, prisma, params }) =>
+        prisma.ombul.update({
+            where: {
+                id: params.id
+            },
+            data,
+            include: {
+                coverImage: {
+                    include: {
+                        image: true
+                    }
+                }
+            }
+        })
+})
+
+const updateFile = defineOperation({
+    authorizer: () => ombulAuth.updateFile.dynamicFields({}),
+    dataSchema: ombulSchemas.updateFile,
+    paramsSchema: z.object({
+        id: z.number()
+    }),
+    operation: async ({ data, prisma, params }) => {
+        const ret = await createFile(data.ombulFile, 'ombul', ['pdf'])
+        const fsLocation = ret.fsLocation
+
+        const ombul = await prisma.ombul.findUnique({
+            where: {
+                id: params.id
+            }
+        })
+        if (!ombul) throw new ServerError('NOT FOUND', 'Ombul ikke funnet')
+
+        const oldFsLocation = ombul.fsLocation
+
+        const ombulUpdated = await prisma.ombul.update({
+            where: {
+                id: params.id
+            },
+            data: {
+                fsLocation
+            },
+            include: {
+                coverImage: {
+                    include: {
+                        image: true
+                    }
+                }
+            }
+        })
+
+        //delete the old file
+        await destroyFile('ombul', oldFsLocation)
+
+        return ombulUpdated
+    }
+})
+
 export const ombulOperations = {
     read,
     readAll,
     readLatest,
-    updateCmsCoverImage
+    updateCmsCoverImage,
+    destroy,
+    create,
+    update,
+    updateFile
 } as const
