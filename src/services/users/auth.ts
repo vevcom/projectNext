@@ -12,7 +12,6 @@ export const userAuth = {
     readPage: RequirePermission.staticFields({ permission: 'USERS_READ' }),
     create: RequirePermission.staticFields({ permission: 'USERS_CREATE' }),
     connectStudentCard: RequireUser.staticFields({}),
-    registerStudentCardInQueue: RequireUserIdOrPermission.staticFields({ permission: 'USERS_CONNECT_STUDENT_CARD' }),
     registerNewEmail: RequireUserIdOrPermission.staticFields({ permission: 'USERS_UPDATE' }),
     updatePassword: RequireUserIdOrPermission.staticFields({ permission: 'USERS_UPDATE' }),
     update: RequirePermission.staticFields({ permission: 'USERS_UPDATE' }),
