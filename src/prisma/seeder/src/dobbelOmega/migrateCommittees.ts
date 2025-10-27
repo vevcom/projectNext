@@ -59,13 +59,13 @@ export default async function migrateCommittees(
     // })).order
 
     await Promise.all(committees.map(async committee => {
-        const committeeParagraph = await readCommitteParagraph(`${committee.shortName}_p.md`)
-        const committeArticle = await readCommitteArticle(`${committee.shortName}_a.md`)
+        const committeeParagraph = await readCommitteParagraph(`${committee.shortname}_p.md`)
+        const committeArticle = await readCommitteArticle(`${committee.shortname}_a.md`)
 
         const newCommittee = await pnPrisma.committee.create({
             data: {
                 name: committee.name,
-                shortName: committee.shortName,
+                shortName: committee.shortname,
                 videoLink: committee.applicationVideo,
                 logoImage: {
                     create: {
@@ -85,7 +85,7 @@ export default async function migrateCommittees(
                         name: committee.name,
                         coverImage: {
                             create: {
-                                name: `${committee.shortName}'s bilde`
+                                name: `${committee.shortname}'s bilde`
                             }
                         },
                         articleSections: committeArticle
@@ -102,7 +102,7 @@ export default async function migrateCommittees(
 
         await Promise.all(committee.CommitteeMembers.map(async member => {
             if (member.UserId === null) {
-                console.warn(`${committee.shortName} has a member that is not connected to a user!`)
+                console.warn(`${committee.shortname} has a member that is not connected to a user!`)
                 console.warn(member)
                 return
             }
