@@ -12,6 +12,7 @@ import type {
     ImageCollectionPageReturn
 } from '@/services/images/collections/types'
 import type { ReadPageInput } from '@/lib/paging/types'
+import { visibilityOperations } from '@/services/visibility/operations'
 
 
 /**
@@ -96,10 +97,18 @@ export async function readSpecialImageCollection(special: SpecialCollection): Pr
     if (!collection) {
         logger.warn(`Special collection ${special} did not exist, creating it`)
 
+        //Note: these visibilities do not actually do anything for special collections,
+        //but the schema requires them to exist - believe this implementation to be better than for
+        //regular collections to maybe be in invalid state with no visibility.
+        const visibilityAdmin = await visibilityOperations.create({ bypassAuth: true })
+        const visibilityRead = await visibilityOperations.create({ bypassAuth: false })
+
         const newCollection = await prismaCall(() => prisma.imageCollection.create({
             data: {
                 name: special,
                 special,
+                visibilityAdminId: visibilityAdmin.id,
+                visibilityReadId: visibilityRead.id
             }
         }))
         return newCollection
