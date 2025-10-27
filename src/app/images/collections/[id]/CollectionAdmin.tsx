@@ -7,7 +7,6 @@ import TextInput from '@/components/UI/TextInput'
 import { ImagePagingContext } from '@/contexts/paging/ImagePaging'
 import ImageUploader from '@/components/Image/ImageUploader'
 import useEditing from '@/hooks/useEditing'
-import VisibilityAdmin from '@/components/VisiblityAdmin/VisibilityAdmin'
 import PopUp from '@/components/PopUp/PopUp'
 import Button from '@/components/UI/Button'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -19,16 +18,16 @@ import type { ExpandedImageCollection } from '@/services/images/collections/type
 
 type PropTypes = {
     collection: ExpandedImageCollection
-    visibility: VisibilityMatrix
+    visibilityAdmin: VisibilityMatrix
+    visibilityRead: VisibilityMatrix
 }
 
-export default function CollectionAdmin({ collection, visibility }: PropTypes) {
+export default function CollectionAdmin({ collection, visibilityAdmin, visibilityRead }: PropTypes) {
+    console.log(visibilityAdmin, visibilityRead)
     const { id: collectionId } = collection
     const router = useRouter()
     const pagingContext = useContext(ImagePagingContext)
-    const canEdit = useEditing({
-        requiredVisibility: visibility,
-    })
+    const canEdit = useEditing({}) //TODO: pass in auther
     const [uploadOption, setUploadOption] = useState<'MANY' | 'ONE'>('MANY')
     if (!canEdit) return null
 
@@ -112,7 +111,7 @@ export default function CollectionAdmin({ collection, visibility }: PropTypes) {
                     <FontAwesomeIcon icon={faEye} />
                 }>
                     <div className={styles.visibility}>
-                        <VisibilityAdmin visibility={visibility} />
+                        {/* VisibilityAdmin... */}
                     </div>
                 </PopUp>
             </div>

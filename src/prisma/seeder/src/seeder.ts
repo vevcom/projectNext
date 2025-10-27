@@ -12,7 +12,6 @@ import dobbelOmega from './dobbelOmega/dobbelOmega'
 import seedNotificationChannels from './seedNotificationsChannels'
 import seedDevGroups from './development/seedDevGroups'
 import seedClasses from './seedClasses'
-import SeedSpecialVisibility from './seedSpecialVisibility'
 import seedMail from './seedMail'
 import seedStudyProgramme from './seedStudyProgramme'
 import seedOmegaMembershipGroups from './seedOmegaMembershipGroups'
@@ -37,7 +36,6 @@ export default async function seed(
 
     if (enableLogging) console.log('seeding standard data....')
     await seedOrder(prisma)
-    await SeedSpecialVisibility(prisma)
     await SeedSpecialImageCollections(prisma)
     await seedImages(prisma)
     await seedCms(prisma)
