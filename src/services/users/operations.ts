@@ -587,6 +587,12 @@ export const userOperations = {
                 }
             })
 
+            if (!user.image) {
+                user.image = await imageOperations.readSpecial({
+                    params: { special: 'DEFAULT_PROFILE_IMAGE' },
+                })
+            }
+
             return {
                 balance: 191900,
                 user,
