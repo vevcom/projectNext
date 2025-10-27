@@ -53,6 +53,13 @@ export const userSchemas = {
         imageConsent: true
     }),
 
+    updateProfile: userSchema.partial().pick({
+        allergies: true,
+        sex: true,
+        bio: true,
+        imageConsent: true
+    }),
+
     register: userSchema.pick({
         mobile: true,
         allergies: true,

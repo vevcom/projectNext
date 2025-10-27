@@ -337,6 +337,17 @@ export const userOperations = {
         })
     }),
 
+    updateProfile: defineOperation({
+        paramsSchema: z.object({
+            username: z.string()
+        }),
+        dataSchema: userSchemas.update,
+        authorizer: ({ params }) => userAuth.updateProfile.dynamicFields({ username: params.username }),
+        operation: ({ prisma, data, params }) => prisma.user.update({
+            where: params,
+            data
+        })
+    }),
 
     updatePassword: defineOperation({
         paramsSchema: z.object({

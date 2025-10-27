@@ -6,7 +6,7 @@ import TextInput from '@/components/UI/TextInput'
 import { SelectString } from '@/components/UI/Select'
 import { useState } from 'react'
 import { configureAction } from '@/services/configureAction'
-import { updateUserAction } from '@/services/users/actions'
+import { updateUserProfileAction } from '@/services/users/actions'
 import { sexConfig } from '@/services/users/constants'
 import Textarea from '@/components/UI/Textarea'
 
@@ -21,30 +21,27 @@ export type UserDataType = {
         sex: $Enums.SEX | null,
         firstname:string,
         lastname:string,
-        bio:string
+        bio:string,
+        imageConsent:boolean
     }
 }
 
 
-export default function UserSettingsForm({ userData } : UserDataType) {
+export default function UserProfileSettingsForm({ userData } : UserDataType) {
     const [sexValue, setSexValue] = useState<SEX | undefined>(userData.sex ?? undefined)
     
     const sexOptions = Object.values(SEX).map(sex => ({
         value: sex,
         label: sexConfig[sex].label
     }))
-
     return (
         <Form
-            title="Brukerinnstillinger"
+            title="Profilinnstillinger"
             submitText="Lagre"
-            action={configureAction(updateUserAction, { params: { username: userData.username } })}
+            action={configureAction(updateUserProfileAction, { params: { username: userData.username } })}
             >
-                <TextInput label="Fornavn" name="firstname" defaultValue={userData.firstname || ''} />
-                <TextInput label="Etternavn" name="lastname" defaultValue={userData.lastname || ''} />
-                <TextInput label="Telefonnummer" name="mobile" defaultValue={userData.mobile || ''} />
+                <p>Har du andre brukerinstillinger du ønsker å endre? Kontakt HS på hs@omega.ntnu.no</p>
                 <TextInput label="Allergier / diett" name="allergies" defaultValue={userData.allergies || ''} />
-                <TextInput label="Email" name="email" defaultValue={userData.email || ''} />
                 <SelectString
                             label="Kjønn"
                             name="sex"
@@ -52,7 +49,7 @@ export default function UserSettingsForm({ userData } : UserDataType) {
                             value={sexValue}
                             onChange={(e) => setSexValue(e as SEX)} />
                 <Textarea label="bio" name="bio" defaultValue={userData.bio} />
-                <Checkbox label="Jeg samtykker til å bli tatt bilde av" name="imageConsent" />
+                <Checkbox label="Jeg samtykker til å bli tatt bilde av" name="imageConsent" defaultChecked={userData.imageConsent} />
             </Form>
         );
 }

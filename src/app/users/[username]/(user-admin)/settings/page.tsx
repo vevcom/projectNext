@@ -7,9 +7,8 @@ import { readUserAction, updateUserAction } from '@/services/users/actions'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { SEX } from '@prisma/client'
 import { notFound, redirect } from 'next/navigation'
-import UserSettingsForm from './UserSettingsForm'
+import UserSettingsForm from './UserProfileSettingsForm'
 import { readUserProfileAction } from '@/services/users/actions'
-import { UserDataType } from './UserSettingsForm'
 
 
 export default async function UserSettings({ params }: PropTypes) {
@@ -17,20 +16,11 @@ export default async function UserSettings({ params }: PropTypes) {
     const profileRes = await readUserProfileAction({ params: { username: (await params).username } })
     if (!profileRes.success) return notFound()
     const userDataFull = profileRes.data.user
-    const userData = {
-        username: userDataFull.username,
-        mobile: userDataFull.mobile,
-        allergies: userDataFull.allergies,
-        email: userDataFull.email,
-        sex: userDataFull.sex,
-        firstname: userDataFull.firstname,
-        lastname: userDataFull.lastname,
-        bio: userDataFull.bio
-    }   
 
     return (
         <div>
-            <UserSettingsForm userData={userData} />
+            <UserSettingsForm userData={userDataFull} />
+            {/* TODO: add Email registration form and admin user settings */},.
             <h2>Generelle Instillinger</h2>
             <Image width={300} image={profile.user.image} />
             <RegisterStudentCardButton userId={profile.user.id} />

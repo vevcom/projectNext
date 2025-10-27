@@ -18,6 +18,7 @@ export const userFieldsToExpose = [
     'acceptedTerms',
     'sex',
     'allergies',
+    'imageConsent'
 ] as const satisfies (keyof User)[]
 
 export const userFilterSelection = createSelection([...userFieldsToExpose])
