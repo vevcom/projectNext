@@ -11,16 +11,16 @@ import type { VisibilityMatrix, VisibilityRequirement } from '@/services/visibil
  * @param visibilitySub
  * @param visibilitySuper
  */
-export function isSubVisibility(visibilitySub: VisibilityMatrix, visibilitySuper: VisibilityMatrix) {
-    visibilitySuper.requirements.every(
+export function isSubVisibility(visibilitySub: VisibilityMatrix, visibilitySuper: VisibilityMatrix): boolean {
+    return visibilitySuper.requirements.every(
         superRequirement => visibilitySub.requirements.some(
             subRequirement => isSubRequirement(subRequirement, superRequirement)
         )
     )
 }
 
-function isSubRequirement(requirementSub: VisibilityRequirement, requirementSuper: VisibilityRequirement) {
-    requirementSub.conditions.every(
+function isSubRequirement(requirementSub: VisibilityRequirement, requirementSuper: VisibilityRequirement): boolean {
+    return requirementSub.conditions.every(
         conditionSub => requirementSuper.conditions.some(
             conditionSuper => {
                 if (conditionSub.groupId !== conditionSuper.groupId) return false
