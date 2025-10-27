@@ -2,7 +2,6 @@ import { createSelection } from '@/services/createSelection'
 import type { Prisma, User, SEX } from '@prisma/client'
 
 export const maxNumberOfGroupsInFilter = 7
-export const studentCardRegistrationExpiry = 2 // minutter
 
 // TODO: This needs to be divived into seperate filters, depending on how much information is needed
 export const userFieldsToExpose = [
