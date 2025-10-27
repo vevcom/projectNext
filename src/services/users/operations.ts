@@ -294,7 +294,7 @@ export const userOperations = {
     }),
 
     connectStudentCard: defineOperation({
-        authorizer: () => userAuth.connectStudentCardQR.dynamicFields({}),
+        authorizer: () => userAuth.connectStudentCard.dynamicFields({}),
         paramsSchema: z.object({
             studentCard: z.coerce.number().int().min(0).optional(),
         }),
