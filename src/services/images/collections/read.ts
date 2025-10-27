@@ -5,6 +5,7 @@ import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { imageOperations } from '@/services/images/operations'
+import { visibilityOperations } from '@/services/visibility/operations'
 import type { SpecialCollection, ImageCollection, Image } from '@prisma/client'
 import type {
     ExpandedImageCollection,
@@ -12,7 +13,6 @@ import type {
     ImageCollectionPageReturn
 } from '@/services/images/collections/types'
 import type { ReadPageInput } from '@/lib/paging/types'
-import { visibilityOperations } from '@/services/visibility/operations'
 
 
 /**
