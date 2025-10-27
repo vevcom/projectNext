@@ -1,14 +1,10 @@
 import RegisterStudentCardButton from './RegisterStudentCardButton'
+import UserSettingsForm from './UserProfileSettingsForm'
 import { getProfileForAdmin } from '@/app/users/[username]/(user-admin)/getProfileForAdmin'
 import Image from '@/components/Image/Image'
-import type { PropTypes } from '@/app/users/[username]/page'
-import { configureAction } from '@/services/configureAction'
-import { readUserAction, updateUserAction } from '@/services/users/actions'
-import { unwrapActionReturn } from '@/app/redirectToErrorPage'
-import { SEX } from '@prisma/client'
-import { notFound, redirect } from 'next/navigation'
-import UserSettingsForm from './UserProfileSettingsForm'
 import { readUserProfileAction } from '@/services/users/actions'
+import { notFound } from 'next/navigation'
+import type { PropTypes } from '@/app/users/[username]/page'
 
 
 export default async function UserSettings({ params }: PropTypes) {
