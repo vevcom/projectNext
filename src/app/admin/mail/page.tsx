@@ -1,21 +1,17 @@
-'use server'
-
+'use server' //why is this use server???
 import styles from './page.module.scss'
 import CreateMailAlias from './createMailAliasForm'
 import CreateMailingList from './createMailingListForm'
 import CreateMailaddressExternal from './createMailaddressExternalForm'
 import MailListView from './mailListView'
-import { getUser } from '@/auth/session/getUser'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { readMailAliases } from '@/services/mail/alias/read'
 import { readMailingLists } from '@/services/mail/list/read'
 import { readMailAddressExternal } from '@/services/mail/mailAddressExternal/read'
+import { Session } from '@/auth/session/Session'
 
 export default async function MailSettings() {
-    const { permissions } = await getUser({
-        userRequired: true,
-        shouldRedirect: true,
-    })
+    const { permissions } = await Session.fromNextAuth()
 
     const createMailAlias = permissions.includes('MAILALIAS_CREATE')
     const createMailingList = permissions.includes('MAILINGLIST_CREATE')

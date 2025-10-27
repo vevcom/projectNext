@@ -1,4 +1,4 @@
-'use server'
+'use server' //why is this use server???
 
 import { RedirectType, redirect } from 'next/navigation'
 

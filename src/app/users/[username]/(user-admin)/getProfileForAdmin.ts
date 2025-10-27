@@ -23,7 +23,7 @@ export async function getProfileForAdmin({ username }: Params, adminPage: string
     userAuth.updateProfile
         .dynamicFields({ username })
         .auth(session)
-        .requireAuthorized({ returnUrlIfFail: `/users/${username}/${adminPage}` })
+        .redirectOnUnauthorized({ returnUrl: `/users/${username}/${adminPage}` })
     const profileRes = await readUserProfileAction({ params: { username } })
     if (!profileRes.success) return notFound()
     const profile = profileRes.data

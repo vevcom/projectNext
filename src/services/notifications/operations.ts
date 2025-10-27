@@ -12,6 +12,8 @@ import { SpecialNotificationChannel } from '@prisma/client'
 import type { Notification } from '@prisma/client'
 import type { ExpandedNotificationChannel, NotificationResult } from './types'
 import type { UserFiltered } from '@/services/users/types'
+import { sendMail } from './email/send'
+import { emailSchemas } from './email/schemas'
 
 const dispathMethod = {
     email: dispatchEmailNotifications,
@@ -107,6 +109,12 @@ export const notificationOperations = {
                 recipients: results.subscriptions.length
             }
         }
+    }),
+
+    sendMail: defineOperation({
+        authorizer: () => notificationAuth.sendMail.dynamicFields({}),
+        dataSchema: emailSchemas.sendMail,
+        operation: ({ data }) => sendMail(data)
     }),
 
     /**

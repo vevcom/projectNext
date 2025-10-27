@@ -33,10 +33,21 @@ export class AuthResult<const UserGuatantee extends UserGuaranteeOption, const A
         return this.errorMessage
     }
 
-    public requireAuthorized({ returnUrlIfFail }: { returnUrlIfFail: string }) : AuthResult<UserGuatantee, true> {
+    public redirectOnUnauthorized({ returnUrl }: { returnUrl?: string }) : AuthResult<UserGuatantee, true> {
         if (!this.authorized) {
-            if (this.session.user) redirectToErrorPage('UNAUTHORIZED')
-            redirect(`/login?callbackUrl=${encodeURI(returnUrlIfFail)}`)
+            if (this.session.user) {
+                if (!this.session.user.acceptedTerms) {
+                    if (returnUrl) {
+                        redirect(`/register?callbackUrl=${encodeURI(returnUrl)}`)
+                    }
+                    redirect('/register')
+                }
+                redirectToErrorPage('UNAUTHORIZED', this.errorMessage)
+            }
+            if (returnUrl) {
+                redirect(`/login?callbackUrl=${encodeURI(returnUrl)}`)
+            }
+            redirect('/login')
         }
         return new AuthResult(this.session, true)
     }
