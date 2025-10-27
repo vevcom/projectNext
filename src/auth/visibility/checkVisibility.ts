@@ -2,8 +2,8 @@ import type { MembershipFiltered } from '@/services/groups/memberships/types'
 import type { VisibilityMatrix } from '@/services/visibility/types'
 
 
-export function checkVisibility(memberships: MembershipFiltered[], visibility: VisibilityMatrix) {
-    visibility.requirements.every(
+export function checkVisibility(memberships: MembershipFiltered[], visibility: VisibilityMatrix): boolean {
+    return visibility.requirements.every(
         requirement => requirement.conditions.some(
             condition => {
                 if (condition.type === 'ACTIVE') {
