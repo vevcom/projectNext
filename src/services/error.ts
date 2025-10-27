@@ -1,5 +1,5 @@
 import type { SafeParseError } from 'zod'
-import type { AuthStatus } from '@/auth/session/getUser'
+import type { AuthStatus } from '@/auth/auther/AuthResult'
 
 export const errorCodes = [
     {

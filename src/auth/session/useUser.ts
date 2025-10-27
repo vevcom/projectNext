@@ -64,8 +64,6 @@ export type ClientAuthStatus = UseUserReturnType['status']
  * Wrapper for next-auth's `useSession`. Returns just the user object of the
  * current session, null otherwise.
 *
-* This function is for client side components. For server side components
-* use `getUser``.
 * @param requiredPermissions - A list of lists that the user must have. If non are given, the user is considered authorized
 * regardless of their permissions.
 * @param userRequired - False by default. If true the user will only be unauthorized if they are not logged inn.
