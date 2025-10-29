@@ -6,21 +6,11 @@ import styles from './page.module.scss'
 import { readStudyProgrammesAction } from '@/services/groups/studyProgrammes/actions'
 import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
-import { getUser } from '@/auth/session/getUser'
+import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 
 
 export default async function StudyProgrammes() {
-    const { permissions } = await getUser({
-        requiredPermissions: [['STUDY_PROGRAMME_READ']],
-        shouldRedirect: true,
-    })
-
-    const studyprogrammes = await readStudyProgrammesAction()
-
-    if (!studyprogrammes.success) {
-        console.log(studyprogrammes)
-        return <div>Ups, an error occured</div>
-    }
+    const studyprogrammes = unwrapActionReturn(await readStudyProgrammesAction())
 
     const showCreateButton = permissions.includes('STUDY_PROGRAMME_CREATE')
     const canEdit = permissions.includes('STUDY_PROGRAMME_UPDATE')
@@ -48,7 +38,7 @@ export default async function StudyProgrammes() {
                     <th>Del av Omega</th>
                 </tr>
             </thead>
-            <StudyProgrammeTableBody studyprogrammes={studyprogrammes.data} canEdit={canEdit} />
+            <StudyProgrammeTableBody studyprogrammes={studyprogrammes} canEdit={canEdit} />
         </table>
     </PageWrapper>
 }

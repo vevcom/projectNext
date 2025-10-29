@@ -42,7 +42,7 @@ export default function EditMailAlias({
                 <TextInput name="description" label="Beskrivelse" defaultValue={focusedAlias.description} />
             </Form>
         </div>}
-        { permissions.includes('MAILALIAS_DESTORY') && <div>
+        { permissions.includes('MAILALIAS_DESTROY') && <div>
             <Form
                 action={destroyMailAliasAction.bind(null, focusedAlias.id)}
                 successCallback={() => push('/admin/mail')}

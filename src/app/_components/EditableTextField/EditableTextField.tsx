@@ -35,8 +35,7 @@ export default function EditableTextField<ReturnType>({
     submitButton,
     inputName,
     ...props
-}: PropTypes<ReturnType>
-) {
+}: PropTypes<ReturnType>) {
     const [value, setValue] = useState('')
     const [noChange, setNoChange] = useState(true)
     const canEdit = useEditing({}) //TODO: auth must be passed

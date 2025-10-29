@@ -1,4 +1,4 @@
-'use server' //why is this use server???
+'use server' //todo: why is this use server???
 import styles from './page.module.scss'
 import CreateMailAlias from './createMailAliasForm'
 import CreateMailingList from './createMailingListForm'

@@ -1,4 +1,4 @@
-'use server' //why is this use server???
+'use server' //todo: why is this use server???
 
 import { RedirectType, redirect } from 'next/navigation'
 
