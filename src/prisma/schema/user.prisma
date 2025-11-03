@@ -38,7 +38,6 @@ model User {
 
   dots                     DotWrapper[]               @relation(name: "dot_user")
   dotsAccused              DotWrapper[]               @relation(name: "dot_accuser")
-  registerStudentCardQueue RegisterStudentCardQueue[]
   Event                    Event[]
 
   cabinBooking Booking[] @relation()
@@ -69,12 +68,6 @@ model FeideAccount {
   issuedAt    DateTime
   userId      Int      @unique
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-}
-
-model RegisterStudentCardQueue {
-  userId Int      @id
-  user   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  expiry DateTime
 }
 
 model ContactDetails {

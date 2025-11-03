@@ -34,13 +34,11 @@ export default async function migrateImageCollections(pnPrisma: PrismaClientPn, 
                 createdAt: imageCollection.updatedAt,
                 updatedAt: imageCollection.updatedAt,
                 //TODO: Link to right committee through visibility
-                visibility: {
-                    create: {
-                        purpose: 'IMAGE',
-                        published: true,
-                        regularLevel: { create: {} },
-                        adminLevel: { create: {} }
-                    }
+                visibilityRead: {
+                    create: {} //Assuming all collections from vevn to be public on migration is probably fine
+                },
+                visibilityAdmin: {
+                    create: {} //TODO: not everyone should be able to update this....
                 }
             }
         })

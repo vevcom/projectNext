@@ -5,13 +5,13 @@ import type { Prisma, School, StandardSchool } from '@prisma/client'
 export const StandardSchoolsConfig = {
     NTNU: {
         name: 'Norges tekniske og naturvitenskapelige universitet',
-        shortname: 'NTNU',
+        shortName: 'NTNU',
     }
 } as const satisfies Record<StandardSchool, CreateSchoolTypes['Detailed']>
 
 export const SchoolFieldsToExpose = [
     'name',
-    'shortname',
+    'shortName',
     'id',
     'desctiption',
 ] as const satisfies (keyof School)[]

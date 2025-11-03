@@ -12,6 +12,7 @@ import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import sharp from 'sharp'
 import { SpecialImage } from '@prisma/client'
 import { z } from 'zod'
+import { File } from 'node:buffer'
 
 /**
  * Creates one image from a file.

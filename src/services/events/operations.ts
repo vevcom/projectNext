@@ -3,26 +3,84 @@ import { eventAuth } from './auth'
 import { eventSchemas } from './schemas'
 import { eventFilterSelection } from './constants'
 import { notificationOperations } from '@/services/notifications/operations'
-import { createCmsParagraph } from '@/services/cms/paragraphs/create'
-import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
-import { createCmsImage } from '@/services/cms/images/create'
 import { getOsloTime } from '@/lib/dates/getOsloTime'
 import { ServerError } from '@/services/error'
 import { defineOperation } from '@/services/serviceOperation'
 import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { displayDate } from '@/lib/dates/displayDate'
-import { v4 as uuid } from 'uuid'
+import { cmsImageOperations } from '@/cms/images/operations'
+import { cmsParagraphOperations } from '@/cms/paragraphs/operations'
 import { z } from 'zod'
 import type { EventExpanded } from './types'
+
+const read = defineOperation({
+    paramsSchema: z.object({
+        id: z.number(),
+    }),
+    authorizer: () => eventAuth.read.dynamicFields({}),
+    operation: async ({ prisma, params, session }) => {
+        const event = await prisma.event.findUniqueOrThrow({
+            where: {
+                id: params.id,
+            },
+            include: {
+                coverImage: {
+                    include: {
+                        image: true
+                    }
+                },
+                paragraph: true,
+                eventTagEvents: {
+                    include: {
+                        tag: true
+                    }
+                },
+                _count: {
+                    select: {
+                        eventRegistrations: true,
+                    },
+                },
+                eventRegistrations: true,
+            }
+        })
+
+        let onWaitingList = false
+
+        if (!session.user) {
+            event.eventRegistrations = []
+        } else {
+            const indexOfUser = event.eventRegistrations.findIndex(reg => reg.userId === session.user.id)
+            if (indexOfUser !== -1) {
+                event.eventRegistrations = [event.eventRegistrations[indexOfUser]]
+                onWaitingList = indexOfUser >= event.places
+            } else {
+                event.eventRegistrations = []
+            }
+        }
+
+        if (onWaitingList && !event.waitingList) {
+            onWaitingList = false
+            event.eventRegistrations = []
+        }
+
+        return {
+            ...event,
+            numOfRegistrations: Math.min(event._count.eventRegistrations, event.places),
+            numOnWaitingList: Math.max(0, event._count.eventRegistrations - event.places),
+            onWaitingList,
+            tags: event.eventTagEvents.map(ete => ete.tag)
+        }
+    }
+})
 
 export const eventOperations = {
     create: defineOperation({
         dataSchema: eventSchemas.create,
         authorizer: () => eventAuth.create.dynamicFields({}),
         operation: async ({ prisma, data, session }) => {
-            const cmsParagraph = await createCmsParagraph({ name: uuid() })
-            const cmsImage = await createCmsImage({ name: uuid() })
+            const cmsParagraph = await cmsParagraphOperations.create({ data: {}, bypassAuth: true })
+            const cmsImage = await cmsImageOperations.create({ data: {}, bypassAuth: true })
 
             if (data.eventStart > data.eventEnd) {
                 throw new ServerError('BAD PARAMETERS', 'Event må jo strate før den slutter')
@@ -54,12 +112,6 @@ export const eventOperations = {
                             id: session.user.id
                         }
                     } : undefined,
-
-                    omegaOrder: {
-                        connect: {
-                            order: data.order || (await readCurrentOmegaOrder()).order
-                        }
-                    },
                     paragraph: {
                         connect: {
                             id: cmsParagraph.id
@@ -92,69 +144,9 @@ export const eventOperations = {
             return event
         }
     }),
-    read: defineOperation({
-        paramsSchema: z.object({
-            order: z.number(),
-            name: z.string(),
-        }),
-        authorizer: () => eventAuth.read.dynamicFields({}),
-        operation: async ({ prisma, params, session }) => {
-            const event = await prisma.event.findUniqueOrThrow({
-                where: {
-                    order_name: {
-                        order: params.order,
-                        name: params.name
-                    }
-                },
-                include: {
-                    coverImage: {
-                        include: {
-                            image: true
-                        }
-                    },
-                    paragraph: true,
-                    eventTagEvents: {
-                        include: {
-                            tag: true
-                        }
-                    },
-                    _count: {
-                        select: {
-                            eventRegistrations: true,
-                        },
-                    },
-                    eventRegistrations: true,
-                }
-            })
 
-            let onWaitingList = false
+    read,
 
-            if (!session.user) {
-                event.eventRegistrations = []
-            } else {
-                const indexOfUser = event.eventRegistrations.findIndex(reg => reg.userId === session.user.id)
-                if (indexOfUser !== -1) {
-                    event.eventRegistrations = [event.eventRegistrations[indexOfUser]]
-                    onWaitingList = indexOfUser >= event.places
-                } else {
-                    event.eventRegistrations = []
-                }
-            }
-
-            if (onWaitingList && !event.waitingList) {
-                onWaitingList = false
-                event.eventRegistrations = []
-            }
-
-            return {
-                ...event,
-                numOfRegistrations: Math.min(event._count.eventRegistrations, event.places),
-                numOnWaitingList: Math.max(0, event._count.eventRegistrations - event.places),
-                onWaitingList,
-                tags: event.eventTagEvents.map(ete => ete.tag)
-            }
-        }
-    }),
     readManyCurrent: defineOperation({
         paramsSchema: z.object({
             tags: z.array(z.string()).nullable(),
@@ -289,6 +281,18 @@ export const eventOperations = {
         }
     }),
 
+    updateCmsCoverImage: cmsImageOperations.update.implement({
+        implementationParamsSchema: z.object({
+            eventId: z.number()
+        }),
+        authorizer: () => eventAuth.updateCmsCoverImage.dynamicFields({}),
+        ownershipCheck: async ({ implementationParams, params }) =>
+            (await read({
+                params: { id: implementationParams.eventId },
+                bypassAuth: true,
+            })).coverImage.id === params.cmsImageId
+    }),
+
     destroy: defineOperation({
         paramsSchema: z.object({
             id: z.number()
@@ -302,7 +306,19 @@ export const eventOperations = {
             })
         }
     }),
-}
+
+    updateParagraphContent: cmsParagraphOperations.updateContent.implement({
+        implementationParamsSchema: z.object({
+            eventId: z.number()
+        }),
+        authorizer: () => eventAuth.updateParagraphContent.dynamicFields({}),
+        ownershipCheck: async ({ implementationParams, params }) =>
+            (await read({
+                params: { id: implementationParams.eventId },
+                bypassAuth: true,
+            })).paragraph.id === params.paragraphId
+    })
+} as const
 
 function eventTagSelector(tags: string[] | null) {
     return tags ? {

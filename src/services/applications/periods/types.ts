@@ -4,7 +4,7 @@ import type { Image, Prisma } from '@prisma/client'
 export type CountdownInfo = {
     endTime: Date,
     commiteesParticipating: {
-        shortname: string,
+        shortName: string,
         logo: Image
     }[]
 }

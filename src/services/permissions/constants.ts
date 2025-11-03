@@ -7,7 +7,6 @@ export const permissionCategories = [
     'groups',
     'jobad',
     'diverse admin',
-    'cms',
     'brukere',
     'bilder',
     'events',
@@ -18,6 +17,7 @@ export const permissionCategories = [
     'cabin',
     'permission',
     'applications',
+    'public'
 ] as const satisfies string[]
 
 export const permissionConfig = {
@@ -176,10 +176,15 @@ export const permissionConfig = {
         description: 'kan lese omega',
         category: 'diverse admin',
     },
-    CMS_ADMIN: {
-        name: 'CMS administrator',
-        description: 'kan administrere CMS',
-        category: 'cms',
+    FRONTPAGE_ADMIN: {
+        name: 'Frontpage administrator',
+        description: 'kan administrere frontpage',
+        category: 'public',
+    },
+    PUBLIC_ARTICLE_ADMIN: {
+        name: 'Administrere offentlige artikler',
+        description: 'kan administrere offentlige artikler',
+        category: 'public',
     },
     USERS_CREATE: {
         name: 'Lage bruker',
@@ -200,12 +205,6 @@ export const permissionConfig = {
         name: 'Oppdatere bruker',
         description: 'kan oppdatere bruker',
         category: 'brukere',
-    },
-    USERS_CONNECT_STUDENT_CARD: {
-        name: 'Koble studentkort til andre brukere',
-        // eslint-disable-next-line max-len
-        description: 'Kan legge til andre personer i registreringskøen for å registrere et kort og kan registrere et kort på en person',
-        category: 'brukere'
     },
     IMAGE_ADMIN: {
         name: 'Bildeadministrator',

@@ -1,40 +1,17 @@
 'use client'
 import styles from './VisibilityAdmin.module.scss'
-import VisibilityLevelAdmin from './VisibilityLevelAdmin'
-import useActionCall from '@/hooks/useActionCall'
-import { readVisibilityForAdminAction } from '@/services/visibility/actions'
-import { useCallback } from 'react'
+import type { VisibilityMatrix } from '@/services/visibility/types'
+
 
 type PropTypes = {
-    visibilityId: number
+    visibility: VisibilityMatrix
 }
 
-
-export default function VisibilityAdmin({ visibilityId }: PropTypes) {
-    const action = useCallback(() => readVisibilityForAdminAction(visibilityId), [visibilityId])
-    const { data } = useActionCall(action)
-    console.log(data)
-    if (!data) return null
+export default function VisibilityAdmin({ visibility }: PropTypes) {
+    console.log(visibility)
     return (
         <div className={styles.VisibilityAdmin}>
-            <div className={styles.info}>
-                <h1>Administrer synelighet</h1>
-                <i>Synelighet for: {data.purpose}</i>
-            </div>
-            {
-                data.type === 'REGULAR' ? (<>
-                    <div className={styles.borderBottom}>
-                        <VisibilityLevelAdmin level="REGULAR" levelName="Synelig" data={data.regular} />
-                    </div>
-                    <div>
-                        <VisibilityLevelAdmin level="ADMIN" levelName="Admin" data={data.admin} />
-                    </div>
-                </>) : (<>
-                    <p>{data.message}</p>
-                    <p>{data.regular}</p>
-                    <p>{data.admin}</p>
-                </>)
-            }
+            <h2>Synelighet!</h2>
         </div>
     )
 }

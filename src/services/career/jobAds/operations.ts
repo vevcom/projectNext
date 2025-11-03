@@ -4,24 +4,38 @@ import { jobAdSchemas } from './schemas'
 import { articleAndCompanyIncluder, simpleArticleAndCompanyIncluder } from './constants'
 import { logoIncluder } from '@/services/career/companies/constants'
 import { defineOperation } from '@/services/serviceOperation'
-import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
-import { createArticle } from '@/services/cms/articles/create'
-import { ServerError } from '@/services/error'
 import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
-import { destroyArticle } from '@/services/cms/articles/destroy'
+import { articleOperations } from '@/cms/articles/operations'
+import { implementUpdateArticleOperations } from '@/cms/articles/implement'
 import { z } from 'zod'
 import { JobType } from '@prisma/client'
 import type { ExpandedJobAd, SimpleJobAd } from './types'
+
+const read = defineOperation({
+    paramsSchema: z.object({
+        id: z.number()
+    }),
+    authorizer: () => jobAdAuth.read.dynamicFields({}),
+    operation: async ({ prisma, params }): Promise<ExpandedJobAd> => await prisma.jobAd.findUniqueOrThrow({
+        where: {
+            id: params.id,
+        },
+        include: {
+            ...articleAndCompanyIncluder,
+            company: {
+                include: logoIncluder,
+            }
+        }
+    })
+})
 
 export const jobAdOperations = {
     create: defineOperation({
         dataSchema: jobAdSchemas.create,
         authorizer: () => jobAdAuth.create.dynamicFields({}),
         operation: async ({ prisma, data: { articleName, companyId, ...data } }) => {
-            const article = await createArticle({ name: articleName })
-
-            const currentOrder = await readCurrentOmegaOrder()
+            const article = await articleOperations.create({ data: { name: articleName }, bypassAuth: true })
 
             return await prisma.jobAd.create({
                 data: {
@@ -29,9 +43,6 @@ export const jobAdOperations = {
                         connect: {
                             id: article.id
                         }
-                    },
-                    omegaOrder: {
-                        connect: currentOrder,
                     },
                     company: {
                         connect: {
@@ -48,38 +59,7 @@ export const jobAdOperations = {
      * @param idOrName - id or articleName and order of jobAd to read (id or {articleName: string, order: number})
      * @returns ExpandedJobAd - the jobAd and its article
      */
-    read: defineOperation({
-        paramsSchema: z.object({
-            idOrName: z.union([
-                z.number(),
-                z.object({
-                    articleName: z.string(),
-                    order: z.number(),
-                }),
-            ]),
-        }),
-        authorizer: () => jobAdAuth.read.dynamicFields({}),
-        operation: async ({ prisma, params: { idOrName } }): Promise<ExpandedJobAd> => {
-            const jobAd = await prisma.jobAd.findUnique({
-                where: typeof idOrName === 'number' ? {
-                    id: idOrName
-                } : {
-                    articleName_orderPublished: {
-                        articleName: idOrName.articleName,
-                        orderPublished: idOrName.order
-                    }
-                },
-                include: {
-                    ...articleAndCompanyIncluder,
-                    company: {
-                        include: logoIncluder,
-                    }
-                }
-            })
-            if (!jobAd) throw new ServerError('NOT FOUND', `job ad ${idOrName} not found`)
-            return jobAd
-        }
-    }),
+    read,
     /**
      * This handler reads all active jobAds
      * @returns SimpleJobAd[] - all jobAds with coverImage
@@ -160,6 +140,16 @@ export const jobAdOperations = {
             data,
         })
     }),
+    updateArticle: implementUpdateArticleOperations({
+        authorizer: () => jobAdAuth.updateArticle.dynamicFields({}),
+        implementationParamsSchema: z.object({
+            jobAdId: z.number(),
+        }),
+        ownedArticles: async ({ implementationParams }) => {
+            const jobAd = await read({ params: { id: implementationParams.jobAdId }, bypassAuth: true })
+            return [jobAd.article]
+        }
+    }),
     destroy: defineOperation({
         paramsSchema: z.object({
             id: z.number(),
@@ -169,7 +159,7 @@ export const jobAdOperations = {
             const jobAd = await prisma.jobAd.delete({
                 where: { id },
             })
-            await destroyArticle(jobAd.articleId)
+            await articleOperations.destroy({ params: { articleId: jobAd.articleId }, bypassAuth: true })
         }
     }),
 }

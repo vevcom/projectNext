@@ -1,4 +1,5 @@
 import { RequirePermission } from '@/auth/auther/RequirePermission'
+import { RequireUser } from '@/auth/auther/RequireUser'
 import { RequireUserFieldOrPermission } from '@/auth/auther/RequireUserFieldOrPermission'
 import { RequireUserId } from '@/auth/auther/RequireUserId'
 import { RequireUserIdOrPermission } from '@/auth/auther/RequireUserIdOrPermission'
@@ -10,8 +11,7 @@ export const userAuth = {
     readOrNull: RequireUserFieldOrPermission.staticFields({ permission: 'USERS_READ' }),
     readPage: RequirePermission.staticFields({ permission: 'USERS_READ' }),
     create: RequirePermission.staticFields({ permission: 'USERS_CREATE' }),
-    connectStudentCard: RequirePermission.staticFields({ permission: 'USERS_CONNECT_STUDENT_CARD' }),
-    registerStudentCardInQueue: RequireUserIdOrPermission.staticFields({ permission: 'USERS_CONNECT_STUDENT_CARD' }),
+    connectStudentCard: RequireUser.staticFields({}),
     registerNewEmail: RequireUserIdOrPermission.staticFields({ permission: 'USERS_UPDATE' }),
     updatePassword: RequireUserIdOrPermission.staticFields({ permission: 'USERS_UPDATE' }),
     update: RequirePermission.staticFields({ permission: 'USERS_UPDATE' }),

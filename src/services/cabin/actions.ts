@@ -25,6 +25,13 @@ export const readCabinAvailabilityAction = makeAction(cabinBookingOperations.rea
 export const readCabinBookingsAction = makeAction(cabinBookingOperations.readMany)
 export const readCabinBookingAction = makeAction(cabinBookingOperations.read)
 
+export const readSpecialCmsParagraphCabinContractAction = makeAction(
+    cabinBookingOperations.readSpecialCmsParagraphCabinContract
+)
+export const updateSpecialCmsParagraphCabinContractAction = makeAction(
+    cabinBookingOperations.updateSpecialCmsParagraphContentCabinContract
+)
+
 export const readCabinProductsAction = makeAction(cabinProductOperations.readMany)
 export const readCabinProductsActiveAction = makeAction(cabinProductOperations.readActive)
 export const readCabinProductAction = makeAction(cabinProductOperations.read)

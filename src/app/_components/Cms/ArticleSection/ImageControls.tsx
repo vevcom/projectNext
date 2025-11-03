@@ -1,7 +1,6 @@
 'use client'
 import styles from './ImageControls.module.scss'
-import { updateArticleSectionAction } from '@/cms/articleSections/actions'
-import { imageSizeIncrement, maxImageSize, minImageSize } from '@/cms/articleSections/ConfigVars'
+import { imageSizeIncrement, maxImageSize, minImageSize } from '@/cms/articleSections/constants'
 import useEditing from '@/hooks/useEditing'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -12,39 +11,52 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/navigation'
 import type { ArticleSection } from '@prisma/client'
+import type { UpdateArticleSectionAction } from '@/cms/articleSections/types'
+
+type PropTypes = {
+    articleSection: ArticleSection
+    className?: string
+    updateArticleSectionAction: UpdateArticleSectionAction
+}
 
 /**
  * This component is used to control the image in the article section
  * i.e move it left or right and size it
  */
-
-type PropTypes = {
-    articleSection: ArticleSection
-    className?: string
-}
-
-export default function ImageControls({ articleSection, className }: PropTypes) {
+export default function ImageControls({ articleSection, className, updateArticleSectionAction }: PropTypes) {
     const canEdit = useEditing({}) //TODO: check visibility of article for user and pass it to useEditing
     const { refresh } = useRouter()
     if (!canEdit) return null
 
     const moveLeft = async () => {
-        await updateArticleSectionAction(articleSection.name, { imagePosition: 'LEFT' })
+        await updateArticleSectionAction(
+            { params: { articleSectionName: articleSection.name } },
+            { data: { position: 'LEFT' } }
+        )
         refresh()
     }
 
     const moveRight = async () => {
-        await updateArticleSectionAction(articleSection.name, { imagePosition: 'RIGHT' })
+        await updateArticleSectionAction(
+            { params: { articleSectionName: articleSection.name } },
+            { data: { position: 'RIGHT' } }
+        )
         refresh()
     }
 
     const increaseSize = async () => {
-        await updateArticleSectionAction(articleSection.name, { imageSize: articleSection.imageSize + imageSizeIncrement })
+        await updateArticleSectionAction(
+            { params: { articleSectionName: articleSection.name } },
+            { data: { imageSize: articleSection.imageSize + imageSizeIncrement } }
+        )
         refresh()
     }
 
     const decreaseSize = async () => {
-        await updateArticleSectionAction(articleSection.name, { imageSize: articleSection.imageSize - imageSizeIncrement })
+        await updateArticleSectionAction(
+            { params: { articleSectionName: articleSection.name } },
+            { data: { imageSize: articleSection.imageSize - imageSizeIncrement } }
+        )
         refresh()
     }
 

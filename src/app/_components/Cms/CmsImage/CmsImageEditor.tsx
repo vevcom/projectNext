@@ -15,11 +15,13 @@ import useEditing from '@/hooks/useEditing'
 import { useState } from 'react'
 import Link from 'next/link'
 import type { CmsImage, Image as ImageT } from '@prisma/client'
+import type { UpdateCmsImageAction } from '@/cms/images/types'
 
 type PropTypes = {
     cmsImage: CmsImage & {
         image: ImageT
-    }
+    },
+    updateCmsImageAction: UpdateCmsImageAction
 }
 
 /**
@@ -27,7 +29,7 @@ type PropTypes = {
  * @param cmsImage - the cms image to edit
  * @returns
  */
-export default function CmsImageEditor({ cmsImage }: PropTypes) {
+export default function CmsImageEditor({ cmsImage, updateCmsImageAction }: PropTypes) {
     const canEdit = useEditing({})
     const [currentCollectionId, setCurrentCollectionId] = useState<number>(cmsImage.image.collectionId)
 
@@ -66,9 +68,14 @@ export default function CmsImageEditor({ cmsImage }: PropTypes) {
                                     currentImageSize={cmsImage.imageSize}
                                     currentImage={cmsImage.image}
                                     cmsImageId={cmsImage.id}
+                                    updateCmsImageAction={updateCmsImageAction}
                                 />
                             </div>
-                            <ChangeImageForm className={styles.changeImageMobile} cmsImageId={cmsImage.id} />
+                            <ChangeImageForm
+                                className={styles.changeImageMobile}
+                                cmsImageId={cmsImage.id}
+                                updateCmsImageAction={updateCmsImageAction}
+                            />
                             <div className={styles.selectImage}>
                                 <ImageList/>
                             </div>

@@ -60,8 +60,8 @@ enum Permission {
   LOCKER_ADMIN
   LOCKER_USE
 
-  // CMS permissions - it overrides the visibility of things
-  CMS_ADMIN
+  // Frontpage
+  FRONTPAGE_ADMIN
 
   // User list permissions - theese are admin permissions, and do not have anything
   // to do with a user´s ability to edit its own user.
@@ -70,8 +70,6 @@ enum Permission {
   USERS_UPDATE
   USERS_DESTROY
   USERS_CREATE
-
-  USERS_CONNECT_STUDENT_CARD
 
   IMAGE_COLLECTION_CREATE
   IMAGE_ADMIN
@@ -177,6 +175,9 @@ enum Permission {
   // Applications
   APPLICATION_ADMIN
   APPLICATION_WRITE
+
+  // Public articles
+  PUBLIC_ARTICLE_ADMIN
 }
 
 model GroupPermission {
@@ -190,4 +191,3 @@ model GroupPermission {
 model DefaultPermission {
   permission Permission @unique
 }
-

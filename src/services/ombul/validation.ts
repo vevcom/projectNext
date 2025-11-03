@@ -2,6 +2,7 @@ import { imageFileSchema } from '@/services/images/schemas'
 import { ValidationBase } from '@/services/Validation'
 import { maxOmbulFileSize } from '@/services/ombul/ConfigVars'
 import { z } from 'zod'
+import { File } from 'node:buffer'
 import type { ValidationTypes } from '@/services/Validation'
 
 export const baseOmbulValidation = new ValidationBase({

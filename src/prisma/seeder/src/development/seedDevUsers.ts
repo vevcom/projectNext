@@ -1,41 +1,90 @@
 import { hashAndEncryptPassword } from '@/auth/passwordHash'
+import { type SeederImage, seedImage } from '@/seeder/src/seedImages'
 import { v4 as uuid } from 'uuid'
-import type { PrismaClient } from '@prisma/client'
+import { OmegaMembershipLevel, type PrismaClient, type Prisma } from '@prisma/client'
+import { randomInt } from 'crypto'
+import { readdir } from 'fs/promises'
+import { join, dirname } from 'path'
+import { fileURLToPath } from 'url'
+
+const fileName = fileURLToPath(import.meta.url)
+const directoryName = dirname(fileName)
+const profileImageFSLocation = join(directoryName, '..', '..', 'standard_store', 'images', 'dev_profile_images')
+
+async function seedDevProfileImages(prisma: PrismaClient) {
+    let files = await readdir(profileImageFSLocation)
+
+    files = files.filter(file => {
+        const filenameS = file.split('.')
+        const ext = filenameS[filenameS.length - 1]
+        return ext === 'jpg'
+    })
+
+    return await Promise.all(files.map(async file => {
+        const fileS = file.split('.')
+
+        const name = fileS[0]
+
+        const imageConfig: SeederImage = {
+            special: null,
+            name,
+            alt: `Bilde av ${name}`,
+            credit: null,
+            license: null,
+            collection: 'PROFILEIMAGES',
+            fsLocation: file,
+        }
+
+        return await seedImage(prisma, profileImageFSLocation, files, imageConfig)
+    }))
+}
 
 export default async function seedDevUsers(prisma: PrismaClient) {
-    const fn = [
-        'anne', 'johan', 'pål', 'lars', 'lasse', 'leo', 'noa',
-        'trude', 'andreas', 'nora', 'knut', 'anne', 'sara', 'frikk', 'merete', 'klara',
-        'britt helen', 'fiola', 'mika', 'helle', 'jesper'
+    const firstNames = [
+        'Anne', 'Johan', 'Pål', 'Lars', 'Lasse', 'Leo', 'Noa',
+        'Trude', 'Andreas', 'Nora', 'Knut', 'Anne', 'Sara',
+        'Frikk', 'Merete', 'Klara', 'Britt Helen', 'Fiola',
+        'Mika', 'Helle', 'Jesper',
     ]
 
-    const ln = [
-        'hansen', 'johansen', 'olsen', 'larsen', 'larsen', 'leosdatter',
-        'noasdatter', 'trudesdatter', 'lien', 'svendsen',
-        'mattisen', 'mørk', 'ruud', 'hansen', 'johansen', 'olsen',
-        'larsen', 'larsen', 'leosdatter', 'noasdatter', 'trudesdatter',
-        'lien', 'svendsen', 'mattisen', 'mørk', 'ruud', 'hansen', 'johansen', 'olsen', 'larsen',
-        'larsen', 'leosdatter', 'noasdatter', 'trudesdatter', 'lien',
-        'svendsen', 'mattisen', 'mørk', 'ruud', 'hansen', 'johansen', 'olsen', 'larsen', 'larsen',
-        // 'leosdatter', 'noasdatter', 'trudesdatter', 'lien', 'svendsen', 'mattisen',
-        // 'mørk', 'ruud', 'hansen', 'johansen', 'olsen', 'larsen', 'larsen', 'leosdatter',
-        // 'noasdatter', 'trudesdatter', 'lien', 'svendsen', 'mattisen', 'mørk',
-        // 'ruud', 'hansen', 'johansen', 'olsen', 'larsen', 'larsen', 'leosdatter',
-        // 'noasdatter', 'trudesdatter', 'lien', 'svendsen', 'mattisen', 'mørk', 'ruud', 'hansen', 'johansen',
-        // 'olsen', 'larsen', 'larsen', 'leosdatter', 'noasdatter', 'trudesdatter',
-        // 'lien', 'svendsen', 'mattisen', 'mørk', 'ruud', 'hansen', 'johansen', 'olsen', 'larsen', 'larsen', 'leosdatter',
-        // 'noasdatter', 'trudesdatter', 'lien', 'svendsen', 'mattisen', 'mørk', 'ruud',
-        // 'hansen', 'johansen', 'olsen', 'larsen', 'larsen', 'leosdatter',
-        // 'noasdatter', 'trudesdatter', 'lien', 'svendsen', 'mattisen', 'mørk', 'ruud'
-    ]
+    const profileImages = await seedDevProfileImages(prisma)
+
+    const lastNames = profileImages.map(image => (image ? image.name.replaceAll('-', ' ') : 'Navnløs'))
 
     const passwordHash = await hashAndEncryptPassword('password')
 
-    Promise.all(fn.map(async (firstName, i) => {
-        await Promise.all(ln.map(async (lastName, j) => {
-            await prisma.user.upsert({
+    const latestOrder = await prisma.omegaOrder.findFirstOrThrow({
+        orderBy: {
+            order: 'desc',
+        },
+    })
+
+    const memberGroup = await prisma.omegaMembershipGroup.findUniqueOrThrow({
+        where: {
+            omegaMembershipLevel: OmegaMembershipLevel.MEMBER
+        }
+    })
+
+    const allStudyProgrammes = await prisma.studyProgramme.findMany()
+    const allCommittees = await prisma.committee.findMany()
+    const allClasses = await prisma.class.findMany()
+
+    Promise.all(firstNames.map(async (firstName, i) => {
+        await Promise.all(lastNames.map(async (lastName, j) => {
+            // Randomly remove profile images for 5% of users.
+            const image = (Math.random() < 0.95) ? profileImages.find(img => (img?.name === lastName)) : undefined
+
+            const username = `${firstName}${lastName}${i + 1}${j}`
+                .toLowerCase()
+                .replace(/å/g, 'aa') // special cases for norwegian letters
+                .replace(/æ/g, 'ae')
+                .replace(/ø/g, 'oe')
+                .normalize('NFD') // decompose into letter + diacritics, i.e. 'é' -> 'e´'
+                .replace(/[^a-zA-Z0-9]/g, '') // only keep ASCII alphanumeric characters
+
+            const user = await prisma.user.upsert({
                 where: {
-                    username: `${firstName}${i}${j}`
+                    username,
                 },
                 update: {
 
@@ -44,15 +93,67 @@ export default async function seedDevUsers(prisma: PrismaClient) {
                     firstname: firstName,
                     lastname: lastName,
                     email: uuid(),
-                    username: `${firstName}${i}${j}`,
-                    studentCard: `${firstName}-${i}-${j}`,
+                    username,
+                    studentCard: `${username}s studentkort`,
                     credentials: {
                         create: {
                             passwordHash,
                         },
                     },
                     acceptedTerms: new Date(),
+                    ...(image ? {
+                        image: {
+                            connect: {
+                                id: image.id,
+                            },
+                        },
+                    } : {}),
                 },
+            })
+
+            const memberships: Prisma.MembershipCreateManyInput[] = [
+                {
+                    groupId: memberGroup.groupId,
+                    userId: user.id,
+                    admin: false,
+                    active: true,
+                    order: latestOrder.order
+                },
+            ]
+
+            const studyProgram = allStudyProgrammes[randomInt(allStudyProgrammes.length)]
+
+            memberships.push({
+                groupId: studyProgram.groupId,
+                userId: user.id,
+                admin: false,
+                active: true,
+                order: latestOrder.order
+            })
+
+            const classMember = allClasses[randomInt(allClasses.length)]
+            memberships.push({
+                groupId: classMember.groupId,
+                userId: user.id,
+                admin: false,
+                active: true,
+                order: latestOrder.order,
+            })
+
+            if (Math.random() > 0.8) {
+                const committee = allCommittees[randomInt(allCommittees.length)]
+
+                memberships.push({
+                    groupId: committee.groupId,
+                    userId: user.id,
+                    admin: false,
+                    active: true,
+                    order: latestOrder.order
+                })
+            }
+
+            await prisma.membership.createMany({
+                data: memberships
             })
         }))
     }))
@@ -94,6 +195,44 @@ export default async function seedDevUsers(prisma: PrismaClient) {
             emailVerified: new Date(),
             acceptedTerms: new Date(),
         },
+    })
+
+    const studyProgrammeMTTK = await prisma.studyProgramme.findUniqueOrThrow({
+        where: {
+            code: 'MTTK',
+        },
+    })
+
+    const harambecom = await prisma.committee.findUniqueOrThrow({
+        where: {
+            shortName: 'harcom'
+        }
+    })
+
+    await prisma.membership.createMany({
+        data: [
+            {
+                groupId: memberGroup.groupId,
+                userId: harambe.id,
+                admin: false,
+                active: true,
+                order: latestOrder.order
+            },
+            {
+                groupId: studyProgrammeMTTK.groupId,
+                userId: harambe.id,
+                admin: false,
+                active: true,
+                order: latestOrder.order
+            },
+            {
+                groupId: harambecom.groupId,
+                userId: harambe.id,
+                admin: false,
+                active: true,
+                order: latestOrder.order
+            }
+        ]
     })
 
     const vever = await prisma.user.upsert({

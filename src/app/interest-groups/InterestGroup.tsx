@@ -3,8 +3,18 @@ import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
 import ArticleSection from '@/components/Cms/ArticleSection/ArticleSection'
 import { SettingsHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
-import { updateInterestGroupAction, destroyInterestGroupAction } from '@/services/groups/interestGroups/actions'
+import {
+    updateInterestGroupAction,
+    destroyInterestGroupAction,
+    updateInterestGroupArticleSectionAction,
+    addPartToInterestGroupArticleSectionAction,
+    removePartFromInterestGroupArticleSectionAction,
+    updateInterestGroupCmsImageAction,
+    updateInterestGroupCmsParagraphAction,
+    updateInterestGroupCmsLinkAction
+} from '@/services/groups/interestGroups/actions'
 import { interestGroupAuth } from '@/services/groups/interestGroups/auth'
+import { configureAction } from '@/services/configureAction'
 import type { SessionMaybeUser } from '@/auth/session/Session'
 import type { ExpandedInterestGroup } from '@/services/groups/interestGroups/types'
 
@@ -18,6 +28,8 @@ export default function InterestGroup({ interestGroup, session }: PropTypes) {
     const canDestroy = interestGroupAuth.destroy.dynamicFields({}).auth(session)
 
     const PopUpKey = `Update interest group ${interestGroup.name}`
+
+    const cmsArticleActionConfig = { implementationParams: { interestGroupId: interestGroup.id } }
 
     return (
         <div className={styles.interestGroup}>
@@ -73,7 +85,30 @@ export default function InterestGroup({ interestGroup, session }: PropTypes) {
                     ) : <></>
                 }
             </div>
-            <ArticleSection key={interestGroup.id} articleSection={interestGroup.articleSection} />
+            <ArticleSection
+                key={interestGroup.id}
+                articleSection={interestGroup.articleSection}
+                actions={{
+                    updateArticleSection: configureAction(
+                        updateInterestGroupArticleSectionAction, cmsArticleActionConfig
+                    ),
+                    addPartToArticleSection: configureAction(
+                        addPartToInterestGroupArticleSectionAction, cmsArticleActionConfig
+                    ),
+                    removePartFromArticleSection: configureAction(
+                        removePartFromInterestGroupArticleSectionAction, cmsArticleActionConfig
+                    ),
+                    updateCmsImage: configureAction(
+                        updateInterestGroupCmsImageAction, cmsArticleActionConfig
+                    ),
+                    updateCmsParagraph: configureAction(
+                        updateInterestGroupCmsParagraphAction, cmsArticleActionConfig
+                    ),
+                    updateCmsLink: configureAction(
+                        updateInterestGroupCmsLinkAction, cmsArticleActionConfig
+                    ),
+                }}
+            />
         </div>
     )
 }

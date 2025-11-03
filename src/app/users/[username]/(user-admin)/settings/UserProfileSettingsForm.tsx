@@ -9,7 +9,7 @@ import { sexConfig } from '@/services/users/constants'
 import Textarea from '@/components/UI/Textarea'
 import { SEX } from '@prisma/client'
 import { useState } from 'react'
-import type { $Enums, User } from '@prisma/client'
+import type { User } from '@prisma/client'
 
 export default function UserProfileSettingsForm({ userData } : {
     userData: Pick<User, 'username' | 'mobile' | 'allergies' | 'sex' | 'imageConsent' | 'bio'>
