@@ -7,10 +7,10 @@ import SlideInOnView from '@/components/SlideInOnView/SlideInOnView'
 import EditableTextField from '@/components/EditableTextField/EditableTextField'
 import CmsImage from '@/components/Cms/CmsImage/CmsImage'
 import { configureAction } from '@/services/configureAction'
-import Link from 'next/link'
-import { notFound } from 'next/navigation'
 import { ombulAuth } from '@/services/ombul/auth'
 import { Session } from '@/auth/session/Session'
+import Link from 'next/link'
+import { notFound } from 'next/navigation'
 
 type PropTypes = {
     params: Promise<{

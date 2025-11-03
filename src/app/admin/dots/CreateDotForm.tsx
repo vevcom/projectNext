@@ -6,19 +6,20 @@ import PopUp from '@/components/PopUp/PopUp'
 import NumberInput from '@/components/UI/NumberInput'
 import TextInput from '@/components/UI/TextInput'
 import UserList from '@/components/User/UserList/UserList'
-import { useUser } from '@/auth/session/useUser'
 import { PopUpContext } from '@/contexts/PopUp'
 import { UserSelectionContext } from '@/contexts/UserSelection'
 import { configureAction } from '@/services/configureAction'
 import { useContext } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import { useSession } from 'next-auth/react'
 
 export default function CreateDotForm() {
-    const session = useUser()
+    const session = useSession()
     const userSelectionContext = useContext(UserSelectionContext)
     const popUpContext = useContext(PopUpContext)
-    if (!session.user) return <></>
+    if (session.loading) return <>loading...</>
+    if (!session.session.user) return <></>
     if (!userSelectionContext) return <></>
 
     userSelectionContext.onSelection(() => {

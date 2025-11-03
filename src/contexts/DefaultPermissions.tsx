@@ -10,7 +10,7 @@ type PropTypes = {
 
 /**
  * This is a context thatsaves the default permissions for all users on the client
- * It is manly used for the useUser hook, when no user is logged in.
+ * It is manly used for the useSession hook to provide permissions for unauthenticated users
  */
 export const DefaultPermissionsContext = createContext<{
     defaultPermissions: Permission[],

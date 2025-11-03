@@ -7,19 +7,21 @@ import { readStudyProgrammesAction } from '@/services/groups/studyProgrammes/act
 import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
+import { studyProgrammeAuth } from '@/services/groups/studyProgrammes/auth'
+import { Session } from '@/auth/session/Session'
 
 
 export default async function StudyProgrammes() {
     const studyprogrammes = unwrapActionReturn(await readStudyProgrammesAction())
 
-    const showCreateButton = permissions.includes('STUDY_PROGRAMME_CREATE')
-    const canEdit = permissions.includes('STUDY_PROGRAMME_UPDATE')
+    const showCreateButton = studyProgrammeAuth.create.dynamicFields({}).auth(await Session.fromNextAuth())
+    const canEdit = studyProgrammeAuth.update.dynamicFields({}).auth(await Session.fromNextAuth())
 
 
     return <PageWrapper
         title="Studieprogrammer"
         headerItem={
-            showCreateButton && (
+            showCreateButton.authorized && (
                 <AddHeaderItemPopUp PopUpKey="create ombul">
                     <UpdateStudyProgrammeForm />
                 </AddHeaderItemPopUp>
@@ -38,7 +40,7 @@ export default async function StudyProgrammes() {
                     <th>Del av Omega</th>
                 </tr>
             </thead>
-            <StudyProgrammeTableBody studyprogrammes={studyprogrammes} canEdit={canEdit} />
+            <StudyProgrammeTableBody studyprogrammes={studyprogrammes} canEdit={canEdit.authorized} />
         </table>
     </PageWrapper>
 }

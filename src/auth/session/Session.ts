@@ -124,4 +124,8 @@ export class Session<UserGuarantee extends UserGuaranteeOption> {
             apiKeyId: id,
         })
     }
+
+    public static fromDefaultPermissions(defaultPermissions: Permission[]) {
+        return new Session({ permissions: defaultPermissions, memberships: [], user: null })
+    }
 }

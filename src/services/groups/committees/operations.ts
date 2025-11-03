@@ -1,5 +1,6 @@
 import { committeeAuth } from './auth'
 import { committeeExpandedIncluder, committeeLogoIncluder, membershipIncluder } from './constants'
+import { committeeSchemas } from './validation'
 import { ServerOnlyAuther } from '@/auth/auther/RequireServer'
 import { cmsImageOperations } from '@/cms/images/operations'
 import { cmsParagraphOperations } from '@/cms/paragraphs/operations'
@@ -8,9 +9,8 @@ import { defineOperation } from '@/services/serviceOperation'
 import { articleRealtionsIncluder } from '@/cms/articles/constants'
 import { implementUpdateArticleOperations } from '@/cms/articles/implement'
 import { articleOperations } from '@/cms/articles/operations'
-import { z } from 'zod'
-import { committeeSchemas } from './validation'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
+import { z } from 'zod'
 import { GroupType } from '@prisma/client'
 
 

@@ -2,10 +2,10 @@ import { EmailVerifiedWrapper } from './EmailVerifiedWrapper'
 import { QueryParams } from '@/lib/queryParams/queryParams'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { verifyEmailAction } from '@/services/auth/actions'
+import { Session } from '@/auth/session/Session'
 import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
 import type { SearchParamsServerSide } from '@/lib/queryParams/types'
-import { Session } from '@/auth/session/Session'
 
 type PropTypes = SearchParamsServerSide
 

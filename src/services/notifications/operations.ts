@@ -4,6 +4,8 @@ import { notificationAuth } from './auth'
 import { notificationSchemas } from './schemas'
 import { allNotificationMethodsOn, notificationMethodsArray } from './constants'
 import { availableNotificationMethodIncluder } from './channel/constants'
+import { sendMail } from './email/send'
+import { emailSchemas } from './email/schemas'
 import { userFilterSelection } from '@/services/users/constants'
 import { defineOperation } from '@/services/serviceOperation'
 import { ServerOnly } from '@/auth/auther/ServerOnly'
@@ -12,8 +14,6 @@ import { SpecialNotificationChannel } from '@prisma/client'
 import type { Notification } from '@prisma/client'
 import type { ExpandedNotificationChannel, NotificationResult } from './types'
 import type { UserFiltered } from '@/services/users/types'
-import { sendMail } from './email/send'
-import { emailSchemas } from './email/schemas'
 
 const dispathMethod = {
     email: dispatchEmailNotifications,

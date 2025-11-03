@@ -2,8 +2,8 @@
 import { createActionError } from '@/services/actionError'
 import { ServerError } from '@/services/error'
 import { generateOmegaId } from '@/services/omegaid/generate'
-import type { ActionReturn } from '@/services/actionTypes'
 import { Session } from '@/auth/session/Session'
+import type { ActionReturn } from '@/services/actionTypes'
 
 export async function generateOmegaIdAction(): Promise<ActionReturn<string>> {
     //TODO: when changed to makeAction + operation it should take in a params: userId and

@@ -1,8 +1,8 @@
-import { RequireUser } from '@/auth/auther/RequireUser'
 import EmailRegistrationForm from './EmailregistrationForm'
+import { RequireUser } from '@/auth/auther/RequireUser'
 import { readUserAction } from '@/services/users/actions'
-import { notFound, redirect } from 'next/navigation'
 import { Session } from '@/auth/session/Session'
+import { notFound, redirect } from 'next/navigation'
 
 export default async function Registeremail() {
     const { authorized, session } = RequireUser.staticFields({}).dynamicFields({}).auth(await Session.fromNextAuth())

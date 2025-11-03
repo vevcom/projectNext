@@ -1,15 +1,13 @@
 'use client'
-
 import TextInput from '@/components/UI/TextInput'
 import Form from '@/components/Form/Form'
 import { SelectNumber } from '@/components/UI/Select'
 import { createAliasMailingListRelationAction } from '@/services/mail/actions'
-import { useUser } from '@/auth/session/useUser'
 import { updateMailAliasAction, destroyMailAliasAction } from '@/services/mail/alias/actions'
+import { useSession } from '@/auth/session/useSession'
 import { useRouter } from 'next/navigation'
 import type { MailFlowObject } from '@/services/mail/types'
 import type { MailingList } from '@prisma/client'
-
 
 export default function EditMailAlias({
     data,
@@ -26,11 +24,12 @@ export default function EditMailAlias({
         throw Error('Could not find alias')
     }
 
-    const uResults = useUser()
-    const permissions = uResults.permissions ?? []
+    const session = useSession()
+    const permissions = !session.loading ? session.session.permissions : []
 
     return <>
         <h2>{focusedAlias.address}</h2>
+        { /** TODO: Call auther */ }
         { permissions.includes('MAILALIAS_UPDATE') && <div>
             <Form
                 title="Alias"

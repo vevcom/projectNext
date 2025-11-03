@@ -4,7 +4,6 @@ import SelectedCompany from '@/career/jobads/SelectedCompany'
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
 import Textarea from '@/components/UI/Textarea'
-import useEditing from '@/hooks/useEditing'
 import { SelectString } from '@/components/UI/Select'
 import DateInput from '@/components/UI/DateInput'
 import Slider from '@/app/_components/UI/Slider'
@@ -12,6 +11,8 @@ import { CompanyPagingContext } from '@/contexts/paging/CompanyPaging'
 import CompanyChooser from '@/app/career/jobads/CompanyChooser'
 import { destroyJobAdAction, updateJobAdAction } from '@/career/jobAds/actions'
 import { jobAdOptions } from '@/services/career/jobAds/constants'
+import useEditMode from '@/hooks/useEditmode'
+import { jobAdAuth } from '@/services/career/jobAds/auth'
 import { configureAction } from '@/services/configureAction'
 import { formatVevenUri } from '@/lib/urlEncoding'
 import { v4 as uuid } from 'uuid'
@@ -30,8 +31,9 @@ type PropTypes = {
  * @param children - children to render if editmode is off
  */
 export default function EditJobAd({ jobAd, children }: PropTypes) {
-    //TODO: chack visibility
-    const canEdit = useEditing({})
+    const canEdit = useEditMode({
+        auther: jobAdAuth.update.dynamicFields({})
+    })
     const companyPagingCtx = useContext(CompanyPagingContext)
     if (!canEdit) return children
     if (!companyPagingCtx) {
