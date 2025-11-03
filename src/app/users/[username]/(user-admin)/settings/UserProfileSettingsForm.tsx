@@ -9,25 +9,11 @@ import { sexConfig } from '@/services/users/constants'
 import Textarea from '@/components/UI/Textarea'
 import { SEX } from '@prisma/client'
 import { useState } from 'react'
-import type { $Enums } from '@prisma/client'
+import type { $Enums, User } from '@prisma/client'
 
-
-export type UserDataType = {
-    userData: {
-        username: string,
-        mobile: string | null,
-        allergies: string | null,
-        email:string,
-        sex: $Enums.SEX | null,
-        firstname:string,
-        lastname:string,
-        bio:string,
-        imageConsent:boolean
-    }
-}
-
-
-export default function UserProfileSettingsForm({ userData } : UserDataType) {
+export default function UserProfileSettingsForm({ userData } : {
+    userData: Pick<User, 'username' | 'mobile' | 'allergies' | 'sex' | 'imageConsent' | 'bio'>
+}) {
     const [sexValue, setSexValue] = useState<SEX | undefined>(userData.sex ?? undefined)
 
     const sexOptions = Object.values(SEX).map(sex => ({
