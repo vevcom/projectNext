@@ -33,18 +33,12 @@ export default async function migrateImages(
         update: {},
         create: {
             name: 'Søppel fra Veven',
-            description: 'Denne samlingen inneholder bilder som ikke tilhører noen samling',
-            visibility: {
-                create: {
-                    purpose: 'IMAGE',
-                    published: true,
-                    regularLevel: {
-                        create: {}
-                    },
-                    adminLevel: {
-                        create: {}
-                    },
-                }
+            description: 'Denne samlingen inneholder bilder som ikke tilhørete noen samling i omegaweb-basic',
+            visibilityRead: {
+                create: {},
+            },
+            visibilityAdmin: {
+                create: {} //TODO: Require vevcom or something...
             }
         },
     })

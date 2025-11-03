@@ -8,7 +8,7 @@ import type { articleSchemas } from './schemas'
 import type { z } from 'zod'
 
 type ParamsSchema = typeof articleSchemas.params
-type OwnedArticles = Prisma.ArticleGetPayload<{
+type OwnedArticle = Prisma.ArticleGetPayload<{
     include: {
         coverImage: true,
         articleSections: {
@@ -43,7 +43,7 @@ export function implementUpdateArticleOperations<
             prisma: PrismaPossibleTransaction<false>,
             implementationParams: z.infer<ImplementationParamsSchema>
         }
-    ) => Promise<OwnedArticles[]>
+    ) => Promise<OwnedArticle[]>
 }) {
     const ownershipCheckArticle = async (
         args: Omit<ArgsAuthGetterAndOwnershipCheck<false, ParamsSchema, undefined, ImplementationParamsSchema>, 'data'>

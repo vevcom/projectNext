@@ -1,19 +1,17 @@
 import '@pn-server-only'
-import { specialCollectionsSpecialVisibilityMap } from './ConfigVars'
 import { prisma } from '@/prisma/client'
 import logger from '@/lib/logger'
 import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
-import { readSpecialVisibility } from '@/services/visibility/read'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { imageOperations } from '@/services/images/operations'
+import { visibilityOperations } from '@/services/visibility/operations'
 import type { SpecialCollection, ImageCollection, Image } from '@prisma/client'
 import type {
     ExpandedImageCollection,
     ImageCollectionCursor,
     ImageCollectionPageReturn
 } from '@/services/images/collections/types'
-import type { VisibilityFilter } from '@/auth/getVisibilityFilter'
 import type { ReadPageInput } from '@/lib/paging/types'
 
 
@@ -46,10 +44,8 @@ export async function readImageCollection(
  */
 export async function readImageCollectionsPage<const PageSize extends number>(
     { page }: ReadPageInput<PageSize, ImageCollectionCursor>,
-    visibilityFilter: VisibilityFilter
 ): Promise<ImageCollectionPageReturn[]> {
     const collections = await prismaCall(() => prisma.imageCollection.findMany({
-        where: visibilityFilter,
         include: {
             coverImage: true,
             images: {
@@ -100,16 +96,26 @@ export async function readSpecialImageCollection(special: SpecialCollection): Pr
     }))
     if (!collection) {
         logger.warn(`Special collection ${special} did not exist, creating it`)
-        const permissionLevels = specialCollectionsSpecialVisibilityMap[special]
-        const visability = await readSpecialVisibility(permissionLevels.specialVisibility)
+
+        //Note: these visibilities do not actually do anything for special collections,
+        //but the schema requires them to exist - believe this implementation to be better than for
+        //regular collections to maybe be in invalid state with no visibility.
+        // TODO: use create method.
+        const visibilityAdmin = await visibilityOperations.create({ bypassAuth: true })
+        const visibilityRead = await visibilityOperations.create({ bypassAuth: true })
 
         const newCollection = await prismaCall(() => prisma.imageCollection.create({
             data: {
                 name: special,
                 special,
-                visibility: {
+                visibilityRead: {
                     connect: {
-                        id: visability.id
+                        id: visibilityRead.id
+                    }
+                },
+                visibilityAdmin: {
+                    connect: {
+                        id: visibilityAdmin.id
                     }
                 }
             }
