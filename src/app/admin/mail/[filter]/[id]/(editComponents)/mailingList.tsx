@@ -9,8 +9,8 @@ import {
     createMailingListGroupRelationAction,
     createMailingListUserRelationAction
 } from '@/services/mail/actions'
-import { useUser } from '@/auth/session/useUser'
 import { updateMailingListAction, destroyMailingListAction } from '@/services/mail/list/actions'
+import { useSession } from '@/auth/session/useSession'
 import { useRouter } from 'next/navigation'
 import type { MailAddressExternal, MailAlias } from '@prisma/client'
 import type { MailFlowObject } from '@/services/mail/types'
@@ -30,11 +30,12 @@ export default function EditMailingList({
 
     const focusedMailingList = data.mailingList[0]
 
-    const uResults = useUser()
-    const permissions = uResults.permissions ?? []
+    const session = useSession()
+    const permissions = !session.loading ? session.session.permissions : []
 
     return <>
         <h2>{focusedMailingList.name}</h2>
+        {/** TODO: Call author */}
         { permissions.includes('MAILINGLIST_UPDATE') && <div>
             <Form
                 title="Mailliste"

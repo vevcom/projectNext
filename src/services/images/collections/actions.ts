@@ -1,7 +1,6 @@
 'use server'
 
 import { createActionError, createZodActionError, safeServerCall } from '@/services/actionError'
-import { getUser } from '@/auth/session/getUser'
 import { createImageCollection } from '@/services/images/collections/create'
 import { destroyImageCollection } from '@/services/images/collections/destroy'
 import {
@@ -22,11 +21,6 @@ import type { ImageCollection } from '@prisma/client'
 export async function createImageCollectionAction(
     rawdata: FormData | CreateImageCollectionTypes['Type']
 ): Promise<ActionReturn<ImageCollection>> {
-    const { authorized, status } = await getUser({
-        requiredPermissions: [['IMAGE_COLLECTION_CREATE']]
-    })
-    if (!authorized) return createActionError(status)
-
     const parse = createImageCollectionValidation.typeValidate(rawdata)
     if (!parse.success) return createZodActionError(parse)
     const data = parse.data

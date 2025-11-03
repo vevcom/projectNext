@@ -1,17 +1,16 @@
 import styles from './page.module.scss'
 import { readSchoolsPageAction } from '@/services/education/schools/actions'
-import { getUser } from '@/auth/session/getUser'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { SchoolPagingProvider } from '@/contexts/paging/SchoolPaging'
 import SchoolList from '@/components/School/SchoolList'
+import { ServerSession } from '@/auth/session/ServerSession'
+import { schoolAuth } from '@/services/education/schools/auth'
 import { schoolListRenderer } from '@/components/School/SchoolListRenderer'
 import Link from 'next/link'
 import type { PageSizeSchool } from '@/contexts/paging/SchoolPaging'
 
 export default async function Schools() {
-    const { permissions } = await getUser()
-
-    const isSchoolAdmin = permissions.includes('SCHOOLS_ADMIN')
+    const isSchoolAdmin = schoolAuth.create.dynamicFields({}).auth(await ServerSession.fromNextAuth()).authorized
 
     const pageSizeSchool: PageSizeSchool = 8
     const res = await readSchoolsPageAction({

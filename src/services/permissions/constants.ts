@@ -296,7 +296,7 @@ export const permissionConfig = {
         description: 'kan lage epostalias',
         category: 'mail',
     },
-    MAILALIAS_DESTORY: {
+    MAILALIAS_DESTROY: {
         name: 'Slette epostalias',
         description: 'kan slette epostalias',
         category: 'mail',

@@ -11,8 +11,8 @@ import {
     readSpecialCmsParagraphCabinContractAction,
     updateSpecialCmsParagraphCabinContractAction
 } from '@/services/cabin/actions'
+import { ServerSession } from '@/auth/session/ServerSession'
 import { displayDate } from '@/lib/dates/displayDate'
-import { Session } from '@/auth/session/Session'
 import { cabinBookingAuth } from '@/services/cabin/booking/auth'
 import type { ReleasePeriod } from '@prisma/client'
 
@@ -43,7 +43,7 @@ export default async function CabinBooking() {
     const nextReleasePeriod = findNextReleasePeriod(releasePeriods)
     const pricePeriods = unwrapActionReturn(await readPublicPricePeriodsAction())
     const cabinProducts = unwrapActionReturn(await readCabinProductsActiveAction())
-    const session = await Session.fromNextAuth()
+    const session = await ServerSession.fromNextAuth()
     const canBookCabin = cabinBookingAuth.createCabinBookingNoUser.dynamicFields({}).auth(session)
     const canBookBed = cabinBookingAuth.createBedBookingNoUser.dynamicFields({}).auth(session)
 

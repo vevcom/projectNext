@@ -1,7 +1,6 @@
 'use server'
 import { schoolOperations } from './operations'
-import { createActionError, createZodActionError, safeServerCall } from '@/services/actionError'
-import { getUser } from '@/auth/session/getUser'
+import { createZodActionError, safeServerCall } from '@/services/actionError'
 import { createSchoolValidation, updateSchoolValidation } from '@/education/schools/validation'
 import { createSchool } from '@/services/education/schools/create'
 import { destroySchool } from '@/services/education/schools/destroy'
@@ -16,11 +15,6 @@ import type { ActionReturn } from '@/services/actionTypes'
 export async function createSchoolAction(
     rawdata: FormData | CreateSchoolTypes['Type']
 ): Promise<ActionReturn<SchoolFiltered>> {
-    const { authorized, status } = await getUser({
-        requiredPermissions: [['SCHOOLS_ADMIN']]
-    })
-    if (!authorized) return createActionError(status)
-
     const parse = createSchoolValidation.typeValidate(rawdata)
     if (!parse.success) return createZodActionError(parse)
     const data = parse.data
@@ -29,31 +23,16 @@ export async function createSchoolAction(
 }
 
 export async function destroySchoolAction(id: number): Promise<ActionReturn<void>> {
-    const { authorized, status } = await getUser({
-        requiredPermissions: [['SCHOOLS_ADMIN']]
-    })
-    if (!authorized) return createActionError(status)
-
     return await safeServerCall(() => destroySchool(id))
 }
 
 export async function readSchoolsPageAction<const PageSize extends number>(
     pageReadInput: ReadPageInput<PageSize, SchoolCursor>
 ): Promise<ActionReturn<ExpandedSchool[]>> {
-    const { authorized, status } = await getUser({
-        requiredPermissions: [['SCHOOLS_READ']]
-    })
-    if (!authorized) return createActionError(status)
-
     return await safeServerCall(() => readSchoolsPage(pageReadInput))
 }
 
 export async function readStandardSchoolsAction(): Promise<ActionReturn<SchoolFiltered[]>> {
-    const { authorized, status } = await getUser({
-        requiredPermissions: [['SCHOOLS_READ']]
-    })
-    if (!authorized) return createActionError(status)
-
     return await safeServerCall(() => readStandardSchools())
 }
 
@@ -62,11 +41,6 @@ export async function readSchoolsAction({
 }: {
     onlyNonStandard: boolean
 }): Promise<ActionReturn<SchoolFiltered[]>> {
-    const { authorized, status } = await getUser({
-        requiredPermissions: [['SCHOOLS_READ']]
-    })
-    if (!authorized) return createActionError(status)
-
     return await safeServerCall(() => readSchools({ onlyNonStandard }))
 }
 
@@ -76,11 +50,6 @@ export async function updateSchoolAction(
     id: number,
     rawdata: FormData | UpdateSchoolTypes['Type']
 ): Promise<ActionReturn<SchoolFiltered>> {
-    const { authorized, status } = await getUser({
-        requiredPermissions: [['SCHOOLS_ADMIN']]
-    })
-    if (!authorized) return createActionError(status)
-
     const parse = updateSchoolValidation.typeValidate(rawdata)
     if (!parse.success) return createZodActionError(parse)
     const data = parse.data

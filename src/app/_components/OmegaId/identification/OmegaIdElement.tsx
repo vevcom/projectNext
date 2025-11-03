@@ -1,9 +1,9 @@
 'use client'
 import styles from './OmegaIdElement.module.scss'
-import { useUser } from '@/auth/session/useUser'
 import { generateOmegaIdAction } from '@/services/omegaid/actions'
 import { readJWTPayload } from '@/jwt/jwtReadUnsecure'
 import { compressOmegaId } from '@/services/omegaid/compress'
+import { useSession } from '@/auth/session/useSession'
 import { useQRCode } from 'next-qrcode'
 import { useEffect, useState } from 'react'
 
@@ -14,7 +14,7 @@ export default function OmegaIdElement({ token }: {
 }) {
     const [tokenState, setTokenState] = useState(token)
 
-    const { user } = useUser()
+    const session = useSession()
 
     const { SVG } = useQRCode()
 
@@ -42,7 +42,9 @@ export default function OmegaIdElement({ token }: {
         return () => clearInterval(interval)
     })
 
-    if (!user) return <p>Could not load OmegaID, since the user is not loggedin.</p>
+    if (session.loading) return <p>Loading...</p>
+    if (!session.session.user) return <p>Could not load OmegaID, since the user is not loggedin.</p>
+    const user = session.session.user
 
     return <div className={styles.OmegaIdElement}>
         <h2>Omega ID</h2>

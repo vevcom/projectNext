@@ -1,8 +1,9 @@
 'use client'
 import styles from './RemovePart.module.scss'
 import Form from '@/components/Form/Form'
+import useEditMode from '@/hooks/useEditmode'
 import useClickOutsideRef from '@/hooks/useClickOutsideRef'
-import useEditing from '@/hooks/useEditing'
+import { RequireNothing } from '@/auth/auther/RequireNothing'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { faX } from '@fortawesome/free-solid-svg-icons'
@@ -17,7 +18,10 @@ type PropTypes = {
 
 export default function RemovePart({ part, removePartFromArticleSectionAction }: PropTypes) {
     const { refresh } = useRouter()
-    const canEdit = useEditing({})
+    //TODO: Auther must be passed in....
+    const canEdit = useEditMode({
+        auther: RequireNothing.staticFields({}).dynamicFields({})
+    })
     const [confirmOpen, setConfirmOpen] = useState(false)
     const confirmRef = useClickOutsideRef(() => setConfirmOpen(false))
     if (!canEdit) return null

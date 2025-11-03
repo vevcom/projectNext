@@ -1,7 +1,7 @@
 import styles from './page.module.scss'
 import SpecialCmsParagraph from '@/components/Cms/CmsParagraph/SpecialCmsParagraph'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
-import { Session } from '@/auth/session/Session'
+import { ServerSession } from '@/auth/session/ServerSession'
 import Image from '@/components/Image/Image'
 import CmsLink from '@/components/Cms/CmsLink/CmsLink'
 import { QueryParams } from '@/lib/queryParams/queryParams'
@@ -12,7 +12,7 @@ import { readCompanySpecialCmsLinkAction, updateCompanySpecialCmsLinkAction } fr
 import Link from 'next/link'
 
 export default async function CareerLandingPage() {
-    const session = await Session.fromNextAuth()
+    const session = await ServerSession.fromNextAuth()
     const jobAdImageRes = await readSpecialImageAction({ params: { special: 'MACHINE' } })
     const eventImageRes = await readSpecialImageAction({ params: { special: 'FAIR' } })
     const comanyImageRes = await readSpecialImageAction({ params: { special: 'REALFAGSBYGGET' } })

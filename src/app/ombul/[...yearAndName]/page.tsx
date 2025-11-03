@@ -5,9 +5,10 @@ import { readOmbulAction, updateOmbulAction, updateOmbulCmsCoverImageAction } fr
 import PdfDocument from '@/components/PdfDocument/PdfDocument'
 import SlideInOnView from '@/components/SlideInOnView/SlideInOnView'
 import EditableTextField from '@/components/EditableTextField/EditableTextField'
-import { getUser } from '@/auth/session/getUser'
 import CmsImage from '@/components/Cms/CmsImage/CmsImage'
+import { ServerSession } from '@/auth/session/ServerSession'
 import { configureAction } from '@/services/configureAction'
+import { ombulAuth } from '@/services/ombul/auth'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
@@ -18,11 +19,6 @@ type PropTypes = {
 }
 
 export default async function Ombul({ params }: PropTypes) {
-    const { permissions } = await getUser({
-        requiredPermissions: [['OMBUL_READ']],
-        shouldRedirect: true,
-    })
-
     const year = parseInt(decodeURIComponent((await params).yearAndName[0]), 10)
     const name = decodeURIComponent((await params).yearAndName[1])
     if (!year || !name || (await params).yearAndName.length > 2) notFound()
@@ -37,9 +33,12 @@ export default async function Ombul({ params }: PropTypes) {
 
     const path = `/store/ombul/${ombul.fsLocation}`
 
-    const canUpdate = permissions.includes('OMBUL_UPDATE') //TODO: use update auther.
+    const canUpdate = ombulAuth.update.dynamicFields({}).auth(await ServerSession.fromNextAuth()).authorized
 
-    const changeDescription = updateOmbulAction.bind(null, ombul.id)
+    const changeDescription = configureAction(
+        updateOmbulAction,
+        { params: { id: ombul.id } }
+    )
 
     return (
         <div className={styles.wrapper}>

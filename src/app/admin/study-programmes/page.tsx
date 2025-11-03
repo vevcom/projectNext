@@ -6,30 +6,22 @@ import styles from './page.module.scss'
 import { readStudyProgrammesAction } from '@/services/groups/studyProgrammes/actions'
 import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
-import { getUser } from '@/auth/session/getUser'
+import { unwrapActionReturn } from '@/app/redirectToErrorPage'
+import { studyProgrammeAuth } from '@/services/groups/studyProgrammes/auth'
+import { ServerSession } from '@/auth/session/ServerSession'
 
 
 export default async function StudyProgrammes() {
-    const { permissions } = await getUser({
-        requiredPermissions: [['STUDY_PROGRAMME_READ']],
-        shouldRedirect: true,
-    })
+    const studyprogrammes = unwrapActionReturn(await readStudyProgrammesAction())
 
-    const studyprogrammes = await readStudyProgrammesAction()
-
-    if (!studyprogrammes.success) {
-        console.log(studyprogrammes)
-        return <div>Ups, an error occured</div>
-    }
-
-    const showCreateButton = permissions.includes('STUDY_PROGRAMME_CREATE')
-    const canEdit = permissions.includes('STUDY_PROGRAMME_UPDATE')
+    const showCreateButton = studyProgrammeAuth.create.dynamicFields({}).auth(await ServerSession.fromNextAuth())
+    const canEdit = studyProgrammeAuth.update.dynamicFields({}).auth(await ServerSession.fromNextAuth())
 
 
     return <PageWrapper
         title="Studieprogrammer"
         headerItem={
-            showCreateButton && (
+            showCreateButton.authorized && (
                 <AddHeaderItemPopUp PopUpKey="create ombul">
                     <UpdateStudyProgrammeForm />
                 </AddHeaderItemPopUp>
@@ -48,7 +40,7 @@ export default async function StudyProgrammes() {
                     <th>Del av Omega</th>
                 </tr>
             </thead>
-            <StudyProgrammeTableBody studyprogrammes={studyprogrammes.data} canEdit={canEdit} />
+            <StudyProgrammeTableBody studyprogrammes={studyprogrammes} canEdit={canEdit.authorized} />
         </table>
     </PageWrapper>
 }

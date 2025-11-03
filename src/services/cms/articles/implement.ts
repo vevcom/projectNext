@@ -2,7 +2,7 @@ import { articleOperations } from './operations'
 import { implementUpdateArticleSectionOperations } from '@/cms/articleSections/implement'
 import { cmsImageOperations } from '@/cms/images/operations'
 import type { ArgsAuthGetterAndOwnershipCheck, PrismaPossibleTransaction } from '@/services/serviceOperation'
-import type { AutherResult } from '@/auth/auther/Auther'
+import type { AutherDynamicFieldsBound } from '@/auth/auther/Auther'
 import type { Prisma } from '@prisma/client'
 import type { articleSchemas } from './schemas'
 import type { z } from 'zod'
@@ -37,7 +37,7 @@ export function implementUpdateArticleOperations<
             prisma: PrismaPossibleTransaction<false>,
             implementationParams: z.infer<ImplementationParamsSchema>
         }
-    ) => AutherResult | Promise<AutherResult>,
+    ) => AutherDynamicFieldsBound | Promise<AutherDynamicFieldsBound>,
     ownedArticles: (
         args: {
             prisma: PrismaPossibleTransaction<false>,

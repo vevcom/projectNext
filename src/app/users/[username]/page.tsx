@@ -1,11 +1,11 @@
 import styles from './page.module.scss'
 import BorderButton from '@/components/UI/BorderButton'
-import { Session } from '@/auth/session/Session'
 import { userAuth } from '@/services/users/auth'
 import ProfilePicture from '@/components/User/ProfilePicture'
 import UserDisplayName from '@/components/User/UserDisplayName'
 import { readUserProfileAction } from '@/services/users/actions'
 import { readSpecialImageAction } from '@/services/images/actions'
+import { ServerSession } from '@/auth/session/ServerSession'
 import { sexConfig } from '@/services/users/constants'
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
@@ -18,7 +18,7 @@ export type PropTypes = {
 }
 
 export default async function User({ params }: PropTypes) {
-    const session = await Session.fromNextAuth()
+    const session = await ServerSession.fromNextAuth()
     if ((await params).username === 'me') {
         if (!session.user) redirect('/login')
         redirect(`/users/${session.user.username}`) //This throws.

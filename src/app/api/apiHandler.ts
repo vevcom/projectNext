@@ -1,6 +1,6 @@
 import '@pn-server-only'
-import { Session } from '@/auth/session/Session'
 import { getHttpErrorCode, ServerError, Smorekopp } from '@/services/error'
+import { ServerSession } from '@/auth/session/ServerSession'
 import type { ServiceOperation } from '@/services/serviceOperation'
 import type { ErrorCode, ErrorMessage } from '@/services/error'
 import type { SessionNoUser } from '@/auth/session/Session'
@@ -22,7 +22,7 @@ type APIHandler<
 async function apiHandlerGeneric<Return>(req: Request, handle: (session: SessionNoUser) => Promise<Return>) {
     try {
         const authorization = req.headers.get('authorization')
-        const session = await Session.fromApiKey(authorization)
+        const session = await ServerSession.fromApiKey(authorization)
         const result = await handle(session)
         return createApiResponse(result)
     } catch (error: unknown) {

@@ -1,5 +1,5 @@
 import styles from './layout.module.scss'
-import { SessionProvider } from '@/auth/session/useUser'
+import { SessionProvider } from '@/auth/session/useSession'
 import MobileNavBar from '@/components/NavBar/MobileNavBar'
 import NavBar from '@/components/NavBar/NavBar'
 import Footer from '@/components/Footer/Footer'

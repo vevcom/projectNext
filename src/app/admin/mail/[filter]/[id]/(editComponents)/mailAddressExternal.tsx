@@ -4,11 +4,11 @@ import TextInput from '@/components/UI/TextInput'
 import Form from '@/components/Form/Form'
 import { SelectNumber } from '@/components/UI/Select'
 import { createMailingListExternalRelationAction } from '@/services/mail/actions'
-import { useUser } from '@/auth/session/useUser'
 import {
     updateMailAddressExternalAction,
     destroyMailAddressExternalAction
 } from '@/services/mail/mailAddressExternal/actions'
+import { useSession } from '@/auth/session/useSession'
 import { useRouter } from 'next/navigation'
 import type { MailingList } from '@prisma/client'
 import type { MailFlowObject } from '@/services/mail/types'
@@ -29,8 +29,8 @@ export default function EditMailAddressExternal({
         throw Error('Could not find alias')
     }
 
-    const uResults = useUser()
-    const permissions = uResults.permissions ?? []
+    const session = useSession()
+    const permissions = !session.loading ? session.session.permissions : []
 
     return <>
         <h2>{focusedAddress.address}</h2>

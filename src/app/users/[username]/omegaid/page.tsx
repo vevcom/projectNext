@@ -1,13 +1,13 @@
 'use server'
 import styles from './page.module.scss'
-import { Session } from '@/auth/session/Session'
+import { ServerSession } from '@/auth/session/ServerSession'
 import OmegaId from '@/components/OmegaId/identification/OmegaId'
 import { forbidden, notFound, redirect } from 'next/navigation'
 import type { PropTypes } from '@/app/users/[username]/page'
 
 
 export default async function OmegaIdPage({ params }: PropTypes) {
-    const session = await Session.fromNextAuth()
+    const session = await ServerSession.fromNextAuth()
     const username = (await params).username
 
     if (!session.user) return notFound()

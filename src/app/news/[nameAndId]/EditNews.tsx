@@ -2,11 +2,12 @@
 import styles from './EditNews.module.scss'
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
+import useEditMode from '@/hooks/useEditmode'
 import Textarea from '@/components/UI/Textarea'
 import DateInput from '@/components/UI/DateInput'
-import useEditing from '@/hooks/useEditing'
 import { destroyNewsAction, updateNewsAction } from '@/services/news/actions'
 import { formatVevenUri } from '@/lib/urlEncoding'
+import { newsAuth } from '@/services/news/auth'
 import { configureAction } from '@/services/configureAction'
 import { useRouter } from 'next/navigation'
 import type { ExpandedNewsArticle } from '@/services/news/types'
@@ -24,7 +25,9 @@ type PropTypes = {
 export default function EditNews({ news, children }: PropTypes) {
     const { refresh, push } = useRouter()
     //TODO: chack visibility
-    const canEdit = useEditing({})
+    const canEdit = useEditMode({
+        auther: newsAuth.update.dynamicFields({})
+    })
     if (!canEdit) return children
 
     // TODO: VISINILITY ADMIN

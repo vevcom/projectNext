@@ -1,9 +1,8 @@
 'use client'
-
+import { useSession } from '@/auth/session/useSession'
 import Form from '@/components/Form/Form'
 import { SelectNumber } from '@/components/UI/Select'
 import { createMailingListUserRelationAction } from '@/services/mail/actions'
-import { useUser } from '@/auth/session/useUser'
 import type { MailFlowObject } from '@/services/mail/types'
 import type { MailingList } from '@prisma/client'
 
@@ -20,11 +19,12 @@ export default function EditUser({
         throw Error('Could not find user')
     }
 
-    const uResults = useUser()
-    const permissions = uResults.permissions ?? []
+    const session = useSession()
+    const permissions = !session.loading ? session.session.permissions : []
 
     return <div>
         <h2>{`${focusedUser.firstname} ${focusedUser.lastname}`}</h2>
+        {/** TODO: Call author */}
         { permissions.includes('MAILINGLIST_USER_CREATE') && <Form
             title="Legg til mailliste"
             submitText="Legg til"

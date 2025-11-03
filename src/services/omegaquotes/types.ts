@@ -1,4 +1,4 @@
-import type { omegaQuoteFieldsToExpose } from './CofigVars'
+import type { omegaQuoteFieldsToExpose } from './constants'
 import type { OmegaQuote } from '@prisma/client'
 
 export type OmegaquoteFiltered = Pick<OmegaQuote, typeof omegaQuoteFieldsToExpose[number]>

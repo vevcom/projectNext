@@ -2,10 +2,11 @@
 import styles from './CmsLinkEditor.module.scss'
 import TextInput from '@/components/UI/TextInput'
 import EditOverlay from '@/cms/EditOverlay'
+import useEditMode from '@/hooks/useEditmode'
 import Form from '@/components/Form/Form'
 import PopUp from '@/components/PopUp/PopUp'
-import useEditing from '@/hooks/useEditing'
 import { configureAction } from '@/services/configureAction'
+import { RequireNothing } from '@/auth/auther/RequireNothing'
 import { useRouter } from 'next/navigation'
 import type { CmsLink } from '@prisma/client'
 import type { UpdateCmsLinkAction } from '@/cms/links/types'
@@ -16,7 +17,10 @@ type PropTypes = {
 }
 
 export default function CmsLinkEditor({ cmsLink, updateCmsLinkAction }: PropTypes) {
-    const canEdit = useEditing({}) //TODO: check visibility of cmsLink for user and pass it to useEditing
+    //TODO: Auther must be passed in....
+    const canEdit = useEditMode({
+        auther: RequireNothing.staticFields({}).dynamicFields({})
+    })
     const { refresh } = useRouter()
     if (!canEdit) return null
 
