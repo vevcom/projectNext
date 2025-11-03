@@ -10,6 +10,8 @@ import { sexConfig } from '@/services/users/constants'
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { v4 as uuid } from 'uuid'
+import { RelationshipStatus } from '@prisma/client'
+import React from 'react'
 
 export type PropTypes = {
     params: Promise<{
@@ -53,13 +55,23 @@ export default async function User({ params }: PropTypes) {
         { username: profile.user.username }
     ).auth(session)
 
+    const relationshipColour = {
+        [RelationshipStatus.SINGLE]: "green",
+        [RelationshipStatus.ITS_COMPLICATED]: "yellow",
+        [RelationshipStatus.TAKEN]: "red",
+        [RelationshipStatus.NOT_SPECIFIED]: "white"
+    }
+
+    // Not ideal to use typecast here, but this is the simplest way.
+    const borderColour = {"--border-colour": relationshipColour[profile.user.relationshipStatus] } as React.CSSProperties
+
     return (
         <div className={styles.wrapper}>
             <div className={styles.profile}>
                 <div className={`${styles.top} ${styles.standard}`} /> {/* TODO change style based on flair */}
 
-                <div className={styles.profileContent}>
-                    <ProfilePicture width={240} profileImage={profileImage} />
+                <div className={styles.profileContent} style={borderColour}>
+                    <ProfilePicture width={240} profileImage={profileImage} className={styles.profilePicture}/>
                     <div className={styles.header}>
                         <div className={styles.nameAndId}>
                             <h1><UserDisplayName user={profile.user} /></h1>
@@ -109,12 +121,32 @@ export default async function User({ params }: PropTypes) {
 
                     </div>
                     <div className={styles.profileMain}>
+                    
+                        
+
+
                         {(profile.user.bio !== '') &&
                             <div className={styles.bio}>
                                 <h2>Bio:</h2>
                                 <p>{profile.user.bio}</p>
                             </div>
                         }
+
+                        {(profile.user.relationshipStatus !== RelationshipStatus.NOT_SPECIFIED) &&
+                        <p>
+                            <span className={styles.relationshipStatus}>Sivilstatus: </span>
+                            {profile.user.relationshipstatusText ? profile.user.relationshipstatusText : 
+                            profile.user.relationshipStatus == RelationshipStatus.SINGLE && "Single" ||
+                            profile.user.relationshipStatus == RelationshipStatus.ITS_COMPLICATED && "It's complicated" ||
+                            profile.user.relationshipStatus == RelationshipStatus.TAKEN && "Taken"
+                            
+                            }
+                            
+                        </p>
+                        }
+
+
+
                         <p>
                             <span className={styles.email}>E-post:</span>
                             {profile.user.email}
