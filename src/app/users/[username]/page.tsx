@@ -56,14 +56,14 @@ export default async function User({ params }: PropTypes) {
     ).auth(session)
 
     const relationshipColour = {
-        [RelationshipStatus.SINGLE]: "green",
-        [RelationshipStatus.ITS_COMPLICATED]: "yellow",
-        [RelationshipStatus.TAKEN]: "red",
-        [RelationshipStatus.NOT_SPECIFIED]: "white"
+        [RelationshipStatus.SINGLE]: 'green',
+        [RelationshipStatus.ITS_COMPLICATED]: 'yellow',
+        [RelationshipStatus.TAKEN]: 'red',
+        [RelationshipStatus.NOT_SPECIFIED]: 'white'
     }
 
     // Not ideal to use typecast here, but this is the simplest way.
-    const borderColour = {"--border-colour": relationshipColour[profile.user.relationshipStatus] } as React.CSSProperties
+    const borderColour = { '--border-colour': relationshipColour[profile.user.relationshipStatus] } as React.CSSProperties
 
     return (
         <div className={styles.wrapper}>
@@ -121,8 +121,6 @@ export default async function User({ params }: PropTypes) {
 
                     </div>
                     <div className={styles.profileMain}>
-                    
-                        
 
 
                         {(profile.user.bio !== '') &&
@@ -135,16 +133,15 @@ export default async function User({ params }: PropTypes) {
                         {(profile.user.relationshipStatus !== RelationshipStatus.NOT_SPECIFIED) &&
                         <p>
                             <span className={styles.relationshipStatus}>Sivilstatus: </span>
-                            {profile.user.relationshipstatusText ? profile.user.relationshipstatusText : 
-                            profile.user.relationshipStatus == RelationshipStatus.SINGLE && "Single" ||
-                            profile.user.relationshipStatus == RelationshipStatus.ITS_COMPLICATED && "It's complicated" ||
-                            profile.user.relationshipStatus == RelationshipStatus.TAKEN && "Taken"
-                            
+                            {profile.user.relationshipstatusText ? profile.user.relationshipstatusText :
+                                profile.user.relationshipStatus === RelationshipStatus.SINGLE && 'Single' ||
+                            profile.user.relationshipStatus === RelationshipStatus.ITS_COMPLICATED && "It's complicated" ||
+                            profile.user.relationshipStatus === RelationshipStatus.TAKEN && 'Taken'
+
                             }
-                            
+
                         </p>
                         }
-
 
 
                         <p>
