@@ -19,7 +19,7 @@
     "docker:dobbelOmega:run": "docker compose -f docker-compose.dev.yml exec projectnext /bin/sh -c 'npm run dobbelOmega:run'",
     "docker:seed": "docker compose -f docker-compose.dev.yml exec projectnext /bin/sh -c 'npm run seed'",
     "seed": "npx prisma db push --force-reset --skip-generate && IGNORE_SERVER_ONLY=true npx prisma db seed",
-    "dev-seed": "(if [ ! -d './node_modules/.prisma-dobbel-omega' ]; then npm run dobbelOmega-generate; fi) && npm run seed && npm run dev"
+    "dev-seed": "(if [ ! -d './node_modules/.prisma-dobbel-omega' ]; then npm run dobbelOmega:generate; fi) && npm run seed && npm run dev"
   },
   "prisma": {
     "schema": "src/prisma/schema",
