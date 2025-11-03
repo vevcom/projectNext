@@ -4,7 +4,6 @@ import { userAuth } from './auth'
 import {
     maxNumberOfGroupsInFilter,
     standardMembershipSelection,
-    studentCardRegistrationExpiry,
     userFilterSelection
 } from './constants'
 import { imageOperations } from '@/services/images/operations'
@@ -111,6 +110,45 @@ export const userOperations = {
                     bio: true,
                     image: true,
                     kioleskapLead: true,
+                    memberships: {
+                        where: {
+                            OR: [
+                                {
+                                    group: {
+                                        groupType: 'CLASS',
+                                    },
+                                    active: true,
+                                },
+                                {
+                                    group: {
+                                        groupType: 'COMMITTEE'
+                                    }
+                                },
+                                {
+                                    group: {
+                                        groupType: 'OMEGA_MEMBERSHIP_GROUP'
+                                    },
+                                    active: true,
+                                },
+                                {
+                                    group: {
+                                        groupType: 'STUDY_PROGRAMME'
+                                    },
+                                    active: true,
+                                },
+                            ]
+                        },
+                        include: {
+                            group: {
+                                include: {
+                                    class: true,
+                                    committee: true,
+                                    omegaMembershipGroup: true,
+                                    studyProgramme: true
+                                }
+                            }
+                        }
+                    }
                 },
             }).then(async userData => ({
                 ...userData,
@@ -258,71 +296,20 @@ export const userOperations = {
 
     connectStudentCard: defineOperation({
         authorizer: () => userAuth.connectStudentCard.dynamicFields({}),
-        dataSchema: userSchemas.connectStudentCard,
-        opensTransaction: true,
-        operation: async ({ prisma, data }) => {
-            const currentQueue = await prisma.registerStudentCardQueue.findMany({
-                where: {
-                    expiry: {
-                        gt: new Date(),
-                    },
-                },
-                orderBy: {
-                    expiry: 'desc',
-                },
-                take: 1,
-            })
-
-            if (currentQueue.length === 0) {
-                throw new ServerError(
-                    'NOT FOUND',
-                    `No user has placed them selves in the registration queue at ${process.env.DOMAIN}`
-                )
+        paramsSchema: z.object({
+            studentCard: z.coerce.number().int().min(0).optional(),
+        }),
+        operation: async ({ prisma, params, session }) => {
+            if (!session.user) {
+                throw new ServerError('DISSALLOWED', 'This endpoint requires a user conencted to the session.')
             }
 
-            const userId = currentQueue[0].userId
-            const result = await prisma.$transaction([
-                prisma.registerStudentCardQueue.delete({
-                    where: {
-                        userId,
-                    }
-                }),
-                prisma.user.update({
-                    where: {
-                        id: userId,
-                    },
-                    data: {
-                        studentCard: data.studentCard,
-                    },
-                    select: userFilterSelection,
-                })
-            ])
-
-            return result[1]
-        }
-    }),
-
-    registerStudentCardInQueue: defineOperation({
-        paramsSchema: z.object({
-            userId: z.number(),
-        }),
-        authorizer: ({ params }) => userAuth.registerStudentCardInQueue.dynamicFields(params),
-        operation: async (args) => {
-            const expiry = (new Date()).getTime() + studentCardRegistrationExpiry * 60 * 1000
-            await args.prisma.registerStudentCardQueue.upsert({
+            await prisma.user.update({
                 where: {
-                    userId: args.params.userId,
+                    id: session.user.id
                 },
-                update: {
-                    expiry: new Date(expiry),
-                },
-                create: {
-                    user: {
-                        connect: {
-                            id: args.params.userId,
-                        },
-                    },
-                    expiry: new Date(expiry),
+                data: {
+                    studentCard: params.studentCard?.toString()
                 }
             })
         }
@@ -548,6 +535,12 @@ export const userOperations = {
                     image: true,
                 }
             })
+
+            if (!user.image) {
+                user.image = await imageOperations.readSpecial({
+                    params: { special: 'DEFAULT_PROFILE_IMAGE' },
+                })
+            }
 
             return {
                 balance: 191900,

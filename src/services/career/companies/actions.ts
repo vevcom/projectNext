@@ -9,4 +9,10 @@ export const destroyCompanyAction = makeAction(companyOperations.destroy)
 
 export const readCompanyPageAction = makeAction(companyOperations.readPage)
 
-export const updateComanyAction = makeAction(companyOperations.update)
+export const updateCompanyAction = makeAction(companyOperations.update)
+
+export const updateCompanyCmsLogoAction = makeAction(companyOperations.updateCmsImageLogo)
+
+export const readCompanySpecialCmsLinkAction = makeAction(companyOperations.readSpecialCmsLink)
+
+export const updateCompanySpecialCmsLinkAction = makeAction(companyOperations.updateSpecialCmsLink)

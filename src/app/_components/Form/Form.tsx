@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation'
 import type { PopUpKeyType } from '@/contexts/PopUp'
 import type { Colors, Confirmation } from '@/components/UI/SubmitButton'
 import type { FormHTMLAttributes, ReactNode, DetailedHTMLProps } from 'react'
-import type { Action } from '@/services/actionTypes'
+import type { ActionFormData } from '@/services/actionTypes'
 import type { ErrorMessage } from '@/services/error'
 
 type FormType = DetailedHTMLProps<FormHTMLAttributes<HTMLFormElement>, HTMLFormElement>
@@ -19,7 +19,7 @@ export type PropTypes<ReturnType> = Omit<FormType, 'action' | 'children'> & {
     submitText?: string,
     submitColor?: Colors,
     confirmation?: Confirmation,
-    action: Action<ReturnType>,
+    action: ActionFormData<ReturnType>,
     successCallback?: (data?: ReturnType) => void,
     refreshOnSuccess?: boolean,
     navigateOnSuccess?: string | ((data?: ReturnType) => string | null),

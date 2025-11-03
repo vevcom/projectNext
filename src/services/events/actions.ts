@@ -12,3 +12,5 @@ export const readEventAction = makeAction(eventOperations.read)
 export const readArchivedEventsPageAction = makeAction(eventOperations.readManyArchivedPage)
 
 export const updateEventAction = makeAction(eventOperations.update)
+export const updateEventParagraphContentAction = makeAction(eventOperations.updateParagraphContent)
+export const updateEventCmsCoverImageAction = makeAction(eventOperations.updateCmsCoverImage)

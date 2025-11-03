@@ -1,11 +1,11 @@
-datasource db {
-  provider = "postgresql"
-  url      = env("VEVEN_DB_URI")
-}
-
 generator veven {
   provider = "prisma-client-js"
   output   = "../../../node_modules/.prisma-dobbel-omega"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("VEVEN_DB_URI")
 }
 
 model AliasAssociations {
@@ -509,7 +509,7 @@ model PollVotes {
 model Polls {
   id          Int              @id @default(autoincrement())
   question    String
-  deadline    DateTime         @default(dbgenerated("'2022-10-17 19:43:15.587+02'::timestamp with time zone")) @db.Timestamptz(6)
+  deadline    DateTime         @default(dbgenerated("'2022-10-17 17:43:15.587+00'::timestamp with time zone")) @db.Timestamptz(6)
   anonymous   Boolean          @default(false)
   allow       enum_Polls_allow @default(everyone)
   createdAt   DateTime         @db.Timestamptz(6)

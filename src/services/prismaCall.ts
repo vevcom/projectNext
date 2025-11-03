@@ -40,10 +40,14 @@ export async function prismaCall<T>(call: () => T | Promise<T>): Promise<T> {
     }
 }
 
-//TODO: Remove prismaCall and use prismaErrorWrapper instead
+//TODO: Remove prismaCall and use prismaErrorWrapper instead - this is handled implicitly through
+// the use of operations
+
 /**
  * A function that wraps a prisma call in a try catch block and throws a ServerError if it fails.
- *
+ * It translates prisma errors into ServerErrors.
+ * Further unknown errors are thrown as UNKNOWN ServerErrors.
+ * When wrapped in this you make sure all thrown errors are of type ServerError
  * @param call - The function to be wrapped
  * @returns
  */

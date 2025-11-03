@@ -1,5 +1,7 @@
 @use "@/styles/ohma";
 
+@use "sass:color";
+
 .RemovePart {
     position: relative;
     .openBtn {
@@ -12,7 +14,7 @@
         place-items: center;
         transition: .3s background-color;
         &:hover {
-            background-color: darken(red, 10%);
+            background-color: color.adjust(red, $lightness: -10%);
             cursor: pointer;
         }
     }
@@ -24,10 +26,10 @@
         transform: translateX(-50%); 
         width: 200px; 
         background-color: ohma.$colors-white;
-        @include ohma.round;
         padding-bottom: 0;
         display: grid;
         place-items: center;
+        @include ohma.round;
         form{
             width: auto;
             height: auto;

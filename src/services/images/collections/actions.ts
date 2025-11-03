@@ -1,9 +1,7 @@
 'use server'
 
 import { createActionError, createZodActionError, safeServerCall } from '@/services/actionError'
-import { checkVisibility } from '@/auth/checkVisibility'
 import { getUser } from '@/auth/session/getUser'
-import { getVisibilityFilter } from '@/auth/getVisibilityFilter'
 import { createImageCollection } from '@/services/images/collections/create'
 import { destroyImageCollection } from '@/services/images/collections/destroy'
 import {
@@ -12,10 +10,8 @@ import {
     readSpecialImageCollection } from '@/services/images/collections/read'
 import { updateImageCollection } from '@/services/images/collections/update'
 import { createImageCollectionValidation, updateImageCollectionValidation } from '@/services/images/collections/validation'
-import { includeVisibility } from '@/services/visibility/read'
 import { SpecialCollection } from '@prisma/client'
 import type { CreateImageCollectionTypes, UpdateImageCollectionTypes } from '@/services/images/collections/validation'
-import type { VisibilityCollapsed } from '@/services/visibility/types'
 import type { ExpandedImageCollection,
     ImageCollectionCursor,
     ImageCollectionPageReturn } from '@/services/images/collections/types'
@@ -50,16 +46,9 @@ export async function destroyImageCollectionAction(collectionId: number): Promis
  */
 export async function readImageCollectionAction(
     idOrName: number | string
-): Promise<ActionReturn<ExpandedImageCollection & {visibility: VisibilityCollapsed}>> {
-    const collection = await safeServerCall(() => includeVisibility(
-        () => readImageCollection(idOrName),
-        data => data.visibilityId
-    ))
+): Promise<ActionReturn<ExpandedImageCollection>> {
+    const collection = await safeServerCall(() => readImageCollection(idOrName))
     if (!collection.success) return collection
-    if (!checkVisibility(await getUser(), collection.data.visibility, 'REGULAR')) {
-        return createActionError('UNAUTHORIZED', 'You do not have permission to view this collection')
-    }
-
     return collection
 }
 
@@ -71,10 +60,7 @@ export async function readImageCollectionAction(
 export async function readImageCollectionsPageAction<const PageSize extends number>(
     readPageInput: ReadPageInput<PageSize, ImageCollectionCursor>
 ): Promise<ActionReturn<ImageCollectionPageReturn[]>> {
-    const { memberships, permissions } = await getUser()
-    const visibilityFilter = getVisibilityFilter(memberships, permissions)
-    console.log(visibilityFilter)
-    return await safeServerCall(() => readImageCollectionsPage(readPageInput, visibilityFilter))
+    return await safeServerCall(() => readImageCollectionsPage(readPageInput))
 }
 
 /**

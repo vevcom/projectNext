@@ -1,4 +1,4 @@
-import { articleRealtionsIncluder } from '@/cms/articles/ConfigVars'
+import { articleRealtionsIncluder } from '@/cms/articles/constants'
 import { JobType } from '@prisma/client'
 import type { Prisma } from '@prisma/client'
 

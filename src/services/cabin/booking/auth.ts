@@ -29,5 +29,13 @@ export const cabinBookingAuth = {
     read: RequirePermission.staticFields({
         permission: 'CABIN_BOOKING_ADMIN'
     }),
+
+    readSpecialCmsParagraphCabinContract: RequirePermission.staticFields({
+        permission: 'CABIN_CALENDAR_READ'
+    }),
+
+    updateSpecialCmsParagraphContentCabinContract: RequirePermission.staticFields({
+        permission: 'CABIN_BOOKING_ADMIN'
+    })
 }
 

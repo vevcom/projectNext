@@ -2,11 +2,14 @@ import StateWrapper from './stateWrapper'
 import SpecialCmsParagraph from '@/app/_components/Cms/CmsParagraph/SpecialCmsParagraph'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
+import { default as DateComponent } from '@/components/Date/Date'
 import {
     readCabinAvailabilityAction,
     readCabinProductsActiveAction,
     readPublicPricePeriodsAction,
-    readReleasePeriodsAction
+    readReleasePeriodsAction,
+    readSpecialCmsParagraphCabinContractAction,
+    updateSpecialCmsParagraphCabinContractAction
 } from '@/services/cabin/actions'
 import { displayDate } from '@/lib/dates/displayDate'
 import { Session } from '@/auth/session/Session'
@@ -49,8 +52,8 @@ export default async function CabinBooking() {
     >
         {nextReleasePeriod &&
             <p>
-                Neste slipptid er {displayDate(nextReleasePeriod.releaseTime, false)},
-                da slippes bookinger fram til {displayDate(nextReleasePeriod.releaseUntil, false)}
+                Neste slipptid er <DateComponent date={nextReleasePeriod.releaseTime} />,
+                da slippes bookinger fram til <DateComponent date={nextReleasePeriod.releaseUntil} />
             </p>
         }
         {pricePeriods.length > 1 &&
@@ -67,6 +70,10 @@ export default async function CabinBooking() {
             pricePeriods={pricePeriods}
         />
 
-        <SpecialCmsParagraph special="CABIN_CONTRACT" />
+        <SpecialCmsParagraph
+            special="CABIN_CONTRACT"
+            readSpecialCmsParagraphAction={readSpecialCmsParagraphCabinContractAction}
+            updateCmsParagraphAction={updateSpecialCmsParagraphCabinContractAction}
+        />
     </PageWrapper>
 }

@@ -3,9 +3,7 @@ model OmegaOrder {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  newsArticles NewsArticle[]
-  memberships  Membership[]
-  jobAds       JobAd[]
-  groups       Group[]
-  events       Event[]
+  memberships                Membership[]
+  groups                     Group[]
+  VisibilityRequirementGroup VisibilityRequirementGroup[]
 }

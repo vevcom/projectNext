@@ -7,13 +7,17 @@ import type { PageSizeOldNews } from '@/contexts/paging/OldNewsPaging'
 
 export default async function NewsArchive() {
     const pageSize: PageSizeOldNews = 20
-    const res = await readOldNewsPageAction<PageSizeOldNews>({
-        page: {
-            page: 0,
-            pageSize,
-            cursor: null,
-        },
-        details: undefined
+    const res = await readOldNewsPageAction({
+        params: {
+            paging: {
+                page: {
+                    page: 0,
+                    pageSize,
+                    cursor: null,
+                },
+                details: undefined
+            },
+        }
     })
     if (!res.success) throw new Error('Failed to read news')
     const serverRendered = res.data

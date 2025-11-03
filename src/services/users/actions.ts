@@ -41,5 +41,5 @@ export const readGroupsForPageFilteringAction = makeAction(groupOperations.readG
 export const updateUserAction = makeAction(userOperations.update)
 export const registerNewEmailAction = makeAction(userOperations.registerNewEmail)
 export const registerUser = makeAction(userOperations.register)
-export const registerStudentCardInQueueAction = makeAction(userOperations.registerStudentCardInQueue)
 
+export const connectStudentCardAction = makeAction(userOperations.connectStudentCard)

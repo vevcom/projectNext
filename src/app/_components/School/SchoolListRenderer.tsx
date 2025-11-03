@@ -8,4 +8,4 @@ import type { ExpandedSchool } from '@/services/education/schools/types'
  */
 // eslint-disable-next-line react/display-name
 export const schoolListRenderer = (asClient: boolean) => (school: ExpandedSchool) =>
-    <School key={school.shortname} asClient={asClient} school={school} />
+    <School key={school.shortName} asClient={asClient} school={school} />

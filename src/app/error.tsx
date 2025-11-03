@@ -2,6 +2,7 @@
 import styles from './error.module.scss'
 import Button from '@/components/UI/Button'
 import SpecialCmsImageClient from '@/components/Cms/CmsImage/SpecialCmsImageClient'
+import { readSpecialCmsImageFrontpage, updateSpecialCmsImageFrontpage } from '@/services/frontpage/actions'
 
 /**
  * note that passing custom error type to next error boundary is not supported
@@ -13,7 +14,13 @@ export default function ErrorBoundary({ error, reset }: {error: unknown, reset: 
         <div className={styles.wrapper}>
             <div className={styles.info}>
                 <div className={styles.imageContainer}>
-                    <SpecialCmsImageClient width={70} special="SERVER_ERROR" />
+                    <SpecialCmsImageClient
+                        width={70}
+                        special="SERVER_ERROR"
+                        //TODO: Probably call through other service see comments in frontpage operations
+                        readSpecialCmsImageAction={readSpecialCmsImageFrontpage}
+                        updateCmsImageAction={updateSpecialCmsImageFrontpage}
+                    />
                 </div>
                 {
                     error instanceof Error ? (

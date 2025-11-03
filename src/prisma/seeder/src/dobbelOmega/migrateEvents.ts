@@ -1,5 +1,4 @@
 import { vevenIdToPnId, type IdMapper } from './IdMapper'
-import upsertOrderBasedOnDate from './upsertOrderBasedOnDate'
 import type { PrismaClient as PrismaClientPn } from '@prisma/client'
 import type { PrismaClient as PrismaClientVeven } from '@/prisma-dobbel-omega/client'
 import type { Limits } from './migrationLimits'
@@ -24,16 +23,6 @@ export default async function migrateEvents(
         }
     })
 
-    //Make sure no events have same title and order
-    events.forEach((event) => {
-        const sameTitle = events.filter(e => e.title === event.title)
-        if (sameTitle.length > 1) {
-            sameTitle.forEach((e, i) => {
-                e.title = `${e.title} (${i + 1})`
-            })
-        }
-    })
-
     await Promise.all(events.map(async event => {
         const coverId = vevenIdToPnId(imageIdMap, event.ImageId)
         const coverIage = await pnPrisma.cmsImage.create({
@@ -53,12 +42,9 @@ export default async function migrateEvents(
             }
         })
 
-        const order = await upsertOrderBasedOnDate(pnPrisma, event.createdAt)
-
         const newEvent = await pnPrisma.event.create({
             data: {
                 name: event.title,
-                order,
                 location: event.location,
                 createdAt: event.createdAt,
                 updatedAt: event.updatedAt,
@@ -112,15 +98,6 @@ export default async function migrateEvents(
             Committees: true,
         }
     })
-    //Make sure no events have same title and order
-    simpleEvents.forEach((event) => {
-        const sameTitle = simpleEvents.filter(e => e.title === event.title)
-        if (sameTitle.length > 1) {
-            sameTitle.forEach((e, i) => {
-                e.title = `${e.title} (${i + 1})`
-            })
-        }
-    })
 
     await Promise.all(simpleEvents.map(async simpleEvent => {
         const coverIage = await pnPrisma.cmsImage.create({
@@ -136,12 +113,9 @@ export default async function migrateEvents(
             }
         })
 
-        const order = await upsertOrderBasedOnDate(pnPrisma, simpleEvent.createdAt)
-
         await pnPrisma.event.create({
             data: {
                 name: simpleEvent.title,
-                order,
                 createdAt: simpleEvent.createdAt,
                 updatedAt: simpleEvent.updatedAt,
                 canBeViewdBy: 'ALL',

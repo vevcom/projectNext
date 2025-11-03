@@ -8,11 +8,13 @@ export const RequireUserId = AutherFactory<
     if (!session.user) {
         return {
             success: false,
-            session
+            session,
+            errorMessage: 'Du må være innlogget for å få tilgang'
         }
     }
     return {
         success: session.user.id === dynamicFields.userId,
-        session
+        session,
+        errorMessage: 'Du har ikke tilgang til denne ressursen'
     }
 })

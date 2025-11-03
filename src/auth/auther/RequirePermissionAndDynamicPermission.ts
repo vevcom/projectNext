@@ -15,7 +15,8 @@ export const RequirePermissionAndDynamicPermission = AutherFactory<
     if (!session.permissions.includes(staticFields.permission)) {
         return {
             success: false,
-            session
+            session,
+            errorMessage: `Du trenger tillatelse '${staticFields.permission}' for å få tilgang`
         }
     }
 

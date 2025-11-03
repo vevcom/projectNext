@@ -8,6 +8,7 @@ type PropTypes = {
 
 /**
  * @param not - pass it not: a id of a news to exclude from the list
+ * WARNING: This component must be server-side rendered
  */
 export default async function CurrentNews({ not }: PropTypes) {
     const res = await readNewsCurrentAction()
