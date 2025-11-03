@@ -3,12 +3,12 @@ import MakeNewCollection from './MakeNewCollection'
 import ImageCollectionList from '@/components/Image/Collection/ImageCollectionList'
 import { ImageCollectionPagingProvider } from '@/contexts/paging/ImageCollectionPaging'
 import CollectionCard from '@/components/Image/Collection/CollectionCard'
+import { ServerSession } from '@/auth/session/ServerSession'
 import { readImageCollectionsPageAction } from '@/services/images/collections/actions'
-import { Session } from '@/auth/session/Session'
 import type { PageSizeImageCollection } from '@/contexts/paging/ImageCollectionPaging'
 
 export default async function Images() {
-    const { user } = await Session.fromNextAuth()
+    const { user } = await ServerSession.fromNextAuth()
 
     const isAdmin = user?.username === 'harambe' //TODO: temp
     const pageSize: PageSizeImageCollection = 12

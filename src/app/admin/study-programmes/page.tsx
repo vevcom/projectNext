@@ -8,14 +8,14 @@ import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { studyProgrammeAuth } from '@/services/groups/studyProgrammes/auth'
-import { Session } from '@/auth/session/Session'
+import { ServerSession } from '@/auth/session/ServerSession'
 
 
 export default async function StudyProgrammes() {
     const studyprogrammes = unwrapActionReturn(await readStudyProgrammesAction())
 
-    const showCreateButton = studyProgrammeAuth.create.dynamicFields({}).auth(await Session.fromNextAuth())
-    const canEdit = studyProgrammeAuth.update.dynamicFields({}).auth(await Session.fromNextAuth())
+    const showCreateButton = studyProgrammeAuth.create.dynamicFields({}).auth(await ServerSession.fromNextAuth())
+    const canEdit = studyProgrammeAuth.update.dynamicFields({}).auth(await ServerSession.fromNextAuth())
 
 
     return <PageWrapper

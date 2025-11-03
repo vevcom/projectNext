@@ -8,10 +8,10 @@ import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { readMailAliases } from '@/services/mail/alias/read'
 import { readMailingLists } from '@/services/mail/list/read'
 import { readMailAddressExternal } from '@/services/mail/mailAddressExternal/read'
-import { Session } from '@/auth/session/Session'
+import { ServerSession } from '@/auth/session/ServerSession'
 
 export default async function MailSettings() {
-    const { permissions } = await Session.fromNextAuth()
+    const { permissions } = await ServerSession.fromNextAuth()
 
     const createMailAlias = permissions.includes('MAILALIAS_CREATE')
     const createMailingList = permissions.includes('MAILINGLIST_CREATE')

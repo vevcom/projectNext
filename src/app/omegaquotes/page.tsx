@@ -4,14 +4,14 @@ import CreateOmegaquoteForm from './CreateOmegaquoteForm'
 import { OmegaquotePagingProvider } from '@/contexts/paging/OmegaquotesPaging'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { readQuotesPageAction } from '@/services/omegaquotes/actions'
+import { ServerSession } from '@/auth/session/ServerSession'
 import { omegaQuotesAuth } from '@/services/omegaquotes/auth'
-import { Session } from '@/auth/session/Session'
 import { notFound } from 'next/navigation'
 import { v4 as uuid } from 'uuid'
 import type { PageSizeOmegaquote } from '@/contexts/paging/OmegaquotesPaging'
 
 export default async function OmegaQuotes() {
-    const session = await Session.fromNextAuth()
+    const session = await ServerSession.fromNextAuth()
     const showCreateButton = session.user && omegaQuotesAuth.create.dynamicFields({
         userId: session.user.id
     }).auth(session).authorized || false

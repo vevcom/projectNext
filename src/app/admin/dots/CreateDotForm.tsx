@@ -6,13 +6,13 @@ import PopUp from '@/components/PopUp/PopUp'
 import NumberInput from '@/components/UI/NumberInput'
 import TextInput from '@/components/UI/TextInput'
 import UserList from '@/components/User/UserList/UserList'
+import { useSession } from '@/auth/session/useSession'
 import { PopUpContext } from '@/contexts/PopUp'
 import { UserSelectionContext } from '@/contexts/UserSelection'
 import { configureAction } from '@/services/configureAction'
 import { useContext } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
-import { useSession } from 'next-auth/react'
 
 export default function CreateDotForm() {
     const session = useSession()
@@ -47,7 +47,7 @@ export default function CreateDotForm() {
                 </PopUp>
             </div>
             <Form
-                action={configureAction(createDotAction, { params: { accuserId: session.user.id } })}
+                action={configureAction(createDotAction, { params: { accuserId: session.session.user.id } })}
                 submitText="Lag prikk"
                 refreshOnSuccess
             >

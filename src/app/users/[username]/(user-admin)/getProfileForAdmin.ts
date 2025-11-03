@@ -1,5 +1,5 @@
+import { ServerSession } from '@/auth/session/ServerSession'
 import { readUserProfileAction } from '@/services/users/actions'
-import { Session } from '@/auth/session/Session'
 import { userAuth } from '@/services/users/auth'
 import { notFound, redirect } from 'next/navigation'
 
@@ -15,7 +15,7 @@ type Params = {
  * @returns - The profile being seen and the session of the current user.
 */
 export async function getProfileForAdmin({ username }: Params, adminPage: string) {
-    const session = await Session.fromNextAuth()
+    const session = await ServerSession.fromNextAuth()
     if (username === 'me') {
         if (!session.user) return notFound()
         redirect(`/users/${session.user.username}/${adminPage}`) //This throws.

@@ -3,13 +3,13 @@ import CreateOmbul from './CreateOmbul'
 import OmbulCover from './OmbulCover'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
+import { ServerSession } from '@/auth/session/ServerSession'
 import { readLatestOmbulAction, readOmbulsAction } from '@/services/ombul/actions'
 import { ombulAuth } from '@/services/ombul/auth'
-import { Session } from '@/auth/session/Session'
 import type { ExpandedOmbul } from '@/services/ombul/types'
 
 export default async function Ombuls() {
-    const showCreateButton = ombulAuth.create.dynamicFields({}).auth(await Session.fromNextAuth()).authorized
+    const showCreateButton = ombulAuth.create.dynamicFields({}).auth(await ServerSession.fromNextAuth()).authorized
 
     const latestOmbulRes = await readLatestOmbulAction()
     const latestOmbul = latestOmbulRes.success ? latestOmbulRes.data : null

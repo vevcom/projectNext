@@ -1,15 +1,15 @@
 'use server'
+import { ServerSession } from '@/auth/session/ServerSession'
 import { createActionError } from '@/services/actionError'
 import { ServerError } from '@/services/error'
 import { generateOmegaId } from '@/services/omegaid/generate'
-import { Session } from '@/auth/session/Session'
 import type { ActionReturn } from '@/services/actionTypes'
 
 export async function generateOmegaIdAction(): Promise<ActionReturn<string>> {
     //TODO: when changed to makeAction + operation it should take in a params: userId and
     //then auth on userId using the RequireUserId auther.
-    const user = (await Session.fromNextAuth()).user
-    if (!user) return createActionError('User not found')
+    const user = (await ServerSession.fromNextAuth()).user
+    if (!user) return createActionError('NOT FOUND', 'User not found')
 
     const token = generateOmegaId(user)
 

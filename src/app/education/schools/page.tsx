@@ -3,14 +3,14 @@ import { readSchoolsPageAction } from '@/services/education/schools/actions'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { SchoolPagingProvider } from '@/contexts/paging/SchoolPaging'
 import SchoolList from '@/components/School/SchoolList'
+import { ServerSession } from '@/auth/session/ServerSession'
 import { schoolAuth } from '@/services/education/schools/auth'
-import { Session } from '@/auth/session/Session'
 import { schoolListRenderer } from '@/components/School/SchoolListRenderer'
 import Link from 'next/link'
 import type { PageSizeSchool } from '@/contexts/paging/SchoolPaging'
 
 export default async function Schools() {
-    const isSchoolAdmin = schoolAuth.create.dynamicFields({}).auth(await Session.fromNextAuth()).authorized
+    const isSchoolAdmin = schoolAuth.create.dynamicFields({}).auth(await ServerSession.fromNextAuth()).authorized
 
     const pageSizeSchool: PageSizeSchool = 8
     const res = await readSchoolsPageAction({

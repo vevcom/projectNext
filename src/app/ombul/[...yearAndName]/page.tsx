@@ -6,9 +6,9 @@ import PdfDocument from '@/components/PdfDocument/PdfDocument'
 import SlideInOnView from '@/components/SlideInOnView/SlideInOnView'
 import EditableTextField from '@/components/EditableTextField/EditableTextField'
 import CmsImage from '@/components/Cms/CmsImage/CmsImage'
+import { ServerSession } from '@/auth/session/ServerSession'
 import { configureAction } from '@/services/configureAction'
 import { ombulAuth } from '@/services/ombul/auth'
-import { Session } from '@/auth/session/Session'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
@@ -33,7 +33,7 @@ export default async function Ombul({ params }: PropTypes) {
 
     const path = `/store/ombul/${ombul.fsLocation}`
 
-    const canUpdate = ombulAuth.update.dynamicFields({}).auth(await Session.fromNextAuth()).authorized
+    const canUpdate = ombulAuth.update.dynamicFields({}).auth(await ServerSession.fromNextAuth()).authorized
 
     const changeDescription = configureAction(
         updateOmbulAction,

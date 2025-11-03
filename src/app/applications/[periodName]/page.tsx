@@ -7,7 +7,6 @@ import CountDown from '@/components/countDown/CountDown'
 import BackdropImage from '@/components/BackdropImage/BackdropImage'
 import CmsParagraph from '@/components/Cms/CmsParagraph/CmsParagraph'
 import PopUp from '@/components/PopUp/PopUp'
-import { Session } from '@/auth/session/Session'
 import Textarea from '@/components/UI/Textarea'
 import Form from '@/components/Form/Form'
 import { SettingsHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
@@ -25,6 +24,7 @@ import {
     readApplicationPeriodAction
 } from '@/services/applications/periods/actions'
 import { readSpecialImageAction } from '@/services/images/actions'
+import { ServerSession } from '@/auth/session/ServerSession'
 import { configureAction } from '@/services/configureAction'
 import { faVideo } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -37,7 +37,7 @@ export type PropTypes = {
 }
 
 export default async function ApplicationPeriod({ params }: PropTypes) {
-    const userId = (await Session.fromNextAuth()).user?.id
+    const userId = (await ServerSession.fromNextAuth()).user?.id
     const period = unwrapActionReturn(
         await readApplicationPeriodAction({ params: { name: (await params).periodName } })
     )
