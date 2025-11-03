@@ -13,6 +13,7 @@ export const userSchema = z.object({
     firstname: z.string().max(50).min(2),
     lastname: z.string().max(50).min(2),
     allergies: z.string().max(150).optional().nullable(),
+    bio: z.string().max(2047).optional(),
     studentCard: studentCardSchema,
     kioleskapLead: Zpn.checkboxOrBoolean({
         label: 'leaderboard'
@@ -22,6 +23,9 @@ export const userSchema = z.object({
         message: 'Passordet må minst ha 12 tegn, en stor og en liten bokstav, et tall, en rune, to emojier, en musikk note, en magisk sopp og en dråpe smørekopp-blod (avsky).'
     }),
     confirmPassword: z.string().max(50).min(12),
+    imageConsent: Zpn.checkboxOrBoolean({
+        label: 'Accepted images'
+    }).optional(),
     acceptedTerms: Zpn.checkboxOrBoolean({
         label: 'Accepted terms',
     }).refine(value => value, 'Du må godta vilkårene for å bruke siden.'),
@@ -47,6 +51,18 @@ export const userSchemas = {
         username: true,
         kioleskapLead: true,
 
+        mobile: true,
+        allergies: true,
+        sex: true,
+        bio: true,
+        imageConsent: true
+    }),
+
+    updateProfile: userSchema.partial().pick({
+        allergies: true,
+        sex: true,
+        bio: true,
+        imageConsent: true
     }),
 
     register: userSchema.pick({
@@ -55,6 +71,7 @@ export const userSchemas = {
         password: true,
         confirmPassword: true,
         sex: true,
+        imageConsent: true,
         acceptedTerms: true,
     }).refine(refinePassword.fcn, refinePassword.message),
 

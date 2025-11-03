@@ -319,12 +319,23 @@ export const userOperations = {
         paramsSchema: z.union([z.object({ id: z.number() }), z.object({ username: z.string() })]),
         dataSchema: userSchemas.update,
         authorizer: () => userAuth.update.dynamicFields({}),
-        operation: async ({ prisma: prisma_, params, data }) => prisma_.user.update({
+        operation: ({ prisma, params, data }) => prisma.user.update({
+            where: params,
+            data,
+        })
+    }),
+
+    updateProfile: defineOperation({
+        paramsSchema: z.object({
+            username: z.string()
+        }),
+        dataSchema: userSchemas.update,
+        authorizer: ({ params }) => userAuth.updateProfile.dynamicFields({ username: params.username }),
+        operation: ({ prisma, data, params }) => prisma.user.update({
             where: params,
             data
         })
     }),
-
 
     updatePassword: defineOperation({
         paramsSchema: z.object({
@@ -420,7 +431,7 @@ export const userOperations = {
         authorizer: ({ params }) => userAuth.register.dynamicFields({ userId: params.id }),
         opensTransaction: true,
         operation: async ({ prisma, data, params }) => {
-            const { sex, password, mobile, allergies } = data
+            const { sex, password, mobile, allergies, imageConsent } = data
 
             if (!password) throw new ServerError('BAD PARAMETERS', 'Passord er obligatorisk.')
 
@@ -466,6 +477,7 @@ export const userOperations = {
                     },
                     data: {
                         acceptedTerms: new Date(),
+                        imageConsent,
                         sex,
                         mobile,
                         allergies,
