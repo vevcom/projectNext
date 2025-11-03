@@ -38,7 +38,13 @@ export const readUserAction = makeAction(userOperations.read)
 
 export const readGroupsForPageFilteringAction = makeAction(groupOperations.readGroupsExpanded)
 
+/**
+ * updateUserAction is meant for admin updates while
+ * updateUserProfileAction is meant for standard profile updates
+ */
 export const updateUserAction = makeAction(userOperations.update)
+export const updateUserProfileAction = makeAction(userOperations.updateProfile)
+
 export const registerNewEmailAction = makeAction(userOperations.registerNewEmail)
 export const registerUser = makeAction(userOperations.register)
 

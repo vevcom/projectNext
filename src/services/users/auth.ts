@@ -15,9 +15,6 @@ export const userAuth = {
     registerNewEmail: RequireUserIdOrPermission.staticFields({ permission: 'USERS_UPDATE' }),
     updatePassword: RequireUserIdOrPermission.staticFields({ permission: 'USERS_UPDATE' }),
     update: RequirePermission.staticFields({ permission: 'USERS_UPDATE' }),
-
-    // TODO: Implement method for updating profile,
-    // IDEA: profile = a user can do it themselvs. Just user - only an admin can do it
     updateProfile: RequireUsernameOrPermission.staticFields({ permission: 'USERS_UPDATE' }),
 
     register: RequireUserId.staticFields({}),
