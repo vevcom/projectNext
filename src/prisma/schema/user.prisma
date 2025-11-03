@@ -28,7 +28,6 @@ model User {
   memberships       Membership[]
   credentials       Credentials?
   feideAccount      FeideAccount?
-  imageConsent      Boolean             @default(false)
   kioleskapLead     Boolean             @default(false)
 
   notificationSubscriptions NotificationSubscription[]
