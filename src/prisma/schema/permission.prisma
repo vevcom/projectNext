@@ -15,9 +15,6 @@ enum Permission {
   OMBUL_UPDATE
   OMBUL_DESTROY
 
-  OMBUL_COMMENT_READ
-  OMBUL_COMMENT_WRITE
-
   // Groups - Generic
   GROUP_READ
   GROUP_DESTROY
