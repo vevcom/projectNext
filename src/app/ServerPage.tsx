@@ -1,3 +1,4 @@
+import '@pn-server-only'
 import type { Metadata } from 'next'
 import type { ReactNode } from 'react'
 
@@ -9,7 +10,7 @@ export function ServerPage<Params = undefined, Data = undefined>({
     render
 }: {
     operation: ({ params, searchParams }: { params: Promise<Params>, searchParams: SearchParams }) => Promise<Data>,
-    metadata: (data: Data) => Promise<Metadata>
+    metadata: (data: Data) => Metadata,
     render: (data: Data) => ReactNode
 }) {
     return {
@@ -17,6 +18,7 @@ export function ServerPage<Params = undefined, Data = undefined>({
             { searchParams, params }: { searchParams: SearchParams, params: Promise<Params> }
         ): Promise<ReactNode> => {
             //TODO: safely catch errors and redirect to error page
+            //TODO: call operation in a context - do not give it prisma!!!
             const data = await operation({ searchParams, params })
             return <>{render(data)}</>
         },
@@ -25,10 +27,15 @@ export function ServerPage<Params = undefined, Data = undefined>({
         ): Promise<Metadata> => {
             try {
                 const data = await operation({ searchParams, params })
-                return metadata(data)
+                const meta = metadata(data)
+                return {
+                    ...meta,
+                    title: meta.title ? `${meta.title} | Omegaveven` : 'Omegaveven',
+                    description: meta.description ?? 'Omegaveven - Sct. Omega Broderskabs nettside'
+                }
             } catch {
                 return {
-                    title: 'Omegaveven',
+                    title: 'Feil | Omegaveven',
                     description: 'En feil oppsto under lasting av siden.'
                 }
             }
