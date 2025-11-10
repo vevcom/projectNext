@@ -35,6 +35,7 @@ model Image {
   cmsImages               CmsImage[]
   special                 SpecialImage?    @unique
   User                    User[]
+  Flair                   Flair[]
 }
 
 model License {
@@ -52,6 +53,7 @@ enum SpecialCollection {
   OMBULCOVERS
   PROFILEIMAGES
   COMMITTEELOGOS
+  FLAIRIMAGES
 }
 
 model ImageCollection {

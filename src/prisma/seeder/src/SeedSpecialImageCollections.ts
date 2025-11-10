@@ -13,6 +13,9 @@ export const specialCollectionsVisibility = {
     },
     COMMITTEELOGOS: {
         specialVisibility: 'COMMITTEE'
+    },
+    FLAIRIMAGES: {
+        specialVisibility: 'FLAIR'
     }
 } satisfies {[CollectionType in SpecialCollection]: {
     specialVisibility: SpecialVisibilityPurpose

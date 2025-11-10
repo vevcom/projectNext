@@ -1,0 +1,8 @@
+model Flair {
+  id Int @id @default(autoincrement())
+  name String
+  Image   Image? @relation(fields: [imageId], references: [id])
+  imageId Int
+
+  User User[] @relation(name: "userFlairs")
+}

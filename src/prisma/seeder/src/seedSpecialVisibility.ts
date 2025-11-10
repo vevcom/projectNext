@@ -17,11 +17,15 @@ const SpecialVisibilityConfig = {
     USER: {
         regularLevel: 'USERS_READ',
         adminLevel: 'USERS_CREATE'
+    },
+    FLAIR: {
+        regularLevel: 'PERMISSION_FLAIR_READ',
+        adminLevel: 'PERMISSION_FLAIR_EDIT',
     }
-} satisfies {[VisibilityType in SpecialVisibilityPurpose]: {
+} satisfies { [VisibilityType in SpecialVisibilityPurpose]: {
     regularLevel: Permission | null,
     adminLevel: Permission | null
-}}
+} }
 
 
 export default async function SeedSpecialVisibility(prisma: PrismaClient) {

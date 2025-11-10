@@ -1,0 +1,27 @@
+@use '@/styles/ohma';
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    > .container {
+        display: flex;
+        flex-direction: column;
+    }
+}
+.header {
+    padding: 3*ohma.$gap;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    > button {
+        margin: ohma.$gap;
+        border: none;
+        background-color: transparent;
+        width: 30px;
+        height: 30px;
+    }
+}
+
+

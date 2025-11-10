@@ -27,6 +27,7 @@ model User {
   memberships       Membership[]
   credentials       Credentials?
   feideAccount      FeideAccount?
+  Flairs            Flair[]             @relation(name: "userFlairs")
 
   notificationSubscriptions NotificationSubscription[]
   mailingLists              MailingListUser[]
