@@ -14,8 +14,14 @@
 }
 
 @mixin boxShadow {
-    box-shadow: colors.$gray-700 0 0 10px;
+    box-shadow: colors.$secondary 0 0 10px;
 }
+
+@mixin layer {
+    background: colors.$layer;
+    backdrop-filter: blur(30px);
+}
+
 
 @mixin table {
     width: 100%;
@@ -57,7 +63,7 @@
 }
 
 //NOTE: also made to work for <Link /> (<a> tag)
-@mixin borderBtn($color: colors.$white, $hoverColor: darken($color, 40%)) { 
+@mixin borderBtn($color: colors.$white, $hoverColor: darken($color, 40%)) {
     @include btn($color);
     background: transparent;
     border: solid $color 2px;
@@ -105,13 +111,13 @@
     }
 }
 
-@mixin yellowIconLink {
-    color: colors.$yellow;
+@mixin primaryIconLink {
+    color: colors.$primary;
     padding: variables.$gap;
     width: 30px;
     height: 30px;
     &:hover {
-        color: darken(colors.$yellow, 10%);
+        color: darken(colors.$primary, 10%);
         cursor: pointer;
     }
 }

@@ -4,6 +4,7 @@ $nav-height: 60px;
 
 .body {
     background-color: ohma.$colors-body-background;
+    color: ohma.$colors-text;
 }
 
 .wrapper {
@@ -19,6 +20,7 @@ $nav-height: 60px;
     position: fixed;
     top: 0;
     width: 100%;
+    background-color: ohma.$colors-secondary;
 } 
 
 .content {

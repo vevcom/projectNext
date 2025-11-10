@@ -15,9 +15,10 @@ function Footer() {
                 </p>
                 <p>Org. Nr. 890 384 692</p>
                 <div>
+                    {/* Uncomment when PWA an SVG
                     <SpecialCmsImage special="FOOTER_1" width={200} >
                         <Link className={styles.pwa} href="/infopages/pwa" />
-                    </SpecialCmsImage>
+                    </SpecialCmsImage>*/}
                     <div className={styles.icons}>
                         <SocialIcons />
                     </div>

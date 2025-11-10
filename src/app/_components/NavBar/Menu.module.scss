@@ -13,8 +13,7 @@
     top: 60px;
     left: 0;
     z-index: 9;
-    background-color: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(10px);
+    @include ohma.layer;
     width: 100dvw;
     height: calc(100dvh - 60px);
     display: flex;
@@ -46,10 +45,9 @@
         margin: 10px 10px 10px 28px;
         a {
             text-decoration: none; 
-            color: black; 
+            color: ohma.$colors-text;
             display: flex;
             align-items: center; 
-            color: ohma.$colors-white;
             font-size: ohma.$fonts-l;
             font-weight: ohma.$fonts-weight-l;
             &:hover {
@@ -60,7 +58,7 @@
             }
             svg {
                 margin-right: 5px;
-                color: ohma.$colors-white;
+                color: ohma.$colors-text;
             }
         }
     }

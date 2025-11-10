@@ -1,8 +1,8 @@
 @use '@/styles/ohma';
 
 .Permission {
+    @include ohma.layer;
     display: flex;
-    background-color: ohma.$colors-gray-200;
     @include ohma.round();
     align-items: center;
     gap: 1em;

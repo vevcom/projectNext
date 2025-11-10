@@ -1,7 +1,7 @@
 @use '@/styles/ohma';
 
 .SlideSidebar {
-    background-color: ohma.$colors-gray-300;
+    @include ohma.layer;
     margin: .5em;
     padding: 2em;
     border-radius: ohma.$rounding;
@@ -23,7 +23,7 @@
         background-color: ohma.$colors-gray-500;
         border: none;
         svg {
-            color: ohma.$colors-gray-100;
+            color: ohma.$colors-text;
         }
     }
 
@@ -57,16 +57,17 @@
         width: 200px;
         overflow-y: auto;
         height: 100%;
+        color: ohma.$colors-text;
 
         a {
-            color: ohma.$colors-gray-700;
+            color: ohma.$colors-text-muted;
             text-decoration: none;
             padding: .5em;
             border-radius: .5em;
             margin: .5em 0;
             transition: background-color .3s;
             &:hover, &.active {
-                background-color: ohma.$colors-gray-200;
+                @include ohma.layer;
             }
         }
         h3 {

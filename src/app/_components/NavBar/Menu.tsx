@@ -1,22 +1,23 @@
 'use client'
 import styles from './Menu.module.scss'
 import stylesNav from './NavBar.module.scss'
+import stylesMobileNav from './MobileNavBar.module.scss'
 import useKeyPress from '@/hooks/useKeyPress'
 import useClickOutsideRef from '@/hooks/useClickOutsideRef'
 import useOnNavigation from '@/hooks/useOnNavigation'
 import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTimes } from '@fortawesome/free-solid-svg-icons'
+import {faBars, faTimes, faX} from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
 import type { NavItem } from './navDef'
 
 type PropTypes = {
-    openBtnContent: React.ReactNode,
+    openBtnContext: React.ReactNode,
     items: NavItem[]
 }
 
 
-export default function Menu({ items, openBtnContent }: PropTypes) {
+export default function Menu({ items, openBtnContext }: PropTypes) {
     const [isOpen, setIsOpen] = useState(false)
     let menuRef: React.RefObject<HTMLDivElement> | null = null
     function closeMenu() {
@@ -49,13 +50,24 @@ export default function Menu({ items, openBtnContent }: PropTypes) {
                 ) : null
             }
             <button className={styles.openBtn} onClick={() => setIsOpen(true)}>
-                {openBtnContent}
-                {!isOpen && // This is bad code and should be replaced...
+                {openBtnContext === 'mobile' && !isOpen &&
+                    <div className={styles.menuBtn}>
+                        <FontAwesomeIcon className={stylesMobileNav.icon} icon={faBars}/>
+                    </div>
+                }
+                {openBtnContext === 'mobile' && isOpen &&
+                    <div className={styles.menuBtn}>
+                        <FontAwesomeIcon className={stylesMobileNav.icon} icon={faX}/>
+                    </div>
+                }
+                {openBtnContext === 'desktop' && !isOpen &&
                     <p className={stylesNav.openMenu}>Mer</p>
                 }
-                {isOpen &&
+                {openBtnContext === 'desktop' && isOpen &&
                     <p className={stylesNav.openMenu}>Mindre</p>
                 }
+
+
             </button>
         </>
     )

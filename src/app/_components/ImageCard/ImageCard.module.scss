@@ -1,13 +1,11 @@
 @use "@/styles/ohma";
 
-$padding: 1.5em;
-$imageHeight: 200px;
+$padding: ohma.$gap;
+$imageHeight: 250px;
 $contentHeight: 200px;
 $height: $imageHeight + $contentHeight;
 
-$textColor: ohma.$colors-gray-900;
 $textUnderlineColor: ohma.$colors-secondary;
-$background: ohma.$colors-white;
 
 .ImageCard {
     min-width: 200px; 
@@ -20,10 +18,10 @@ $background: ohma.$colors-white;
     height: $height;
     isolation: isolate;
     overflow: hidden;
-    background-color: $background;
-    margin: calc(2 * ohma.$gap);
+    @include ohma.layer;
+    margin: calc(1 * ohma.$gap);
     &:hover {
-        > .image {
+        > .image > * > img {
             scale: 1.1;
         }
     }
@@ -35,7 +33,8 @@ $background: ohma.$colors-white;
         width: 100%;
         height: $imageHeight;
         z-index: 1;
-        transition: scale 0.3s;
+        overflow: hidden;
+        border-radius: ohma.$cardRounding;
 
         > * {
             width: 100% !important;
@@ -46,6 +45,7 @@ $background: ohma.$colors-white;
                 width: 100% !important;
                 height: 100%;
                 object-fit: cover;
+                transition: scale 0.3s;
             }
         } 
 
@@ -63,15 +63,13 @@ $background: ohma.$colors-white;
     }
 
     > .content {
-        background-color: $background;
         z-index: 2;
         position: absolute;
         width: 100%;
         padding-left: $padding;
         padding-right: $padding;
-        top: calc($imageHeight - $padding);
+        top: calc($imageHeight + $padding);
         height: $contentHeight;
-        color: $textColor;
         transition: 0.3s;
         overflow: hidden;
         > h2 {

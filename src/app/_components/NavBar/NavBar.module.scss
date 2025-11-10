@@ -1,9 +1,9 @@
 @use "@/styles/ohma";
 
 .NavBar {
-    color: ohma.$colors-white;
+    color: ohma.$colors-text;
     font-size: ohma.$fonts-m;
-    background-color: ohma.$colors-gray-900;
+    background-color: ohma.$colors-layer;
     padding: 0 3*ohma.$gap;
     width: 100%;
     height: 100%;
@@ -36,7 +36,7 @@
     }
     .openMenu {
         font-weight: ohma.$fonts-weight-m;        
-        color: ohma.$colors-white;
+        color: ohma.$colors-text;
     }
 }
 

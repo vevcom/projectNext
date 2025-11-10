@@ -44,11 +44,10 @@ export default async function MobileNavBar({ profile }: PropTypes) {
                 />
                 <UserNavigation profile={profile} />
             </div>
-            <Menu items={itemsForMenu} openBtnContent={
-                <div className={styles.menuBtn}>
-                    <FontAwesomeIcon className={styles.icon} icon={faBars}/>
-                </div>
-            }/>
+            <Menu
+                items={itemsForMenu}
+                openBtnContext={'mobile'}
+            />
             <div className={styles.editMode}>
                 <EditModeSwitch />
             </div>

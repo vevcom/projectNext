@@ -44,7 +44,7 @@ export default async function NavBar({ profile }: PropTypes) {
                 }
                 <li>
                     <Menu
-                        // openBtnContent={<p className={styles.openMenu}>Mer</p>} Temporary disabled
+                        openBtnContext={'desktop'}
                         items={itemsForMenu}
                     />
                 </li>

@@ -21,7 +21,7 @@
         width: 100vw;
         height: calc(100vh - 50px);
     }
-    background-color: ohma.$colors-gray-200;
+    @include ohma.layer;
     h2 {
         color: ohma.$colors-black;
         font-size: ohma.$fonts-xl;
