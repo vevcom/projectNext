@@ -1,11 +1,10 @@
 @use "@/styles/ohma";
 
 .resetPasswordLink {
-    color: ohma.$colors-black;
+    color: ohma.$colors-text;
     transition: color 100ms;
-    padding: 0.3rem;
 
     &:hover {
-        color: ohma.$colors-gray-500;
+        color: ohma.$colors-text-muted;
     }
 }

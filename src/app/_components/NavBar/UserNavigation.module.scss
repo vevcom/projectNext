@@ -8,7 +8,7 @@
         transform: translateY(calc(100% + .5em));
         min-width: 300px;
         max-height: 90vh;
-        @include ohma.boxShadow();
+        @include ohma.boxShadow("");
         @include ohma.round();
     }
     @include ohma.screenMobile {

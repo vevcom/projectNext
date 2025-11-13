@@ -24,7 +24,7 @@
             );
             transition: box-shadow 0.3s;
             &:hover {
-                @include ohma.boxShadow;
+                @include ohma.boxShadow();
             }
             text-decoration: none;
             color: ohma.$colors-gray-800;

@@ -20,11 +20,6 @@ $textUnderlineColor: ohma.$colors-secondary;
     overflow: hidden;
     @include ohma.layer;
     margin: calc(1 * ohma.$gap);
-    &:hover {
-        > .image > * > img {
-            scale: 1.1;
-        }
-    }
 
     > .image {
         position: absolute;
@@ -45,7 +40,6 @@ $textUnderlineColor: ohma.$colors-secondary;
                 width: 100% !important;
                 height: 100%;
                 object-fit: cover;
-                transition: scale 0.3s;
             }
         } 
 
@@ -78,5 +72,5 @@ $textUnderlineColor: ohma.$colors-secondary;
         }
     }
 
-    @include ohma.boxShadow();
+    @include ohma.card();
 }

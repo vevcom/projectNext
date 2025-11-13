@@ -8,13 +8,22 @@
     padding: variables.$rounding;
 }
 
+@mixin boxShadow($state) {
+    @if $state=='hover' {
+        box-shadow: colors.$layer 0px 3px 6px, colors.$layer 0px 3px 6px;
+    } @else {
+        box-shadow: colors.$layer 0px 1px 3px, colors.$layer 0px 1px 2px;
+    }
+}
+
 @mixin card {
     border-radius: variables.$cardRounding;
     padding: variables.$cardPadding;
-}
-
-@mixin boxShadow {
-    box-shadow: colors.$secondary 0 0 10px;
+    transition: box-shadow 0.3s;
+    @include boxShadow('');
+    &:hover {
+        @include boxShadow('hover');
+    }
 }
 
 @mixin layer {

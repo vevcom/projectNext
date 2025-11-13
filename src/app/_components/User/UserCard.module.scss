@@ -2,7 +2,7 @@
 
 .UserCard {
     @include ohma.round;
-    @include ohma.boxShadow;
+    @include ohma.boxShadow();
     text-decoration: none;
     margin: ohma.$gap;
     margin-bottom: 0;

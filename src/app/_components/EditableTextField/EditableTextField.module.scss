@@ -11,12 +11,12 @@ $border: 1px;
         position: absolute;
         right: calc($padding / 2);
         top: calc($padding / 2);
-        color: ohma.$colors-yellow;
+        color: ohma.$colors-primary
     }
     .text {
         position: relative;
         padding: $padding;
-        border: $border solid ohma.$colors-yellow;; // Add this line
+        border: $border solid ohma.$colors-primary;; // Add this line
         border-radius: ohma.$rounding;
         &:focus {
             outline: 2px solid ohma.$colors-primary;
