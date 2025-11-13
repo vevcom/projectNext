@@ -1,7 +1,7 @@
 import { AutherFactory } from './Auther'
 import { verifyJWT } from '@/lib/jwt/jwt'
 import { ServerError } from '@/services/error'
-import type { OmegaJWTAudience } from '@/jwt/Types'
+import type { OmegaJWTAudience } from '@/lib/jwt/types'
 
 export const RequireJWT = AutherFactory<
     { audience: OmegaJWTAudience },

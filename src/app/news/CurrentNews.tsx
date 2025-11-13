@@ -1,5 +1,5 @@
 import NewsCard from './NewsCard'
-import { readNewsCurrentAction } from '@/actions/news/read'
+import { readNewsCurrentAction } from '@/services/news/actions'
 import React from 'react'
 
 type PropTypes = {
@@ -8,6 +8,7 @@ type PropTypes = {
 
 /**
  * @param not - pass it not: a id of a news to exclude from the list
+ * WARNING: This component must be server-side rendered
  */
 export default async function CurrentNews({ not }: PropTypes) {
     const res = await readNewsCurrentAction()

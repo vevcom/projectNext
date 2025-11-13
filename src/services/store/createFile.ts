@@ -3,7 +3,8 @@ import { ServerError } from '@/services/error'
 import { v4 as uuid } from 'uuid'
 import { join } from 'path'
 import { mkdir, writeFile } from 'fs/promises'
-import type { StoreLocations } from './StoreLocations'
+import type { StoreLocations } from './types'
+import type { File } from 'node:buffer'
 
 /**
  * Create a file in the store volume

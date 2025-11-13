@@ -12,7 +12,6 @@ import dobbelOmega from './dobbelOmega/dobbelOmega'
 import seedNotificationChannels from './seedNotificationsChannels'
 import seedDevGroups from './development/seedDevGroups'
 import seedClasses from './seedClasses'
-import SeedSpecialVisibility from './seedSpecialVisibility'
 import seedMail from './seedMail'
 import seedStudyProgramme from './seedStudyProgramme'
 import seedOmegaMembershipGroups from './seedOmegaMembershipGroups'
@@ -24,8 +23,8 @@ import seedDevJobAds from './development/seedDevJobAds'
 import seedDevEvents from './development/seedDevEvents'
 import seedEvents from './seedEvent'
 import seedCabin from './seedCabin'
-import { PrismaClient } from '@prisma/client'
 import seedPermissions from './seedPermissions'
+import { PrismaClient } from '@prisma/client'
 
 export default async function seed(
     shouldMigrate: boolean,
@@ -37,7 +36,6 @@ export default async function seed(
 
     if (enableLogging) console.log('seeding standard data....')
     await seedOrder(prisma)
-    await SeedSpecialVisibility(prisma)
     await SeedSpecialImageCollections(prisma)
     await seedImages(prisma)
     await seedCms(prisma)
@@ -58,8 +56,8 @@ export default async function seed(
     if (!seedDevData || shouldMigrate) return
     if (enableLogging) console.log('seeding dev data....')
     await seedDevImages(prisma)
-    await seedDevUsers(prisma)
     await seedDevGroups(prisma)
+    await seedDevUsers(prisma)
     await seedDevPermissions(prisma)
     await seedDevOmegaquotes(prisma)
     await seedDevNews(prisma)

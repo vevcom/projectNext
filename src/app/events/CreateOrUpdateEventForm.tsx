@@ -7,12 +7,12 @@ import Slider from '@/components/UI/Slider'
 import NumberInput from '@/components/UI/NumberInput'
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
-import { EventConfig } from '@/services/events/config'
-import { updateEventAction } from '@/actions/events/update'
-import { createEventAction } from '@/actions/events/create'
 import EventTag from '@/components/Event/EventTag'
-import { bindParams } from '@/actions/bind'
-import { FIELD_IS_PRESENT_VALUE } from '@/lib/fields/config'
+import { createEventAction, updateEventAction } from '@/services/events/actions'
+import { eventCanBeViewdByOptions } from '@/services/events/constants'
+import { FIELD_IS_PRESENT_VALUE } from '@/lib/fields/constants'
+import { configureAction } from '@/services/configureAction'
+import { formatVevenUri } from '@/lib/urlEncoding'
 import { useState } from 'react'
 import type { Event, EventTag as EventTagT } from '@prisma/client'
 import type { ChangeEvent } from 'react'
@@ -31,7 +31,7 @@ type PropTypes = {
  */
 export default function CreateOrUpdateEventForm({ event, eventTags }: PropTypes) {
     const [showRegistrationOptions, setShowRegistrationOptions] = useState(event?.takesRegistration ?? false)
-    const action = event ? bindParams(updateEventAction, { id: event.id }) : createEventAction
+    const action = event ? configureAction(updateEventAction, { params: { id: event.id } }) : createEventAction
 
     const handleShowRegistration = (changeEvent: ChangeEvent<HTMLInputElement>) => {
         setShowRegistrationOptions(changeEvent.target.checked)
@@ -46,7 +46,7 @@ export default function CreateOrUpdateEventForm({ event, eventTags }: PropTypes)
                 submitText={event ? 'Oppdater' : 'Opprett'}
                 refreshOnSuccess
                 navigateOnSuccess={
-                    data => (data?.name ? `/events/${data.order}/${encodeURIComponent(data.name)}` : '/events')
+                    data => (data?.name ? `/events/${formatVevenUri(data.name, data.id)}` : '/events')
                 }
             >
                 <TextInput label="Navn" name="name" defaultValue={event?.name} />
@@ -55,7 +55,7 @@ export default function CreateOrUpdateEventForm({ event, eventTags }: PropTypes)
                     className={styles.canBeViewdBy}
                     label="Hvem kan se"
                     name="canBeViewdBy"
-                    options={EventConfig.canBeViewdByOptions}
+                    options={eventCanBeViewdByOptions}
                     defaultValue={event?.canBeViewdBy}
                 />
                 <DateInput label="Start" name="eventStart" includeTime defaultValue={event?.eventStart} />

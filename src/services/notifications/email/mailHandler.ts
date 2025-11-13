@@ -1,5 +1,5 @@
 import '@pn-server-only'
-import { TRANSPORT_OPTIONS } from './config'
+import { TRANSPORT_OPTIONS } from './constants'
 import nodemailer from 'nodemailer'
 import type SMTPPool from 'nodemailer/lib/smtp-pool'
 import type SMTPTransport from 'nodemailer/lib/smtp-transport'

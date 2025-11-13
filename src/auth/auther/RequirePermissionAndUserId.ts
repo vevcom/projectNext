@@ -9,17 +9,20 @@ export const RequirePermissionAndUserId = AutherFactory<
     if (!session.user) {
         return {
             success: false,
-            session
+            session,
+            errorMessage: 'Du må være innlogget for å få tilgang'
         }
     }
     if (session.user.id !== dynamicFields.userId) {
         return {
             success: false,
-            session
+            session,
+            errorMessage: 'Du er ikke autorisert til å se denne ressursen'
         }
     }
     return {
         success: session.permissions.includes(staticFields.permission),
-        session
+        session,
+        errorMessage: `Du trenger tillatelse '${staticFields.permission}' for å få tilgang`
     }
 })

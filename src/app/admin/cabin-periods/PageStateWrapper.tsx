@@ -6,7 +6,8 @@ import PopUp from '@/app/_components/PopUp/PopUp'
 import { displayDate } from '@/lib/dates/displayDate'
 import SimpleTable from '@/app/_components/Table/SimpleTable'
 import Form from '@/app/_components/Form/Form'
-import { destoryPricePeriodAction, destroyReleasePeriodAction } from '@/actions/cabin'
+import { destoryPricePeriodAction, destroyReleasePeriodAction } from '@/services/cabin/actions'
+import { configureAction } from '@/services/configureAction'
 import { v4 as uuid } from 'uuid'
 import type { PricePeriod, ReleasePeriod } from '@prisma/client'
 
@@ -46,8 +47,8 @@ export default function PageStateWrapper({
                 period.releaseTime < new Date() ? 'Slipp perioden er publisert.' :
                     <Form
                         key={uuid()}
-                        action={destroyReleasePeriodAction.bind(null, {
-                            id: period.id
+                        action={configureAction(destroyReleasePeriodAction, {
+                            params: { id: period.id },
                         })}
                         submitText="Slett"
                         submitColor="red"
@@ -78,8 +79,8 @@ export default function PageStateWrapper({
                     {isPricePeriodReleased(period) ? 'Pris perioden er publisert.' :
                         <Form
                             key={uuid()}
-                            action={destoryPricePeriodAction.bind(null, {
-                                id: period.id
+                            action={configureAction(destoryPricePeriodAction, {
+                                params: { id: period.id },
                             })}
                             submitText="Slett"
                             submitColor="red"

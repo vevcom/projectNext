@@ -1,15 +1,15 @@
 import styles from './page.module.scss'
 import CreateUpdateApplicationPeriodForm from './CreateUpdateApplicationPeriodForm'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
-import { readApplicationPeriodsAction } from '@/actions/applications/periods/read'
+import { readApplicationPeriodsAction } from '@/services/applications/periods/actions'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import Date from '@/components/Date/Date'
 import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
-import { readCommitteesAction } from '@/actions/groups/committees/read'
+import { readAllCommitteesAction } from '@/services/groups/committees/actions'
 
-export default async function Apllications() {
+export default async function Applications() {
     const periods = unwrapActionReturn(await readApplicationPeriodsAction())
-    const committees = unwrapActionReturn(await readCommitteesAction())
+    const committees = unwrapActionReturn(await readAllCommitteesAction())
 
     return (
         <PageWrapper title="Søknadsperioder" headerItem={

@@ -3,7 +3,7 @@ import ProductForm from '@/app/admin/product/productForm'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import PageWrapper from '@/app/_components/PageWrapper/PageWrapper'
 import { displayPrice } from '@/lib/money/convert'
-import { readProductAction } from '@/actions/shop/product'
+import { readProductAction } from '@/services/shop/actions'
 import { v4 as uuid } from 'uuid'
 import Link from 'next/link'
 
@@ -14,7 +14,7 @@ type PropTypes = {
 }
 
 export default async function ProductPage({ params }: PropTypes) {
-    const product = unwrapActionReturn(await readProductAction({ productId: Number((await params).productId) }))
+    const product = unwrapActionReturn(await readProductAction({ params: { productId: Number((await params).productId) } }))
 
     return <PageWrapper
         title={product.name}

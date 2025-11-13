@@ -3,11 +3,20 @@ import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
 import ArticleSection from '@/components/Cms/ArticleSection/ArticleSection'
 import { SettingsHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
-import { updateInterestGroupAction } from '@/actions/groups/interestGroups/update'
-import { destroyInterestGroupAction } from '@/actions/groups/interestGroups/destroy'
-import { InterestGroupAuthers } from '@/services/groups/interestGroups/authers'
-import type { SessionMaybeUser } from '@/auth/Session'
-import type { ExpandedInterestGroup } from '@/services/groups/interestGroups/Types'
+import {
+    updateInterestGroupAction,
+    destroyInterestGroupAction,
+    updateInterestGroupArticleSectionAction,
+    addPartToInterestGroupArticleSectionAction,
+    removePartFromInterestGroupArticleSectionAction,
+    updateInterestGroupCmsImageAction,
+    updateInterestGroupCmsParagraphAction,
+    updateInterestGroupCmsLinkAction
+} from '@/services/groups/interestGroups/actions'
+import { interestGroupAuth } from '@/services/groups/interestGroups/auth'
+import { configureAction } from '@/services/configureAction'
+import type { SessionMaybeUser } from '@/auth/session/Session'
+import type { ExpandedInterestGroup } from '@/services/groups/interestGroups/types'
 
 type PropTypes = {
     interestGroup: ExpandedInterestGroup
@@ -15,10 +24,12 @@ type PropTypes = {
 }
 
 export default function InterestGroup({ interestGroup, session }: PropTypes) {
-    const canUpdate = InterestGroupAuthers.update.dynamicFields({ groupId: interestGroup.groupId }).auth(session)
-    const canDestroy = InterestGroupAuthers.destroy.dynamicFields({}).auth(session)
+    const canUpdate = interestGroupAuth.update.dynamicFields({ groupId: interestGroup.groupId }).auth(session)
+    const canDestroy = interestGroupAuth.destroy.dynamicFields({}).auth(session)
 
     const PopUpKey = `Update interest group ${interestGroup.name}`
+
+    const cmsArticleActionConfig = { implementationParams: { interestGroupId: interestGroup.id } }
 
     return (
         <div className={styles.interestGroup}>
@@ -34,7 +45,9 @@ export default function InterestGroup({ interestGroup, session }: PropTypes) {
                                         <Form
                                             refreshOnSuccess
                                             closePopUpOnSuccess={PopUpKey}
-                                            action={updateInterestGroupAction.bind(null, ({ id: interestGroup.id }))}
+                                            action={
+                                                updateInterestGroupAction.bind(null, ({ params: { id: interestGroup.id } }))
+                                            }
                                             submitText="Endre"
                                         >
                                             <TextInput
@@ -56,7 +69,9 @@ export default function InterestGroup({ interestGroup, session }: PropTypes) {
                                     <Form
                                         refreshOnSuccess
                                         closePopUpOnSuccess={PopUpKey}
-                                        action={destroyInterestGroupAction.bind(null, ({ id: interestGroup.id }))}
+                                        action={
+                                            destroyInterestGroupAction.bind(null, ({ params: { id: interestGroup.id } }))
+                                        }
                                         submitText="Slett"
                                         submitColor="red"
                                         confirmation={{
@@ -70,7 +85,30 @@ export default function InterestGroup({ interestGroup, session }: PropTypes) {
                     ) : <></>
                 }
             </div>
-            <ArticleSection key={interestGroup.id} articleSection={interestGroup.articleSection} />
+            <ArticleSection
+                key={interestGroup.id}
+                articleSection={interestGroup.articleSection}
+                actions={{
+                    updateArticleSection: configureAction(
+                        updateInterestGroupArticleSectionAction, cmsArticleActionConfig
+                    ),
+                    addPartToArticleSection: configureAction(
+                        addPartToInterestGroupArticleSectionAction, cmsArticleActionConfig
+                    ),
+                    removePartFromArticleSection: configureAction(
+                        removePartFromInterestGroupArticleSectionAction, cmsArticleActionConfig
+                    ),
+                    updateCmsImage: configureAction(
+                        updateInterestGroupCmsImageAction, cmsArticleActionConfig
+                    ),
+                    updateCmsParagraph: configureAction(
+                        updateInterestGroupCmsParagraphAction, cmsArticleActionConfig
+                    ),
+                    updateCmsLink: configureAction(
+                        updateInterestGroupCmsLinkAction, cmsArticleActionConfig
+                    ),
+                }}
+            />
         </div>
     )
 }

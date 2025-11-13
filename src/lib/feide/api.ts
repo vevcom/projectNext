@@ -36,7 +36,9 @@ export async function fetchExtendedUserInfoFromFeide(accessToken: string): Promi
         throw new Error(`Could not fetch extended user info from feide. Status: ${extendedUserInfoRequest.status}`)
     }
 
-    return await extendedUserInfoRequest.json()
+    const ret = await extendedUserInfoRequest.json()
+    console.log('Extended user info from Feide:', ret)
+    return ret
 }
 
 /**

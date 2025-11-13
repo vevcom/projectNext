@@ -1,16 +1,17 @@
 import SmallEventTag from './SmallEventTag'
 import styles from './EventCard.module.scss'
 import ImageCard from '@/components/ImageCard/ImageCard'
+import { formatVevenUri } from '@/lib/urlEncoding'
 import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCalendar, faLocationDot, faUsers } from '@fortawesome/free-solid-svg-icons'
-import type { EventExpanded } from '@/services/events/Types'
+import type { EventExpanded } from '@/services/events/types'
 
 export default function EventCard({ event }: {
     event: EventExpanded,
 }) {
     return <ImageCard
-        href={`/events/${event.order}/${event.name}`}
+        href={`/events/${formatVevenUri(event.name, event.id)}`}
         title={event.name}
         image={event.coverImage.image}
     >

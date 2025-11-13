@@ -1,6 +1,6 @@
 import styles from './FinalCountdown.module.scss'
-import { readNumberOfApplicationsAction } from '@/actions/applications/periods/read'
 import useInterval from '@/hooks/useInterval'
+import { readNumberOfApplicationsAction } from '@/services/applications/periods/actions'
 import { useEffect, useRef, useState } from 'react'
 
 type PropTypes = {
@@ -14,7 +14,7 @@ export default function FinalCountdown({ periodName }: PropTypes) {
     const [applicants, setApplicants] = useState(0)
 
     useEffect(() => {
-        readNumberOfApplicationsAction({ name: periodName }).then(res => {
+        readNumberOfApplicationsAction({ params: { name: periodName } }).then(res => {
             if (!res.success) return
             setApplicants(res.data)
         })

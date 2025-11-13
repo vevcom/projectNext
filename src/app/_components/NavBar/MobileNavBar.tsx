@@ -4,6 +4,7 @@ import Menu from './Menu'
 import UserNavigation from './UserNavigation'
 import SpecialCmsImage from '@/components/Cms/CmsImage/SpecialCmsImage'
 import EditModeSwitch from '@/components/EditModeSwitch/EditModeSwitch'
+import { readSpecialCmsImageFrontpage, updateSpecialCmsImageFrontpage } from '@/services/frontpage/actions'
 import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBars } from '@fortawesome/free-solid-svg-icons'
@@ -30,7 +31,12 @@ export default async function MobileNavBar({ profile }: PropTypes) {
                 ))
             }
             <div>
-                <SpecialCmsImage special="MOBILE_NAV_PRIMARY_BUTTON" width={30}>
+                <SpecialCmsImage
+                    special="MOBILE_NAV_PRIMARY_BUTTON"
+                    width={30}
+                    readSpecialCmsImageAction={readSpecialCmsImageFrontpage}
+                    updateCmsImageAction={updateSpecialCmsImageFrontpage}
+                >
                     <Link className={styles.imagelink} href="/"/>
                 </SpecialCmsImage>
             </div>
@@ -41,6 +47,8 @@ export default async function MobileNavBar({ profile }: PropTypes) {
                     height={25}
                     alt="log in button"
                     className={styles.image}
+                    readSpecialCmsImageAction={readSpecialCmsImageFrontpage}
+                    updateCmsImageAction={updateSpecialCmsImageFrontpage}
                 />
                 <UserNavigation profile={profile} />
             </div>

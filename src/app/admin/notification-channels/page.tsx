@@ -3,7 +3,7 @@
 import AddNotificationChannel from './addNotificationChannel'
 import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
-import { readNotificationChannelsAction } from '@/actions/notifications'
+import { readNotificationChannelsAction } from '@/services/notifications/actions'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import Link from 'next/link'
 import { v4 as uuid } from 'uuid'

@@ -5,12 +5,15 @@ import TextInput from '@/UI/TextInput'
 import CmsImage from '@/cms/CmsImage/CmsImage'
 import CmsImageClient from '@/cms/CmsImage/CmsImageClient'
 import Form from '@/components/Form/Form'
-import { updateComanyAction } from '@/actions/career/companies/update'
-import { destroyCompanyAction } from '@/actions/career/companies/destroy'
-import { bindParams } from '@/actions/bind'
-import { CompanyAuthers } from '@/services/career/companies/authers'
-import type { CompanyExpanded } from '@/services/career/companies/Types'
-import type { SessionMaybeUser } from '@/auth/Session'
+import { companyAuth } from '@/services/career/companies/auth'
+import {
+    destroyCompanyAction,
+    updateCompanyAction,
+    updateCompanyCmsLogoAction
+} from '@/services/career/companies/actions'
+import { configureAction } from '@/services/configureAction'
+import type { CompanyExpanded } from '@/services/career/companies/types'
+import type { SessionMaybeUser } from '@/auth/session/Session'
 
 type PropTypes = {
     company: CompanyExpanded,
@@ -39,8 +42,12 @@ export default function Company({
     logoWidth = 300,
     squareLogo = true,
 }: PropTypes) {
-    const canUpdate = CompanyAuthers.update.dynamicFields({}).auth(session)
-    const canDestroy = CompanyAuthers.destroy.dynamicFields({}).auth(session)
+    const canUpdate = companyAuth.update.dynamicFields({}).auth(session)
+    const canDestroy = companyAuth.destroy.dynamicFields({}).auth(session)
+    const updateCmsImageAction = configureAction(
+        updateCompanyCmsLogoAction,
+        { implementationParams: { companyId: company.id } }
+    )
     return (
         <div className={styles.Company}>
             {asClient ?
@@ -49,12 +56,15 @@ export default function Company({
                     className={squareLogo ? styles.logoSq : styles.logo}
                     cmsImage={company.logo}
                     width={logoWidth}
+                    updateCmsImageAction={updateCmsImageAction}
+
                 /> :
                 <CmsImage
                     disableEditor={disableEdit}
                     className={squareLogo ? styles.logoSq : styles.logo}
                     cmsImage={company.logo}
                     width={logoWidth}
+                    updateCmsImageAction={updateCmsImageAction}
                 />
             }
             <div className={styles.info}>
@@ -65,7 +75,7 @@ export default function Company({
                         <SettingsHeaderItemPopUp showButtonClass={styles.showSettings} PopUpKey={`Edit ${company.id}`}>
                             <Form
                                 title="Rediger Bedrift"
-                                action={bindParams(updateComanyAction, { id: company.id })}
+                                action={configureAction(updateCompanyAction, { params: { id: company.id } })}
                                 refreshOnSuccess
                                 closePopUpOnSuccess={`Edit ${company.id}`}
                                 submitText="Lagre"
@@ -74,7 +84,7 @@ export default function Company({
                                 <TextInput name="description" label="Beskrivelse" defaultValue={company.description} />
                             </Form>
                             <Form
-                                action={bindParams(destroyCompanyAction, { id: company.id })}
+                                action={configureAction(destroyCompanyAction, { params: { id: company.id } })}
                                 refreshOnSuccess
                                 closePopUpOnSuccess={`Edit ${company.id}`}
                                 submitText="Slett"

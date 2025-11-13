@@ -1,7 +1,7 @@
 'use client'
 import styles from './LicenseChooser.module.scss'
 import { SelectNumberPossibleNULL } from '@/UI/Select'
-import { readAllLicensesAction } from '@/actions/licenses/read'
+import { readAllLicensesAction } from '@/services/licenses/actions'
 import useActionCall from '@/hooks/useActionCall'
 import { useCallback, useEffect, useState } from 'react'
 

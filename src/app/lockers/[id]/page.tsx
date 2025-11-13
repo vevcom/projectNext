@@ -3,9 +3,10 @@ import LockerNotFound from './LockerNotFound'
 import CreateLockerReservationForm from './CreateLockerReservationForm'
 import UpdateLockerReservationForm from './UpdateLockerReservationForm'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
-import { readLockerAction } from '@/actions/lockers/lockers'
-import { getUser } from '@/auth/getUser'
-import { checkGroupValidity, GroupMethods, inferGroupName } from '@/services/groups/methods'
+import { readLockerAction } from '@/services/lockers/actions'
+import { getUser } from '@/auth/session/getUser'
+import { checkGroupValidity, groupOperations, inferGroupName } from '@/services/groups/operations'
+import { notFound } from 'next/navigation'
 
 
 type PropTypes = {
@@ -15,16 +16,16 @@ type PropTypes = {
 }
 
 export default async function Locker({ params }: PropTypes) {
-    const { user, status, authorized } = await getUser({
+    const { user, authorized } = await getUser({
         userRequired: true,
         shouldRedirect: true,
         requiredPermissions: [['LOCKER_USE']],
     })
-    if (!authorized) return Error(status)
+    if (!authorized) notFound()
 
     const lockerId = parseInt((await params).id, 10)
 
-    const locker = await readLockerAction({ id: lockerId })
+    const locker = await readLockerAction({ params: { id: lockerId } })
     if (!locker.success) {
         return <LockerNotFound />
     }
@@ -33,8 +34,7 @@ export default async function Locker({ params }: PropTypes) {
     const reservation = locker.data.LockerReservation[0]
     const groupName = (isReserved && reservation.group) ? inferGroupName(checkGroupValidity(reservation.group)) : ''
 
-    const groups = await GroupMethods.readGroupsOfUser.newClient().execute({
-        session: null,
+    const groups = await groupOperations.readGroupsOfUser({
         bypassAuth: true,
         params: {
             userId: user.id,

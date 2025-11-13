@@ -1,21 +1,20 @@
 import styles from './page.module.scss'
 import UpdateSchool from './UpdateSchool'
-import { destroySchoolAction } from '@/education/schools/destroy'
-import { readSchoolAction } from '@/education/schools/read'
+import { destroySchoolAction, readSchoolAction } from '@/education/schools/actions'
 import Form from '@/components/Form/Form'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import School from '@/components/School/School'
 
 type PropTypes = {
     params: Promise<{
-        shortname: string
+        shortName: string
     }>
 }
 
 export default async function SchoolAdmin({ params }: PropTypes) {
-    const shortname = decodeURIComponent((await params).shortname)
+    const shortName = decodeURIComponent((await params).shortName)
 
-    const res = await readSchoolAction(shortname)
+    const res = await readSchoolAction({ params: { shortName } })
     if (!res.success) throw new Error(res.error?.length ? res.error[0].message : 'Unknown error')
     const school = res.data
 

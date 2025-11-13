@@ -2,7 +2,7 @@ import '@pn-server-only'
 import { sendSystemMail } from '@/services/notifications/email/send'
 import { ResetPasswordTemplate } from '@/services/notifications/email/templates/resetPassword'
 import { generateJWT } from '@/jwt/jwt'
-import { UserMethods } from '@/services/users/methods'
+import { userOperations } from '@/services/users/operations'
 import { ServerError } from '@/services/error'
 import { z } from 'zod'
 
@@ -10,9 +10,8 @@ export async function sendResetPasswordMail(email: string) {
     const emailParsed = z.string().email().parse(email)
 
     try {
-        const user = await UserMethods.read.newClient().execute({
+        const user = await userOperations.read({
             params: { email: emailParsed },
-            session: null,
             bypassAuth: true,
         })
 

@@ -2,13 +2,13 @@
 import styles from './CommitteeLogoRoll.module.scss'
 import Image from '@/app/_components/Image/Image'
 import useInterval from '@/hooks/useInterval'
-import { readNumberOfApplicationsAction } from '@/actions/applications/periods/read'
+import { readNumberOfApplicationsAction } from '@/services/applications/periods/actions'
 import { useRef, useState } from 'react'
 import type { Image as ImageT } from '@prisma/client'
 
 type PropTypes = {
     committees: {
-        shortname: string,
+        shortName: string,
         logo: ImageT
     }[],
     periodName: string
@@ -30,7 +30,7 @@ export default function CommitteeLogoRoll({ committees, periodName }: PropTypes)
     const sokere = useRef(0)
 
     useInterval(async () => {
-        const res = await readNumberOfApplicationsAction({ name: periodName })
+        const res = await readNumberOfApplicationsAction({ params: { name: periodName } })
         if (!res.success) return
         sokere.current = res.data
     }, 2000)
@@ -100,7 +100,7 @@ export default function CommitteeLogoRoll({ committees, periodName }: PropTypes)
                         </>) : (
                             <Display
                                 image={committees[currentCommitteeIndexes.display1].logo}
-                                shortname={committees[currentCommitteeIndexes.display1].shortname}
+                                shortName={committees[currentCommitteeIndexes.display1].shortName}
                             />
                         )
                     }
@@ -115,7 +115,7 @@ export default function CommitteeLogoRoll({ committees, periodName }: PropTypes)
                         </>) : (
                             <Display
                                 image={committees[currentCommitteeIndexes.display2].logo}
-                                shortname={committees[currentCommitteeIndexes.display2].shortname}
+                                shortName={committees[currentCommitteeIndexes.display2].shortName}
                             />
                         )
                     }
@@ -130,7 +130,7 @@ export default function CommitteeLogoRoll({ committees, periodName }: PropTypes)
                         </>) : (
                             <Display
                                 image={committees[currentCommitteeIndexes.display3].logo}
-                                shortname={committees[currentCommitteeIndexes.display3].shortname}
+                                shortName={committees[currentCommitteeIndexes.display3].shortName}
                             />
                         )
                     }
@@ -141,11 +141,11 @@ export default function CommitteeLogoRoll({ committees, periodName }: PropTypes)
 }
 
 
-function Display({ image, shortname }: { image: ImageT, shortname: string }) {
+function Display({ image, shortName }: { image: ImageT, shortName: string }) {
     return (
         <>
             <Image width={600} image={image} />
-            <span>{shortname}</span>
+            <span>{shortName}</span>
         </>
     )
 }

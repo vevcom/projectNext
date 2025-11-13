@@ -1,7 +1,7 @@
 'use client'
 
 import { createContext, useState } from 'react'
-import type { ExpandedGroup } from '@/services/groups/Types'
+import type { ExpandedGroup } from '@/services/groups/types'
 import type { ReactNode } from 'react'
 
 export const GroupSelectionContext = createContext<{

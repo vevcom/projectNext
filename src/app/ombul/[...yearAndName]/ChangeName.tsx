@@ -2,9 +2,9 @@
 
 import styles from './ChangeName.module.scss'
 import EditableTextField from '@/components/EditableTextField/EditableTextField'
-import { updateOmbulAction } from '@/actions/ombul/update'
+import { updateOmbulAction } from '@/services/ombul/actions'
 import type { ReactNode } from 'react'
-import type { ExpandedOmbul } from '@/services/ombul/Types'
+import type { ExpandedOmbul } from '@/services/ombul/types'
 
 type PropTypes = {
     children: ReactNode

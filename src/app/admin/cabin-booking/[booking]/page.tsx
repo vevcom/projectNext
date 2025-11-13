@@ -1,8 +1,9 @@
-import { readCabinBookingAction } from '@/actions/cabin'
+import { readCabinBookingAction } from '@/services/cabin/actions'
 import PageWrapper from '@/app/_components/PageWrapper/PageWrapper'
 import SimpleTable from '@/app/_components/Table/SimpleTable'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { displayDate } from '@/lib/dates/displayDate'
+import { formatVevenUri } from '@/lib/urlEncoding'
 import Link from 'next/link'
 import React from 'react'
 
@@ -21,7 +22,9 @@ export default async function CabinBooking({
     }>
 }) {
     const booking = unwrapActionReturn(await readCabinBookingAction({
-        id: parseInt(decodeURIComponent((await params).booking), 10)
+        params: {
+            id: parseInt(decodeURIComponent((await params).booking), 10)
+        }
     }))
 
     return <PageWrapper
@@ -47,7 +50,7 @@ export default async function CabinBooking({
                 }
                 {booking.event &&
                     trHelper('Arrangement', <Link
-                        href={`/event/${booking.event.order}/${booking.event.name}`}
+                        href={`/event/${formatVevenUri(booking.event.name, booking.event.id)}`}
                     >
                         {booking.event.name}
                     </Link>)

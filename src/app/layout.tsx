@@ -1,20 +1,20 @@
 import styles from './layout.module.scss'
-import { SessionProvider } from '@/auth/useUser'
+import { SessionProvider } from '@/auth/session/useUser'
 import MobileNavBar from '@/components/NavBar/MobileNavBar'
 import NavBar from '@/components/NavBar/NavBar'
 import Footer from '@/components/Footer/Footer'
-import { authOptions } from '@/auth/authoptions'
+import { authOptions } from '@/auth/nextAuth/authOptions'
 import EditModeProvider from '@/contexts/EditMode'
 import PopUpProvider from '@/contexts/PopUp'
 import DefaultPermissionsProvider from '@/contexts/DefaultPermissions'
-import { readDefaultPermissionsAction } from '@/actions/permissions/index'
+import { readDefaultPermissionsAction } from '@/services/permissions/actions'
 import { Inter } from 'next/font/google'
 import '@/styles/globals.scss'
 import { config } from '@fortawesome/fontawesome-svg-core'
 import '@fortawesome/fontawesome-svg-core/styles.css'
 import { getServerSession } from 'next-auth'
 import type { ReactNode } from 'react'
-import { readUserProfileAction } from '@/actions/users/read'
+import { readUserProfileAction } from '@/services/users/actions'
 import { unwrapActionReturn } from './redirectToErrorPage'
 
 config.autoAddCss = false
@@ -36,7 +36,7 @@ export default async function RootLayout({ children }: PropTypes) {
     const defaultPermissionsRes = await readDefaultPermissionsAction()
     const defaultPermissions = defaultPermissionsRes.success ? defaultPermissionsRes.data : []
     const profile = session?.user ?
-        unwrapActionReturn(await readUserProfileAction(session?.user)) : null
+        unwrapActionReturn(await readUserProfileAction({ params: { username: session.user.username } })) : null
 
     return (
         <html lang="en">

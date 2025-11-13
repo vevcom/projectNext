@@ -1,17 +1,17 @@
 'use client'
 import styles from './ChangeName.module.scss'
 import EditableTextField from '@/components/EditableTextField/EditableTextField'
-import { updateArticleAction } from '@/actions/cms/articles/update'
 import React, { useState } from 'react'
 import { usePathname } from 'next/navigation'
-import type { ExpandedArticle } from '@/cms/articles/Types'
+import type { ExpandedArticle, UpdateArticleAction } from '@/cms/articles/types'
+import type { ConfiguredAction } from '@/services/actionTypes'
 
 type PropTypes = {
     article: ExpandedArticle
+    updateArticleAction: ConfiguredAction<UpdateArticleAction>
 }
 
-export default function ChangeName({ article }: PropTypes) {
-    const changeName = updateArticleAction.bind(null, article.id)
+export default function ChangeName({ article, updateArticleAction }: PropTypes) {
     const currentPath = usePathname()
     const [currentName, setCurrentName] = useState(article.name)
     const successCallback = (data: ExpandedArticle | undefined) => {
@@ -27,7 +27,7 @@ export default function ChangeName({ article }: PropTypes) {
         <EditableTextField
             formProps={
                 {
-                    action: changeName,
+                    action: updateArticleAction,
                     successCallback
                 }
             }

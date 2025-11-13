@@ -1,13 +1,19 @@
 import styles from './Footer.module.scss'
 import SocialIcons from '@/components/SocialIcons/SocialIcons'
 import SpecialCmsImage from '@/components/Cms/CmsImage/SpecialCmsImage'
+import { readSpecialCmsImageFrontpage, updateSpecialCmsImageFrontpage } from '@/services/frontpage/actions'
 import Link from 'next/link'
 
 function Footer() {
     return (
         <footer className={styles.Footer}>
             <div>
-                <SpecialCmsImage special="FOOTER_LOGO" width={350} />
+                <SpecialCmsImage
+                    special="FOOTER_LOGO"
+                    width={350}
+                    readSpecialCmsImageAction={readSpecialCmsImageFrontpage}
+                    updateCmsImageAction={updateSpecialCmsImageFrontpage}
+                />
                 <p>
                 Linjeforeningen for Elektronisk Systemdesign
                 og Innovasjon (MTELSYS) og Kybernetikk og
@@ -16,7 +22,12 @@ function Footer() {
                 <p>Org. Nr. 890 384 692</p>
                 <div>
                     {/* Uncomment when PWA an SVG
-                    <SpecialCmsImage special="FOOTER_1" width={200} >
+                    <SpecialCmsImage
+                        special="FOOTER_1"
+                        width={200}
+                        readSpecialCmsImageAction={readSpecialCmsImageFrontpage}
+                        updateCmsImageAction={updateSpecialCmsImageFrontpage}
+                    >
                         <Link className={styles.pwa} href="/infopages/pwa" />
                     </SpecialCmsImage>*/}
                     <div className={styles.icons}>
@@ -40,10 +51,20 @@ function Footer() {
                 <p>7491 Trondheim</p>
             </div>
             <div className={styles.sponsors}>
-                <SpecialCmsImage special="FOOTER_2" width={170}>
+                <SpecialCmsImage
+                    special="FOOTER_2"
+                    width={170}
+                    readSpecialCmsImageAction={readSpecialCmsImageFrontpage}
+                    updateCmsImageAction={updateSpecialCmsImageFrontpage}
+                >
                     <Link href="http://www.nordicsemi.com" target="_blank" />
                 </SpecialCmsImage>
-                <SpecialCmsImage special="FOOTER_3" width={100}>
+                <SpecialCmsImage
+                    special="FOOTER_3"
+                    width={100}
+                    readSpecialCmsImageAction={readSpecialCmsImageFrontpage}
+                    updateCmsImageAction={updateSpecialCmsImageFrontpage}
+                >
                     <Link href="http://www.kongsberg.com" target="_blank" />
                 </SpecialCmsImage>
             </div>

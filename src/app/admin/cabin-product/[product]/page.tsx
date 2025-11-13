@@ -1,7 +1,7 @@
 import styles from './page.module.scss'
 import { UpdateCabinProductPriceForm } from './UpdateCabinProductPriceForm'
 import { AddHeaderItemPopUp } from '@/app/_components/HeaderItems/HeaderItemPopUp'
-import { readCabinProductAction, readUnreleasedPricePeriodsAction } from '@/actions/cabin'
+import { readCabinProductAction, readUnreleasedPricePeriodsAction } from '@/services/cabin/actions'
 import PageWrapper from '@/app/_components/PageWrapper/PageWrapper'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { displayDate } from '@/lib/dates/displayDate'
@@ -17,7 +17,9 @@ export default async function CabinProduct({
     }>
 }) {
     const product = unwrapActionReturn(await readCabinProductAction({
-        id: parseInt(decodeURIComponent((await params).product), 10),
+        params: {
+            id: parseInt(decodeURIComponent((await params).product), 10),
+        }
     }))
     const pricePeriods = unwrapActionReturn(await readUnreleasedPricePeriodsAction())
 

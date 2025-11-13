@@ -1,6 +1,6 @@
 'use client'
 import styles from './CreateUserForm.module.scss'
-import { createUserAction } from '@/actions/users/create'
+import { createUserAction } from '@/services/users/actions'
 import TextInput from '@/components/UI/TextInput'
 import Form from '@/components/Form/Form'
 import React from 'react'

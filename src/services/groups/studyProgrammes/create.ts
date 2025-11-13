@@ -1,9 +1,9 @@
 import { createStudyProgrammeValidation } from './validation'
 import { prismaCall } from '@/services/prismaCall'
-import prisma from '@/prisma'
+import { prisma } from '@/prisma/client'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import type { CreateStudyProgrammeTypes } from './validation'
-import type { ExpandedStudyProgramme } from './Types'
+import type { ExpandedStudyProgramme } from './types'
 
 export async function createStudyProgramme(data: CreateStudyProgrammeTypes['Detailed']): Promise<ExpandedStudyProgramme> {
     const parse = createStudyProgrammeValidation.detailedValidate(data)

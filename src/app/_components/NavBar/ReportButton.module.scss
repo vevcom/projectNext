@@ -1,0 +1,29 @@
+@use '@/styles/ohma';
+
+.reportButton {
+    margin: ohma.$gap;
+    // padding: ;
+    cursor: pointer;
+    // margin-top: .5em;
+    
+    
+    .reportPicture {
+        //Width and height plus padding must equal 50px
+        width: 40px;
+        height: 40px;
+        padding: 5px;
+        border-radius: 10px;
+        // background-color: ohma.$colors-red;
+        // filter: saturate(0);
+        color: ohma.$colors-white;
+        &:hover{
+            transition: 0.5s;
+            background-color: ohma.$colors-red;
+            // background-color: rgb(211, 0, 0);
+        }
+    }
+}
+
+// .reportPicture{
+//     background-color: red;
+// }

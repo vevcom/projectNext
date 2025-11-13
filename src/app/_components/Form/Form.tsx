@@ -1,6 +1,6 @@
 'use client'
 import styles from './Form.module.scss'
-import { SUCCESS_FEEDBACK_TIME } from './ConfigVars'
+import { SUCCESS_FEEDBACK_TIME } from './constants'
 import { PopUpContext } from '@/contexts/PopUp'
 import SubmitButton from '@/components/UI/SubmitButton'
 import React, { Children, useContext, useEffect, useState } from 'react'
@@ -9,17 +9,17 @@ import { useRouter } from 'next/navigation'
 import type { PopUpKeyType } from '@/contexts/PopUp'
 import type { Colors, Confirmation } from '@/components/UI/SubmitButton'
 import type { FormHTMLAttributes, ReactNode, DetailedHTMLProps } from 'react'
-import type { Action } from '@/actions/Types'
+import type { ActionFormData } from '@/services/actionTypes'
 import type { ErrorMessage } from '@/services/error'
 
 type FormType = DetailedHTMLProps<FormHTMLAttributes<HTMLFormElement>, HTMLFormElement>
-export type PropTypes<ReturnType, DataGuarantee extends boolean> = Omit<FormType, 'action' | 'children'> & {
+export type PropTypes<ReturnType> = Omit<FormType, 'action' | 'children'> & {
     children?: ReactNode,
     title?: string,
     submitText?: string,
     submitColor?: Colors,
     confirmation?: Confirmation,
-    action: Action<ReturnType, DataGuarantee>,
+    action: ActionFormData<ReturnType>,
     successCallback?: (data?: ReturnType) => void,
     refreshOnSuccess?: boolean,
     navigateOnSuccess?: string | ((data?: ReturnType) => string | null),
@@ -62,7 +62,7 @@ const makeInputArray = (children: ReactNode): Inputs =>
         }
     })
 
-export default function Form<GiveActionReturn, DataGuarantee extends boolean>({
+export default function Form<GiveActionReturn>({
     children,
     title,
     submitText = 'create',
@@ -78,7 +78,7 @@ export default function Form<GiveActionReturn, DataGuarantee extends boolean>({
     closePopUpOnSuccess,
     buttonClassName,
     ...props
-}: PropTypes<GiveActionReturn, DataGuarantee>) {
+}: PropTypes<GiveActionReturn>) {
     const [generalErrors, setGeneralErrors] = useState<ErrorMessage[]>()
     const [inputs, setInputs] = useState<Inputs>(makeInputArray(children))
     const [success, setSuccess] = useState(false)

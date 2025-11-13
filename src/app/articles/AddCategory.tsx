@@ -3,7 +3,7 @@ import styles from './AddCategory.module.scss'
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
 import Textarea from '@/components/UI/Textarea'
-import { createArticleCategoryAction } from '@/actions/cms/articleCategories/create'
+import { createArticleCategoryAction } from '@/services/articleCategories/actions'
 import { useRouter } from 'next/navigation'
 
 export default function AddCategory() {

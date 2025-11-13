@@ -1,9 +1,9 @@
 import '@pn-server-only'
 import { prismaCall } from '@/services/prismaCall'
-import prisma from '@/prisma'
+import { prisma } from '@/prisma/client'
 import { invalidateOneUserSessionData } from '@/services/auth/invalidateSession'
-import { GroupMethods } from '@/services/groups/methods'
-import type { ExpandedMembership } from './Types'
+import { groupOperations } from '@/services/groups/operations'
+import type { ExpandedMembership } from './types'
 
 export async function updateMembership({
     groupId,
@@ -18,9 +18,8 @@ export async function updateMembership({
     active?: boolean
 }): Promise<ExpandedMembership> {
     const order = (orderArg && typeof orderArg === 'number') ? orderArg : (
-        await GroupMethods.readCurrentGroupOrder.newClient().execute({
+        await groupOperations.readCurrentGroupOrder({
             bypassAuth: true,
-            session: null,
             params: {
                 id: groupId
             }

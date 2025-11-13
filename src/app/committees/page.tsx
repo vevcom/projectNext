@@ -1,15 +1,15 @@
 import styles from './page.module.scss'
 import CommitteeCard from '@/components/CommitteeCard/CommitteeCard'
-import { readCommitteesAction } from '@/actions/groups/committees/read'
-import { readSpecialImageAction } from '@/actions/images/read'
+import { readAllCommitteesAction } from '@/services/groups/committees/actions'
+import { readSpecialImageAction } from '@/services/images/actions'
 
 export default async function Committees() {
-    const res = await readCommitteesAction()
+    const res = await readAllCommitteesAction()
     if (!res.success) throw new Error(`Kunne ikke hente komiteer - ${res.errorCode}`)
     const committees = res.data
 
     const strandardCommitteeLogoRes = await readSpecialImageAction.bind(
-        null, { special: 'DAFAULT_COMMITTEE_LOGO' }
+        null, { params: { special: 'DAFAULT_COMMITTEE_LOGO' } }
     )()
     const standardCommitteeLogo = strandardCommitteeLogoRes.success ? strandardCommitteeLogoRes.data : null
 

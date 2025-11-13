@@ -1,5 +1,5 @@
 import School from './School'
-import type { ExpandedSchool } from '@/services/education/schools/Types'
+import type { ExpandedSchool } from '@/services/education/schools/types'
 
 /**
  * Used to render schools server side and client side in consistent manner
@@ -8,4 +8,4 @@ import type { ExpandedSchool } from '@/services/education/schools/Types'
  */
 // eslint-disable-next-line react/display-name
 export const schoolListRenderer = (asClient: boolean) => (school: ExpandedSchool) =>
-    <School key={school.shortname} asClient={asClient} school={school} />
+    <School key={school.shortName} asClient={asClient} school={school} />

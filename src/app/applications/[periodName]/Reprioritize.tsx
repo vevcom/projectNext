@@ -1,6 +1,6 @@
 'use client'
 import styles from './Reprioritize.module.scss'
-import { updateApplicationAction } from '@/actions/applications/update'
+import { updateApplicationAction } from '@/services/applications/actions'
 import { faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useCallback, useState } from 'react'
@@ -25,9 +25,16 @@ export default function Reprioritize({ showUp, showDown, userId, commiteePartici
     }, [])
 
     const handleReprioritize = useCallback(async (direction: 'UP' | 'DOWN') => {
+        // TODO: Merge action arguments into one object?
         const res = await updateApplicationAction({
-            userId, commiteeParticipationId
-        }, { priority: direction })
+            params: {
+                userId, commiteeParticipationId
+            }
+        }, {
+            data: {
+                priority: direction,
+            },
+        })
         if (!res.success) {
             handleShowError(
                 res.error?.length ?

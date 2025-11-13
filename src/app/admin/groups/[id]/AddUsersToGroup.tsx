@@ -2,7 +2,7 @@
 import styles from './AddUsersToGroup.module.scss'
 import UserList from '@/components/User/UserList/UserList'
 import Form from '@/components/Form/Form'
-import { createMembershipsForGroupAction } from '@/actions/groups/memberships/create'
+import { createMembershipsForGroupAction } from '@/services/groups/memberships/actions'
 import { UsersSelectionContext } from '@/contexts/UsersSelection'
 import { useContext } from 'react'
 import { useRouter } from 'next/navigation'

@@ -1,35 +1,33 @@
 'use client'
 import styles from './CollectionAdmin.module.scss'
 import CollectionAdminUpload from './CollectionAdminUpload'
-import { updateImageCollectionAction } from '@/actions/images/collections/update'
+import { updateImageCollectionAction, destroyImageCollectionAction } from '@/services/images/collections/actions'
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
-import { destroyImageCollectionAction } from '@/actions/images/collections/destroy'
 import { ImagePagingContext } from '@/contexts/paging/ImagePaging'
 import ImageUploader from '@/components/Image/ImageUploader'
 import useEditing from '@/hooks/useEditing'
-import VisibilityAdmin from '@/components/VisiblityAdmin/VisibilityAdmin'
 import PopUp from '@/components/PopUp/PopUp'
 import Button from '@/components/UI/Button'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCog, faEye, faUpload } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/navigation'
 import { useContext, useState } from 'react'
-import type { VisibilityCollapsed } from '@/services/visibility/Types'
-import type { ExpandedImageCollection } from '@/services/images/collections/Types'
+import type { VisibilityMatrix } from '@/services/visibility/types'
+import type { ExpandedImageCollection } from '@/services/images/collections/types'
 
 type PropTypes = {
     collection: ExpandedImageCollection
-    visibility: VisibilityCollapsed
+    visibilityAdmin: VisibilityMatrix
+    visibilityRead: VisibilityMatrix
 }
 
-export default function CollectionAdmin({ collection, visibility }: PropTypes) {
+export default function CollectionAdmin({ collection, visibilityAdmin, visibilityRead }: PropTypes) {
+    console.log(visibilityAdmin, visibilityRead)
     const { id: collectionId } = collection
     const router = useRouter()
     const pagingContext = useContext(ImagePagingContext)
-    const canEdit = useEditing({
-        requiredVisibility: visibility,
-    })
+    const canEdit = useEditing({}) //TODO: pass in auther
     const [uploadOption, setUploadOption] = useState<'MANY' | 'ONE'>('MANY')
     if (!canEdit) return null
 
@@ -113,7 +111,7 @@ export default function CollectionAdmin({ collection, visibility }: PropTypes) {
                     <FontAwesomeIcon icon={faEye} />
                 }>
                     <div className={styles.visibility}>
-                        <VisibilityAdmin visibilityId={visibility.id} />
+                        {/* VisibilityAdmin... */}
                     </div>
                 </PopUp>
             </div>

@@ -1,27 +1,32 @@
 'use client'
 import styles from './SectionMover.module.scss'
-import { moveSectionOrderAction } from '@/actions/cms/articles/update'
 import useEditing from '@/hooks/useEditing'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons'
 import { useCallback } from 'react'
 import { useRouter } from 'next/navigation'
+import type { ConfiguredAction } from '@/services/actionTypes'
+import type { ReorderArticleSectionsAction } from '@/cms/articles/types'
 
 type PropTypes = {
-    articleId: number
-    sectionId: number
     className?: string
     showUp: boolean
     showDown: boolean
+    reorderArticleSectionsAction: ConfiguredAction<ReorderArticleSectionsAction>
 }
 
-export default function SectionMover({ articleId, sectionId, className, showUp, showDown }: PropTypes) {
+export default function SectionMover({
+    className,
+    showUp,
+    showDown,
+    reorderArticleSectionsAction
+}: PropTypes) {
     const canEdit = useEditing({}) //TODO: check visibility of section for user and pass it to useEditing
     const { refresh } = useRouter()
     const handleMove = useCallback(async (direction: 'UP' | 'DOWN') => {
-        await moveSectionOrderAction(articleId, sectionId, direction)
+        await reorderArticleSectionsAction({ data: { direction } })
         refresh()
-    }, [sectionId, articleId, refresh])
+    }, [reorderArticleSectionsAction, refresh])
     if (!canEdit) return null
 
     return (

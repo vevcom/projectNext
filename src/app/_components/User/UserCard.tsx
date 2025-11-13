@@ -3,7 +3,7 @@ import styles from './UserCard.module.scss'
 import ProfilePicture from './ProfilePicture'
 import Link from 'next/link'
 import type { Image } from '@prisma/client'
-import type { UserFiltered } from '@/services/users/Types'
+import type { UserFiltered } from '@/services/users/types'
 
 // TODO: Make nice and add picture
 export default function UserCard({

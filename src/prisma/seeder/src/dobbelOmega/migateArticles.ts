@@ -97,26 +97,7 @@ export default async function migrateArticles(
 
     for (let i = 0; i < articles.length; i++) {
         const articlePn = articlesPn[i]
-        let newArticleName = articlePn.name
-        let unique = false
-
-        let k = 0
-        while (!unique) {
-            const articlesSameWithNameAndOrder = await pnPrisma.newsArticle.findMany({
-                where: {
-                    articleName: newArticleName,
-                    orderPublished: articlePn.orderPublished,
-                }
-            })
-
-            if (articlesSameWithNameAndOrder.length) {
-                console.log(`Must change a name of a article ${newArticleName} for unique constraint`)
-                newArticleName = `${articlePn.name} (${++k})`
-            } else {
-                unique = true
-            }
-        }
-
+        const newArticleName = articlePn.name
         await pnPrisma.article.update({
             where: {
                 id: articlePn.id,
@@ -131,11 +112,6 @@ export default async function migrateArticles(
                 article: {
                     connect: {
                         id: articlePn.id,
-                    }
-                },
-                omegaOrder: {
-                    connect: {
-                        order: articlePn.orderPublished,
                     }
                 },
                 endDateTime: articlePn.endDateTime,

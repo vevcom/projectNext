@@ -4,19 +4,21 @@ import ChangeImageForm from './ChangeImageForm'
 import Image from '@/components/Image/Image'
 import { ImageSelectionContext } from '@/contexts/ImageSelection'
 import Form from '@/components/Form/Form'
-import { updateCmsImageConfigAction } from '@/actions/cms/images/update'
+import { configureAction } from '@/services/configureAction'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTurnUp } from '@fortawesome/free-solid-svg-icons'
 import React, { useContext, useEffect, useState } from 'react'
 import type { ImageSize, Image as ImageT } from '@prisma/client'
+import type { UpdateCmsImageAction } from '@/cms/images/types'
 
 type PropTypes = {
     currentImage: ImageT,
     cmsImageId: number,
     currentImageSize: ImageSize,
+    updateCmsImageAction: UpdateCmsImageAction
 }
 
-export default function ChangeImage({ currentImage, cmsImageId, currentImageSize }: PropTypes) {
+export default function ChangeImage({ currentImage, cmsImageId, currentImageSize, updateCmsImageAction }: PropTypes) {
     const selectedContext = useContext(ImageSelectionContext)
     if (!selectedContext) throw new Error('ImageSelectionContext required to use ChangeImage')
 
@@ -62,15 +64,16 @@ export default function ChangeImage({ currentImage, cmsImageId, currentImageSize
             <i>image name: {currentImage.name}</i>
             {
                 selectedContext.selectedImage && selectedContext.selectedImage.id !== currentImage.id ? (
-                    <ChangeImageForm cmsImageId={cmsImageId} />
+                    <ChangeImageForm cmsImageId={cmsImageId} updateCmsImageAction={updateCmsImageAction} />
                 ) : (
                     <div className={styles.resolution}>
                         <p>Resolution: {currentImageSize.toLowerCase()}</p>
                         <Form
                             action={
-                                updateCmsImageConfigAction
-                                    .bind(null, cmsImageId)
-                                    .bind(null, { imageSize: changeToSize })
+                                configureAction(
+                                    updateCmsImageAction,
+                                    { params: { cmsImageId } }
+                                ).bind(null, { data: { imageSize: changeToSize } })
                             }
                             submitText={`change to ${changeToSize.toLocaleLowerCase()}`}
                             refreshOnSuccess

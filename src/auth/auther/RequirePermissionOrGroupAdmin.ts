@@ -10,4 +10,8 @@ export const RequirePermissionOrGroupAdmin = AutherFactory<
         membersip => membersip.groupId === dynamicFields.groupId && membersip.admin && membersip.active
     ),
     session,
+    errorMessage: `
+        Du trenger tillatelse '${staticFields.permission}' for å få tilgang eller 
+        være gruppeleder for gruppe ${dynamicFields.groupId}
+    `
 }))

@@ -1,5 +1,7 @@
 @use '@/styles/ohma';
 
+@use "sass:color";
+
 .conactorLink {
     width: 170px;
     height: 35px;
@@ -31,6 +33,16 @@
             display: flex;
             flex-flow: row wrap;
             align-items: center;
+            transition: box-shadow 0.3s;
+            background: linear-gradient(
+                to top right,
+                ohma.$colors-secondary,
+                color.change(ohma.$colors-secondary, $alpha: 0.1)
+            );
+            @include ohma.card;
+            &:hover {
+                @include ohma.boxShadow;
+            }
             > h2 {
                 flex: 1;
                 text-align: center;

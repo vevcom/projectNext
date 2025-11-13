@@ -1,6 +1,11 @@
 @use '@/styles/ohma';
 
 .UserNavigation {
+    background-color: ohma.$colors-gray-200;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
     @include ohma.screenLg {
         position: absolute;
         bottom: 0;
@@ -26,9 +31,7 @@
         color: ohma.$colors-black;
         font-size: ohma.$fonts-xl;
     }
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+
     .logout {
         margin-top: .5em;
         width: 100%;

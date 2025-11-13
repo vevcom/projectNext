@@ -1,5 +1,5 @@
 'use client'
-import { sendResetPasswordEmailAction } from '@/actions/auth/auth'
+import { sendResetPasswordEmailAction } from '@/services/auth/actions'
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
 import { useState } from 'react'

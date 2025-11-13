@@ -3,13 +3,15 @@
 import TextInput from '@/components/UI/TextInput'
 import Form from '@/components/Form/Form'
 import { SelectNumber } from '@/components/UI/Select'
-import { createMailingListExternalRelationAction } from '@/actions/mail/create'
-import { useUser } from '@/auth/useUser'
-import { updateMailAddressExternalAction } from '@/actions/mail/mailAddressExternal/update'
-import { destroyMailAddressExternalAction } from '@/actions/mail/mailAddressExternal/destroy'
+import { createMailingListExternalRelationAction } from '@/services/mail/actions'
+import { useUser } from '@/auth/session/useUser'
+import {
+    updateMailAddressExternalAction,
+    destroyMailAddressExternalAction
+} from '@/services/mail/mailAddressExternal/actions'
 import { useRouter } from 'next/navigation'
 import type { MailingList } from '@prisma/client'
-import type { MailFlowObject } from '@/services/mail/Types'
+import type { MailFlowObject } from '@/services/mail/types'
 
 
 export default function EditMailAddressExternal({

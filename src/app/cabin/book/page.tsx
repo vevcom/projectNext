@@ -2,15 +2,18 @@ import StateWrapper from './stateWrapper'
 import SpecialCmsParagraph from '@/app/_components/Cms/CmsParagraph/SpecialCmsParagraph'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
+import { default as DateComponent } from '@/components/Date/Date'
 import {
     readCabinAvailabilityAction,
     readCabinProductsActiveAction,
     readPublicPricePeriodsAction,
-    readReleasePeriodsAction
-} from '@/actions/cabin'
+    readReleasePeriodsAction,
+    readSpecialCmsParagraphCabinContractAction,
+    updateSpecialCmsParagraphCabinContractAction
+} from '@/services/cabin/actions'
 import { displayDate } from '@/lib/dates/displayDate'
-import { Session } from '@/auth/Session'
-import { CabinBookingAuthers } from '@/services/cabin/booking/authers'
+import { Session } from '@/auth/session/Session'
+import { cabinBookingAuth } from '@/services/cabin/booking/auth'
 import type { ReleasePeriod } from '@prisma/client'
 
 function findCurrentReleasePeriod(releasePeriods: ReleasePeriod[]) {
@@ -41,16 +44,16 @@ export default async function CabinBooking() {
     const pricePeriods = unwrapActionReturn(await readPublicPricePeriodsAction())
     const cabinProducts = unwrapActionReturn(await readCabinProductsActiveAction())
     const session = await Session.fromNextAuth()
-    const canBookCabin = CabinBookingAuthers.createCabinBookingNoUser.dynamicFields({}).auth(session)
-    const canBookBed = CabinBookingAuthers.createBedBookingNoUser.dynamicFields({}).auth(session)
+    const canBookCabin = cabinBookingAuth.createCabinBookingNoUser.dynamicFields({}).auth(session)
+    const canBookBed = cabinBookingAuth.createBedBookingNoUser.dynamicFields({}).auth(session)
 
     return <PageWrapper
         title="Heutte Booking"
     >
         {nextReleasePeriod &&
             <p>
-                Neste slipptid er {displayDate(nextReleasePeriod.releaseTime, false)},
-                da slippes bookinger fram til {displayDate(nextReleasePeriod.releaseUntil, false)}
+                Neste slipptid er <DateComponent date={nextReleasePeriod.releaseTime} />,
+                da slippes bookinger fram til <DateComponent date={nextReleasePeriod.releaseUntil} />
             </p>
         }
         {pricePeriods.length > 1 &&
@@ -67,6 +70,10 @@ export default async function CabinBooking() {
             pricePeriods={pricePeriods}
         />
 
-        <SpecialCmsParagraph special="CABIN_CONTRACT" />
+        <SpecialCmsParagraph
+            special="CABIN_CONTRACT"
+            readSpecialCmsParagraphAction={readSpecialCmsParagraphCabinContractAction}
+            updateCmsParagraphAction={updateSpecialCmsParagraphCabinContractAction}
+        />
     </PageWrapper>
 }

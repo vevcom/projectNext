@@ -2,11 +2,11 @@ import '@pn-server-only'
 import { createOmbulValidation } from './validation'
 import { prismaCall } from '@/services/prismaCall'
 import { readSpecialImageCollection } from '@/services/images/collections/read'
-import { createCmsImage } from '@/services/cms/images/create'
-import prisma from '@/prisma'
+import { cmsImageOperations } from '@/cms/images/operations'
+import { prisma } from '@/prisma/client'
 import { createFile } from '@/services/store/createFile'
-import { ImageMethods } from '@/services/images/methods'
-import { NotificationMethods } from '@/services/notifications/methods'
+import { imageOperations } from '@/services/images/operations'
+import { notificationOperations } from '@/services/notifications/operations'
 import type { CreateOmbulTypes } from './validation'
 import type { Ombul } from '@prisma/client'
 
@@ -42,8 +42,7 @@ export async function createOmbul(
 
     // create coverimage
     const ombulCoverCollection = await readSpecialImageCollection('OMBULCOVERS')
-
-    const coverImage = await ImageMethods.create.client(prisma).execute({
+    const coverImage = await imageOperations.create({
         params: {
             collectionId: ombulCoverCollection.id,
         },
@@ -52,10 +51,12 @@ export async function createOmbul(
             alt: `cover of ${config.name}`,
             file: cover,
         },
-        session: null
     })
 
-    const cmsCoverImage = await createCmsImage({ name: fsLocation }, coverImage)
+    const cmsCoverImage = await cmsImageOperations.create({
+        data: { imageId: coverImage.id },
+        bypassAuth: true
+    })
 
     const ombul = await prismaCall(() => prisma.ombul.create({
         data: {
@@ -71,7 +72,7 @@ export async function createOmbul(
         }
     }))
 
-    NotificationMethods.createSpecial.newClient().execute({
+    notificationOperations.createSpecial({
         params: {
             special: 'NEW_OMBUL',
         },
@@ -79,7 +80,6 @@ export async function createOmbul(
             title: 'Ny ombul',
             message: `Ny ombul er ute! ${ombul.name}`,
         },
-        session: null,
         bypassAuth: true,
     })
 

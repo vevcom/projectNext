@@ -6,8 +6,6 @@ enum EventCanView {
 model Event {
   id             Int             @id @default(autoincrement())
   name           String
-  omegaOrder     OmegaOrder      @relation(fields: [order], references: [order])
-  order          Int
   paragraph      CmsParagraph    @relation(fields: [cmsParagraphId], references: [id])
   cmsParagraphId Int             @unique
   coverImage     CmsImage        @relation(fields: [coverImageId], references: [id])
@@ -39,8 +37,6 @@ model Event {
   company     Boolean @default(false) // If a plus one is allowed
   lead        String?
   extraFields Json?   @db.Json
-
-  @@unique([order, name])
 }
 
 model EventTagEvent {

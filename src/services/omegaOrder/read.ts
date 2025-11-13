@@ -1,7 +1,7 @@
 'use server'
 import { ServerError } from '@/services/error'
 import { prismaCall } from '@/services/prismaCall'
-import prisma from '@/prisma'
+import { prisma } from '@/prisma/client'
 import type { OmegaOrder } from '@prisma/client'
 
 /**

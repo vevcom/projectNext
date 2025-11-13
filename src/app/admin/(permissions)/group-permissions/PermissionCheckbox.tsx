@@ -2,7 +2,7 @@
 
 import Checkbox from '@/components/UI/Checkbox'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
-import { updateGroupPermissionAction } from '@/actions/permissions'
+import { updateGroupPermissionAction } from '@/services/permissions/actions'
 import { useState } from 'react'
 import type { Permission } from '@prisma/client'
 
@@ -22,10 +22,14 @@ export default function PermissionCheckbox({
     async function onClick() {
         setWorking(true)
         const result = unwrapActionReturn(await updateGroupPermissionAction({
-            groupId,
-            permission,
+            params: {
+                groupId,
+                permission,
+            },
         }, {
-            value: !hasPermission,
+            data: {
+                value: !hasPermission,
+            },
         }))
 
         setHasPermission(result)

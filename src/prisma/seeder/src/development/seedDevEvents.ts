@@ -1,4 +1,4 @@
-import { EventMethods } from '@/services/events/methods'
+import { eventOperations } from '@/services/events/operations'
 import type { PrismaClient } from '@prisma/client'
 
 export default async function seedDevEvents(prisma: PrismaClient) {
@@ -17,8 +17,8 @@ export default async function seedDevEvents(prisma: PrismaClient) {
         }
     })
 
-    const bedpres = await EventMethods.create.client(prisma).execute({
-        session: null,
+    const bedpres = await eventOperations.create({
+        prisma,
         bypassAuth: true,
         data: {
             name: 'Bedpres med Kongsberg',
@@ -37,8 +37,8 @@ export default async function seedDevEvents(prisma: PrismaClient) {
         }
     })
 
-    await EventMethods.create.client(prisma).execute({
-        session: null,
+    await eventOperations.create({
+        prisma,
         bypassAuth: true,
         data: {
             name: 'Stresset eksamenslesing',
@@ -48,6 +48,24 @@ export default async function seedDevEvents(prisma: PrismaClient) {
             canBeViewdBy: 'ALL',
             takesRegistration: false,
             waitingList: false,
+            registrationStart: today,
+            registrationEnd: tomorrow,
+            tagIds: [],
+        }
+    })
+
+    const ohmaBirthday = await eventOperations.create({
+        prisma,
+        bypassAuth: true,
+        data: {
+            name: 'Ohma sin bursdag',
+            location: 'Ohma',
+            eventStart: startDate,
+            eventEnd: endDate,
+            canBeViewdBy: 'ALL',
+            takesRegistration: true,
+            waitingList: true,
+            places: 50,
             registrationStart: today,
             registrationEnd: tomorrow,
             tagIds: [],
@@ -64,6 +82,20 @@ export default async function seedDevEvents(prisma: PrismaClient) {
     await prisma.eventRegistration.createMany({
         data: someUsers.map(user => ({
             eventId: bedpres.id,
+            userId: user.id
+        }))
+    })
+
+    const aLotOfUsers = await prisma.user.findMany({
+        take: 70,
+        select: {
+            id: true
+        }
+    })
+
+    await prisma.eventRegistration.createMany({
+        data: aLotOfUsers.map(user => ({
+            eventId: ohmaBirthday.id,
             userId: user.id
         }))
     })

@@ -3,26 +3,31 @@ import { createSchoolValidation } from './validation'
 import { SchoolFilteredSelection, StandardSchoolsConfig } from './ConfigVars'
 import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
-import { createCmsImage } from '@/services/cms/images/create'
-import { createCmsParagraph } from '@/services/cms/paragraphs/create'
-import prisma from '@/prisma'
-import { createCmsLink } from '@/services/cms/links/create'
-import { v4 as uuid } from 'uuid'
+import { prisma } from '@/prisma/client'
+import { cmsParagraphOperations } from '@/cms/paragraphs/operations'
+import { cmsLinkOperations } from '@/cms/links/operations'
+import { cmsImageOperations } from '@/cms/images/operations'
 import { StandardSchool } from '@prisma/client'
-import type { SchoolFiltered } from './Types'
+import type { SchoolFiltered } from './types'
 import type { CreateSchoolTypes } from './validation'
 
 export async function createSchool(rawdata: CreateSchoolTypes['Detailed']): Promise<SchoolFiltered> {
     const data = createSchoolValidation.detailedValidate(rawdata)
 
-    const cmsImage = await createCmsImage({ name: uuid() })
-    const cmsParagraph = await createCmsParagraph({ name: uuid() })
-    const cmsLink = await createCmsLink({ name: uuid() })
+    const cmsImage = await cmsImageOperations.create({
+        data: {},
+        bypassAuth: true
+    })
+    const cmsParagraph = await cmsParagraphOperations.create({
+        data: {},
+        bypassAuth: true
+    })
+    const cmsLink = await cmsLinkOperations.create({ data: { text: 'link', url: './' }, bypassAuth: true })
 
     return await prismaCall(() => prisma.school.create({
         data: {
             name: data.name,
-            shortname: data.shortname,
+            shortName: data.shortName,
             standardSchool: data.standardSchool,
             cmsImage: {
                 connect: {

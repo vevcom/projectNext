@@ -1,13 +1,15 @@
 'use client'
-import { useUser } from '@/auth/useUser'
+import { useUser } from '@/auth/session/useUser'
 import { EditModeContext } from '@/contexts/EditMode'
-import { checkVisibility } from '@/auth/checkVisibility'
 import { useContext, useEffect, useRef, useState } from 'react'
 import { v4 as uuid } from 'uuid'
 import type { Permission } from '@prisma/client'
-import type { Matrix } from '@/utils/checkMatrix'
-import type { VisibilityCollapsed, VisibilityLevelType } from '@/services/visibility/Types'
+import type { Matrix } from '@/lib/checkMatrix'
 
+//TODO: Change this to take in session and a auther
+//useUser should return a session.
+// This function does way to many things...
+// just use the auther system...
 /**
  * A hook that uses useUser to determine if the user is allowed to edit the content.
  * If the user is allowed to edit the content, the hook will add the content to the list of editable content
@@ -24,14 +26,8 @@ import type { VisibilityCollapsed, VisibilityLevelType } from '@/services/visibi
  */
 export default function useEditing({
     requiredPermissions,
-    requiredVisibility,
-    operation = 'OR',
-    level = 'ADMIN'
 }: {
     requiredPermissions?: Matrix<Permission>,
-    requiredVisibility?: VisibilityCollapsed
-    operation?: 'AND' | 'OR',
-    level?: VisibilityLevelType
 }): boolean {
     const editModeCtx = useContext(EditModeContext)
     const { authorized: permissionAuthorized, permissions, memberships } = useUser({
@@ -44,14 +40,7 @@ export default function useEditing({
 
     const uniqueKey = useRef(uuid()).current
     useEffect(() => {
-        const visibilityAuthorized = requiredVisibility ? checkVisibility({
-            permissions: permissions ?? [],
-            memberships: memberships ?? [],
-        }, requiredVisibility, level) : undefined
-
-        const authorized_ = (operation === 'OR' ?
-            permissionAuthorized || visibilityAuthorized :
-            permissionAuthorized && visibilityAuthorized) ?? false
+        const authorized_ = permissionAuthorized === true
         if (editModeCtx) {
             if (authorized_) editModeCtx.addEditableContent(uniqueKey)
             if (!authorized_) editModeCtx.removeEditableContent(uniqueKey)
@@ -60,7 +49,7 @@ export default function useEditing({
         return () => {
             if (editModeCtx) editModeCtx.removeEditableContent(uniqueKey)
         }
-    }, [permissionAuthorized, requiredVisibility, permissions, memberships])
+    }, [permissionAuthorized, permissions, memberships])
 
     useEffect(() => {
         setEditable(editModeCtx ? Boolean(authorized) && editModeCtx.editMode : false)

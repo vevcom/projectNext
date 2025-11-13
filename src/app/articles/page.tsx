@@ -2,7 +2,7 @@ import styles from './page.module.scss'
 import AddCategory from './AddCategory'
 import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import ImageCard from '@/components/ImageCard/ImageCard'
-import { readArticleCategoriesAction } from '@/cms/articleCategories/read'
+import { readArticleCategoriesAction } from '@/services/articleCategories/actions'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 
 export default async function ArticleCategoryList() {

@@ -1,6 +1,7 @@
 'use client'
 import styles from './EditModeSwitch.module.scss'
 import { EditModeContext } from '@/contexts/EditMode'
+import useKeyPress from '@/hooks/useKeyPress'
 import { useContext, useEffect, useRef } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencil } from '@fortawesome/free-solid-svg-icons'
@@ -16,12 +17,19 @@ export default function EditModeSwitch() {
 
     const ref = useRef<HTMLInputElement>(null)
 
+    useKeyPress('ø', (event:KeyboardEvent) => {
+        if (event.ctrlKey) {
+            editingContext.setEditMode(!editingContext.editMode)
+        }
+    })
+
     useEffect(() => {
         if (ref.current?.checked) {
             ref.current.checked = editingContext.editMode
         }
     })
     if (!editingContext.somethingToEdit) return null
+
 
     return (
         <div className={styles.EditModeSwitch}>

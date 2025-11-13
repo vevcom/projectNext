@@ -1,11 +1,11 @@
 import { EmailVerifiedWrapper } from './EmailVerifiedWrapper'
-import { getUser } from '@/auth/getUser'
-import { verifyEmailAction } from '@/actions/auth/auth'
-import { QueryParams } from '@/lib/query-params/queryParams'
+import { getUser } from '@/auth/session/getUser'
+import { QueryParams } from '@/lib/queryParams/queryParams'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
+import { verifyEmailAction } from '@/services/auth/actions'
 import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
-import type { SearchParamsServerSide } from '@/lib/query-params/Types'
+import type { SearchParamsServerSide } from '@/lib/queryParams/types'
 
 type PropTypes = SearchParamsServerSide
 
@@ -21,7 +21,7 @@ export default async function Register({ searchParams }: PropTypes) {
     })
 
     const userId = user?.id
-    const updatedUser = unwrapActionReturn(await verifyEmailAction({ token }))
+    const updatedUser = unwrapActionReturn(await verifyEmailAction({ params: { token } }))
 
     if (!userId) {
         // TODO: If the user arrives here by an invitation email

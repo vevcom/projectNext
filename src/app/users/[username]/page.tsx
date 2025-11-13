@@ -1,20 +1,15 @@
 import styles from './page.module.scss'
-import { readSpecialImageAction } from '@/actions/images/read'
 import BorderButton from '@/components/UI/BorderButton'
-import { readCommitteesFromGroupIds } from '@/services/groups/committees/read'
-import { readUserProfileAction } from '@/actions/users/read'
-import OmegaId from '@/components/OmegaId/identification/OmegaId'
-import PopUp from '@/components/PopUp/PopUp'
-import { Session } from '@/auth/Session'
-import { UserAuthers } from '@/services/users/authers'
+import { Session } from '@/auth/session/Session'
+import { userAuth } from '@/services/users/auth'
 import ProfilePicture from '@/components/User/ProfilePicture'
-import { UserConfig } from '@/services/users/config'
 import UserDisplayName from '@/components/User/UserDisplayName'
+import { readUserProfileAction } from '@/services/users/actions'
+import { readSpecialImageAction } from '@/services/images/actions'
+import { sexConfig } from '@/services/users/constants'
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { v4 as uuid } from 'uuid'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faQrcode } from '@fortawesome/free-solid-svg-icons'
 
 export type PropTypes = {
     params: Promise<{
@@ -25,35 +20,38 @@ export type PropTypes = {
 export default async function User({ params }: PropTypes) {
     const session = await Session.fromNextAuth()
     if ((await params).username === 'me') {
-        if (!session.user) return notFound()
+        if (!session.user) redirect('/login')
         redirect(`/users/${session.user.username}`) //This throws.
     }
-    const profileRes = await readUserProfileAction({ username: (await params).username })
+    const profileRes = await readUserProfileAction({ params: { username: (await params).username } })
     if (!profileRes.success) return notFound()
     const profile = profileRes.data
 
-    // REFACTOR THIS PART, THE ORDER IS BASED ON ORDER OF MEMBERSHIP NOT STUDYPROGRAMME ALSO I THINK
-    const groupIds = profile.memberships.map(group => group.groupId)
-    const committees = await readCommitteesFromGroupIds(groupIds)
+    const committeeMemberships = profile.user.memberships.filter(membership => membership.group.groupType === 'COMMITTEE')
+        .filter(membership => membership.group.committee !== null)
 
-    //TODO: Basic user info will exist on the profile object
-    const studyProgramme = { name: 'Kybernetikk', code: 'MTTK' }
+    const studyProgrammes = profile.user.memberships.filter(membership => membership.group.groupType === 'STUDY_PROGRAMME')
+        .map(membership => membership.group.studyProgramme).filter(membership => membership !== null)
 
-    // TODO: Change to the correct order
-    const order = 105
+    const classes = profile.user.memberships.filter(membership => membership.group.groupType === 'CLASS')
+        .map(membership => membership.group.class).filter(membership => membership !== null)
+
+    const omegaMembership = profile.user.memberships
+        .find(membership => membership.group.groupType === 'OMEGA_MEMBERSHIP_GROUP')
+    if (!omegaMembership) {
+        throw new Error('Failed to load the omega membership level')
+    }
 
     const profileImage = profile.user.image ? profile.user.image : await readSpecialImageAction.bind(
-        null, { special: 'DEFAULT_PROFILE_IMAGE' }
+        null, { params: { special: 'DEFAULT_PROFILE_IMAGE' } }
     )().then(res => {
         if (!res.success) throw new Error('Kunne ikke finne standard profilbilde')
         return res.data
     })
 
-    const { authorized: canAdministrate } = UserAuthers.updateProfile.dynamicFields(
+    const { authorized: canAdministrate } = userAuth.updateProfile.dynamicFields(
         { username: profile.user.username }
     ).auth(session)
-
-    const showOmegaId = session.user?.username === (await params).username
 
     return (
         <div className={styles.wrapper}>
@@ -65,29 +63,21 @@ export default async function User({ params }: PropTypes) {
                     <div className={styles.header}>
                         <div className={styles.nameAndId}>
                             <h1><UserDisplayName user={profile.user} /></h1>
-                            {showOmegaId && <PopUp
-                                showButtonClass={styles.omegaIdOpen}
-                                showButtonContent={
-                                    <FontAwesomeIcon icon={faQrcode} />
-                                }
-                                PopUpKey={'omegaId'}
-                            >
-                                <div className={styles.omegaId}>
-                                    <OmegaId />
-                                </div>
-                            </PopUp>}
                         </div>
-                        {
-                            studyProgramme && (
-                                <p className={styles.studyProgramme}>{studyProgramme.name} {`(${studyProgramme.code})`}</p>
-                            )
-                        }
+                        { studyProgrammes.map((studyProgramme, i) =>
+                            <p key={i} className={styles.studyProgramme}>
+                                {studyProgramme.name} {`(${studyProgramme.code})`}
+                            </p>
+                        )}
+                        { classes.map((classGroup, i) =>
+                            <p key={i} className={styles.studyProgramme}>{classGroup.year}. årstrinn</p>
+                        )}
                         <div className={styles.committeesWrapper}>
                             {
-                                committees.map(committee =>
+                                committeeMemberships.filter(membership => membership.active).map(membership =>
                                     <div className={styles.committee} key={uuid()}>
-                                        <Link href={`/committees/${committee.shortName}`}>
-                                            <p>{committee.name}</p>
+                                        <Link href={`/committees/${membership.group.committee?.shortName}`}>
+                                            <p>{membership.title}</p>
                                         </Link>
                                     </div>
                                 )
@@ -96,8 +86,8 @@ export default async function User({ params }: PropTypes) {
                         </div>
                         <hr />
                         <p className={styles.orderText}>
-                            {UserConfig.sexConfig[profile.user.sex ?? 'OTHER'].title}
-                            uudaf {order}´dis orden i Sanctus Omega Broderskab
+                            {sexConfig[profile.user.sex ?? 'OTHER'].title}
+                            uudaf {omegaMembership.order}´dis orden i Sanctus Omega Broderskab
                         </p>
                     </div>
                     <div className={styles.leftSection}>
@@ -133,6 +123,22 @@ export default async function User({ params }: PropTypes) {
                             <span className={styles.username}>Brukernavn:</span>
                             {profile.user.username}
                         </p>
+                        <p>
+                            <span className={styles.username}>Mobilnummer:</span>
+                            {profile.user.mobile}
+                        </p>
+
+                        { (committeeMemberships.length > 0) && <div>
+                            <h2>Medlemsskap</h2>
+                            {committeeMemberships.map((membership, i) => (
+                                <Link
+                                    href={`/committees/${membership.group.committee?.shortName}`}
+                                    key={i}
+                                >
+                                    <p>{membership.title} i {membership.group.committee?.name}</p>
+                                </Link>
+                            ))}
+                        </div> }
                     </div>
                 </div>
             </div>

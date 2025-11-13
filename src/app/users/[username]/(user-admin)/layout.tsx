@@ -1,7 +1,7 @@
 import styles from './layout.module.scss'
 import Nav from './Nav'
-import { Session } from '@/auth/Session'
-import { readUserProfileAction } from '@/actions/users/read'
+import { Session } from '@/auth/session/Session'
+import { readUserProfileAction } from '@/services/users/actions'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { notFound } from 'next/navigation'
@@ -16,9 +16,9 @@ export default async function UserAdmin({ children, params }: PropTypes & { chil
         if (!session.user) return notFound()
         username = session.user.username
     }
-    const { user } = unwrapActionReturn(await readUserProfileAction({ username }))
+    const { user } = unwrapActionReturn(await readUserProfileAction({ params: { username } }))
     return (
-        <PageWrapper title={`${user.firstname} ${user.lastname} Admin`}>
+        <PageWrapper title={`Innstillinger for ${user.firstname} ${user.lastname}`}>
             <Link href={`/users/${username}`} className={styles.toProfile}>
                 Til Profilsiden
             </Link>

@@ -1,8 +1,8 @@
 import '@pn-server-only'
-import prisma from '@/prisma'
+import { prisma } from '@/prisma/client'
 import { ServerError } from '@/services/error'
 import { prismaCall } from '@/services/prismaCall'
-import { destroyVisibility } from '@/services/visibility/destroy'
+import { visibilityOperations } from '@/services/visibility/operations'
 import type { ImageCollection } from '@prisma/client'
 
 export async function destroyImageCollection(collectionId: number): Promise<ImageCollection> {
@@ -21,7 +21,7 @@ export async function destroyImageCollection(collectionId: number): Promise<Imag
         },
     }))
 
-    //The visibility is "owned" by the collection, so we can delete it here
-    await destroyVisibility(collection.visibilityId)
+    await visibilityOperations.destroy({ params: { visibilityId: collection.visibilityAdminId }, bypassAuth: true })
+    await visibilityOperations.destroy({ params: { visibilityId: collection.visibilityReadId }, bypassAuth: true })
     return collection
 }

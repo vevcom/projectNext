@@ -1,10 +1,11 @@
 'use client'
-import { registerUser } from '@/actions/users/update'
+import { configureAction } from '@/services/configureAction'
+import { registerUser } from '@/services/users/actions'
 import Form from '@/components/Form/Form'
 import Checkbox from '@/components/UI/Checkbox'
 import { SelectString } from '@/components/UI/Select'
 import TextInput from '@/components/UI/TextInput'
-import { UserConfig } from '@/services/users/config'
+import { sexConfig } from '@/services/users/constants'
 import { SEX, type User } from '@prisma/client'
 import { signIn } from 'next-auth/react'
 import { useSearchParams } from 'next/navigation'
@@ -23,13 +24,13 @@ export default function RegistrationForm({
 
     const sexOptions = Object.values(SEX).map(sex => ({
         value: sex,
-        label: UserConfig.sexConfig[sex].label
+        label: sexConfig[sex].label
     }))
 
     return <Form
         title="Ekstra brukerinformasjon"
         submitText="Fullfør registrering"
-        action={registerUser.bind(null, { id: userData.id })}
+        action={configureAction(registerUser, { params: { id: userData.id } })}
         successCallback={() => signIn('credentials', {
             username: userData.username,
             password: lastPassword,
@@ -47,6 +48,7 @@ export default function RegistrationForm({
             options={sexOptions}
             value={sexValue}
             onChange={(e) => setSexValue(e as SEX)} />
+        <Checkbox label="Jeg samtykker til å bli tatt bilde av" name="imageConsent" />
         <Checkbox label="Jeg godtar vilkårene" name="acceptedTerms" />
     </Form>
 }

@@ -1,6 +1,6 @@
 import styles from './SchoolAdminList.module.scss'
 import Link from 'next/link'
-import type { SchoolFiltered } from '@/education/schools/Types'
+import type { SchoolFiltered } from '@/services/education/schools/types'
 
 type PropTypes = {
     schools: SchoolFiltered[]
@@ -18,11 +18,11 @@ export async function SchoolAdminList({ schools }: PropTypes) {
             </thead>
             <tbody>
                 {schools.map(school => (
-                    <Link key={school.shortname} href={`/admin/schools/${encodeURIComponent(school.shortname)}`}>
+                    <Link key={school.shortName} href={`/admin/schools/${encodeURIComponent(school.shortName)}`}>
                         <tr key={school.id}>
                             <td>{school.id}</td>
                             <td>{school.name}</td>
-                            <td>{school.shortname}</td>
+                            <td>{school.shortName}</td>
                         </tr>
                     </Link>
                 ))}

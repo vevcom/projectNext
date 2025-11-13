@@ -1,7 +1,7 @@
 'use client'
 import CmsImageClient from './CmsImageClient'
-import { readSpecialCmsImageAction } from '@/actions/cms/images/read'
 import useActionCall from '@/hooks/useActionCall'
+import { configureAction } from '@/services/configureAction'
 import { useCallback } from 'react'
 import type { PropTypes } from './SpecialCmsImage'
 
@@ -11,14 +11,22 @@ import type { PropTypes } from './SpecialCmsImage'
  * @param special - the special cms image to display
  * @returns
  */
-export default function SpecialCmsImageClient({ special, ...props }: PropTypes) {
-    const action = useCallback(() => readSpecialCmsImageAction(special), [special])
+export default function SpecialCmsImageClient({
+    special,
+    updateCmsImageAction,
+    readSpecialCmsImageAction,
+    ...props
+}: PropTypes) {
+    const action = useCallback(configureAction(
+        readSpecialCmsImageAction,
+        { params: { special } }
+    ), [special])
     const { data: cmsImage, error } = useActionCall(action)
     if (error) throw new Error(`No special cms image found for ${special}`)
 
     return (
         cmsImage && (
-            <CmsImageClient {...props} cmsImage={cmsImage} />
+            <CmsImageClient {...props} cmsImage={cmsImage} updateCmsImageAction={updateCmsImageAction} />
         )
     )
 }

@@ -1,22 +1,21 @@
-import { UserSchemas } from '@/services/users/schemas'
+import { studentCardSchema } from '@/services/users/schemas'
 import { z } from 'zod'
 
-export namespace PurchaseSchemas {
-    const productsZodObject = z.array(z.object({
-        id: z.number().int(),
-        quantity: z.number().int().min(1)
-    }))
+const productSchema = z.array(z.object({
+    id: z.number().int(),
+    quantity: z.number().int().min(1)
+}))
 
-    const fields = z.object({
-        shopId: z.coerce.number().int(),
-        studentCard: UserSchemas.studentCardZodValidation,
-        products: productsZodObject,
-    })
+const baseSchema = z.object({
+    shopId: z.coerce.number().int(),
+    studentCard: studentCardSchema,
+    products: productSchema,
+})
 
-    export const createFromStudentCard = fields.pick({
+export const purchaseSchemas = {
+    createFromStudentCard: baseSchema.pick({
         shopId: true,
         products: true,
         studentCard: true,
     })
 }
-
