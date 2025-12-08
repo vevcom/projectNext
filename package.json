@@ -38,7 +38,7 @@
     "jsonwebtoken": "^9.0.2",
     "jsqr": "^1.4.0",
     "luxon": "^3.7.2",
-    "next": "^15.5.6",
+    "next": "^15.5.7",
     "next-auth": "^4.24.11",
     "next-qrcode": "^2.5.1",
     "nodemailer": "^6.9.16",
