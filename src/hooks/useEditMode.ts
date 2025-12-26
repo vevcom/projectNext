@@ -5,7 +5,7 @@ import { RequireNothing } from '@/auth/auther/RequireNothing'
 import { useContext, useEffect, useRef } from 'react'
 import { v4 as uuid } from 'uuid'
 import type { AutherDynamicFieldsBound } from '@/auth/auther/Auther'
-import type { AuthResult } from '@/auth/auther/AuthResult'
+import type { AuthResultType } from '@/auth/auther/AuthResult'
 
 /**
  * This hook does the following:
@@ -26,7 +26,7 @@ export default function useEditMode({
     authResult?: undefined
 } | {
     auther?: undefined
-    authResult: AuthResult<'HAS_USER' | 'NO_USER', boolean>
+    authResult: AuthResultType
 }): boolean {
     const editModeCtx = useContext(EditModeContext)
     const uniqueKey = useRef(uuid()).current
