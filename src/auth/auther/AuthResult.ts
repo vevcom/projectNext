@@ -4,15 +4,17 @@ import type { SessionType, UserGuaranteeOption } from '@/auth/session/Session'
 
 export type AuthStatus = 'AUTHORIZED' | 'UNAUTHORIZED' | 'AUTHORIZED_NO_USER' | 'UNAUTHENTICATED'
 
-export type AuthResultType = {
-    session: SessionType<UserGuaranteeOption>,
+export type AuthResultType<UserGuatantee extends UserGuaranteeOption, Authorized extends boolean> = {
+    session: SessionType<UserGuatantee>,
     errorMessage?: string,
-    authorized: boolean,
+    authorized: Authorized,
     status: AuthStatus,
 }
 
+export type AuthResultTypeAny = AuthResultType<UserGuaranteeOption, boolean>
+
 export class AuthResult<const UserGuatantee extends UserGuaranteeOption, const Authorized extends boolean> {
-    private authResult: Omit<AuthResultType, 'status'>
+    private authResult: Omit<AuthResultType<UserGuatantee, Authorized>, 'status'>
     public get authorized() {
         return this.authResult.authorized
     }
@@ -49,7 +51,7 @@ export class AuthResult<const UserGuatantee extends UserGuaranteeOption, const A
      * as you cannot send class instances to a client component from a server component.
      * @returns A javascript object representation of the AuthResult
      */
-    public toJsObject(): AuthResultType {
+    public toJsObject(): AuthResultType<UserGuatantee, Authorized> {
         return {
             session: this.session,
             authorized: this.authorized,
@@ -59,7 +61,7 @@ export class AuthResult<const UserGuatantee extends UserGuaranteeOption, const A
     }
 
     public static fromJsObject<const UserGuatantee_ extends UserGuaranteeOption, const Authorized_ extends boolean>(
-        authResult: AuthResultType
+        authResult: AuthResultType<UserGuatantee_, Authorized_>
     ): AuthResult<UserGuatantee_, Authorized_> {
         return new AuthResult(authResult.session, authResult.authorized, authResult.errorMessage)
     }
