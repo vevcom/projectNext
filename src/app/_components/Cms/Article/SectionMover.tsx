@@ -1,6 +1,6 @@
 'use client'
 import styles from './SectionMover.module.scss'
-import useEditMode from '@/hooks/useEditmode'
+import useEditMode from '@/hooks/useEditMode'
 import { RequireNothing } from '@/auth/auther/RequireNothing'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons'

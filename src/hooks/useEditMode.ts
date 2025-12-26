@@ -21,14 +21,16 @@ export default function useEditMode({
     const editModeCtx = useContext(EditModeContext)
     const uniqueKey = useRef(uuid()).current
     const authResult = useAuther({ auther })
+    const { addEditableContent, removeEditableContent } = editModeCtx || {
+        addEditableContent: () => { },
+        removeEditableContent: () => { },
+    }
     useEffect(() => {
-        if (editModeCtx) {
-            if (authResult.authorized) editModeCtx.addEditableContent(uniqueKey)
-            if (!authResult.authorized) editModeCtx.removeEditableContent(uniqueKey)
-        }
-        return () => {
-            if (editModeCtx) editModeCtx.removeEditableContent(uniqueKey)
-        }
-    }, [editModeCtx, auther, authResult, uniqueKey])
+        if (authResult.authorized) addEditableContent(uniqueKey)
+        if (!authResult.authorized) removeEditableContent(uniqueKey)
+    }, [auther, authResult, uniqueKey, addEditableContent, removeEditableContent])
+    useEffect(() => () => {
+        removeEditableContent(uniqueKey)
+    }, [uniqueKey, removeEditableContent])
     return authResult.authorized && editModeCtx?.editMode === true
 }

@@ -1,7 +1,7 @@
 'use client'
 import styles from './RemovePart.module.scss'
 import Form from '@/components/Form/Form'
-import useEditMode from '@/hooks/useEditmode'
+import useEditMode from '@/hooks/useEditMode'
 import useClickOutsideRef from '@/hooks/useClickOutsideRef'
 import { RequireNothing } from '@/auth/auther/RequireNothing'
 import { useRouter } from 'next/navigation'

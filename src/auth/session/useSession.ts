@@ -6,14 +6,13 @@ import { useContext } from 'react'
 
 export { SessionProvider } from 'next-auth/react'
 
-type useSessionReturn = { loading: true } | { loading: false, session: Session<'NO_USER'> | Session<'HAS_USER'> }
+type UseSessionReturn = { loading: true } | { loading: false, session: Session<'NO_USER'> | Session<'HAS_USER'> }
 
-export function useSession(): useSessionReturn {
+export function useSession(): UseSessionReturn {
     const defaultPermissionsContext = useContext(DefaultPermissionsContext)
     const defaultPermissions = defaultPermissionsContext ? defaultPermissionsContext.defaultPermissions : []
 
     const { data: session, status: nextAuthStatus } = useSessionNextAuth()
-
     switch (nextAuthStatus) {
         case 'loading':
             return { loading: true }

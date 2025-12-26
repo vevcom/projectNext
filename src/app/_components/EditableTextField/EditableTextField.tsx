@@ -1,7 +1,7 @@
 'use client'
 import styles from './EditableTextField.module.scss'
 import Form from '@/components/Form/Form'
-import useEditMode from '@/hooks/useEditmode'
+import useEditMode from '@/hooks/useEditMode'
 import { RequireNothing } from '@/auth/auther/RequireNothing'
 import useKeyPress from '@/hooks/useKeyPress'
 import React, { useEffect, useState, useRef } from 'react'

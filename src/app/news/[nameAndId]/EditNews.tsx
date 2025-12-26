@@ -2,7 +2,7 @@
 import styles from './EditNews.module.scss'
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
-import useEditMode from '@/hooks/useEditmode'
+import useEditMode from '@/hooks/useEditMode'
 import Textarea from '@/components/UI/Textarea'
 import DateInput from '@/components/UI/DateInput'
 import { destroyNewsAction, updateNewsAction } from '@/services/news/actions'

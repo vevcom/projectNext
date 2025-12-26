@@ -1,6 +1,6 @@
 'use client'
 import styles from './ImageControls.module.scss'
-import useEditMode from '@/hooks/useEditmode'
+import useEditMode from '@/hooks/useEditMode'
 import { imageSizeIncrement, maxImageSize, minImageSize } from '@/cms/articleSections/constants'
 import { RequireNothing } from '@/auth/auther/RequireNothing'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'

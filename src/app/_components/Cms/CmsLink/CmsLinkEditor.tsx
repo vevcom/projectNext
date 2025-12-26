@@ -2,7 +2,7 @@
 import styles from './CmsLinkEditor.module.scss'
 import TextInput from '@/components/UI/TextInput'
 import EditOverlay from '@/cms/EditOverlay'
-import useEditMode from '@/hooks/useEditmode'
+import useEditMode from '@/hooks/useEditMode'
 import Form from '@/components/Form/Form'
 import PopUp from '@/components/PopUp/PopUp'
 import { configureAction } from '@/services/configureAction'

@@ -3,7 +3,7 @@
 import styles from './AddSection.module.scss'
 import AddParts from '@/cms/AddParts'
 import { maxSections } from '@/cms/articles/constants'
-import useEditMode from '@/hooks/useEditmode'
+import useEditMode from '@/hooks/useEditMode'
 import { RequireNothing } from '@/auth/auther/RequireNothing'
 import { useRouter } from 'next/navigation'
 import type { ArticleSectionPart } from '@/cms/articleSections/types'

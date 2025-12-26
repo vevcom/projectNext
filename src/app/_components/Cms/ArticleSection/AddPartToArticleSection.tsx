@@ -1,7 +1,7 @@
 'use client'
 import styles from './AddPartToArticleSection.module.scss'
 import AddParts from '@/cms/AddParts'
-import useEditMode from '@/hooks/useEditmode'
+import useEditMode from '@/hooks/useEditMode'
 import { RequireNothing } from '@/auth/auther/RequireNothing'
 import { useCallback } from 'react'
 import { useRouter } from 'next/navigation'
