@@ -19,6 +19,8 @@ import SlideInOnView from '@/components/SlideInOnView/SlideInOnView'
 import { decodeVevenUriHandleError } from '@/lib/urlEncoding'
 import { configureAction } from '@/services/configureAction'
 import { notFound } from 'next/navigation'
+import { newsAuth } from '@/services/news/auth'
+import { ServerSession } from '@/auth/session/ServerSession'
 
 type PropTypes = {
     params: Promise<{
@@ -29,13 +31,16 @@ type PropTypes = {
 export default async function NewsArticle({ params }: PropTypes) {
     const idAndName = (await params).nameAndId
     const res = await readNewsAction({ params: { id: decodeVevenUriHandleError(idAndName) } })
-
     if (!res.success) notFound()
     const news = res.data
 
+    const canEdit = newsAuth.updateArticle.dynamicFields({}).auth(
+        await ServerSession.fromNextAuth()
+    ).toJsObject()
     return (
         <div className={styles.wrapper}>
             <Article
+                canEdit={canEdit}
                 article={news.article}
                 actions={{
                     updateArticleAction: configureAction(

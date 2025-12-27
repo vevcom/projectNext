@@ -32,6 +32,7 @@ import {
     faSuitcase,
     faXmarkCircle
 } from '@fortawesome/free-solid-svg-icons'
+import { jobAdAuth } from '@/services/career/jobAds/auth'
 
 type PropTypes = {
     params: Promise<{
@@ -50,10 +51,16 @@ export default async function JobAd({ params }: PropTypes) {
         throw new Error('Failed to read jobAd')
     }
     const jobAd = jobAdRes.data
+
+    const canEdit = jobAdAuth.updateArticle.dynamicFields({}).auth(
+        session
+    ).toJsObject()
+
     return (
         <div className={styles.wrapper}>
             <main>
                 <Article
+                    canEdit={canEdit}
                     article={jobAd.article}
                     sideBarClassName={styles.sideBar}
                     actions={{
