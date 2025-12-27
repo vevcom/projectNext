@@ -22,6 +22,7 @@ import { jobAdType } from '@/services/career/jobAds/constants'
 import { decodeVevenUriHandleError } from '@/lib/urlEncoding'
 import { ServerSession } from '@/auth/session/ServerSession'
 import { configureAction } from '@/services/configureAction'
+import { jobAdAuth } from '@/services/career/jobAds/auth'
 import { notFound } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -32,7 +33,6 @@ import {
     faSuitcase,
     faXmarkCircle
 } from '@fortawesome/free-solid-svg-icons'
-import { jobAdAuth } from '@/services/career/jobAds/auth'
 
 type PropTypes = {
     params: Promise<{

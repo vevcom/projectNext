@@ -8,8 +8,8 @@ import EditModeSwitch from '@/components/EditModeSwitch/EditModeSwitch'
 import SpecialCmsImage from '@/components/Cms/CmsImage/SpecialCmsImage'
 import { readSpecialCmsImageFrontpage, updateSpecialCmsImageFrontpage } from '@/services/frontpage/actions'
 import Link from 'next/link'
+import type { AuthResultTypeAny } from '@/auth/auther/AuthResult'
 import type { Profile } from '@/services/users/types'
-import { AuthResultTypeAny } from '@/auth/auther/AuthResult'
 
 export type PropTypes = {
     profile: Profile | null

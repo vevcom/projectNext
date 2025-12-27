@@ -9,8 +9,6 @@ import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBars } from '@fortawesome/free-solid-svg-icons'
 import type { PropTypes } from './NavBar'
-import { ServerSession } from '@/auth/session/ServerSession'
-import { frontpageAuth } from '@/services/frontpage/auth'
 
 export default async function MobileNavBar({ profile, canEditSpecialCmsImage }: PropTypes) {
     const user = profile?.user ?? null

@@ -1,5 +1,5 @@
-import { ServerSession } from '@/auth/session/ServerSession'
 import styles from './loading.module.scss'
+import { ServerSession } from '@/auth/session/ServerSession'
 import Loader from '@/components/Loader/Loader'
 
 export default async function loading() {

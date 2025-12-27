@@ -1,9 +1,9 @@
-import { ServerSession } from '@/auth/session/ServerSession'
 import styles from './layout.module.scss'
+import { ServerSession } from '@/auth/session/ServerSession'
 import SpecialCmsImage from '@/components/Cms/CmsImage/SpecialCmsImage'
 import { readSpecialCmsImageFrontpage, updateSpecialCmsImageFrontpage } from '@/services/frontpage/actions'
-import React from 'react'
 import { frontpageAuth } from '@/services/frontpage/auth'
+import React from 'react'
 
 type PropTypes = {
     children: React.ReactNode
