@@ -18,9 +18,9 @@ import {
 import SlideInOnView from '@/components/SlideInOnView/SlideInOnView'
 import { decodeVevenUriHandleError } from '@/lib/urlEncoding'
 import { configureAction } from '@/services/configureAction'
-import { notFound } from 'next/navigation'
 import { newsAuth } from '@/services/news/auth'
 import { ServerSession } from '@/auth/session/ServerSession'
+import { notFound } from 'next/navigation'
 
 type PropTypes = {
     params: Promise<{

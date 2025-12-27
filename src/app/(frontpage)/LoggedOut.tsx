@@ -6,11 +6,11 @@ import SocialIcons from '@/components/SocialIcons/SocialIcons'
 import SpecialCmsImage from '@/components/Cms/CmsImage/SpecialCmsImage'
 import YouTube from '@/components/YouTube/YouTube'
 import { readSpecialCmsImageFrontpage, updateSpecialCmsImageFrontpage } from '@/services/frontpage/actions'
+import { ServerSession } from '@/auth/session/ServerSession'
+import { frontpageAuth } from '@/services/frontpage/auth'
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Link from 'next/link'
-import { ServerSession } from '@/auth/session/ServerSession'
-import { frontpageAuth } from '@/services/frontpage/auth'
 
 export default async function LoggedOutLandingPage() {
     const session = await ServerSession.fromNextAuth()

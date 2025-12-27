@@ -11,11 +11,11 @@ import { readNewsCurrentAction } from '@/services/news/actions'
 import { readActiveJobAdsAction } from '@/services/career/jobAds/actions'
 import { readCurrentEventsAction } from '@/services/events/actions'
 import { readSpecialCmsImageFrontpage, updateSpecialCmsImageFrontpage } from '@/services/frontpage/actions'
+import { frontpageAuth } from '@/services/frontpage/auth'
+import { ServerSession } from '@/auth/session/ServerSession'
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Link from 'next/link'
-import { frontpageAuth } from '@/services/frontpage/auth'
-import { ServerSession } from '@/auth/session/ServerSession'
 
 export default async function LoggedInLandingPage() {
     const MAX_NUMBER_OF_ELEMENTS = 3

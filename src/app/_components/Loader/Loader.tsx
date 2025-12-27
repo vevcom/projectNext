@@ -1,8 +1,8 @@
 import styles from './Loader.module.scss'
 import { readSpecialCmsImageFrontpage, updateSpecialCmsImageFrontpage } from '@/services/frontpage/actions'
 import SpecialCmsImage from '@/components/Cms/CmsImage/SpecialCmsImage'
-import { SessionMaybeUser } from '@/auth/session/Session'
 import { frontpageAuth } from '@/services/frontpage/auth'
+import type { SessionMaybeUser } from '@/auth/session/Session'
 
 type PropTypes = {
     session: SessionMaybeUser

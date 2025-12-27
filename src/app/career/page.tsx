@@ -13,8 +13,8 @@ import {
     readCareerSpecialCmsLinkAction,
     updateCareerSpecialCmsLinkAction
 } from '@/services/career/actions'
-import Link from 'next/link'
 import { careerAuth } from '@/services/career/auth'
+import Link from 'next/link'
 
 export default async function CareerLandingPage() {
     const session = await ServerSession.fromNextAuth()

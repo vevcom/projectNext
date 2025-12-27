@@ -26,10 +26,10 @@ import {
 import { readSpecialImageAction } from '@/services/images/actions'
 import { ServerSession } from '@/auth/session/ServerSession'
 import { configureAction } from '@/services/configureAction'
+import { committeeAuth } from '@/services/groups/committees/auth'
 import { faVideo } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Link from 'next/link'
-import { committeeAuth } from '@/services/groups/committees/auth'
 
 export type PropTypes = {
     params: Promise<{
