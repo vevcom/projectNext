@@ -2,7 +2,6 @@
 import styles from './ImageControls.module.scss'
 import useEditMode from '@/hooks/useEditMode'
 import { imageSizeIncrement, maxImageSize, minImageSize } from '@/cms/articleSections/constants'
-import { RequireNothing } from '@/auth/auther/RequireNothing'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
     faChevronLeft,
@@ -13,24 +12,22 @@ import {
 import { useRouter } from 'next/navigation'
 import type { ArticleSection } from '@prisma/client'
 import type { UpdateArticleSectionAction } from '@/cms/articleSections/types'
+import type { AuthResultTypeAny } from '@/auth/auther/AuthResult'
 
 type PropTypes = {
     articleSection: ArticleSection
     className?: string
     updateArticleSectionAction: UpdateArticleSectionAction
+    canEdit: AuthResultTypeAny
 }
 
 /**
  * This component is used to control the image in the article section
  * i.e move it left or right and size it
  */
-export default function ImageControls({ articleSection, className, updateArticleSectionAction }: PropTypes) {
-    //TODO: Auther must be passed in....
-    const canEdit = useEditMode({
-        auther: RequireNothing.staticFields({}).dynamicFields({})
-    })
+export default function ImageControls({ articleSection, className, updateArticleSectionAction, canEdit }: PropTypes) {
+    const editable = useEditMode({ authResult: canEdit })
     const { refresh } = useRouter()
-    if (!canEdit) return null
 
     const moveLeft = async () => {
         await updateArticleSectionAction(
@@ -64,6 +61,7 @@ export default function ImageControls({ articleSection, className, updateArticle
         refresh()
     }
 
+    if (!editable) return null
     return (
         <div className={`${className} ${styles.ImageControls}`}>
             {

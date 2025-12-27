@@ -15,6 +15,7 @@ import type {
 import type { UpdateCmsParagraphAction } from '@/cms/paragraphs/types'
 import type { UpdateCmsImageAction } from '@/cms/images/types'
 import type { UpdateCmsLinkAction } from '@/cms/links/types'
+import type { AuthResultTypeAny } from '@/auth/auther/AuthResult'
 
 type PropTypes = {
     articleSection: ExpandedArticleSection
@@ -26,13 +27,15 @@ type PropTypes = {
         addPartToArticleSection: AddPartToArticleSectionAction,
         removePartFromArticleSection: RemovePartFromArticleSectionAction
     }
+    canEdit: AuthResultTypeAny
 }
 
 export type ArticleSectionActions = PropTypes['actions']
 
 export default function ArticleSection({
     articleSection,
-    actions
+    actions,
+    canEdit,
 }: PropTypes) {
     const { cmsParagraph, cmsImage, cmsLink } = articleSection
 
@@ -44,11 +47,13 @@ export default function ArticleSection({
                         width={articleSection.imageSize}
                         cmsImage={cmsImage}
                         updateCmsImageAction={actions.updateCmsImage}
+                        canEdit={canEdit}
                     />
                     <ImageControls
                         className={styles.moveControls}
                         articleSection={articleSection}
                         updateArticleSectionAction={actions.updateArticleSection}
+                        canEdit={canEdit}
                     />
                 </span>
                 <div className={styles.remover}>
@@ -60,6 +65,7 @@ export default function ArticleSection({
                                 { params: { articleSectionName: articleSection.name } }
                             )
                         }
+                        canEdit={canEdit}
                     />
                 </div>
             </>
@@ -77,6 +83,7 @@ export default function ArticleSection({
                     actions.addPartToArticleSection,
                     { params: { articleSectionName: articleSection.name } }
                 )}
+                canEdit={canEdit}
             >
                 <span className={styles.content}>
                     {
@@ -96,12 +103,14 @@ export default function ArticleSection({
                                             { params: { articleSectionName: articleSection.name } }
                                         )
                                     }
+                                    canEdit={canEdit}
                                 />
                             </div>
                             <CmsParagraph
                                 cmsParagraph={cmsParagraph}
                                 className={styles.paragrphComponent}
                                 updateCmsParagraphAction={actions.updateCmsParagraph}
+                                canEdit={canEdit}
                             />
                         </span>
                         }
@@ -117,9 +126,10 @@ export default function ArticleSection({
                                             { params: { articleSectionName: articleSection.name } }
                                         )
                                     }
+                                    canEdit={canEdit}
                                 />
                             </div>
-                            <CmsLink cmsLink={cmsLink} updateCmsLinkAction={actions.updateCmsLink} />
+                            <CmsLink canEdit={canEdit} cmsLink={cmsLink} updateCmsLinkAction={actions.updateCmsLink} />
                         </div>
                         }
                     </div>

@@ -2,7 +2,6 @@
 import styles from './AddPartToArticleSection.module.scss'
 import AddParts from '@/cms/AddParts'
 import useEditMode from '@/hooks/useEditMode'
-import { RequireNothing } from '@/auth/auther/RequireNothing'
 import { useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import type { PropTypes as AddPartsPropTypes } from '@/cms/AddParts'
@@ -12,28 +11,29 @@ import type {
 } from '@/cms/articleSections/types'
 import type { ReactNode } from 'react'
 import type { ConfiguredAction } from '@/services/actionTypes'
+import type { AuthResultTypeAny } from '@/auth/auther/AuthResult'
 
 type PropTypes = Omit<AddPartsPropTypes, 'onClick'> & {
     children: ReactNode
     addPartToArticleSectionAction: ConfiguredAction<AddPartToArticleSectionAction>
+    canEdit: AuthResultTypeAny
 }
 
 export default function AddPartToArticleSection({
     children,
     addPartToArticleSectionAction,
+    canEdit,
     ...props
 }: PropTypes) {
     const { refresh } = useRouter()
-    //TODO: Auther must be passed in....
-    const canEdit = useEditMode({
-        auther: RequireNothing.staticFields({}).dynamicFields({})
-    })
+    const editable = useEditMode({ authResult: canEdit })
+
     const handleAdd = useCallback(async (part: ArticleSectionPart) => {
         await addPartToArticleSectionAction({ data: { part } })
         refresh()
     }, [addPartToArticleSectionAction, refresh])
-    if (!canEdit) return children
 
+    if (!editable) return children
     return (
         <div className={styles.AddPartToArticleSection}>
             <div className={

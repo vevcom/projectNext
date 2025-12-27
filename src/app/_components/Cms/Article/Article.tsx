@@ -16,6 +16,7 @@ import type {
     UpdateArticleAction
 } from '@/cms/articles/types'
 import type { UpdateCmsImageAction } from '@/cms/images/types'
+import type { AuthResultTypeAny } from '@/auth/auther/AuthResult'
 
 export type PropTypes = {
     article: ExpandedArticle,
@@ -31,6 +32,7 @@ export type PropTypes = {
         reorderArticleSectionsAction: ReorderArticleSectionsAction,
         articleSections: ArticleSectionActions
     }
+    canEdit: AuthResultTypeAny
 }
 
 export default function Article({
@@ -41,6 +43,7 @@ export default function Article({
     sideBarContent,
     sideBarClassName,
     actions,
+    canEdit,
 }: PropTypes) {
     return (
         <span className={styles.Article}>
@@ -50,6 +53,7 @@ export default function Article({
                         width={500}
                         cmsImage={article.coverImage}
                         updateCmsImageAction={actions.updateCoverImageAction}
+                        canEdit={canEdit}
                     />
                     <SlideInOnView direction="bottom">
                         <ChangeName
@@ -60,6 +64,7 @@ export default function Article({
                                     { params: { articleId: article.id } }
                                 )
                             }
+                            canEdit={canEdit}
                         />
                     </SlideInOnView>
                 </span>
@@ -70,8 +75,13 @@ export default function Article({
                         article.articleSections.sort((a, b) => (a.order - b.order)).map((section, i) => (
                             <SlideInOnView direction="left" key={section.id}>
                                 <span className={styles.moveSection}>
-                                    <ArticleSection actions={actions.articleSections} articleSection={section} />
+                                    <ArticleSection
+                                        actions={actions.articleSections}
+                                        articleSection={section}
+                                        canEdit={canEdit}
+                                    />
                                     <SectionMover
+                                        canEdit={canEdit}
                                         showUp={i !== 0}
                                         showDown={i !== article.articleSections.length - 1}
                                         className={styles.moverComponent}
@@ -102,6 +112,7 @@ export default function Article({
             )}
             <div className={styles.addSection}>
                 <AddSection
+                    canEdit={canEdit}
                     currentNumberSections={article.articleSections.length}
                     addSectionToArticleAction={
                         configureAction(

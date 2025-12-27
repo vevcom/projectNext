@@ -21,12 +21,12 @@ const ownedCmsImages: Readonly<SpecialCmsImage[]> = [
     'FOOTER_3',
     'FOOTER_LOGO',
     'FRONTPAGE_LOGO',
+    //TODO: these probably should not be read through 'frontpage'-service...
+    //but I anyway feel like making some of the special cms images into just special images
     'MOBILE_NAV_LOGIN_BUTTON',
     'MOBILE_NAV_PRIMARY_BUTTON',
     'LOADER_IMAGE',
     'AUTH_ICON',
-    //TODO: these probably should not be read through 'frontpage'
-    //but I anyway feel like making some of the special cms images into just special images
     'NAV_LOGIN_BUTTON',
     'NAV_PRIMARY_BUTTON',
     'NOT_FOUND',

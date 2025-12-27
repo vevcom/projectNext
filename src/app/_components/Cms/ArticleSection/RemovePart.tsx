@@ -3,30 +3,28 @@ import styles from './RemovePart.module.scss'
 import Form from '@/components/Form/Form'
 import useEditMode from '@/hooks/useEditMode'
 import useClickOutsideRef from '@/hooks/useClickOutsideRef'
-import { RequireNothing } from '@/auth/auther/RequireNothing'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { faX } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import type { ArticleSectionPart, RemovePartFromArticleSectionAction } from '@/cms/articleSections/types'
 import type { ConfiguredAction } from '@/services/actionTypes'
+import type { AuthResultTypeAny } from '@/auth/auther/AuthResult'
 
 type PropTypes = {
     part: ArticleSectionPart,
     removePartFromArticleSectionAction: ConfiguredAction<RemovePartFromArticleSectionAction>
+    canEdit: AuthResultTypeAny
 }
 
-export default function RemovePart({ part, removePartFromArticleSectionAction }: PropTypes) {
+export default function RemovePart({ part, removePartFromArticleSectionAction, canEdit }: PropTypes) {
     const { refresh } = useRouter()
-    //TODO: Auther must be passed in....
-    const canEdit = useEditMode({
-        auther: RequireNothing.staticFields({}).dynamicFields({})
-    })
+    const editable = useEditMode({ authResult: canEdit })
     const [confirmOpen, setConfirmOpen] = useState(false)
     const confirmRef = useClickOutsideRef(() => setConfirmOpen(false))
-    if (!canEdit) return null
     const handleRemove = removePartFromArticleSectionAction.bind(null, { data: { part } })
 
+    if (!editable) return null
     return (
         <div ref={confirmRef} className={styles.RemovePart}>
             <button className={styles.openBtn} onClick={() => setConfirmOpen(x => !x)}>
