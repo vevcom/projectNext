@@ -13,20 +13,33 @@ import type {
     SpecialCmsImage as SpecialCmsImageT,
     SpecialCmsParagraph as SpecialCmsParagraphT
 } from '@prisma/client'
+import type { AuthResultTypeAny } from '@/auth/auther/AuthResult'
 
 type PropTypes = {
     specialCmsImage: SpecialCmsImageT,
+    canEditSpecialCmsImage: AuthResultTypeAny,
     specialCmsParagraph: SpecialCmsParagraphT,
-    lesMer: string,
+    canEditSpecialCmsParagraph: AuthResultTypeAny,
+    readMore: string,
     position: 'left' | 'right',
     imgWidth: number,
     id?: string,
 }
 
-function Section({ specialCmsImage, specialCmsParagraph, lesMer, position, imgWidth, id }: PropTypes) {
+function Section({
+    specialCmsImage,
+    canEditSpecialCmsImage,
+    specialCmsParagraph,
+    canEditSpecialCmsParagraph,
+    readMore,
+    position,
+    imgWidth,
+    id
+}: PropTypes) {
     const imgContainer = (
         <div style={{ width: imgWidth }} className={styles.imgContainer}>
             <SpecialCmsImage
+                canEdit={canEditSpecialCmsImage}
                 special={specialCmsImage}
                 width={imgWidth}
                 readSpecialCmsImageAction={readSpecialCmsImageFrontpage}
@@ -39,12 +52,13 @@ function Section({ specialCmsImage, specialCmsParagraph, lesMer, position, imgWi
             {position === 'left' && imgContainer}
             <div>
                 <SpecialCmsParagraph
+                    canEdit={canEditSpecialCmsParagraph}
                     className={styles.paragraph}
                     special={specialCmsParagraph}
                     readSpecialCmsParagraphAction={readSpecialCmsParagraphFrontpageSection}
                     updateCmsParagraphAction={updateSpecialCmsParagraphFrontpageSection}
                 />
-                <Link className={styles.readMore} href={lesMer}>Les mer</Link>
+                <Link className={styles.readMore} href={readMore}>Les mer</Link>
             </div>
             {position === 'right' && imgContainer}
         </div>
