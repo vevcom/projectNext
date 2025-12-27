@@ -9,8 +9,10 @@ import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBars } from '@fortawesome/free-solid-svg-icons'
 import type { PropTypes } from './NavBar'
+import { ServerSession } from '@/auth/session/ServerSession'
+import { frontpageAuth } from '@/services/frontpage/auth'
 
-export default async function MobileNavBar({ profile }: PropTypes) {
+export default async function MobileNavBar({ profile, canEditSpecialCmsImage }: PropTypes) {
     const user = profile?.user ?? null
     const isLoggedIn = user !== null
     const applicationPeriod = false //TODO
@@ -32,6 +34,7 @@ export default async function MobileNavBar({ profile }: PropTypes) {
             }
             <div>
                 <SpecialCmsImage
+                    canEdit={canEditSpecialCmsImage}
                     special="MOBILE_NAV_PRIMARY_BUTTON"
                     width={30}
                     readSpecialCmsImageAction={readSpecialCmsImageFrontpage}
@@ -42,6 +45,7 @@ export default async function MobileNavBar({ profile }: PropTypes) {
             </div>
             <div className={styles.magicHat}>
                 <SpecialCmsImage
+                    canEdit={canEditSpecialCmsImage}
                     special="MOBILE_NAV_LOGIN_BUTTON"
                     width={25}
                     height={25}

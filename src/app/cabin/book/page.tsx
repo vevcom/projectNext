@@ -43,9 +43,15 @@ export default async function CabinBooking() {
     const nextReleasePeriod = findNextReleasePeriod(releasePeriods)
     const pricePeriods = unwrapActionReturn(await readPublicPricePeriodsAction())
     const cabinProducts = unwrapActionReturn(await readCabinProductsActiveAction())
+
     const session = await ServerSession.fromNextAuth()
     const canBookCabin = cabinBookingAuth.createCabinBookingNoUser.dynamicFields({}).auth(session)
     const canBookBed = cabinBookingAuth.createBedBookingNoUser.dynamicFields({}).auth(session)
+    const canEditSpecialCmsParagraphContract = cabinBookingAuth.updateSpecialCmsParagraphContentCabinContract.dynamicFields(
+        {}
+    ).auth(
+        session
+    ).toJsObject()
 
     return <PageWrapper
         title="Heutte Booking"
@@ -71,6 +77,7 @@ export default async function CabinBooking() {
         />
 
         <SpecialCmsParagraph
+            canEdit={canEditSpecialCmsParagraphContract}
             special="CABIN_CONTRACT"
             readSpecialCmsParagraphAction={readSpecialCmsParagraphCabinContractAction}
             updateCmsParagraphAction={updateSpecialCmsParagraphCabinContractAction}

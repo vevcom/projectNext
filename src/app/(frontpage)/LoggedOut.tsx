@@ -9,14 +9,25 @@ import { readSpecialCmsImageFrontpage, updateSpecialCmsImageFrontpage } from '@/
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Link from 'next/link'
+import { ServerSession } from '@/auth/session/ServerSession'
+import { frontpageAuth } from '@/services/frontpage/auth'
 
 export default async function LoggedOutLandingPage() {
+    const session = await ServerSession.fromNextAuth()
+    const canEditSpecialCmsImage = frontpageAuth.updateSpecialCmsImage.dynamicFields({}).auth(
+        session
+    ).toJsObject()
+    const canEditSpecialCmsParagraph = frontpageAuth.updateSpecialCmsParagraphContentSection.dynamicFields({}).auth(
+        session
+    ).toJsObject()
+
     return (
         <div className={styles.wrapper}>
             <div className={`${styles.part} ${styles.frontImg}`}>
                 <div className={styles.frontInfo}>
                     <div>
                         <SpecialCmsImage
+                            canEdit={canEditSpecialCmsImage}
                             special="FRONTPAGE_LOGO"
                             width={300}
                             readSpecialCmsImageAction={readSpecialCmsImageFrontpage}
@@ -36,20 +47,24 @@ export default async function LoggedOutLandingPage() {
                     </div>
                 </div>
                 <Section
+                    canEditSpecialCmsImage={canEditSpecialCmsImage}
+                    canEditSpecialCmsParagraph={canEditSpecialCmsParagraph}
                     position="left"
                     specialCmsImage="FRONTPAGE_1"
                     specialCmsParagraph="FRONTPAGE_1"
-                    lesMer="/articles"
+                    readMore="/articles"
                     imgWidth={450}
                     id="firstSection"
                 />
 
                 <InfoBubbles />
                 <Section
+                    canEditSpecialCmsImage={canEditSpecialCmsImage}
+                    canEditSpecialCmsParagraph={canEditSpecialCmsParagraph}
                     position="right"
                     specialCmsImage="FRONTPAGE_2"
                     specialCmsParagraph="FRONTPAGE_2"
-                    lesMer="/articles"
+                    readMore="/articles"
                     imgWidth={700}
                 />
 
@@ -59,17 +74,21 @@ export default async function LoggedOutLandingPage() {
                 <YouTube src="https://www.youtube.com/watch?v=I-zNLW4ILu4" />
                 <div className={styles.emptyPart} />
                 <Section
+                    canEditSpecialCmsImage={canEditSpecialCmsImage}
+                    canEditSpecialCmsParagraph={canEditSpecialCmsParagraph}
                     position="left"
                     specialCmsImage="FRONTPAGE_3"
                     specialCmsParagraph="FRONTPAGE_3"
-                    lesMer="/career"
+                    readMore="/career"
                     imgWidth={550}
                 />
                 <Section
+                    canEditSpecialCmsImage={canEditSpecialCmsImage}
+                    canEditSpecialCmsParagraph={canEditSpecialCmsParagraph}
                     position="right"
                     specialCmsImage="FRONTPAGE_4"
                     specialCmsParagraph="FRONTPAGE_4"
-                    lesMer="infopages/loccom"
+                    readMore="infopages/loccom"
                     imgWidth={750}
                 />
 

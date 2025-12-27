@@ -34,13 +34,13 @@ const ownedCmsImages: Readonly<SpecialCmsImage[]> = [
 ]
 
 export const frontpageOperations = {
-    readSpecialCmsParagraphFrontpageSection: cmsParagraphOperations.readSpecial.implement({
-        authorizer: () => frontpageAuth.readSpecialCmsParagraphFrontpageSection.dynamicFields({}),
+    readSpecialCmsParagraphSection: cmsParagraphOperations.readSpecial.implement({
+        authorizer: () => frontpageAuth.readSpecialCmsParagraphSection.dynamicFields({}),
         ownershipCheck: ({ params }) => ownedCmsParagraphs.includes(params.special)
     }),
 
-    updateSpecialCmsParagraphContentFrontpageSection: cmsParagraphOperations.updateContent.implement({
-        authorizer: () => frontpageAuth.updateSpecialCmsParagraphContentFrontpageSection.dynamicFields({}),
+    updateSpecialCmsParagraphContentSection: cmsParagraphOperations.updateContent.implement({
+        authorizer: () => frontpageAuth.updateSpecialCmsParagraphContentSection.dynamicFields({}),
         ownershipCheck: async ({ params }) =>
             await cmsParagraphOperations.isSpecial({
                 params: {

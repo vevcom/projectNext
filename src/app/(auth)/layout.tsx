@@ -1,13 +1,20 @@
+import { ServerSession } from '@/auth/session/ServerSession'
 import styles from './layout.module.scss'
 import SpecialCmsImage from '@/components/Cms/CmsImage/SpecialCmsImage'
 import { readSpecialCmsImageFrontpage, updateSpecialCmsImageFrontpage } from '@/services/frontpage/actions'
 import React from 'react'
+import { frontpageAuth } from '@/services/frontpage/auth'
 
 type PropTypes = {
     children: React.ReactNode
 }
 
-export default function AuthLayout({ children }: PropTypes) {
+export default async function AuthLayout({ children }: PropTypes) {
+    const session = await ServerSession.fromNextAuth()
+    const canEditAuthIcon = frontpageAuth.updateSpecialCmsImage.dynamicFields({}).auth(
+        session
+    ).toJsObject()
+
     return (
         <div className={styles.wrapper}>
             <div className={styles.card}>
@@ -16,6 +23,7 @@ export default function AuthLayout({ children }: PropTypes) {
                 </div>
                 <div className={styles.image}>
                     <SpecialCmsImage
+                        canEdit={canEditAuthIcon}
                         special="AUTH_ICON"
                         alt="en kappemann sin hatt"
                         width={200}
