@@ -36,7 +36,7 @@ export default async function Schools() {
                 startPage={{ pageSize: pageSizeSchool, page: 1 }}
             >
                 <div className={styles.wrapper}>
-                    <SchoolList serverRendered={serverRenderedData.map(schoolListRenderer(false, session))} />
+                    <SchoolList serverRendered={serverRenderedData.map(schoolListRenderer(false, session.toJsObject()))} />
                 </div>
             </SchoolPagingProvider>
         </PageWrapper>

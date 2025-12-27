@@ -19,7 +19,7 @@ type PropTypes = {
     session: SessionMaybeUser
 }
 
-export default async function School({ school, asClient = false, session }: PropTypes) {
+export default function School({ school, asClient = false, session }: PropTypes) {
     const updateCmsImageAction = configureAction(
         updateSchoolCmsImageAction,
         { implementationParams: { shortName: school.shortName } }
