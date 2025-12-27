@@ -6,24 +6,22 @@ import useEditMode from '@/hooks/useEditMode'
 import Form from '@/components/Form/Form'
 import PopUp from '@/components/PopUp/PopUp'
 import { configureAction } from '@/services/configureAction'
-import { RequireNothing } from '@/auth/authorizer/RequireNothing'
 import { useRouter } from 'next/navigation'
 import type { CmsLink } from '@prisma/client'
 import type { UpdateCmsLinkAction } from '@/cms/links/types'
+import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
 
 type PropTypes = {
     cmsLink: CmsLink
     updateCmsLinkAction: UpdateCmsLinkAction
+    canEdit: AuthResultTypeAny
 }
 
-export default function CmsLinkEditor({ cmsLink, updateCmsLinkAction }: PropTypes) {
-    //TODO: Authorizer must be passed in....
-    const canEdit = useEditMode({
-        authorizer: RequireNothing.staticFields({}).dynamicFields({})
-    })
+export default function CmsLinkEditor({ cmsLink, updateCmsLinkAction, canEdit }: PropTypes) {
+    const editable = useEditMode({ authResult: canEdit })
     const { refresh } = useRouter()
-    if (!canEdit) return null
 
+    if (!editable) return null
     return (
         <PopUp
             PopUpKey={cmsLink.id}

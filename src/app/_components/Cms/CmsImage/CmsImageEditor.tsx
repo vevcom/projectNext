@@ -11,18 +11,19 @@ import { ImageCollectionPagingProvider, ImageCollectionPagingContext } from '@/c
 import useEditMode from '@/hooks/useEditMode'
 import { ImagePagingProvider } from '@/contexts/paging/ImagePaging'
 import PopUpProvider from '@/contexts/PopUp'
-import { RequireNothing } from '@/auth/authorizer/RequireNothing'
 import ImageSelectionProvider from '@/contexts/ImageSelection'
 import { useState } from 'react'
 import Link from 'next/link'
 import type { CmsImage, Image as ImageT } from '@prisma/client'
 import type { UpdateCmsImageAction } from '@/cms/images/types'
+import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
 
 type PropTypes = {
     cmsImage: CmsImage & {
         image: ImageT
     },
     updateCmsImageAction: UpdateCmsImageAction
+    canEdit: AuthResultTypeAny
 }
 
 /**
@@ -30,17 +31,16 @@ type PropTypes = {
  * @param cmsImage - the cms image to edit
  * @returns
  */
-export default function CmsImageEditor({ cmsImage, updateCmsImageAction }: PropTypes) {
-    const canEdit = useEditMode({
-        authorizer: RequireNothing.staticFields({}).dynamicFields({})
-    })
+export default function CmsImageEditor({ cmsImage, updateCmsImageAction, canEdit }: PropTypes) {
+    const editable = useEditMode({ authResult: canEdit })
     const [currentCollectionId, setCurrentCollectionId] = useState<number>(cmsImage.image.collectionId)
 
     const isCollectionActive = (collection: { id: number }) => (
         collection.id === currentCollectionId ? styles.selected : ''
     )
 
-    return canEdit && (
+    if (!editable) return null
+    return (
         <PopUp
             PopUpKey={`EditCmsImage${cmsImage.id}`}
             showButtonContent={<EditOverlay />}
