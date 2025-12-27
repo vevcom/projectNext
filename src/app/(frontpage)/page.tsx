@@ -1,11 +1,11 @@
 import styles from './page.module.scss'
-import { QueryParams } from '@/lib/queryParams/queryParams'
 import LoggedInLandingPage from './LoggedIn'
 import LoggedOutLandingPage from './LoggedOut'
+import { QueryParams } from '@/lib/queryParams/queryParams'
 import { ServerSession } from '@/auth/session/ServerSession'
-import type { SearchParamsServerSide } from '@/lib/queryParams/types'
 import { frontpageAuth } from '@/services/frontpage/auth'
 import Link from 'next/link'
+import type { SearchParamsServerSide } from '@/lib/queryParams/types'
 
 type PropTypes = SearchParamsServerSide
 
@@ -15,7 +15,7 @@ export default async function Home({ searchParams }: PropTypes) {
         return <LoggedOutLandingPage />
     }
     const frontpageVersion = QueryParams.frontpageVersion.decode(await searchParams)
-    const canEditFrontpage = 
+    const canEditFrontpage =
         frontpageAuth.updateSpecialCmsParagraphContentSection.dynamicFields({}).auth(
             session
         ).authorized
@@ -26,7 +26,7 @@ export default async function Home({ searchParams }: PropTypes) {
         case 'logged-out':
             return (
                 <>
-                    <Link 
+                    <Link
                         className={styles.link}
                         href={`/?${QueryParams.frontpageVersion.encodeUrl('logged-in')}`}
                     >
@@ -48,7 +48,7 @@ export default async function Home({ searchParams }: PropTypes) {
                         </Link>
                     )
                 }
-                    <LoggedInLandingPage />
+                <LoggedInLandingPage />
                 </>
             )
     }
