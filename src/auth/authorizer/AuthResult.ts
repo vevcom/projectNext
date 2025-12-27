@@ -53,7 +53,11 @@ export class AuthResult<const UserGuatantee extends UserGuaranteeOption, const A
      */
     public toJsObject(): AuthResultType<UserGuatantee, Authorized> {
         return {
-            session: this.session,
+            session: {
+                //Note spread is neccessary if the session stored on the AuthResult is the Session class and
+                // not the session object of Session type
+                ...this.session,
+            },
             authorized: this.authorized,
             errorMessage: this.getErrorMessage,
             status: this.status,
