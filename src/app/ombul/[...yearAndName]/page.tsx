@@ -33,7 +33,9 @@ export default async function Ombul({ params }: PropTypes) {
 
     const path = `/store/ombul/${ombul.fsLocation}`
 
-    const canUpdate = ombulAuth.update.dynamicFields({}).auth(await ServerSession.fromNextAuth()).authorized
+    const session = await ServerSession.fromNextAuth()
+    const canUpdate = ombulAuth.update.dynamicFields({}).auth(session)
+    const canUpdateCmsCover = ombulAuth.updateCmsCoverImage.dynamicFields({}).auth(session).toJsObject()
 
     const changeDescription = configureAction(
         updateOmbulAction,
@@ -43,12 +45,12 @@ export default async function Ombul({ params }: PropTypes) {
     return (
         <div className={styles.wrapper}>
             <div className={styles.header}>
-                <ChangeName editable={canUpdate} ombulId={ombul.id}>
+                <ChangeName editable={canUpdate.authorized} ombulId={ombul.id}>
                     <h1>{ombul.name}</h1>
                 </ChangeName>
                 <p>{ombul.year} - {ombul.issueNumber}</p>
                 <EditableTextField
-                    editable={canUpdate}
+                    editable={canUpdate.authorized}
                     formProps={{
                         action: changeDescription
                     }}
@@ -78,6 +80,7 @@ export default async function Ombul({ params }: PropTypes) {
             <div className={styles.admin}>
                 <OmbulAdmin ombul={ombul}>
                     <CmsImage
+                        canEdit={canUpdateCmsCover}
                         cmsImage={ombul.coverImage}
                         width={400}
                         updateCmsImageAction={

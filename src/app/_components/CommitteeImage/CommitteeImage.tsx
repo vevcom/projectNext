@@ -6,6 +6,7 @@ import { updateCommitteeArticleCoverImageAction } from '@/services/groups/commit
 import type { ReactNode } from 'react'
 import type { Image as ImageT } from '@prisma/client'
 import type { ExpandedCmsImage } from '@/cms/images/types'
+import type { AuthResultTypeAny } from '@/auth/auther/AuthResult'
 
 type PropTypes = {
     children?: ReactNode
@@ -13,6 +14,7 @@ type PropTypes = {
     coverImage: ExpandedCmsImage
     grayScale?: boolean,
     shortName: string
+    canEditCoverImage: AuthResultTypeAny
 }
 /**
  * A component that renders a backdrop image with a content div on top of it
@@ -25,6 +27,7 @@ export default function CommitteeImage({
     logoImage,
     coverImage,
     shortName,
+    canEditCoverImage,
     grayScale = false
 }: PropTypes) {
     return (
@@ -41,6 +44,7 @@ export default function CommitteeImage({
                     />
                 </div>
                 <CmsImage
+                    canEdit={canEditCoverImage}
                     updateCmsImageAction={configureAction(
                         updateCommitteeArticleCoverImageAction,
                         { implementationParams: { shortName } }
