@@ -25,7 +25,7 @@ export default async function SchoolAdmin({ params }: PropTypes) {
         <PageWrapper title="Administrer skole">
             <UpdateSchool school={school} />
             <div className={styles.preview}>
-                <School school={school} session={session} />
+                <School school={school} session={session.toJsObject()} />
             </div>
             <Form
                 action={destroySchoolAction.bind(null, school.id)}
