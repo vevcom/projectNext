@@ -1,6 +1,6 @@
 'use server'
 
-import { LedgerTransactionMethods } from './operations'
-import { action } from '@/services/action'
+import { ledgerTransactionOperations } from './operations'
+import { makeAction } from '@/services/serverAction'
 
-export const readLedgerTransactionPageAction = action(LedgerTransactionMethods.readPage)
+export const readLedgerTransactionPageAction = makeAction(ledgerTransactionOperations.readPage)

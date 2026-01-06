@@ -1,7 +1,7 @@
 'use server'
 
-import { LedgerAccountMethods } from './operations'
-import { action } from '@/services/action'
+import { ledgerAccountOperations } from './operations'
+import { makeAction } from '@/services/serverAction'
 
-export const calculateLedgerAccountBalanceAction = action(LedgerAccountMethods.calculateBalance)
-export const readLedgerAccountPageAction = action(LedgerAccountMethods.readPage)
+export const calculateLedgerAccountBalanceAction = makeAction(ledgerAccountOperations.calculateBalance)
+export const readLedgerAccountPageAction = makeAction(ledgerAccountOperations.readPage)

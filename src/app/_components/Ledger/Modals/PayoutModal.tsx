@@ -1,14 +1,14 @@
 'use client'
 
 import styles from './PayoutModal.module.scss'
-import Form from '../../Form/Form'
-import PopUp from '../../PopUp/PopUp'
-import NumberInput from '../../UI/NumberInput'
-import Button from '../../UI/Button'
+import Form from '@/components/Form/Form'
+import PopUp from '@/components/PopUp/PopUp'
+import NumberInput from '@/components/UI/NumberInput'
+import Button from '@/components/UI/Button'
 import { createPayout } from '@/services/ledger/ledgerOperations/actions'
 import { convertAmount } from '@/lib/currency/convert'
-import { useState } from 'react'
 import { configureAction } from '@/services/configureAction'
+import { useState } from 'react'
 
 type Props = {
     ledgerAccountId: number,
@@ -19,12 +19,15 @@ type Props = {
 export default function PayoutModal({ ledgerAccountId, defaultFunds = 0, defaultFees = 0 }: Props) {
     const [funds, setFunds] = useState(defaultFunds)
     const [fees, setFees] = useState(defaultFees)
-    createPayout()
-    return <PopUp PopUpKey="payoutModal" customShowButton={(open) => <Button onClick={open} color="primary">Registrer utbetaling</Button>}>
+
+    return <PopUp
+        PopUpKey="payoutModal"
+        customShowButton={(open) => <Button onClick={open} color="primary">Registrer utbetaling</Button>}
+    >
         <h2>Ny utbetaling</h2>
         <div className={styles.checkoutFormContainer}>
             <Form
-                action={configureAction(createPayout, { ledgerAccountId, fees, funds })}
+                action={configureAction(createPayout, { params: { ledgerAccountId, fees, funds } })}
                 submitText="Registrer utbetaling"
                 buttonClassName={styles.submitButton}
             >

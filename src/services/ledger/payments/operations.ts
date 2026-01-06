@@ -1,18 +1,18 @@
 import { RequireNothing } from '@/auth/auther/RequireNothing'
 import { stripe } from '@/lib/stripe'
 import { ServerError } from '@/services/error'
-import { serviceMethod } from '@/services/serviceMethod'
+import { defineOperation } from '@/services/serviceOperation'
 import { PaymentProvider } from '@prisma/client'
 import { z } from 'zod'
 
 
-export namespace PaymentMethods {
+export const paymentOperations = {
     /**
      * Creates a new payment record in the db.
      * Important: This method does not call external APIs to enable it to be used in transactions.
      * Call `initiate` to actually begin collecting the payment.
      */
-    export const create = serviceMethod({
+    create: defineOperation({
         authorizer: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO: Add proper auther
         paramsSchema: z.intersection(
             z.object({
@@ -35,7 +35,7 @@ export namespace PaymentMethods {
                 }),
             ]),
         ),
-        method: async ({ prisma, params }) => {
+        operation: async ({ prisma, params }) => {
             const { details = {}, ...paymentData } = params
 
             return prisma.payment.create({
@@ -45,10 +45,10 @@ export namespace PaymentMethods {
                     state: params.provider === 'MANUAL' ? 'SUCCEEDED' : 'PENDING',
                     fees: params.provider === 'MANUAL' ? 0 : undefined,
                     stripePayment: params.provider === 'STRIPE' ? {
-                        create: params.details,
+                        create: details,
                     } : undefined,
                     manualPayment: params.provider === 'MANUAL' ? {
-                        create: params.details,
+                        create: details,
                     } : undefined,
                 },
                 include: {
@@ -57,14 +57,14 @@ export namespace PaymentMethods {
                 }
             })
         },
-    })
+    }),
 
     /**
      * Calls the external API to begin collecting the payment.
      *
      * @warning Do not call this method for manual payments! It will fail.
      */
-    export const initiate = serviceMethod({
+    initiate: defineOperation({
         authorizer: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO: Add proper auther
         paramsSchema: z.object({
             paymentId: z.number(),
@@ -72,7 +72,7 @@ export namespace PaymentMethods {
         // This method does not actually open a transaction. However, it cannot be used
         // inside a transaction as it does external API calls which cannot be reversed.
         opensTransaction: true,
-        method: async ({ prisma, params }) => {
+        operation: async ({ prisma, params }) => {
             const payment = await prisma.payment.findUniqueOrThrow({
                 where: {
                     id: params.paymentId,
@@ -90,54 +90,54 @@ export namespace PaymentMethods {
                 throw new ServerError('BAD PARAMETERS', 'Betalingen har allerede blitt forespurt.')
             }
 
-            switch (payment.provider) {
-                case 'MANUAL':
-                    throw new ServerError('BAD PARAMETERS', 'Manuelle betalinger trenger ikke å startes.')
-
-                case 'STRIPE':
-                    const paymentIntent = await stripe.paymentIntents.create({
-                        amount: payment.funds,
-                        currency: 'nok',
-                        description: payment.descriptionLong ?? undefined,
-                        statement_descriptor_suffix: payment.descriptionShort ?? undefined,
-                        // Stripe allows us to attach arbitrary metadata to payment intents
-                        // Currently, we don't use this for anything, but it might be
-                        // useful in the future.
-                        metadata: {
-                            projectNextPaymentId: params.paymentId,
-                        },
-                    }, {
-                        // The idempotency key makes it so that multiple requests with the
-                        // same key return the same result. This is useful in case
-                        // initiate payment is accidentally called twice.
-                        idempotencyKey: `project-next-payment-id-${params.paymentId}`,
-                    })
-
-                    if (paymentIntent.client_secret === null) {
-                        throw new ServerError('UNKNOWN ERROR', 'Noe gikk galt med forespørselen til Stripe.')
-                    }
-
-                    return await prisma.payment.update({
-                        where: {
-                            id: params.paymentId,
-                        },
-                        data: {
-                            stripePayment: {
-                                update: {
-                                    paymentIntentId: paymentIntent.id,
-                                },
-                            },
-                            state: 'PROCESSING',
-                        },
-                        include: {
-                            stripePayment: true,
-                            manualPayment: true,
-                        }
-                    })
-
-                default:
-                    throw new ServerError('SERVER ERROR', 'Prøvde å forespørre betalingsleverandør som ikke er støttet.')
+            if (payment.provider === 'MANUAL') {
+                throw new ServerError('BAD PARAMETERS', 'Manuelle betalinger trenger ikke å startes.')
             }
+
+            if (payment.provider === 'STRIPE') {
+                const paymentIntent = await stripe.paymentIntents.create({
+                    amount: payment.funds,
+                    currency: 'nok',
+                    description: payment.descriptionLong ?? undefined,
+                    statement_descriptor_suffix: payment.descriptionShort ?? undefined,
+                    // Stripe allows us to attach arbitrary metadata to payment intents
+                    // Currently, we don't use this for anything, but it might be
+                    // useful in the future.
+                    metadata: {
+                        projectNextPaymentId: params.paymentId,
+                    },
+                }, {
+                    // The idempotency key makes it so that multiple requests with the
+                    // same key return the same result. This is useful in case
+                    // initiate payment is accidentally called twice.
+                    idempotencyKey: `project-next-payment-id-${params.paymentId}`,
+                })
+
+                if (paymentIntent.client_secret === null) {
+                    throw new ServerError('UNKNOWN ERROR', 'Noe gikk galt med forespørselen til Stripe.')
+                }
+
+                return await prisma.payment.update({
+                    where: {
+                        id: params.paymentId,
+                    },
+                    data: {
+                        stripePayment: {
+                            update: {
+                                paymentIntentId: paymentIntent.id,
+                            },
+                        },
+                        state: 'PROCESSING',
+                    },
+                    include: {
+                        stripePayment: true,
+                        manualPayment: true,
+                    }
+                })
+            }
+
+            // If we reach here, the payment provider is unknown.
+            throw new ServerError('SERVER ERROR', 'Prøvde å forespørre betalingsleverandør som ikke er støttet.')
         },
-    })
+    }),
 }

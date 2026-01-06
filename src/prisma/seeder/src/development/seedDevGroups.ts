@@ -37,7 +37,7 @@ export default async function seedDevGroups(prisma: PrismaClient) {
                     order: order.order,
                     ledgerAccount: {
                         create: {
-                            name: `Kontoen til Harambes komité`,
+                            name: 'Kontoen til Harambes komité',
                             type: 'GROUP',
                         },
                     },

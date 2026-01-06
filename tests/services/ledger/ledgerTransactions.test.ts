@@ -1,9 +1,9 @@
-import { LedgerAccountMethods } from '@/services/ledger/ledgerAccount/operations'
-import { LedgerTransactionMethods } from '@/services/ledger/ledgerTransactions/operations'
-import { PaymentMethods } from '@/services/ledger/payments/operations'
-import { UserMethods } from '@/services/users/methods'
 import { allSettledOrThrow } from 'tests/utils'
 import { prisma } from '@/prisma/client'
+import { ledgerAccountOperations } from '@/services/ledger/ledgerAccount/operations'
+import { userOperations } from '@/services/users/operations'
+import { paymentOperations } from '@/services/ledger/payments/operations'
+import { ledgerTransactionOperations } from '@/services/ledger/ledgerTransactions/operations'
 import { beforeAll, beforeEach, afterEach, describe, expect, test } from '@jest/globals'
 
 const TEST_ACCOUNT_COUNT = 3
@@ -18,7 +18,7 @@ describe('ledger transactions', () => {
         await allSettledOrThrow(Array.from({ length: TEST_ACCOUNT_COUNT }).map(async (_, i) => {
             const username = `testuser${i + 1}`
 
-            const testUser = await UserMethods.create({
+            const testUser = await userOperations.create({
                 data: {
                     email: `${username}@example.com`,
                     firstname: 'Test',
@@ -28,7 +28,7 @@ describe('ledger transactions', () => {
                 bypassAuth: true,
             })
 
-            const testAccount = await LedgerAccountMethods.create({
+            const testAccount = await ledgerAccountOperations.create({
                 data: {
                     userId: testUser.id,
                 },
@@ -51,7 +51,7 @@ describe('ledger transactions', () => {
     describe('internal transactions', () => {
         beforeEach(async () => {
             await allSettledOrThrow(testAccountIds.map(async accountId => {
-                const manualPayment = await PaymentMethods.create({
+                const manualPayment = await paymentOperations.create({
                     params: {
                         funds: INITIAL_BALANCE.amount,
                         provider: 'MANUAL',
@@ -61,7 +61,7 @@ describe('ledger transactions', () => {
                     },
                 })
 
-                await LedgerTransactionMethods.create({
+                await ledgerTransactionOperations.create({
                     params: {
                         purpose: 'DEPOSIT',
                         ledgerEntries: [{
@@ -87,7 +87,7 @@ describe('ledger transactions', () => {
         ]
 
         test.each(validLedgerEntries)('valid internal transactions', async (...entries) => {
-            const transaction = await LedgerTransactionMethods.create({
+            const transaction = await ledgerTransactionOperations.create({
                 params: {
                     ledgerEntries: entries.map((funds, i) => ({ funds, ledgerAccountId: testAccountIds[i] })),
                     purpose: 'DEPOSIT',
@@ -98,7 +98,7 @@ describe('ledger transactions', () => {
                 state: 'SUCCEEDED',
             })
 
-            const balances = await LedgerAccountMethods.calculateBalances({
+            const balances = await ledgerAccountOperations.calculateBalances({
                 params: { ids: testAccountIds },
             })
 
@@ -121,7 +121,7 @@ describe('ledger transactions', () => {
         ]
 
         test.each(invalidLedgerEntries)('invalid internal transactions', async (...entries) => {
-            const transactionPromise = LedgerTransactionMethods.create({
+            const transactionPromise = ledgerTransactionOperations.create({
                 params: {
                     ledgerEntries: entries.map((funds, i) => ({ funds, ledgerAccountId: testAccountIds[i] })),
                     purpose: 'DEPOSIT',
@@ -130,7 +130,7 @@ describe('ledger transactions', () => {
 
             await expect(transactionPromise).rejects.toThrow()
 
-            const balances = await LedgerAccountMethods.calculateBalances({
+            const balances = await ledgerAccountOperations.calculateBalances({
                 params: { ids: testAccountIds },
             })
 

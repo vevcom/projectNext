@@ -1,25 +1,26 @@
 import { calculateCreditFees, calculateDebitFees } from './calculateFees'
 import { determineTransactionState } from './determineTransactionState'
-import { LedgerAccountMethods } from '@/services/ledger/ledgerAccount/operations'
+import { ledgerAccountOperations } from '@/services/ledger/ledgerAccount/operations'
 import { RequireNothing } from '@/auth/auther/RequireNothing'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { ServerError } from '@/services/error'
-import { serviceMethod } from '@/services/serviceMethod'
+import { defineOperation } from '@/services/serviceOperation'
 import { LedgerTransactionPurpose } from '@prisma/client'
 import { z } from 'zod'
+import type { ExpandedLedgerTransaction } from './types'
 import type { Prisma } from '@prisma/client'
 
-export namespace LedgerTransactionMethods {
+export const ledgerTransactionOperations = {
     /**
      * Reads a single transaction including its ledger entries, payment and manual transfer (if any).
      */
-    export const read = serviceMethod({
+    read: defineOperation({
         authorizer: () => RequireNothing.staticFields({}).dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),
-        method: async ({ prisma, params }) => {
+        operation: async ({ prisma, params }) => {
             const transaction = await prisma.ledgerTransaction.findUniqueOrThrow({
                 where: {
                     id: params.id,
@@ -37,12 +38,12 @@ export namespace LedgerTransactionMethods {
 
             return transaction
         }
-    })
+    }),
 
     /**
      * Read several ledger transactions including its ledger entries, payment and manual transfer (if any).
      */
-    export const readPage = serviceMethod({
+    readPage: defineOperation({
         authorizer: () => RequireNothing.staticFields({}).dynamicFields({}),
         paramsSchema: readPageInputSchemaObject(
             z.number(),
@@ -53,7 +54,7 @@ export namespace LedgerTransactionMethods {
                 accountId: z.number(),
             }),
         ),
-        method: async ({ prisma, params }) => prisma.ledgerTransaction.findMany({
+        operation: async ({ prisma, params }) => prisma.ledgerTransaction.findMany({
             where: {
                 ledgerEntries: {
                     some: {
@@ -76,19 +77,19 @@ export namespace LedgerTransactionMethods {
             ],
             ...cursorPageingSelection(params.paging.page)
         })
-    })
+    }),
 
     /**
      * Tries to advance the transactions state to a terminal state.
      * Also, updates the fees if possible.
      */
-    export const advance = serviceMethod({
+    advance: defineOperation({
         authorizer: () => RequireNothing.staticFields({}).dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),
-        method: async ({ prisma, params }) => {
-            let transaction = await read({
+        operation: async ({ prisma, params }) => {
+            let transaction: ExpandedLedgerTransaction = await ledgerTransactionOperations.read({
                 params: { id: params.id },
             })
 
@@ -122,7 +123,7 @@ export namespace LedgerTransactionMethods {
                 })
             }
 
-            const balances = await LedgerAccountMethods.calculateBalances({
+            const balances = await ledgerAccountOperations.calculateBalances({
                 params: {
                     ids: transaction.ledgerEntries.map(entry => entry.ledgerAccountId),
                     atTransactionId: transaction.id,
@@ -141,13 +142,13 @@ export namespace LedgerTransactionMethods {
                 data: transition,
             })
 
-            transaction = await read({
+            transaction = await ledgerTransactionOperations.read({
                 params: { id: params.id },
             })
 
             return transaction
         }
-    })
+    }),
 
     /**
      * Create a new transaction on the ledger with the given entries and optionally
@@ -157,7 +158,7 @@ export namespace LedgerTransactionMethods {
      *
      * The lifecycle of the transaction is automatically handled by the system.
      */
-    export const create = serviceMethod({
+    create: defineOperation({
         authorizer: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO,
         paramsSchema: z.object({
             purpose: z.nativeEnum(LedgerTransactionPurpose),
@@ -167,10 +168,10 @@ export namespace LedgerTransactionMethods {
             }).array(),
             paymentId: z.number().optional(),
         }),
-        method: async ({ prisma, params },) => {
+        operation: async ({ prisma, params }) => {
             // Calculate the balance for all accounts which are going to be deducted
             const debitEntries = params.ledgerEntries.filter(entry => entry.funds < 0)
-            const balances = await LedgerAccountMethods.calculateBalances({
+            const balances = await ledgerAccountOperations.calculateBalances({
                 params: { ids: debitEntries.map(entry => entry.ledgerAccountId) },
             })
 
@@ -205,7 +206,7 @@ export namespace LedgerTransactionMethods {
                 },
             })
 
-            const transaction = await advance({
+            const transaction: ExpandedLedgerTransaction = await ledgerTransactionOperations.advance({
                 params: {
                     id,
                 },
@@ -218,5 +219,5 @@ export namespace LedgerTransactionMethods {
 
             return transaction
         }
-    })
+    }),
 }

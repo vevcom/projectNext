@@ -1,22 +1,22 @@
 import { z } from 'zod'
 
-export namespace LedgerAccountSchemas {
-    const fields = z.object({
-        userId: z.number().optional(),
-        groupId: z.number().optional(),
-        payoutAccountNumber: z.string().optional(),
-    })
+const ledgerAcccountSchema = z.object({
+    userId: z.number().optional(),
+    groupId: z.number().optional(),
+    payoutAccountNumber: z.string().optional(),
+})
 
-    export const create = fields.pick({
+export const ledgerAccountSchemas = {
+    create: ledgerAcccountSchema.pick({
         userId: true,
         groupId: true,
         payoutAccountNumber: true,
     }).refine(
         data => (data.userId === undefined) !== (data.groupId === undefined),
         'Bruker- eller gruppe-ID må være satt.'
-    )
+    ),
 
-    export const update = fields.partial().pick({
+    update: ledgerAcccountSchema.partial().pick({
         payoutAccountNumber: true,
     })
 }

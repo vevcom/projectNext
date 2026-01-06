@@ -1,21 +1,21 @@
+import { ServerError } from '@/services/error'
+import { defineOperation } from '@/services/serviceOperation'
 import { stripe } from '@/lib/stripe'
-import { serviceMethod } from '@/services/serviceMethod'
-import { z } from 'zod'
-import { ServerError } from '../error'
 import { RequireUserId } from '@/auth/auther/RequireUserId'
+import { z } from 'zod'
 
-export namespace StripeCustomerMethods {
+export const stripeCustomerOperations = {
     /**
      * If a user already has a Stripe customer associated it is returned.
      * Otherwise, a new customer is created, associated in the DB, and returned.
      */
-    export const readOrCreate = serviceMethod({
+    readOrCreate: defineOperation({
         // No one should ever be able to retrieve the customer id of another user. NOT EVEN ADMINS!
         authorizer: ({ params: { userId } }) => RequireUserId.staticFields({}).dynamicFields({ userId }),
         paramsSchema: z.object({
             userId: z.number(),
         }),
-        method: async ({ params: { userId }, prisma }) => {
+        operation: async ({ params: { userId }, prisma }) => {
             // We query the user table and not the StripeCustomer table here
             // because we also need to fetch the user's email and name in
             // case the Stripe customer does not exist and we need to create it.
@@ -63,7 +63,7 @@ export namespace StripeCustomerMethods {
             }
 
             // Otherwise, we can just return the existing customer.
-            // But, we'll first verify that it is not deleted and that 
+            // But, we'll first verify that it is not deleted and that
             // the stored information are up to date.
 
             const customer = await stripe.customers.retrieve(stripeCustomer.customerId)
@@ -84,28 +84,27 @@ export namespace StripeCustomerMethods {
                         userId: userId.toString(),
                     },
                 })
-
             }
-            
+
             return {
                 customerId: stripeCustomer.customerId,
             }
         }
-    })
+    }),
 
     /**
      * Creates a Strip customer session which allows the frontend to manage the saved payment methods
      * for the user. This session is a one time use object and needs to be created each time it is needed.
-     * 
+     *
      * If the user does not have a Stripe customer associated it will be created automatically.
      */
-    export const createSession = serviceMethod({
+    createSession: defineOperation({
         authorizer: ({ params: { userId } }) => RequireUserId.staticFields({}).dynamicFields({ userId }),
         paramsSchema: z.object({
             userId: z.number(),
         }),
-        method: async ({ params: { userId } }) => {
-            const { customerId } = await readOrCreate({ params: { userId } })
+        operation: async ({ params: { userId } }) => {
+            const { customerId } = await stripeCustomerOperations.readOrCreate({ params: { userId } })
 
             // I havent seen much about this customer session API on the internet.
             // I guess it must be rather new? Here is a link to the docs in case you wonder how it works:
@@ -136,11 +135,11 @@ export namespace StripeCustomerMethods {
             })
 
             // The customer session is a one time use object, so we don't need to (nor should we) store it in the DB.
-            
+
             // Only return what is needed by the frontend.
             return {
                 customerSessionClientSecret: customerSession.client_secret,
             }
         }
-    })
+    }),
 }

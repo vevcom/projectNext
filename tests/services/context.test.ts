@@ -1,21 +1,21 @@
 import { RequireNothing } from '@/auth/auther/RequireNothing'
-import { Session } from '@/auth/Session'
-import { serviceMethod } from '@/services/serviceMethod'
 import { prisma as globalPrisma } from '@/prisma/client'
+import { defineOperation } from '@/services/serviceOperation'
+import { Session } from '@/auth/session/Session'
 import { describe, test, expect } from '@jest/globals'
-import type { ServiceMethodContext } from '@/services/serviceMethod'
+import type { ServiceOperationContext } from '@/services/serviceOperation'
 
-const returnContextInfo = serviceMethod({
+const returnContextInfo = defineOperation({
     authorizer: () => RequireNothing.staticFields({}).dynamicFields({}),
-    method: async ({ prisma, session }) => ({
+    operation: async ({ prisma, session }) => ({
         inTransaction: '$transaction' in prisma,
         apiKeyId: session.apiKeyId,
     })
 })
 
-const callReturnContextInfo = serviceMethod({
+const callReturnContextInfo = defineOperation({
     authorizer: () => RequireNothing.staticFields({}).dynamicFields({}),
-    method: async () => returnContextInfo({})
+    operation: async () => returnContextInfo({})
 })
 
 describe('context', () => {
@@ -27,7 +27,7 @@ describe('context', () => {
     })
     const emptySession = Session.empty()
 
-    const contexts: ServiceMethodContext[] = [
+    const contexts: ServiceOperationContext[] = [
         { session: emptySession, prisma: globalPrisma, bypassAuth: false },
         { session: apiKeySession, prisma: globalPrisma, bypassAuth: false },
         { session: emptySession, prisma: globalPrisma, bypassAuth: true },

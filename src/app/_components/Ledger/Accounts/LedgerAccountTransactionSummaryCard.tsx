@@ -20,6 +20,11 @@ export default function LedgerAccountTransactionSummary({ transactionsHref }: Pr
                 </tr>
             </tbody>
         </table>
-        { transactionsHref && <Link href={transactionsHref}>Se alle transaksjoner <FontAwesomeIcon icon={faArrowRight} /></Link> }
+        {
+            transactionsHref &&
+            <Link href={transactionsHref}>
+                Se alle transaksjoner <FontAwesomeIcon icon={faArrowRight} />
+            </Link>
+        }
     </Card>
 }

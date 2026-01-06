@@ -4,7 +4,7 @@ import Card from '@/components/UI/Card'
 import DepositModal from '@/components/Ledger/Modals/DepositModal'
 import PayoutModal from '@/components/Ledger/Modals/PayoutModal'
 import Button from '@/components/UI/Button'
-import { getUser } from '@/auth/getUser'
+import { getUser } from '@/auth/session/getUser'
 import { createStripeCustomerSessionAction } from '@/services/stripeCustomers/actions'
 
 type Props = {
@@ -21,7 +21,7 @@ const getCustomerSessionClientSecret = async () => {
         return undefined
     }
 
-    const customerSessionResult = await createStripeCustomerSessionAction({ userId: user.id })
+    const customerSessionResult = await createStripeCustomerSessionAction({ params: { userId: user.id } })
     if (!customerSessionResult.success) {
         return undefined
     }
@@ -43,7 +43,10 @@ export default async function LedgerAccountOverview({
     return <Card heading="Kontooversikt">
         <LedgerAccountBalance ledgerAccountId={ledgerAccountId} showFees={showFees} />
         <div className={styles.ledgerAccountOverviewButtons}>
-            { showDepositButton && <DepositModal ledgerAccountId={ledgerAccountId} customerSessionClientSecret={customerSessionClientSecret} /> }
+            {
+                showDepositButton &&
+                <DepositModal ledgerAccountId={ledgerAccountId} customerSessionClientSecret={customerSessionClientSecret} />
+            }
             { showPayoutButton && <PayoutModal ledgerAccountId={ledgerAccountId} /> }
             { showDeactivateButton && <Button color="red" className={styles.rightAligned}>Deaktiver</Button> }
         </div>

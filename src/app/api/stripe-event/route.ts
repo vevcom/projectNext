@@ -1,6 +1,6 @@
 import logger from '@/lib/logger'
 import { stripe } from '@/lib/stripe'
-import { DepositMethods } from '@/services/ledger/transactions/deposits/methods'
+import { stripeWebhookCallback } from '@/services/ledger/payments/stripeWebhookCallback'
 
 export async function POST(req: Request) {
     if (!process.env.STRIPE_WEBHOOK_SECRET) {
@@ -28,12 +28,7 @@ export async function POST(req: Request) {
     }
 
     try {
-        await DepositMethods.confirmStripe({
-            params: {
-                balanceTransactionId: event.data.object.balance_transaction,
-                paymentIntentId: event.data.object.payment_intent,
-            },
-        })
+        await stripeWebhookCallback(event)
     } catch {
         return new Response('Server-side error confirming deposit', { status: 500 })
     }

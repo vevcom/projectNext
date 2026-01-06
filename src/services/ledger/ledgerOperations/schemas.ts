@@ -1,8 +1,8 @@
 import { z } from 'zod'
 
-export namespace LedgerOperationSchemas {
-    export const createDepositSchema = z.object({
-    })
+export const ledgerOperationSchemas = {
+    createDeposit: z.object({
+    }),
 
     // export const createPayoutSchema = z.object({
     //     funds: z.coerce.number().nonnegative(),

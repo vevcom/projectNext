@@ -3,15 +3,15 @@ import Card from '@/components/UI/Card'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { readUserAction } from '@/services/users/actions'
 import BooleanIndicator from '@/components/UI/BooleanIndicator'
-import Link from 'next/link'
 import { createStripeCustomerSessionAction } from '@/services/stripeCustomers/actions'
+import Link from 'next/link'
 
 type Props = {
     userId: number,
 }
 
 const getCustomerSessionClientSecret = async (userId: number) => {
-    const customerSessionResult = await createStripeCustomerSessionAction({ userId})
+    const customerSessionResult = await createStripeCustomerSessionAction({ params: { userId } })
     if (customerSessionResult.success) {
         return customerSessionResult.data.customerSessionClientSecret
     }
@@ -19,7 +19,7 @@ const getCustomerSessionClientSecret = async (userId: number) => {
 }
 
 export default async function LedgerAccountPaymentMethods({ userId }: Props) {
-    const user = unwrapActionReturn(await readUserAction({ id: userId }))
+    const user = unwrapActionReturn(await readUserAction({ params: { id: userId } }))
     const customerSessionClientSecret = await getCustomerSessionClientSecret(userId)
 
     const hasBankCard = false // TODO: Actually check with Stripe

@@ -33,6 +33,8 @@ type Props = {
 
 export default function DepositModal({ ledgerAccountId, customerSessionClientSecret }: Props) {
     const [funds, setFunds] = useState(MINIMUM_PAYMENT_AMOUNT)
+    // TODO: Actually use manual fees
+    // eslint-disable-next-line
     const [manualFees, setManualFees] = useState(0)
     const [selectedProvider, setSelectedProvider] = useState<PaymentProvider>(defaultPaymentProvider)
 
@@ -53,9 +55,11 @@ export default function DepositModal({ ledgerAccountId, customerSessionClientSec
         // Call the stripe payment ref to confirm the payment
         const confirmError = await current.confirmPayment(clientSecret)
         if (confirmError) return confirmError
+
+        return null
     }
 
-    const handleSubmit = async (_: FormData) => {
+    const handleSubmit = async () => {
         // If the stripe payment ref is set, validate the input
         if (stripePaymentRef.current) {
             const submitError = await stripePaymentRef.current.submit()
@@ -63,7 +67,7 @@ export default function DepositModal({ ledgerAccountId, customerSessionClientSec
         }
 
         // Call the server action to create the deposit
-        const createResult = await createDepositAction({ ledgerAccountId, funds, provider: selectedProvider })
+        const createResult = await createDepositAction({ params: { ledgerAccountId, funds, provider: selectedProvider } })
         if (!createResult.success) return createResult
 
         // The returned transaction should have a payment
@@ -77,10 +81,13 @@ export default function DepositModal({ ledgerAccountId, customerSessionClientSec
             if (confirmError) return createActionError('UNKNOWN ERROR', confirmError)
         }
 
-        return { success: true } as const
+        return { success: true, data: undefined } as const
     }
 
-    return <PopUp PopUpKey={'depositModal'} customShowButton={(open) => <Button onClick={open} color="primary">Sett inn</Button>}>
+    return <PopUp
+        PopUpKey={'depositModal'}
+        customShowButton={(open) => <Button onClick={open} color="primary">Sett inn</Button>}
+    >
         <div className={styles.checkoutFormContainer}>
             <h2>Nytt innskudd</h2>
             <Form action={handleSubmit} submitText="Sett inn">
@@ -119,7 +126,7 @@ export default function DepositModal({ ledgerAccountId, customerSessionClientSec
 
                 {selectedProvider === 'MANUAL' && (
                     <div>
-                        <Checkbox name="iUseThisWithCare" required>Jeg bruker dette med ohmu.</Checkbox>
+                        <Checkbox name="iUseThisWithCare" required>Jeg bruker dette med omhu.</Checkbox>
                         <NumberInput
                             label="Påførte gebyrer"
                             name="manualFees"

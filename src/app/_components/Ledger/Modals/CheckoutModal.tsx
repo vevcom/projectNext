@@ -4,14 +4,14 @@ import Form from '@/components/Form/Form'
 import PopUp from '@/components/PopUp/PopUp'
 import Button from '@/components/UI/Button'
 import { createActionError } from '@/services/actionError'
-import React, { useState, lazy, Ref, useRef } from 'react'
+import React, { useState, lazy, useRef } from 'react'
 import type { ExpandedLedgerTransaction } from '@/services/ledger/ledgerTransactions/types'
 import type { PaymentProvider } from '@prisma/client'
-import type { StripePaymentRef } from '../../Stripe/StripePayment'
+import type { StripePaymentRef } from '@/components/Stripe/StripePayment'
 import type { ActionReturn } from '@/services/actionTypes'
 
-const StripeProvider = lazy(() => import('../../Stripe/StripeProvider'))
-const StripePayment = lazy(() => import('../../Stripe/StripePayment'))
+const StripeProvider = lazy(() => import('@/components/Stripe/StripeProvider'))
+const StripePayment = lazy(() => import('@/components/Stripe/StripePayment'))
 
 const defaultPaymentProvider: PaymentProvider = 'STRIPE'
 
@@ -38,7 +38,7 @@ export default function CheckoutModal({
     showSummary = true,
     totalFunds = 100,
     availableFunds = 50,
-    manualFees = 0,
+    // manualFees = 0,
     sourceLedgerAccountId,
     targetLedgerAccountId,
 }: Props) {
@@ -52,19 +52,21 @@ export default function CheckoutModal({
     const fundsToTransfer = useFunds ? Math.min(totalFunds, availableFunds) : 0
     const fundsToPay = Math.max(0, totalFunds - fundsToTransfer)
 
-    const handleSubmit = async (): Promise<ActionReturn<void, false>> => {
+    const handleSubmit = async (): Promise<ActionReturn<void>> => {
         if (paymentProvider === 'STRIPE') {
-            const result = await stripePaymentRef?.current?.submit()
-
-            if (!result) {
-                return createActionError('BAD DATA', 'Stripe er ikke initalisert enda.')
+            if (!stripePaymentRef?.current) {
+                return createActionError('BAD DATA', 'Stripe er ikke initialisert enda.')
             }
 
-            if (!result.success) {
-                return result
+            const error = await stripePaymentRef.current.submit()
+
+            if (error) {
+                return createActionError('BAD DATA', error)
             }
         }
 
+        // TODO: Figure out why this is a linter error
+        // eslint-disable-next-line
         const result = await callback({
             ledgerEntries: [
                 ...(fundsToTransfer > 0 ? [{
@@ -87,15 +89,14 @@ export default function CheckoutModal({
         const transaction = result.data
 
         if (transaction.payment?.state === 'PENDING') {
-            if (paymentProvider !== 'STRIPE' || !transaction.payment?.stripePayment) {
+            if (paymentProvider !== 'STRIPE' || !transaction.payment?.stripePayment?.clientSecret) {
                 return createActionError('BAD DATA', 'Ugyldig betalingsdata fra server.')
             }
 
-            stripePaymentRef.current?.confirm(transaction.payment.stripePayment.clientSecret)
+            stripePaymentRef.current?.confirmPayment(transaction.payment.stripePayment.clientSecret)
         }
 
-        const { payment } = result.data
-        return { success: true }
+        return { success: true, data: undefined }
     }
 
     return (
@@ -137,7 +138,7 @@ export default function CheckoutModal({
                     <div className={styles.paymentDetails}>
                         {fundsToPay > 0 && (
                             paymentProvider === 'STRIPE' && (
-                                <StripeProvider amount={fundsToPay}>
+                                <StripeProvider amount={fundsToPay} mode={'payment'}>
                                     <StripePayment ref={stripePaymentRef}/>
                                 </StripeProvider>
                             ) ||
@@ -149,12 +150,17 @@ export default function CheckoutModal({
                             )
                         )}
                     </div>
+
                     {/* {amountToPay > 0 ? (
-                        // paymentProvider === "STRIPE" && <p>Du vil bli omdirigert til Stripe for å fullføre betalingen.</p> ||
-                        // paymentProvider === "MANUAL" && <p>Du vil motta instruksjoner for manuell betaling via e-post etter at du har sendt inn skjemaet.</p>
-                        // ) : (
-                        //     <p>Saldoen din dekker hele beløpet; ingen betaling er nødvendig.</p>
-                        // )} */}
+                        paymentProvider === 'STRIPE' && <p>
+                            Du vil bli omdirigert til Stripe for å fullføre betalingen.
+                        </p> ||
+                        paymentProvider === 'MANUAL' && <p>
+                            Du vil motta instruksjoner for manuell betaling via e-post etter at du har sendt inn skjemaet.
+                        </p>
+                    ) : (
+                        <p>Saldoen din dekker hele beløpet; ingen betaling er nødvendig.</p>
+                    )} */}
 
                     {showSummary && <table className={styles.summary}>
                         <tbody>
@@ -176,7 +182,7 @@ export default function CheckoutModal({
     )
 }
 
-{/* <table>
+/* <table>
     <tbody>
     <tr>
         <td>Tilgjengelig Saldo</td>
@@ -191,7 +197,7 @@ export default function CheckoutModal({
         <td className="text-right" align="right">{displayAmount(amountToPay)} Kluengende Muente</td>
     </tr>
     </tbody>
-</table> */}
+</table> */
 
 
 // type PropType = {

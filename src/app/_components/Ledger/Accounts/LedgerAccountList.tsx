@@ -2,11 +2,15 @@
 
 import styles from './LedgerAccountList.module.scss'
 import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
-import LedgerAccountPagingProvider, { LedgerAccountPagingContext } from '@/contexts/paging/LedgerAccountPaging'
+import { LedgerAccountPagingProvider, LedgerAccountPagingContext } from '@/contexts/paging/LedgerAccountPaging'
 import Link from 'next/link'
 
 export default function LedgerAccountList() {
-    return <LedgerAccountPagingProvider startPage={{ page: 0, pageSize: 10 }} details={{ accountType: 'GROUP' }} serverRenderedData={[]}>
+    return <LedgerAccountPagingProvider
+        startPage={{ page: 0, pageSize: 10 }}
+        details={{ accountType: 'GROUP' }}
+        serverRenderedData={[]}
+    >
         <table className={styles.ledgerAccountListTable}>
             <thead>
                 <tr>

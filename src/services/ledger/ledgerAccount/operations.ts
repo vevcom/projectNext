@@ -1,15 +1,15 @@
-import { LedgerAccountSchemas } from './schemas'
+import { ledgerAccountSchemas } from './schemas'
 import { RequireNothing } from '@/auth/auther/RequireNothing'
 import { ServerError } from '@/services/error'
-import { serviceMethod } from '@/services/serviceMethod'
-import { stripe } from '@/lib/stripe'
 import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
+import { defineOperation } from '@/services/serviceOperation'
 import { z } from 'zod'
 import { LedgerAccountType } from '@prisma/client'
-import type { BalanceRecord } from './types'
+import type { LedgerAccount } from '@prisma/client'
+import type { Balance, BalanceRecord } from './types'
 
-export namespace LedgerAccountMethods {
+export const ledgerAccountOperations = {
     /**
      * Creates a new ledger account for given user or group.
      *
@@ -20,10 +20,10 @@ export namespace LedgerAccountMethods {
      *
      * @returns The created account.
      */
-    export const create = serviceMethod({
+    create: defineOperation({
         authorizer: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO: Add proper auther
-        dataSchema: LedgerAccountSchemas.create,
-        method: async ({ prisma, data }) => {
+        dataSchema: ledgerAccountSchemas.create,
+        operation: async ({ prisma, data }): Promise<LedgerAccount> => {
             const type = data.userId === undefined ? 'GROUP' : 'USER'
 
             if (data.userId === undefined && data.groupId === undefined) {
@@ -43,7 +43,7 @@ export namespace LedgerAccountMethods {
                 }
             })
         },
-    })
+    }),
 
     /**
      * Reads details of a ledger account for a given user or group.
@@ -57,7 +57,7 @@ export namespace LedgerAccountMethods {
      *
      * @returns The account details.
      */
-    export const read = serviceMethod({
+    read: defineOperation({
         authorizer: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO: Add proper auther
         paramsSchema: z.union([
             z.object({
@@ -69,7 +69,7 @@ export namespace LedgerAccountMethods {
                 userId: z.undefined(),
             }),
         ]),
-        method: async ({ prisma, session, params }) => {
+        operation: async ({ prisma, session, params }): Promise<LedgerAccount> => {
             const account = await prisma.ledgerAccount.findUnique({
                 where: {
                     userId: params.userId,
@@ -79,11 +79,11 @@ export namespace LedgerAccountMethods {
 
             if (account) return account
 
-            return create({ session, data: params })
+            return ledgerAccountOperations.create({ session, data: params })
         },
-    })
+    }),
 
-    export const readPage = serviceMethod({
+    readPage: defineOperation({
         authorizer: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO: Add proper auther
         paramsSchema: readPageInputSchemaObject(
             z.number(),
@@ -94,7 +94,7 @@ export namespace LedgerAccountMethods {
                 accountType: z.nativeEnum(LedgerAccountType).optional(),
             }),
         ),
-        method: async ({ params: { paging }, prisma }) =>
+        operation: async ({ params: { paging }, prisma }) =>
             // TODO: Add balance to each account
             await prisma.ledgerAccount.findMany({
                 where: {
@@ -107,10 +107,11 @@ export namespace LedgerAccountMethods {
                 ...cursorPageingSelection(paging.page),
             })
 
-    })
+    }),
 
     /**
-     * Calculates the balance and fees of a ledger account. Optionally takes a transaction ID to calculate the balance up until that transaction.
+     * Calculates the balance and fees of a ledger account.
+     * Optionally takes a transaction ID to calculate the balance up until that transaction.
      *
      * @warning Non-existent accounts will be treated as having a balance of zero.
      *
@@ -119,13 +120,13 @@ export namespace LedgerAccountMethods {
      *
      * @returns The balances of the ledger accounts.
      */
-    export const calculateBalances = serviceMethod({
+    calculateBalances: defineOperation({
         authorizer: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO: Add proper auther
         paramsSchema: z.object({
             ids: z.number().array(),
             atTransactionId: z.number().optional(),
         }),
-        method: async ({ prisma, params }): Promise<BalanceRecord> => {
+        operation: async ({ prisma, params }): Promise<BalanceRecord> => {
             const balanceArray = await prisma.ledgerEntry.groupBy({
                 by: ['ledgerAccountId'],
                 where: {
@@ -180,7 +181,7 @@ export namespace LedgerAccountMethods {
 
             return balanceRecord
         }
-    })
+    }),
 
     /**
      * Calcultates the balance of a single account. Under the hood it simply uses `calculateBalances`.
@@ -192,14 +193,14 @@ export namespace LedgerAccountMethods {
      *
      * @returns The balances of the ledger accounts.
      */
-    export const calculateBalance = serviceMethod({
+    calculateBalance: defineOperation({
         authorizer: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO: Add proper auther
         paramsSchema: z.object({
             id: z.number(),
             atTransactionId: z.number().optional(),
         }),
-        method: async ({ params }) => {
-            const balances = await calculateBalances({
+        operation: async ({ params }): Promise<Balance> => {
+            const balances = await ledgerAccountOperations.calculateBalances({
                 params: {
                     ids: [params.id],
                     atTransactionId: params.atTransactionId,
@@ -208,5 +209,5 @@ export namespace LedgerAccountMethods {
 
             return balances[params.id]
         }
-    })
+    }),
 }

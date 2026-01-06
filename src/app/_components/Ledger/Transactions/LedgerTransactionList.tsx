@@ -2,7 +2,7 @@
 
 import LedgerTransactionRow from './LedgerTransactionRow'
 import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
-import LedgerTransactionPagingProvider, { LedgerTransactionPagingContext } from '@/contexts/paging/LedgerTransactionPaging'
+import { LedgerTransactionPagingProvider, LedgerTransactionPagingContext } from '@/contexts/paging/LedgerTransactionPaging'
 
 type Props = {
     accountId: number,
@@ -10,7 +10,10 @@ type Props = {
 }
 
 export default function TransactionList({ accountId, showFees }: Props) {
-    return <LedgerTransactionPagingProvider startPage={{ page: 0, pageSize: 10 }} details={{ accountId }} serverRenderedData={[]}>
+    return <LedgerTransactionPagingProvider
+        startPage={{ page: 0, pageSize: 10 }}
+        details={{ accountId }} serverRenderedData={[]}
+    >
         <EndlessScroll
             pagingContext={LedgerTransactionPagingContext}
             renderer={

@@ -2,9 +2,9 @@ import { PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js'
 import React, { useImperativeHandle } from 'react'
 
 export type StripePaymentRef = {
-    submit: () => Promise<string | undefined>;
-    confirmPayment: (clientSecret: string) => Promise<string | undefined>;
-    confirmSetup: (clientSecret: string) => Promise<string | undefined>;
+    submit: () => Promise<string | null>;
+    confirmPayment: (clientSecret: string) => Promise<string | null>;
+    confirmSetup: (clientSecret: string) => Promise<string | null>;
 }
 
 type Props = {
@@ -22,6 +22,8 @@ export default function StripePayment({ ref }: Props) {
             const { error } = await elements.submit()
 
             if (error) return error.message || 'En feil oppsto når betalingen skulle sendes inn.'
+
+            return null
         },
         confirmPayment: async (clientSecret: string) => {
             if (!stripe || !elements) return 'Stripe ikke initialisert enda.'
@@ -35,6 +37,8 @@ export default function StripePayment({ ref }: Props) {
             })
 
             if (error) return error.message || 'En feil oppsto når betalingen skulle bekreftes.'
+
+            return null
         },
         confirmSetup: async (clientSecret: string) => {
             if (!stripe || !elements) return 'Stripe ikke initialisert enda.'
@@ -48,6 +52,8 @@ export default function StripePayment({ ref }: Props) {
             })
 
             if (error) return error.message || 'En feil oppsto ved lagring av informasjon.'
+
+            return null
         }
     }))
 
