@@ -9,7 +9,7 @@ type Props = {
 }
 
 export default async function LedgerAccountBalance({ ledgerAccountId: accountId, showFees }: Props) {
-    const balance = unwrapActionReturn(await calculateLedgerAccountBalanceAction({ id: accountId }))
+    const balance = unwrapActionReturn(await calculateLedgerAccountBalanceAction({ params: { id: accountId } }))
 
     return <div className={styles.LedgerAccountBalance}>
         <div className={styles.amountRow}>
