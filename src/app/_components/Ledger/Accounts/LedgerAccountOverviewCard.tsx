@@ -1,14 +1,18 @@
-import styles from './LedgerAccountOverview.module.scss'
+import styles from './LedgerAccountOverviewCard.module.scss'
 import LedgerAccountBalance from './LedgerAccountBalance'
 import Card from '@/components/UI/Card'
 import DepositModal from '@/components/Ledger/Modals/DepositModal'
 import PayoutModal from '@/components/Ledger/Modals/PayoutModal'
-import Button from '@/components/UI/Button'
 import { getUser } from '@/auth/session/getUser'
 import { createStripeCustomerSessionAction } from '@/services/stripeCustomers/actions'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faWarning } from '@fortawesome/free-solid-svg-icons'
+import { LedgerAccount } from '@prisma/client'
+import { updateLedgerAccountAction } from '@/services/ledger/ledgerAccount/actions'
+import LedgerAccountFreezeButton from './LedgerAccountFreezeButton'
 
 type Props = {
-    ledgerAccountId: number,
+    ledgerAccount: LedgerAccount,
     showFees?: boolean,
     showDepositButton?: boolean,
     showPayoutButton?: boolean,
@@ -31,7 +35,7 @@ const getCustomerSessionClientSecret = async () => {
 
 export default async function LedgerAccountOverview({
     showFees,
-    ledgerAccountId,
+    ledgerAccount,
     showPayoutButton,
     showDepositButton,
     showDeactivateButton,
@@ -41,14 +45,19 @@ export default async function LedgerAccountOverview({
         : undefined
 
     return <Card heading="Kontooversikt">
-        <LedgerAccountBalance ledgerAccountId={ledgerAccountId} showFees={showFees} />
+        <LedgerAccountBalance ledgerAccountId={ledgerAccount.id} showFees={showFees} />
+        <div className={styles.frozenStatus}>
+            {
+                <p className={ledgerAccount.frozen ? "" : styles.frozenWarningHidden}><FontAwesomeIcon icon={faWarning}/> Kontoen er fryst; Ingen transaksjoner kan utføres.</p>
+            }
+        </div>
         <div className={styles.ledgerAccountOverviewButtons}>
             {
                 showDepositButton &&
-                <DepositModal ledgerAccountId={ledgerAccountId} customerSessionClientSecret={customerSessionClientSecret} />
+                <DepositModal ledgerAccountId={ledgerAccount.id} customerSessionClientSecret={customerSessionClientSecret} />
             }
-            { showPayoutButton && <PayoutModal ledgerAccountId={ledgerAccountId} /> }
-            { showDeactivateButton && <Button color="red" className={styles.rightAligned}>Deaktiver</Button> }
+            { showPayoutButton && <PayoutModal ledgerAccountId={ledgerAccount.id} /> }
+            { showDeactivateButton && <LedgerAccountFreezeButton ledgerAccount={ledgerAccount} className={styles.rightAligned} /> }
         </div>
     </Card>
 }

@@ -1,6 +1,6 @@
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { getUser } from '@/auth/session/getUser'
-import { calculateLedgerAccountBalanceAction } from '@/services/ledger/ledgerAccount/actions'
+import { calculateLedgerAccountBalanceAction, readLedgerAccountAction } from '@/services/ledger/ledgerAccount/actions'
 import LedgerAccountOverview from '@/components/Ledger/Accounts/LedgerAccountOverviewCard'
 import LedgerAccountPaymentMethods from '@/components/Ledger/Accounts/LedgerAccountPaymentMethodsCard'
 import LedgerAccountTransactionSummary from '@/components/Ledger/Accounts/LedgerAccountTransactionSummaryCard'
@@ -11,15 +11,11 @@ export default async function Account() {
         shouldRedirect: true,
     }) // TODO: Replace with whatever we agree should be the standard for getting user
 
-    const account = { id: 1 } //unwrapActionReturn(await readLedgerAccount({ userId: session.user.id }))
-
-    // TODO: use balance
-    // eslint-disable-next-line
-    const balance = unwrapActionReturn(await calculateLedgerAccountBalanceAction({ params: { id: account.id } }))
+    const ledgerAccount = unwrapActionReturn(await readLedgerAccountAction({ params: { userId: session.user.id } }))
 
     return <div>
-        <LedgerAccountOverview ledgerAccountId={account.id} showPayoutButton showDepositButton showDeactivateButton />
+        <LedgerAccountOverview ledgerAccount={ledgerAccount} showPayoutButton showDepositButton showDeactivateButton />
         <LedgerAccountPaymentMethods userId={session.user.id} />
-        <LedgerAccountTransactionSummary ledgerAccountId={account.id} transactionsHref="account/transactions" />
+        <LedgerAccountTransactionSummary ledgerAccountId={ledgerAccount.id} transactionsHref="account/transactions" />
     </div>
 }

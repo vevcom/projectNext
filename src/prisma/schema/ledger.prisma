@@ -38,6 +38,7 @@ model LedgerAccount {
   group               Group?            @relation(fields: [groupId], references: [id], onDelete: SetNull, onUpdate: Cascade)
   groupId             Int?              @unique
   type                LedgerAccountType
+  frozen              Boolean           @default(false) // If true, no transactions may be made on this account.
   name                String? // Optional display name for the account, only used for group accounts
   payoutAccountNumber String? // For display only, only used for group accounts
 

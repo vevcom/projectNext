@@ -95,6 +95,9 @@ export const ledgerTransactionOperations = {
 
             const creditFees = calculateCreditFees(transaction.ledgerEntries, transaction.payment)
 
+            // Update credit fees if they could be calculated.
+            // Credit fees are null while the payment is pending, since 
+            // the final fees are unknown until the payment is completed.
             if (creditFees) {
                 const creditEntries = transaction.ledgerEntries.filter(entry => entry.funds > 0)
 
@@ -107,9 +110,11 @@ export const ledgerTransactionOperations = {
                     },
                 })) satisfies Prisma.LedgerEntryUpdateWithWhereUniqueWithoutLedgerTransactionInput[] // X_x
 
+                // TODO: Figure out a way to not throw here.
                 await prisma.ledgerTransaction.update({
                     where: {
                         id: params.id,
+                        state: 'PENDING', // Protect against modifying a completed transaction.
                     },
                     data: {
                         ledgerEntries: {
@@ -117,7 +122,7 @@ export const ledgerTransactionOperations = {
                         },
                     },
                 })
-
+                
                 transaction.ledgerEntries.forEach(entry => {
                     entry.fees = creditFees[entry.ledgerAccountId] ?? entry.fees
                 })
@@ -130,7 +135,18 @@ export const ledgerTransactionOperations = {
                 },
             })
 
-            const transition = await determineTransactionState(transaction, balances)
+            // Find frozen accounts, if any, among the involved ledger accounts.
+            const frozenAccounts = await prisma.ledgerAccount.findMany({
+                where: {
+                    id: {
+                        in: transaction.ledgerEntries.map(entry => entry.ledgerAccountId),
+                    },
+                    frozen: true,
+                }
+            })
+            const frozenAccountIds = new Set(frozenAccounts.map(account => account.id))
+
+            const transition = await determineTransactionState({ transaction, balances, frozenAccountIds })
 
             // We use `updateMany` in stead of just `update` here because
             // we don't want to throw in case the record is not found.
@@ -169,7 +185,7 @@ export const ledgerTransactionOperations = {
             paymentId: z.number().optional(),
         }),
         operation: async ({ prisma, params }) => {
-            // Calculate the balance for all accounts which are going to be deducted
+            // Calculate the balance for all accounts which are going to be deducted.
             const debitEntries = params.ledgerEntries.filter(entry => entry.funds < 0)
             const balances = await ledgerAccountOperations.calculateBalances({
                 params: { ids: debitEntries.map(entry => entry.ledgerAccountId) },

@@ -1,5 +1,13 @@
 @use "@/styles/ohma";
 
+.frozenStatus {
+    color: red;
+
+    .frozenWarningHidden {
+        visibility: hidden;
+    }
+}
+
 .ledgerAccountOverviewButtons {
     margin-top: 3*ohma.$gap;
     display: flex;

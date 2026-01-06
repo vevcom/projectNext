@@ -39,6 +39,7 @@ export const ledgerAccountOperations = {
                     userId: data.userId,
                     groupId: data.groupId,
                     payoutAccountNumber: data.payoutAccountNumber,
+                    frozen: data.frozen,
                     type,
                 }
             })
@@ -107,6 +108,30 @@ export const ledgerAccountOperations = {
                 ...cursorPageingSelection(paging.page),
             })
 
+    }),
+
+    /**
+     * Updates a ledger account with the given data.
+     * 
+     * @param params.id The ID of the account to update.
+     * @param data The data to update the account with.
+     * 
+     * @returns The updated account.
+     */
+    update: defineOperation({
+        authorizer: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO: Add proper auther
+        paramsSchema: z.object({
+            id: z.number(),
+        }),
+        dataSchema: ledgerAccountSchemas.update,
+        operation: async ({ prisma, params, data }) => {
+            return prisma.ledgerAccount.update({
+                where: {
+                    id: params.id,
+                },
+                data,
+            })
+        }
     }),
 
     /**

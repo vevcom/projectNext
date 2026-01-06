@@ -4,6 +4,7 @@ const ledgerAcccountSchema = z.object({
     userId: z.number().optional(),
     groupId: z.number().optional(),
     payoutAccountNumber: z.string().optional(),
+    frozen: z.boolean().optional(),
 })
 
 export const ledgerAccountSchemas = {
@@ -11,6 +12,7 @@ export const ledgerAccountSchemas = {
         userId: true,
         groupId: true,
         payoutAccountNumber: true,
+        frozen: true,
     }).refine(
         data => (data.userId === undefined) !== (data.groupId === undefined),
         'Bruker- eller gruppe-ID må være satt.'
@@ -18,5 +20,6 @@ export const ledgerAccountSchemas = {
 
     update: ledgerAcccountSchema.partial().pick({
         payoutAccountNumber: true,
+        frozen: true,
     })
 }
