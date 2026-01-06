@@ -1,6 +1,6 @@
 import styles from './layout.module.scss'
 import SideBar from './SideBar'
-import { readArticleCategoryAction } from '@/cms/articleCategories/actions'
+import { readArticleCategoryAction } from '@/services/articleCategories/actions'
 import { notFound } from 'next/navigation'
 import type { ReactNode } from 'react'
 
@@ -13,7 +13,7 @@ type PropTypes = {
 
 export default async function ArticleCategoryLayout({ params, children }: PropTypes) {
     const categoryName = decodeURIComponent((await params).category)
-    const res = await readArticleCategoryAction(categoryName)
+    const res = await readArticleCategoryAction({ params: { name: categoryName } })
     if (!res.success) return notFound()
     const category = res.data
 

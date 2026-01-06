@@ -12,6 +12,7 @@ import { createEventAction, updateEventAction } from '@/services/events/actions'
 import { eventCanBeViewdByOptions } from '@/services/events/constants'
 import { FIELD_IS_PRESENT_VALUE } from '@/lib/fields/constants'
 import { configureAction } from '@/services/configureAction'
+import { formatVevenUri } from '@/lib/urlEncoding'
 import { useState } from 'react'
 import type { Event, EventTag as EventTagT } from '@prisma/client'
 import type { ChangeEvent } from 'react'
@@ -45,7 +46,7 @@ export default function CreateOrUpdateEventForm({ event, eventTags }: PropTypes)
                 submitText={event ? 'Oppdater' : 'Opprett'}
                 refreshOnSuccess
                 navigateOnSuccess={
-                    data => (data?.name ? `/events/${data.order}/${encodeURIComponent(data.name)}` : '/events')
+                    data => (data?.name ? `/events/${formatVevenUri(data.name, data.id)}` : '/events')
                 }
             >
                 <TextInput label="Navn" name="name" defaultValue={event?.name} />

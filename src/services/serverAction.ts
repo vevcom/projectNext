@@ -1,53 +1,46 @@
 import '@pn-server-only'
 import { safeServerCall } from './actionError'
 import { Session } from '@/auth/session/Session'
-import type { ActionReturn } from './actionTypes'
+import type { Action, ActionReturn } from './actionTypes'
 import type { ServiceOperation } from '@/services/serviceOperation'
 import type { z } from 'zod'
 
 // This function is overloaded to allow for different combinations of parameters and data.
 
-export function makeAction<Return>(
+export function makeAction<
+    Return,
+>(
     serviceOperation: ServiceOperation<boolean, Return, undefined, undefined, undefined>
-): () => Promise<ActionReturn<Return>>
+): Action<Return, undefined, undefined, undefined>
 
 export function makeAction<
     Return,
-    ImplementationParamsSchema extends z.ZodTypeAny
+    ImplementationParamsSchema extends z.ZodTypeAny,
 >(
     serviceOperation: ServiceOperation<boolean, Return, undefined, undefined, ImplementationParamsSchema>
-): (
-    implementationParams: { implementationParams: z.input<ImplementationParamsSchema> },
-) => Promise<ActionReturn<Return>>
+): Action<Return, ImplementationParamsSchema, undefined, undefined>
 
 export function makeAction<
     Return,
-    ParamsSchema extends z.ZodTypeAny
+    ParamsSchema extends z.ZodTypeAny,
 >(
     serviceOperation: ServiceOperation<boolean, Return, ParamsSchema, undefined, undefined>
-): (
-    params: { params: z.input<ParamsSchema> },
-) => Promise<ActionReturn<Return>>
+): Action<Return, undefined, ParamsSchema, undefined>
 
 export function makeAction<
     Return,
     DataSchema extends z.ZodTypeAny
 >(
     serviceOperation: ServiceOperation<boolean, Return, undefined, DataSchema, undefined>
-): (
-    data: { data: z.input<DataSchema> } | FormData
-) => Promise<ActionReturn<Return>>
+): Action<Return, undefined, undefined, DataSchema>
 
 export function makeAction<
     Return,
+    ImplementationParamsSchema extends z.ZodTypeAny,
     ParamsSchema extends z.ZodTypeAny,
-    ImplementationParamsSchema extends z.ZodTypeAny
 >(
     serviceOperation: ServiceOperation<boolean, Return, ParamsSchema, undefined, ImplementationParamsSchema>
-): (
-    implementationParams: { implementationParams: z.input<ImplementationParamsSchema> },
-    params: { params: z.input<ParamsSchema> },
-) => Promise<ActionReturn<Return>>
+): Action<Return, ImplementationParamsSchema, ParamsSchema, undefined>
 
 export function makeAction<
     Return,
@@ -55,10 +48,7 @@ export function makeAction<
     DataSchema extends z.ZodTypeAny
 >(
     serviceOperation: ServiceOperation<boolean, Return, ParamsSchema, DataSchema, undefined>
-): (
-    params: { params: z.input<ParamsSchema> },
-    data: { data: z.input<DataSchema> } | FormData
-) => Promise<ActionReturn<Return>>
+): Action<Return, undefined, ParamsSchema, DataSchema>
 
 export function makeAction<
     Return,
@@ -66,11 +56,7 @@ export function makeAction<
     DataSchema extends z.ZodTypeAny
 >(
     serviceOperation: ServiceOperation<boolean, Return, undefined, DataSchema, ImplementationParamsSchema>
-): (
-    implementationParams: { implementationParams: z.input<ImplementationParamsSchema> },
-    params: { params: unknown },
-    data: { data: z.input<DataSchema> } | FormData
-) => Promise<ActionReturn<Return>>
+): Action<Return, ImplementationParamsSchema, undefined, DataSchema>
 
 export function makeAction<
     Return,
@@ -79,11 +65,7 @@ export function makeAction<
     DataSchema extends z.ZodTypeAny
 >(
     serviceOperation: ServiceOperation<boolean, Return, ParamsSchema, DataSchema, ImplementationParamsSchema>
-): (
-    implementationParams: { implementationParams: z.input<ImplementationParamsSchema> },
-    params: { params: z.input<ParamsSchema> },
-    data: { data: z.input<DataSchema> } | FormData
-) => Promise<ActionReturn<Return>>
+): Action<Return, ImplementationParamsSchema, ParamsSchema, DataSchema>
 
 
 /**
@@ -94,12 +76,12 @@ export function makeAction<
  */
 export function makeAction<
     Return,
+    ImplementationParamsSchema extends z.ZodTypeAny | undefined = undefined,
     ParamsSchema extends z.ZodTypeAny | undefined = undefined,
-    DataSchema extends z.ZodTypeAny | undefined = undefined,
-    ImplementationParamsSchema extends z.ZodTypeAny | undefined = undefined
+    DataSchema extends z.ZodTypeAny | undefined = undefined
 >(
     serviceOperation: ServiceOperation<boolean, Return, ParamsSchema, DataSchema, ImplementationParamsSchema>
-) {
+): Action<Return, ImplementationParamsSchema, ParamsSchema, DataSchema> {
     // Letting the arguments to the actual function be unknown is safer as anything can be passed to it form the client.
     // The action and service operation will validate the parameter and data before it is used.
     //
@@ -110,7 +92,7 @@ export function makeAction<
         implementationParams: { implementationParams: unknown },
         params: { params: unknown },
         data: { data: unknown } | FormData,
-    ) => {
+    ): Promise<ActionReturn<Return>> => {
         const session = await Session.fromNextAuth()
 
         let processedData: unknown
@@ -137,12 +119,18 @@ export function makeAction<
     }
 
     if (serviceOperation.implementationParamsSchema) {
-        return actionUnsafe
+        return actionUnsafe as Action<Return, ImplementationParamsSchema, ParamsSchema, DataSchema>
     }
 
     if (serviceOperation.paramsSchema) {
-        return actionUnsafe.bind(null, { implementationParams: undefined })
+        return (
+            actionUnsafe.bind(null, { implementationParams: undefined }) as
+            Action<Return, ImplementationParamsSchema, ParamsSchema, DataSchema>
+        )
     }
 
-    return actionUnsafe.bind(null, { implementationParams: undefined }, { params: undefined })
+    return (
+        actionUnsafe.bind(null, { implementationParams: undefined }, { params: undefined }) as
+        Action<Return, ImplementationParamsSchema, ParamsSchema, DataSchema>
+    )
 }

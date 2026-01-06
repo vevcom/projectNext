@@ -2,6 +2,7 @@ import '@pn-server-only'
 import { ParseError, Smorekopp } from './error'
 import { prismaErrorWrapper } from './prismaCall'
 import { prisma as globalPrisma } from '@/prisma/client'
+import { RequireNothing } from '@/auth/auther/RequireNothing'
 import { Session } from '@/auth/session/Session'
 import { zfd } from 'zod-form-data'
 import { AsyncLocalStorage } from 'async_hooks'
@@ -70,16 +71,27 @@ export type SubServiceOperationConfig<
     DataSchema extends z.ZodTypeAny | undefined,
     ParamsSchemaImplementationFields extends object | undefined,
     DataSchemaImplementationFields extends object | undefined,
-    OperationImplementationParams extends object | undefined,
+    OperationImplementationFields extends object | undefined,
     Return,
     OpensTransaction extends boolean = false,
 > = {
     paramsSchema?: ((implementationFields: ParamsSchemaImplementationFields) => ParamsSchema) | undefined,
     dataSchema?: ((implementationFields: DataSchemaImplementationFields) => DataSchema) | undefined,
     opensTransaction?: OpensTransaction,
-    operation: (implementationParams: OperationImplementationParams) =>
+    operation: (implementationFields: OperationImplementationFields) =>
         ServiceOperationOperation<OpensTransaction, ParamsSchema, DataSchema, Return>
 }
+
+export type ArgsAuthGetterAndOwnershipCheck<
+    OpensTransaction extends boolean,
+    ParamsSchema extends z.ZodTypeAny | undefined,
+    DataSchema extends z.ZodTypeAny | undefined,
+    ImplementationParamsSchema extends z.ZodTypeAny | undefined
+> =
+    & ParamsObject<ParamsSchema, 'INFERED'>
+    & ImplementationParamsObject<ImplementationParamsSchema, 'INFERED'>
+    & DataObject<DataSchema, 'INFERED'>
+    & Pick<ServiceOperationContext<OpensTransaction>, 'prisma'>
 
 export type AutherGetter<
     OpensTransaction extends boolean,
@@ -87,12 +99,41 @@ export type AutherGetter<
     DataSchema extends z.ZodTypeAny | undefined,
     ImplementationParamsSchema extends z.ZodTypeAny | undefined
 > = (
-    args:
-        & ParamsObject<ParamsSchema, 'INFERED'>
-        & ImplementationParamsObject<ImplementationParamsSchema, 'INFERED'>
-        & DataObject<DataSchema, 'INFERED'>
-        & ServiceOperationContext<OpensTransaction>
+    args: ArgsAuthGetterAndOwnershipCheck<OpensTransaction, ParamsSchema, DataSchema, ImplementationParamsSchema>
 ) => AutherResult | Promise<AutherResult>
+
+export type OwnershipCheck<
+    OpensTransaction extends boolean,
+    ParamsSchema extends z.ZodTypeAny | undefined,
+    DataSchema extends z.ZodTypeAny | undefined,
+    ImplementationParamsSchema extends z.ZodTypeAny | undefined
+> = (
+    args: ArgsAuthGetterAndOwnershipCheck<OpensTransaction, ParamsSchema, DataSchema, ImplementationParamsSchema>
+) => boolean | Promise<boolean>
+
+export type ServiceOperationImplementationConfigInternalCall<
+    ImplementationParamsSchema extends z.ZodTypeAny | undefined,
+    ParamsSchemaImplementationFields extends object | undefined,
+    DataSchemaImplementationFields extends object | undefined,
+    OperationImplementationFields extends object | undefined,
+    > = {
+    implementationParamsSchema?: ImplementationParamsSchema,
+    paramsSchemaImplementationFields?: ParamsSchemaImplementationFields
+    dataSchemaImplementationFields?: DataSchemaImplementationFields
+    operationImplementationFields?: OperationImplementationFields
+} & (ParamsSchemaImplementationFields extends undefined ?
+    object
+ : {
+    paramsSchemaImplementationFields: ParamsSchemaImplementationFields
+}) & (DataSchemaImplementationFields extends undefined ?
+    object
+ : {
+    dataSchemaImplementationFields: DataSchemaImplementationFields
+}) & (OperationImplementationFields extends undefined ?
+    object
+ : {
+    operationImplementationFields: OperationImplementationFields
+})
 
 export type ServiceOperationImplementationConfig<
     OpensTransaction extends boolean,
@@ -102,14 +143,15 @@ export type ServiceOperationImplementationConfig<
     ParamsSchemaImplementationFields extends object | undefined,
     DataSchemaImplementationFields extends object | undefined,
     OperationImplementationFields extends object | undefined,
-> = {
-    implementationParamsSchema: ImplementationParamsSchema,
+    > = ServiceOperationImplementationConfigInternalCall<
+    ImplementationParamsSchema,
+    ParamsSchemaImplementationFields,
+    DataSchemaImplementationFields,
+    OperationImplementationFields
+    > & {
     authorizer: AutherGetter<OpensTransaction, ParamsSchema, DataSchema, ImplementationParamsSchema>,
-    paramsSchemaImplementationFields: ParamsSchemaImplementationFields
-    dataSchemaImplementationFields: DataSchemaImplementationFields
-    operationImplementationFields: OperationImplementationFields
+    ownershipCheck: OwnershipCheck<OpensTransaction, ParamsSchema, DataSchema, ImplementationParamsSchema>,
 }
-
 
 /**
  * This is the type for the prisma client that is passed to the service operation.
@@ -125,7 +167,7 @@ export type PrismaPossibleTransaction<
 /**
  * In addition to custom data arguments, every service operation receives a context object.
  */
-type ServiceOperationContext<OpensTransaction extends boolean = boolean> = {
+export type ServiceOperationContext<OpensTransaction extends boolean = boolean> = {
     prisma: PrismaPossibleTransaction<OpensTransaction>,
     session: SessionMaybeUser,
     bypassAuth: boolean,
@@ -200,19 +242,19 @@ export function defineSubOperation<
     DataSchema extends z.ZodTypeAny | undefined = undefined,
     ParamsSchemaImplementationFields extends object | undefined = undefined,
     DataSchemaImplementationFields extends object | undefined = undefined,
-    OperationImplementationParams extends object | undefined = undefined,
+    OperationImplementationFields extends object | undefined = undefined,
 >(
     serviceOperationConfig: SubServiceOperationConfig<
         ParamsSchema,
         DataSchema,
         ParamsSchemaImplementationFields,
         DataSchemaImplementationFields,
-        OperationImplementationParams,
+        OperationImplementationFields,
         Return,
         OpensTransaction
     >
 ) {
-    const implement = <ImplementationParamsSchema extends z.ZodTypeAny | undefined>(
+    const implement = <ImplementationParamsSchema extends z.ZodTypeAny | undefined = undefined>(
         implementationArgs: ServiceOperationImplementationConfig<
             OpensTransaction,
             ImplementationParamsSchema,
@@ -220,7 +262,7 @@ export function defineSubOperation<
             DataSchema,
             ParamsSchemaImplementationFields,
             DataSchemaImplementationFields,
-            OperationImplementationParams
+            OperationImplementationFields
         >
     ): ServiceOperation<OpensTransaction, Return, ParamsSchema, DataSchema, ImplementationParamsSchema> => {
         const expectedArgsArePresent = (
@@ -229,7 +271,7 @@ export function defineSubOperation<
             const paramsMatch = Boolean(args.params) === Boolean(serviceOperationConfig.paramsSchema)
             const dataMatches = Boolean(args.data) === Boolean(serviceOperationConfig.dataSchema)
             const implementationParamsMatch =
-                Boolean(args.implementationParams) === Boolean(implementationArgs.operationImplementationFields)
+            Boolean(args.implementationParams) === Boolean(implementationArgs.implementationParamsSchema)
             return paramsMatch && dataMatches && implementationParamsMatch
         }
 
@@ -242,7 +284,7 @@ export function defineSubOperation<
         const executeOperation = async ({
             implementationParams, params, data, ...context
         }:
-            &ServiceOperationExecuteArgs<'UNSAFE', ParamsSchema, DataSchema, ImplementationParamsSchema>
+            & ServiceOperationExecuteArgs<'UNSAFE', ParamsSchema, DataSchema, ImplementationParamsSchema>
             & Partial<ServiceOperationContext<OpensTransaction>>
         ): Promise<Return> => {
             const args = {
@@ -281,7 +323,7 @@ export function defineSubOperation<
                     )
                 }
                 const dataSchema = serviceOperationConfig.dataSchema(
-                    implementationArgs.dataSchemaImplementationFields
+                    implementationArgs.dataSchemaImplementationFields!
                 )
                 if (!dataSchema) {
                     throw new Smorekopp(
@@ -343,7 +385,9 @@ export function defineSubOperation<
                         )
                     }
 
-                    const authorizer = await implementationArgs.authorizer({ ...args, prisma, bypassAuth, session })
+                    const authorizer = await prismaErrorWrapper(
+                        () => implementationArgs.authorizer({ ...args, prisma })
+                    )
                     const authResult = authorizer.auth(session)
 
                     if (!authResult.authorized) {
@@ -351,26 +395,59 @@ export function defineSubOperation<
                     }
                 }
 
-                // Finally, call the operation.
-                return prismaErrorWrapper(() => {
-                    const operation = serviceOperationConfig.operation(args.implementationParams)
+                const ownershipCheckResult = await prismaErrorWrapper(
+                    () => implementationArgs.ownershipCheck({
+                        ...args,
+                        prisma,
+                    })
+                )
+                if (!ownershipCheckResult) {
+                    throw new Smorekopp('DISSALLOWED', `
+                        This resource cannot be accessed through this implementation
+                        as the resource implementing this resource does not own it.
+                    `)
+                }
 
-                    return operation({ ...args, prisma, bypassAuth, session })
-                })
+                // Finally, call the operation.
+                return prismaErrorWrapper(() =>
+                    serviceOperationConfig.operation(
+                        implementationArgs.operationImplementationFields!
+                    )({ ...args, prisma, bypassAuth, session })
+                )
             })
         }
 
         executeOperation.paramsSchema = serviceOperationConfig.paramsSchema
-            ? serviceOperationConfig.paramsSchema(implementationArgs.paramsSchemaImplementationFields)
+            ? serviceOperationConfig.paramsSchema(implementationArgs.paramsSchemaImplementationFields!)
             : undefined
         executeOperation.dataSchema = serviceOperationConfig.dataSchema
-            ? serviceOperationConfig.dataSchema(implementationArgs.dataSchemaImplementationFields)
+            ? serviceOperationConfig.dataSchema(implementationArgs.dataSchemaImplementationFields!)
             : undefined
         executeOperation.implementationParamsSchema = implementationArgs.implementationParamsSchema
 
         return executeOperation
     }
-    return { implement }
+    return {
+        implement,
+        /**
+         * Implements the sub-operation right away with require-nothing authorizer and "no" ownership check.
+         */
+        internalCall: (
+            args:
+            & ServiceOperationImplementationConfigInternalCall<
+                undefined,
+                ParamsSchemaImplementationFields,
+                DataSchemaImplementationFields,
+                OperationImplementationFields
+            >
+            & ServiceOperationExecuteArgs<'SAFE', ParamsSchema, DataSchema, undefined>
+            & Partial<ServiceOperationContext<OpensTransaction>>
+        ) => implement({
+            ...args,
+            authorizer: () => RequireNothing.staticFields({}).dynamicFields({}),
+            ownershipCheck: () => true,
+        })(args)
+    }
 }
 
 export function defineOperation<
@@ -400,9 +477,29 @@ export function defineOperation<
         dataSchema: dataSchema !== undefined ? () => dataSchema : undefined,
     }).implement({
         authorizer,
+        ownershipCheck: () => true,
         implementationParamsSchema: undefined,
         dataSchemaImplementationFields: undefined,
         paramsSchemaImplementationFields: undefined,
         operationImplementationFields: undefined,
     })
 }
+
+export type SubServiceOperation<
+    Return,
+    OpensTransaction extends boolean = false,
+    ParamsSchema extends z.ZodTypeAny | undefined = undefined,
+    DataSchema extends z.ZodTypeAny | undefined = undefined,
+    ParamsSchemaImplementationFields extends object | undefined = undefined,
+    DataSchemaImplementationFields extends object | undefined = undefined,
+    OperationImplementationFields extends object | undefined = undefined,
+> = ReturnType<typeof defineSubOperation<
+    Return,
+    OpensTransaction,
+    ParamsSchema,
+    DataSchema,
+    ParamsSchemaImplementationFields,
+    DataSchemaImplementationFields,
+    OperationImplementationFields
+>>
+

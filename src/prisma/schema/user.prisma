@@ -66,7 +66,7 @@ model User {
 
   // The queue used to determine who is registering cards at Kiogeskabet.
   registerStudentCardQueue RegisterStudentCardQueue[]
-
+  
   // Which cabin bookings the user has made.
   cabinBooking Booking[] @relation()
 

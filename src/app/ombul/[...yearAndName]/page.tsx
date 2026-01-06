@@ -1,12 +1,13 @@
 import styles from './page.module.scss'
 import ChangeName from './ChangeName'
 import OmbulAdmin from './OmbulAdmin'
-import { readOmbulAction, updateOmbulAction } from '@/services/ombul/actions'
+import { readOmbulAction, updateOmbulAction, updateOmbulCmsCoverImageAction } from '@/services/ombul/actions'
 import PdfDocument from '@/components/PdfDocument/PdfDocument'
 import SlideInOnView from '@/components/SlideInOnView/SlideInOnView'
 import EditableTextField from '@/components/EditableTextField/EditableTextField'
 import { getUser } from '@/auth/session/getUser'
 import CmsImage from '@/components/Cms/CmsImage/CmsImage'
+import { configureAction } from '@/services/configureAction'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
@@ -26,15 +27,17 @@ export default async function Ombul({ params }: PropTypes) {
     const name = decodeURIComponent((await params).yearAndName[1])
     if (!year || !name || (await params).yearAndName.length > 2) notFound()
     const ombulRes = await readOmbulAction({
-        name,
-        year
+        params: {
+            name,
+            year
+        }
     })
     if (!ombulRes.success) notFound()
     const ombul = ombulRes.data
 
     const path = `/store/ombul/${ombul.fsLocation}`
 
-    const canUpdate = permissions.includes('OMBUL_UPDATE')
+    const canUpdate = permissions.includes('OMBUL_UPDATE') //TODO: use update auther.
 
     const changeDescription = updateOmbulAction.bind(null, ombul.id)
 
@@ -75,7 +78,16 @@ export default async function Ombul({ params }: PropTypes) {
             </div>
             <div className={styles.admin}>
                 <OmbulAdmin ombul={ombul}>
-                    <CmsImage cmsImage={ombul.coverImage} width={400}/>
+                    <CmsImage
+                        cmsImage={ombul.coverImage}
+                        width={400}
+                        updateCmsImageAction={
+                            configureAction(
+                                updateOmbulCmsCoverImageAction,
+                                { implementationParams: { ombulId: ombul.id } }
+                            )
+                        }
+                    />
                 </OmbulAdmin>
             </div>
         </div>

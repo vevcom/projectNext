@@ -19,7 +19,7 @@ export async function readSchoolsPage<const PageSize extends number>({
         },
         orderBy: [
             { standardSchool: 'asc' },
-            { shortname: 'asc' },
+            { shortName: 'asc' },
             { id: 'asc' },
         ],
         ...cursorPageingSelection(page),
@@ -48,17 +48,5 @@ export async function readStandardSchools(): Promise<SchoolFiltered[]> {
             return await createStandardSchool(standardSchool)
         }
         return school
-    }))
-}
-
-export async function readSchool(shortname: string): Promise<ExpandedSchool> {
-    return await prismaCall(() => prisma.school.findUniqueOrThrow({
-        where: {
-            shortname,
-        },
-        select: {
-            ...SchoolFilteredSelection,
-            ...SchoolRelationIncluder,
-        },
     }))
 }

@@ -5,33 +5,62 @@ import AddPartToArticleSection from './AddPartToArticleSection'
 import CmsLink from '@/cms/CmsLink/CmsLink'
 import CmsImage from '@/cms/CmsImage/CmsImage'
 import CmsParagraph from '@/cms/CmsParagraph/CmsParagraph'
-import type { ExpandedCmsImage } from '@/cms/images/types'
+import { configureAction } from '@/services/configureAction'
 import type {
-    ArticleSection as ArticleSectionT,
-    CmsParagraph as CmsParagraphT,
-    CmsLink as CmsLinkT
-} from '@prisma/client'
+    ExpandedArticleSection,
+    AddPartToArticleSectionAction,
+    RemovePartFromArticleSectionAction,
+    UpdateArticleSectionAction
+} from '@/cms/articleSections/types'
+import type { UpdateCmsParagraphAction } from '@/cms/paragraphs/types'
+import type { UpdateCmsImageAction } from '@/cms/images/types'
+import type { UpdateCmsLinkAction } from '@/cms/links/types'
 
 type PropTypes = {
-    articleSection: ArticleSectionT & {
-        cmsParagraph: CmsParagraphT | null,
-        cmsImage: ExpandedCmsImage | null,
-        cmsLink: CmsLinkT | null
+    articleSection: ExpandedArticleSection
+    actions: {
+        updateCmsParagraph: UpdateCmsParagraphAction,
+        updateCmsImage: UpdateCmsImageAction,
+        updateCmsLink: UpdateCmsLinkAction,
+        updateArticleSection: UpdateArticleSectionAction,
+        addPartToArticleSection: AddPartToArticleSectionAction,
+        removePartFromArticleSection: RemovePartFromArticleSectionAction
     }
 }
 
-export default function ArticleSection({ articleSection }: PropTypes) {
+export type ArticleSectionActions = PropTypes['actions']
+
+export default function ArticleSection({
+    articleSection,
+    actions
+}: PropTypes) {
     const { cmsParagraph, cmsImage, cmsLink } = articleSection
 
     const cmsImageContent = (
         <span className={styles.image}>
             {cmsImage && <>
                 <span className={styles.cmsImageWithControls}>
-                    <CmsImage width={articleSection.imageSize} cmsImage={cmsImage} />
-                    <ImageControls className={styles.moveControls} articleSection={articleSection} />
+                    <CmsImage
+                        width={articleSection.imageSize}
+                        cmsImage={cmsImage}
+                        updateCmsImageAction={actions.updateCmsImage}
+                    />
+                    <ImageControls
+                        className={styles.moveControls}
+                        articleSection={articleSection}
+                        updateArticleSectionAction={actions.updateArticleSection}
+                    />
                 </span>
                 <div className={styles.remover}>
-                    <RemovePart articleSectionName={articleSection.name} part="cmsImage" />
+                    <RemovePart
+                        part="cmsImage"
+                        removePartFromArticleSectionAction={
+                            configureAction(
+                                actions.removePartFromArticleSection,
+                                { params: { articleSectionName: articleSection.name } }
+                            )
+                        }
+                    />
                 </div>
             </>
             }
@@ -41,10 +70,13 @@ export default function ArticleSection({ articleSection }: PropTypes) {
     return (
         <section className={styles.ArticleSection}>
             <AddPartToArticleSection
-                articleSectionName={articleSection.name}
                 showParagraphAdd={!cmsParagraph}
                 showImageAdd={!cmsImage}
                 showLinkAdd={!cmsLink}
+                addPartToArticleSectionAction={configureAction(
+                    actions.addPartToArticleSection,
+                    { params: { articleSectionName: articleSection.name } }
+                )}
             >
                 <span className={styles.content}>
                     {
@@ -56,18 +88,38 @@ export default function ArticleSection({ articleSection }: PropTypes) {
                             cmsParagraph &&
                         <span className={styles.paragraph}>
                             <div className={styles.remover}>
-                                <RemovePart articleSectionName={articleSection.name} part="cmsParagraph" />
+                                <RemovePart
+                                    part="cmsParagraph"
+                                    removePartFromArticleSectionAction={
+                                        configureAction(
+                                            actions.removePartFromArticleSection,
+                                            { params: { articleSectionName: articleSection.name } }
+                                        )
+                                    }
+                                />
                             </div>
-                            <CmsParagraph cmsParagraph={cmsParagraph} className={styles.paragrphComponent} />
+                            <CmsParagraph
+                                cmsParagraph={cmsParagraph}
+                                className={styles.paragrphComponent}
+                                updateCmsParagraphAction={actions.updateCmsParagraph}
+                            />
                         </span>
                         }
                         {
                             cmsLink &&
                         <div className={styles.link}>
                             <div className={styles.remover}>
-                                <RemovePart articleSectionName={articleSection.name} part="cmsLink" />
+                                <RemovePart
+                                    part="cmsLink"
+                                    removePartFromArticleSectionAction={
+                                        configureAction(
+                                            actions.removePartFromArticleSection,
+                                            { params: { articleSectionName: articleSection.name } }
+                                        )
+                                    }
+                                />
                             </div>
-                            <CmsLink cmsLink={cmsLink} />
+                            <CmsLink cmsLink={cmsLink} updateCmsLinkAction={actions.updateCmsLink} />
                         </div>
                         }
                     </div>

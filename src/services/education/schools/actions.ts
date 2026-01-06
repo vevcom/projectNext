@@ -1,11 +1,12 @@
 'use server'
-
+import { schoolOperations } from './operations'
 import { createActionError, createZodActionError, safeServerCall } from '@/services/actionError'
 import { getUser } from '@/auth/session/getUser'
 import { createSchoolValidation, updateSchoolValidation } from '@/education/schools/validation'
 import { createSchool } from '@/services/education/schools/create'
 import { destroySchool } from '@/services/education/schools/destroy'
-import { readSchool, readSchools, readSchoolsPage, readStandardSchools } from '@/services/education/schools/read'
+import { makeAction } from '@/services/serverAction'
+import { readSchools, readSchoolsPage, readStandardSchools } from '@/services/education/schools/read'
 import { updateSchool } from '@/services/education/schools/update'
 import type { ReadPageInput } from '@/lib/paging/types'
 import type { CreateSchoolTypes, UpdateSchoolTypes } from '@/education/schools/validation'
@@ -69,14 +70,7 @@ export async function readSchoolsAction({
     return await safeServerCall(() => readSchools({ onlyNonStandard }))
 }
 
-export async function readSchoolAction(shortname: string): Promise<ActionReturn<ExpandedSchool>> {
-    const { authorized, status } = await getUser({
-        requiredPermissions: [['SCHOOLS_READ']]
-    })
-    if (!authorized) return createActionError(status)
-
-    return await safeServerCall(() => readSchool(shortname))
-}
+export const readSchoolAction = makeAction(schoolOperations.read)
 
 export async function updateSchoolAction(
     id: number,
@@ -93,3 +87,15 @@ export async function updateSchoolAction(
 
     return await safeServerCall(() => updateSchool(id, data))
 }
+
+export const updateSchoolCmsParagraphContentAction = makeAction(
+    schoolOperations.updateCmsParagraphContent
+)
+
+export const updateSchoolCmsImageAction = makeAction(
+    schoolOperations.updateCmsImage
+)
+
+export const updateSchoolCmsLinkAction = makeAction(
+    schoolOperations.updateCmsLink
+)

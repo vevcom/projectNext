@@ -2,7 +2,8 @@ import {
     seedCmsConfig,
     seedSpecialCmsImageConfig,
     seedSpecialCmsParagraphConfig,
-    standardArticleCategories
+    standardArticleCategories,
+    seedSpecialCmsArticleConfig,
 } from './seedCmsConfig'
 import { transformObject } from './seedImages'
 import { unified } from 'unified'
@@ -13,14 +14,14 @@ import remarkRehype from 'remark-rehype'
 import { dirname, join } from 'path'
 import { readFile } from 'fs/promises'
 import { fileURLToPath } from 'url'
-import type { PrismaClient, SpecialCmsImage, SpecialCmsParagraph } from '@prisma/client'
+import type { PrismaClient, SpecialCmsArticle, SpecialCmsImage, SpecialCmsParagraph } from '@prisma/client'
 import type {
     SeedCmsImage,
     SeedCmsParagraph,
     SeedCmsLink,
     SeedArticleSection,
     SeedArticle,
-    SeedCategories
+    SeedCategories,
 } from './seedCmsConfig'
 
 const fileName = fileURLToPath(import.meta.url)
@@ -67,7 +68,19 @@ export default async function seedCms(prisma: PrismaClient) {
         await seedArticleCategories(category, prisma)
     }))
 
-    await Promise.all(seedCmsConfig.articles.map(async (article, i) => {
+    const seedCmsArticlesTransformed = seedCmsConfig.articles.map((value) => ({
+        ...value,
+        special: null
+    }))
+    const seedSpecialCmsArticlesTransformed = transformObject(seedSpecialCmsArticleConfig, (value, key) => ({
+        ...value,
+        special: key
+    }))
+
+    const allCmsArticles = [...seedCmsArticlesTransformed, ...seedSpecialCmsArticlesTransformed]
+
+
+    await Promise.all(allCmsArticles.map(async (article, i) => {
         await seedArticle({ ...article, id: i }, prisma)
     }))
 }
@@ -197,14 +210,14 @@ async function seedArticleSection(
     })
 }
 
-async function seedArticle(article: SeedArticle & { id: number }, prisma: PrismaClient) {
+async function seedArticle(article: SeedArticle & { id: number, special: SpecialCmsArticle | null }, prisma: PrismaClient) {
     const coverImage = await seedCmsImage(article.coverImage, prisma)
     const articleSections = await Promise.all(article.articleSections.map(
         async (articleSection, i) =>
             seedArticleSection({ ...articleSection, order: i }, prisma)
     ))
 
-    return prisma.article.upsert({
+    const articles = prisma.article.upsert({
         where: {
             id: article.id
         },
@@ -212,6 +225,7 @@ async function seedArticle(article: SeedArticle & { id: number }, prisma: Prisma
             name: article.name,
         },
         create: {
+            special: article.special,
             name: article.name,
             coverImage: {
                 connect: {
@@ -230,17 +244,17 @@ async function seedArticle(article: SeedArticle & { id: number }, prisma: Prisma
                             date.setDate(date.getDate() + 7)
                             return date
                         })(),
-                        orderPublished: article.orderPublished,
                     }
                 } : undefined,
             articleCategory:
-                article.category === 'news' ? undefined : {
+                ['news', 'special'].includes(article.category) ? undefined : {
                     connect: {
                         name: article.category,
                     }
                 },
         }
     })
+    return articles
 }
 
 async function seedArticleCategories(category: SeedCategories, prisma: PrismaClient) {

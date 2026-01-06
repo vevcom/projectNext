@@ -5,11 +5,11 @@ import { readApplicationPeriodsAction } from '@/services/applications/periods/ac
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import Date from '@/components/Date/Date'
 import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
-import { readCommitteesAction } from '@/services/groups/committees/actions'
+import { readAllCommitteesAction } from '@/services/groups/committees/actions'
 
-export default async function Apllications() {
+export default async function Applications() {
     const periods = unwrapActionReturn(await readApplicationPeriodsAction())
-    const committees = unwrapActionReturn(await readCommitteesAction())
+    const committees = unwrapActionReturn(await readAllCommitteesAction())
 
     return (
         <PageWrapper title="Søknadsperioder" headerItem={

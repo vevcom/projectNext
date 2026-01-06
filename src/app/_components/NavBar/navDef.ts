@@ -8,7 +8,6 @@ import {
     faShoppingCart,
     faComment,
     faCamera,
-    faList,
     faCircleInfo,
     faNewspaper,
     faCalendar,
@@ -126,12 +125,6 @@ export const itemsForMenu: NavItem[] = [
         href: '/images',
         show: 'all',
         icon: faCamera,
-    },
-    {
-        name: 'Klasselister',
-        href: '/userlist',
-        show: 'loggedIn',
-        icon: faList,
     },
     {
         name: 'Om Omega',
