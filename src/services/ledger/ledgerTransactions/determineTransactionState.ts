@@ -1,5 +1,5 @@
-import type { ExpandedLedgerTransaction } from './Type'
-import type { BalanceRecord } from '@/services/ledger/ledgerAccount/Types'
+import type { ExpandedLedgerTransaction } from './types'
+import type { BalanceRecord } from '@/services/ledger/ledgerAccount/types'
 import type { LedgerTransactionState, PaymentState } from '@prisma/client'
 
 type LedgerTransactionTransition = {

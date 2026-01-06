@@ -10,7 +10,7 @@
 // }))
 
 import { Smorekopp } from '@/services/error'
-import { PaymentMethods } from '@/services/ledger/payments/methods'
+import { PaymentMethods } from '@/services/ledger/payments/operations'
 import { stripeWebhookCallback } from '@/services/ledger/payments/stripeWebhookCallback'
 import { prisma } from '@/prisma/client'
 import { PaymentProvider } from '@prisma/client'

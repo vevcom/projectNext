@@ -7,7 +7,7 @@ import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { z } from 'zod'
 import { LedgerAccountType } from '@prisma/client'
-import type { BalanceRecord } from './Types'
+import type { BalanceRecord } from './types'
 
 export namespace LedgerAccountMethods {
     /**

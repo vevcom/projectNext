@@ -1,5 +1,5 @@
-import { LedgerTransactionMethods } from '../ledgerTransactions/methods'
-import { PaymentMethods } from '../payments/methods'
+import { LedgerTransactionMethods } from '../ledgerTransactions/operations'
+import { PaymentMethods } from '../payments/operations'
 import { RequireNothing } from '@/auth/auther/RequireNothing'
 import { serviceMethod } from '@/services/serviceMethod'
 import { z } from 'zod'

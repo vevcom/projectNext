@@ -1,6 +1,6 @@
 'use server'
 
-import { action } from "../action"
-import { StripeCustomerMethods } from "./methods"
+import { makeAction } from "@/services/serverAction"
+import { StripeCustomerMethods } from "./operations"
 
-export const createStripeCustomerSessionAction = action(StripeCustomerMethods.createSession)
+export const createStripeCustomerSessionAction = makeAction(StripeCustomerMethods.createSession)

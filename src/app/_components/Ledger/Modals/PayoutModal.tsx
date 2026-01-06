@@ -7,8 +7,8 @@ import NumberInput from '../../UI/NumberInput'
 import Button from '../../UI/Button'
 import { createPayout } from '@/services/ledger/ledgerOperations/actions'
 import { convertAmount } from '@/lib/currency/convert'
-import { bindParams } from '@/services/actionBind'
 import { useState } from 'react'
+import { configureAction } from '@/services/configureAction'
 
 type Props = {
     ledgerAccountId: number,
@@ -19,12 +19,12 @@ type Props = {
 export default function PayoutModal({ ledgerAccountId, defaultFunds = 0, defaultFees = 0 }: Props) {
     const [funds, setFunds] = useState(defaultFunds)
     const [fees, setFees] = useState(defaultFees)
-
+    createPayout()
     return <PopUp PopUpKey="payoutModal" customShowButton={(open) => <Button onClick={open} color="primary">Registrer utbetaling</Button>}>
         <h2>Ny utbetaling</h2>
         <div className={styles.checkoutFormContainer}>
             <Form
-                action={bindParams(createPayout, { ledgerAccountId, fees, funds })}
+                action={configureAction(createPayout, { ledgerAccountId, fees, funds })}
                 submitText="Registrer utbetaling"
                 buttonClassName={styles.submitButton}
             >

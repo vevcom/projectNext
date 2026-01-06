@@ -1,6 +1,6 @@
 'use client'
 
-import { MINIMUM_PAYMENT_AMOUNT } from '@/services/ledger/payments/config'
+import { MINIMUM_PAYMENT_AMOUNT } from '@/services/ledger/payments/constants'
 import { Elements } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
 import type { ReactNode } from 'react'

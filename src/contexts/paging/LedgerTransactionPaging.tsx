@@ -2,7 +2,7 @@
 
 import generatePagingProvider, { generatePagingContext } from './PagingGenerator'
 import { readLedgerTransactionPageAction } from '@/services/ledger/ledgerTransactions/actions'
-import type { ExpandedLedgerTransaction } from '@/services/ledger/ledgerTransactions/Type'
+import type { ExpandedLedgerTransaction } from '@/services/ledger/ledgerTransactions/types'
 
 // TODO: Might be possible to cleanup? Why is size a type???
 
