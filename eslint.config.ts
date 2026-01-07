@@ -26,516 +26,516 @@ const eslintConfig = defineConfig([
             tsNextRules,
         ],
         rules: {
-            "indent": [
-                "error",
+            indent: [
+                'error',
                 4,
                 {
-                    "SwitchCase": 1,
-                    "VariableDeclarator": 1
+                    SwitchCase: 1,
+                    VariableDeclarator: 1
                 }
             ],
             // require function expressions to have a name
-            "func-names": "warn",
+            'func-names': 'warn',
             // enforce newline at the end of file, with no multiple empty lines
-            "eol-last": "error",  
+            'eol-last': 'error',
             // disallow padding inside computed properties, ie. obj[ "fjie"] not allowed
-            "computed-property-spacing": [ 
-                "error",
-                "never"
+            'computed-property-spacing': [
+                'error',
+                'never'
             ],
             // Allow the use of namespaces
-            "@typescript-eslint/no-namespace": "off",
+            '@typescript-eslint/no-namespace': 'off',
             // suggest using arrow functions as callbacks
-            "prefer-arrow-callback": "error",
+            'prefer-arrow-callback': 'error',
             // suggest using template literals instead of string concatenation
-            "prefer-template": "error",
+            'prefer-template': 'error',
             // disallow modifying variables that are declared using const
-            "no-const-assign": "error",
+            'no-const-assign': 'error',
             // disallow symbol constructor
-            "no-new-symbol": "error",
+            'no-new-symbol': 'error',
             // disallow to use this/super before super() calling in constructors.
-            "no-this-before-super": "error",
+            'no-this-before-super': 'error',
             // require let or const instead of var
-            "no-var": "error",
+            'no-var': 'error',
             // disallow unnecessary constructor
-            "no-useless-constructor": "error",
+            'no-useless-constructor': 'error',
             // require method and property shorthand syntax for object literals
             // ie write obj = { x }, not obj = {x: x}
-            "object-shorthand": [
-                "error",
-                "always"
+            'object-shorthand': [
+                'error',
+                'always'
             ],
             // disallow deletion of variables
-            "no-delete-var": "error",
+            'no-delete-var': 'error',
             // disallow labels that share a name with a variable
-            "no-label-var": "error",
+            'no-label-var': 'error',
             // disallow self assignment
-            "no-self-assign": "error",
+            'no-self-assign': 'error',
             // disallow shadowing of names such as arguments
-            "no-shadow-restricted-names": "error",
+            'no-shadow-restricted-names': 'error',
             // disallow declaration of variables already declared in the outer scope
-            "no-shadow": "error",
+            'no-shadow': 'error',
             // disallow use of undeclared variables unless mentioned in a /*global */ block
-            "no-undef": "error",
+            'no-undef': 'error',
             // disallow use of variables before they are defined
-            "@typescript-eslint/no-use-before-define": [
-                "error",
+            '@typescript-eslint/no-use-before-define': [
+                'error',
                 {
-                    "functions": false,
-                    "classes": false,
-                    "variables": true,
-                    "typedefs": false
+                    functions: false,
+                    classes: false,
+                    variables: true,
+                    typedefs: false
                 }
             ],
             // enforces no braces where they can be omitted
-            "arrow-body-style": [
-                "error",
-                "as-needed"
+            'arrow-body-style': [
+                'error',
+                'as-needed'
             ],
             // require space before/after arrow function"s arrow
-            "arrow-spacing": [
-                "error",
+            'arrow-spacing': [
+                'error',
                 {
-                    "before": true,
-                    "after": true
+                    before: true,
+                    after: true
                 }
             ],
             // verify super() callings in constructors
-            "constructor-super": "error",
+            'constructor-super': 'error',
             // disallow modifying variables of class declarations
-            "no-class-assign": "error",
+            'no-class-assign': 'error',
             // disallow arrow functions where they could be confused with comparisons
-            "no-confusing-arrow": [
-                "error",
+            'no-confusing-arrow': [
+                'error',
                 {
-                    "allowParens": true
+                    allowParens: true
                 }
             ],
             // Require or disallow spaces before/after unary operators
-            "space-unary-ops": [
-            "error",
-            {
-                "words": true,
-                "nonwords": false
-            }
+            'space-unary-ops': [
+                'error',
+                {
+                    words: true,
+                    nonwords: false
+                }
             ],
-            "quotes": [
-                "error",
-                "single",
-                "avoid-escape"
+            quotes: [
+                'error',
+                'single',
+                'avoid-escape'
             ],
-            "jsx-quotes": ["error", "prefer-double"],
+            'jsx-quotes': ['error', 'prefer-double'],
             // require camel case names
-            "camelcase": [
-                "error",
-                { 
-                    "properties": "never" 
+            camelcase: [
+                'error',
+                {
+                    properties: 'never'
                 }
             ],
             // enforce spacing before and after comma
-            "comma-spacing": [
-                "error",
-                { 
-                    "before": false, 
-                    "after": true 
+            'comma-spacing': [
+                'error',
+                {
+                    before: false,
+                    after: true
                 }
             ],
             // enforce one true comma style
-            "comma-style": [
-                "error",
-                "last"
+            'comma-style': [
+                'error',
+                'last'
             ],
-            "key-spacing": [
-                "error",
+            'key-spacing': [
+                'error',
                 {
-                    "beforeColon": false,
-                    "afterColon": true
+                    beforeColon: false,
+                    afterColon: true
                 }
             ],
             // require a space before & after certain keywords
-            "keyword-spacing": [
-                "error",
+            'keyword-spacing': [
+                'error',
                 {
-                    "before": true,
-                    "after": true,
-                    "overrides": {
-                        "return": { "after": true },
-                        "throw": { "after": true },
-                        "case": { "after": true }
+                    before: true,
+                    after: true,
+                    overrides: {
+                        return: { after: true },
+                        throw: { after: true },
+                        case: { after: true }
                     }
                 }
             ],
             // disallow mixed "LF" and "CRLF" as linebreaks
-            "linebreak-style": [
-                "error",
-                "unix"
+            'linebreak-style': [
+                'error',
+                'unix'
             ],
             // specify the maximum depth callbacks can be nested
-            "max-nested-callbacks": [
-                "error",
+            'max-nested-callbacks': [
+                'error',
                 3
             ],
             // disallow the omission of parentheses when invoking a constructor with no arguments
-            "new-parens": "error",
+            'new-parens': 'error',
             // enforces new line after each method call in the chain to make it
             // more readable and easy to maintain
-            "newline-per-chained-call": [
-                "error",
-                { 
-                    "ignoreChainWithDepth": 4
+            'newline-per-chained-call': [
+                'error',
+                {
+                    ignoreChainWithDepth: 4
                 }
             ],
             // disallow use of the Array constructor
-            "no-array-constructor": "error",
+            'no-array-constructor': 'error',
             // disallow use of the continue statement
             // "no-continue": "warn",
             // disallow if as the only statement in an else block
-            "no-lonely-if": "error",
+            'no-lonely-if': 'error',
             // disallow mixed spaces and tabs for indentation
-            "no-mixed-spaces-and-tabs": "error",
+            'no-mixed-spaces-and-tabs': 'error',
             // disallow multiple empty lines and only one newline at the end
-            "no-multiple-empty-lines": [
-                "error",
+            'no-multiple-empty-lines': [
+                'error',
                 {
-                    "max": 2,
-                    "maxEOF": 1
+                    max: 2,
+                    maxEOF: 1
                 }
             ],
             // disallow nested ternary expressions
-            "no-nested-ternary": "error",
+            'no-nested-ternary': 'error',
             // disallow use of the Object constructor
-            "no-new-object": "error",
+            'no-new-object': 'error',
             // disallow trailing whitespace at the end of lines
-            "no-trailing-spaces": "error",
+            'no-trailing-spaces': 'error',
             // disallow the use of Boolean literals in conditional expressions
             // also, prefer `a || b` over `a ? a : b`
-            "no-unneeded-ternary": [
-                "error",
+            'no-unneeded-ternary': [
+                'error',
                 {
-                    "defaultAssignment": true
+                    defaultAssignment: true
                 }
             ],
             // disallow whitespace before properties
-            "no-whitespace-before-property": "error",
+            'no-whitespace-before-property': 'error',
             // require padding inside curly braces
-            "object-curly-spacing": [
-                "error",
-                "always"
+            'object-curly-spacing': [
+                'error',
+                'always'
             ],
             // require a newline around variable declaration
-            "one-var-declaration-per-line": [
-                "error",
-                "always"
+            'one-var-declaration-per-line': [
+                'error',
+                'always'
             ],
             // enforce padding within blocks
-            "padded-blocks": [
-                "error",
-                "never"
+            'padded-blocks': [
+                'error',
+                'never'
             ],
             // require quotes around object literal property names
-            "quote-props": [
-                "warn",
-                "as-needed",
+            'quote-props': [
+                'warn',
+                'as-needed',
                 {
-                    "keywords": false,
-                    "unnecessary": true,
-                    "numbers": false
+                    keywords: false,
+                    unnecessary: true,
+                    numbers: false
                 }
             ],
             // specify whether double or single quotes should be used
             // require or disallow use of semicolons instead of ASI
-            "semi": [
-                "error",
-                "never"
+            semi: [
+                'error',
+                'never'
             ],
             // require or disallow space before blocks
-            "space-before-blocks": "error",
+            'space-before-blocks': 'error',
             // require or disallow space before function opening parenthesis
-            "space-before-function-paren": [
-                "error",
+            'space-before-function-paren': [
+                'error',
                 {
-                    "anonymous": "always",
-                    "named": "never"
+                    anonymous: 'always',
+                    named: 'never'
                 }
             ],
             // require or disallow spaces inside parentheses
-            "space-in-parens": [
-                "error",
-                "never"
+            'space-in-parens': [
+                'error',
+                'never'
             ],
             // require spaces around operators
-            "space-infix-ops": "error",
+            'space-infix-ops': 'error',
             // enforces return statements in callbacks of array"s methods
-            "array-callback-return": "error",
+            'array-callback-return': 'error',
             // require return statements to either always or never specify values
-            "consistent-return": "error",
+            'consistent-return': 'error',
             // specify curly brace conventions for all control statements
-            "curly": [
-                "error",
-                "multi-line"
+            curly: [
+                'error',
+                'multi-line'
             ],
             // require default case in switch statements
-            "default-case": "error",
+            'default-case': 'error',
             // encourages use of dot notation whenever possible
-            "dot-notation": "error",
+            'dot-notation': 'error',
             // require the use of === and !==
-            "eqeqeq": "error",
+            eqeqeq: 'error',
             // make sure for-in loops have an if statement
-            "guard-for-in": "error",
+            'guard-for-in': 'error',
             // disallow the use of alert, confirm, and prompt
-            "no-alert": "warn",
+            'no-alert': 'warn',
             // disallow use of arguments.caller or arguments.callee
-            "no-caller": "error",
+            'no-caller': 'error',
             // disallow lexical declarations in case/default clauses
-            "no-case-declarations": "error",
+            'no-case-declarations': 'error',
             // disallow else after a return in an if
-            "no-else-return": "error",
+            'no-else-return': 'error',
             // disallow Unnecessary Labels
-            "no-extra-label": "error",
+            'no-extra-label': 'error',
             // disallow comparisons to null without a type-checking operator
-            "no-eq-null": "error",
+            'no-eq-null': 'error',
             // disallow use of eval()
-            "no-eval": "error",
+            'no-eval': 'error',
             // disallow adding to native types
-            "no-extend-native": "error",
+            'no-extend-native': 'error',
             // disallow unnecessary function binding
-            "no-extra-bind": "error",
+            'no-extra-bind': 'error',
             // disallow fallthrough of case statements
-            "no-fallthrough": "error",
+            'no-fallthrough': 'error',
             // disallow the use of leading or trailing decimal points in numeric literals
-            "no-floating-decimal": "error",
+            'no-floating-decimal': 'error',
             // disallow use of eval()-like methods
-            "no-implied-eval": "error",
+            'no-implied-eval': 'error',
             // disallow this keywords outside of classes or class-like objects
-            "no-iterator": "error",
+            'no-iterator': 'error',
             // disallow use of labels for anything other then loops and switches
-            "no-labels": [
-                "error",
+            'no-labels': [
+                'error',
                 {
-                    "allowLoop": false,
-                    "allowSwitch": false
+                    allowLoop: false,
+                    allowSwitch: false
                 }
             ],
             // disallow unnecessary nested blocks
-            "no-lone-blocks": "error",
+            'no-lone-blocks': 'error',
             // disallow creation of functions within loops
-            "no-loop-func": "error",
+            'no-loop-func': 'error',
             // disallow use of multiple spaces
-            "no-multi-spaces": "error",
+            'no-multi-spaces': 'error',
             // disallow use of multiline strings
-            "no-multi-str": "error",
+            'no-multi-str': 'error',
             // disallow reassignments of native objects
-            "no-native-reassign": "error",
+            'no-native-reassign': 'error',
             // disallow use of new operator when not part of the assignment or comparison
-            "no-new": "error",
+            'no-new': 'error',
             // disallow use of new operator for Function object
-            "no-new-func": "error",
+            'no-new-func': 'error',
             // disallows creating new instances of String,Number, and Boolean
-            "no-new-wrappers": "error",
+            'no-new-wrappers': 'error',
             // disallow use of (old style) octal literals
-            "no-octal": "error",
+            'no-octal': 'error',
             // disallow use of octal escape sequences in string literals, such as
             // var foo = "Copyright \251";
-            "no-octal-escape": "error",
+            'no-octal-escape': 'error',
             // disallow reassignment of function parameters
             // disallow parameter object manipulation
-            "no-param-reassign": [
-                "warn",
+            'no-param-reassign': [
+                'warn',
                 {
-                    "props": false
+                    props: false
                 }
             ],
             // disallow usage of __proto__ property
-            "no-proto": "error",
+            'no-proto': 'error',
             // disallow use of assignment in return statement
-            "no-return-assign": "error",
+            'no-return-assign': 'error',
             // disallow use of `javascript:` urls.
-            "no-script-url": "error",
+            'no-script-url': 'error',
             // disallow comparisons where both sides are exactly the same
-            "no-self-compare": "error",
+            'no-self-compare': 'error',
             // disallow use of comma operator
-            "no-sequences": "error",
+            'no-sequences': 'error',
             // disallow usage of expressions in statement position
-            "no-unused-expressions": "error",
+            'no-unused-expressions': 'error',
             // disallow unused labels
-            "no-unused-labels": "error",
+            'no-unused-labels': 'error',
             // disallow usage of configurable warning terms in comments: e.g. todo
-            "no-warning-comments": [
-                "warn",
+            'no-warning-comments': [
+                'warn',
                 {
-                    "terms": ["todo", "fixme", "xxx"],
-                    "location": "start"
+                    terms: ['todo', 'fixme', 'xxx'],
+                    location: 'start'
                 }
             ],
             // disallow use of the with statement
-            "no-with": "error",
+            'no-with': 'error',
             // require use of the second argument for parseInt()
-            "radix": "error",
+            radix: 'error',
             // require immediate function invocation to be wrapped in parentheses
-            "wrap-iife": [
-                "error",
-                "outside"
+            'wrap-iife': [
+                'error',
+                'outside'
             ],
             // require or disallow Yoda conditions
-            "yoda": "error",
+            yoda: 'error',
             // disallow assignment in conditional expressions
-            "no-cond-assign": [
-                "error",
-                "always"
+            'no-cond-assign': [
+                'error',
+                'always'
             ],
             // disallow use of constant expressions in conditions
-            "no-constant-condition": "warn",
+            'no-constant-condition': 'warn',
             // disallow control characters in regular expressions
-            "no-control-regex": "error",
+            'no-control-regex': 'error',
             // disallow use of debugger
-            "no-debugger": "warn",
+            'no-debugger': 'warn',
             // disallow duplicate arguments in functions
-            "no-dupe-args": "error",
+            'no-dupe-args': 'error',
             // disallow duplicate keys when creating object literals
-            "no-dupe-keys": "error",
+            'no-dupe-keys': 'error',
             // disallow a duplicate case label.
-            "no-duplicate-case": "error",
+            'no-duplicate-case': 'error',
             // disallow the use of empty character classes in regular expressions
-            "no-empty-character-class": "error",
+            'no-empty-character-class': 'error',
             // disallow empty statements
-            "no-empty": "error",
+            'no-empty': 'error',
             // disallow assigning to the exception in a catch block
-            "no-ex-assign": "error",
+            'no-ex-assign': 'error',
             // disallow double-negation boolean casts in a boolean context
-            "no-extra-boolean-cast": "error",
+            'no-extra-boolean-cast': 'error',
             // disallow unnecessary parentheses
-            "no-extra-parens": [
-                "error",
-                "functions"
+            'no-extra-parens': [
+                'error',
+                'functions'
             ],
             // disallow unnecessary semicolons
-            "no-extra-semi": "error",
+            'no-extra-semi': 'error',
             // disallow overwriting functions written as function declarations
-            "no-func-assign": "error",
+            'no-func-assign': 'error',
             // disallow function or variable declarations in nested blocks
-            "no-inner-declarations": "error",
+            'no-inner-declarations': 'error',
             // disallow invalid regular expression strings in the RegExp constructor
-            "no-invalid-regexp": "error",
+            'no-invalid-regexp': 'error',
             // disallow irregular whitespace outside of strings and comments
-            "no-irregular-whitespace": "error",
+            'no-irregular-whitespace': 'error',
             // disallow negation of the left operand of an in expression
-            "no-negated-in-lhs": "error",
+            'no-negated-in-lhs': 'error',
             // disallow the use of object properties of the global object (Math and JSON) as functions
-            "no-obj-calls": "error",
+            'no-obj-calls': 'error',
             // disallow multiple spaces in a regular expression literal
-            "no-regex-spaces": "error",
+            'no-regex-spaces': 'error',
             // disallow sparse arrays
-            "no-sparse-arrays": "error",
+            'no-sparse-arrays': 'error',
             // disallow unreachable statements after a return, throw, continue, or break statement
-            "no-unreachable": "error",
+            'no-unreachable': 'error',
             // disallow comparisons with the value NaN
-            "use-isnan": "error",
+            'use-isnan': 'error',
             // ensure that the results of typeof are compared against a valid string
-            "valid-typeof": "error",
+            'valid-typeof': 'error',
             // Avoid code that looks like two expressions but is actually one
-            "no-unexpected-multiline": "error",
+            'no-unexpected-multiline': 'error',
             // specify the maximum depth that blocks can be nested
-            "max-depth": [
-                "error",
+            'max-depth': [
+                'error',
                 4
             ],
             // limits the number of parameters that can be used in the function declaration.
-            "max-params": [
-                "error",
+            'max-params': [
+                'error',
                 5
             ],
             // disallow use of bitwise operators
-            "no-bitwise": "warn",
+            'no-bitwise': 'warn',
             // enforce return after a callback
-            "callback-return": "error",
+            'callback-return': 'error',
             // enforces error handling in callbacks (node environment)
-            "handle-callback-err": "error",
+            'handle-callback-err': 'error',
             // disallow mixing regular variable and require declarations
-            "no-mixed-requires": [
-                "error",
+            'no-mixed-requires': [
+                'error',
                 {
-                    "grouping": true, 
-                    "allowCall": true 
+                    grouping: true,
+                    allowCall: true
                 }
             ],
             // disallow use of new operator with the require function
-            "no-new-require": "error",
+            'no-new-require': 'error',
             // disallow string concatenation with __dirname and __filename
-            "no-path-concat": "error",
+            'no-path-concat': 'error',
             // disallow process.exit()
-            "no-process-exit": "error",
+            'no-process-exit': 'error',
             // disallow use of synchronous methods (off by default)
-            "no-sync": "error",
+            'no-sync': 'error',
             // enforce spacing inside array brackets
-            "array-bracket-spacing": [
-                "error",
-                "never"
+            'array-bracket-spacing': [
+                'error',
+                'never'
             ],
             // enforce one true brace style
-            "brace-style": [
-                "error",
-                "1tbs", 
-                { 
-                    "allowSingleLine": true 
+            'brace-style': [
+                'error',
+                '1tbs',
+                {
+                    allowSingleLine: true
                 }
             ],
             // enforce max length of lines
-            "max-len": [
-                "error",
+            'max-len': [
+                'error',
                 {
-                    "code": 125
+                    code: 125
                 }
             ],
             // dissallow relative imports (e.g. '../'), imports from same folder are stil allowed
-            "no-restricted-imports": [
-                "error",
+            'no-restricted-imports': [
+                'error',
                 {
-                    "patterns": [
+                    patterns: [
                         {
-                            "group": ["../"],
-                            "message": "Relative imports are not allowed."
+                            group: ['../'],
+                            message: 'Relative imports are not allowed.'
                         }
                     ]
                 }
             ],
             // import statement order
-            "import/order": [
-                "warn",
+            'import/order': [
+                'warn',
                 {
-                    "groups": [
-                        "index",
-                        "sibling",
-                        "parent",
-                        "internal",
-                        "external",
-                        "builtin",
-                        "object",
-                        "type"
+                    groups: [
+                        'index',
+                        'sibling',
+                        'parent',
+                        'internal',
+                        'external',
+                        'builtin',
+                        'object',
+                        'type'
                     ]
                 }
             ],
-            "@typescript-eslint/consistent-type-imports": [
-                "error",
+            '@typescript-eslint/consistent-type-imports': [
+                'error',
                 {
-                    "prefer": "type-imports"
+                    prefer: 'type-imports'
                 }
             ],
             //SOME ODD OPTIONS:
             // suggest using the spread operator instead of .apply()
-            "prefer-spread": "error",
+            'prefer-spread': 'error',
             // suggest using Reflect methods where applicable
-            "prefer-reflect": "error",
+            'prefer-reflect': 'error',
             // use rest parameters instead of arguments
-            "prefer-rest-params": "error",
+            'prefer-rest-params': 'error',
             // enforce usage of spacing in template strings
-            "template-curly-spacing": "error",
+            'template-curly-spacing': 'error',
             // disable next js warning for using <img>
-            "@next/next/no-img-element": "off",
-            "id-length": [
-                "error",
+            '@next/next/no-img-element': 'off',
+            'id-length': [
+                'error',
                 {
-                    "exceptions": [ "i", "j", "k", "a", "b", "x", "y", "e", "_" ],
-                    "min": 2
+                    exceptions: ['i', 'j', 'k', 'a', 'b', 'x', 'y', 'e', '_'],
+                    min: 2
                 }
             ]
         }
@@ -545,7 +545,8 @@ const eslintConfig = defineConfig([
         'out/**',
         'build/**',
         'next-env.d.ts',
+        'pncli/**'
     ]),
 ])
- 
+
 export default eslintConfig

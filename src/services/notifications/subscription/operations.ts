@@ -13,7 +13,7 @@ import type { Prisma } from '@prisma/client'
 import type { Subscription } from './types'
 import type { NotificationMethodGeneral } from '@/services/notifications/types'
 
-// eslint-disable-next-line
+
 async function createTransactionPart(
     prisma: Prisma.TransactionClient,
     userId: number,
@@ -169,7 +169,7 @@ export const notificationSubscriptionOperations = {
                 data.subscriptions.map(subscription =>
                     createTransactionPart(prisma, params.userId, subscription.channelId, subscription.methods)
                 )
-            )).filter(i => i) as (() => Promise<Subscription>)[]
+            )).filter(i => i !== null)
 
             // Update the subscriptions
             return await Promise.all(
