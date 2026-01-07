@@ -26,6 +26,7 @@ import {
 import { readSpecialImageAction } from '@/services/images/actions'
 import { ServerSession } from '@/auth/session/ServerSession'
 import { configureAction } from '@/services/configureAction'
+import { committeeAuth } from '@/services/groups/committees/auth'
 import { faVideo } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Link from 'next/link'
@@ -37,7 +38,8 @@ export type PropTypes = {
 }
 
 export default async function ApplicationPeriod({ params }: PropTypes) {
-    const userId = (await ServerSession.fromNextAuth()).user?.id
+    const session = await ServerSession.fromNextAuth()
+    const userId = session.user?.id
     const period = unwrapActionReturn(
         await readApplicationPeriodAction({ params: { name: (await params).periodName } })
     )
@@ -162,6 +164,13 @@ export default async function ApplicationPeriod({ params }: PropTypes) {
                                 >
                                     <h1>{part.committee.name}</h1>
                                     <CmsParagraph
+                                        canEdit={
+                                            committeeAuth.updateParagraphContent.dynamicFields(
+                                                { groupId: part.committee.groupId }
+                                            ).auth(
+                                                session
+                                            ).toJsObject()
+                                        }
                                         cmsParagraph={part.committee.paragraph}
                                         updateCmsParagraphAction={
                                             configureAction(

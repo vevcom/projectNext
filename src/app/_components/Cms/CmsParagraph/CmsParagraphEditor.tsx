@@ -5,16 +5,16 @@ import styles from './CmsParagraphEditor.module.scss'
 import EditOverlay from '@/components/Cms/EditOverlay'
 import Form from '@/components/Form/Form'
 import PopUp from '@/components/PopUp/PopUp'
-import { RequireNothing } from '@/auth/authorizer/RequireNothing'
 import { configureAction } from '@/services/configureAction'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import type { CmsParagraph } from '@prisma/client'
 import type { UpdateCmsParagraphAction } from '@/cms/paragraphs/types'
+import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
 import useEditMode from '@/hooks/useEditMode'
 
-//needed because SimpleMDE is not SSR compatible as it access navigator object
+// Needed because SimpleMDE is not SSR compatible as it access navigator object
 const DynamicSimpleMDEditor = dynamic(
     () => import('react-simplemde-editor'),
     {
@@ -27,17 +27,13 @@ type PropTypes = {
     cmsParagraph: CmsParagraph
     editorClassName?: string
     updateCmsParagraphAction: UpdateCmsParagraphAction
+    canEdit: AuthResultTypeAny
 }
 
-export default function CmsParagraphEditor({ cmsParagraph, editorClassName, updateCmsParagraphAction }: PropTypes) {
-    //TODO: Authorizer must be passed in....
-    const canEdit = useEditMode({
-        authorizer: RequireNothing.staticFields({}).dynamicFields({})
-    })
+export default function CmsParagraphEditor({ cmsParagraph, editorClassName, updateCmsParagraphAction, canEdit }: PropTypes) {
+    const editable = useEditMode({ authResult: canEdit })
     const { refresh } = useRouter()
     const [content, setContent] = useState(cmsParagraph.contentMd)
-
-    if (!canEdit) return null
 
     const handleContentChange = (value: string) => {
         setContent(value)
@@ -45,6 +41,7 @@ export default function CmsParagraphEditor({ cmsParagraph, editorClassName, upda
 
     const action = configureAction(updateCmsParagraphAction, { params: { paragraphId: cmsParagraph.id } })
 
+    if (!editable) return null
     return (
         <PopUp
             PopUpKey={cmsParagraph.id}

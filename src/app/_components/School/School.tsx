@@ -9,24 +9,32 @@ import {
     updateSchoolCmsParagraphContentAction
 } from '@/services/education/schools/actions'
 import { configureAction } from '@/services/configureAction'
+import { schoolAuth } from '@/services/education/schools/auth'
 import type { ExpandedSchool } from '@/services/education/schools/types'
+import type{ SessionMaybeUser } from '@/auth/session/Session'
 
 type PropTypes = {
     school: ExpandedSchool
     asClient?: boolean
+    session: SessionMaybeUser
 }
 
-export default function School({ school, asClient = false }: PropTypes) {
+export default function School({ school, asClient = false, session }: PropTypes) {
     const updateCmsImageAction = configureAction(
         updateSchoolCmsImageAction,
         { implementationParams: { shortName: school.shortName } }
     )
+
+    const canEditCmsImage = schoolAuth.updateCmsImage.dynamicFields({}).auth(session).toJsObject()
+    const canEditCmsParagraph = schoolAuth.updateCmsParagraph.dynamicFields({}).auth(session).toJsObject()
+    const canEditCmsLink = schoolAuth.updateCmsLink.dynamicFields({}).auth(session).toJsObject()
 
     return (
         <div className={styles.School}>
             {
                 asClient ? (
                     <CmsImageClient
+                        canEdit={canEditCmsImage}
                         className={styles.cmsImage}
                         classNameImage={styles.image}
                         cmsImage={school.cmsImage}
@@ -34,6 +42,7 @@ export default function School({ school, asClient = false }: PropTypes) {
                         updateCmsImageAction={updateCmsImageAction}
                     />
                 ) : <CmsImage
+                    canEdit={canEditCmsImage}
                     className={styles.cmsImage}
                     classNameImage={styles.image}
                     cmsImage={school.cmsImage}
@@ -54,6 +63,7 @@ export default function School({ school, asClient = false }: PropTypes) {
                             { implementationParams: { shortName: school.shortName } }
                         )
                     }
+                    canEdit={canEditCmsParagraph}
                 />
                 <CmsLink
                     cmsLink={school.cmsLink}
@@ -65,6 +75,7 @@ export default function School({ school, asClient = false }: PropTypes) {
                             { implementationParams: { shortName: school.shortName } }
                         )
                     }
+                    canEdit={canEditCmsLink}
                 />
             </div>
         </div>

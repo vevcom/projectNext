@@ -10,7 +10,8 @@ import Link from 'next/link'
 import type { PageSizeSchool } from '@/contexts/paging/SchoolPaging'
 
 export default async function Schools() {
-    const isSchoolAdmin = schoolAuth.create.dynamicFields({}).auth(await ServerSession.fromNextAuth()).authorized
+    const session = await ServerSession.fromNextAuth()
+    const isSchoolAdmin = schoolAuth.create.dynamicFields({}).auth(session).authorized
 
     const pageSizeSchool: PageSizeSchool = 8
     const res = await readSchoolsPageAction({
@@ -35,7 +36,7 @@ export default async function Schools() {
                 startPage={{ pageSize: pageSizeSchool, page: 1 }}
             >
                 <div className={styles.wrapper}>
-                    <SchoolList serverRendered={serverRenderedData.map(schoolListRenderer(false))} />
+                    <SchoolList serverRendered={serverRenderedData.map(schoolListRenderer(false, session.toJsObject()))} />
                 </div>
             </SchoolPagingProvider>
         </PageWrapper>

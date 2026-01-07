@@ -1,38 +1,38 @@
 'use client'
 import styles from './SectionMover.module.scss'
 import useEditMode from '@/hooks/useEditMode'
-import { RequireNothing } from '@/auth/authorizer/RequireNothing'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons'
 import { useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import type { ConfiguredAction } from '@/services/actionTypes'
 import type { ReorderArticleSectionsAction } from '@/cms/articles/types'
+import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
 
 type PropTypes = {
     className?: string
     showUp: boolean
     showDown: boolean
     reorderArticleSectionsAction: ConfiguredAction<ReorderArticleSectionsAction>
+    canEdit: AuthResultTypeAny
 }
 
 export default function SectionMover({
     className,
     showUp,
     showDown,
-    reorderArticleSectionsAction
+    reorderArticleSectionsAction,
+    canEdit,
 }: PropTypes) {
-    //TODO: Authorizer must be passed in....
-    const canEdit = useEditMode({
-        authorizer: RequireNothing.staticFields({}).dynamicFields({})
-    })
+    const editable = useEditMode({ authResult: canEdit })
     const { refresh } = useRouter()
+
     const handleMove = useCallback(async (direction: 'UP' | 'DOWN') => {
         await reorderArticleSectionsAction({ data: { direction } })
         refresh()
     }, [reorderArticleSectionsAction, refresh])
-    if (!canEdit) return null
 
+    if (!editable) return null
     return (
         <div className={`${styles.SectionMover} ${className}`}>
             {

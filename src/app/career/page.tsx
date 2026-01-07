@@ -7,8 +7,13 @@ import CmsLink from '@/components/Cms/CmsLink/CmsLink'
 import { QueryParams } from '@/lib/queryParams/queryParams'
 import { readSpecialImageAction } from '@/services/images/actions'
 import { readSpecialEventTagAction } from '@/services/events/tags/actions'
-import { readSpecialCmsParagraphCareerInfo, updateSpecialCmsParagraphContentCareerInfo } from '@/services/career/actions'
-import { readCompanySpecialCmsLinkAction, updateCompanySpecialCmsLinkAction } from '@/services/career/companies/actions'
+import {
+    readSpecialCmsParagraphCareerInfo,
+    updateSpecialCmsParagraphContentCareerInfo,
+    readCareerSpecialCmsLinkAction,
+    updateCareerSpecialCmsLinkAction
+} from '@/services/career/actions'
+import { careerAuth } from '@/services/career/auth'
 import Link from 'next/link'
 
 export default async function CareerLandingPage() {
@@ -16,7 +21,7 @@ export default async function CareerLandingPage() {
     const jobAdImageRes = await readSpecialImageAction({ params: { special: 'MACHINE' } })
     const eventImageRes = await readSpecialImageAction({ params: { special: 'FAIR' } })
     const comanyImageRes = await readSpecialImageAction({ params: { special: 'REALFAGSBYGGET' } })
-    const conactorCmsLinkRes = await readCompanySpecialCmsLinkAction({ params: { special: 'CAREER_LINK_TO_CONTACTOR' } })
+    const conactorCmsLinkRes = await readCareerSpecialCmsLinkAction({ params: { special: 'CAREER_LINK_TO_CONTACTOR' } })
     const companyPresentationEventTagRes = await readSpecialEventTagAction({ params: { special: 'COMPANY_PRESENTATION' } })
 
     const jobAdImage = jobAdImageRes.success ? jobAdImageRes.data : null
@@ -25,16 +30,25 @@ export default async function CareerLandingPage() {
     const contactorCmsLink = conactorCmsLinkRes.success ? conactorCmsLinkRes.data : null
     const companyPresentationEventTag = companyPresentationEventTagRes.success ? companyPresentationEventTagRes.data : null
 
+    const canEditSpecialCmsLink = careerAuth.updateSpecialCmsLink.dynamicFields({}).auth(
+        session
+    ).toJsObject()
+    const canEditSpecialCmsParagraph = careerAuth.updateSpecialCmsParagraphContentCareerInfo.dynamicFields({}).auth(
+        session
+    ).toJsObject()
+
     return (
         <PageWrapper title={session.user ? 'Karriere' : 'For bedrifter'} headerItem={
             contactorCmsLink ? <CmsLink
+                canEdit={canEditSpecialCmsLink}
                 className={styles.conactorLink}
                 cmsLink={contactorCmsLink}
-                updateCmsLinkAction={updateCompanySpecialCmsLinkAction}
+                updateCmsLinkAction={updateCareerSpecialCmsLinkAction}
             /> : <></>
         }>
             <div className={styles.wrapper}>
                 <SpecialCmsParagraph
+                    canEdit={canEditSpecialCmsParagraph}
                     className={styles.info}
                     special="CAREER_INFO"
                     readSpecialCmsParagraphAction={readSpecialCmsParagraphCareerInfo}
