@@ -1,7 +1,7 @@
-import { AutherFactory } from './Auther'
+import { AuthorizerFactory } from './Authorizer'
 import type { Permission } from '@prisma/client'
 
-export const RequirePermissionAndDynamicPermission = AutherFactory<
+export const RequirePermissionAndDynamicPermission = AuthorizerFactory<
     {
         permission: Permission,
         dynamicPermission: Permission,

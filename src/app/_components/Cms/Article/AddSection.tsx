@@ -4,7 +4,7 @@ import styles from './AddSection.module.scss'
 import AddParts from '@/cms/AddParts'
 import { maxSections } from '@/cms/articles/constants'
 import useEditMode from '@/hooks/useEditmode'
-import { RequireNothing } from '@/auth/auther/RequireNothing'
+import { RequireNothing } from '@/auth/authorizer/RequireNothing'
 import { useRouter } from 'next/navigation'
 import type { ArticleSectionPart } from '@/cms/articleSections/types'
 import type { AddSectionToArticleAction } from '@/cms/articles/types'
@@ -20,8 +20,8 @@ export default function AddSection({
     addSectionToArticleAction
 }: PropTypes) {
     const { refresh } = useRouter()
-    //TODO: Auther must be passed in....
-    const canEdit = useEditMode({ auther: RequireNothing.staticFields({}).dynamicFields({}) })
+    //TODO: Authorizer must be passed in....
+    const canEdit = useEditMode({ authorizer: RequireNothing.staticFields({}).dynamicFields({}) })
 
     const handleAdd = async (includePart: ArticleSectionPart) => {
         await addSectionToArticleAction({

@@ -1,33 +1,33 @@
 import { useSession } from '@/auth/session/useSession'
-import { AuthResult } from '@/auth/auther/AuthResult'
+import { AuthResult } from '@/auth/authorizer/AuthResult'
 import { Session, type UserGuaranteeOption } from '@/auth/session/Session'
-import type { AutherDynamicFieldsBound } from '@/auth/auther/Auther'
+import type { AuthorizerDynamicFieldsBound } from '@/auth/authorizer/Authorizer'
 
 /**
- * This function applies an auther to the current client side session stored. While
+ * This function applies an authorizer to the current client side session stored. While
  * this session is still loading, it will return an AuthResult with authorized set to false.
  * @param param0
  */
-function useAuther({
-    auther
+function useAuthorizer({
+    authorizer
 }: {
-    auther: AutherDynamicFieldsBound<'USER_NOT_REQUIERED_FOR_AUTHORIZED'>
+    authorizer: AuthorizerDynamicFieldsBound<'USER_NOT_REQUIERED_FOR_AUTHORIZED'>
 }): AuthResult<UserGuaranteeOption, boolean>
-function useAuther({
-    auther
+function useAuthorizer({
+    authorizer
 }: {
-    auther: AutherDynamicFieldsBound<'USER_REQUIERED_FOR_AUTHORIZED'>
+    authorizer: AuthorizerDynamicFieldsBound<'USER_REQUIERED_FOR_AUTHORIZED'>
 }): AuthResult<UserGuaranteeOption, false> | AuthResult<'HAS_USER', true>
-function useAuther({
-    auther
+function useAuthorizer({
+    authorizer
 }: {
-    auther: AutherDynamicFieldsBound
+    authorizer: AuthorizerDynamicFieldsBound
 }): AuthResult<UserGuaranteeOption, boolean> {
     const session = useSession()
     if (session.loading) {
         return new AuthResult(Session.empty(), false)
     }
-    return auther.auth(session.session)
+    return authorizer.auth(session.session)
 }
 
-export default useAuther
+export default useAuthorizer

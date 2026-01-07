@@ -5,7 +5,7 @@ import styles from './CmsParagraphEditor.module.scss'
 import EditOverlay from '@/components/Cms/EditOverlay'
 import Form from '@/components/Form/Form'
 import PopUp from '@/components/PopUp/PopUp'
-import { RequireNothing } from '@/auth/auther/RequireNothing'
+import { RequireNothing } from '@/auth/authorizer/RequireNothing'
 import { configureAction } from '@/services/configureAction'
 import useEditMode from '@/hooks/useEditmode'
 import { useState } from 'react'
@@ -30,9 +30,9 @@ type PropTypes = {
 }
 
 export default function CmsParagraphEditor({ cmsParagraph, editorClassName, updateCmsParagraphAction }: PropTypes) {
-    //TODO: Auther must be passed in....
+    //TODO: Authorizer must be passed in....
     const canEdit = useEditMode({
-        auther: RequireNothing.staticFields({}).dynamicFields({})
+        authorizer: RequireNothing.staticFields({}).dynamicFields({})
     })
     const { refresh } = useRouter()
     const [content, setContent] = useState(cmsParagraph.contentMd)

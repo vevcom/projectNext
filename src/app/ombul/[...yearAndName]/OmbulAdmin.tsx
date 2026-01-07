@@ -30,10 +30,10 @@ export default function OmbulAdmin({
 }: PropTypes) {
     const { push, refresh } = useRouter()
     const canUpdate = useEditMode({
-        auther: ombulAuth.update.dynamicFields({})
+        authorizer: ombulAuth.update.dynamicFields({})
     })
     const canDestroy = useEditMode({
-        auther: ombulAuth.destroy.dynamicFields({})
+        authorizer: ombulAuth.destroy.dynamicFields({})
     })
 
     const updateOmbulActionBind = configureAction(

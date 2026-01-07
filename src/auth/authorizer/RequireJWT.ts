@@ -1,9 +1,9 @@
-import { AutherFactory } from './Auther'
+import { AuthorizerFactory } from './Authorizer'
 import { verifyJWT } from '@/lib/jwt/jwt'
 import { ServerError } from '@/services/error'
 import type { OmegaJWTAudience } from '@/lib/jwt/types'
 
-export const RequireJWT = AutherFactory<
+export const RequireJWT = AuthorizerFactory<
     { audience: OmegaJWTAudience },
     { token: string },
     'USER_NOT_REQUIERED_FOR_AUTHORIZED'

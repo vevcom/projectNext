@@ -1,13 +1,13 @@
-import { RequirePermission } from '@/auth/auther/RequirePermission'
+import { RequirePermission } from '@/auth/authorizer/RequirePermission'
 
-const baseAuther = RequirePermission.staticFields({ permission: 'APIKEY_ADMIN' })
+const baseAuthorizer = RequirePermission.staticFields({ permission: 'APIKEY_ADMIN' })
 
 export const apiKeyAuth = {
-    create: baseAuther,
-    read: baseAuther,
-    readMany: baseAuther,
-    readWithHash: baseAuther,
-    update: baseAuther,
-    updateIfExpired: baseAuther,
-    destroy: baseAuther,
+    create: baseAuthorizer,
+    read: baseAuthorizer,
+    readMany: baseAuthorizer,
+    readWithHash: baseAuthorizer,
+    update: baseAuthorizer,
+    updateIfExpired: baseAuthorizer,
+    destroy: baseAuthorizer,
 }

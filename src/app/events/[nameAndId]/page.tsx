@@ -72,7 +72,7 @@ export default async function Event({ params }: PropTypes) {
                     </UsersHeaderItemPopUp>}
                     <SettingsHeaderItemPopUp scale={30} PopUpKey="EditEvent">
                         <CreateOrUpdateEventForm event={event} eventTags={tags} />
-                        {/*TODO: Use auther to only display if it can be destroy*/}
+                        {/*TODO: Use authorizer to only display if it can be destroy*/}
                         <Form
                             action={configureAction(destroyEventAction, { params: { id: event.id } })}
                             navigateOnSuccess="/events"

@@ -26,7 +26,7 @@ export default function EditNews({ news, children }: PropTypes) {
     const { refresh, push } = useRouter()
     //TODO: chack visibility
     const canEdit = useEditMode({
-        auther: newsAuth.update.dynamicFields({})
+        authorizer: newsAuth.update.dynamicFields({})
     })
     if (!canEdit) return children
 

@@ -6,7 +6,7 @@ import useEditMode from '@/hooks/useEditmode'
 import Form from '@/components/Form/Form'
 import PopUp from '@/components/PopUp/PopUp'
 import { configureAction } from '@/services/configureAction'
-import { RequireNothing } from '@/auth/auther/RequireNothing'
+import { RequireNothing } from '@/auth/authorizer/RequireNothing'
 import { useRouter } from 'next/navigation'
 import type { CmsLink } from '@prisma/client'
 import type { UpdateCmsLinkAction } from '@/cms/links/types'
@@ -17,9 +17,9 @@ type PropTypes = {
 }
 
 export default function CmsLinkEditor({ cmsLink, updateCmsLinkAction }: PropTypes) {
-    //TODO: Auther must be passed in....
+    //TODO: Authorizer must be passed in....
     const canEdit = useEditMode({
-        auther: RequireNothing.staticFields({}).dynamicFields({})
+        authorizer: RequireNothing.staticFields({}).dynamicFields({})
     })
     const { refresh } = useRouter()
     if (!canEdit) return null

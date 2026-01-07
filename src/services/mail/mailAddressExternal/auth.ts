@@ -1,6 +1,6 @@
-import { RequirePermission } from '@/auth/auther/RequirePermission'
+import { RequirePermission } from '@/auth/authorizer/RequirePermission'
 
-//TODO: Use authers when refactoring to operations.ts
+//TODO: Use authorizers when refactoring to operations.ts
 export const mailAddressExternalAuth = {
     create: RequirePermission.staticFields({ permission: 'MAILADDRESS_EXTERNAL_CREATE' }),
     destroy: RequirePermission.staticFields({ permission: 'MAILADDRESS_EXTERNAL_DESTROY' }),

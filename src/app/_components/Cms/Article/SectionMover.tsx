@@ -1,7 +1,7 @@
 'use client'
 import styles from './SectionMover.module.scss'
 import useEditMode from '@/hooks/useEditmode'
-import { RequireNothing } from '@/auth/auther/RequireNothing'
+import { RequireNothing } from '@/auth/authorizer/RequireNothing'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons'
 import { useCallback } from 'react'
@@ -22,9 +22,9 @@ export default function SectionMover({
     showDown,
     reorderArticleSectionsAction
 }: PropTypes) {
-    //TODO: Auther must be passed in....
+    //TODO: Authorizer must be passed in....
     const canEdit = useEditMode({
-        auther: RequireNothing.staticFields({}).dynamicFields({})
+        authorizer: RequireNothing.staticFields({}).dynamicFields({})
     })
     const { refresh } = useRouter()
     const handleMove = useCallback(async (direction: 'UP' | 'DOWN') => {
