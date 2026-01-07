@@ -13,7 +13,7 @@ import type {
     SpecialCmsImage as SpecialCmsImageT,
     SpecialCmsParagraph as SpecialCmsParagraphT
 } from '@prisma/client'
-import type { AuthResultTypeAny } from '@/auth/auther/AuthResult'
+import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
 
 type PropTypes = {
     specialCmsImage: SpecialCmsImageT,
