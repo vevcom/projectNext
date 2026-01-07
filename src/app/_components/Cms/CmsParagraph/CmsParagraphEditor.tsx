@@ -7,12 +7,12 @@ import Form from '@/components/Form/Form'
 import PopUp from '@/components/PopUp/PopUp'
 import { RequireNothing } from '@/auth/authorizer/RequireNothing'
 import { configureAction } from '@/services/configureAction'
-import useEditMode from '@/hooks/useEditMode'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import type { CmsParagraph } from '@prisma/client'
 import type { UpdateCmsParagraphAction } from '@/cms/paragraphs/types'
+import useEditMode from '@/hooks/useEditMode'
 
 //needed because SimpleMDE is not SSR compatible as it access navigator object
 const DynamicSimpleMDEditor = dynamic(
