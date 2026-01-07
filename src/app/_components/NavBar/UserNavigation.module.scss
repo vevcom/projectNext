@@ -13,7 +13,10 @@
         transform: translateY(calc(100% + .5em));
         min-width: 300px;
         max-height: 90vh;
-        @include ohma.boxShadow("");
+        @include ohma.boxShadow('');
+        &:hover {
+            @include ohma.boxShadow('hover');
+        }
         @include ohma.round();
     }
     @include ohma.screenMobile {

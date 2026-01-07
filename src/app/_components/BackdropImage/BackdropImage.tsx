@@ -21,7 +21,7 @@ export default function BackdropImage({ children, image, grayScale = true, image
             <div className={styles.content}>
                 {children}
             </div>
-            <div className={styles.image} style={{ width: imageSize ?? 400 }}>
+            <div className={styles.image}>
                 <Image
                     className={grayScale ? styles.gray : ''}
                     image={image}

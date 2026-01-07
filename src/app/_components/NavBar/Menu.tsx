@@ -35,16 +35,16 @@ export default function Menu({ items, openBtnContext }: PropTypes) {
                     <>
                         <div ref={menuRef} className={styles.Menu}>
                             <FontAwesomeIcon className={styles.close} icon={faTimes} onClick={closeMenu}/>
-                            <ul>
+                            <div>
                                 {items.map((item) => (
-                                    <li key={item.name}>
+                                    <div key={item.name}>
                                         <Link href={item.href}>
                                             <FontAwesomeIcon icon={item.icon}/>
                                             {item.name}
                                         </Link>
-                                    </li>
+                                    </div>
                                 ))}
-                            </ul>
+                            </div>
                         </div>
                     </>
                 ) : null

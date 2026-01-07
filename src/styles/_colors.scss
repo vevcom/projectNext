@@ -27,9 +27,15 @@ $gray-900: #1c1c1c;
 $black:  #000;
 
 
-$primary:    hsl(210, 98%, 50%);
+$primary:    hsl(210, 70%, 50%);
 $secondary:  hsl(210, 5%, 12%);
 $layer:      hsl(210, 0%, 0%, 20%);
+$text:       hsl(0, 0%, 80%);
+$text-muted: hsl(0, 0%, 70%);
+
+$primary:    hsl(207, 91%, 65%);
+$secondary:  hsl(202, 64%, 10%);
+$layer:      hsl(207, 0%, 30%, 20%);
 $text:       hsl(0, 0%, 80%);
 $text-muted: hsl(0, 0%, 70%);
 
@@ -50,5 +56,4 @@ $text-muted: hsl(0, 0%, 70%);
 }
 
 $error: $red;
-
 $body-background: $secondary;

@@ -12,14 +12,15 @@
 @mixin boxShadow($state) {
     @if $state=='hover' {
         box-shadow: colors.$layer 0px 3px 6px, colors.$layer 0px 3px 6px;
+        transition: box-shadow 0.3s;
     } @else {
         box-shadow: colors.$layer 0px 1px 3px, colors.$layer 0px 1px 2px;
+        transition: box-shadow 0.3s;
     }
 }
 
 @mixin card {
     border-radius: variables.$cardRounding;
-    padding: variables.$cardPadding;
     transition: box-shadow 0.3s;
     @include boxShadow('');
     &:hover {
@@ -36,22 +37,21 @@
 @mixin table {
     width: 100%;
     border-collapse: collapse;
+    border: none;
     margin: 20px 0;
     font-size: 18px;
     text-align: left;
     th, td {
-        border: 1px solid colors.$gray-300;
-        padding: 8px;
+        padding: variables.$gap
     }
     th {
-        background-color: colors.$gray-200;
-        color: colors.$black;
+        background-color: lighten(colors.$secondary, 4%)
     }
     tr:nth-child(even) {
-        background-color: colors.$gray-100;
+        background-color: lighten(colors.$secondary, 2%)
     }
     tr:hover {
-        background-color: colors.$gray-200;
+        @include layer;
     }
 }
 

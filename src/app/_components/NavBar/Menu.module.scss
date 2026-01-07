@@ -14,7 +14,8 @@
     left: 0;
     z-index: 9;
     @include ohma.layer;
-    width: 100dvw;
+    max-width: 50dvw;
+    width: 66 * ohma.$gap;
     height: calc(100dvh - 60px);
     display: flex;
     justify-content: start;
@@ -22,6 +23,7 @@
     overflow-y: auto;
     .close {
         position: absolute;
+        display: none;
         top: 0;
         left: 0;
         margin: .6rem;
@@ -33,35 +35,42 @@
         width: 50px;
         height: 50px;
     }
-    ul {
+    div {
+        margin: ohma.$gap;
         position: relative;
-        top: 60px;
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         justify-content: start;
-    }
-    li {
-        list-style: none; 
-        margin: 10px 10px 10px 28px;
-        a {
-            text-decoration: none; 
-            color: ohma.$colors-text;
-            display: flex;
-            align-items: center; 
-            font-size: ohma.$fonts-l;
-            font-weight: ohma.$fonts-weight-l;
-            &:hover {
-                color: ohma.$colors-primary;
-                svg {
-                    color: ohma.$colors-primary;
-                }
-            }
-            svg {
-                margin-right: 5px;
+        flex-wrap: wrap;
+
+        div {
+            list-style: none;
+            margin: ohma.$gap;
+            a {
+                width: 30 * ohma.$gap;
+                text-decoration: none;
+                padding: 2 * ohma.$gap;
+                @include ohma.layer();
+                border-radius: ohma.$rounding;
                 color: ohma.$colors-text;
+                display: flex;
+                align-items: center;
+                font-size: ohma.$fonts-l;
+                font-weight: ohma.$fonts-weight-l;
+                &:hover {
+                    color: ohma.$colors-primary;
+                    svg {
+                        color: ohma.$colors-primary;
+                    }
+                }
+                svg {
+                    margin-right: ohma.$gap;
+                    color: ohma.$colors-text;
+                }
             }
         }
     }
+
     animation: radiate .4s ease-out forwards;
     &.closeMenu {
         animation: deradiate .4s ease-in forwards;
@@ -70,32 +79,37 @@
 
 @keyframes radiate {
     0% {
-        clip-path: inset(0 0 100% 0);
+        clip-path: inset(0 100% 0 0);
     }
     100% {
-        clip-path: inset(0 0 0% 0);
+        clip-path: inset(0 0% 0 0);
     }
 }
 
 @keyframes deradiate {
     0% {
-        clip-path: inset(0 0 0% 0);
+        clip-path: inset(0 0 0 0);
     }
     100% {
-        clip-path: inset(0 0 100% 0);
+        clip-path: inset(0 100% 0 0);
     }
 }
 
 @media screen and (max-width: ohma.$mobileBreakpoint) {
     .Menu {
-        width: auto;
+        width: 100dvw;
+        max-width: unset;
         height: calc(100dvh - 59px);
         top: 0;
         bottom: 0;
         right: 0;
-        > ul {
+        > div {
             top: 0;
-            justify-content: flex-end;
+            justify-content: center;
+            > div > a {
+                font-size: x-large;
+                width: calc(100dvw - (ohma.$gap * 4));
+            }
         }
         &.closeMenu {
             animation: none;

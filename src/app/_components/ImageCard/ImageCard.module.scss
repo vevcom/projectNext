@@ -19,7 +19,7 @@ $textUnderlineColor: ohma.$colors-secondary;
     isolation: isolate;
     overflow: hidden;
     @include ohma.layer;
-    margin: calc(1 * ohma.$gap);
+    margin: ohma.$gap;
 
     > .image {
         position: absolute;
