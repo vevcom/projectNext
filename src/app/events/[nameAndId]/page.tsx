@@ -40,7 +40,7 @@ export default async function Event({ params }: PropTypes) {
 
     const tags = unwrapActionReturn(await readEventTagsAction())
 
-    const ownRegitration = event.eventRegistrations.length ? event.eventRegistrations[0] : undefined
+    const ownRegistration = event.eventRegistrations.length ? event.eventRegistrations[0] : undefined
 
     return (
         <div className={styles.wrapper}>
@@ -111,7 +111,7 @@ export default async function Event({ params }: PropTypes) {
                     {event.waitingList && <p>
                         På venteliste: {event.numOnWaitingList}
                     </p>}
-                    <RegistrationUI event={event} registration={ownRegitration} onWaitingList={event.onWaitingList} />
+                    <RegistrationUI event={event} registration={ownRegistration} onWaitingList={event.onWaitingList} />
                 </> : <p>
                     <FontAwesomeIcon icon={faExclamation} />
                     Dette arrangementet tar ikke påmeldinger
