@@ -1,5 +1,5 @@
 'use client'
-import useAuthorizer from './useAuther'
+import useAuthorizer from './useAuthorizer'
 import { EditModeContext } from '@/contexts/EditMode'
 import { useContext, useEffect, useRef } from 'react'
 import { v4 as uuid } from 'uuid'
