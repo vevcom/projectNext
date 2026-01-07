@@ -1,7 +1,7 @@
-import { AutherFactory } from './Auther'
+import { AuthorizerFactory } from './Authorizer'
 import type { Permission } from '@prisma/client'
 
-export const RequirePermissionOrGroupAdmin = AutherFactory<
+export const RequirePermissionOrGroupAdmin = AuthorizerFactory<
     { permission: Permission },
     { groupId: number },
     'USER_NOT_REQUIERED_FOR_AUTHORIZED'

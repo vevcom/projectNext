@@ -1,6 +1,6 @@
 import EmailRegistrationForm from './EmailregistrationForm'
 import { ServerSession } from '@/auth/session/ServerSession'
-import { RequireUser } from '@/auth/auther/RequireUser'
+import { RequireUser } from '@/auth/authorizer/RequireUser'
 import { readUserAction } from '@/services/users/actions'
 import { notFound, redirect } from 'next/navigation'
 

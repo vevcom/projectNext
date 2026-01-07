@@ -1,9 +1,9 @@
-import { AutherFactory } from './Auther'
+import { AuthorizerFactory } from './Authorizer'
 import type { Permission } from '@prisma/client'
 
-export const RequireUserIdOrPermission = AutherFactory<
+export const RequireUsernameOrPermission = AuthorizerFactory<
     { permission: Permission },
-    { userId: number },
+    { username: string },
     'USER_NOT_REQUIERED_FOR_AUTHORIZED'
 >(({ session, staticFields, dynamicFields }) => {
     if (session.permissions.includes(staticFields.permission)) {
@@ -13,7 +13,7 @@ export const RequireUserIdOrPermission = AutherFactory<
         }
     }
     return {
-        success: session.user !== null && session.user.id === dynamicFields.userId,
+        success: session.user !== null && session.user.username === dynamicFields.username,
         session,
         errorMessage: 'Du har ikke tilgang til denne ressursen'
     }

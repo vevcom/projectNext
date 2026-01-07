@@ -1,6 +1,6 @@
-import { AutherFactory } from './Auther'
+import { AuthorizerFactory } from './Authorizer'
 
-export const RequireUser = AutherFactory<
+export const RequireUser = AuthorizerFactory<
     Record<string, never>,
     Record<string, never>,
     'USER_REQUIERED_FOR_AUTHORIZED'

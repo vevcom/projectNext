@@ -16,7 +16,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import type { CmsImage, Image as ImageT } from '@prisma/client'
 import type { UpdateCmsImageAction } from '@/cms/images/types'
-import type { AuthResultTypeAny } from '@/auth/auther/AuthResult'
+import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
 
 type PropTypes = {
     cmsImage: CmsImage & {

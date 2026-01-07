@@ -3,7 +3,7 @@ import CmsLinkEditor from './CmsLinkEditor'
 import Link from 'next/link'
 import type { CmsLink as CmsLinkT } from '@prisma/client'
 import type { UpdateCmsLinkAction } from '@/cms/links/types'
-import type { AuthResultTypeAny } from '@/auth/auther/AuthResult'
+import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
 
 type PropTypes = {
     cmsLink: CmsLinkT

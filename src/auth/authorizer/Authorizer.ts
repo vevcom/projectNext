@@ -3,7 +3,7 @@ import type { SessionMaybeUser, SessionUser } from '@/auth/session/Session'
 
 export type UserRequieredOutOpt = 'USER_NOT_REQUIERED_FOR_AUTHORIZED' | 'USER_REQUIERED_FOR_AUTHORIZED'
 
-export type AutherDynamicFieldsBound<
+export type AuthorizerDynamicFieldsBound<
     UserRequieredOut extends UserRequieredOutOpt = 'USER_NOT_REQUIERED_FOR_AUTHORIZED' | 'USER_REQUIERED_FOR_AUTHORIZED',
 > = {
     auth: (session: SessionMaybeUser) => UserRequieredOut extends 'USER_REQUIERED_FOR_AUTHORIZED'
@@ -11,23 +11,23 @@ export type AutherDynamicFieldsBound<
     : (AuthResult<'HAS_USER' | 'NO_USER', true> | AuthResult<'HAS_USER' | 'NO_USER', false>)
 }
 
-export type AutherStaticFieldsBound<
+export type AuthorizerStaticFieldsBound<
     DynamicFields extends object,
     UserRequieredOut extends UserRequieredOutOpt = 'USER_NOT_REQUIERED_FOR_AUTHORIZED' | 'USER_REQUIERED_FOR_AUTHORIZED',
 > = {
-    dynamicFields: (dynamicFields: DynamicFields) => AutherDynamicFieldsBound<UserRequieredOut>,
+    dynamicFields: (dynamicFields: DynamicFields) => AuthorizerDynamicFieldsBound<UserRequieredOut>,
 }
 
-export type Auther<
+export type Authorizer<
     StaticFields extends object,
     DynamicFields extends object,
     UserRequieredOut extends UserRequieredOutOpt,
 > = {
-    staticFields: (staticFields: StaticFields) => AutherStaticFieldsBound<DynamicFields, UserRequieredOut>
+    staticFields: (staticFields: StaticFields) => AuthorizerStaticFieldsBound<DynamicFields, UserRequieredOut>
 }
 
 
-export function AutherFactory<
+export function AuthorizerFactory<
     StaticFields extends object,
     DynamicFields extends object,
     const UserRequieredOut extends UserRequieredOutOpt,
@@ -49,7 +49,7 @@ export function AutherFactory<
         session: SessionMaybeUser
         errorMessage?: string,
     }))
-): Auther<StaticFields, DynamicFields, UserRequieredOut> {
+): Authorizer<StaticFields, DynamicFields, UserRequieredOut> {
     return {
         staticFields: (staticFields) => (
             {

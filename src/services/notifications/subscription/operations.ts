@@ -6,7 +6,7 @@ import { allNotificationMethodsOff, allNotificationMethodsOn } from '@/services/
 import { availableNotificationMethodIncluder } from '@/services/notifications/channel/constants'
 import { notificationChannelOperations } from '@/services/notifications/channel/operations'
 import { defineOperation } from '@/services/serviceOperation'
-import { ServerOnly } from '@/auth/auther/ServerOnly'
+import { ServerOnly } from '@/auth/authorizer/ServerOnly'
 import { ServerError } from '@/services/error'
 import { z } from 'zod'
 import type { Prisma } from '@prisma/client'

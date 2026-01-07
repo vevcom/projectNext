@@ -7,7 +7,7 @@ import type { ActionReturn } from '@/services/actionTypes'
 
 export async function generateOmegaIdAction(): Promise<ActionReturn<string>> {
     //TODO: when changed to makeAction + operation it should take in a params: userId and
-    //then auth on userId using the RequireUserId auther.
+    //then auth on userId using the RequireUserId authorizer.
     const user = (await ServerSession.fromNextAuth()).user
     if (!user) return createActionError('NOT FOUND', 'User not found')
 

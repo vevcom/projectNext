@@ -5,7 +5,7 @@ import { readSpecialImageAction } from '@/services/images/actions'
 import React from 'react'
 import type { ExpandedCmsImage, UpdateCmsImageAction } from '@/cms/images/types'
 import type { PropTypes as ImagePropTypes } from '@/components/Image/Image'
-import type { AuthResultTypeAny } from '@/auth/auther/AuthResult'
+import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
 
 export type PropTypes = Omit<
     ImagePropTypes, 'className' | 'imageSize' | 'smallSize' | 'largeSize' | 'image' | 'children'

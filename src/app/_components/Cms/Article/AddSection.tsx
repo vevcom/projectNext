@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation'
 import type { ArticleSectionPart } from '@/cms/articleSections/types'
 import type { AddSectionToArticleAction } from '@/cms/articles/types'
 import type { ConfiguredAction } from '@/services/actionTypes'
-import type { AuthResultTypeAny } from '@/auth/auther/AuthResult'
+import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
 
 type PropTypes = {
     currentNumberSections: number,

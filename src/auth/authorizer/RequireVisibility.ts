@@ -1,9 +1,9 @@
-import { AutherFactory } from './Auther'
+import { AuthorizerFactory } from './Authorizer'
 import { checkVisibility } from '@/auth/visibility/checkVisibility'
 import type { VisibilityMatrix } from '@/services/visibility/types'
 import type { Permission } from '@prisma/client'
 
-export const RequireVisibility = AutherFactory<
+export const RequireVisibility = AuthorizerFactory<
     { bypassPermission: Permission },
     { visibility: VisibilityMatrix },
     'USER_NOT_REQUIERED_FOR_AUTHORIZED'

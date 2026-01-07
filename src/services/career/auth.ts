@@ -1,5 +1,5 @@
-import { RequireNothing } from '@/auth/auther/RequireNothing'
-import { RequireOneOfPermission } from '@/auth/auther/RequireOneOfPermission'
+import { RequireNothing } from '@/auth/authorizer/RequireNothing'
+import { RequireOneOfPermission } from '@/auth/authorizer/RequireOneOfPermission'
 
 export const careerAuth = {
     readSpecialCmsParagraphCareerInfo: RequireNothing.staticFields({}),

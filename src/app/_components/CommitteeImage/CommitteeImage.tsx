@@ -6,7 +6,7 @@ import { updateCommitteeArticleCoverImageAction } from '@/services/groups/commit
 import type { ReactNode } from 'react'
 import type { Image as ImageT } from '@prisma/client'
 import type { ExpandedCmsImage } from '@/cms/images/types'
-import type { AuthResultTypeAny } from '@/auth/auther/AuthResult'
+import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
 
 type PropTypes = {
     children?: ReactNode

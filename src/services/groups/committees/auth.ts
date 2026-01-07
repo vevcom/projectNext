@@ -1,5 +1,5 @@
-import { RequirePermission } from '@/auth/auther/RequirePermission'
-import { RequirePermissionOrGroupAdmin } from '@/auth/auther/RequirePermissionOrGroupAdmin'
+import { RequirePermission } from '@/auth/authorizer/RequirePermission'
+import { RequirePermissionOrGroupAdmin } from '@/auth/authorizer/RequirePermissionOrGroupAdmin'
 
 export const committeeAuth = {
     create: RequirePermission.staticFields({ permission: 'COMMITTEE_CREATE' }),

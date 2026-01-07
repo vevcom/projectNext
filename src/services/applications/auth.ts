@@ -1,4 +1,4 @@
-import { RequireUserIdOrPermission } from '@/auth/auther/RequireUserIdOrPermission'
+import { RequireUserIdOrPermission } from '@/auth/authorizer/RequireUserIdOrPermission'
 
 export const applicationAuth = {
     readForUser: RequireUserIdOrPermission.staticFields({ permission: 'APPLICATION_ADMIN' }),

@@ -9,7 +9,7 @@ import { configureAction } from '@/services/configureAction'
 import { useRouter } from 'next/navigation'
 import type { CmsLink } from '@prisma/client'
 import type { UpdateCmsLinkAction } from '@/cms/links/types'
-import type { AuthResultTypeAny } from '@/auth/auther/AuthResult'
+import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
 
 type PropTypes = {
     cmsLink: CmsLink

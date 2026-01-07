@@ -11,7 +11,7 @@ import type {
 } from '@/cms/articleSections/types'
 import type { ReactNode } from 'react'
 import type { ConfiguredAction } from '@/services/actionTypes'
-import type { AuthResultTypeAny } from '@/auth/auther/AuthResult'
+import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
 
 type PropTypes = Omit<AddPartsPropTypes, 'onClick'> & {
     children: ReactNode

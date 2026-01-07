@@ -6,7 +6,7 @@ import React, { useState } from 'react'
 import { usePathname } from 'next/navigation'
 import type { ExpandedArticle, UpdateArticleAction } from '@/cms/articles/types'
 import type { ConfiguredAction } from '@/services/actionTypes'
-import type { AuthResultTypeAny } from '@/auth/auther/AuthResult'
+import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
 
 type PropTypes = {
     article: ExpandedArticle

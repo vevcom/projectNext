@@ -15,7 +15,7 @@ import type {
 import type { UpdateCmsParagraphAction } from '@/cms/paragraphs/types'
 import type { UpdateCmsImageAction } from '@/cms/images/types'
 import type { UpdateCmsLinkAction } from '@/cms/links/types'
-import type { AuthResultTypeAny } from '@/auth/auther/AuthResult'
+import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
 
 type PropTypes = {
     articleSection: ExpandedArticleSection

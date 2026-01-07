@@ -16,7 +16,7 @@ import type {
     UpdateArticleAction
 } from '@/cms/articles/types'
 import type { UpdateCmsImageAction } from '@/cms/images/types'
-import type { AuthResultTypeAny } from '@/auth/auther/AuthResult'
+import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
 
 export type PropTypes = {
     article: ExpandedArticle,

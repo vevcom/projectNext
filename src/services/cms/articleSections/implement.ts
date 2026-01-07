@@ -4,7 +4,7 @@ import { cmsParagraphOperations } from '@/cms/paragraphs/operations'
 import { cmsImageOperations } from '@/cms/images/operations'
 import { cmsLinkOperations } from '@/cms/links/operations'
 import type { articleSectionSchemas } from './schemas'
-import type { AutherDynamicFieldsBound } from '@/auth/auther/Auther'
+import type { AuthorizerDynamicFieldsBound } from '@/auth/authorizer/Authorizer'
 import type { Prisma } from '@prisma/client'
 import type { z } from 'zod'
 import type { ArgsAuthGetterAndOwnershipCheck, PrismaPossibleTransaction } from '@/services/serviceOperation'
@@ -35,7 +35,7 @@ export function implementUpdateArticleSectionOperations<
             prisma: PrismaPossibleTransaction<false>,
             implementationParams: z.infer<ImplementationParamsSchema>
         }
-    ) => AutherDynamicFieldsBound | Promise<AutherDynamicFieldsBound>,
+    ) => AuthorizerDynamicFieldsBound | Promise<AuthorizerDynamicFieldsBound>,
     ownedArticleSections: (
         args: {
             prisma: PrismaPossibleTransaction<false>,

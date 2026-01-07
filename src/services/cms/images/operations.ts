@@ -1,6 +1,6 @@
 import '@pn-server-only'
 import { cmsImageSchemas } from './schemas'
-import { ServerOnly } from '@/auth/auther/ServerOnly'
+import { ServerOnly } from '@/auth/authorizer/ServerOnly'
 import { defineOperation, defineSubOperation } from '@/services/serviceOperation'
 import { ServerError } from '@/services/error'
 import { z } from 'zod'

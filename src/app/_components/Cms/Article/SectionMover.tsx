@@ -7,7 +7,7 @@ import { useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import type { ConfiguredAction } from '@/services/actionTypes'
 import type { ReorderArticleSectionsAction } from '@/cms/articles/types'
-import type { AuthResultTypeAny } from '@/auth/auther/AuthResult'
+import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
 
 type PropTypes = {
     className?: string

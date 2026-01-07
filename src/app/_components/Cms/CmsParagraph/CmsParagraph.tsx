@@ -3,7 +3,7 @@ import ParagraphEditor from './CmsParagraphEditor'
 import React from 'react'
 import type { CmsParagraph as CmsParagraphT } from '@prisma/client'
 import type { UpdateCmsParagraphAction } from '@/cms/paragraphs/types'
-import type { AuthResultTypeAny } from '@/auth/auther/AuthResult'
+import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
 
 export type PropTypes = {
     cmsParagraph: CmsParagraphT

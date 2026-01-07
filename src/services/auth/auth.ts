@@ -1,5 +1,5 @@
-import { RequireJWT } from '@/auth/auther/RequireJWT'
-import { RequireNothing } from '@/auth/auther/RequireNothing'
+import { RequireJWT } from '@/auth/authorizer/RequireJWT'
+import { RequireNothing } from '@/auth/authorizer/RequireNothing'
 
 // TODO: A better name lol
 export const authAuth = {

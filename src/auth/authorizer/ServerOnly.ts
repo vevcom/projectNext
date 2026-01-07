@@ -1,6 +1,6 @@
-import { AutherFactory } from './Auther'
+import { AuthorizerFactory } from './Authorizer'
 
-export const RequireServerOnly = AutherFactory(
+export const RequireServerOnly = AuthorizerFactory(
     ({ session }) => ({ success: false, session })
 )
 

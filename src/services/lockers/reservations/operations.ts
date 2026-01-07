@@ -23,7 +23,7 @@ export const lockerReservationOperations = {
         }),
         dataSchema: lockerReservationSchemas.create,
         operation: async ({ prisma, session, data, params }) => {
-            // TODO: Use authers for authing in stead of this
+            // TODO: Use authorizers for authing in stead of this
             // Verify that user is in group
             if (data.groupId) {
                 const groupUsers = await groupOperations.readUsersOfGroups({
@@ -90,7 +90,7 @@ export const lockerReservationOperations = {
         }),
         dataSchema: lockerReservationSchemas.update,
         operation: async ({ prisma, session, data, params: { id } }) => {
-            // TODO: Use authers for authing in stead of this
+            // TODO: Use authorizers for authing in stead of this
             // Verify that the user updating is the creator of the reservation
             const reservation = await prisma.lockerReservation.findUniqueOrThrow({
                 where: {
