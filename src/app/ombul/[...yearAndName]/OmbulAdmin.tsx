@@ -5,7 +5,9 @@ import Form from '@/components/Form/Form'
 import { updateOmbulAction, updateOmbulFileAction, destroyOmbulAction } from '@/services/ombul/actions'
 import NumberInput from '@/components/UI/NumberInput'
 import FileInput from '@/components/UI/FileInput'
-import useEditing from '@/hooks/useEditing'
+import useEditMode from '@/hooks/useEditMode'
+import { ombulAuth } from '@/services/ombul/auth'
+import { configureAction } from '@/services/configureAction'
 import { useRouter } from 'next/navigation'
 import type { ReactNode } from 'react'
 import type { ExpandedOmbul } from '@/services/ombul/types'
@@ -27,15 +29,21 @@ export default function OmbulAdmin({
     children,
 }: PropTypes) {
     const { push, refresh } = useRouter()
-    const canUpdate = useEditing({
-        requiredPermissions: [['OMBUL_UPDATE']]
+    const canUpdate = useEditMode({
+        authorizer: ombulAuth.update.dynamicFields({})
     })
-    const canDestroy = useEditing({
-        requiredPermissions: [['OMBUL_DESTROY']]
+    const canDestroy = useEditMode({
+        authorizer: ombulAuth.destroy.dynamicFields({})
     })
 
-    const updateOmbulActionBind = updateOmbulAction.bind(null, ombul.id)
-    const updateOmbulFileActionBind = updateOmbulFileAction.bind(null, ombul.id)
+    const updateOmbulActionBind = configureAction(
+        updateOmbulAction,
+        { params: { id: ombul.id } }
+    )
+    const updateOmbulFileActionBind = configureAction(
+        updateOmbulFileAction,
+        { params: { id: ombul.id } }
+    )
 
     const handleChange = async (newOmbul: ExpandedOmbul | undefined) => {
         if (!newOmbul) return
@@ -85,7 +93,10 @@ export default function OmbulAdmin({
                 {
                     canDestroy && (
                         <Form
-                            action={destroyOmbulAction.bind(null, ombul.id)}
+                            action={configureAction(
+                                destroyOmbulAction,
+                                { params: { id: ombul.id } }
+                            )}
                             successCallback={handleDestroy}
                             submitText="Slett"
                             submitColor="red"

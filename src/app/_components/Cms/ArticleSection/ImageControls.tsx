@@ -1,7 +1,8 @@
 'use client'
 import styles from './ImageControls.module.scss'
+import useEditMode from '@/hooks/useEditMode'
 import { imageSizeIncrement, maxImageSize, minImageSize } from '@/cms/articleSections/constants'
-import useEditing from '@/hooks/useEditing'
+import { RequireNothing } from '@/auth/authorizer/RequireNothing'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
     faChevronLeft,
@@ -24,7 +25,10 @@ type PropTypes = {
  * i.e move it left or right and size it
  */
 export default function ImageControls({ articleSection, className, updateArticleSectionAction }: PropTypes) {
-    const canEdit = useEditing({}) //TODO: check visibility of article for user and pass it to useEditing
+    //TODO: Authorizer must be passed in....
+    const canEdit = useEditMode({
+        authorizer: RequireNothing.staticFields({}).dynamicFields({})
+    })
     const { refresh } = useRouter()
     if (!canEdit) return null
 

@@ -1,17 +1,18 @@
 'use client'
+import 'easymde/dist/easymde.min.css'
+import './CustomEditorClasses.scss'
 import styles from './CmsParagraphEditor.module.scss'
 import EditOverlay from '@/components/Cms/EditOverlay'
 import Form from '@/components/Form/Form'
 import PopUp from '@/components/PopUp/PopUp'
-import useEditing from '@/hooks/useEditing'
+import { RequireNothing } from '@/auth/authorizer/RequireNothing'
 import { configureAction } from '@/services/configureAction'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import 'easymde/dist/easymde.min.css'
-import './CustomEditorClasses.scss'
 import dynamic from 'next/dynamic'
 import type { CmsParagraph } from '@prisma/client'
 import type { UpdateCmsParagraphAction } from '@/cms/paragraphs/types'
+import useEditMode from '@/hooks/useEditMode'
 
 //needed because SimpleMDE is not SSR compatible as it access navigator object
 const DynamicSimpleMDEditor = dynamic(
@@ -29,7 +30,10 @@ type PropTypes = {
 }
 
 export default function CmsParagraphEditor({ cmsParagraph, editorClassName, updateCmsParagraphAction }: PropTypes) {
-    const canEdit = useEditing({}) //TODO: pass visibility / permissions to useEditing
+    //TODO: Authorizer must be passed in....
+    const canEdit = useEditMode({
+        authorizer: RequireNothing.staticFields({}).dynamicFields({})
+    })
     const { refresh } = useRouter()
     const [content, setContent] = useState(cmsParagraph.contentMd)
 

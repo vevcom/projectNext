@@ -1,7 +1,7 @@
-import { RequirePermission } from '@/auth/auther/RequirePermission'
-import { RequirePermissionAndUser } from '@/auth/auther/RequirePermissionAndUser'
-import { RequireUser } from '@/auth/auther/RequireUser'
-import { RequireUserIdOrPermission } from '@/auth/auther/RequireUserIdOrPermission'
+import { RequirePermission } from '@/auth/authorizer/RequirePermission'
+import { RequirePermissionAndUser } from '@/auth/authorizer/RequirePermissionAndUser'
+import { RequireUser } from '@/auth/authorizer/RequireUser'
+import { RequireUserIdOrPermission } from '@/auth/authorizer/RequireUserIdOrPermission'
 
 export const eventRegistrationAuth = {
     // TODO: Fix authing

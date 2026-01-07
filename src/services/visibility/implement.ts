@@ -1,6 +1,6 @@
 import { visibilityOperations } from './operations'
 import type { ArgsAuthGetterAndOwnershipCheck, PrismaPossibleTransaction } from '@/services/serviceOperation'
-import type { AutherResult } from '@/auth/auther/Auther'
+import type { AuthorizerDynamicFieldsBound } from '@/auth/authorizer/Authorizer'
 import type { Prisma } from '@prisma/client'
 import type { visibilitySchemas } from './schemas'
 import type { z } from 'zod'
@@ -35,13 +35,13 @@ export function implementVisibilityOperations<
                 prisma: PrismaPossibleTransaction<false>,
                 implementationParams: z.infer<ImplementationParamsSchema>
             }
-        ) => AutherResult | Promise<AutherResult>
+        ) => AuthorizerDynamicFieldsBound | Promise<AuthorizerDynamicFieldsBound>
         read: (
             args: {
                 prisma: PrismaPossibleTransaction<false>,
                 implementationParams: z.infer<ImplementationParamsSchema>
             }
-        ) => AutherResult | Promise<AutherResult>
+        ) => AuthorizerDynamicFieldsBound | Promise<AuthorizerDynamicFieldsBound>
     },
     ownedVisibility: (
         args: {

@@ -1,96 +1,12 @@
 'use server'
-
 import { ombulOperations } from './operations'
 import { makeAction } from '@/services/serverAction'
-import { createActionError, createZodActionError, safeServerCall } from '@/services/actionError'
-import { getUser } from '@/auth/session/getUser'
-import { createOmbul } from '@/services/ombul/create'
-import { destroyOmbul } from '@/services/ombul/destroy'
-import { updateOmbul, updateOmbulFile } from '@/services/ombul/update'
-import { createOmbulValidation, updateOmbulFileValidation, updateOmbulValidation } from '@/services/ombul/validation'
-import type { ExpandedOmbul } from '@/services/ombul/types'
-import type { ActionReturn } from '@/services/actionTypes'
-import type { CreateOmbulTypes, UpdateOmbulFileTypes, UpdateOmbulTypes } from '@/services/ombul/validation'
-import type { Ombul } from '@prisma/client'
 
-/**
- * Create a new Ombul.
- * @param rawData includes a pdf file with the ombul issue optionaly year and issueNumber
- * @param CoverImageId is the id of the Image that will be used as the cover of the ombul
- */
-export async function createOmbulAction(rawdata: FormData | CreateOmbulTypes['Type']): Promise<ActionReturn<Ombul>> {
-    //Auth route
-    const { status, authorized } = await getUser({
-        requiredPermissions: [['OMBUL_CREATE']]
-    })
-    if (!authorized) return createActionError(status)
-
-    const parse = createOmbulValidation.typeValidate(rawdata)
-    if (!parse.success) return createZodActionError(parse)
-    const data = parse.data
-
-    return await safeServerCall(() => createOmbul(data))
-}
-
-export async function destroyOmbulAction(id: number): Promise<ActionReturn<ExpandedOmbul>> {
-    const { status, authorized } = await getUser({
-        requiredPermissions: [['OMBUL_DESTROY']]
-    })
-
-    if (!authorized) return createActionError(status)
-
-    return await safeServerCall(() => destroyOmbul(id))
-}
-
+export const createOmbulAction = makeAction(ombulOperations.create)
+export const destroyOmbulAction = makeAction(ombulOperations.destroy)
 export const readOmbulAction = makeAction(ombulOperations.read)
 export const readLatestOmbulAction = makeAction(ombulOperations.readLatest)
 export const readOmbulsAction = makeAction(ombulOperations.readAll)
-
 export const updateOmbulCmsCoverImageAction = makeAction(ombulOperations.updateCmsCoverImage)
-
-/**
- * A action to update an ombul
- * @param id - The id of the ombul to update
- * @param rawdata - The new data for the ombul including: name, year, issueNumber, description,
- * @returns The updated ombul
- */
-export async function updateOmbulAction(
-    id: number,
-    rawdata: FormData | UpdateOmbulTypes['Type']
-): Promise<ActionReturn<ExpandedOmbul>> {
-    // Auth route
-    const { status, authorized } = await getUser({
-        requiredPermissions: [['OMBUL_UPDATE']]
-    })
-    if (!authorized) return createActionError(status)
-
-    //Parse the data
-    const parse = updateOmbulValidation.typeValidate(rawdata)
-    if (!parse.success) return createZodActionError(parse)
-    const data = parse.data
-
-    return await safeServerCall(() => updateOmbul(id, data))
-}
-
-/**
- * A action that updates the ombul file (i.e. the pdf file) of an ombul
- * @param id - The id of the ombul to update
- * @param rawData - The new data for the new ombul file with field name 'file'
- * @returns The updated ombul
- */
-export async function updateOmbulFileAction(
-    id: number,
-    rawData: FormData | UpdateOmbulFileTypes['Type']
-): Promise<ActionReturn<ExpandedOmbul>> {
-    // auth route
-    const { status, authorized } = await getUser({
-        requiredPermissions: [['OMBUL_UPDATE']]
-    })
-    if (!authorized) return createActionError(status)
-
-    const parse = updateOmbulFileValidation.typeValidate(rawData)
-    if (!parse.success) return createZodActionError(parse)
-    const data = parse.data
-
-    return await safeServerCall(() => updateOmbulFile(id, data))
-}
+export const updateOmbulAction = makeAction(ombulOperations.update)
+export const updateOmbulFileAction = makeAction(ombulOperations.updateFile)

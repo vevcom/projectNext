@@ -1,7 +1,7 @@
 import { EmailVerifiedWrapper } from './EmailVerifiedWrapper'
-import { getUser } from '@/auth/session/getUser'
 import { QueryParams } from '@/lib/queryParams/queryParams'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
+import { ServerSession } from '@/auth/session/ServerSession'
 import { verifyEmailAction } from '@/services/auth/actions'
 import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
@@ -15,10 +15,7 @@ export default async function Register({ searchParams }: PropTypes) {
         notFound()
     }
 
-    const { user } = await getUser({
-        userRequired: false,
-        shouldRedirect: false,
-    })
+    const user = (await ServerSession.fromNextAuth()).user
 
     const userId = user?.id
     const updatedUser = unwrapActionReturn(await verifyEmailAction({ params: { token } }))

@@ -1,8 +1,8 @@
 import LoggedInLandingPage from './LoggedIn'
 import LoggedOutLandingPage from './LoggedOut'
-import { Session } from '@/auth/session/Session'
+import { ServerSession } from '@/auth/session/ServerSession'
 
 export default async function Home() {
-    const { user } = await Session.fromNextAuth()
+    const { user } = await ServerSession.fromNextAuth()
     return user ? <LoggedInLandingPage/> : <LoggedOutLandingPage />
 }

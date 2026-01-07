@@ -8,6 +8,7 @@ import type {
     NotificationMethodTypes
 } from '@/services/notifications/types'
 
+//TODO: This is unused ??
 export function parseMethods(data: FormData, prefix?: NotificationMethodTypes) {
     return Object.fromEntries(
         notificationMethodsArray.filter(method => notificationMethodsArray.includes(method)).map(method => {

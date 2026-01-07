@@ -3,6 +3,7 @@
 import styles from './ChangeName.module.scss'
 import EditableTextField from '@/components/EditableTextField/EditableTextField'
 import { updateOmbulAction } from '@/services/ombul/actions'
+import { configureAction } from '@/services/configureAction'
 import type { ReactNode } from 'react'
 import type { ExpandedOmbul } from '@/services/ombul/types'
 
@@ -21,8 +22,6 @@ type PropTypes = {
  * @returns The component jsx
  */
 export default function ChangeName({ children, editable, ombulId }: PropTypes) {
-    const changeName = updateOmbulAction.bind(null, ombulId)
-
     const handleChange = async (data: ExpandedOmbul | undefined) => {
         const name = data?.name
         if (!name) return
@@ -37,7 +36,10 @@ export default function ChangeName({ children, editable, ombulId }: PropTypes) {
         <EditableTextField
             editable={editable}
             formProps={{
-                action: changeName,
+                action: configureAction(
+                    updateOmbulAction,
+                    { params: { id: ombulId } }
+                ),
                 successCallback: handleChange
             }}
             inputName="name"
