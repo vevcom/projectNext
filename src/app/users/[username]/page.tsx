@@ -59,7 +59,7 @@ export default async function User({ params }: PropTypes) {
         [RelationshipStatus.SINGLE]: 'green',
         [RelationshipStatus.ITS_COMPLICATED]: 'yellow',
         [RelationshipStatus.TAKEN]: 'red',
-        [RelationshipStatus.NOT_SPECIFIED]: 'white'
+        [RelationshipStatus.NOT_SPECIFIED]: 'white' 
     }
 
     // Not ideal to use typecast here, but this is the simplest way.
@@ -98,8 +98,8 @@ export default async function User({ params }: PropTypes) {
                         </div>
                         <hr />
                         <p className={styles.orderText}>
-                            {sexConfig[profile.user.sex ?? 'OTHER'].title}
-                            uudaf {omegaMembership.order}´dis orden i Sanctus Omega Broderskab
+                            {sexConfig[profile.user.sex ?? 'OTHER'].title
+                            } uudaf {omegaMembership.order}´dis orden i Sanctus Omega Broderskab
                         </p>
                     </div>
                     <div className={styles.leftSection}>
@@ -134,9 +134,9 @@ export default async function User({ params }: PropTypes) {
                         <p>
                             <span className={styles.relationshipStatus}>Sivilstatus: </span>
                             {profile.user.relationshipstatusText ? profile.user.relationshipstatusText :
-                                profile.user.relationshipStatus === RelationshipStatus.SINGLE && 'Single' ||
-                            profile.user.relationshipStatus === RelationshipStatus.ITS_COMPLICATED && "It's complicated" ||
-                            profile.user.relationshipStatus === RelationshipStatus.TAKEN && 'Taken'
+                                profile.user.relationshipStatus === RelationshipStatus.SINGLE && 'Singel' ||
+                            profile.user.relationshipStatus === RelationshipStatus.ITS_COMPLICATED && 'Det er komplisert'||
+                            profile.user.relationshipStatus === RelationshipStatus.TAKEN && 'I et forhold'
 
                             }
 
