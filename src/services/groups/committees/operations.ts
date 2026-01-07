@@ -1,7 +1,7 @@
 import { committeeAuth } from './auth'
 import { committeeExpandedIncluder, committeeLogoIncluder, membershipIncluder } from './constants'
 import { committeeSchemas } from './validation'
-import { ServerOnlyAuther } from '@/auth/auther/RequireServer'
+import { ServerOnlyAuthorizer } from '@/auth/authorizer/RequireServer'
 import { cmsImageOperations } from '@/cms/images/operations'
 import { cmsParagraphOperations } from '@/cms/paragraphs/operations'
 import { imageOperations } from '@/services/images/operations'
@@ -56,7 +56,7 @@ const read = defineOperation({
 })
 
 const readFromGroupIds = defineOperation({
-    authorizer: ServerOnlyAuther,
+    authorizer: ServerOnlyAuthorizer,
     paramsSchema: z.object({
         ids: z.number().int().array()
     }),

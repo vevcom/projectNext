@@ -11,7 +11,7 @@ import { ImageCollectionPagingProvider, ImageCollectionPagingContext } from '@/c
 import useEditMode from '@/hooks/useEditMode'
 import { ImagePagingProvider } from '@/contexts/paging/ImagePaging'
 import PopUpProvider from '@/contexts/PopUp'
-import { RequireNothing } from '@/auth/auther/RequireNothing'
+import { RequireNothing } from '@/auth/authorizer/RequireNothing'
 import ImageSelectionProvider from '@/contexts/ImageSelection'
 import { useState } from 'react'
 import Link from 'next/link'
@@ -32,7 +32,7 @@ type PropTypes = {
  */
 export default function CmsImageEditor({ cmsImage, updateCmsImageAction }: PropTypes) {
     const canEdit = useEditMode({
-        auther: RequireNothing.staticFields({}).dynamicFields({})
+        authorizer: RequireNothing.staticFields({}).dynamicFields({})
     })
     const [currentCollectionId, setCurrentCollectionId] = useState<number>(cmsImage.image.collectionId)
 

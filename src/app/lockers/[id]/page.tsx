@@ -5,7 +5,7 @@ import UpdateLockerReservationForm from './UpdateLockerReservationForm'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { readLockerAction } from '@/services/lockers/actions'
 import { checkGroupValidity, groupOperations, inferGroupName } from '@/services/groups/operations'
-import { RequireUser } from '@/auth/auther/RequireUser'
+import { RequireUser } from '@/auth/authorizer/RequireUser'
 import { ServerSession } from '@/auth/session/ServerSession'
 
 type PropTypes = {

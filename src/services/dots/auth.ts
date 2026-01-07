@@ -1,6 +1,6 @@
-import { RequirePermission } from '@/auth/auther/RequirePermission'
-import { RequirePermissionAndUserId } from '@/auth/auther/RequirePermissionAndUserId'
-import { RequireUserIdOrPermission } from '@/auth/auther/RequireUserIdOrPermission'
+import { RequirePermission } from '@/auth/authorizer/RequirePermission'
+import { RequirePermissionAndUserId } from '@/auth/authorizer/RequirePermissionAndUserId'
+import { RequireUserIdOrPermission } from '@/auth/authorizer/RequireUserIdOrPermission'
 
 export const dotAuth = {
     create: RequirePermissionAndUserId.staticFields({ permission: 'DOTS_ADMIN' }),

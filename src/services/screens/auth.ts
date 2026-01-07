@@ -1,4 +1,4 @@
-import { RequirePermission } from '@/auth/auther/RequirePermission'
+import { RequirePermission } from '@/auth/authorizer/RequirePermission'
 
 export const screenAuth = {
     create: RequirePermission.staticFields({ permission: 'SCREEN_ADMIN' }),

@@ -1,5 +1,5 @@
-import { RequirePermission } from '@/auth/auther/RequirePermission'
-import { RequirePermissionAndUserId } from '@/auth/auther/RequirePermissionAndUserId'
+import { RequirePermission } from '@/auth/authorizer/RequirePermission'
+import { RequirePermissionAndUserId } from '@/auth/authorizer/RequirePermissionAndUserId'
 
 
 export const omegaQuotesAuth = {

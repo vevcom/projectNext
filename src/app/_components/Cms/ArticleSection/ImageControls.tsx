@@ -2,7 +2,7 @@
 import styles from './ImageControls.module.scss'
 import useEditMode from '@/hooks/useEditMode'
 import { imageSizeIncrement, maxImageSize, minImageSize } from '@/cms/articleSections/constants'
-import { RequireNothing } from '@/auth/auther/RequireNothing'
+import { RequireNothing } from '@/auth/authorizer/RequireNothing'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
     faChevronLeft,
@@ -25,9 +25,9 @@ type PropTypes = {
  * i.e move it left or right and size it
  */
 export default function ImageControls({ articleSection, className, updateArticleSectionAction }: PropTypes) {
-    //TODO: Auther must be passed in....
+    //TODO: Authorizer must be passed in....
     const canEdit = useEditMode({
-        auther: RequireNothing.staticFields({}).dynamicFields({})
+        authorizer: RequireNothing.staticFields({}).dynamicFields({})
     })
     const { refresh } = useRouter()
     if (!canEdit) return null

@@ -1,5 +1,5 @@
-import { RequirePermission } from '@/auth/auther/RequirePermission'
-import { RequireEveryPermission } from '@/auth/auther/RequireEveryPermission'
+import { RequirePermission } from '@/auth/authorizer/RequirePermission'
+import { RequireEveryPermission } from '@/auth/authorizer/RequireEveryPermission'
 
 export const mailAuth = {
     createAliasMailingListRelation: RequirePermission.staticFields({ permission: 'MAILINGLIST_ALIAS_CREATE' }),

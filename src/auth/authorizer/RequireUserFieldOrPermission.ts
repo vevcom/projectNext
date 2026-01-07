@@ -1,10 +1,10 @@
-import { AutherFactory } from './Auther'
+import { AuthorizerFactory } from './Authorizer'
 import type { Permission } from '@prisma/client'
 
 /**
  * Authenticates session if session has permission or session.user with specific field.
  */
-export const RequireUserFieldOrPermission = AutherFactory<
+export const RequireUserFieldOrPermission = AuthorizerFactory<
     { permission: Permission },
     {
         username?: string,

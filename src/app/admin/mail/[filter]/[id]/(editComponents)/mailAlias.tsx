@@ -29,7 +29,7 @@ export default function EditMailAlias({
 
     return <>
         <h2>{focusedAlias.address}</h2>
-        { /** TODO: Call auther */ }
+        { /** TODO: Call authorizer */ }
         { permissions.includes('MAILALIAS_UPDATE') && <div>
             <Form
                 title="Alias"

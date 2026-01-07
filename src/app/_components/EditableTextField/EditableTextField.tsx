@@ -2,7 +2,7 @@
 import styles from './EditableTextField.module.scss'
 import Form from '@/components/Form/Form'
 import useEditMode from '@/hooks/useEditMode'
-import { RequireNothing } from '@/auth/auther/RequireNothing'
+import { RequireNothing } from '@/auth/authorizer/RequireNothing'
 import useKeyPress from '@/hooks/useKeyPress'
 import React, { useEffect, useState, useRef } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -39,9 +39,9 @@ export default function EditableTextField<ReturnType>({
 }: PropTypes<ReturnType>) {
     const [value, setValue] = useState('')
     const [noChange, setNoChange] = useState(true)
-    //TODO: Auther must be passed in....
+    //TODO: Authorizer must be passed in....
     const canEdit = useEditMode({
-        auther: RequireNothing.staticFields({}).dynamicFields({})
+        authorizer: RequireNothing.staticFields({}).dynamicFields({})
     })
     const ref = useRef<HTMLInputElement>(null)
     const submitRef = useRef<HTMLButtonElement>(null)

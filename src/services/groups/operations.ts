@@ -4,7 +4,7 @@ import { groupAuth } from './auth'
 import { userFilterSelection } from '@/services/users/constants'
 import { ServerError } from '@/services/error'
 import { defineOperation } from '@/services/serviceOperation'
-import { ServerOnlyAuther } from '@/auth/auther/RequireServer'
+import { ServerOnlyAuthorizer } from '@/auth/authorizer/RequireServer'
 import { getMembershipFilter } from '@/auth/getMembershipFilter'
 import logger from '@/lib/logger'
 import { z } from 'zod'
@@ -194,7 +194,7 @@ export const groupOperations = {
     }),
 
     readCurrentGroupOrder: defineOperation({
-        authorizer: ServerOnlyAuther,
+        authorizer: ServerOnlyAuthorizer,
         paramsSchema: z.object({
             id: z.number(),
         }),
@@ -209,7 +209,7 @@ export const groupOperations = {
     }),
 
     readCurrentGroupOrders: defineOperation({
-        authorizer: ServerOnlyAuther,
+        authorizer: ServerOnlyAuthorizer,
         paramsSchema: z.object({
             ids: z.number().array(),
         }),
@@ -227,7 +227,7 @@ export const groupOperations = {
     }),
 
     readGroup: defineOperation({
-        authorizer: ServerOnlyAuther,
+        authorizer: ServerOnlyAuthorizer,
         paramsSchema: z.object({
             id: z.number(),
         }),
@@ -306,7 +306,7 @@ export const groupOperations = {
     }),
 
     readUsersOfGroups: defineOperation({
-        authorizer: ServerOnlyAuther,
+        authorizer: ServerOnlyAuthorizer,
         paramsSchema: z.object({
             groups: z.array(z.object({
                 groupId: z.number(),
@@ -333,7 +333,7 @@ export const groupOperations = {
     }),
 
     readGroupsOfUser: defineOperation({
-        authorizer: ServerOnlyAuther,
+        authorizer: ServerOnlyAuthorizer,
         paramsSchema: z.object({
             userId: z.number(),
         }),

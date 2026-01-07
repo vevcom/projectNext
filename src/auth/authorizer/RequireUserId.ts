@@ -1,8 +1,8 @@
-import { AutherFactory } from './Auther'
+import { AuthorizerFactory } from './Authorizer'
 
-export const RequireUsername = AutherFactory<
+export const RequireUserId = AuthorizerFactory<
     Record<string, never>,
-    { username: string },
+    { userId: number },
     'USER_REQUIERED_FOR_AUTHORIZED'
 >(({ session, dynamicFields }) => {
     if (!session.user) {
@@ -13,7 +13,7 @@ export const RequireUsername = AutherFactory<
         }
     }
     return {
-        success: session.user?.username === dynamicFields.username,
+        success: session.user.id === dynamicFields.userId,
         session,
         errorMessage: 'Du har ikke tilgang til denne ressursen'
     }

@@ -1,5 +1,5 @@
-import { RequireNothing } from '@/auth/auther/RequireNothing'
-import { RequirePermission } from '@/auth/auther/RequirePermission'
+import { RequireNothing } from '@/auth/authorizer/RequireNothing'
+import { RequirePermission } from '@/auth/authorizer/RequirePermission'
 
 export const publicArticleAuth = {
     read: RequireNothing.staticFields({}),

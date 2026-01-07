@@ -2,7 +2,7 @@
 import styles from './AddPartToArticleSection.module.scss'
 import AddParts from '@/cms/AddParts'
 import useEditMode from '@/hooks/useEditMode'
-import { RequireNothing } from '@/auth/auther/RequireNothing'
+import { RequireNothing } from '@/auth/authorizer/RequireNothing'
 import { useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import type { PropTypes as AddPartsPropTypes } from '@/cms/AddParts'
@@ -24,9 +24,9 @@ export default function AddPartToArticleSection({
     ...props
 }: PropTypes) {
     const { refresh } = useRouter()
-    //TODO: Auther must be passed in....
+    //TODO: Authorizer must be passed in....
     const canEdit = useEditMode({
-        auther: RequireNothing.staticFields({}).dynamicFields({})
+        authorizer: RequireNothing.staticFields({}).dynamicFields({})
     })
     const handleAdd = useCallback(async (part: ArticleSectionPart) => {
         await addPartToArticleSectionAction({ data: { part } })
