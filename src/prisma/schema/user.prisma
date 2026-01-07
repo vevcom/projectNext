@@ -4,30 +4,39 @@ enum SEX {
   OTHER
 }
 
+enum RelationshipStatus {
+  NOT_SPECIFIED
+  SINGLE
+  TAKEN
+  ITS_COMPLICATED
+}
+
 model User {
-  id                Int                 @id @default(autoincrement())
-  username          String              @unique
-  email             String              @unique
-  firstname         String              @default("[Fjernet]")
-  lastname          String              @default("[Fjernet]")
-  bio               String              @default("")
-  archived          Boolean             @default(false)
-  acceptedTerms     DateTime?
-  imageConsent      Boolean             @default(false) //if the user has consented to being photographed
-  sex               SEX?
-  allergies         String?
-  mobile            String?
-  emailVerified     DateTime?
-  createdAt         DateTime            @default(now())
-  updatedAt         DateTime            @updatedAt // is also updated manually
-  image             Image?              @relation(fields: [imageId], references: [id])
-  imageId           Int?
-  studentCard       String?             @unique
-  LockerReservation LockerReservation[]
-  omegaQuote        OmegaQuote[]
-  memberships       Membership[]
-  credentials       Credentials?
-  feideAccount      FeideAccount?
+  id                     Int                 @id @default(autoincrement())
+  username               String              @unique
+  email                  String              @unique
+  firstname              String              @default("[Fjernet]")
+  lastname               String              @default("[Fjernet]")
+  bio                    String              @default("")
+  relationshipStatus     RelationshipStatus  @default(NOT_SPECIFIED)
+  relationshipstatusText String              @default("")
+  archived               Boolean             @default(false)
+  acceptedTerms          DateTime?
+  imageConsent           Boolean             @default(false) //if the user has consented to being photographed
+  sex                    SEX?
+  allergies              String?
+  mobile                 String?
+  emailVerified          DateTime?
+  createdAt              DateTime            @default(now())
+  updatedAt              DateTime            @updatedAt // is also updated manually
+  image                  Image?              @relation(fields: [imageId], references: [id])
+  imageId                Int?
+  studentCard            String?             @unique
+  LockerReservation      LockerReservation[]
+  omegaQuote             OmegaQuote[]
+  memberships            Membership[]
+  credentials            Credentials?
+  feideAccount           FeideAccount?
 
   notificationSubscriptions NotificationSubscription[]
   mailingLists              MailingListUser[]

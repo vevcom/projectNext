@@ -1,5 +1,6 @@
 import { Zpn } from '@/lib/fields/zpn'
 import { SEX } from '@prisma/client'
+import { RelationshipStatus } from '@prisma/client'
 import { z } from 'zod'
 
 export const studentCardSchema = z.string()
@@ -14,6 +15,8 @@ export const userSchema = z.object({
     lastname: z.string().max(50).min(2),
     allergies: z.string().max(150).optional().nullable(),
     bio: z.string().max(2047).optional(),
+    relationshipstatusText: z.string().max(150).optional(),
+    relationshipStatus: z.nativeEnum(RelationshipStatus).optional(),
     studentCard: studentCardSchema,
     password: z.string().max(50).min(12, {
         // eslint-disable-next-line
@@ -50,14 +53,18 @@ export const userSchemas = {
         allergies: true,
         sex: true,
         bio: true,
-        imageConsent: true
+        imageConsent: true,
+        relationshipstatusText: true,
+        relationshipStatus: true,
     }),
 
     updateProfile: userSchema.partial().pick({
         allergies: true,
         sex: true,
         bio: true,
-        imageConsent: true
+        imageConsent: true,
+        relationshipstatusText: true,
+        relationshipStatus: true,
     }),
 
     register: userSchema.pick({
