@@ -1,3 +1,5 @@
+import RegisterKioleskapLeaderboard from './kioleskapLeaderboard'
+
 import UserSettingsForm from './UserProfileSettingsForm'
 import { getProfileForAdmin } from '@/app/users/[username]/(user-admin)/getProfileForAdmin'
 import Image from '@/components/Image/Image'
@@ -18,6 +20,8 @@ export default async function UserSettings({ params }: PropTypes) {
             {/* TODO: add Email registration form and admin user settings */},.
             <h2>Generelle Instillinger</h2>
             <Image width={300} image={profile.user.image} />
+
+            <RegisterKioleskapLeaderboard userId={profile.user.id} kioleskapLead={profile.user.kioleskapLead} />
         </div>
     )
 }

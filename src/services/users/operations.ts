@@ -109,6 +109,7 @@ export const userOperations = {
                     ...userFilterSelection,
                     bio: true,
                     image: true,
+                    kioleskapLead: true,
                     memberships: {
                         where: {
                             OR: [

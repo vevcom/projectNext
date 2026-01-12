@@ -28,6 +28,7 @@ model User {
   memberships       Membership[]
   credentials       Credentials?
   feideAccount      FeideAccount?
+  kioleskapLead     Boolean             @default(false)
 
   notificationSubscriptions NotificationSubscription[]
   mailingLists              MailingListUser[]
@@ -41,6 +42,7 @@ model User {
   Event                    Event[]
 
   cabinBooking Booking[] @relation()
+  
 
   // We need to explicitly mark the combination of 'id', 'username' and 'email' as
   // unique to make the relation to 'Credentials' work.
