@@ -1,7 +1,7 @@
-import { RequireNothing } from '@/auth/auther/RequireNothing'
 import { stripe } from '@/lib/stripe'
 import { ServerError } from '@/services/error'
 import { defineOperation } from '@/services/serviceOperation'
+import { RequireNothing } from '@/auth/authorizer/RequireNothing'
 import { PaymentProvider } from '@prisma/client'
 import { z } from 'zod'
 

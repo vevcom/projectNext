@@ -268,6 +268,26 @@ export default async function seedDevUsers(prisma: PrismaClient) {
             acceptedTerms: new Date(),
         },
     })
+
+    await prisma.membership.createMany({
+        data: [
+            {
+                groupId: memberGroup.groupId,
+                userId: vever.id,
+                admin: false,
+                active: true,
+                order: latestOrder.order
+            },
+            {
+                groupId: studyProgrammeMTTK.groupId,
+                userId: vever.id,
+                admin: false,
+                active: true,
+                order: latestOrder.order
+            },
+        ]
+    })
+
     console.log(harambe)
     console.log(vever)
 }

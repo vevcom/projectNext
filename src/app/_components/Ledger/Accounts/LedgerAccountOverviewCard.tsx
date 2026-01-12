@@ -4,8 +4,8 @@ import LedgerAccountFreezeButton from './LedgerAccountFreezeButton'
 import Card from '@/components/UI/Card'
 import DepositModal from '@/components/Ledger/Modals/DepositModal'
 import PayoutModal from '@/components/Ledger/Modals/PayoutModal'
-import { getUser } from '@/auth/session/getUser'
 import { createStripeCustomerSessionAction } from '@/services/stripeCustomers/actions'
+import { ServerSession } from '@/auth/session/ServerSession'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faWarning } from '@fortawesome/free-solid-svg-icons'
 import type { LedgerAccount } from '@prisma/client'
@@ -19,7 +19,8 @@ type Props = {
 }
 
 const getCustomerSessionClientSecret = async () => {
-    const { user } = await getUser()
+    const { user } = await ServerSession.fromNextAuth()
+
     if (!user) {
         return undefined
     }

@@ -21,6 +21,8 @@ import {
 } from '@/services/events/actions'
 import { configureAction } from '@/services/configureAction'
 import { decodeVevenUriHandleError } from '@/lib/urlEncoding'
+import { ServerSession } from '@/auth/session/ServerSession'
+import { eventAuth } from '@/services/events/auth'
 import Link from 'next/link'
 import { faCalendar, faExclamation, faLocationDot, faUsers } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -42,10 +44,21 @@ export default async function Event({ params }: PropTypes) {
 
     const ownRegistration = event.eventRegistrations.length ? event.eventRegistrations[0] : undefined
 
+    const canEditCmsCoverImage = eventAuth.updateCmsCoverImage.dynamicFields({}).auth(
+        await ServerSession.fromNextAuth()
+    ).toJsObject()
+    const canEditCmsParagraph = eventAuth.updateParagraphContent.dynamicFields({}).auth(
+        await ServerSession.fromNextAuth()
+    ).toJsObject()
+    const canDestroy = eventAuth.destroy.dynamicFields({}).auth(
+        await ServerSession.fromNextAuth()
+    ).toJsObject()
+
     return (
         <div className={styles.wrapper}>
             <span className={styles.coverImage}>
                 <CmsImage
+                    canEdit={canEditCmsCoverImage}
                     cmsImage={event.coverImage}
                     width={900}
                     updateCmsImageAction={
@@ -72,19 +85,20 @@ export default async function Event({ params }: PropTypes) {
                     </UsersHeaderItemPopUp>}
                     <SettingsHeaderItemPopUp scale={30} PopUpKey="EditEvent">
                         <CreateOrUpdateEventForm event={event} eventTags={tags} />
-                        {/*TODO: Use auther to only display if it can be destroy*/}
-                        <Form
-                            action={configureAction(destroyEventAction, { params: { id: event.id } })}
-                            navigateOnSuccess="/events"
-                            className={styles.destroyForm}
-                            buttonClassName={styles.destroyButton}
-                            submitText="Slett"
-                            submitColor="red"
-                            confirmation={{
-                                confirm: true,
-                                text: 'Er du sikker på at du vil slette dette arrangementet?'
-                            }}
-                        />
+                        { canDestroy.authorized &&
+                            <Form
+                                action={configureAction(destroyEventAction, { params: { id: event.id } })}
+                                navigateOnSuccess="/events"
+                                className={styles.destroyForm}
+                                buttonClassName={styles.destroyButton}
+                                submitText="Slett"
+                                submitColor="red"
+                                confirmation={{
+                                    confirm: true,
+                                    text: 'Er du sikker på at du vil slette dette arrangementet?'
+                                }}
+                            />
+                        }
                     </SettingsHeaderItemPopUp>
                 </div>
             </span>
@@ -120,6 +134,7 @@ export default async function Event({ params }: PropTypes) {
             </aside>
             <main>
                 <CmsParagraph
+                    canEdit={canEditCmsParagraph}
                     cmsParagraph={event.paragraph}
                     updateCmsParagraphAction={
                         configureAction(

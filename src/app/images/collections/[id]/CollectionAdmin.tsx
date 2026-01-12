@@ -6,8 +6,9 @@ import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
 import { ImagePagingContext } from '@/contexts/paging/ImagePaging'
 import ImageUploader from '@/components/Image/ImageUploader'
-import useEditing from '@/hooks/useEditing'
 import PopUp from '@/components/PopUp/PopUp'
+import useEditMode from '@/hooks/useEditMode'
+import { RequireNothing } from '@/auth/authorizer/RequireNothing'
 import Button from '@/components/UI/Button'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCog, faEye, faUpload } from '@fortawesome/free-solid-svg-icons'
@@ -27,7 +28,10 @@ export default function CollectionAdmin({ collection, visibilityAdmin, visibilit
     const { id: collectionId } = collection
     const router = useRouter()
     const pagingContext = useContext(ImagePagingContext)
-    const canEdit = useEditing({}) //TODO: pass in auther
+    //TODO: Use correct authorizer.
+    const canEdit = useEditMode({
+        authorizer: RequireNothing.staticFields({}).dynamicFields({})
+    })
     const [uploadOption, setUploadOption] = useState<'MANY' | 'ONE'>('MANY')
     if (!canEdit) return null
 

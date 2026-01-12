@@ -20,6 +20,7 @@ import type { Image as ImageT } from '@prisma/client'
 export default function CmsImageClient({
     cmsImage,
     updateCmsImageAction,
+    canEdit,
     children,
     className = '',
     classNameImage,
@@ -40,6 +41,7 @@ export default function CmsImageClient({
     return (
         <div className={`${styles.CmsImage} ${className}`}>
             {(image && !disableEditor) && <CmsImageEditor
+                canEdit={canEdit}
                 updateCmsImageAction={updateCmsImageAction}
                 cmsImage={{ ...cmsImage, image }}
             />}

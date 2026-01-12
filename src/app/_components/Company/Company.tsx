@@ -44,6 +44,7 @@ export default function Company({
 }: PropTypes) {
     const canUpdate = companyAuth.update.dynamicFields({}).auth(session)
     const canDestroy = companyAuth.destroy.dynamicFields({}).auth(session)
+    const canEditCmsImageLogo = companyAuth.updateCmsImageLogo.dynamicFields({}).auth(session).toJsObject()
     const updateCmsImageAction = configureAction(
         updateCompanyCmsLogoAction,
         { implementationParams: { companyId: company.id } }
@@ -52,6 +53,7 @@ export default function Company({
         <div className={styles.Company}>
             {asClient ?
                 <CmsImageClient
+                    canEdit={canEditCmsImageLogo}
                     disableEditor={disableEdit}
                     className={squareLogo ? styles.logoSq : styles.logo}
                     cmsImage={company.logo}
@@ -60,6 +62,7 @@ export default function Company({
 
                 /> :
                 <CmsImage
+                    canEdit={canEditCmsImageLogo}
                     disableEditor={disableEdit}
                     className={squareLogo ? styles.logoSq : styles.logo}
                     cmsImage={company.logo}

@@ -1,7 +1,6 @@
 'use server'
 
-import { createActionError, createZodActionError, safeServerCall } from '@/services/actionError'
-import { getUser } from '@/auth/session/getUser'
+import { createZodActionError, safeServerCall } from '@/services/actionError'
 import { createMailAlias } from '@/services/mail/alias/create'
 import { destroyMailAlias } from '@/services/mail/alias/destroy'
 import { readMailAliases } from '@/services/mail/alias/read'
@@ -16,11 +15,6 @@ import type { MailAlias } from '@prisma/client'
 
 export async function createMailAliasAction(rawdata: FormData):
     Promise<ActionReturn<MailAlias>> {
-    const { authorized, status } = await getUser({
-        requiredPermissions: [['MAILALIAS_CREATE']]
-    })
-    if (!authorized) return createActionError(status)
-
     const parse = createMailAliasValidation.typeValidate(rawdata)
     if (!parse.success) return createZodActionError(parse)
 
@@ -28,11 +22,6 @@ export async function createMailAliasAction(rawdata: FormData):
 }
 
 export async function destroyMailAliasAction(id: number): Promise<ActionReturn<MailAlias>> {
-    const { authorized, status } = await getUser({
-        requiredPermissions: [['MAILALIAS_DESTORY']],
-    })
-    if (!authorized) return createActionError(status)
-
     const parse = destoryMailAliasValidation.typeValidate({ id })
     if (!parse.success) return createZodActionError(parse)
 
@@ -40,20 +29,10 @@ export async function destroyMailAliasAction(id: number): Promise<ActionReturn<M
 }
 
 export async function readMailAliasesAction(): Promise<ActionReturn<MailAlias[]>> {
-    const { authorized, status } = await getUser({
-        requiredPermissions: [['MAILALIAS_READ']]
-    })
-    if (!authorized) return createActionError(status)
-
     return safeServerCall(() => readMailAliases())
 }
 
 export async function updateMailAliasAction(rawdata: FormData): Promise<ActionReturn<MailAlias>> {
-    const { authorized, status } = await getUser({
-        requiredPermissions: [['MAILALIAS_UPDATE']],
-    })
-    if (!authorized) return createActionError(status)
-
     const parsed = updateMailAliasValidation.typeValidate(rawdata)
     if (!parsed.success) return createZodActionError(parsed)
 

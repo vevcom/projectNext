@@ -10,6 +10,6 @@ export const [OmegaquotePagingContext, OmegaquotePagingProvider] = generatePagin
     OmegaquoteCursor,
     PageSizeOmegaquote
 >({
-    fetcher: async ({ paging }) => await readQuotesPageAction(paging),
+    fetcher: async ({ paging }) => await readQuotesPageAction({ params: { paging } }),
     getCursor: ({ lastElement }) => ({ id: lastElement.id }),
 })

@@ -1,7 +1,7 @@
 import { ledgerTransactionOperations } from '@/services/ledger/transactions/operations'
 import { paymentOperations } from '@/services/ledger/payments/operations'
-import { RequireNothing } from '@/auth/auther/RequireNothing'
 import { defineOperation } from '@/services/serviceOperation'
+import { RequireNothing } from '@/auth/authorizer/RequireNothing'
 import { z } from 'zod'
 import { PaymentProvider } from '@prisma/client'
 

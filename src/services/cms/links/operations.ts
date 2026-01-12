@@ -1,6 +1,6 @@
 import '@pn-server-only'
 import { cmsLinkSchemas } from './schemas'
-import { ServerOnly } from '@/auth/auther/ServerOnly'
+import { ServerOnly } from '@/auth/authorizer/ServerOnly'
 import { defineOperation, defineSubOperation } from '@/services/serviceOperation'
 import logger from '@/lib/logger'
 import { ServerError } from '@/services/error'

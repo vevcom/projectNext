@@ -4,23 +4,32 @@ enum SEX {
   OTHER
 }
 
+enum RelationshipStatus {
+  NOT_SPECIFIED
+  SINGLE
+  TAKEN
+  ITS_COMPLICATED
+}
+
 model User {
-  id            Int       @id @default(autoincrement())
-  username      String    @unique
-  email         String    @unique
-  firstname     String    @default("[Fjernet]")
-  lastname      String    @default("[Fjernet]")
-  bio           String    @default("")
-  archived      Boolean   @default(false)
-  acceptedTerms DateTime?
-  imageConsent  Boolean   @default(false) //if the user has consented to being photographed
-  sex           SEX?
-  allergies     String?
-  mobile        String?
-  emailVerified DateTime?
-  image         Image?    @relation(fields: [imageId], references: [id]) // TODO: Rename to "profilePicture"?
-  imageId       Int?
-  studentCard   String?   @unique
+  id                     Int                @id @default(autoincrement())
+  username               String             @unique
+  email                  String             @unique
+  firstname              String             @default("[Fjernet]")
+  lastname               String             @default("[Fjernet]")
+  bio                    String             @default("")
+  relationshipStatus     RelationshipStatus @default(NOT_SPECIFIED)
+  relationshipstatusText String             @default("")
+  archived               Boolean            @default(false)
+  acceptedTerms          DateTime?
+  imageConsent           Boolean            @default(false) //if the user has consented to being photographed
+  sex                    SEX?
+  allergies              String?
+  mobile                 String?
+  emailVerified          DateTime?
+  image                  Image?             @relation(fields: [imageId], references: [id])
+  imageId                Int?
+  studentCard            String?            @unique
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt // is also updated manually

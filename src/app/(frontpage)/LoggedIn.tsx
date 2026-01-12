@@ -11,6 +11,8 @@ import { readNewsCurrentAction } from '@/services/news/actions'
 import { readActiveJobAdsAction } from '@/services/career/jobAds/actions'
 import { readCurrentEventsAction } from '@/services/events/actions'
 import { readSpecialCmsImageFrontpage, updateSpecialCmsImageFrontpage } from '@/services/frontpage/actions'
+import { frontpageAuth } from '@/services/frontpage/auth'
+import { ServerSession } from '@/auth/session/ServerSession'
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Link from 'next/link'
@@ -24,12 +26,17 @@ export default async function LoggedInLandingPage() {
     const events = unwrapActionReturn(await readCurrentEventsAction({ params: { tags: null } }))
         .slice(0, MAX_NUMBER_OF_ELEMENTS)
 
+    const canEditFrontpageCmsImage = frontpageAuth.updateSpecialCmsImage.dynamicFields({}).auth(
+        await ServerSession.fromNextAuth()
+    ).toJsObject()
+
     return (
         <div className={styles.wrapper}>
             <div className={`${styles.part} ${styles.frontImg}`}>
                 <div className={styles.frontInfo}>
                     <div>
                         <SpecialCmsImage
+                            canEdit={canEditFrontpageCmsImage}
                             special="FRONTPAGE_LOGO"
                             width={300}
                             readSpecialCmsImageAction={readSpecialCmsImageFrontpage}

@@ -3,11 +3,11 @@ import { frontpageOperations } from './operations'
 import { makeAction } from '@/services/serverAction'
 
 export const readSpecialCmsParagraphFrontpageSection = makeAction(
-    frontpageOperations.readSpecialCmsParagraphFrontpageSection
+    frontpageOperations.readSpecialCmsParagraphSection
 )
 
 export const updateSpecialCmsParagraphFrontpageSection = makeAction(
-    frontpageOperations.updateSpecialCmsParagraphContentFrontpageSection
+    frontpageOperations.updateSpecialCmsParagraphContentSection
 )
 
 export const readSpecialCmsImageFrontpage = makeAction(

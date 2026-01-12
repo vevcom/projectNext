@@ -1,7 +1,7 @@
-import { RequireNothing } from '@/auth/auther/RequireNothing'
 import { prisma as globalPrisma } from '@/prisma/client'
 import { defineOperation } from '@/services/serviceOperation'
 import { Session } from '@/auth/session/Session'
+import { RequireNothing } from '@/auth/authorizer/RequireNothing'
 import { describe, test, expect } from '@jest/globals'
 import type { ServiceOperationContext } from '@/services/serviceOperation'
 

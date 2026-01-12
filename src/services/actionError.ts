@@ -1,6 +1,6 @@
 import { errorCodes, type ErrorCode, type ErrorMessage } from '@/services/error'
 import { ParseError, Smorekopp } from '@/services/error'
-import type { AuthStatus } from '@/auth/session/getUser'
+import type { AuthStatus } from '@/auth/authorizer/AuthResult'
 import type { SafeParseError } from 'zod'
 import type { ActionError, ActionReturn } from './actionTypes'
 

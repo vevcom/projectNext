@@ -2,11 +2,11 @@ import '@pn-server-only'
 import { ParseError, Smorekopp } from './error'
 import { prismaErrorWrapper } from './prismaCall'
 import { prisma as globalPrisma } from '@/prisma/client'
-import { RequireNothing } from '@/auth/auther/RequireNothing'
+import { RequireNothing } from '@/auth/authorizer/RequireNothing'
 import { Session } from '@/auth/session/Session'
 import { zfd } from 'zod-form-data'
 import { AsyncLocalStorage } from 'async_hooks'
-import type { AutherResult } from '@/auth/auther/Auther'
+import type { AuthorizerDynamicFieldsBound } from '@/auth/authorizer/Authorizer'
 import type { z } from 'zod'
 import type { SessionMaybeUser } from '@/auth/session/Session'
 import type { Prisma, PrismaClient } from '@prisma/client'
@@ -93,14 +93,14 @@ export type ArgsAuthGetterAndOwnershipCheck<
     & DataObject<DataSchema, 'INFERED'>
     & Pick<ServiceOperationContext<OpensTransaction>, 'prisma'>
 
-export type AutherGetter<
+export type AuthorizerGetter<
     OpensTransaction extends boolean,
     ParamsSchema extends z.ZodTypeAny | undefined,
     DataSchema extends z.ZodTypeAny | undefined,
     ImplementationParamsSchema extends z.ZodTypeAny | undefined
 > = (
     args: ArgsAuthGetterAndOwnershipCheck<OpensTransaction, ParamsSchema, DataSchema, ImplementationParamsSchema>
-) => AutherResult | Promise<AutherResult>
+) => AuthorizerDynamicFieldsBound | Promise<AuthorizerDynamicFieldsBound>
 
 export type OwnershipCheck<
     OpensTransaction extends boolean,
@@ -149,7 +149,7 @@ export type ServiceOperationImplementationConfig<
     DataSchemaImplementationFields,
     OperationImplementationFields
     > & {
-    authorizer: AutherGetter<OpensTransaction, ParamsSchema, DataSchema, ImplementationParamsSchema>,
+    authorizer: AuthorizerGetter<OpensTransaction, ParamsSchema, DataSchema, ImplementationParamsSchema>,
     ownershipCheck: OwnershipCheck<OpensTransaction, ParamsSchema, DataSchema, ImplementationParamsSchema>,
 }
 
@@ -459,7 +459,7 @@ export function defineOperation<
     paramsSchema?: ParamsSchema,
     dataSchema?: DataSchema,
     opensTransaction?: OpensTransaction,
-    authorizer: AutherGetter<OpensTransaction, ParamsSchema, DataSchema, undefined>,
+    authorizer: AuthorizerGetter<OpensTransaction, ParamsSchema, DataSchema, undefined>,
     operation: ServiceOperationOperation<OpensTransaction, ParamsSchema, DataSchema, Return>
 }): ServiceOperation<OpensTransaction, Return, ParamsSchema, DataSchema, undefined> {
     return defineSubOperation<

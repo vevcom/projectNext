@@ -1,8 +1,8 @@
 import { ServerError } from '@/services/error'
 import { defineOperation } from '@/services/serviceOperation'
 import { stripe } from '@/lib/stripe'
-import { RequireUserId } from '@/auth/auther/RequireUserId'
-import { RequireNothing } from '@/auth/auther/RequireNothing'
+import { RequireUserId } from '@/auth/authorizer/RequireUserId'
+import { RequireNothing } from '@/auth/authorizer/RequireNothing'
 import { z } from 'zod'
 
 export const stripeCustomerOperations = {

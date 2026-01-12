@@ -1,14 +1,12 @@
 'use client'
-
 import CabinCalendar from './CabinCalendar'
 import CabinPriceCalculator from './CabinPriceCalculator'
 import SelectBedProducts from './SelectBedProduct'
-import RadioLarge from '@/app/_components/UI/RadioLarge'
-import Form from '@/app/_components/Form/Form'
-import TextInput from '@/app/_components/UI/TextInput'
-import NumberInput from '@/app/_components/UI/NumberInput'
-import Checkbox from '@/app/_components/UI/Checkbox'
-import { useUser } from '@/auth/session/useUser'
+import RadioLarge from '@/components/UI/RadioLarge'
+import Form from '@/components/Form/Form'
+import TextInput from '@/components/UI/TextInput'
+import NumberInput from '@/components/UI/NumberInput'
+import Checkbox from '@/components/UI/Checkbox'
 import {
     createBedBookingNoUserAction,
     createBedBookingUserAttachedAction,
@@ -17,6 +15,7 @@ import {
 } from '@/services/cabin/actions'
 import { getZodDateString } from '@/lib/dates/formatting'
 import { configureAction } from '@/services/configureAction'
+import { useSession } from '@/auth/session/useSession'
 import { useMemo, useState } from 'react'
 import type { CabinProductExtended } from '@/services/cabin/product/constants'
 import type { BookingFiltered } from '@/services/cabin/booking/types'
@@ -58,7 +57,7 @@ export default function StateWrapper({
     const [numberOfMembers, setNumberOfMembers] = useState(0)
     const [numberOfNonMembers, setNumberOfNonMembers] = useState(0)
 
-    const user = useUser()
+    const session = useSession()
 
     const calendar = useMemo(() => (
         <CabinCalendar
@@ -86,14 +85,23 @@ export default function StateWrapper({
         return <>Du kan ikke booke hytta.</>
     }
 
+    if (session.loading) {
+        return <>Laster session...</>
+    }
+
     const canChangeBookingType = canBookCabin && canBookBed
 
+    const user = session.session.user
+
     function submitFormAction() {
+        if (session.loading) {
+            throw new Error('Session is still loading')
+        }
         if (!cabinProduct) {
             throw new Error('Could not find the cabin product.')
         }
 
-        if (!user.user) {
+        if (!user) {
             if (bookingType === 'CABIN') {
                 return configureAction(createCabinBookingNoUserAction, {
                     params: {
@@ -118,7 +126,7 @@ export default function StateWrapper({
         if (bookingType === 'CABIN') {
             return configureAction(createCabinBookingUserAttachedAction, {
                 params: {
-                    userId: user.user?.id ?? -1,
+                    userId: user?.id ?? -1,
                     bookingProducts: [{
                         cabinProductId: cabinProduct.id,
                         quantity: 1,
@@ -129,7 +137,7 @@ export default function StateWrapper({
 
         return configureAction(createBedBookingUserAttachedAction, {
             params: {
-                userId: user.user?.id ?? -1,
+                userId: user?.id ?? -1,
                 bookingProducts: bedProducts.map((product, index) => ({
                     cabinProductId: product.id,
                     quantity: bedAmounts[index],
@@ -175,7 +183,7 @@ export default function StateWrapper({
 
             }
 
-            {(bookingType === 'CABIN' && user.user) ? <>
+            {(bookingType === 'CABIN' && user) ? <>
                 <NumberInput
                     name="numberOfMembers"
                     label="Antall som er medlem i Omega"
@@ -216,30 +224,30 @@ export default function StateWrapper({
             <TextInput
                 name="firstname"
                 label="Fornavn"
-                defaultValue={user.user?.firstname ?? ''}
-                disabled={Boolean(user.user)}
-                readOnly={Boolean(user.user)}
+                defaultValue={user?.firstname ?? ''}
+                disabled={Boolean(user)}
+                readOnly={Boolean(user)}
             />
             <TextInput
                 name="lastname"
                 label="Etternavn"
-                defaultValue={user.user?.lastname ?? ''}
-                disabled={Boolean(user.user)}
-                readOnly={Boolean(user.user)}
+                defaultValue={user?.lastname ?? ''}
+                disabled={Boolean(user)}
+                readOnly={Boolean(user)}
             />
             <TextInput
                 name="email"
                 label="E-post"
-                defaultValue={user.user?.email ?? ''}
-                disabled={Boolean(user.user)}
-                readOnly={Boolean(user.user)}
+                defaultValue={user?.email ?? ''}
+                disabled={Boolean(user)}
+                readOnly={Boolean(user)}
             />
             <TextInput
                 name="mobile"
                 label="Telefonnummer"
-                defaultValue={user.user?.mobile ?? ''}
-                disabled={Boolean(user.user)}
-                readOnly={Boolean(user.user)}
+                defaultValue={user?.mobile ?? ''}
+                disabled={Boolean(user)}
+                readOnly={Boolean(user)}
             />
 
             <TextInput name="tenantNotes" label="Notater til utleier" />
