@@ -14,7 +14,7 @@ export default async function Account() {
     const ledgerAccount = unwrapActionReturn(await readLedgerAccountAction({ params: { userId: session.user.id } }))
 
     return <div>
-        <LedgerAccountOverview ledgerAccount={ledgerAccount} showPayoutButton showDepositButton showDeactivateButton />
+        <LedgerAccountOverview ledgerAccount={ledgerAccount} showPayoutButton showDepositButton showDeactivateButton showFees />
         <LedgerAccountPaymentMethods userId={session.user.id} />
         <LedgerAccountTransactionSummary ledgerAccountId={ledgerAccount.id} transactionsHref="account/transactions" />
     </div>

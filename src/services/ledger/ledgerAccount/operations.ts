@@ -47,14 +47,15 @@ export const ledgerAccountOperations = {
     }),
 
     /**
-     * Reads details of a ledger account for a given user or group.
-     * The account will be created if it does not exist.
+     * Reads details of a ledger account by ledger account id, user id, or group id.
+     * If searching by userId/groupId the account will be created if it does not exist.
      *
      * **Note**: The balance of an account is not included in the response.
      * Use the `calculateBalance` method to get the balance.
      *
      * @param params.userId The ID of the user to read the account for.
      * @param params.groupId The ID of the group to read the account for.
+     * @param params.ledgerAccountId The ID of the ledger account to read.
      *
      * @returns The account details.
      */
@@ -64,13 +65,32 @@ export const ledgerAccountOperations = {
             z.object({
                 userId: z.number(),
                 groupId: z.undefined(),
+                ledgerAccountId: z.undefined(),
             }),
             z.object({
                 groupId: z.number(),
                 userId: z.undefined(),
+                ledgerAccountId: z.undefined(),
+            }),
+            z.object({
+                groupId: z.undefined(),
+                userId: z.undefined(),
+                ledgerAccountId: z.number(),
             }),
         ]),
         operation: async ({ prisma, session, params }): Promise<LedgerAccount> => {
+            // If searching by ledger account id we don't want to create a new account if it doesn't exist.
+            if (params.ledgerAccountId !== undefined) {
+                return await prisma.ledgerAccount.findUniqueOrThrow({
+                    where: {
+                        id: params.ledgerAccountId,
+                    },
+                })
+            }
+
+            // If searching by userId/groupId we want to create the account if it doesn't exist.
+            // TODO: Is this something we want?
+
             const account = await prisma.ledgerAccount.findUnique({
                 where: {
                     userId: params.userId,
