@@ -5,16 +5,14 @@ import TextInput from '@/components/UI/TextInput'
 import { SelectString } from '@/components/UI/Select'
 import { configureAction } from '@/services/configureAction'
 import { updateUserProfileAction } from '@/services/users/actions'
-import { sexConfig } from '@/services/users/constants'
-import { relationshipStatusConfig } from '@/services/users/constants'
+import { sexConfig, relationshipStatusConfig } from '@/services/users/constants'
 import Textarea from '@/components/UI/Textarea'
-import { SEX } from '@prisma/client'
-import { RelationshipStatus } from '@prisma/client'
+import { SEX, RelationshipStatus } from '@prisma/client'
 import { useState } from 'react'
-import type { User } from '@prisma/client'
+import type { UserFiltered } from '@/services/users/types'
 
 export default function UserProfileSettingsForm({ userData } : {
-    userData: Pick<User, 'username' | 'mobile' | 'allergies' | 'sex' | 'imageConsent' | 'bio' | 'relationshipstatusText' | 'relationshipStatus'>
+    userData: UserFiltered
 }) {
     const [sexValue, setSexValue] = useState<SEX | undefined>(userData.sex ?? undefined)
 
@@ -23,8 +21,10 @@ export default function UserProfileSettingsForm({ userData } : {
         label: sexConfig[sex].label
     }))
 
-    const [relationshipStatusValue, setRelationshipStatus] = useState<RelationshipStatus>(userData.relationshipStatus ?? RelationshipStatus.NOT_SPECIFIED)
-    
+    const [relationshipStatusValue, setRelationshipStatus] = useState<RelationshipStatus>(
+        userData.relationshipStatus ?? RelationshipStatus.NOT_SPECIFIED
+    )
+
     const relationshipOptions = Object.values(RelationshipStatus).map(relationshipStatus => ({
         value: relationshipStatus,
         label: relationshipStatusConfig[relationshipStatus].label
@@ -45,14 +45,18 @@ export default function UserProfileSettingsForm({ userData } : {
                 value={sexValue}
                 onChange={(e) => setSexValue(e as SEX)} />
             <Textarea label="bio" name="bio" defaultValue={userData.bio} />
-            <TextInput label="Sivilstatus" name="relationshipstatusText" defaultValue={userData.relationshipstatusText || ''}/>
+            <TextInput
+                label="Sivilstatus"
+                name="relationshipstatusText"
+                defaultValue={userData.relationshipstatusText || ''}
+            />
             <SelectString
                 label="Sivilstatus"
                 name="relationshipStatus"
                 options={relationshipOptions}
                 value={relationshipStatusValue}
                 onChange={(e) => setRelationshipStatus(e as RelationshipStatus)}
-                />
+            />
             <Checkbox
                 label="Jeg samtykker til å bli tatt bilde av"
                 name="imageConsent"

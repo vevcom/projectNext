@@ -20,6 +20,7 @@ export const userFieldsToExpose = [
     'imageConsent',
     'relationshipStatus',
     'relationshipstatusText',
+    'bio',
 ] as const satisfies (keyof User)[]
 
 export const userFilterSelection = createSelection([...userFieldsToExpose])
@@ -69,9 +70,9 @@ export const relationshipStatusConfig = {
         label: 'I et forhold'
     },
     ITS_COMPLICATED: {
-        label: "Det er komplisert"
+        label: 'Det er komplisert'
     },
     NOT_SPECIFIED: {
-        label: "Ikke spesifisert"
+        label: 'Ikke spesifisert'
     }
 }

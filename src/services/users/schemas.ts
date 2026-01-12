@@ -1,6 +1,5 @@
 import { Zpn } from '@/lib/fields/zpn'
-import { SEX } from '@prisma/client'
-import { RelationshipStatus } from '@prisma/client'
+import { SEX, RelationshipStatus } from '@prisma/client'
 import { z } from 'zod'
 
 export const studentCardSchema = z.string()

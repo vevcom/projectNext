@@ -59,7 +59,7 @@ export default async function User({ params }: PropTypes) {
         [RelationshipStatus.SINGLE]: 'green',
         [RelationshipStatus.ITS_COMPLICATED]: 'yellow',
         [RelationshipStatus.TAKEN]: 'red',
-        [RelationshipStatus.NOT_SPECIFIED]: 'white' 
+        [RelationshipStatus.NOT_SPECIFIED]: 'white'
     }
 
     // Not ideal to use typecast here, but this is the simplest way.
@@ -135,7 +135,7 @@ export default async function User({ params }: PropTypes) {
                             <span className={styles.relationshipStatus}>Sivilstatus: </span>
                             {profile.user.relationshipstatusText ? profile.user.relationshipstatusText :
                                 profile.user.relationshipStatus === RelationshipStatus.SINGLE && 'Singel' ||
-                            profile.user.relationshipStatus === RelationshipStatus.ITS_COMPLICATED && 'Det er komplisert'||
+                            profile.user.relationshipStatus === RelationshipStatus.ITS_COMPLICATED && 'Det er komplisert' ||
                             profile.user.relationshipStatus === RelationshipStatus.TAKEN && 'I et forhold'
 
                             }
