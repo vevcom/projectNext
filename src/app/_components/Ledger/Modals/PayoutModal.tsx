@@ -5,9 +5,9 @@ import Form from '@/components/Form/Form'
 import PopUp from '@/components/PopUp/PopUp'
 import NumberInput from '@/components/UI/NumberInput'
 import Button from '@/components/UI/Button'
-import { createPayout } from '@/services/ledger/ledgerOperations/actions'
 import { convertAmount } from '@/lib/currency/convert'
 import { configureAction } from '@/services/configureAction'
+import { createPayoutAction } from '@/services/ledger/movements/actions'
 import { useState } from 'react'
 
 type Props = {
@@ -27,7 +27,7 @@ export default function PayoutModal({ ledgerAccountId, defaultFunds = 0, default
         <h2>Ny utbetaling</h2>
         <div className={styles.checkoutFormContainer}>
             <Form
-                action={configureAction(createPayout, { params: { ledgerAccountId, fees, funds } })}
+                action={configureAction(createPayoutAction, { params: { ledgerAccountId, fees, funds } })}
                 submitText="Registrer utbetaling"
                 buttonClassName={styles.submitButton}
             >

@@ -1,5 +1,6 @@
 import styles from './LedgerAccountOverviewCard.module.scss'
 import LedgerAccountBalance from './LedgerAccountBalance'
+import LedgerAccountFreezeButton from './LedgerAccountFreezeButton'
 import Card from '@/components/UI/Card'
 import DepositModal from '@/components/Ledger/Modals/DepositModal'
 import PayoutModal from '@/components/Ledger/Modals/PayoutModal'
@@ -7,9 +8,7 @@ import { getUser } from '@/auth/session/getUser'
 import { createStripeCustomerSessionAction } from '@/services/stripeCustomers/actions'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faWarning } from '@fortawesome/free-solid-svg-icons'
-import { LedgerAccount } from '@prisma/client'
-import { updateLedgerAccountAction } from '@/services/ledger/accounts/actions'
-import LedgerAccountFreezeButton from './LedgerAccountFreezeButton'
+import type { LedgerAccount } from '@prisma/client'
 
 type Props = {
     ledgerAccount: LedgerAccount,
@@ -48,7 +47,11 @@ export default async function LedgerAccountOverview({
         <LedgerAccountBalance ledgerAccountId={ledgerAccount.id} showFees={showFees} />
         <div className={styles.frozenStatus}>
             {
-                <p className={ledgerAccount.frozen ? "" : styles.frozenWarningHidden}><FontAwesomeIcon icon={faWarning}/> Kontoen er fryst; Ingen transaksjoner kan utføres.</p>
+                <p
+                    className={ledgerAccount.frozen ? '' : styles.frozenWarningHidden}
+                >
+                    <FontAwesomeIcon icon={faWarning}/> Kontoen er fryst; Ingen transaksjoner kan utføres.
+                </p>
             }
         </div>
         <div className={styles.ledgerAccountOverviewButtons}>
@@ -57,7 +60,10 @@ export default async function LedgerAccountOverview({
                 <DepositModal ledgerAccountId={ledgerAccount.id} customerSessionClientSecret={customerSessionClientSecret} />
             }
             { showPayoutButton && <PayoutModal ledgerAccountId={ledgerAccount.id} /> }
-            { showDeactivateButton && <LedgerAccountFreezeButton ledgerAccount={ledgerAccount} className={styles.rightAligned} /> }
+            {
+                showDeactivateButton &&
+                <LedgerAccountFreezeButton ledgerAccount={ledgerAccount} className={styles.rightAligned} />
+            }
         </div>
     </Card>
 }

@@ -2,11 +2,14 @@
 
 import Button from '@/components/UI/Button'
 import { updateLedgerAccountAction } from '@/services/ledger/accounts/actions'
-import { LedgerAccount } from '@prisma/client'
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation'
+import type { LedgerAccount } from '@prisma/client'
 
-export default function LedgerAccountFreezeButton({ ledgerAccount, className }: { ledgerAccount: LedgerAccount, className?: string }) {
-    const { refresh } = useRouter();
+export default function LedgerAccountFreezeButton({
+    ledgerAccount,
+    className
+}: { ledgerAccount: LedgerAccount, className?: string }) {
+    const { refresh } = useRouter()
 
     const toggleFrozen = async () => {
         await updateLedgerAccountAction({
@@ -22,6 +25,8 @@ export default function LedgerAccountFreezeButton({ ledgerAccount, className }: 
     }
 
     return (
-        <Button color="secondary" className={className} onClick={toggleFrozen}>{ledgerAccount.frozen ? "Tin konto" : "Frys konto"}</Button>
+        <Button color="secondary" className={className} onClick={toggleFrozen}>
+            {ledgerAccount.frozen ? 'Tin konto' : 'Frys konto'}
+        </Button>
     )
 }

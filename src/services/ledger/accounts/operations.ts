@@ -132,10 +132,10 @@ export const ledgerAccountOperations = {
 
     /**
      * Updates a ledger account with the given data.
-     * 
+     *
      * @param params.id The ID of the account to update.
      * @param data The data to update the account with.
-     * 
+     *
      * @returns The updated account.
      */
     update: defineOperation({
@@ -144,14 +144,12 @@ export const ledgerAccountOperations = {
             id: z.number(),
         }),
         dataSchema: ledgerAccountSchemas.update,
-        operation: async ({ prisma, params, data }) => {
-            return prisma.ledgerAccount.update({
-                where: {
-                    id: params.id,
-                },
-                data,
-            })
-        }
+        operation: async ({ prisma, params, data }) => prisma.ledgerAccount.update({
+            where: {
+                id: params.id,
+            },
+            data,
+        })
     }),
 
     /**

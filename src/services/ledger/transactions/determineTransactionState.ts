@@ -1,6 +1,6 @@
 import type { ExpandedLedgerTransaction } from './types'
 import type { BalanceRecord } from '@/services/ledger/accounts/types'
-import type { LedgerAccount, LedgerTransactionState, PaymentState } from '@prisma/client'
+import type { LedgerTransactionState, PaymentState } from '@prisma/client'
 
 type LedgerTransactionTransition = {
     state: LedgerTransactionState,
@@ -125,7 +125,9 @@ function validAmountSum(
 function sufficientBalances(
     { transaction, balances }: LedgerTransactionRuleContext,
 ): LedgerTransactionTransition | null {
-    const debitLedgerAccountIds = transaction.ledgerEntries.filter(entry => entry.funds < 0).map(entry => entry.ledgerAccountId)
+    const debitLedgerAccountIds = transaction.ledgerEntries
+        .filter(entry => entry.funds < 0)
+        .map(entry => entry.ledgerAccountId)
     const debitBalances = debitLedgerAccountIds.map(id => balances[id])
 
     if (debitBalances.some(balance => !balance)) {

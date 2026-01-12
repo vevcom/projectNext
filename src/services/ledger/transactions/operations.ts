@@ -54,31 +54,29 @@ export const ledgerTransactionOperations = {
                 accountId: z.number(),
             }),
         ),
-        operation: async ({ prisma, params }) => {
-            return await prisma.ledgerTransaction.findMany({
-                where: {
-                    ledgerEntries: {
-                        some: {
-                            ledgerAccountId: params.paging.details.accountId,
-                        },
+        operation: async ({ prisma, params }) => await prisma.ledgerTransaction.findMany({
+            where: {
+                ledgerEntries: {
+                    some: {
+                        ledgerAccountId: params.paging.details.accountId,
                     },
                 },
-                include: {
-                    ledgerEntries: true,
-                    payment: {
-                        include: {
-                            stripePayment: true,
-                            manualPayment: true,
-                        },
+            },
+            include: {
+                ledgerEntries: true,
+                payment: {
+                    include: {
+                        stripePayment: true,
+                        manualPayment: true,
                     },
                 },
-                orderBy: [
-                    { createdAt: 'desc' },
-                    { id: 'desc' },
-                ],
-                ...cursorPageingSelection(params.paging.page)
-            })
-        }
+            },
+            orderBy: [
+                { createdAt: 'desc' },
+                { id: 'desc' },
+            ],
+            ...cursorPageingSelection(params.paging.page)
+        })
     }),
 
     /**
@@ -98,7 +96,7 @@ export const ledgerTransactionOperations = {
             const creditFees = calculateCreditFees(transaction.ledgerEntries, transaction.payment)
 
             // Update credit fees if they could be calculated.
-            // Credit fees are null while the payment is pending, since 
+            // Credit fees are null while the payment is pending, since
             // the final fees are unknown until the payment is completed.
             if (creditFees) {
                 const creditEntries = transaction.ledgerEntries.filter(entry => entry.funds > 0)
@@ -124,7 +122,7 @@ export const ledgerTransactionOperations = {
                         },
                     },
                 })
-                
+
                 transaction.ledgerEntries.forEach(entry => {
                     entry.fees = creditFees[entry.ledgerAccountId] ?? entry.fees
                 })

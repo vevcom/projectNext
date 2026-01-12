@@ -2,8 +2,8 @@ import { ServerError } from '@/services/error'
 import { defineOperation } from '@/services/serviceOperation'
 import { stripe } from '@/lib/stripe'
 import { RequireUserId } from '@/auth/auther/RequireUserId'
-import { z } from 'zod'
 import { RequireNothing } from '@/auth/auther/RequireNothing'
+import { z } from 'zod'
 
 export const stripeCustomerOperations = {
     /**
@@ -52,7 +52,7 @@ export const stripeCustomerOperations = {
                     },
                 })
 
-                // We use upsert here since two simultaneous requests could try to 
+                // We use upsert here since two simultaneous requests could try to
                 // create the customer record in our database at the same time.
                 // (This has actually happened during testing.)
                 return await prisma.stripeCustomer.upsert({
@@ -221,7 +221,7 @@ export const stripeCustomerOperations = {
         }),
         operation: async ({ params: { paymentMethodId } }) => {
             await stripe.paymentMethods.detach(paymentMethodId)
-            
+
             return {
                 success: true
             }

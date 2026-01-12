@@ -1,6 +1,6 @@
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { getUser } from '@/auth/session/getUser'
-import { calculateLedgerAccountBalanceAction, readLedgerAccountAction } from '@/services/ledger/accounts/actions'
+import { readLedgerAccountAction } from '@/services/ledger/accounts/actions'
 import LedgerAccountOverview from '@/components/Ledger/Accounts/LedgerAccountOverviewCard'
 import LedgerAccountPaymentMethods from '@/components/Ledger/Accounts/LedgerAccountPaymentMethodsCard'
 import LedgerAccountTransactionSummary from '@/components/Ledger/Accounts/LedgerAccountTransactionSummaryCard'
@@ -14,7 +14,13 @@ export default async function Account() {
     const ledgerAccount = unwrapActionReturn(await readLedgerAccountAction({ params: { userId: session.user.id } }))
 
     return <div>
-        <LedgerAccountOverview ledgerAccount={ledgerAccount} showPayoutButton showDepositButton showDeactivateButton showFees />
+        <LedgerAccountOverview
+            ledgerAccount={ledgerAccount}
+            showPayoutButton
+            showDepositButton
+            showDeactivateButton
+            showFees
+        />
         <LedgerAccountPaymentMethods userId={session.user.id} />
         <LedgerAccountTransactionSummary ledgerAccountId={ledgerAccount.id} transactionsHref="account/transactions" />
     </div>

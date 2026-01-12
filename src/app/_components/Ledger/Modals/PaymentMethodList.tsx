@@ -2,10 +2,10 @@
 
 import styles from './PaymentMethodList.module.scss'
 import { deleteSavedPaymentMethodAction } from '@/services/stripeCustomers/actions'
-import { FilteredPaymentMethod } from '@/services/stripeCustomers/types'
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useRouter } from 'next/navigation'
+import type { FilteredPaymentMethod } from '@/services/stripeCustomers/types'
 
 type Params = {
     paymentMethods: FilteredPaymentMethod[],
@@ -14,7 +14,7 @@ type Params = {
 export default function PaymentMethodList({ paymentMethods }: Params) {
     const router = useRouter()
 
-    const displayPaymentMethod = ({ type, card, id }: FilteredPaymentMethod) => {
+    const displayPaymentMethod = ({ type, card }: FilteredPaymentMethod) => {
         switch (type) {
             case 'card':
                 return <>
@@ -31,12 +31,12 @@ export default function PaymentMethodList({ paymentMethods }: Params) {
         await deleteSavedPaymentMethodAction({ params: { paymentMethodId: id } })
         router.refresh()
     }
-    
+
     return (
         <ul>
             {paymentMethods.map((method) => (
                 <li key={method.id} className={styles.paymentMethodElement}>
-                    {displayPaymentMethod(method)} 
+                    {displayPaymentMethod(method)}
                     <button onClick={() => removePaymentMethod(method.id)} className={styles.deletePaymentMethodButton}>
                         <FontAwesomeIcon icon={faXmark}/>
                     </button>

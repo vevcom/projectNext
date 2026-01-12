@@ -4,11 +4,12 @@ import styles from './PaymentMethodModal.module.scss'
 import PopUp from '@/app/_components/PopUp/PopUp'
 import Button from '@/app/_components/UI/Button'
 import Form from '@/components/Form/Form'
-import StripePayment, { StripePaymentRef } from '@/components/Stripe/StripePayment'
+import StripePayment from '@/components/Stripe/StripePayment'
 import StripeProvider from '@/components/Stripe/StripeProvider'
 import { createActionError } from '@/services/actionError'
 import { createSetupIntentAction } from '@/services/stripeCustomers/actions'
 import { useRef } from 'react'
+import type { StripePaymentRef } from '@/components/Stripe/StripePayment'
 
 type PropTypes = {
     userId: number,
@@ -18,8 +19,8 @@ export default function PaymentMethodModal({ userId }: PropTypes) {
     const stripePaymentRef = useRef<StripePaymentRef>(null)
 
     const handleSubmit = async () => {
-        if (!stripePaymentRef.current) return createActionError('UNKNOWN ERROR', 'Noe gikk galt ved innhenting av Stripe-komponenten.')
-        
+        if (!stripePaymentRef.current) return createActionError('UNKNOWN ERROR', 'Noe gikk galt ved innhenting av Stripe.')
+
         const submitError = await stripePaymentRef.current.submit()
 
         if (submitError) return createActionError('BAD DATA', submitError)
@@ -37,7 +38,7 @@ export default function PaymentMethodModal({ userId }: PropTypes) {
             data: undefined,
         } as const
     }
-    
+
     return (
         <PopUp
             PopUpKey="PaymentMethodModal"
@@ -45,7 +46,7 @@ export default function PaymentMethodModal({ userId }: PropTypes) {
         >
             <h3>Legg til bankkort</h3>
             <div className={styles.bankCardFormContainer}>
-                <Form action={handleSubmit} submitText='Legg til bankkort'>
+                <Form action={handleSubmit} submitText="Legg til bankkort">
                     <StripeProvider mode="setup">
                         <StripePayment ref={stripePaymentRef} />
                     </StripeProvider>
