@@ -54,29 +54,31 @@ export const ledgerTransactionOperations = {
                 accountId: z.number(),
             }),
         ),
-        operation: async ({ prisma, params }) => prisma.ledgerTransaction.findMany({
-            where: {
-                ledgerEntries: {
-                    some: {
-                        ledgerAccountId: params.paging.details.accountId,
+        operation: async ({ prisma, params }) => {
+            return await prisma.ledgerTransaction.findMany({
+                where: {
+                    ledgerEntries: {
+                        some: {
+                            ledgerAccountId: params.paging.details.accountId,
+                        },
                     },
                 },
-            },
-            include: {
-                ledgerEntries: true,
-                payment: {
-                    include: {
-                        stripePayment: true,
-                        manualPayment: true,
+                include: {
+                    ledgerEntries: true,
+                    payment: {
+                        include: {
+                            stripePayment: true,
+                            manualPayment: true,
+                        },
                     },
                 },
-            },
-            orderBy: [
-                { createdAt: 'desc' },
-                { id: 'desc' },
-            ],
-            ...cursorPageingSelection(params.paging.page)
-        })
+                orderBy: [
+                    { createdAt: 'desc' },
+                    { id: 'desc' },
+                ],
+                ...cursorPageingSelection(params.paging.page)
+            })
+        }
     }),
 
     /**

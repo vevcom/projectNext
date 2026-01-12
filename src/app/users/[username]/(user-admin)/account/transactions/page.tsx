@@ -7,7 +7,7 @@ export default async function Transactions() {
     //     shouldRedirect: true,
     // })
 
-    const account = { id: 1 }
+    const account = { id: 2 }
 
     return <TransactionList accountId={account.id}/>
 }

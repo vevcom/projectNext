@@ -3,6 +3,7 @@ import { defineOperation } from '@/services/serviceOperation'
 import { stripe } from '@/lib/stripe'
 import { RequireUserId } from '@/auth/auther/RequireUserId'
 import { z } from 'zod'
+import { RequireNothing } from '@/auth/auther/RequireNothing'
 
 export const stripeCustomerOperations = {
     /**
@@ -51,10 +52,19 @@ export const stripeCustomerOperations = {
                     },
                 })
 
-                return await prisma.stripeCustomer.create({
-                    data: {
+                // We use upsert here since two simultaneous requests could try to 
+                // create the customer record in our database at the same time.
+                // (This has actually happened during testing.)
+                return await prisma.stripeCustomer.upsert({
+                    where: {
+                        userId,
+                    },
+                    create: {
                         userId,
                         customerId: customer.id,
+                    },
+                    update: {
+                        // Dont update anything. Let the first created account win.
                     },
                     select: {
                         customerId: true,
@@ -93,7 +103,7 @@ export const stripeCustomerOperations = {
     }),
 
     /**
-     * Creates a Strip customer session which allows the frontend to manage the saved payment methods
+     * Creates a Stripe customer session which allows the frontend to manage the saved payment methods
      * for the user. This session is a one time use object and needs to be created each time it is needed.
      *
      * If the user does not have a Stripe customer associated it will be created automatically.
@@ -139,6 +149,81 @@ export const stripeCustomerOperations = {
             // Only return what is needed by the frontend.
             return {
                 customerSessionClientSecret: customerSession.client_secret,
+            }
+        }
+    }),
+
+    /**
+     * Creates a setup intent for adding a new payment method to the user's customer account in Stripe.
+     */
+    createSetupIntent: defineOperation({
+        authorizer: ({ params: { userId } }) => RequireUserId.staticFields({}).dynamicFields({ userId }),
+        paramsSchema: z.object({
+            userId: z.number(),
+        }),
+        operation: async ({ params: { userId } }) => {
+            const customerId: string = (await stripeCustomerOperations.readOrCreate({ params: { userId } })).customerId
+
+            const setupIntent = await stripe.setupIntents.create({ customer: customerId })
+
+            if (!setupIntent.client_secret) {
+                throw new ServerError(
+                    'UNKNOWN ERROR',
+                    'Noe gikk galt ved opprettelse av betalingsmetode.',
+                )
+            }
+
+            return {
+                setupIntentClientSecret: setupIntent.client_secret,
+            }
+        }
+    }),
+
+    /**
+     * Returns a filtered list of saved payment methods for the user.
+     */
+    readSavedPaymentMethods: defineOperation({
+        authorizer: ({ params: { userId } }) => RequireUserId.staticFields({}).dynamicFields({ userId }),
+        paramsSchema: z.object({
+            userId: z.number(),
+        }),
+        operation: async ({ params: { userId } }) => {
+            const customerId: string = (await stripeCustomerOperations.readOrCreate({ params: { userId } })).customerId
+
+            const paymentMethods = await stripe.paymentMethods.list({
+                customer: customerId,
+            })
+
+            // Filter out only the necessary information to return to the frontend.
+            // This is to avoid leaking any sensitive information.
+            const filteredPaymentMethods = paymentMethods.data.map(paymentMethod => ({
+                id: paymentMethod.id,
+                type: paymentMethod.type,
+                card: paymentMethod.card && {
+                    brand: paymentMethod.card.brand,
+                    last4: paymentMethod.card.last4,
+                    exp_month: paymentMethod.card.exp_month,
+                    exp_year: paymentMethod.card.exp_year,
+                },
+            }))
+
+            return filteredPaymentMethods
+        }
+    }),
+
+    /**
+     * Deletes (or "detaches" in Stripe lingo) a saved payment method from the user's customer account in Stripe.
+     */
+    deleteSavedPaymentMethod: defineOperation({
+        authorizer: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO: This should probably be authed?
+        paramsSchema: z.object({
+            paymentMethodId: z.string(),
+        }),
+        operation: async ({ params: { paymentMethodId } }) => {
+            await stripe.paymentMethods.detach(paymentMethodId)
+            
+            return {
+                success: true
             }
         }
     }),
