@@ -1,4 +1,4 @@
-import { feesFormula } from '@/services/ledger/ledgerTransactions/calculateFees'
+import { feesFormula } from '@/services/ledger/transactions/calculateFees'
 import { describe, expect, test } from '@jest/globals'
 
 type FeeInputOutput = [

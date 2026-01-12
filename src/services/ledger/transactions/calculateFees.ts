@@ -1,4 +1,4 @@
-import type { BalanceRecord } from '@/services/ledger/ledgerAccount/types'
+import type { BalanceRecord } from '@/services/ledger/accounts/types'
 
 /**
  * Calculates fees proportional to the ratio between `entryAmount` and `totalAmount`.

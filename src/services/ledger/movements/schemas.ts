@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-export const ledgerOperationSchemas = {
+export const ledgerMovementSchemas = {
     createDeposit: z.object({
     }),
 

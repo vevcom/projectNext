@@ -1,7 +1,7 @@
 'use client'
 
 import Button from '@/components/UI/Button'
-import { updateLedgerAccountAction } from '@/services/ledger/ledgerAccount/actions'
+import { updateLedgerAccountAction } from '@/services/ledger/accounts/actions'
 import { LedgerAccount } from '@prisma/client'
 import { useRouter } from 'next/navigation';
 

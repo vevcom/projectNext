@@ -1,6 +1,6 @@
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { getUser } from '@/auth/session/getUser'
-import { calculateLedgerAccountBalanceAction, readLedgerAccountAction } from '@/services/ledger/ledgerAccount/actions'
+import { calculateLedgerAccountBalanceAction, readLedgerAccountAction } from '@/services/ledger/accounts/actions'
 import LedgerAccountOverview from '@/components/Ledger/Accounts/LedgerAccountOverviewCard'
 import LedgerAccountPaymentMethods from '@/components/Ledger/Accounts/LedgerAccountPaymentMethodsCard'
 import LedgerAccountTransactionSummary from '@/components/Ledger/Accounts/LedgerAccountTransactionSummaryCard'

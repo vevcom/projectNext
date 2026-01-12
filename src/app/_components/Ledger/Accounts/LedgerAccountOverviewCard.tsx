@@ -8,7 +8,7 @@ import { createStripeCustomerSessionAction } from '@/services/stripeCustomers/ac
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faWarning } from '@fortawesome/free-solid-svg-icons'
 import { LedgerAccount } from '@prisma/client'
-import { updateLedgerAccountAction } from '@/services/ledger/ledgerAccount/actions'
+import { updateLedgerAccountAction } from '@/services/ledger/accounts/actions'
 import LedgerAccountFreezeButton from './LedgerAccountFreezeButton'
 
 type Props = {

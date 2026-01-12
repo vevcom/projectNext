@@ -1,16 +1,16 @@
-import { ledgerTransactionOperations } from '@/services/ledger/ledgerTransactions/operations'
+import { ledgerTransactionOperations } from '@/services/ledger/transactions/operations'
 import { paymentOperations } from '@/services/ledger/payments/operations'
 import { RequireNothing } from '@/auth/auther/RequireNothing'
 import { defineOperation } from '@/services/serviceOperation'
 import { z } from 'zod'
 import { PaymentProvider } from '@prisma/client'
 
-// `LedgerOperations` provides functions to orchestrate account related actions,
+// `ledgerMovementOperations` provides functions to orchestrate account related actions,
 // such as depositing funds or creating payouts. If the ledger is needed for
 // other purposes, such as creating a transaction, it should be done through
-// `LedgerTransaction`.
+// `ledgerTransactionOperations`.
 
-export const ledgerOperationOperations = {
+export const ledgerMovementOperations = {
     /**
      * Creates a deposit transaction, which is a deposit of funds into the ledger.
      *

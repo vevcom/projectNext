@@ -1,9 +1,9 @@
 import { allSettledOrThrow } from 'tests/utils'
 import { prisma } from '@/prisma/client'
-import { ledgerAccountOperations } from '@/services/ledger/ledgerAccount/operations'
+import { ledgerAccountOperations } from '@/services/ledger/accounts/operations'
 import { userOperations } from '@/services/users/operations'
 import { paymentOperations } from '@/services/ledger/payments/operations'
-import { ledgerTransactionOperations } from '@/services/ledger/ledgerTransactions/operations'
+import { ledgerTransactionOperations } from '@/services/ledger/transactions/operations'
 import { beforeAll, beforeEach, afterEach, describe, expect, test } from '@jest/globals'
 
 const TEST_ACCOUNT_COUNT = 3

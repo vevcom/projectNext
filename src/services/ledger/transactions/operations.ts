@@ -1,6 +1,6 @@
 import { calculateCreditFees, calculateDebitFees } from './calculateFees'
 import { determineTransactionState } from './determineTransactionState'
-import { ledgerAccountOperations } from '@/services/ledger/ledgerAccount/operations'
+import { ledgerAccountOperations } from '@/services/ledger/accounts/operations'
 import { RequireNothing } from '@/auth/auther/RequireNothing'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { readPageInputSchemaObject } from '@/lib/paging/schema'

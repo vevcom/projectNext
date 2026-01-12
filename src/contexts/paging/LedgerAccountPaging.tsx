@@ -1,7 +1,7 @@
 'use client'
 
 import { generatePaging } from './PagingGenerator'
-import { readLedgerAccountPageAction } from '@/services/ledger/ledgerAccount/actions'
+import { readLedgerAccountPageAction } from '@/services/ledger/accounts/actions'
 import type { LedgerAccount, LedgerAccountType } from '@prisma/client'
 
 export type PageSizeTransactions = 10

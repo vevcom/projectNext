@@ -1,6 +1,6 @@
 import styles from './LedgerTransactionRow.module.scss'
 import { displayAmount } from '@/lib/currency/convert'
-import type { ExpandedLedgerTransaction } from '@/services/ledger/ledgerTransactions/types'
+import type { ExpandedLedgerTransaction } from '@/services/ledger/transactions/types'
 
 type Props = {
     transaction: ExpandedLedgerTransaction,

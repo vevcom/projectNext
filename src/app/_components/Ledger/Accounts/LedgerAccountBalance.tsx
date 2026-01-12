@@ -1,7 +1,7 @@
 import styles from './LedgerAccountBalance.module.scss'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { displayAmount } from '@/lib/currency/convert'
-import { calculateLedgerAccountBalanceAction } from '@/services/ledger/ledgerAccount/actions'
+import { calculateLedgerAccountBalanceAction } from '@/services/ledger/accounts/actions'
 
 type Props = {
     ledgerAccountId: number,
