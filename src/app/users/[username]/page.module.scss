@@ -156,7 +156,7 @@
             margin-bottom: 2em; 
         }
 
-        .email, .username {
+        .email, .username, .relationshipStatus {
             width: 10em;
             display: inline-block;
             font-weight: ohma.$fonts-weight-m;
@@ -189,5 +189,16 @@
         }
     }
 
+}
+
+img.profilePicture {
+    // We have to use "!important" here to override the
+    // border color set in "ProfilePicture.module.scss".
+    // TODO: Find a better way to do this.
+    
+
+    border-color: var(--border-colour) !important;
+    
+    
 }
 

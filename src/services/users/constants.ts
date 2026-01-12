@@ -17,7 +17,10 @@ export const userFieldsToExpose = [
     'acceptedTerms',
     'sex',
     'allergies',
-    'imageConsent'
+    'imageConsent',
+    'relationshipStatus',
+    'relationshipstatusText',
+    'bio',
 ] as const satisfies (keyof User)[]
 
 export const userFilterSelection = createSelection([...userFieldsToExpose])
@@ -53,8 +56,23 @@ export const sexConfig = {
         label: 'Kvinne',
     },
     OTHER: {
-        title: 'Søsken',
+        title: 'Sysken',
         pronoun: 'Hends',
         label: 'Annet',
     }
 } as const satisfies { [key in SEX]: { title: string, pronoun: string, label: string } }
+
+export const relationshipStatusConfig = {
+    SINGLE: {
+        label: 'Singel'
+    },
+    TAKEN: {
+        label: 'I et forhold'
+    },
+    ITS_COMPLICATED: {
+        label: 'Det er komplisert'
+    },
+    NOT_SPECIFIED: {
+        label: 'Ikke spesifisert'
+    }
+}
