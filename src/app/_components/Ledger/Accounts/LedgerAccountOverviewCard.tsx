@@ -47,9 +47,7 @@ export default async function LedgerAccountOverview({
         <LedgerAccountBalance ledgerAccountId={ledgerAccount.id} showFees={showFees} />
         <div className={styles.frozenStatus}>
             {
-                <p
-                    className={ledgerAccount.frozen ? '' : styles.frozenWarningHidden}
-                >
+                <p className={ledgerAccount.frozen ? '' : styles.frozenWarningHidden}>
                     <FontAwesomeIcon icon={faWarning}/> Kontoen er fryst; Ingen transaksjoner kan utføres.
                 </p>
             }

@@ -15,7 +15,10 @@ type Props = {
 
 export default async function LedgerAccountPaymentMethods({ userId }: Props) {
     const user = unwrapActionReturn(await readUserAction({ params: { id: userId } })) // TODO: Change to better method
-    const savedPaymentMethods = unwrapActionReturn(await readSavedPaymentMethodsAction({ params: { userId } }))
+    const savedPaymentMethodsResult = await readSavedPaymentMethodsAction({ params: { userId }})
+    const savedPaymentMethods = savedPaymentMethodsResult.success
+        ? savedPaymentMethodsResult.data 
+        : []
 
     const hasBankCard = savedPaymentMethods.length > 0
     const hasStudentCard = user.studentCard !== null

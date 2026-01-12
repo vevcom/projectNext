@@ -33,7 +33,7 @@ export const ledgerMovementOperations = {
                     params: {
                         provider: params.provider,
                         funds: params.funds,
-                        descriptionLong: 'Innskudd',
+                        descriptionLong: 'Innskudd til veven',
                         descriptionShort: 'Innskudd',
                     },
                     prisma: tx,
@@ -83,7 +83,7 @@ export const ledgerMovementOperations = {
             const payment = await paymentOperations.create({
                 params: {
                     provider: 'MANUAL',
-                    descriptionLong: 'Utbetaling',
+                    descriptionLong: 'Utbetaling fra veven',
                     descriptionShort: 'Utbetaling',
                     funds: -params.funds,
                 },

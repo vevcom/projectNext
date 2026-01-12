@@ -34,14 +34,14 @@ export default function PaymentMethodList({ paymentMethods }: Params) {
 
     return (
         <ul>
-            {paymentMethods.map((method) => (
+            {paymentMethods.length > 0 ? paymentMethods.map((method) => (
                 <li key={method.id} className={styles.paymentMethodElement}>
                     {displayPaymentMethod(method)}
                     <button onClick={() => removePaymentMethod(method.id)} className={styles.deletePaymentMethodButton}>
                         <FontAwesomeIcon icon={faXmark}/>
                     </button>
                 </li>
-            ))}
+            )) : <p><em>Du har ingen lagrede betalingskort.</em></p>}
         </ul>
     )
 }
