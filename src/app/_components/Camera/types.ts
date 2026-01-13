@@ -6,7 +6,7 @@ export type CameraFeedProps = {
     videoRef: RefObject<HTMLVideoElement | null>,
     cameraState: CameraState,
     setCameraState: Dispatch<SetStateAction<CameraState>>,
-    constraints: MediaStreamConstraints,
+    constraints: globalThis.MediaStreamConstraints,
     callbackFunction?: () => void,
     width?: number,
     height?: number

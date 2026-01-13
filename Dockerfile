@@ -27,7 +27,7 @@ RUN mkdir -p usr/src/app/store/images
 # Copy remaining files except src
 # (src is binded in dev so there is no need to copy it here)
 COPY public public
-COPY next-env.d.t[s] next.config.mjs tsconfig.json ./
+COPY next-env.d.t[s] next.config.ts tsconfig.json ./
 
 ############################################################
 FROM base AS prod
