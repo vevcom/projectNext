@@ -20,6 +20,8 @@ model Visibility {
   createdAt    DateTime                @default(now())
   updatedAt    DateTime                @updatedAt
 
+  specialPurpose SpecialVisibilityPurpose? @unique
+
   imageCollectionAdmin ImageCollection? @relation(name: "ImageCollectionAdminVisibility")
   imageCollectionRead  ImageCollection? @relation(name: "ImageCollectionReadVisibility")
 }

@@ -1,5 +1,5 @@
 import '@pn-server-only'
-import { flairAuth } from './auth.ts'
+import { flairAuth } from './auth'
 import { defineOperation } from '@/services/serviceOperation'
 import { ServerError } from '@/services/error'
 import { createImageAction, readImageAction } from '@/services/images/actions'
@@ -25,11 +25,17 @@ export const flairOperations = {
                 create: {
                     name: 'FLAIRIMAGES',
                     special: 'FLAIRIMAGES',
-                    visibility: {
+                    visibilityAdmin: {
+                        connect: {
+                            specialPurpose: 'FLAIR',
+                        }
+                    },
+                    visibilityRead: {
                         connect: {
                             specialPurpose: 'FLAIR',
                         }
                     }
+
                 }
             })
             const image = unwrapActionReturn(await createImageAction(
@@ -70,7 +76,12 @@ export const flairOperations = {
                 create: {
                     name: 'FLAIRIMAGES',
                     special: 'FLAIRIMAGES',
-                    visibility: {
+                    visibilityAdmin: {
+                        connect: {
+                            specialPurpose: 'FLAIR',
+                        }
+                    },
+                    visibilityRead: {
                         connect: {
                             specialPurpose: 'FLAIR',
                         }
