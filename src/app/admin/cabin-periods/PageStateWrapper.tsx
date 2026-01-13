@@ -28,7 +28,7 @@ export default function PageStateWrapper({
     return <>
 
         <PopUp
-            PopUpKey="CreateNewReleasePeriod"
+            popUpKey="CreateNewReleasePeriod"
             showButtonContent="Ny Slipp Periode"
             showButtonClass={styles.button}
         >
@@ -61,7 +61,7 @@ export default function PageStateWrapper({
         />
 
         <PopUp
-            PopUpKey="CreateNewPricePeriod"
+            popUpKey="CreateNewPricePeriod"
             showButtonContent="Ny Pris Periode"
             showButtonClass={styles.button}
         >

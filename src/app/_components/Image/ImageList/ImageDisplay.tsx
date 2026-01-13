@@ -208,7 +208,7 @@ export default function ImageDisplay() {
             </div>
             {
                 canEdit && (
-                    <PopUp PopUpKey="EditImage" showButtonClass={styles.openImageAdmin} showButtonContent={
+                    <PopUp popUpKey="EditImage" showButtonClass={styles.openImageAdmin} showButtonContent={
                         <FontAwesomeIcon icon={faCog}/>
                     }>
                         <div className={styles.admin}>

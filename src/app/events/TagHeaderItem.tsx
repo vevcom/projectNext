@@ -22,7 +22,7 @@ export default function TagHeaderItem({
     page
 }: PropTypes) {
     return (
-        <TagHeasderItemPopUp scale={35} PopUpKey="TagEventPopUp">
+        <TagHeasderItemPopUp scale={35} popUpKey="TagEventPopUp">
             <PopUpProvider>
                 <EventTagsAdmin
                     canCreate={canCreate}

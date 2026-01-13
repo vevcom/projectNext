@@ -17,7 +17,7 @@ export default function MakeNewCollection() {
         router.refresh()
     }
     return (
-        <PopUp PopUpKey={uuid()} showButtonContent={<FontAwesomeIcon icon={faPlus} />}>
+        <PopUp popUpKey={uuid()} showButtonContent={<FontAwesomeIcon icon={faPlus} />}>
             <div className={styles.MakeNewCollection}>
                 <Form successCallback={collectionCreatedCallback}
                     title="Lag et album" submitText="Lag album" action={createImageCollectionAction}>

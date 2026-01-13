@@ -17,7 +17,7 @@ export default function CreateOmegaquoteForm() {
 
     return (
         <PopUp
-            PopUpKey="new_omega_quote"
+            popUpKey="new_omega_quote"
             showButtonContent="Ny Omegaquote"
             showButtonClass={styles.button}
         >

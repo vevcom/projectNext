@@ -55,7 +55,7 @@ export default function EditCategory({ category }: PropTypes) {
                 />
             </li>
             <PopUp
-                PopUpKey="editCategory"
+                popUpKey="editCategory"
                 showButtonClass={styles.openEditCategory}
                 showButtonContent={
                     <FontAwesomeIcon icon={faCog} />

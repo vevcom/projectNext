@@ -76,7 +76,7 @@ export default function EventTagsAdmin({
                             </Link>
                             {
                                 canUpdate || canDestroy ? (
-                                    <SettingsHeaderItemPopUp scale={25} PopUpKey={`EventTagPopUp${tag.id}`}>
+                                    <SettingsHeaderItemPopUp scale={25} popUpKey={`EventTagPopUp${tag.id}`}>
                                         {canUpdate && <span className={styles.update}>
                                             <Form
                                                 refreshOnSuccess

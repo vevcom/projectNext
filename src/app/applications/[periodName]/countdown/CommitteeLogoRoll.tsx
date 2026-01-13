@@ -1,6 +1,6 @@
 'use client'
 import styles from './CommitteeLogoRoll.module.scss'
-import Image from '@/app/_components/Image/Image'
+import Image from '@/components/Image/Image'
 import useInterval from '@/hooks/useInterval'
 import { readNumberOfApplicationsAction } from '@/services/applications/periods/actions'
 import { useRef, useState } from 'react'
@@ -27,12 +27,12 @@ export default function CommitteeLogoRoll({ committees, periodName }: PropTypes)
         display3: 2,
     })
 
-    const sokere = useRef(0)
+    const [sokere, setSokere] = useState(0)
 
     useInterval(async () => {
         const res = await readNumberOfApplicationsAction({ params: { name: periodName } })
         if (!res.success) return
-        sokere.current = res.data
+        setSokere(res.data)
     }, 2000)
 
     const display1Ref = useRef<HTMLDivElement>(null)
@@ -96,7 +96,7 @@ export default function CommitteeLogoRoll({ committees, periodName }: PropTypes)
                     {
                         currentCommitteeIndexes.display1 === 'Søkere' ? (<>
                             <h1>Søknader Hittil</h1>
-                            <h1>{sokere.current}</h1>
+                            <h1>{sokere}</h1>
                         </>) : (
                             <Display
                                 image={committees[currentCommitteeIndexes.display1].logo}
@@ -111,7 +111,7 @@ export default function CommitteeLogoRoll({ committees, periodName }: PropTypes)
                     {
                         currentCommitteeIndexes.display2 === 'Søkere' ? (<>
                             <h1>Søknader Hittil</h1>
-                            <h1>{sokere.current}</h1>
+                            <h1>{sokere}</h1>
                         </>) : (
                             <Display
                                 image={committees[currentCommitteeIndexes.display2].logo}
@@ -126,7 +126,7 @@ export default function CommitteeLogoRoll({ committees, periodName }: PropTypes)
                     {
                         currentCommitteeIndexes.display3 === 'Søkere' ? (<>
                             <h1>Søkere</h1>
-                            <h1>{sokere.current}</h1>
+                            <h1>{sokere}</h1>
                         </>) : (
                             <Display
                                 image={committees[currentCommitteeIndexes.display3].logo}

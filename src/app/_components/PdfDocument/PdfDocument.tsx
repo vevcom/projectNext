@@ -4,7 +4,8 @@ import useViewPort from '@/hooks/useViewPort'
 import {
     useEffect,
     useState,
-    useRef
+    useRef,
+    useEffectEvent
 } from 'react'
 import { Document, Page, pdfjs } from 'react-pdf'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -55,9 +56,12 @@ export default function PdfDocument({ src, className }: PropTypes) {
         setNumPages(numPagesCount)
     }
 
-    useEffect(() => {
+    const updateCurrentPages = useEffectEvent(() => {
         if (!numPages) return
-        if (pagePair < 0) setPagePair(1)
+        if (pagePair < 0) {
+            setPagePair(1)
+            return
+        }
         if (pagePair === 0) {
             setCurrentPages({
                 leftPage: null,
@@ -76,7 +80,10 @@ export default function PdfDocument({ src, className }: PropTypes) {
             leftPage: 2 * pagePair,
             rightPage: 2 * pagePair + 1
         })
-        return
+    })
+
+    useEffect(() => {
+        updateCurrentPages()
     }, [numPages, pagePair])
 
     useViewPort(() => {

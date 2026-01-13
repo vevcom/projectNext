@@ -19,7 +19,7 @@ export default async function SchoolsAdmin() {
 
     return (
         <PageWrapper title="Skoler" headerItem={
-            <AddHeaderItemPopUp PopUpKey="CreateSchool">
+            <AddHeaderItemPopUp popUpKey="CreateSchool">
                 <Form
                     action={createSchoolAction}
                     refreshOnSuccess

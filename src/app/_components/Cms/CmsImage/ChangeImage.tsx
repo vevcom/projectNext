@@ -7,7 +7,7 @@ import Form from '@/components/Form/Form'
 import { configureAction } from '@/services/configureAction'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTurnUp } from '@fortawesome/free-solid-svg-icons'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useEffectEvent, useState } from 'react'
 import type { ImageSize, Image as ImageT } from '@prisma/client'
 import type { UpdateCmsImageAction } from '@/cms/images/types'
 
@@ -24,7 +24,8 @@ export default function ChangeImage({ currentImage, cmsImageId, currentImageSize
 
     //What is the next option in quality. The image always cycles up.
     const [changeToSize, setChangeToSize] = useState<ImageSize>(currentImageSize)
-    useEffect(() => {
+
+    const handleChangeSize = useEffectEvent(() => {
         switch (currentImageSize) {
             case 'SMALL':
                 setChangeToSize('MEDIUM')
@@ -39,6 +40,10 @@ export default function ChangeImage({ currentImage, cmsImageId, currentImageSize
                 setChangeToSize('MEDIUM')
                 break
         }
+    })
+
+    useEffect(() => {
+        handleChangeSize()
     }, [currentImageSize])
 
     return (

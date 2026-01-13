@@ -22,7 +22,7 @@ export default function StudyProgrammeTableBody({
                 {canEdit && <td className={styles.editButtonWrapper}><PopUp
                     showButtonContent={<FontAwesomeIcon icon={faPencil} />}
                     showButtonClass={styles.editButton}
-                    PopUpKey={uuid()}
+                    popUpKey={uuid()}
                 >
                     <UpdateStudyProgrammeForm studyProgramme={studyProgramme} />
                 </PopUp></td>}

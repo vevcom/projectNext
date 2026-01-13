@@ -46,7 +46,7 @@ export default async function Shop({ params }: PropTypes) {
         <PopUp
             showButtonClass={styles.button}
             showButtonContent="Legg til Produkt"
-            PopUpKey="createProductForShop"
+            popUpKey="createProductForShop"
         >
             <FindProductForm shopId={shopId} products={unconnectedProducts} />
             <br />
@@ -70,7 +70,7 @@ export default async function Shop({ params }: PropTypes) {
                     <td className={styles.editButtonWrapper}>
                         <PopUp
                             showButtonContent={<FontAwesomeIcon icon={faPencil} />}
-                            PopUpKey={'EditProductForShop'}
+                            popUpKey={'EditProductForShop'}
                         >
                             <EditProductForShopForm shopId={shopId} product={product} />
                         </PopUp>

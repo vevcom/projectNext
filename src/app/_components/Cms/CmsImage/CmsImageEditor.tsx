@@ -42,7 +42,7 @@ export default function CmsImageEditor({ cmsImage, updateCmsImageAction, canEdit
     if (!editable) return null
     return (
         <PopUp
-            PopUpKey={`EditCmsImage${cmsImage.id}`}
+            popUpKey={`EditCmsImage${cmsImage.id}`}
             showButtonContent={<EditOverlay />}
             showButtonClass={styles.showBtn}
         >
