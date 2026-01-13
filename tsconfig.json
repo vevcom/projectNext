@@ -27,11 +27,11 @@
       "@/styles/*": ["src/styles/*"],
 
       "@/prisma/*": ["src/prisma/*"],
-      "@/prisma-generated-pn/*": ["src/prisma/schema/generated/*"],
-      "@/prisma-generated-pn-client": ["src/prisma/schema/generated/client.ts"],
-      "@/prisma-generated-pn-types": ["src/prisma/schema/generated/browser.ts"],
+      "@/prisma-generated-pn/*": ["src/prisma/schema/generated/prisma/*"],
+      "@/prisma-generated-pn-client": ["src/prisma/schema/generated/prisma/client.ts"],
+      "@/prisma-generated-pn-types": ["src/prisma/schema/generated/prisma/browser.ts"],
       "@/prisma-pn-client-instance": ["src/prisma/client.ts"],
-      "@/prisma-generated-ow-basic/*": ["src/prisma/owSchema/generated/*"],
+      "@/prisma-generated-ow-basic/*": ["src/prisma/owSchema/generated/prisma/*"],
       
       "@/contexts/*": ["src/contexts/*"],
       "@/hooks/*": ["src/hooks/*"],
