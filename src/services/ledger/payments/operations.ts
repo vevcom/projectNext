@@ -14,42 +14,35 @@ export const paymentOperations = {
      */
     create: defineOperation({
         authorizer: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO: Add proper auther
-        paramsSchema: z.intersection(
-            z.object({
-                funds: z.number(),
-                descriptionLong: z.string().optional(),
-                descriptionShort: z.string().optional(),
-                ledgerAccountId: z.number().optional(),
-            }),
-            z.discriminatedUnion('provider', [
-                z.object({
-                    provider: z.literal(PaymentProvider.STRIPE),
-                    details: z.object({}).optional(),
-                }),
-                z.object({
-                    provider: z.literal(PaymentProvider.MANUAL),
-                    details: z.object({
-                        bankAccountNumber: z.string().optional(),
-                        fees: z.number().nonnegative().default(0),
-                    }).optional(),
-                }),
-            ]),
-        ),
-        operation: async ({ prisma, params }) => {
-            const { details = {}, ...paymentData } = params
-
+        paramsSchema: z.object({
+            funds: z.number(),
+            descriptionLong: z.string().optional(),
+            descriptionShort: z.string().optional(),
+            provider: z.nativeEnum(PaymentProvider),
+            manualFees: z.number().nonnegative().optional(),
+            bankAccountNumber: z.string().optional(),
+        }),
+        operation: async ({ prisma, params }) => {            
             return prisma.payment.create({
                 data: {
-                    ...paymentData,
-                    // Manual payments are automatically succeeded
-                    state: params.provider === 'MANUAL' ? 'SUCCEEDED' : 'PENDING',
-                    fees: params.provider === 'MANUAL' ? 0 : undefined,
-                    stripePayment: params.provider === 'STRIPE' ? {
-                        create: details,
-                    } : undefined,
-                    manualPayment: params.provider === 'MANUAL' ? {
-                        create: details,
-                    } : undefined,
+                    provider: params.provider,
+                    funds: params.funds,
+                    
+                    ...(params.provider === 'STRIPE' && {
+                        create: {},
+                    }),
+
+                    // Manual payments are special in that they automatically succeed
+                    // and fees are determined manually by the user.
+                    ...(params.provider === 'MANUAL' && {
+                        state: 'SUCCEEDED',
+                        fees: params.manualFees,
+                        manualPayment: {
+                            create: {
+                                bankAccountNumber: params.bankAccountNumber,
+                            },
+                        },
+                    })
                 },
                 include: {
                     stripePayment: true,

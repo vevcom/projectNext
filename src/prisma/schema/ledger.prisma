@@ -1,6 +1,6 @@
 // Join table between groups and their ledger accounts
 model GroupLedgerAccount {
-  id            Int           @id @default(autoincrement())
+  id Int @id @default(autoincrement())
   // TODO: Finnish this
 
   // group         Group         @relation(fields: [groupId], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -8,8 +8,8 @@ model GroupLedgerAccount {
   // ledgerAccount LedgerAccount @relation(fields: [ledgerAccountId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   // ledgerAccountId Int
 
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Index on IDs for faster look up
   // @@index([groupId])
@@ -158,7 +158,7 @@ model Payment {
   // The text displayed on the bank statement
   descriptionShort String?
   // The life cycle state of this payment
-  state            PaymentState
+  state            PaymentState    @default(PENDING)
   // The responsible provider for this payment
   provider         PaymentProvider
   // Only one of the following relations may be set

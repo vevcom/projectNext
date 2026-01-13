@@ -55,9 +55,7 @@ describe('ledger transactions', () => {
                     params: {
                         funds: INITIAL_BALANCE.amount,
                         provider: 'MANUAL',
-                        details: {
-                            fees: INITIAL_BALANCE.fees,
-                        },
+                        manualFees: INITIAL_BALANCE.fees,
                     },
                 })
 
