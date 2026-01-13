@@ -183,7 +183,6 @@ enum Permission {
 
   //Flair/badge/cape
   PERMISSION_FLAIR_EDIT
-  PERMISSION_FLAIR_READ
 }
 
 model GroupPermission {

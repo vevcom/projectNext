@@ -7,9 +7,13 @@ import UserDisplayName from '@/components/User/UserDisplayName'
 import { readUserProfileAction } from '@/services/users/actions'
 import { readSpecialImageAction } from '@/services/images/actions'
 import { sexConfig } from '@/services/users/constants'
+import { readUserFlairsAction } from '@/services/flairs/actions'
+import { unwrapActionReturn } from '@/app/redirectToErrorPage'
+import Image from '@/components/Image/Image'
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { v4 as uuid } from 'uuid'
+
 
 export type PropTypes = {
     params: Promise<{
@@ -41,6 +45,7 @@ export default async function User({ params }: PropTypes) {
     if (!omegaMembership) {
         throw new Error('Failed to load the omega membership level')
     }
+    const flairs = unwrapActionReturn(await readUserFlairsAction({ params: { userId: profile.user.id } }))
 
     const profileImage = profile.user.image ? profile.user.image : await readSpecialImageAction.bind(
         null, { params: { special: 'DEFAULT_PROFILE_IMAGE' } }
@@ -48,6 +53,7 @@ export default async function User({ params }: PropTypes) {
         if (!res.success) throw new Error('Kunne ikke finne standard profilbilde')
         return res.data
     })
+
 
     const { authorized: canAdministrate } = userAuth.updateProfile.dynamicFields(
         { username: profile.user.username }
@@ -61,15 +67,27 @@ export default async function User({ params }: PropTypes) {
                 <div className={styles.profileContent}>
                     <ProfilePicture width={240} profileImage={profileImage} />
                     <div className={styles.header}>
-                        <div className={styles.nameAndId}>
-                            <h1><UserDisplayName user={profile.user} /></h1>
+                        <div className={styles.nameAndFlairContainer}>
+                            <div className={styles.nameAndId}>
+                                <h1><UserDisplayName user={profile.user} /></h1>
+                            </div>
+                            <div className={styles.flairContainer}>
+                                {flairs.map((data, index) => (
+                                    <Image className={styles.flairImage}
+                                        key={index}
+                                        width={50}
+                                        alt={data.alt}
+                                        image={data}></Image>
+                                ))
+                                }
+                            </div>
                         </div>
-                        { studyProgrammes.map((studyProgramme, i) =>
+                        {studyProgrammes.map((studyProgramme, i) =>
                             <p key={i} className={styles.studyProgramme}>
                                 {studyProgramme.name} {`(${studyProgramme.code})`}
                             </p>
                         )}
-                        { classes.map((classGroup, i) =>
+                        {classes.map((classGroup, i) =>
                             <p key={i} className={styles.studyProgramme}>{classGroup.year}. årstrinn</p>
                         )}
                         <div className={styles.committeesWrapper}>
@@ -128,7 +146,7 @@ export default async function User({ params }: PropTypes) {
                             {profile.user.mobile}
                         </p>
 
-                        { (committeeMemberships.length > 0) && <div>
+                        {(committeeMemberships.length > 0) && <div>
                             <h2>Medlemsskap</h2>
                             {committeeMemberships.map((membership, i) => (
                                 <Link
@@ -138,7 +156,7 @@ export default async function User({ params }: PropTypes) {
                                     <p>{membership.title} i {membership.group.committee?.name}</p>
                                 </Link>
                             ))}
-                        </div> }
+                        </div>}
                     </div>
                 </div>
             </div>

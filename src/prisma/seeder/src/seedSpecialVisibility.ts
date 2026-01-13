@@ -19,7 +19,7 @@ const SpecialVisibilityConfig = {
         adminLevel: 'USERS_CREATE'
     },
     FLAIR: {
-        regularLevel: 'PERMISSION_FLAIR_READ',
+        regularLevel: null,
         adminLevel: 'PERMISSION_FLAIR_EDIT',
     }
 } satisfies { [VisibilityType in SpecialVisibilityPurpose]: {
