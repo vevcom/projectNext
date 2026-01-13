@@ -4,22 +4,24 @@ import useKeyPress from '@/hooks/useKeyPress'
 import { PopUpContext } from '@/contexts/PopUp'
 import useClickOutsideRef from '@/hooks/useClickOutsideRef'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faX } from '@fortawesome/free-solid-svg-icons'
+import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import { useContext, useEffect, useState, useRef, useCallback } from 'react'
 import type { ReactNode, CSSProperties } from 'react'
 import type { PopUpKeyType } from '@/contexts/PopUp'
 
 export type PropTypes = {
     children: ReactNode,
-    showButtonContent: ReactNode,
-    showButtonClass?: string,
     PopUpKey: PopUpKeyType,
+    customShowButton?: (open: () => void) => ReactNode,
+    showButtonContent?: ReactNode,
+    showButtonClass?: string,
     showButtonStyle?: CSSProperties,
 }
 
 export default function PopUp({
     PopUpKey,
     children,
+    customShowButton,
     showButtonContent,
     showButtonClass,
     showButtonStyle,
@@ -54,7 +56,7 @@ export default function PopUp({
                 <div className={styles.main} ref={ref}>
                     <div className={styles.overflow}>
                         <button className={styles.closeBtn} onClick={() => setIsOpen(false)}>
-                            <FontAwesomeIcon icon={faX} />
+                            <FontAwesomeIcon icon={faXmark} />
                         </button>
                         <div className={styles.content}>
                             { children }
@@ -72,13 +74,17 @@ export default function PopUp({
         setIsOpen(true)
     }, [])
 
-    return (
-        <button
-            className={`${styles.openBtn} ${showButtonClass}`}
-            style={showButtonStyle}
-            onClick={handleOpening}
-        >
-            {showButtonContent}
-        </button>
-    )
+    return <>{
+        customShowButton ? (
+            customShowButton(handleOpening)
+        ) : (
+            <button
+                className={`${styles.openBtn} ${showButtonClass}`}
+                style={showButtonStyle}
+                onClick={handleOpening}
+            >
+                {showButtonContent}
+            </button>
+        )
+    }</>
 }
