@@ -23,8 +23,10 @@ export const specialCollectionsVisibility = {
 
 export default async function SeedSpecialImageCollections(prisma: PrismaClient) {
     const keys = Object.keys(SpecialCollection) as SpecialCollection[]
-    await Promise.all(keys.map((special) =>
-        prisma.imageCollection.upsert({
+    await Promise.all(keys.map(async (special) => {
+        const visibilityAdmin = await prisma.visibility.create({ data: {} })
+        const visibilityRead = await prisma.visibility.create({ data: {} })
+        return await prisma.imageCollection.upsert({
             where: {
                 name: special
             },
@@ -34,12 +36,9 @@ export default async function SeedSpecialImageCollections(prisma: PrismaClient) 
             create: {
                 name: special,
                 special,
-                visibility: {
-                    connect: {
-                        specialPurpose: specialCollectionsVisibility[special].specialVisibility
-                    }
-                }
+                visibilityRead: { connect: { id: visibilityRead.id } },
+                visibilityAdmin: { connect: { id: visibilityAdmin.id } }
             }
         })
-    ))
+    }))
 }

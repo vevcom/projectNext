@@ -17,7 +17,7 @@ export const authOperations = {
         }),
         authorizer: ({ params }) => authAuth.verifyEmail.dynamicFields(params),
         operation: async ({ prisma, params }) => {
-            // INFO: Safe to parse unsafe since the auther has verified the token.
+            // INFO: Safe to parse unsafe since the authorizer has verified the token.
             const payload = readJWTPayload(params.token)
 
             if (!payload.sub || !payload.email || !payload.iat) {
@@ -59,7 +59,7 @@ export const authOperations = {
         }),
         authorizer: ({ params }) => authAuth.resetPassword.dynamicFields(params),
         operation: async ({ prisma, params }) => {
-            // INFO: Safe to parse unsafe since the auther has verified the token.
+            // INFO: Safe to parse unsafe since the authorizer has verified the token.
             const payload = readJWTPayload(params.token)
 
             if (!payload.sub || !payload.iat) {

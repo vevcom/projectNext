@@ -74,7 +74,7 @@ export default function SideBar({ category, children }: PropTypes) {
 }
 
 function MainListContent({ category }: { category: ExpandedArticleCategory }) {
-    // Make a visibility check for edit
+    // Make a visibility check for edit - no just call the apropriate authorizer.
     const canEditCategory = true
     const { push, refresh } = useRouter()
 

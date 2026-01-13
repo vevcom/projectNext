@@ -8,7 +8,7 @@ import { z } from 'zod'
 export const cabinReleasePeriodOperations = {
 
     create: defineOperation({
-        authorizer: () => cabinReleasePeriodAuth.createReleasePeriodAuther.dynamicFields({}),
+        authorizer: () => cabinReleasePeriodAuth.createReleasePeriodAuthorizer.dynamicFields({}),
         dataSchema: cabinReleasePeriodSchemas.createReleasePeriod,
         operation: async ({ prisma, data }) => {
             const latestReleasePeriod = await prisma.releasePeriod.findFirst({
@@ -32,7 +32,7 @@ export const cabinReleasePeriodOperations = {
     }),
 
     destroy: defineOperation({
-        authorizer: () => cabinReleasePeriodAuth.deleteReleasePeriodAuther.dynamicFields({}),
+        authorizer: () => cabinReleasePeriodAuth.deleteReleasePeriodAuthorizer.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),
@@ -52,7 +52,7 @@ export const cabinReleasePeriodOperations = {
     }),
 
     readMany: defineOperation({
-        authorizer: () => cabinReleasePeriodAuth.readReleasePeriodAuther.dynamicFields({}),
+        authorizer: () => cabinReleasePeriodAuth.readReleasePeriodAuthorizer.dynamicFields({}),
         operation: async ({ prisma }) => prisma.releasePeriod.findMany({
             orderBy: {
                 releaseUntil: 'desc',
@@ -61,7 +61,7 @@ export const cabinReleasePeriodOperations = {
     }),
 
     getCurrentReleasePeriod: defineOperation({
-        authorizer: () => cabinReleasePeriodAuth.readReleasePeriodAuther.dynamicFields({}),
+        authorizer: () => cabinReleasePeriodAuth.readReleasePeriodAuthorizer.dynamicFields({}),
         operation: async ({ prisma }) => prisma.releasePeriod.findFirst({
             where: {
                 releaseTime: {
@@ -76,7 +76,7 @@ export const cabinReleasePeriodOperations = {
     }),
 
     update: defineOperation({
-        authorizer: () => cabinReleasePeriodAuth.updateReleasePeriodAuther.dynamicFields({}),
+        authorizer: () => cabinReleasePeriodAuth.updateReleasePeriodAuthorizer.dynamicFields({}),
         dataSchema: cabinReleasePeriodSchemas.updateReleasePeriod,
         operation: async ({ prisma, data }) => prisma.releasePeriod.update({
             where: {

@@ -1,8 +1,8 @@
 import styles from './layout.module.scss'
 import Nav from './Nav'
-import { Session } from '@/auth/session/Session'
 import { readUserProfileAction } from '@/services/users/actions'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
+import { ServerSession } from '@/auth/session/ServerSession'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
@@ -10,7 +10,7 @@ import type { ReactNode } from 'react'
 import type { PropTypes } from '@/app/users/[username]/page'
 
 export default async function UserAdmin({ children, params }: PropTypes & { children: ReactNode }) {
-    const session = await Session.fromNextAuth()
+    const session = await ServerSession.fromNextAuth()
     let username = (await params).username
     if (username === 'me') {
         if (!session.user) return notFound()
@@ -18,7 +18,7 @@ export default async function UserAdmin({ children, params }: PropTypes & { chil
     }
     const { user } = unwrapActionReturn(await readUserProfileAction({ params: { username } }))
     return (
-        <PageWrapper title={`${user.firstname} ${user.lastname} Admin`}>
+        <PageWrapper title={`Innstillinger for ${user.firstname} ${user.lastname}`}>
             <Link href={`/users/${username}`} className={styles.toProfile}>
                 Til Profilsiden
             </Link>

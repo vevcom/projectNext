@@ -38,10 +38,16 @@ type ExtendedMemberGroup = Prisma.OmegaMembershipGroupGetPayload<{
 const userIncluder = {
     StudyProgrammes: {
         select: {
-            years: true
-        }
-    }
-}
+            years: true,
+        },
+    },
+    MoneySourceAccounts: {
+        select: {
+            NTNUCard: true,
+        },
+    },
+} satisfies VevenPrisma.UsersInclude
+
 type userExtended = VevenPrisma.UsersGetPayload<{
     include: typeof userIncluder
 }>
@@ -192,7 +198,8 @@ export class UserMigrator {
             updatedAt: user.updatedAt,
             imageId: vevenIdToPnId(this.imageIdMap, user.ImageId),
             archived: user.archived,
-        }
+        } satisfies Prisma.UserUncheckedCreateInput
+
         try {
             pnUser = await this.pnPrisma.user.create({
                 data: userData
@@ -214,6 +221,25 @@ export class UserMigrator {
             })
         }
         this.userIdMap[user.id] = pnUser.id
+
+        // Try to add the studentCard, this can throw an unique contraint exception
+        if (user.MoneySourceAccounts?.NTNUCard) {
+            try {
+                await this.pnPrisma.user.update({
+                    where: {
+                        id: pnUser.id
+                    },
+                    data: {
+                        studentCard: user.MoneySourceAccounts?.NTNUCard
+                    }
+                })
+            } catch (e) {
+                console.error(
+                    `Failed to conenct StudentCard to user. StudentCard: ${user.MoneySourceAccounts?.NTNUCard} `,
+                    `User: ${pnUser} Error: ${e}`
+                )
+            }
+        }
 
         return pnUser
     }

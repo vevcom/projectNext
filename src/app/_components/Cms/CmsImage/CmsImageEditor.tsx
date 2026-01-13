@@ -8,20 +8,22 @@ import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
 import CollectionCard from '@/components/Image/Collection/CollectionCard'
 import ImageList from '@/components/Image/ImageList/ImageList'
 import { ImageCollectionPagingProvider, ImageCollectionPagingContext } from '@/contexts/paging/ImageCollectionPaging'
+import useEditMode from '@/hooks/useEditMode'
 import { ImagePagingProvider } from '@/contexts/paging/ImagePaging'
 import PopUpProvider from '@/contexts/PopUp'
 import ImageSelectionProvider from '@/contexts/ImageSelection'
-import useEditing from '@/hooks/useEditing'
 import { useState } from 'react'
 import Link from 'next/link'
 import type { CmsImage, Image as ImageT } from '@prisma/client'
 import type { UpdateCmsImageAction } from '@/cms/images/types'
+import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
 
 type PropTypes = {
     cmsImage: CmsImage & {
         image: ImageT
     },
     updateCmsImageAction: UpdateCmsImageAction
+    canEdit: AuthResultTypeAny
 }
 
 /**
@@ -29,15 +31,16 @@ type PropTypes = {
  * @param cmsImage - the cms image to edit
  * @returns
  */
-export default function CmsImageEditor({ cmsImage, updateCmsImageAction }: PropTypes) {
-    const canEdit = useEditing({})
+export default function CmsImageEditor({ cmsImage, updateCmsImageAction, canEdit }: PropTypes) {
+    const editable = useEditMode({ authResult: canEdit })
     const [currentCollectionId, setCurrentCollectionId] = useState<number>(cmsImage.image.collectionId)
 
     const isCollectionActive = (collection: { id: number }) => (
         collection.id === currentCollectionId ? styles.selected : ''
     )
 
-    return canEdit && (
+    if (!editable) return null
+    return (
         <PopUp
             PopUpKey={`EditCmsImage${cmsImage.id}`}
             showButtonContent={<EditOverlay />}

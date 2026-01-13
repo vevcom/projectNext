@@ -2,7 +2,6 @@ import { createSelection } from '@/services/createSelection'
 import type { Prisma, User, SEX } from '@prisma/client'
 
 export const maxNumberOfGroupsInFilter = 7
-export const studentCardRegistrationExpiry = 2 // minutter
 
 // TODO: This needs to be divived into seperate filters, depending on how much information is needed
 export const userFieldsToExpose = [
@@ -18,6 +17,10 @@ export const userFieldsToExpose = [
     'acceptedTerms',
     'sex',
     'allergies',
+    'imageConsent',
+    'relationshipStatus',
+    'relationshipstatusText',
+    'bio',
 ] as const satisfies (keyof User)[]
 
 export const userFilterSelection = createSelection([...userFieldsToExpose])
@@ -53,8 +56,23 @@ export const sexConfig = {
         label: 'Kvinne',
     },
     OTHER: {
-        title: 'Søsken',
+        title: 'Sysken',
         pronoun: 'Hends',
         label: 'Annet',
     }
 } as const satisfies { [key in SEX]: { title: string, pronoun: string, label: string } }
+
+export const relationshipStatusConfig = {
+    SINGLE: {
+        label: 'Singel'
+    },
+    TAKEN: {
+        label: 'I et forhold'
+    },
+    ITS_COMPLICATED: {
+        label: 'Det er komplisert'
+    },
+    NOT_SPECIFIED: {
+        label: 'Ikke spesifisert'
+    }
+}

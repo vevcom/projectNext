@@ -4,31 +4,40 @@ enum SEX {
   OTHER
 }
 
-model User {
-  id                Int                 @id @default(autoincrement())
-  username          String              @unique
-  email             String              @unique
-  firstname         String              @default("[Fjernet]")
-  lastname          String              @default("[Fjernet]")
-  bio               String              @default("")
-  archived          Boolean             @default(false)
-  acceptedTerms     DateTime?
-  sex               SEX?
-  allergies         String?
-  mobile            String?
-  emailVerified     DateTime?
-  createdAt         DateTime            @default(now())
-  updatedAt         DateTime            @updatedAt // is also updated manually
-  image             Image?              @relation(fields: [imageId], references: [id])
-  imageId           Int?
-  studentCard       String?             @unique
-  LockerReservation LockerReservation[]
-  omegaQuote        OmegaQuote[]
-  memberships       Membership[]
-  credentials       Credentials?
-  feideAccount      FeideAccount?
-  Flairs            Flair[]             @relation(name: "userFlairs")
+enum RelationshipStatus {
+  NOT_SPECIFIED
+  SINGLE
+  TAKEN
+  ITS_COMPLICATED
+}
 
+model User {
+  id                     Int                 @id @default(autoincrement())
+  username               String              @unique
+  email                  String              @unique
+  firstname              String              @default("[Fjernet]")
+  lastname               String              @default("[Fjernet]")
+  bio                    String              @default("")
+  relationshipStatus     RelationshipStatus  @default(NOT_SPECIFIED)
+  relationshipstatusText String              @default("")
+  archived               Boolean             @default(false)
+  acceptedTerms          DateTime?
+  imageConsent           Boolean             @default(false) //if the user has consented to being photographed
+  sex                    SEX?
+  allergies              String?
+  mobile                 String?
+  emailVerified          DateTime?
+  createdAt              DateTime            @default(now())
+  updatedAt              DateTime            @updatedAt // is also updated manually
+  image                  Image?              @relation(fields: [imageId], references: [id])
+  imageId                Int?
+  studentCard            String?             @unique
+  LockerReservation      LockerReservation[]
+  omegaQuote             OmegaQuote[]
+  memberships            Membership[]
+  credentials            Credentials?
+  feideAccount           FeideAccount?
+  
   notificationSubscriptions NotificationSubscription[]
   mailingLists              MailingListUser[]
   admissionTrials           AdmissionTrial[]           @relation(name: "user")
@@ -38,10 +47,11 @@ model User {
 
   dots                     DotWrapper[]               @relation(name: "dot_user")
   dotsAccused              DotWrapper[]               @relation(name: "dot_accuser")
-  registerStudentCardQueue RegisterStudentCardQueue[]
   Event                    Event[]
 
   cabinBooking Booking[] @relation()
+
+  Flairs            Flair[]             @relation(name: "userFlairs")
 
   // We need to explicitly mark the combination of 'id', 'username' and 'email' as
   // unique to make the relation to 'Credentials' work.
@@ -69,12 +79,6 @@ model FeideAccount {
   issuedAt    DateTime
   userId      Int      @unique
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-}
-
-model RegisterStudentCardQueue {
-  userId Int      @id
-  user   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  expiry DateTime
 }
 
 model ContactDetails {

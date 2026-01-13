@@ -26,6 +26,9 @@ type PropTypes = {
 export default function InterestGroup({ interestGroup, session }: PropTypes) {
     const canUpdate = interestGroupAuth.update.dynamicFields({ groupId: interestGroup.groupId }).auth(session)
     const canDestroy = interestGroupAuth.destroy.dynamicFields({}).auth(session)
+    const canEditArticleSection = interestGroupAuth.updateArticleSection.dynamicFields({
+        groupId: interestGroup.groupId
+    }).auth(session).toJsObject()
 
     const PopUpKey = `Update interest group ${interestGroup.name}`
 
@@ -86,6 +89,7 @@ export default function InterestGroup({ interestGroup, session }: PropTypes) {
                 }
             </div>
             <ArticleSection
+                canEdit={canEditArticleSection}
                 key={interestGroup.id}
                 articleSection={interestGroup.articleSection}
                 actions={{

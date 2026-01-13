@@ -1,4 +1,4 @@
-import { RequireNothing } from '@/auth/auther/RequireNothing'
+import { RequireNothing } from '@/auth/authorizer/RequireNothing'
 
 export const articleCategoryAuth = {
     //This should probably be a permoission:

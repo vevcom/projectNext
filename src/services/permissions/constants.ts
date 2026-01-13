@@ -206,12 +206,6 @@ export const permissionConfig = {
         description: 'kan oppdatere bruker',
         category: 'brukere',
     },
-    USERS_CONNECT_STUDENT_CARD: {
-        name: 'Koble studentkort til andre brukere',
-        description: `Kan legge til andre personer i registreringskøen for å 
-        registrere et kort og kan registrere et kort på en person`,
-        category: 'brukere'
-    },
     IMAGE_ADMIN: {
         name: 'Bildeadministrator',
         description: 'kan administrere bilder',
@@ -302,7 +296,7 @@ export const permissionConfig = {
         description: 'kan lage epostalias',
         category: 'mail',
     },
-    MAILALIAS_DESTORY: {
+    MAILALIAS_DESTROY: {
         name: 'Slette epostalias',
         description: 'kan slette epostalias',
         category: 'mail',

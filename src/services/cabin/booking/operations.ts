@@ -6,7 +6,7 @@ import { cabinBookingFilerSelection, cabinBookingIncluder } from './constants'
 import { cabinPricePeriodOperations } from '@/services/cabin/pricePeriod/operations'
 import { cabinProductPriceIncluder } from '@/services/cabin/product/constants'
 import { defineOperation } from '@/services/serviceOperation'
-import { ServerOnlyAuther } from '@/auth/auther/RequireServer'
+import { ServerOnlyAuthorizer } from '@/auth/authorizer/RequireServer'
 import { ServerError } from '@/services/error'
 import { cabinReleasePeriodOperations } from '@/services/cabin/releasePeriod/operations'
 import { sendSystemMail } from '@/services/notifications/email/send'
@@ -27,7 +27,7 @@ const cabinAvailable = defineOperation({
         start: z.date(),
         end: z.date()
     }),
-    authorizer: ServerOnlyAuther,
+    authorizer: ServerOnlyAuthorizer,
     operation: async ({ prisma, params }) => {
         const results = await prisma.booking.findMany({
             where: {
@@ -54,7 +54,7 @@ const create = defineOperation({
         bookingType: z.nativeEnum(BookingType),
         bookingProducts: bookingProductParams,
     }),
-    authorizer: ServerOnlyAuther,
+    authorizer: ServerOnlyAuthorizer,
     dataSchema: cabinBookingSchemas.createBookingUserAttached,
     operation: async ({ prisma, params, data }) => {
         // TODO: Prevent Race conditions
@@ -163,7 +163,7 @@ const createBookingWithUser = defineOperation({
         bookingType: z.nativeEnum(BookingType),
         bookingProducts: bookingProductParams,
     }),
-    authorizer: ServerOnlyAuther,
+    authorizer: ServerOnlyAuthorizer,
     dataSchema: cabinBookingSchemas.createBookingUserAttached,
     operation: async ({ prisma, params, data }) => {
         const result = await create({
@@ -203,7 +203,7 @@ const createBookingNoUser = defineOperation({
         bookingType: z.nativeEnum(BookingType),
         bookingProducts: bookingProductParams,
     }),
-    authorizer: ServerOnlyAuther,
+    authorizer: ServerOnlyAuthorizer,
     dataSchema: cabinBookingSchemas.createBookingNoUser,
     operation: async ({ prisma, params, data }) => {
         const result = await create({
