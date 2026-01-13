@@ -4,7 +4,7 @@ import Image from '@/components/Image/Image'
 import useInterval from '@/hooks/useInterval'
 import { readNumberOfApplicationsAction } from '@/services/applications/periods/actions'
 import { useRef, useState } from 'react'
-import type { Image as ImageT } from '@prisma/client'
+import type { Image as ImageT } from '@/prisma-generated-pn-types'
 
 type PropTypes = {
     committees: {

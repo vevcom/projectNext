@@ -1,4 +1,4 @@
-import type { GroupType } from '@prisma/client'
+import type { GroupType } from '@/prisma-generated-pn-types'
 
 /**
  * This object defines which group types can automatically increase their order

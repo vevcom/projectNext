@@ -9,7 +9,7 @@ import { defineOperation } from '@/services/serviceOperation'
 import { ServerOnly } from '@/auth/authorizer/ServerOnly'
 import { ServerError } from '@/services/error'
 import { z } from 'zod'
-import type { Prisma } from '@prisma/client'
+import type { Prisma } from '@/prisma-generated-pn-types'
 import type { Subscription } from './types'
 import type { NotificationMethodGeneral } from '@/services/notifications/types'
 

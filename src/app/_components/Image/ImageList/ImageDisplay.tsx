@@ -18,7 +18,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useContext } from 'react'
 import Link from 'next/link'
 import type { ImageSizeOptions } from '@/components/Image/Image'
-import type { Image as ImageT } from '@prisma/client'
+import type { Image as ImageT } from '@/prisma-generated-pn-types'
 
 const mimeTypes: { [key: string]: string } = {
     jpg: 'image/jpeg',

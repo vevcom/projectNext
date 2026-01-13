@@ -1,12 +1,12 @@
 import upsertOrderBasedOnDate from './upsertOrderBasedOnDate'
 import { type IdMapper, vevenIdToPnId } from './IdMapper'
 import manifest from '@/seeder/src/logger'
-import { Prisma, type PrismaClient as PrismaClientPn, type SEX } from '@prisma/client'
+import { Prisma, type PrismaClient as PrismaClientPn, type SEX } from '@/prisma-generated-pn-client'
 import type {
     Prisma as VevenPrisma,
     PrismaClient as PrismaClientVeven,
     enum_Users_sex as SEXVEVEN
-} from '@/prisma-dobbel-omega/client'
+} from '@/prisma-generated-ow-basic/client'
 import type { Limits } from './migrationLimits'
 
 /**
@@ -17,7 +17,7 @@ import type { Limits } from './migrationLimits'
  * - else it is assumed to be a member and an inactive relation to the soelle group.
  * i.e. no users are assumed to be external.
  * @param pnPrisma - PrismaClientPn
- * @param vevenPrisma - PrismaClientVeven
+ * @param owPrisma - PrismaClientVeven
  * @param limits - Limits - used to limit the number of users to migrate
  */
 
@@ -57,7 +57,7 @@ export class UserMigrator {
     private currentlyMigratingIds: Record<number, Promise<unknown>> = {}
 
     private pnPrisma: PrismaClientPn
-    private vevenPrisma: PrismaClientVeven
+    private owPrisma: PrismaClientVeven
     private imageIdMap: IdMapper
 
 
@@ -71,11 +71,11 @@ export class UserMigrator {
 
     constructor(
         pnPrisma: PrismaClientPn,
-        vevenPrisma: PrismaClientVeven,
+        owPrisma: PrismaClientVeven,
         imageIdMap: IdMapper,
     ) {
         this.pnPrisma = pnPrisma
-        this.vevenPrisma = vevenPrisma
+        this.owPrisma = owPrisma
         this.imageIdMap = imageIdMap
     }
 
@@ -114,7 +114,7 @@ export class UserMigrator {
     }
 
     async migrateUsers(limits: Limits) {
-        const users = await this.vevenPrisma.users.findMany({
+        const users = await this.owPrisma.users.findMany({
             take: limits.users ? limits.users : undefined,
             select: {
                 id: true,
@@ -128,7 +128,7 @@ export class UserMigrator {
                 'johanhst103',
                 'pauliusj103'
             ].map(async uname =>
-                await this.vevenPrisma.users.findUnique({
+                await this.owPrisma.users.findUnique({
                     where: {
                         username_order: {
                             username: uname.slice(0, -3),
@@ -265,7 +265,7 @@ export class UserMigrator {
             return
         }
 
-        const users = await this.vevenPrisma.users.findMany({
+        const users = await this.owPrisma.users.findMany({
             where: {
                 id: {
                     in: vevenIdsToMigrate,

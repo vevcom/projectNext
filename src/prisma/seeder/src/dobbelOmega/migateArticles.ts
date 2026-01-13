@@ -1,7 +1,7 @@
 import { vevenIdToPnId } from './IdMapper'
 import upsertOrderBasedOnDate from './upsertOrderBasedOnDate'
-import type { PrismaClient as PrismaClientPn } from '@prisma/client'
-import type { PrismaClient as PrismaClientVeven } from '@/prisma-dobbel-omega/client'
+import type { PrismaClient as PrismaClientPn } from '@/prisma-generated-pn-client'
+import type { PrismaClient as PrismaClientVeven } from '@/prisma-generated-ow-basic/client'
 import type { IdMapper } from './IdMapper'
 import type { Limits } from './migrationLimits'
 
@@ -13,17 +13,17 @@ import type { Limits } from './migrationLimits'
  * Both Articles -> NewsAricle (with Article relation)
  * And InfoPages -> Articles (belonging to a Article collection)
  * @param pnPrisma - PrismaClientPn
- * @param vevenPrisma - PrismaClientVeven
+ * @param owPrisma - PrismaClientVeven
  * @param imageIdMap - IdMapper - A map of the old and new id's of the images to get cover images
  * @param limits - Limits - used to limit the number of articles to migrate
  */
 export default async function migrateArticles(
     pnPrisma: PrismaClientPn,
-    vevenPrisma: PrismaClientVeven,
+    owPrisma: PrismaClientVeven,
     imageIdMap: IdMapper,
     limits: Limits,
 ) {
-    const articles = await vevenPrisma.articles.findMany({ take: limits.articles ? limits.articles : undefined })
+    const articles = await owPrisma.articles.findMany({ take: limits.articles ? limits.articles : undefined })
 
     const articlesPn = await Promise.all(articles.map(async (article, i) => {
         const coverId = vevenIdToPnId(imageIdMap, article.ImageId) || undefined

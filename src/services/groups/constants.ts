@@ -1,4 +1,4 @@
-import type { GroupType, OmegaMembershipLevel, Prisma } from '@prisma/client'
+import type { GroupType, OmegaMembershipLevel, Prisma } from '@/prisma-generated-pn-types'
 import type { GroupTypeInfo } from './types'
 
 /**

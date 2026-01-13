@@ -1,4 +1,4 @@
-import { SpecialCmsParagraph } from '@prisma/client'
+import { SpecialCmsParagraph } from '@/prisma-generated-pn-types'
 import { z } from 'zod'
 
 

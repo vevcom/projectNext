@@ -17,9 +17,10 @@ RUN npm ci
 # Generate prisma client
 RUN mkdir -p src/prisma
 COPY src/prisma/schema src/prisma/schema
+COPY prisma.config.ts .
 RUN npx prisma generate
 
-COPY src/prisma/vevenSchema src/prisma/vevenSchema
+COPY src/prisma/owSchema src/prisma/owSchema
 RUN npm run dobbelOmega:generate
 
 RUN mkdir -p usr/src/app/store/images

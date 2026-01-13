@@ -13,7 +13,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck } from '@fortawesome/free-solid-svg-icons'
 import type { UserPagingReturn } from '@/services/users/types'
 import type { ChangeEvent, ReactNode } from 'react'
-import type { GroupType } from '@prisma/client'
+import type { GroupType } from '@/prisma-generated-pn-types'
 import type { ExpandedGroup } from '@/services/groups/types'
 
 type GroupSelectionType = Exclude<GroupType, 'INTEREST_GROUP' | 'MANUAL_GROUP'>

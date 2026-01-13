@@ -24,7 +24,8 @@ import seedDevEvents from './development/seedDevEvents'
 import seedEvents from './seedEvent'
 import seedCabin from './seedCabin'
 import seedPermissions from './seedPermissions'
-import { PrismaClient } from '@prisma/client'
+import { PrismaPg } from '@prisma/adapter-pg'
+import { PrismaClient } from '@/prisma-generated-pn-client'
 
 export default async function seed(
     shouldMigrate: boolean,
@@ -32,7 +33,11 @@ export default async function seed(
     logging?: boolean,
 ) {
     const enableLogging = logging === undefined ? true : logging
-    const prisma = new PrismaClient()
+    const prisma = new PrismaClient({
+        adapter: new PrismaPg({
+            connectionString: process.env.DB_URI,
+        })
+    })
 
     if (enableLogging) console.log('seeding standard data....')
     await seedOrder(prisma)

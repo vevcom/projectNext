@@ -3,8 +3,8 @@ import { v4 as uuid } from 'uuid'
 import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
 import { writeFile, mkdir } from 'fs/promises'
-import type { PrismaClient as PrismaClientVeven } from '@/prisma-dobbel-omega/client'
-import type { PrismaClient as PrismaClientPn } from '@prisma/client'
+import type { PrismaClient as PrismaClientVeven } from '@/prisma-generated-ow-basic/client'
+import type { PrismaClient as PrismaClientPn } from '@/prisma-generated-pn-client'
 import type { IdMapper } from './IdMapper'
 import type { Limits } from './migrationLimits'
 
@@ -16,23 +16,23 @@ const directoryName = dirname(fileName)
  * each ombul in Veven, adding the correct relations to the coverimage and fetching the
  * pdf from the old location and storing it in the new location
  * @param pnPrisma - PrismaClientPn
- * @param vevenPrisma - PrismaClientVeven
+ * @param owPrisma - PrismaClientVeven
  * @param imageIdMap - IdMapper - A map of the old and new id's of the images to
  * be used to create correct relations
  */
 export default async function migrateOmbul(
     pnPrisma: PrismaClientPn,
-    vevenPrisma: PrismaClientVeven,
+    owPrisma: PrismaClientVeven,
     imageIdMap: IdMapper,
     limits: Limits,
 ) {
-    const ombuls = await vevenPrisma.ombul.findMany({
+    const ombuls = await owPrisma.ombul.findMany({
         take: limits.ombul ? limits.ombul : undefined,
     })
 
     //First write files concurrently for speed
     const fsLocations = await Promise.all(ombuls.map(async (ombul) => {
-        const fsLocationOldVev = `${process.env.VEVEN_STORE_URL}/ombul/${ombul.fileName}.pdf/${ombul.originalName}`
+        const fsLocationOldVev = `${process.env.OW_STORE_URL}/ombul/${ombul.fileName}.pdf/${ombul.originalName}`
 
         // Get pdf served at old location
         const res = await fetch(fsLocationOldVev, {

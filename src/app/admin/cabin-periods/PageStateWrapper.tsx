@@ -9,7 +9,7 @@ import Form from '@/app/_components/Form/Form'
 import { destoryPricePeriodAction, destroyReleasePeriodAction } from '@/services/cabin/actions'
 import { configureAction } from '@/services/configureAction'
 import { v4 as uuid } from 'uuid'
-import type { PricePeriod, ReleasePeriod } from '@prisma/client'
+import type { PricePeriod, ReleasePeriod } from '@/prisma-generated-pn-types'
 
 
 export default function PageStateWrapper({

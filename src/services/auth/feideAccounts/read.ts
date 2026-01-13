@@ -1,6 +1,6 @@
 import { prismaCall } from '@/services/prismaCall'
-import { prisma } from '@/prisma/client'
-import type { User } from '@prisma/client'
+import { prisma } from '@/prisma-pn-client-instance'
+import type { User } from '@/prisma-generated-pn-types'
 
 /**
  * Reads the user associated with a feide account. Returns null if feide

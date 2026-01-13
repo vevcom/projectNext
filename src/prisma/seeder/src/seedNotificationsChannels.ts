@@ -1,6 +1,7 @@
 import { allNotificationMethodsOn } from '@/services/notifications/constants'
-import { SpecialNotificationChannel } from '@prisma/client'
-import type { NotificationMethod, PrismaClient } from '@prisma/client'
+import type { PrismaClient } from '@/prisma-generated-pn-client'
+import type { NotificationMethod } from '@/prisma-generated-pn-types'
+import { SpecialNotificationChannel } from '@/prisma-generated-pn-types'
 
 type ChannelInfo = {
     special?: SpecialNotificationChannel

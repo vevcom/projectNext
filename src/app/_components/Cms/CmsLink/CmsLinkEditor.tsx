@@ -7,7 +7,7 @@ import Form from '@/components/Form/Form'
 import PopUp from '@/components/PopUp/PopUp'
 import { configureAction } from '@/services/configureAction'
 import { useRouter } from 'next/navigation'
-import type { CmsLink } from '@prisma/client'
+import type { CmsLink } from '@/prisma-generated-pn-types'
 import type { UpdateCmsLinkAction } from '@/cms/links/types'
 import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
 

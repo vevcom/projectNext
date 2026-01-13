@@ -1,15 +1,15 @@
 import type { IdMapper } from './IdMapper'
-import type { PrismaClient as PrismaClientPn } from '@prisma/client'
-import type { PrismaClient as PrismaClientVeven } from '@/prisma-dobbel-omega/client'
+import type { PrismaClient as PrismaClientPn } from '@/prisma-generated-pn-client'
+import type { PrismaClient as PrismaClientVeven } from '@/prisma-generated-ow-basic/client'
 
 /**
  * This function migrates image collections from Veven to PN
  * @param pnPrisma - PrismaClientPn
- * @param vevenPrisma - PrismaClientVeven
+ * @param owPrisma - PrismaClientVeven
  * @returns - IdMapper - A map of the old and new id's of the image collections
  */
-export default async function migrateImageCollections(pnPrisma: PrismaClientPn, vevenPrisma: PrismaClientVeven) {
-    const imageCollections = await vevenPrisma.imageGroups.findMany()
+export default async function migrateImageCollections(pnPrisma: PrismaClientPn, owPrisma: PrismaClientVeven) {
+    const imageCollections = await owPrisma.imageGroups.findMany()
 
     const IdMap: IdMapper = []
     for (const imageCollection of imageCollections) {

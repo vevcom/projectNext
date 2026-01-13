@@ -1,4 +1,4 @@
-import type { AdmissionTrial } from '@prisma/client'
+import type { AdmissionTrial } from '@/prisma-generated-pn-types'
 import type { UserFiltered } from '@/services/users/types'
 
 export type ExpandedAdmissionTrail = AdmissionTrial & {

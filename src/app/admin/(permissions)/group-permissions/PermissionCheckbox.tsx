@@ -4,7 +4,7 @@ import Checkbox from '@/components/UI/Checkbox'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { updateGroupPermissionAction } from '@/services/permissions/actions'
 import { useState } from 'react'
-import type { Permission } from '@prisma/client'
+import type { Permission } from '@/prisma-generated-pn-types'
 
 
 export default function PermissionCheckbox({

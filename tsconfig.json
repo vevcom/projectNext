@@ -25,7 +25,14 @@
       "@/components/*": ["src/app/_components/*"],
       "@/UI/*": ["src/app/_components/UI/*"],
       "@/styles/*": ["src/styles/*"],
+
       "@/prisma/*": ["src/prisma/*"],
+      "@/prisma-generated-pn/*": ["src/prisma/schema/generated/*"],
+      "@/prisma-generated-pn-client": ["src/prisma/schema/generated/client.ts"],
+      "@/prisma-generated-pn-types": ["src/prisma/schema/generated/browser.ts"],
+      "@/prisma-pn-client-instance": ["src/prisma/client.ts"],
+      "@/prisma-generated-ow-basic/*": ["src/prisma/owSchema/generated/*"],
+      
       "@/contexts/*": ["src/contexts/*"],
       "@/hooks/*": ["src/hooks/*"],
       "@/cms/*": ["src/app/_components/Cms/*", "src/services/cms/*"],
@@ -35,7 +42,6 @@
       "@/api/*": ["src/app/api/*"],
       "@/education/*": ["src/services/education/*", "src/app/education/*"],
       "@/career/*": ["src/services/career/*", "src/app/career/*"],
-      "@/prisma-dobbel-omega/*": ["node_modules/.prisma-dobbel-omega/*"],
       "@/seeder/*": ["src/prisma/seeder/*"],
       "@/*": ["./src/*"]
     }

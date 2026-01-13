@@ -9,7 +9,7 @@ import { QueryParams } from '@/lib/queryParams/queryParams'
 import { destroyEventTagAction, updateEventTagAction, createEventTagAction } from '@/services/events/tags/actions'
 import { configureAction } from '@/services/configureAction'
 import Link from 'next/link'
-import type { EventTag as EventTagT } from '@prisma/client'
+import type { EventTag as EventTagT } from '@/prisma-generated-pn-types'
 
 type PropTypes = {
     eventTags: EventTagT[]

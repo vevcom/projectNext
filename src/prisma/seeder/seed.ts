@@ -1,5 +1,5 @@
 import seed from './src/seeder'
-import { prisma } from '@/prisma/client'
+import { prisma } from '@/prisma-pn-client-instance'
 import { exit } from 'process'
 
 seed(

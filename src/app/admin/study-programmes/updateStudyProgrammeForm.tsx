@@ -5,7 +5,7 @@ import { SelectString } from '@/components/UI/Select'
 import TextInput from '@/components/UI/TextInput'
 import { updateStudyProgrammeAction, createStudyProgrammeAction } from '@/services/groups/studyProgrammes/actions'
 import { useRouter } from 'next/navigation'
-import type { StudyProgramme } from '@prisma/client'
+import type { StudyProgramme } from '@/prisma-generated-pn-types'
 
 
 export default function UpdateStudyProgrammeForm({

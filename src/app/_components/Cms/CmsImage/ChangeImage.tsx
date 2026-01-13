@@ -8,7 +8,7 @@ import { configureAction } from '@/services/configureAction'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTurnUp } from '@fortawesome/free-solid-svg-icons'
 import React, { useContext, useEffect, useEffectEvent, useState } from 'react'
-import type { ImageSize, Image as ImageT } from '@prisma/client'
+import type { ImageSize, Image as ImageT } from '@/prisma-generated-pn-types'
 import type { UpdateCmsImageAction } from '@/cms/images/types'
 
 type PropTypes = {

@@ -1,15 +1,15 @@
-import type { PrismaClient as PrismaClientPn } from '@prisma/client'
-import type { PrismaClient as PrismaClientVeven } from '@/prisma-dobbel-omega/client'
+import type { PrismaClient as PrismaClientPn } from '@/prisma-generated-pn-client'
+import type { PrismaClient as PrismaClientVeven } from '@/prisma-generated-ow-basic/client'
 import type { Limits } from './migrationLimits'
 
 
 export default async function migrateMailAliases(
     pnPrisma: PrismaClientPn,
-    vevenPrisma: PrismaClientVeven,
+    owPrisma: PrismaClientVeven,
     limits: Limits,
 ) {
     if (limits.mailaliases === 0) return
-    const aliases = await vevenPrisma.mailAliases.findMany({
+    const aliases = await owPrisma.mailAliases.findMany({
         take: limits.mailaliases ?? undefined,
         include: {
             ExtraAliasMembers: true,

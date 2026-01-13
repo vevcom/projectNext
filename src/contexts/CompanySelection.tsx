@@ -1,6 +1,6 @@
 'use client'
 import { createContext, useState, type ReactNode } from 'react'
-import type { Company } from '@prisma/client'
+import type { Company } from '@/prisma-generated-pn-types'
 
 export const CompanySelectionContext = createContext<{
     selectedCompany: Company | null,

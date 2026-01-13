@@ -5,8 +5,8 @@ import { v4 as uuid } from 'uuid'
 import { writeFile, mkdir } from 'fs/promises'
 import { join } from 'path'
 import type { Limits } from './migrationLimits'
-import type { PrismaClient as PrismaClientPn } from '@prisma/client'
-import type { PrismaClient as PrismaClientVeven } from '@/prisma-dobbel-omega/client'
+import type { PrismaClient as PrismaClientPn } from '@/prisma-generated-pn-client'
+import type { PrismaClient as PrismaClientVeven } from '@/prisma-generated-ow-basic/client'
 
 /**
  * This function migrates images from Veven to PN and adds them to the correct image collection
@@ -14,7 +14,7 @@ import type { PrismaClient as PrismaClientVeven } from '@/prisma-dobbel-omega/cl
  * they will be added to a garbage collection. The function also places special images
  * like the once related to a ombul or profile picture in the correct special collection.
  * @param pnPrisma - PrismaClientPn
- * @param vevenPrisma - PrismaClientVeven
+ * @param owPrisma - PrismaClientVeven
  * @param migrateImageCollectionIdMap - IdMapper - A map of the old and new id's of the image collections also
  * @param limits - Limits - used to limit the number of images to migrate
  * the same as the return value of migrateImageCollection
@@ -22,7 +22,7 @@ import type { PrismaClient as PrismaClientVeven } from '@/prisma-dobbel-omega/cl
  */
 export default async function migrateImages(
     pnPrisma: PrismaClientPn,
-    vevenPrisma: PrismaClientVeven,
+    owPrisma: PrismaClientVeven,
     migrateImageCollectionIdMap: IdMapper,
     limits: Limits
 ) {
@@ -57,7 +57,7 @@ export default async function migrateImages(
     })
     if (!profileCollection) throw new Error('No profile collection found for seeding images')
 
-    const images = await vevenPrisma.images.findMany({
+    const images = await owPrisma.images.findMany({
         include: {
             Ombul: true,
             Articles: true,
@@ -66,7 +66,7 @@ export default async function migrateImages(
     })
 
     // Find what the profile collection is on veven
-    const vevenProfileCollection = await vevenPrisma.imageGroups.findFirstOrThrow({
+    const vevenProfileCollection = await owPrisma.imageGroups.findFirstOrThrow({
         where: {
             name: 'Profilbilder',
         },
@@ -181,13 +181,13 @@ async function fetchAllImagesAndUploadToStore<ImageType extends {
     const uploadOne = async (image: ImageType) => {
         manifest.info(`Migrating image number ${imageCounter++} of ${images.length}`)
         const ext = image.originalName.split('.').pop() || ''
-        const fsLocationDefaultOldVev = `${process.env.VEVEN_STORE_URL}/image/default/${image.name}`
+        const fsLocationDefaultOldVev = `${process.env.OW_STORE_URL}/image/default/${image.name}`
             + `?url=/store/images/${image.name}.${ext}`
-        const fsLocationMediumOldVev = `${process.env.VEVEN_STORE_URL}/image/resize/${imageSizes.medium}/`
+        const fsLocationMediumOldVev = `${process.env.OW_STORE_URL}/image/resize/${imageSizes.medium}/`
             + `${imageSizes.medium}/${image.name}?url=/store/images/${image.name}.${ext}`
-        const fsLocationSmallOldVev = `${process.env.VEVEN_STORE_URL}/image/resize/${imageSizes.small}/`
+        const fsLocationSmallOldVev = `${process.env.OW_STORE_URL}/image/resize/${imageSizes.small}/`
             + `${imageSizes.small}/${image.name}?url=/store/images/${image.name}.${ext}`
-        const fsLocationLargeOldVev = `${process.env.VEVEN_STORE_URL}/image/resize/${imageSizes.large}/`
+        const fsLocationLargeOldVev = `${process.env.OW_STORE_URL}/image/resize/${imageSizes.large}/`
             + `${imageSizes.large}/${image.name}?url=/store/images/${image.name}.${ext}`
         const fsLocationOriginal = await fetchImageAndUploadToStore(fsLocationDefaultOldVev)
         const fsLocationMediumSize = await fetchImageAndUploadToStore(fsLocationMediumOldVev)

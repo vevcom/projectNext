@@ -1,5 +1,5 @@
 import { createSelection } from '@/services/createSelection'
-import type { Prisma, User, SEX } from '@prisma/client'
+import type { Prisma, User, SEX } from '@/prisma-generated-pn-types'
 
 export const maxNumberOfGroupsInFilter = 7
 

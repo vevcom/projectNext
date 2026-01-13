@@ -1,5 +1,5 @@
 import { AuthorizerFactory } from './Authorizer'
-import type { Permission } from '@prisma/client'
+import type { Permission } from '@/prisma-generated-pn-types'
 
 /**
  * Authenticates session if session has permission or session.user with specific field.

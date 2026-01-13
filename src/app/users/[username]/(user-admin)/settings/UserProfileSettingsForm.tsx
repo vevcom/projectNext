@@ -7,9 +7,9 @@ import { configureAction } from '@/services/configureAction'
 import { updateUserProfileAction } from '@/services/users/actions'
 import { sexConfig } from '@/services/users/constants'
 import Textarea from '@/components/UI/Textarea'
-import { SEX } from '@prisma/client'
+import { SEX } from '@/prisma-generated-pn-types'
 import { useState } from 'react'
-import type { User } from '@prisma/client'
+import type { User } from '@/prisma-generated-pn-types'
 
 export default function UserProfileSettingsForm({ userData } : {
     userData: Pick<User, 'username' | 'mobile' | 'allergies' | 'sex' | 'imageConsent' | 'bio'>

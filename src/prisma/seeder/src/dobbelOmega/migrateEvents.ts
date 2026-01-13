@@ -1,17 +1,17 @@
 import { vevenIdToPnId, type IdMapper } from './IdMapper'
-import type { PrismaClient as PrismaClientPn } from '@prisma/client'
-import type { PrismaClient as PrismaClientVeven } from '@/prisma-dobbel-omega/client'
+import type { PrismaClient as PrismaClientPn } from '@/prisma-generated-pn-client'
+import type { PrismaClient as PrismaClientVeven } from '@/prisma-generated-ow-basic/client'
 import type { Limits } from './migrationLimits'
 import type { UserMigrator } from './migrateUsers'
 
 export default async function migrateEvents(
     pnPrisma: PrismaClientPn,
-    vevenPrisma: PrismaClientVeven,
+    owPrisma: PrismaClientVeven,
     imageIdMap: IdMapper,
     userMigrator: UserMigrator,
     limits: Limits
 ) {
-    const events = await vevenPrisma.events.findMany({
+    const events = await owPrisma.events.findMany({
         take: limits.events ? limits.events : undefined,
         orderBy: limits.events ? {
             createdAt: 'desc'
@@ -92,7 +92,7 @@ export default async function migrateEvents(
         }))
     }))
 
-    const simpleEvents = await vevenPrisma.simpleEvents.findMany({
+    const simpleEvents = await owPrisma.simpleEvents.findMany({
         take: limits.events ? limits.events : undefined,
         include: {
             Committees: true,

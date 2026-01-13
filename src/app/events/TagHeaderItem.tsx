@@ -2,7 +2,7 @@ import { TagHeasderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import PopUpProvider from '@/contexts/PopUp'
 import EventTagsAdmin from '@/components/Event/EventTagsAdmin'
 import React from 'react'
-import type { EventTag } from '@prisma/client'
+import type { EventTag } from '@/prisma-generated-pn-types'
 
 type PropTypes = {
     eventTags: EventTag[],

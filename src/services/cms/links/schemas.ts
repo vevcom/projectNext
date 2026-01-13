@@ -1,4 +1,4 @@
-import { SpecialCmsLink } from '@prisma/client'
+import { SpecialCmsLink } from '@/prisma-generated-pn-types'
 import { z } from 'zod'
 
 const cmsLinkRefiner = {

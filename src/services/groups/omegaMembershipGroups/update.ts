@@ -1,11 +1,11 @@
 import '@pn-server-only'
 import { readOmegaMembershipGroup, readUserOmegaMembershipLevel } from './read'
 import { OMEGA_MEMBERSHIP_LEVEL_RANKING } from '@/services/groups/constants'
-import { prisma } from '@/prisma/client'
+import { prisma } from '@/prisma-pn-client-instance'
 import { prismaCall } from '@/services/prismaCall'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import { ServerError } from '@/services/error'
-import type { OmegaMembershipLevel } from '@prisma/client'
+import type { OmegaMembershipLevel } from '@/prisma-generated-pn-types'
 
 function omegaMembershipGTEQ(lhs: OmegaMembershipLevel, rhs: OmegaMembershipLevel) {
     return OMEGA_MEMBERSHIP_LEVEL_RANKING.indexOf(lhs) >= OMEGA_MEMBERSHIP_LEVEL_RANKING.indexOf(rhs)

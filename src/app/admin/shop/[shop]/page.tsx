@@ -11,7 +11,7 @@ import { faPencil } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { notFound } from 'next/navigation'
 import { v4 as uuid } from 'uuid'
-import type { Product } from '@prisma/client'
+import type { Product } from '@/prisma-generated-pn-types'
 
 type PropTypes = {
     params: Promise<{
