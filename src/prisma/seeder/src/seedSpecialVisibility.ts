@@ -30,38 +30,23 @@ const SpecialVisibilityConfig = {
 
 export default async function SeedSpecialVisibility(prisma: PrismaClient) {
     const keys = Object.keys(SpecialVisibilityConfig) as SpecialVisibilityPurpose[]
-    await Promise.all(keys.map((special) =>
+    await Promise.all(keys.map(async (special) => {
+        const visibilityAdmin = await prisma.visibility.create({ data: {} })
+        const visibilityRead = await prisma.visibility.create({ data: {} })
         prisma.visibility.upsert({
             where: {
                 specialPurpose: special
             },
             update: {
-                regularLevel: {
-                    update: {
-                        permission: SpecialVisibilityConfig[special].regularLevel
-                    }
-                },
-                adminLevel: {
-                    update: {
-                        permission: SpecialVisibilityConfig[special].adminLevel
-                    }
-                }
+
             },
             create: {
-                purpose: 'SPECIAL',
-                published: true,
                 specialPurpose: special,
-                regularLevel: {
-                    create: {
-                        permission: SpecialVisibilityConfig[special].regularLevel
-                    }
-                },
-                adminLevel: {
-                    create: {
-                        permission: SpecialVisibilityConfig[special].adminLevel
-                    }
-                }
+                imageCollectionRead: { connect: { id: visibilityRead.id } },
+                imageCollectionAdmin: { connect: { id: visibilityAdmin.id } }
+
             }
         })
+    }
     ))
 }
