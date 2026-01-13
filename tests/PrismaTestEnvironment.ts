@@ -44,7 +44,7 @@ export default class PrismaTestEnvironment extends NodeEnvironment {
 
     async setup() {
         // Run migrations to create tables and columns in the new schema.
-        execSync('npx prisma db push --skip-generate', { env: this.global.process.env })
+        execSync('npx prisma db push', { env: this.global.process.env })
 
         return super.setup()
     }
