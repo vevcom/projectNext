@@ -1,7 +1,10 @@
-import { RequireNothing } from '@/auth/auther/RequireNothing'
-import { RequirePermission } from '@/auth/auther/RequirePermission'
+import { RequireNothing } from '@/auth/authorizer/RequireNothing'
+import { RequirePermission } from '@/auth/authorizer/RequirePermission'
 
 export const flairAuth = {
-    edit: RequirePermission.staticFields({ permission: 'PERMISSION_FLAIR_EDIT' }),
+    create: RequirePermission.staticFields({ permission: 'FLAIR_ADMIN' }),
+    destroy: RequirePermission.staticFields({ permission: 'FLAIR_ADMIN' }),
+    update: RequirePermission.staticFields({ permission: 'FLAIR_ADMIN' }),
+    assign: RequirePermission.staticFields({ permission: 'FLAIR_ADMIN' }),
     read: RequireNothing.staticFields({}),
 }

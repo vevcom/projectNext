@@ -180,7 +180,7 @@ enum Permission {
   PUBLIC_ARTICLE_ADMIN
 
   //Flair/badge/cape
-  PERMISSION_FLAIR_EDIT
+  FLAIR_ADMIN
 }
 
 model GroupPermission {

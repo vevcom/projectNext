@@ -1,36 +1,38 @@
 import '@pn-server-only'
-import { flairAuth } from './auth.ts'
+import { flairAuth } from './auth'
+import { flairSchema } from './schemas'
 import { defineOperation } from '@/services/serviceOperation'
 import { ServerError } from '@/services/error'
 import { createImageAction, readImageAction } from '@/services/images/actions'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { z } from 'zod'
-import { File } from 'node:buffer'
 import type { flairImageType } from '@/services/flairs/types'
 
 
 export const flairOperations = {
     create: defineOperation({
-        authorizer: () => flairAuth.edit.dynamicFields({}),
-        dataSchema: z.object(
-            {
-                file: z.instanceof(File),
-                flairName: z.string()
-            }
-        ),
+        authorizer: () => flairAuth.create.dynamicFields({}),
+        dataSchema: flairSchema.create,
         operation: async ({ prisma, data }) => {
+            const emptyVisibility = await prisma.visibility.create({
+                data: {}
+            })
+
             const flairImageCollection = await prisma.imageCollection.upsert({
-                where: { special: 'FLAIRIMAGES' },
-                update: {},
+                where: {
+                    special: 'FLAIRIMAGES'
+                },
                 create: {
                     name: 'FLAIRIMAGES',
-                    special: 'FLAIRIMAGES',
-                    visibility: {
-                        connect: {
-                            specialPurpose: 'FLAIR',
-                        }
+                    visibilityAdmin: {
+                        connect: emptyVisibility
+                    },
+                    visibilityRead: {
+                        connect: emptyVisibility
                     }
-                }
+
+                },
+                update: {}
             })
             const image = unwrapActionReturn(await createImageAction(
                 { params: { collectionId: flairImageCollection.id } },
@@ -44,7 +46,7 @@ export const flairOperations = {
             ))
             return await prisma.flair.create({
                 data: {
-                    Image: {
+                    image: {
                         connect: { id: image.id }
                     },
                     name: data.flairName,
@@ -53,30 +55,37 @@ export const flairOperations = {
         }
     }),
     update: defineOperation({
-        authorizer: () => flairAuth.edit.dynamicFields({}),
-        dataSchema: z.object(
-            {
-                file: z.instanceof(File).optional(),
-                flairName: z.string(),
-            }
-        ),
+        authorizer: () => flairAuth.update.dynamicFields({}),
+        dataSchema: flairSchema.update,
         paramsSchema: z.object({
             flairId: z.number()
         }),
         operation: async ({ prisma, params, data }) => {
-            const flairImageCollection = await prisma.imageCollection.upsert({
-                where: { special: 'FLAIRIMAGES' },
-                update: {},
-                create: {
-                    name: 'FLAIRIMAGES',
-                    special: 'FLAIRIMAGES',
-                    visibility: {
-                        connect: {
-                            specialPurpose: 'FLAIR',
-                        }
-                    }
-                }
+            let flairImageCollection = await prisma.imageCollection.findUnique({
+                where: { special: 'FLAIRIMAGES' }
             })
+            if (!flairImageCollection) {
+                const emptyVisibility = await prisma.visibility.create({
+                    data: {}
+                })
+
+                flairImageCollection = await prisma.imageCollection.upsert({
+                    where: {
+                        special: 'FLAIRIMAGES'
+                    },
+                    create: {
+                        name: 'FLAIRIMAGES',
+                        visibilityAdmin: {
+                            connect: emptyVisibility
+                        },
+                        visibilityRead: {
+                            connect: emptyVisibility
+                        }
+
+                    },
+                    update: {}
+                })
+            }
             if (data.file) {
                 const image = unwrapActionReturn(await createImageAction(
                     { params: { collectionId: flairImageCollection.id } },
@@ -91,7 +100,7 @@ export const flairOperations = {
                 return await prisma.flair.update({
                     where: { id: params.flairId },
                     data: {
-                        Image: {
+                        image: {
                             connect: { id: image.id }
                         },
                         name: data.flairName,
@@ -179,7 +188,7 @@ export const flairOperations = {
         }
     }),
     assignToUser: defineOperation({
-        authorizer: () => flairAuth.edit.dynamicFields({}),
+        authorizer: () => flairAuth.assign.dynamicFields({}),
         paramsSchema: z.object({
             flairId: z.number(),
             userId: z.number(),
@@ -209,7 +218,7 @@ export const flairOperations = {
         ,
     }),
     unAssignToUser: defineOperation({
-        authorizer: () => flairAuth.edit.dynamicFields({}),
+        authorizer: () => flairAuth.assign.dynamicFields({}),
         paramsSchema: z.object({
             flairId: z.number(),
             userId: z.number(),
@@ -230,7 +239,7 @@ export const flairOperations = {
         ,
     }),
     destroy: defineOperation({
-        authorizer: () => flairAuth.edit.dynamicFields({}),
+        authorizer: () => flairAuth.assign.dynamicFields({}),
         paramsSchema: z.object({
             flairId: z.number(),
         }),
@@ -240,11 +249,13 @@ export const flairOperations = {
                     id: flairId,
                 }
             })
-            await prisma.image.delete({
-                where: {
-                    id: flair.imageId,
-                }
-            })
+            if (flair.imageId) {
+                await prisma.image.delete({
+                    where: {
+                        id: flair.imageId,
+                    }
+                })
+            }
         }
     })
 }

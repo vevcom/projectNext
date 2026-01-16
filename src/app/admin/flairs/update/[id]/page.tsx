@@ -19,7 +19,7 @@ function destroyFlair(id: number, router: routerType) {
     if (response === 'y') {
         destroyFlairAction({ params: { flairId: id } })
     }
-    router.push('/flairs/update')
+    router.push('/admin/flairs/update')
 }
 
 
