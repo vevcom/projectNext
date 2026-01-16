@@ -178,6 +178,9 @@ enum Permission {
 
   // Public articles
   PUBLIC_ARTICLE_ADMIN
+
+  //Flair/badge/cape
+  FLAIR_ADMIN
 }
 
 model GroupPermission {
