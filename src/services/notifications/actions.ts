@@ -1,5 +1,4 @@
 'use server'
-
 import { makeAction } from '@/services/serverAction'
 import { notificationChannelOperations } from '@/services/notifications/channel/operations'
 import { notificationOperations } from '@/services/notifications/operations'
@@ -13,3 +12,5 @@ export const createNotificationAction = makeAction(notificationOperations.create
 
 export const readNotificationSubscriptionsAction = makeAction(notificationSubscriptionOperations.read)
 export const updateNotificationSubscriptionsAction = makeAction(notificationSubscriptionOperations.update)
+
+export const sendMailAction = makeAction(notificationOperations.sendMail)

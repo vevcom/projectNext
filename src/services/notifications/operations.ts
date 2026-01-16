@@ -4,9 +4,11 @@ import { notificationAuth } from './auth'
 import { notificationSchemas } from './schemas'
 import { allNotificationMethodsOn, notificationMethodsArray } from './constants'
 import { availableNotificationMethodIncluder } from './channel/constants'
+import { sendMail } from './email/send'
+import { emailSchemas } from './email/schemas'
 import { userFilterSelection } from '@/services/users/constants'
 import { defineOperation } from '@/services/serviceOperation'
-import { ServerOnly } from '@/auth/auther/ServerOnly'
+import { ServerOnly } from '@/auth/authorizer/ServerOnly'
 import { z } from 'zod'
 import { SpecialNotificationChannel } from '@prisma/client'
 import type { Notification } from '@prisma/client'
@@ -107,6 +109,12 @@ export const notificationOperations = {
                 recipients: results.subscriptions.length
             }
         }
+    }),
+
+    sendMail: defineOperation({
+        authorizer: () => notificationAuth.sendMail.dynamicFields({}),
+        dataSchema: emailSchemas.sendMail,
+        operation: ({ data }) => sendMail(data)
     }),
 
     /**

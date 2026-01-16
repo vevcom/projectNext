@@ -1,4 +1,4 @@
-import { RequireUserIdOrPermission } from '@/auth/auther/RequireUserIdOrPermission'
+import { RequireUserIdOrPermission } from '@/auth/authorizer/RequireUserIdOrPermission'
 
 export const notificationSubscriptionAuth = {
     read: RequireUserIdOrPermission.staticFields({ permission: 'NOTIFICATION_SUBSCRIPTION_READ' }),

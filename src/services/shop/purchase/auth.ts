@@ -1,4 +1,4 @@
-import { RequirePermissionAndDynamicPermission } from '@/auth/auther/RequirePermissionAndDynamicPermission'
+import { RequirePermissionAndDynamicPermission } from '@/auth/authorizer/RequirePermissionAndDynamicPermission'
 
 
 export const purchaseAuth = {

@@ -1,11 +1,11 @@
 import styles from './page.module.scss'
 import BorderButton from '@/components/UI/BorderButton'
-import { Session } from '@/auth/session/Session'
 import { userAuth } from '@/services/users/auth'
 import ProfilePicture from '@/components/User/ProfilePicture'
 import UserDisplayName from '@/components/User/UserDisplayName'
 import { readUserProfileAction } from '@/services/users/actions'
 import { readSpecialImageAction } from '@/services/images/actions'
+import { ServerSession } from '@/auth/session/ServerSession'
 import { sexConfig } from '@/services/users/constants'
 import { readUserFlairsAction } from '@/services/flairs/actions'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
@@ -13,6 +13,8 @@ import Image from '@/components/Image/Image'
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { v4 as uuid } from 'uuid'
+import { RelationshipStatus } from '@prisma/client'
+import React from 'react'
 
 
 export type PropTypes = {
@@ -22,7 +24,7 @@ export type PropTypes = {
 }
 
 export default async function User({ params }: PropTypes) {
-    const session = await Session.fromNextAuth()
+    const session = await ServerSession.fromNextAuth()
     if ((await params).username === 'me') {
         if (!session.user) redirect('/login')
         redirect(`/users/${session.user.username}`) //This throws.
@@ -59,13 +61,23 @@ export default async function User({ params }: PropTypes) {
         { username: profile.user.username }
     ).auth(session)
 
+    const relationshipColour = {
+        [RelationshipStatus.SINGLE]: 'green',
+        [RelationshipStatus.ITS_COMPLICATED]: 'yellow',
+        [RelationshipStatus.TAKEN]: 'red',
+        [RelationshipStatus.NOT_SPECIFIED]: 'white'
+    }
+
+    // Not ideal to use typecast here, but this is the simplest way.
+    const borderColour = { '--border-colour': relationshipColour[profile.user.relationshipStatus] } as React.CSSProperties
+
     return (
         <div className={styles.wrapper}>
             <div className={styles.profile}>
                 <div className={`${styles.top} ${styles.standard}`} /> {/* TODO change style based on flair */}
 
-                <div className={styles.profileContent}>
-                    <ProfilePicture width={240} profileImage={profileImage} />
+                <div className={styles.profileContent} style={borderColour}>
+                    <ProfilePicture width={240} profileImage={profileImage} className={styles.profilePicture}/>
                     <div className={styles.header}>
                         <div className={styles.nameAndFlairContainer}>
                             <div className={styles.nameAndId}>
@@ -104,8 +116,8 @@ export default async function User({ params }: PropTypes) {
                         </div>
                         <hr />
                         <p className={styles.orderText}>
-                            {sexConfig[profile.user.sex ?? 'OTHER'].title}
-                            uudaf {omegaMembership.order}´dis orden i Sanctus Omega Broderskab
+                            {sexConfig[profile.user.sex ?? 'OTHER'].title
+                            } uudaf {omegaMembership.order}´dis orden i Sanctus Omega Broderskab
                         </p>
                     </div>
                     <div className={styles.leftSection}>
@@ -127,12 +139,29 @@ export default async function User({ params }: PropTypes) {
 
                     </div>
                     <div className={styles.profileMain}>
+
+
                         {(profile.user.bio !== '') &&
                             <div className={styles.bio}>
                                 <h2>Bio:</h2>
                                 <p>{profile.user.bio}</p>
                             </div>
                         }
+
+                        {(profile.user.relationshipStatus !== RelationshipStatus.NOT_SPECIFIED) &&
+                        <p>
+                            <span className={styles.relationshipStatus}>Sivilstatus: </span>
+                            {profile.user.relationshipstatusText ? profile.user.relationshipstatusText :
+                                profile.user.relationshipStatus === RelationshipStatus.SINGLE && 'Singel' ||
+                            profile.user.relationshipStatus === RelationshipStatus.ITS_COMPLICATED && 'Det er komplisert' ||
+                            profile.user.relationshipStatus === RelationshipStatus.TAKEN && 'I et forhold'
+
+                            }
+
+                        </p>
+                        }
+
+
                         <p>
                             <span className={styles.email}>E-post:</span>
                             {profile.user.email}

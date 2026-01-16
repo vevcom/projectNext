@@ -20,7 +20,7 @@ type PropTypes = {
 
 export default function EditCategory({ category }: PropTypes) {
     const { refresh, push } = useRouter()
-    // Make a visibility check for edit
+    // Make a visibility check for edit - no just call the apropriate authorizer.
     const canEditCategory = true
 
     const handleSuccessDestroy = () => {

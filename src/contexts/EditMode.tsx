@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, createContext, useEffect } from 'react'
+import React, { useState, createContext, useEffect, useCallback } from 'react'
 
 type PropTypes = {
     children: React.ReactNode,
@@ -29,18 +29,21 @@ export default function EditModeProvider({ defaultValue = false, children }: Pro
         if (newEditMode === true && editableContent.length > 0) setEditMode_(true)
     }
 
-    const addEditableContent = (key: string) => {
+    const addEditableContent = useCallback((key: string) => {
         setEditableContent((prev) => {
             if (prev.includes(key)) {
                 return prev
             }
             return [...prev, key]
         })
-    }
+    }, [])
 
-    const removeEditableContent = (key: string) => {
-        setEditableContent((prev) => prev.filter((k) => k !== key))
-    }
+    const removeEditableContent = useCallback((key: string) => {
+        setEditableContent((prev) => {
+            if (!prev.includes(key)) return prev
+            return prev.filter((k) => k !== key)
+        })
+    }, [])
 
     useEffect(() => {
         if (editableContent.length === 0) setEditMode_(false)

@@ -6,7 +6,7 @@ model Membership {
   admin      Boolean
   active     Boolean
   title      String     @default("Medlem")
-  omegaOrder OmegaOrder @relation(fields: [order], references: [order])
+  omegaOrder OmegaOrder @relation(fields: [order], references: [order], onDelete: Restrict)
   order      Int
 
   @@unique([userId, groupId, order])
@@ -34,7 +34,7 @@ model Group {
   id          Int          @id @default(autoincrement())
   groupType   GroupType
   memberships Membership[]
-  omegaOrder  OmegaOrder   @relation(fields: [order], references: [order])
+  omegaOrder  OmegaOrder   @relation(fields: [order], references: [order], onDelete: Restrict)
   order       Int //The order the group is in currently.
 
   class                Class?
@@ -46,7 +46,7 @@ model Group {
   LockerReservation    LockerReservation[]
   mailingLists         MailingListGroup[]
 
-  VisibilityRequirmenetGroup VisibilityRequirmenetGroup[]
+  VisibilityRequirementGroup VisibilityRequirementGroup[]
   permissions                GroupPermission[]
 }
 

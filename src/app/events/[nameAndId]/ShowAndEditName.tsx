@@ -21,7 +21,7 @@ export default function ShowAndEditName({ event }: PropTypes) {
                     ? `/events/${formatVevenUri(data.name, data.id)}`
                     : '/events'),
             }}
-            editable={true} //TODO: auther
+            editable={true} //TODO: authorizer
             inputName="name"
             submitButton={{
                 text: 'Lagre',

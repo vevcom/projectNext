@@ -1,55 +1,34 @@
-enum VisibilityPurpose {
-  IMAGE
-  EVENT
-  ARTICLE_CATEGORY
-  NEWS_ARTICLE
-  SPECIAL
-}
-
-enum SpecialVisibilityPurpose {
-  OMBUL
-  COMMITTEE
-  USER
-  PUBLIC
-  FLAIR
-}
-
 model Visibility {
-  id              Int                       @id @default(autoincrement())
-  imageCollection ImageCollection?
-  published       Boolean                   @default(false)
-  purpose         VisibilityPurpose
-  specialPurpose  SpecialVisibilityPurpose? @unique
+  id           Int                     @id @default(autoincrement())
+  requirements VisibilityRequirement[] // You must fullfill all requirements
+  createdAt    DateTime                @default(now())
+  updatedAt    DateTime                @updatedAt
 
-  regularLevel   VisibilityLevel @relation(fields: [regularLevelId], references: [id], name: "regularLevel")
-  regularLevelId Int             @unique
-  adminLevel     VisibilityLevel @relation(fields: [adminLevelId], references: [id], name: "adminLevel")
-  adminLevelId   Int             @unique
-}
-
-model VisibilityLevel {
-  id                Int                     @id @default(autoincrement())
-  permission        Permission? //Used if type of the Visibility is SPECIAL. (If null everybody will have access at this level)
-  requirements      VisibilityRequirement[]
-  createdAt         DateTime                @default(now())
-  updatedAt         DateTime                @updatedAt
-  regularVisibility Visibility?             @relation(name: "regularLevel")
-  adminVisibility   Visibility?             @relation(name: "adminLevel")
+  imageCollectionAdmin ImageCollection? @relation(name: "ImageCollectionAdminVisibility")
+  imageCollectionRead  ImageCollection? @relation(name: "ImageCollectionReadVisibility")
 }
 
 model VisibilityRequirement {
-  id                          Int                          @id @default(autoincrement())
-  visibility                  VisibilityLevel              @relation(fields: [visibilityId], references: [id], onDelete: Cascade)
-  visibilityId                Int
-  visibilityRequirmenetGroups VisibilityRequirmenetGroup[]
+  id           Int                          @id @default(autoincrement())
+  visibility   Visibility                   @relation(fields: [visibilityId], references: [id], onDelete: Cascade)
+  visibilityId Int
+  conditions   VisibilityRequirementGroup[] //must be in one of these to fullfill this requirement
 }
 
-model VisibilityRequirmenetGroup {
-  id                      Int                   @id @default(autoincrement())
-  visibilityRequirmenet   VisibilityRequirement @relation(fields: [visibilityRequirmenetId], references: [id], onDelete: Cascade)
-  visibilityRequirmenetId Int
-  group                   Group                 @relation(fields: [groupId], references: [id], onDelete: Cascade)
-  groupId                 Int
+enum VisibilityRequirementGroupType {
+  ACTIVE
+  ORDER
+}
 
-  @@unique([visibilityRequirmenetId, groupId])
+model VisibilityRequirementGroup {
+  id                      Int                            @id @default(autoincrement())
+  visibilityRequirement   VisibilityRequirement          @relation(fields: [visibilityRequirementId], references: [id], onDelete: Cascade)
+  visibilityRequirementId Int
+  group                   Group                          @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  groupId                 Int
+  type                    VisibilityRequirementGroupType
+  omegaOrder              OmegaOrder                     @relation(fields: [order], references: [order], onDelete: Restrict)
+  order                   Int
+
+  @@unique([visibilityRequirementId, groupId, order])
 }

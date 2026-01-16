@@ -1,4 +1,5 @@
 import styles from './page.module.scss'
+import getCommittee from './getCommittee'
 import {
     readCommitteeMembersAction,
     readCommitteeParagraphAction,
@@ -8,6 +9,8 @@ import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import CmsParagraph from '@/components/Cms/CmsParagraph/CmsParagraph'
 import UserCard from '@/components/User/UserCard'
 import { configureAction } from '@/services/configureAction'
+import { committeeAuth } from '@/services/groups/committees/auth'
+import { ServerSession } from '@/auth/session/ServerSession'
 
 export type PropTypes = {
     params: Promise<{
@@ -16,6 +19,7 @@ export type PropTypes = {
 }
 
 export default async function Committee({ params }: PropTypes) {
+    const committee = await getCommittee(params)
     const paragraphRes = await readCommitteeParagraphAction({ params: await params })
     if (!paragraphRes.success) throw new Error('Kunne ikke hente komitéparagrafen')
     const members = unwrapActionReturn(await readCommitteeMembersAction({
@@ -27,9 +31,14 @@ export default async function Committee({ params }: PropTypes) {
 
     const paragraph = paragraphRes.data
 
+    const canEditCommitteeParagraph = committeeAuth.updateParagraphContent.dynamicFields({
+        groupId: committee.groupId
+    }).auth(await ServerSession.fromNextAuth()).toJsObject()
+
     return (
         <div className={styles.wrapper}>
             <CmsParagraph
+                canEdit={canEditCommitteeParagraph}
                 cmsParagraph={paragraph}
                 updateCmsParagraphAction={configureAction(
                     updateCommitteeParagraphAction,

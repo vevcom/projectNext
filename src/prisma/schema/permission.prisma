@@ -71,8 +71,6 @@ enum Permission {
   USERS_DESTROY
   USERS_CREATE
 
-  USERS_CONNECT_STUDENT_CARD
-
   IMAGE_COLLECTION_CREATE
   IMAGE_ADMIN
 
@@ -102,7 +100,7 @@ enum Permission {
   MAILALIAS_CREATE
   MAILALIAS_READ
   MAILALIAS_UPDATE
-  MAILALIAS_DESTORY
+  MAILALIAS_DESTROY
 
   // Mailing list
   MAILINGLIST_CREATE
@@ -196,4 +194,3 @@ model GroupPermission {
 model DefaultPermission {
   permission Permission @unique
 }
-

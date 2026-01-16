@@ -4,7 +4,6 @@ import { userAuth } from './auth'
 import {
     maxNumberOfGroupsInFilter,
     standardMembershipSelection,
-    studentCardRegistrationExpiry,
     userFilterSelection
 } from './constants'
 import { imageOperations } from '@/services/images/operations'
@@ -296,71 +295,20 @@ export const userOperations = {
 
     connectStudentCard: defineOperation({
         authorizer: () => userAuth.connectStudentCard.dynamicFields({}),
-        dataSchema: userSchemas.connectStudentCard,
-        opensTransaction: true,
-        operation: async ({ prisma, data }) => {
-            const currentQueue = await prisma.registerStudentCardQueue.findMany({
-                where: {
-                    expiry: {
-                        gt: new Date(),
-                    },
-                },
-                orderBy: {
-                    expiry: 'desc',
-                },
-                take: 1,
-            })
-
-            if (currentQueue.length === 0) {
-                throw new ServerError(
-                    'NOT FOUND',
-                    `No user has placed them selves in the registration queue at ${process.env.DOMAIN}`
-                )
+        paramsSchema: z.object({
+            studentCard: z.coerce.number().int().min(0).optional(),
+        }),
+        operation: async ({ prisma, params, session }) => {
+            if (!session.user) {
+                throw new ServerError('DISSALLOWED', 'This endpoint requires a user conencted to the session.')
             }
 
-            const userId = currentQueue[0].userId
-            const result = await prisma.$transaction([
-                prisma.registerStudentCardQueue.delete({
-                    where: {
-                        userId,
-                    }
-                }),
-                prisma.user.update({
-                    where: {
-                        id: userId,
-                    },
-                    data: {
-                        studentCard: data.studentCard,
-                    },
-                    select: userFilterSelection,
-                })
-            ])
-
-            return result[1]
-        }
-    }),
-
-    registerStudentCardInQueue: defineOperation({
-        paramsSchema: z.object({
-            userId: z.number(),
-        }),
-        authorizer: ({ params }) => userAuth.registerStudentCardInQueue.dynamicFields(params),
-        operation: async (args) => {
-            const expiry = (new Date()).getTime() + studentCardRegistrationExpiry * 60 * 1000
-            await args.prisma.registerStudentCardQueue.upsert({
+            await prisma.user.update({
                 where: {
-                    userId: args.params.userId,
+                    id: session.user.id
                 },
-                update: {
-                    expiry: new Date(expiry),
-                },
-                create: {
-                    user: {
-                        connect: {
-                            id: args.params.userId,
-                        },
-                    },
-                    expiry: new Date(expiry),
+                data: {
+                    studentCard: params.studentCard?.toString()
                 }
             })
         }
@@ -370,12 +318,23 @@ export const userOperations = {
         paramsSchema: z.union([z.object({ id: z.number() }), z.object({ username: z.string() })]),
         dataSchema: userSchemas.update,
         authorizer: () => userAuth.update.dynamicFields({}),
-        operation: async ({ prisma: prisma_, params, data }) => prisma_.user.update({
+        operation: ({ prisma, params, data }) => prisma.user.update({
             where: params,
-            data
+            data,
         })
     }),
 
+    updateProfile: defineOperation({
+        paramsSchema: z.object({
+            username: z.string()
+        }),
+        dataSchema: userSchemas.update,
+        authorizer: ({ params }) => userAuth.updateProfile.dynamicFields({ username: params.username }),
+        operation: ({ prisma, data, params }) => prisma.user.update({
+            where: params,
+            data,
+        })
+    }),
 
     updatePassword: defineOperation({
         paramsSchema: z.object({
@@ -471,7 +430,7 @@ export const userOperations = {
         authorizer: ({ params }) => userAuth.register.dynamicFields({ userId: params.id }),
         opensTransaction: true,
         operation: async ({ prisma, data, params }) => {
-            const { sex, password, mobile, allergies } = data
+            const { sex, password, mobile, allergies, imageConsent } = data
 
             if (!password) throw new ServerError('BAD PARAMETERS', 'Passord er obligatorisk.')
 
@@ -517,6 +476,7 @@ export const userOperations = {
                     },
                     data: {
                         acceptedTerms: new Date(),
+                        imageConsent,
                         sex,
                         mobile,
                         allergies,
@@ -586,6 +546,12 @@ export const userOperations = {
                     image: true,
                 }
             })
+
+            if (!user.image) {
+                user.image = await imageOperations.readSpecial({
+                    params: { special: 'DEFAULT_PROFILE_IMAGE' },
+                })
+            }
 
             return {
                 balance: 191900,
