@@ -3,7 +3,7 @@ import { prisma } from '@/prisma-pn-client-instance'
 import { exit } from 'process'
 
 seed(
-    process.env.MIGRATE_FROM_VEVEN === 'true',
+    process.env.MIGRATE_FROM_OW === 'true',
     process.env.NODE_ENV === 'development'
 )
     .then(async () => {

@@ -9,7 +9,7 @@ services:
             dockerfile: ${PROJECT_ROOT:-.}/Dockerfile
         environment:
             DB_URI: ${DB_URI}
-            MIGRATE_FROM_VEVEN: ${MIGRATE_FROM_VEVEN}
+            MIGRATE_FROM_OW: ${MIGRATE_FROM_OW}
             OW_STORE_URL: ${OW_STORE_URL}
             OW_DB_URI: ${OW_DB_URI}
             MIGRATION_WITH_LIMITS: ${MIGRATION_WITH_LIMITS}
