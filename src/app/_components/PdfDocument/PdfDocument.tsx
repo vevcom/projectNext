@@ -60,7 +60,6 @@ export default function PdfDocument({ src, className }: PropTypes) {
         if (!numPages) return
         if (pagePair < 0) {
             setPagePair(1)
-            return
         }
         if (pagePair === 0) {
             setCurrentPages({

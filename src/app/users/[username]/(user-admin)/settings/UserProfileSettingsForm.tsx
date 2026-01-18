@@ -33,8 +33,6 @@ export default function UserProfileSettingsForm({ user } : PropTypes) {
         label: relationshipStatusConfig[relationshipStatus].label
     }))
 
-    console.log('user in form', user)
-
     return (
         <Form
             title="Profilinnstillinger"
