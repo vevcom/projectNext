@@ -1,7 +1,7 @@
 import { AuthorizerFactory } from './Authorizer'
 import { checkVisibility } from '@/auth/visibility/checkVisibility'
 import type { VisibilityMatrix } from '@/services/visibility/types'
-import type { Permission } from '@prisma/client'
+import type { Permission } from '@/prisma-generated-pn-types'
 
 export const RequireVisibility = AuthorizerFactory<
     { bypassPermission: Permission },

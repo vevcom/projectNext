@@ -1,7 +1,7 @@
 import styles from './CmsLink.module.scss'
 import CmsLinkEditor from './CmsLinkEditor'
 import Link from 'next/link'
-import type { CmsLink as CmsLinkT } from '@prisma/client'
+import type { CmsLink as CmsLinkT } from '@/prisma-generated-pn-types'
 import type { UpdateCmsLinkAction } from '@/cms/links/types'
 import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
 

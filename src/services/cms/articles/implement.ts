@@ -3,7 +3,7 @@ import { implementUpdateArticleSectionOperations } from '@/cms/articleSections/i
 import { cmsImageOperations } from '@/cms/images/operations'
 import type { ArgsAuthGetterAndOwnershipCheck, PrismaPossibleTransaction } from '@/services/serviceOperation'
 import type { AuthorizerDynamicFieldsBound } from '@/auth/authorizer/Authorizer'
-import type { Prisma } from '@prisma/client'
+import type { Prisma } from '@/prisma-generated-pn-types'
 import type { articleSchemas } from './schemas'
 import type { z } from 'zod'
 

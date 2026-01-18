@@ -10,7 +10,7 @@ import {
 } from '@/services/mail/mailAddressExternal/actions'
 import { useSession } from '@/auth/session/useSession'
 import { useRouter } from 'next/navigation'
-import type { MailingList } from '@prisma/client'
+import type { MailingList } from '@/prisma-generated-pn-types'
 import type { MailFlowObject } from '@/services/mail/types'
 
 

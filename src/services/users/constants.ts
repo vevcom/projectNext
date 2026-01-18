@@ -1,5 +1,5 @@
 import { createSelection } from '@/services/createSelection'
-import type { Prisma, User, SEX } from '@prisma/client'
+import type { Prisma, User, SEX } from '@/prisma-generated-pn-types'
 
 export const maxNumberOfGroupsInFilter = 7
 
@@ -19,7 +19,7 @@ export const userFieldsToExpose = [
     'allergies',
     'imageConsent',
     'relationshipStatus',
-    'relationshipstatusText',
+    'relationshipStatusText',
     'bio',
 ] as const satisfies (keyof User)[]
 

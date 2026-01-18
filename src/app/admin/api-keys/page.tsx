@@ -16,7 +16,7 @@ export default async function ApiKeysAdmin() {
 
     return (
         <PageWrapper title="API-nøkler" headerItem={
-            <AddHeaderItemPopUp PopUpKey={popUpKey}>
+            <AddHeaderItemPopUp popUpKey={popUpKey}>
                 <CreateApiKeyForm popUpKey={popUpKey} />
             </AddHeaderItemPopUp>
         }>

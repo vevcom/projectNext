@@ -2,7 +2,7 @@ import '@pn-server-only'
 import { frontpageAuth } from './auth'
 import { cmsParagraphOperations } from '@/cms/paragraphs/operations'
 import { cmsImageOperations } from '@/cms/images/operations'
-import type { SpecialCmsImage, SpecialCmsParagraph } from '@prisma/client'
+import type { SpecialCmsImage, SpecialCmsParagraph } from '@/prisma-generated-pn-types'
 
 const ownedCmsParagraphs: Readonly<SpecialCmsParagraph[]> = [
     'FRONTPAGE_1',

@@ -4,7 +4,7 @@ import Form from '@/components/Form/Form'
 import useEditMode from '@/hooks/useEditMode'
 import { RequireNothing } from '@/auth/authorizer/RequireNothing'
 import useKeyPress from '@/hooks/useKeyPress'
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef, useEffectEvent } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencil } from '@fortawesome/free-solid-svg-icons'
 import type { PropTypes as FormPropTypes } from '@/components/Form/Form'
@@ -50,8 +50,10 @@ export default function EditableTextField<ReturnType>({
         submitRef.current?.click()
     })
 
+    const resetNoChange = useEffectEvent(() => setNoChange(true))
+
     useEffect(() => {
-        setNoChange(true)
+        resetNoChange()
     }, [canEdit])
 
     const handleInput = (e: React.FormEvent<HTMLDivElement>) => {
@@ -63,7 +65,11 @@ export default function EditableTextField<ReturnType>({
         ref.current?.setAttribute('value', value)
     }, [value])
 
-    if (!canEdit || !editable) return (children)
+    if (!canEdit || !editable) {
+        return (
+            <>{children}</>
+        )
+    }
     return (
         <div className={styles.EditableTextField}>
             <div

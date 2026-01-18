@@ -10,7 +10,7 @@ import {
     faMinimize
 } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/navigation'
-import type { ArticleSection } from '@prisma/client'
+import type { ArticleSection } from '@/prisma-generated-pn-types'
 import type { UpdateArticleSectionAction } from '@/cms/articleSections/types'
 import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
 

@@ -1,9 +1,9 @@
 import '@pn-server-only'
-import { prisma } from '@/prisma/client'
+import { prisma } from '@/prisma-pn-client-instance'
 import { ServerError } from '@/services/error'
 import { prismaCall } from '@/services/prismaCall'
 import { visibilityOperations } from '@/services/visibility/operations'
-import type { ImageCollection } from '@prisma/client'
+import type { ImageCollection } from '@/prisma-generated-pn-types'
 
 export async function destroyImageCollection(collectionId: number): Promise<ImageCollection> {
     const collection = await prismaCall(() => prisma.imageCollection.findUnique({

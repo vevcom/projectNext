@@ -7,7 +7,7 @@ import { updateMailAliasAction, destroyMailAliasAction } from '@/services/mail/a
 import { useSession } from '@/auth/session/useSession'
 import { useRouter } from 'next/navigation'
 import type { MailFlowObject } from '@/services/mail/types'
-import type { MailingList } from '@prisma/client'
+import type { MailingList } from '@/prisma-generated-pn-types'
 
 export default function EditMailAlias({
     data,

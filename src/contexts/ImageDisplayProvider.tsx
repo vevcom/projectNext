@@ -2,7 +2,7 @@
 
 import ImageDisplay from '@/components/Image/ImageList/ImageDisplay'
 import React, { createContext, useState } from 'react'
-import type { Image } from '@prisma/client'
+import type { Image } from '@/prisma-generated-pn-types'
 import type { ImageSizeOptions } from '@/components/Image/Image'
 
 /**

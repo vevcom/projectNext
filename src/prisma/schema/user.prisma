@@ -19,7 +19,7 @@ model User {
   lastname               String              @default("[Fjernet]")
   bio                    String              @default("")
   relationshipStatus     RelationshipStatus  @default(NOT_SPECIFIED)
-  relationshipstatusText String              @default("")
+  relationshipStatusText String              @default("")
   archived               Boolean             @default(false)
   acceptedTerms          DateTime?
   imageConsent           Boolean             @default(false) //if the user has consented to being photographed

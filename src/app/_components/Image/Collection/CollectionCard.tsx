@@ -1,7 +1,7 @@
 import styles from './CollectionCard.module.scss'
 import Image from '@/components/Image/Image'
 import Link from 'next/link'
-import type { Image as ImageT, ImageCollection } from '@prisma/client'
+import type { Image as ImageT, ImageCollection } from '@/prisma-generated-pn-types'
 
 type PropTypes = {
     collection: ImageCollection & {

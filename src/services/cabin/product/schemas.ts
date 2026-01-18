@@ -1,6 +1,6 @@
 import { Zpn } from '@/lib/fields/zpn'
 import { convertPrice } from '@/lib/money/convert'
-import { BookingType } from '@prisma/client'
+import { BookingType } from '@/prisma-generated-pn-types'
 import { z } from 'zod'
 
 const baseSchema = z.object({

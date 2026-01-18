@@ -1,5 +1,5 @@
 import type { MembershipFiltered } from '@/services/groups/memberships/types'
-import type { Prisma } from '@prisma/client'
+import type { Prisma } from '@/prisma-generated-pn-types'
 
 export function visibilityFilter(memberships: MembershipFiltered[]) {
     return {

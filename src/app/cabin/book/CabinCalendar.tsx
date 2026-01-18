@@ -5,7 +5,6 @@ import React, { useState } from 'react'
 import { v4 as uuid } from 'uuid'
 import type { BookingFiltered } from '@/services/cabin/booking/types'
 import type { ReactNode } from 'react'
-import type { Record } from '@prisma/client/runtime/library'
 
 const WEEKDAYS = ['Man', 'Tir', 'Ons', 'Tor', 'Fre', 'Lør', 'Søn']
 const MONTHS = [

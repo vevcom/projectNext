@@ -1,6 +1,6 @@
 'use client'
 import { createContext } from 'react'
-import type { Permission } from '@prisma/client'
+import type { Permission } from '@/prisma-generated-pn-types'
 import type { ReactNode } from 'react'
 
 type PropTypes = {

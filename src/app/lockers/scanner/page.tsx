@@ -4,7 +4,7 @@ import Button from '@/components/UI/Button'
 import CameraFeed from '@/components/Camera/CameraFeed'
 import { useRouter } from 'next/navigation'
 import jsQR from 'jsqr'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState, useEffectEvent } from 'react'
 import type { CameraState } from '@/components/Camera/types'
 
 const WIDTH = 400
@@ -42,16 +42,20 @@ export default function Scanner() {
         }
     }, [router])
 
-    useEffect(() => {
+    const initializeCamera = useEffectEvent(() => {
         setCameraState('Pending')
         setHasAsked(true)
+    })
+
+    useEffect(() => {
+        initializeCamera()
     }, [])
 
     useEffect(() => {
         if (hasAsked && cameraState === 'Off') {
             router.push('/lockers')
         }
-    }, [cameraState, hasAsked])
+    }, [cameraState, hasAsked, router])
 
     return (
         <>

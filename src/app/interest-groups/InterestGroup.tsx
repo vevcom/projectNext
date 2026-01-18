@@ -30,7 +30,7 @@ export default function InterestGroup({ interestGroup, session }: PropTypes) {
         groupId: interestGroup.groupId
     }).auth(session).toJsObject()
 
-    const PopUpKey = `Update interest group ${interestGroup.name}`
+    const popUpKey = `Update interest group ${interestGroup.name}`
 
     const cmsArticleActionConfig = { implementationParams: { interestGroupId: interestGroup.id } }
 
@@ -40,14 +40,14 @@ export default function InterestGroup({ interestGroup, session }: PropTypes) {
             <div className={styles.admin}>
                 {
                     canUpdate.authorized || canDestroy.authorized ? (
-                        <SettingsHeaderItemPopUp PopUpKey={PopUpKey}>
+                        <SettingsHeaderItemPopUp popUpKey={popUpKey}>
                             {
                                 canUpdate.authorized && (
                                     <>
                                         <h2>Oppdater interessegruppe</h2>
                                         <Form
                                             refreshOnSuccess
-                                            closePopUpOnSuccess={PopUpKey}
+                                            closePopUpOnSuccess={popUpKey}
                                             action={
                                                 updateInterestGroupAction.bind(null, ({ params: { id: interestGroup.id } }))
                                             }
@@ -71,7 +71,7 @@ export default function InterestGroup({ interestGroup, session }: PropTypes) {
                                 canDestroy.authorized && (
                                     <Form
                                         refreshOnSuccess
-                                        closePopUpOnSuccess={PopUpKey}
+                                        closePopUpOnSuccess={popUpKey}
                                         action={
                                             destroyInterestGroupAction.bind(null, ({ params: { id: interestGroup.id } }))
                                         }

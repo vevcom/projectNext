@@ -1,4 +1,4 @@
-import type { Permission } from '@prisma/client'
+import type { Permission } from '@/prisma-generated-pn-types'
 import type { PermissionInfo } from './types'
 
 export const permissionCategories = [

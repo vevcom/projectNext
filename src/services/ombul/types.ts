@@ -1,4 +1,4 @@
-import type { CmsImage, Image, Ombul } from '@prisma/client'
+import type { CmsImage, Image, Ombul } from '@/prisma-generated-pn-types'
 
 export type ExpandedOmbul = Ombul & {
     coverImage: CmsImage & {

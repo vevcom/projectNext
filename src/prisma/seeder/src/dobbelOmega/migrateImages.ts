@@ -1,20 +1,20 @@
-import { vevenIdToPnId, type IdMapper } from './IdMapper'
+import { owIdToPnId, type IdMapper } from './IdMapper'
 import manifest from '@/seeder/src/logger'
 import { imageSizes, imageStoreLocation } from '@/seeder/src/seedImages'
 import { v4 as uuid } from 'uuid'
 import { writeFile, mkdir } from 'fs/promises'
 import { join } from 'path'
 import type { Limits } from './migrationLimits'
-import type { PrismaClient as PrismaClientPn } from '@prisma/client'
-import type { PrismaClient as PrismaClientVeven } from '@/prisma-dobbel-omega/client'
+import type { PrismaClient as PrismaClientPn } from '@/prisma-generated-pn-client'
+import type { PrismaClient as PrismaClientOw } from '@/prisma-generated-ow-basic/client'
 
 /**
- * This function migrates images from Veven to PN and adds them to the correct image collection
- * If they do not belong to a image collection (group on veven)
+ * This function migrates images from Omegaweb-basic to PN and adds them to the correct image collection
+ * If they do not belong to a image collection (group on Omegaweb-basic)
  * they will be added to a garbage collection. The function also places special images
  * like the once related to a ombul or profile picture in the correct special collection.
  * @param pnPrisma - PrismaClientPn
- * @param vevenPrisma - PrismaClientVeven
+ * @param owPrisma - PrismaClientOw
  * @param migrateImageCollectionIdMap - IdMapper - A map of the old and new id's of the image collections also
  * @param limits - Limits - used to limit the number of images to migrate
  * the same as the return value of migrateImageCollection
@@ -22,7 +22,7 @@ import type { PrismaClient as PrismaClientVeven } from '@/prisma-dobbel-omega/cl
  */
 export default async function migrateImages(
     pnPrisma: PrismaClientPn,
-    vevenPrisma: PrismaClientVeven,
+    owPrisma: PrismaClientOw,
     migrateImageCollectionIdMap: IdMapper,
     limits: Limits
 ) {
@@ -32,7 +32,7 @@ export default async function migrateImages(
         },
         update: {},
         create: {
-            name: 'Søppel fra Veven',
+            name: 'Søppel fra Omegaweb-basic',
             description: 'Denne samlingen inneholder bilder som ikke tilhørete noen samling i omegaweb-basic',
             visibilityRead: {
                 create: {},
@@ -57,7 +57,7 @@ export default async function migrateImages(
     })
     if (!profileCollection) throw new Error('No profile collection found for seeding images')
 
-    const images = await vevenPrisma.images.findMany({
+    const images = await owPrisma.images.findMany({
         include: {
             Ombul: true,
             Articles: true,
@@ -65,8 +65,8 @@ export default async function migrateImages(
         }
     })
 
-    // Find what the profile collection is on veven
-    const vevenProfileCollection = await vevenPrisma.imageGroups.findFirstOrThrow({
+    // Find what the profile collection is on omegaweb-basic
+    const omegawebBasicProfileCollection = await owPrisma.imageGroups.findFirstOrThrow({
         where: {
             name: 'Profilbilder',
         },
@@ -74,12 +74,12 @@ export default async function migrateImages(
 
     manifest.info(`Before filter: ${images.length} images`)
     const imagesWithCollection = images.map(image => {
-        let collectionId = vevenIdToPnId(migrateImageCollectionIdMap, image.ImageGroupId)
+        let collectionId = owIdToPnId(migrateImageCollectionIdMap, image.ImageGroupId)
         if (image.Ombul.length) {
             collectionId = ombulCollection.id
         } else if (!collectionId) {
             collectionId = garbageCollection.id
-        } else if (image.ImageGroupId === vevenProfileCollection.id) {
+        } else if (image.ImageGroupId === omegawebBasicProfileCollection.id) {
             collectionId = profileCollection.id
         }
         return {
@@ -149,7 +149,7 @@ export default async function migrateImages(
                 }
             }
         })
-        migrateImageIdMap.push({ vevenId: image.id, pnId })
+        migrateImageIdMap.push({ owId: image.id, pnId })
     }))
     return migrateImageIdMap
 }
@@ -181,13 +181,13 @@ async function fetchAllImagesAndUploadToStore<ImageType extends {
     const uploadOne = async (image: ImageType) => {
         manifest.info(`Migrating image number ${imageCounter++} of ${images.length}`)
         const ext = image.originalName.split('.').pop() || ''
-        const fsLocationDefaultOldVev = `${process.env.VEVEN_STORE_URL}/image/default/${image.name}`
+        const fsLocationDefaultOldVev = `${process.env.OW_STORE_URL}/image/default/${image.name}`
             + `?url=/store/images/${image.name}.${ext}`
-        const fsLocationMediumOldVev = `${process.env.VEVEN_STORE_URL}/image/resize/${imageSizes.medium}/`
+        const fsLocationMediumOldVev = `${process.env.OW_STORE_URL}/image/resize/${imageSizes.medium}/`
             + `${imageSizes.medium}/${image.name}?url=/store/images/${image.name}.${ext}`
-        const fsLocationSmallOldVev = `${process.env.VEVEN_STORE_URL}/image/resize/${imageSizes.small}/`
+        const fsLocationSmallOldVev = `${process.env.OW_STORE_URL}/image/resize/${imageSizes.small}/`
             + `${imageSizes.small}/${image.name}?url=/store/images/${image.name}.${ext}`
-        const fsLocationLargeOldVev = `${process.env.VEVEN_STORE_URL}/image/resize/${imageSizes.large}/`
+        const fsLocationLargeOldVev = `${process.env.OW_STORE_URL}/image/resize/${imageSizes.large}/`
             + `${imageSizes.large}/${image.name}?url=/store/images/${image.name}.${ext}`
         const fsLocationOriginal = await fetchImageAndUploadToStore(fsLocationDefaultOldVev)
         const fsLocationMediumSize = await fetchImageAndUploadToStore(fsLocationMediumOldVev)
@@ -215,28 +215,28 @@ async function fetchAllImagesAndUploadToStore<ImageType extends {
 }
 
 /**
- * fetches an image from the Veven store and uploads it to the PN store (does NOT store the image
- * in the database, only the file on the server). Note that veven will often fail when we make a
+ * fetches an image from the Omegaweb-basic store and uploads it to the PN store (does NOT store the image
+ * in the database, only the file on the server). Note that omegaweb-basic will often fail when we make a
  * lot of requests to it. TODO: Add a retry mechanism
- * @param fsLocationVev - The location of the image on the Veven store to be fetched
+ * @param fsLocationOmegawebBasic - The location of the image on the Omegaweb-basic store to be fetched
  * @returns - The location of the image on the PN store
  */
-async function fetchImageAndUploadToStore(fsLocationVev: string): Promise<string | null> {
-    const ext = fsLocationVev.split('.').pop()
+async function fetchImageAndUploadToStore(fsLocationOmegawebBasic: string): Promise<string | null> {
+    const ext = fsLocationOmegawebBasic.split('.').pop()
     const fsLocationPn = `${uuid()}.${ext}`
 
     if (!ext || !['webp', 'png', 'jpg', 'jpeg', 'svg'].includes(ext)) {
-        console.error(`Image ${fsLocationVev} is not a suported image`)
+        console.error(`Image ${fsLocationOmegawebBasic} is not a suported image`)
         return null
     }
-    const res = await fetch(fsLocationVev, {
+    const res = await fetch(fsLocationOmegawebBasic, {
         method: 'GET',
         //This is to make the fetch request look like it comes from a browser. Not sure if it helps
         headers: {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
                 + 'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3',
         },
-    }).catch(() => console.error(`Failed to fetch image from ${fsLocationVev}`))
+    }).catch(() => console.error(`Failed to fetch image from ${fsLocationOmegawebBasic}`))
 
     if (!res) return null
     const imageBuffer = Buffer.from(await res.arrayBuffer())

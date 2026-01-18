@@ -7,7 +7,8 @@ import { readdir, copyFile, mkdir } from 'fs/promises'
 import path, { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
 import type { ImageSeedConfigBase } from './seedImagesConfig'
-import type { Image, PrismaClient } from '@prisma/client'
+import type { PrismaClient } from '@/prisma-generated-pn-client'
+import type { Image } from '@/prisma-generated-pn-types'
 
 const fileName = fileURLToPath(import.meta.url)
 const directoryName = dirname(fileName)

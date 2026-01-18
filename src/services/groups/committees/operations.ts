@@ -10,8 +10,8 @@ import { articleRealtionsIncluder } from '@/cms/articles/constants'
 import { implementUpdateArticleOperations } from '@/cms/articles/implement'
 import { articleOperations } from '@/cms/articles/operations'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
+import { GroupType } from '@/prisma-generated-pn-types'
 import { z } from 'zod'
-import { GroupType } from '@prisma/client'
 
 
 const readAll = defineOperation({

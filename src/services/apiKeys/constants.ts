@@ -1,5 +1,5 @@
 import { createSelection } from '@/services/createSelection'
-import type { ApiKey } from '@prisma/client'
+import type { ApiKey } from '@/prisma-generated-pn-types'
 
 export const apiKeyFieldsToExpose = [
     'id',

@@ -4,7 +4,7 @@ import Image from '@/components/Image/Image'
 import { configureAction } from '@/services/configureAction'
 import { updateCommitteeArticleCoverImageAction } from '@/services/groups/committees/actions'
 import type { ReactNode } from 'react'
-import type { Image as ImageT } from '@prisma/client'
+import type { Image as ImageT } from '@/prisma-generated-pn-types'
 import type { ExpandedCmsImage } from '@/cms/images/types'
 import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
 

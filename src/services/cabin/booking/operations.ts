@@ -12,8 +12,8 @@ import { cabinReleasePeriodOperations } from '@/services/cabin/releasePeriod/ope
 import { sendSystemMail } from '@/services/notifications/email/send'
 import { notificationOperations } from '@/services/notifications/operations'
 import { cmsParagraphOperations } from '@/cms/paragraphs/operations'
+import { BookingType } from '@/prisma-generated-pn-types'
 import { z } from 'zod'
-import { BookingType } from '@prisma/client'
 import type { CabinProductExtended } from '@/services/cabin/product/constants'
 
 const mailData = {

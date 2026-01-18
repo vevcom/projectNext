@@ -1,5 +1,5 @@
 import { AuthorizerFactory } from './Authorizer'
-import type { Permission } from '@prisma/client'
+import type { Permission } from '@/prisma-generated-pn-types'
 
 export const RequireOneOfPermission = AuthorizerFactory<
     { permissions: Permission[] },

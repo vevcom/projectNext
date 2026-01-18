@@ -5,7 +5,7 @@ import { cmsImageOperations } from '@/cms/images/operations'
 import { cmsLinkOperations } from '@/cms/links/operations'
 import type { articleSectionSchemas } from './schemas'
 import type { AuthorizerDynamicFieldsBound } from '@/auth/authorizer/Authorizer'
-import type { Prisma } from '@prisma/client'
+import type { Prisma } from '@/prisma-generated-pn-types'
 import type { z } from 'zod'
 import type { ArgsAuthGetterAndOwnershipCheck, PrismaPossibleTransaction } from '@/services/serviceOperation'
 

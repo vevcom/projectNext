@@ -16,7 +16,7 @@ import type {
     OmegaMembershipGroup,
     Prisma,
     StudyProgramme
-} from '@prisma/client'
+} from '@/prisma-generated-pn-types'
 import type {
     ExpandedGroup,
     GroupsStructured,

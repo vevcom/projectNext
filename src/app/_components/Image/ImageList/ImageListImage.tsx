@@ -2,7 +2,7 @@ import styles from './ImageListImage.module.scss'
 import ImageSelectionButton from './ImageSelectionButton'
 import SelectImageDisplay from './SelectImageDisplay'
 import { default as ImageComponent } from '@/components/Image/Image'
-import type { Image } from '@prisma/client'
+import type { Image } from '@/prisma-generated-pn-types'
 
 type PropTypes = {
     image: Image

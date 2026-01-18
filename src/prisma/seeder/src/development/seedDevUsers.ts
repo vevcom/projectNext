@@ -1,11 +1,12 @@
 import { hashAndEncryptPassword } from '@/auth/passwordHash'
 import { type SeederImage, seedImage } from '@/seeder/src/seedImages'
 import { v4 as uuid } from 'uuid'
-import { OmegaMembershipLevel, type PrismaClient, type Prisma } from '@prisma/client'
 import { randomInt } from 'crypto'
 import { readdir } from 'fs/promises'
 import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
+import type { PrismaClient } from '@/prisma-generated-pn-client'
+import { OmegaMembershipLevel, type Prisma } from '@/prisma-generated-pn-types'
 
 const fileName = fileURLToPath(import.meta.url)
 const directoryName = dirname(fileName)

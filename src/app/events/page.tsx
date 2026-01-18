@@ -57,7 +57,7 @@ export default async function Events({
                     canDestroy={canDestroy.authorized}
                     page="EVENT"
                 />
-                <AddHeaderItemPopUp PopUpKey="CreateEventPopUp">
+                <AddHeaderItemPopUp popUpKey="CreateEventPopUp">
                     <div className={styles.createEvent}>
                         <CreateOrUpdateEventForm eventTags={eventTags} />
                     </div>

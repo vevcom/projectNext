@@ -8,8 +8,8 @@ import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { articleOperations } from '@/cms/articles/operations'
 import { implementUpdateArticleOperations } from '@/cms/articles/implement'
+import { JobType } from '@/prisma-generated-pn-types'
 import { z } from 'zod'
-import { JobType } from '@prisma/client'
 import type { ExpandedJobAd, SimpleJobAd } from './types'
 
 const read = defineOperation({

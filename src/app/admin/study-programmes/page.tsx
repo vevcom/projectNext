@@ -22,7 +22,7 @@ export default async function StudyProgrammes() {
         title="Studieprogrammer"
         headerItem={
             showCreateButton.authorized && (
-                <AddHeaderItemPopUp PopUpKey="create ombul">
+                <AddHeaderItemPopUp popUpKey="create ombul">
                     <UpdateStudyProgrammeForm />
                 </AddHeaderItemPopUp>
             )

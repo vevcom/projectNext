@@ -7,7 +7,7 @@ import { implementUpdateArticleOperations } from '@/cms/articles/implement'
 import { articleOperations } from '@/cms/articles/operations'
 import { z } from 'zod'
 import type { ExpandedArticleCategory } from './types'
-import type { Image } from '@prisma/client'
+import type { Image } from '@/prisma-generated-pn-types'
 import type { PrismaPossibleTransaction } from '@/services/serviceOperation'
 
 export const articleCategoryOperations = {

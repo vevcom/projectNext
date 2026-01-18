@@ -20,7 +20,7 @@ import { useMemo, useState } from 'react'
 import type { CabinProductExtended } from '@/services/cabin/product/constants'
 import type { BookingFiltered } from '@/services/cabin/booking/types'
 import type { DateRange } from './CabinCalendar'
-import type { BookingType, PricePeriod } from '@prisma/client'
+import type { BookingType, PricePeriod } from '@/prisma-generated-pn-types'
 
 export default function StateWrapper({
     cabinAvailability,

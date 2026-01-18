@@ -3,8 +3,8 @@ import { cmsImageSchemas } from './schemas'
 import { ServerOnly } from '@/auth/authorizer/ServerOnly'
 import { defineOperation, defineSubOperation } from '@/services/serviceOperation'
 import { ServerError } from '@/services/error'
+import { SpecialCmsImage } from '@/prisma-generated-pn-types'
 import { z } from 'zod'
-import { SpecialCmsImage } from '@prisma/client'
 
 const create = defineOperation({
     authorizer: ServerOnly,

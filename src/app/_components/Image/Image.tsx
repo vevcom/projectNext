@@ -2,7 +2,7 @@ import styles from './Image.module.scss'
 import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCopyright } from '@fortawesome/free-solid-svg-icons'
-import type { Image, ImageSize, Image as ImageT } from '@prisma/client'
+import type { Image, ImageSize, Image as ImageT } from '@/prisma-generated-pn-types'
 import type { ImageProps } from 'next/image'
 
 export type ImageSizeOptions = ImageSize | 'ORIGINAL'

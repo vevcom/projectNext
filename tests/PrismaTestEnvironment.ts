@@ -1,9 +1,10 @@
+import { PrismaClient } from '@/prisma-generated-pn-client'
 import { v4 } from 'uuid'
 import NodeEnvironment from 'jest-environment-node'
-import { PrismaClient } from '@prisma/client'
 import { execSync } from 'child_process'
 import { URL } from 'url'
 import type { EnvironmentContext, JestEnvironmentConfig } from '@jest/environment'
+import { PrismaPg } from '@prisma/adapter-pg'
 
 /**
  * Generates a modified version of the database URL environment variable
@@ -43,14 +44,18 @@ export default class PrismaTestEnvironment extends NodeEnvironment {
 
     async setup() {
         // Run migrations to create tables and columns in the new schema.
-        execSync('npx prisma db push --skip-generate', { env: this.global.process.env })
+        execSync('npx prisma db push', { env: this.global.process.env })
 
         return super.setup()
     }
 
     async teardown() {
         // Delete the schema and all its tables after tests have run.
-        const prisma = new PrismaClient({ datasourceUrl: this.dbUrl })
+        const prisma = new PrismaClient({
+            adapter: new PrismaPg({
+                connectionString: this.dbUrl,
+            })
+        })
         await prisma.$executeRawUnsafe(`DROP SCHEMA "${this.schema}" CASCADE`)
         await prisma.$disconnect()
     }

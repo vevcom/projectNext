@@ -1,4 +1,4 @@
-import type { Image, ImageCollection } from '@prisma/client'
+import type { Image, ImageCollection } from '@/prisma-generated-pn-types'
 
 export type ExpandedImageCollection = ImageCollection & {
     coverImage: Image | null

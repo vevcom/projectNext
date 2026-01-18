@@ -3,7 +3,7 @@ import { displayPrice } from '@/lib/money/convert'
 import { calculateCabinBookingPrice, calculateTotalCabinBookingPrice } from '@/services/cabin/booking/cabinPriceCalculator'
 import type { CabinProductExtended } from '@/services/cabin/product/constants'
 import type { CabinPriceCalculatorReturnType } from '@/services/cabin/booking/cabinPriceCalculator'
-import type { PricePeriod } from '@prisma/client'
+import type { PricePeriod } from '@/prisma-generated-pn-types'
 
 
 export default function CabinPriceCalculator({
