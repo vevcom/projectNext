@@ -14,18 +14,21 @@ type PropTypes = {
     periodName: string
 }
 
+
 export default function CommitteeLogoRoll({ committees, periodName }: PropTypes) {
-    const [currentCommitteeIndexes, setCurrentCommitteeIndexes] = useState<
-        {
-            display1: number | 'Søkere',
-            display2: number | 'Søkere',
-            display3: number | 'Søkere',
+    // Dynamically set initial indexes based on committee count
+    const initialIndexes = () => {
+        const result: Record<string, number | 'applicantionCount' | null> = {}
+        for (let i = 0; i < 3; i++) {
+            result[`display${i + 1}`] = i < committees.length ? i : null
         }
-    >({
-        display1: 0,
-        display2: 1,
-        display3: 2,
-    })
+        return result as {
+            display1: number | 'applicantionCount' | null,
+            display2: number | 'applicantionCount' | null,
+            display3: number | 'applicantionCount' | null,
+        }
+    }
+    const [currentCommitteeIndexes, setCurrentCommitteeIndexes] = useState(initialIndexes())
 
     const [applicationCount, setApplicationCount] = useState(0)
 
@@ -39,34 +42,39 @@ export default function CommitteeLogoRoll({ committees, periodName }: PropTypes)
     const display2Ref = useRef<HTMLDivElement>(null)
     const display3Ref = useRef<HTMLDivElement>(null)
 
-    const currentIndex = useRef<number | 'Søkere'>(0)
+    const currentIndex = useRef<number | 'applicantionCount'>(0)
 
     const [toggle, setToggle] = useState<1 | 2 | 3>(1)
+
+    const dispays = ['display1', 'display2', 'display3'] as const
 
     useInterval(() => {
         if (!committees.length) return
 
-        let nextIndex: number | 'Søkere' = 0
-        if (currentIndex.current === committees.length - 1) {
-            nextIndex = 'Søkere'
-        } else if (currentIndex.current === 'Søkere') {
+        // Find how many displays are actually used
+        const displayKeys = dispays.filter((_, i) => i < Math.max(1, committees.length))
+
+        let nextIndex: number | 'applicantionCount' = 0
+        if (typeof currentIndex.current === 'number' && currentIndex.current === committees.length - 1) {
+            nextIndex = 'applicantionCount'
+        } else if (currentIndex.current === 'applicantionCount') {
             nextIndex = 0
-        } else {
+        } else if (typeof currentIndex.current === 'number') {
             nextIndex = currentIndex.current + 1
         }
 
-        let display: keyof typeof currentCommitteeIndexes = 'display1'
+        let display: keyof typeof currentCommitteeIndexes = `display${toggle}` as keyof typeof currentCommitteeIndexes
         let nextToggle = toggle
         switch (toggle) {
             case 1:
                 display = 'display1'
-                nextToggle = 2
+                nextToggle = displayKeys.length >= 2 ? 2 : 1
                 display1Ref.current?.classList.remove(styles.animate)
                 setTimeout(() => display1Ref.current?.classList.add(styles.animate), 50)
                 break
             case 2:
                 display = 'display2'
-                nextToggle = 3
+                nextToggle = displayKeys.length === 3 ? 3 : 1
                 display2Ref.current?.classList.remove(styles.animate)
                 setTimeout(() => display2Ref.current?.classList.add(styles.animate), 50)
                 break
@@ -91,51 +99,35 @@ export default function CommitteeLogoRoll({ committees, periodName }: PropTypes)
 
     return (
         <div className={styles.CommitteeLogoRoll}>
-            {currentCommitteeIndexes.display1 !== null && (
-                <div ref={display1Ref} className={styles.display}>
-                    {
-                        currentCommitteeIndexes.display1 === 'Søkere' ? (<>
-                            <h1>Søknader Hittil</h1>
-                            <h1>{applicationCount}</h1>
-                        </>) : (
-                            <Display
-                                image={committees[currentCommitteeIndexes.display1].logo}
-                                shortName={committees[currentCommitteeIndexes.display1].shortName}
-                            />
-                        )
-                    }
-                </div>
-            )}
-            {currentCommitteeIndexes.display2 !== null && (
-                <div ref={display2Ref} className={styles.display}>
-                    {
-                        currentCommitteeIndexes.display2 === 'Søkere' ? (<>
-                            <h1>Søknader Hittil</h1>
-                            <h1>{applicationCount}</h1>
-                        </>) : (
-                            <Display
-                                image={committees[currentCommitteeIndexes.display2].logo}
-                                shortName={committees[currentCommitteeIndexes.display2].shortName}
-                            />
-                        )
-                    }
-                </div>
-            )}
-            {currentCommitteeIndexes.display3 !== null && (
-                <div ref={display3Ref} className={styles.display}>
-                    {
-                        currentCommitteeIndexes.display3 === 'Søkere' ? (<>
-                            <h1>Søkere</h1>
-                            <h1>{applicationCount}</h1>
-                        </>) : (
-                            <Display
-                                image={committees[currentCommitteeIndexes.display3].logo}
-                                shortName={committees[currentCommitteeIndexes.display3].shortName}
-                            />
-                        )
-                    }
-                </div>
-            )}
+            {dispays.map((displayKey, i) => {
+                const idx = currentCommitteeIndexes[displayKey]
+                if (idx === null) return null
+
+                let content = null
+                if (idx === 'applicantionCount') {
+                    content = <>
+                        <h1>Søknader Hittil</h1>
+                        <h1>{applicationCount}</h1>
+                    </>
+                } else if (typeof idx === 'number' && committees[idx]) {
+                    content = <Display image={committees[idx].logo} shortName={committees[idx].shortName} />
+                }
+
+                let refProp = null
+                if (displayKey === 'display1') refProp = display1Ref
+                else if (displayKey === 'display2') refProp = display2Ref
+                else refProp = display3Ref
+
+                return (
+                    <div
+                        key={displayKey}
+                        ref={refProp}
+                        className={styles.display}
+                    >
+                        {content}
+                    </div>
+                )
+            })}
         </div>
     )
 }
