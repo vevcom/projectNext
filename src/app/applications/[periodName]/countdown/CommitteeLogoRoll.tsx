@@ -27,12 +27,12 @@ export default function CommitteeLogoRoll({ committees, periodName }: PropTypes)
         display3: 2,
     })
 
-    const [sokere, setSokere] = useState(0)
+    const [applicantCount, setApplicantCount] = useState(0)
 
     useInterval(async () => {
         const res = await readNumberOfApplicationsAction({ params: { name: periodName } })
         if (!res.success) return
-        setSokere(res.data)
+        setApplicantCount(res.data)
     }, 2000)
 
     const display1Ref = useRef<HTMLDivElement>(null)
@@ -96,7 +96,7 @@ export default function CommitteeLogoRoll({ committees, periodName }: PropTypes)
                     {
                         currentCommitteeIndexes.display1 === 'Søkere' ? (<>
                             <h1>Søknader Hittil</h1>
-                            <h1>{sokere}</h1>
+                            <h1>{applicantCount}</h1>
                         </>) : (
                             <Display
                                 image={committees[currentCommitteeIndexes.display1].logo}
@@ -111,7 +111,7 @@ export default function CommitteeLogoRoll({ committees, periodName }: PropTypes)
                     {
                         currentCommitteeIndexes.display2 === 'Søkere' ? (<>
                             <h1>Søknader Hittil</h1>
-                            <h1>{sokere}</h1>
+                            <h1>{applicantCount}</h1>
                         </>) : (
                             <Display
                                 image={committees[currentCommitteeIndexes.display2].logo}
@@ -126,7 +126,7 @@ export default function CommitteeLogoRoll({ committees, periodName }: PropTypes)
                     {
                         currentCommitteeIndexes.display3 === 'Søkere' ? (<>
                             <h1>Søkere</h1>
-                            <h1>{sokere}</h1>
+                            <h1>{applicantCount}</h1>
                         </>) : (
                             <Display
                                 image={committees[currentCommitteeIndexes.display3].logo}
