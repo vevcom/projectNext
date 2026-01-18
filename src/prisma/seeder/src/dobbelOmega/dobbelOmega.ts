@@ -16,7 +16,7 @@ import { PrismaClient as PrismaClientOw } from '@/prisma-generated-ow-basic/clie
 
 /**
  * !DobbelOmega!
- * This function migrates data from Veven to ProjectNext
+ * This function migrates data from OW basic to ProjectNext
  * @param pnPrisma - PrismaClientPn
  */
 export default async function dobbelOmega(pnPrisma: PrismaClientPn) {

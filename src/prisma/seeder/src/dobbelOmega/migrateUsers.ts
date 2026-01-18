@@ -1,23 +1,23 @@
 import upsertOrderBasedOnDate from './upsertOrderBasedOnDate'
-import { type IdMapper, vevenIdToPnId } from './IdMapper'
+import { type IdMapper, owIdToPnId } from './IdMapper'
 import manifest from '@/seeder/src/logger'
 import { Prisma, type PrismaClient as PrismaClientPn, type SEX } from '@/prisma-generated-pn-client'
 import type {
-    Prisma as VevenPrisma,
-    PrismaClient as PrismaClientVeven,
-    enum_Users_sex as SEXVEVEN
+    Prisma as OwPrisma,
+    PrismaClient as PrismaClientOw,
+    enum_Users_sex as SEXOW,
 } from '@/prisma-generated-ow-basic/client'
 import type { Limits } from './migrationLimits'
 
 /**
  * TODO: Need migrate reservations (mail reservations) ?, and flairs
- * This function migrates users from Veven to PN. It only migrates to theUser model, not FeideAccounts
+ * This function migrates users from Omegaweb-basic to PN. It only migrates to theUser model, not FeideAccounts
  * or Credentials. These should be linked when people log in for the first time.
- * If a user has the soelle field true on veven it will get a relation to the soelle group
+ * If a user has the soelle field true on Omegaweb-basic it will get a relation to the soelle group
  * - else it is assumed to be a member and an inactive relation to the soelle group.
  * i.e. no users are assumed to be external.
  * @param pnPrisma - PrismaClientPn
- * @param owPrisma - PrismaClientVeven
+ * @param owPrisma - PrismaClientOw
  * @param limits - Limits - used to limit the number of users to migrate
  */
 
@@ -27,7 +27,7 @@ const sexMap = {
     // eslint-disable-next-line id-length
     f: 'FEMALE',
     other: 'OTHER',
-} as const satisfies Record<SEXVEVEN, SEX>
+} as const satisfies Record<SEXOW, SEX>
 
 type ExtendedMemberGroup = Prisma.OmegaMembershipGroupGetPayload<{
     include: {
@@ -46,9 +46,9 @@ const userIncluder = {
             NTNUCard: true,
         },
     },
-} satisfies VevenPrisma.UsersInclude
+} satisfies OwPrisma.UsersInclude
 
-type userExtended = VevenPrisma.UsersGetPayload<{
+type userExtended = OwPrisma.UsersGetPayload<{
     include: typeof userIncluder
 }>
 
@@ -57,7 +57,7 @@ export class UserMigrator {
     private currentlyMigratingIds: Record<number, Promise<unknown>> = {}
 
     private pnPrisma: PrismaClientPn
-    private owPrisma: PrismaClientVeven
+    private owPrisma: PrismaClientOw
     private imageIdMap: IdMapper
 
 
@@ -71,7 +71,7 @@ export class UserMigrator {
 
     constructor(
         pnPrisma: PrismaClientPn,
-        owPrisma: PrismaClientVeven,
+        owPrisma: PrismaClientOw,
         imageIdMap: IdMapper,
     ) {
         this.pnPrisma = pnPrisma
@@ -150,15 +150,15 @@ export class UserMigrator {
         return await this.migrateBulk(userIds)
     }
 
-    async getPnUserId(vevenId: number) {
-        if (!this.userIdMap[vevenId]) {
-            await this.migrateUser(vevenId)
+    async getPnUserId(owId: number) {
+        if (!this.userIdMap[owId]) {
+            await this.migrateUser(owId)
         }
-        return this.userIdMap[vevenId]
+        return this.userIdMap[owId]
     }
 
-    async migrateUser(vevenId: number) {
-        return await this.migrateBulk([vevenId])
+    async migrateUser(owId: number) {
+        return await this.migrateBulk([owId])
     }
 
     private async createUser(user: userExtended) {
@@ -196,7 +196,7 @@ export class UserMigrator {
             emailVerified: undefined,
             createdAt: user.createdAt,
             updatedAt: user.updatedAt,
-            imageId: vevenIdToPnId(this.imageIdMap, user.ImageId),
+            imageId: owIdToPnId(this.imageIdMap, user.ImageId),
             archived: user.archived,
         } satisfies Prisma.UserUncheckedCreateInput
 
@@ -244,15 +244,15 @@ export class UserMigrator {
         return pnUser
     }
 
-    async migrateBulk(vevenIds: number[]) {
-        const vevenIdsToMigrate = vevenIds.filter(id => !this.userIdMap[id])
+    async migrateBulk(owIds: number[]) {
+        const owIdsToMigrate = owIds.filter(id => !this.userIdMap[id])
         const waitForParalell: Promise<unknown>[] = []
         const resolveWhenFinished: ((value: unknown) => void)[] = []
-        for (let i = vevenIdsToMigrate.length - 1; i >= 0; i--) {
-            const id = vevenIdsToMigrate[i]
+        for (let i = owIdsToMigrate.length - 1; i >= 0; i--) {
+            const id = owIdsToMigrate[i]
             if (this.currentlyMigratingIds.hasOwnProperty(id)) {
                 waitForParalell.push(this.currentlyMigratingIds[id])
-                vevenIdsToMigrate.splice(i, 1)
+                owIdsToMigrate.splice(i, 1)
             } else {
                 this.currentlyMigratingIds[id] = new Promise((resolve) => {
                     resolveWhenFinished.push(resolve)
@@ -260,7 +260,7 @@ export class UserMigrator {
             }
         }
 
-        if (vevenIdsToMigrate.length === 0 && resolveWhenFinished.length === 0) {
+        if (owIdsToMigrate.length === 0 && resolveWhenFinished.length === 0) {
             await Promise.all(waitForParalell)
             return
         }
@@ -268,7 +268,7 @@ export class UserMigrator {
         const users = await this.owPrisma.users.findMany({
             where: {
                 id: {
-                    in: vevenIdsToMigrate,
+                    in: owIdsToMigrate,
                 }
             },
             include: userIncluder,

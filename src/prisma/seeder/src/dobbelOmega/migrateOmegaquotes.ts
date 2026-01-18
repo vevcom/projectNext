@@ -1,18 +1,18 @@
 import manifest from '@/seeder/src/logger'
 import type { UserMigrator } from './migrateUsers'
 import type { PrismaClient as PrismaClientPn } from '@/prisma-generated-pn-client'
-import type { PrismaClient as PrismaClientVeven } from '@/prisma-generated-ow-basic/client'
+import type { PrismaClient as PrismaClientOw } from '@/prisma-generated-ow-basic/client'
 import type { Limits } from './migrationLimits'
 
 /**
- * This function migrates omegaquotes from Veven to PN
+ * This function migrates omegaquotes from Omegaweb-basic to PN
  * @param pnPrisma - PrismaClientPn
- * @param owPrisma - PrismaClientVeven
+ * @param owPrisma - PrismaClientOw
  * @param limits - Limits - used to limit the number of quotes to migrate
  */
 export default async function migrateOmegaquotes(
     pnPrisma: PrismaClientPn,
-    owPrisma: PrismaClientVeven,
+    owPrisma: PrismaClientOw,
     userMigrator: UserMigrator,
     limits: Limits
 ) {

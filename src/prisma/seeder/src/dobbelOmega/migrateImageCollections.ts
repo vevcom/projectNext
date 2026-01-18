@@ -1,14 +1,14 @@
 import type { IdMapper } from './IdMapper'
 import type { PrismaClient as PrismaClientPn } from '@/prisma-generated-pn-client'
-import type { PrismaClient as PrismaClientVeven } from '@/prisma-generated-ow-basic/client'
+import type { PrismaClient as PrismaClientOw } from '@/prisma-generated-ow-basic/client'
 
 /**
- * This function migrates image collections from Veven to PN
+ * This function migrates image collections from Omegaweb-basic to PN
  * @param pnPrisma - PrismaClientPn
- * @param owPrisma - PrismaClientVeven
+ * @param owPrisma - PrismaClientOw
  * @returns - IdMapper - A map of the old and new id's of the image collections
  */
-export default async function migrateImageCollections(pnPrisma: PrismaClientPn, owPrisma: PrismaClientVeven) {
+export default async function migrateImageCollections(pnPrisma: PrismaClientPn, owPrisma: PrismaClientOw) {
     const imageCollections = await owPrisma.imageGroups.findMany()
 
     const IdMap: IdMapper = []
@@ -30,19 +30,19 @@ export default async function migrateImageCollections(pnPrisma: PrismaClientPn, 
             },
             create: {
                 name,
-                description: 'Denne samlingen ble migrert fra Veven',
+                description: 'Denne samlingen ble migrert fra Omegaweb-basic',
                 createdAt: imageCollection.updatedAt,
                 updatedAt: imageCollection.updatedAt,
                 //TODO: Link to right committee through visibility
                 visibilityRead: {
-                    create: {} //Assuming all collections from vevn to be public on migration is probably fine
+                    create: {} //Assuming all collections from omegaweb-basic to be public on migration is probably fine
                 },
                 visibilityAdmin: {
                     create: {} //TODO: not everyone should be able to update this....
                 }
             }
         })
-        IdMap.push({ vevenId: imageCollection.id, pnId: collection.id })
+        IdMap.push({ owId: imageCollection.id, pnId: collection.id })
     }
     return IdMap
 }

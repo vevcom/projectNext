@@ -1,9 +1,9 @@
-import { vevenIdToPnId } from './IdMapper'
+import { owIdToPnId } from './IdMapper'
 import { v4 as uuid } from 'uuid'
 import { fileURLToPath } from 'url'
 import { dirname, join } from 'path'
 import { writeFile, mkdir } from 'fs/promises'
-import type { PrismaClient as PrismaClientVeven } from '@/prisma-generated-ow-basic/client'
+import type { PrismaClient as PrismaClientOw } from '@/prisma-generated-ow-basic/client'
 import type { PrismaClient as PrismaClientPn } from '@/prisma-generated-pn-client'
 import type { IdMapper } from './IdMapper'
 import type { Limits } from './migrationLimits'
@@ -12,17 +12,17 @@ const fileName = fileURLToPath(import.meta.url)
 const directoryName = dirname(fileName)
 
 /**
- * This function migrates ombul from Veven to PN, by creating a new ombul in PN for
- * each ombul in Veven, adding the correct relations to the coverimage and fetching the
+ * This function migrates ombul from OW to PN, by creating a new ombul in PN for
+ * each ombul in OW, adding the correct relations to the coverimage and fetching the
  * pdf from the old location and storing it in the new location
  * @param pnPrisma - PrismaClientPn
- * @param owPrisma - PrismaClientVeven
+ * @param owPrisma - PrismaClientOw
  * @param imageIdMap - IdMapper - A map of the old and new id's of the images to
  * be used to create correct relations
  */
 export default async function migrateOmbul(
     pnPrisma: PrismaClientPn,
-    owPrisma: PrismaClientVeven,
+    owPrisma: PrismaClientOw,
     imageIdMap: IdMapper,
     limits: Limits,
 ) {
@@ -57,7 +57,7 @@ export default async function migrateOmbul(
 
         const coverName = `${ombul.title.split(' ').join('_')}_cover${uuid()}`
 
-        const coverImageId = vevenIdToPnId(imageIdMap, ombul.ImageId)
+        const coverImageId = owIdToPnId(imageIdMap, ombul.ImageId)
 
         const coverImage = await pnPrisma.cmsImage.upsert({
             where: {
