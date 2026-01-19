@@ -12,9 +12,8 @@ pncli-config.json
 /.pnp
 .pnp.js
 
-#prisma, but only in prisma directory
-/src/prisma/schema/generated
-/src/prisma/owSchema/generated
+# generated prisma client(s)
+/src/prisma/generated
 
 # testing
 /coverage

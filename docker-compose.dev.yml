@@ -12,6 +12,7 @@ services:
             - ${PROJECT_ROOT:-.}/logs:/usr/src/app/logs
             - devstore:/usr/src/app/store
             - dotnext:/usr/src/app/.next
+            - /usr/src/prisma/generated/ # Exclude prisma generated files from volume
 
     db:
         extends:

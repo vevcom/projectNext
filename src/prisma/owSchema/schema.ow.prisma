@@ -1,6 +1,6 @@
 generator veven {
   provider = "prisma-client"
-  output   = "./generated/prisma"
+  output   = "../generated/ow-prisma"
 }
 
 datasource db {

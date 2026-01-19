@@ -1,6 +1,6 @@
 generator projectnext {
   provider = "prisma-client"
-  output   = "./generated/prisma"
+  output   = "../generated/pn-prisma"
 }
 
 datasource db {
