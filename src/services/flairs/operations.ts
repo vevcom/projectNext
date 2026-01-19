@@ -2,6 +2,7 @@ import '@pn-server-only'
 import { flairAuth } from './auth'
 import { flairSchema } from './schemas'
 import { defineOperation } from '@/services/serviceOperation'
+import { ServerError } from '@/services/error'
 import { cmsImageOperations } from '@/cms/images/operations'
 import { z } from 'zod'
 
@@ -173,6 +174,81 @@ export const flairOperations = {
                         cmsImageId: flair.imageId,
                     }
                 })
+            })
+        }
+    }),
+    increaseRank: defineOperation({
+        authorizer: () => flairAuth.increaseRank.dynamicFields({}),
+        paramsSchema: z.object({
+            flairId: z.number(),
+        }),
+        operation: async ({ prisma, params: { flairId } }) => {
+            const flair = await prisma.flair.findUniqueOrThrow({
+                where: { id: flairId }
+            })
+            const lowerFlair = await prisma.flair.findFirst({
+                where: {
+                    rank: {
+                        lt: flair.rank
+                    }
+                },
+                orderBy: {
+                    rank: 'desc'
+                }
+            })
+            if (!lowerFlair) {
+                throw new ServerError('BAD PARAMETERS', 'Flair is already at lowest rank')
+            }
+            const tempRank = -99999999
+            await prisma.flair.update({
+                where: { id: lowerFlair.id },
+                data: { rank: tempRank }
+            })
+            await prisma.flair.update({
+                where: { id: flair.id },
+                data: { rank: lowerFlair.rank }
+            })
+            await prisma.flair.update({
+                where: { id: lowerFlair.id },
+                data: { rank: flair.rank }
+            })
+        }
+    }),
+    decreaseRank: defineOperation({
+        authorizer: () => flairAuth.decreaseRank.dynamicFields({}),
+        paramsSchema: z.object({
+            flairId: z.number(),
+        }),
+        operation: async ({ prisma, params: { flairId } }) => {
+            const flair = await prisma.flair.findUniqueOrThrow({
+                where: { id: flairId }
+            })
+            const higherFlair = await prisma.flair.findFirst({
+                where: {
+                    rank: {
+                        gt: flair.rank
+                    }
+                },
+                orderBy: {
+                    rank: 'asc'
+                }
+            })
+            if (!higherFlair) {
+                throw new ServerError('BAD PARAMETERS', 'Flair is already at highest rank')
+            }
+            // Use a temporary rank to avoid unique constraint violation
+            const tempRank = -99999999
+            await prisma.flair.update({
+                where: { id: higherFlair.id },
+                data: { rank: tempRank }
+            })
+            await prisma.flair.update({
+                where: { id: flair.id },
+                data: { rank: higherFlair.rank }
+            })
+            await prisma.flair.update({
+                where: { id: higherFlair.id },
+                data: { rank: flair.rank }
             })
         }
     }),
