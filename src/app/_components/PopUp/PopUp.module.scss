@@ -7,11 +7,12 @@
     top: 0;
     left: 0;
     > .main {
-        box-shadow: rgba(0, 0, 0, 0.35) 0px 25px 25px;
+        @include ohma.boxShadow('');
         @include ohma.card;
+        @include ohma.layer();
+        padding: 2*ohma.$gap;
         z-index: 9;
         max-height: 95svh;
-        background-color: ohma.$colors-secondary;
         > .overflow {
             overflow-y: auto;
             margin: 0;

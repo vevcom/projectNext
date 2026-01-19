@@ -4,20 +4,20 @@
 
 $padding: 1.5em;
 $imageHeight: 175px;
-$contentHeight: 50px;
+$contentHeight: 64px;
 $height: $imageHeight + $contentHeight;
 
-$background: color.adjust(ohma.$colors-secondary, $lightness: 15%);
+$background: color-mix(in srgb, ohma.$colors-secondary, white 30%); // TODO Perhaps change
 $textBoxTransparency: 60%;
-$textColor: ohma.$colors-gray-900;
+$textColor: ohma.$colors-text;
 $textUnderlineColor: ohma.$colors-secondary;
 $textBoxBackgroundColor: ohma.$colors-white;
 
 .CommitteeCard {
     width: 100%;
     aspect-ratio: 1/1;
-    border-radius: 50%;
-    padding: 0px;
+    border-radius: ohma.$cardRounding;
+    padding: 0;
     position: relative;
     color: inherit;
     text-decoration: none;
@@ -26,6 +26,7 @@ $textBoxBackgroundColor: ohma.$colors-white;
     isolation: isolate;
     overflow: hidden;
     box-shadow: ohma.$colors-gray-800 0 0 10px;
+    transition-duration: 0.3s;
 
     @include ohma.screenMobile {
         width: 100%;
@@ -33,7 +34,6 @@ $textBoxBackgroundColor: ohma.$colors-white;
 
     &:hover {
         scale: 1.1;
-        transition-duration: 0.3s;
 
         @include ohma.screenMobile {
             scale: 1;
@@ -49,18 +49,16 @@ $textBoxBackgroundColor: ohma.$colors-white;
         }
 
         > .content {
-            background-color: rgba($textBoxBackgroundColor, 0%);
-            box-shadow: ohma.$colors-secondary 0 0 0px;
-            padding-top: 10px;
+            box-shadow: ohma.$colors-secondary 0 0 0;
 
             @include ohma.screenMobile {
-                background-color: rgba($textBoxBackgroundColor, 60%);
+
                 box-shadow: ohma.$colors-secondary 0 0 40px;
                 padding-top: $padding
             }
 
             > h2 {
-                opacity: 0%;
+                opacity: 100%;
 
                 @include ohma.screenMobile {
                     opacity: 100%;
@@ -106,11 +104,11 @@ $textBoxBackgroundColor: ohma.$colors-white;
     > .content {
         z-index: 2;
         position: absolute;
-        border-radius: calc(ohma.$cardRounding - $padding);
-        background-color: rgba($textBoxBackgroundColor, $textBoxTransparency);
+        border-radius: ohma.$cardRounding;
+        @include ohma.layer();
         width: 100%;
         padding: $padding;
-        bottom: 5%;
+        bottom: 0;
         height: $contentHeight;
         box-shadow: ohma.$colors-secondary 0 0 40px;
         color: $textColor;

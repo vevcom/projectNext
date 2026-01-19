@@ -39,7 +39,7 @@ export default async function RootLayout({ children }: PropTypes) {
         unwrapActionReturn(await readUserProfileAction({ params: { username: session.user.username } })) : null
 
     return (
-        <html lang="en">
+        <html className={'html'} lang="en">
             <body className={`${inter.className} ${styles.body}`}>
                 <SessionProvider session={session}>
                     <DefaultPermissionsProvider defaultPermissions={defaultPermissions}>

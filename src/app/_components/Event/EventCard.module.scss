@@ -2,7 +2,70 @@
 
 .tags {
     display: flex;
-    gap: 0 .3em;
+    align-items: center;
     list-style-type: none;
-    padding-bottom: 1rem;
+    margin-left: ohma.$gap;
+}
+
+.EventWrapper {
+    @include ohma.layer();
+    @include ohma.boxShadow('');
+    border-radius: ohma.$cardRounding;
+    overflow: hidden;
+    text-decoration: none;
+    color: unset;
+    margin: ohma.$gap;
+}
+
+.EventWrapper:hover {
+    @include ohma.boxShadow('hover');
+}
+
+.EventHeader {
+    display: flex;
+    height: 50px;
+    @include ohma.layer();
+}
+
+.EventMainTime {
+    background: ohma.$colors-primary;
+    height: 100%;
+    min-width: 180px;
+    font-size: x-large;
+    line-height: 50px - 2*ohma.$gap;
+    padding: ohma.$gap;
+    padding-left: ohma.$gap*3;
+}
+
+.EventAttendanceBar {
+    height: 10px;
+    > div {
+        background: color-mix(in srgb, ohma.$colors-primary, black 20%);
+        height: 100%;
+    }
+    position: relative;
+    z-index: 2;
+}
+
+.EventImage {
+    height: 200px;
+    margin-top: -10px;
+    background-image: url('https://media.starcitizen.tools/thumb/d/d9/Ironclad_x2_floating_over_sandy_world_-_Cropped.jpg/800px-Ironclad_x2_floating_over_sandy_world_-_Cropped.jpg.webp');
+}
+
+.EventMain {
+    height: 150px;
+    padding: ohma.$gap;
+}
+
+.EventFooter {
+    @include ohma.layer();
+    height: 50px;
+    display: flex;
+    justify-content: space-evenly;
+    text-align: center;
+    > div {
+        line-height: 50px;
+        width: 100px;
+    }
 }

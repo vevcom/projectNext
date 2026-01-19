@@ -60,7 +60,7 @@ export default function UserNavigation({ profile }: PropTypes) {
                 </Link>
                 <Link href="/users/me/settings">
                     <FontAwesomeIcon icon={faCog} />
-                    <p>Instillinger</p>
+                    <p>Innstillinger</p>
                 </Link>
             </div>
         </div>

@@ -73,7 +73,7 @@
         @include rangeStyles(ohma.$colors-primary, 100%, 10px);
 
         &.inRange {
-          background-color: color.adjust(ohma.$colors-primary, $lightness: 30%);
+          background-color: color-mix(in srgb, ohma.$colors-primary, white 30%); // TODO Perhaps change
         }
 
         >.dateNumber {
