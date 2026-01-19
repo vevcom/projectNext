@@ -86,7 +86,7 @@ export default function PopUp({
         }
     }, [children, isOpen, popUpKey, teleport, ref])
 
-    useEffect(() => {
+    const handleSearchParamsChange = useEffectEvent(() => {
         if (!storeInUrl) return
 
         const params = new URLSearchParams(searchParams.toString())
@@ -95,9 +95,13 @@ export default function PopUp({
         if (keyInUrl && !isOpen) {
             setIsOpen(true)
         }
-    }, [storeInUrl, isOpen, searchParams, popUpKey])
+    })
 
     useEffect(() => {
+        handleSearchParamsChange()
+    }, [searchParams])
+
+    const handleIsOpenChange = useEffectEvent(() => {
         if (!storeInUrl) return
 
         const params = new URLSearchParams(searchParams.toString())
@@ -118,7 +122,11 @@ export default function PopUp({
         if (newUrl !== oldUrl) {
             router.replace(`${pathName}?${params.toString()}`)
         }
-    }, [storeInUrl, pathName, searchParams, isOpen, popUpKey])
+    })
+
+    useEffect(() => {
+        handleIsOpenChange()
+    }, [isOpen])
 
     const handleOpening = useCallback(() => {
         setIsOpen(true)
