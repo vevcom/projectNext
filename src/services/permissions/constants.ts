@@ -436,7 +436,7 @@ export const permissionConfig = {
         description: 'kan administrere prikker',
         category: 'brukere'
     },
-    PERMISSION_FLAIR_EDIT: {
+    FLAIR_ADMIN: {
         name: 'Kappe redigering',
         description: `
             Opprette, endre og gi kapper`,

@@ -4,7 +4,7 @@ import { readAllFlairsAction } from '@/services/flairs/actions'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import Image from '@/components/Image/Image'
 import { useEffect, useState } from 'react'
-import Link from 'next/link';
+import Link from 'next/link'
 import type { flairImageType } from '@/services/flairs/types'
 
 
