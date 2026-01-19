@@ -19,7 +19,7 @@ export default async function FlairAdmin({ params }: PropTypes) {
     const flairs = unwrapActionReturn(await readAllFlairsAction()).map(flair => ({
         ...flair,
         assignedToUser: usersFlairs.some(userFlair => userFlair.id === flair.id)
-    }))
+    })).sort((a, b) => a.rank - b.rank)
 
     return (
         <div className={styles.wrapper}>
@@ -29,6 +29,8 @@ export default async function FlairAdmin({ params }: PropTypes) {
                         <tr>
                             <th>Flair</th>
                             <th>Navn</th>
+                            <th>Rank</th>
+                            <th>Farge</th>
                             <th>Handling</th>
                         </tr>
                     </thead>
@@ -37,9 +39,14 @@ export default async function FlairAdmin({ params }: PropTypes) {
                             <tr key={flair.id}>
                                 <td><Flair flair={flair} width={100} session={session} /></td>
                                 <td>{flair.name}</td>
+                                <td>{flair.rank}</td>
+                                <td style={{ backgroundColor: `rgb(${flair.colorR}, ${flair.colorG}, ${flair.colorB})` }}>
+                                </td>
                                 <td>
                                     <Form
                                         submitText={flair.assignedToUser ? 'Fjern' : 'Tildel'}
+                                        refreshOnSuccess
+                                        submitColor={flair.assignedToUser ? 'red' : 'green'}
                                         action={
                                             flair.assignedToUser
                                                 ? configureAction(
