@@ -8,7 +8,7 @@ import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import Image from '@/components/Image/Image'
 import { useEffect, useState, } from 'react'
 import type { Dispatch, SetStateAction } from 'react'
-import type { flairImageType } from '@/services/flairs/types'
+import type { FlairImageType } from '@/services/flairs/types'
 import type { PropTypes } from '@/app/users/[username]/page'
 
 
@@ -21,7 +21,7 @@ async function changeAssignmentHandler(userId: number, flairId: number, setUpdat
 
 
 export default function Flair({ params }: PropTypes) {
-    const [flairs, setFlairs] = useState<flairImageType[] | null>(null)
+    const [flairs, setFlairs] = useState<FlairImageType[] | null>(null)
     const [update, setUpdate] = useState(false)
     const [username, setUsername] = useState<string | null>(null)
     const [userId, setUserId] = useState<number | null>(null)

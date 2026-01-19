@@ -5,11 +5,11 @@ import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import Image from '@/components/Image/Image'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import type { flairImageType } from '@/services/flairs/types'
+import type { FlairImageType } from '@/services/flairs/types'
 
 
 export default function FlairUpdatePage() {
-    const [flairs, setFlairs] = useState<flairImageType[] | null>(null)
+    const [flairs, setFlairs] = useState<FlairImageType[] | null>(null)
     useEffect(() => {
         async function loadFlairs() {
             const res = unwrapActionReturn(await readAllFlairsAction())

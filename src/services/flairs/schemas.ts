@@ -1,19 +1,15 @@
 import { z } from 'zod'
-import { File } from 'node:buffer'
+
+const baseSchema = z.object({
+    name: z.string().min(2, 'min length is 2').max(50, 'max length is 50'),
+})
 
 export const flairSchema = {
-    create: z.object(
-        {
-            file: z.instanceof(File),
-            flairName: z.string()
-        }
-    ),
-    update: z.object(
-        {
-            file: z.instanceof(File).optional(),
-            flairName: z.string(),
-        }
-    )
-
-}
+    create: baseSchema.pick({
+        name: true,
+    }),
+    update: baseSchema.partial().pick({
+        name: true,
+    }),
+} as const
 

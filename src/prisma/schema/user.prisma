@@ -45,13 +45,13 @@ model User {
   Application               Application[]
   EventRegistration         EventRegistration[]
 
-  dots                     DotWrapper[]               @relation(name: "dot_user")
-  dotsAccused              DotWrapper[]               @relation(name: "dot_accuser")
-  Event                    Event[]
+  dots        DotWrapper[] @relation(name: "dot_user")
+  dotsAccused DotWrapper[] @relation(name: "dot_accuser")
+  Event       Event[]
 
   cabinBooking Booking[] @relation()
 
-  Flairs            Flair[]             @relation(name: "userFlairs")
+  Flairs Flair[] @relation(name: "userFlairs")
 
   // We need to explicitly mark the combination of 'id', 'username' and 'email' as
   // unique to make the relation to 'Credentials' work.

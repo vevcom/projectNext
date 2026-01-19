@@ -10,7 +10,7 @@ import Button from '@/components/UI/Button'
 import { configureAction } from '@/services/configureAction'
 import { useRouter, useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import type { flairImageType } from '@/services/flairs/types'
+import type { FlairImageType } from '@/services/flairs/types'
 
 type routerType = ReturnType<typeof useRouter>
 
@@ -26,7 +26,7 @@ function destroyFlair(id: number, router: routerType) {
 export default function FlairUpdatePage() {
     const params = useParams()
     const id = Number(params?.id)
-    const [flair, setFlair] = useState<flairImageType | null>(null)
+    const [flair, setFlair] = useState<FlairImageType | null>(null)
     const router = useRouter()
 
     useEffect(() => {

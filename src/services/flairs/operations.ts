@@ -6,7 +6,7 @@ import { ServerError } from '@/services/error'
 import { createImageAction, readImageAction } from '@/services/images/actions'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { z } from 'zod'
-import type { flairImageType } from '@/services/flairs/types'
+import type { FlairImageType, FlairWithImage } from '@/services/flairs/types'
 
 
 export const flairOperations = {
@@ -61,56 +61,12 @@ export const flairOperations = {
             flairId: z.number()
         }),
         operation: async ({ prisma, params, data }) => {
-            let flairImageCollection = await prisma.imageCollection.findUnique({
-                where: { special: 'FLAIRIMAGES' }
-            })
-            if (!flairImageCollection) {
-                const emptyVisibility = await prisma.visibility.create({
-                    data: {}
-                })
-
-                flairImageCollection = await prisma.imageCollection.upsert({
-                    where: {
-                        special: 'FLAIRIMAGES'
-                    },
-                    create: {
-                        name: 'FLAIRIMAGES',
-                        visibilityAdmin: {
-                            connect: emptyVisibility
-                        },
-                        visibilityRead: {
-                            connect: emptyVisibility
-                        }
-
-                    },
-                    update: {}
-                })
-            }
-            if (data.file) {
-                const image = unwrapActionReturn(await createImageAction(
-                    { params: { collectionId: flairImageCollection.id } },
-                    {
-                        data: {
-                            file: data.file,
-                            alt: data.flairName,
-                            name: data.flairName,
-                        }
-                    }
-                ))
-                return await prisma.flair.update({
-                    where: { id: params.flairId },
-                    data: {
-                        image: {
-                            connect: { id: image.id }
-                        },
-                        name: data.flairName,
-                    }
-                })
-            }
-            return await prisma.flair.update({
-                where: { id: params.flairId },
+            prisma.flair.update({
+                where: {
+                    id: params.flairId,
+                },
                 data: {
-                    name: data.flairName,
+                    name: data.name,
                 }
             })
         }
@@ -133,15 +89,17 @@ export const flairOperations = {
     readAll: defineOperation({
         authorizer: () => flairAuth.read.dynamicFields({}),
         operation: async ({ prisma }) => {
-            const flairs = await prisma.flair.findMany({})
-            if (!flairs) throw new ServerError('NOT FOUND', 'Flair not found')
-            const images: flairImageType[] = []
-            for (const flair of flairs) {
-                const imageData = unwrapActionReturn(await readImageAction({ params: { id: flair.imageId } }))
-                const flairImage = { ...imageData, flairId: flair.id }
-                images.push(flairImage)
-            }
-            return images
+            const flairs = await prisma.flair.findMany({
+                include: {
+                    cmsImage: {
+                        include: {
+                            image: true
+                        }
+                    }
+                }
+
+            })
+            return flairs
         }
     }),
     readUserFlairsId: defineOperation({
@@ -178,7 +136,7 @@ export const flairOperations = {
                 }
             })
             if (!flairs) throw new ServerError('NOT FOUND', 'Flair not found')
-            const images: flairImageType[] = []
+            const images: FlairImageType[] = []
             for (const flair of flairs) {
                 const imageData = unwrapActionReturn(await readImageAction({ params: { id: flair.imageId } }))
                 const flairImage = { ...imageData, flairId: flair.id }

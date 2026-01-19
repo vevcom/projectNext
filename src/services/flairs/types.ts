@@ -1,4 +1,7 @@
-import type { Image as ImageT } from '@prisma/client'
+import type { ExpandedCmsImage } from '@/cms/images/types'
+import type { Flair } from '@/prisma-generated-pn-types'
 
 
-export type flairImageType = ImageT & {flairId: number}
+export type FlairWithImage = Flair & {
+    cmsImage: ExpandedCmsImage
+}

@@ -35,7 +35,6 @@ model Image {
   cmsImages               CmsImage[]
   special                 SpecialImage?    @unique
   User                    User[]
-  flair                   Flair?           
 }
 
 model License {

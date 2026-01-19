@@ -36,6 +36,7 @@ model CmsImage {
   School               School[]
   Event                Event[]
   Company              Company[]
+  flairs               Flair[]
 }
 
 enum SpecialCmsParagraph {

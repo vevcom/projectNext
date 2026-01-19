@@ -74,7 +74,7 @@ export default async function User({ params }: PropTypes) {
     return (
         <div className={styles.wrapper}>
             <div className={styles.profile}>
-                <div className={`${styles.top} ${styles.standard}`} /> {/* TODO change style based on flair */}
+                <div className={`${styles.top} ${styles.standard}`} />
 
                 <div className={styles.profileContent} style={borderColour}>
                     <ProfilePicture width={240} profileImage={profileImage} className={styles.profilePicture}/>
