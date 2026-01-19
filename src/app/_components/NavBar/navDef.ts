@@ -91,12 +91,6 @@ export const itemsForMenu: NavItem[] = [
         icon: faNewspaper
     },
     {
-        name: 'Omegashop',
-        href: '/money/shop',
-        show: 'loggedIn',
-        icon: faShoppingCart,
-    },
-    {
         name: 'Omegaquotes',
         href: '/omegaquotes',
         show: 'loggedIn',
