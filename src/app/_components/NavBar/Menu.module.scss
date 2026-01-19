@@ -10,25 +10,20 @@
 
 .Menu {
     position: fixed;
-    top: 0;
+    top: 60px;
     left: 0;
     z-index: 9;
-    background: radial-gradient(circle at top left, 
-        ohma.$colors-secondary 0%, 
-        ohma.$colors-secondary 40%, 
-        rgba(ohma.$colors-secondary, 0.7) 60%, 
-        rgba(ohma.$colors-secondary, 0.4) 80%, 
-        rgba(ohma.$colors-secondary, 0.1) 90%, 
-        transparent 100%
-    );
-    height: max(80vmin, 550px);
-    width: max(80vmin, 550px);
-    padding: 0 12.5% 12.5% 0;
+    @include ohma.layer;
+    max-width: 50dvw;
+    width: 66 * ohma.$gap;
+    height: calc(100dvh - 60px);
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: start;
+    align-items: start;
+    overflow-y: auto;
     .close {
         position: absolute;
+        display: none;
         top: 0;
         left: 0;
         margin: .6rem;
@@ -40,37 +35,42 @@
         width: 50px;
         height: 50px;
     }
-    ul {
-        position: absolute;
-        top: 0;
+    div {
+        margin: ohma.$gap;
+        position: relative;
         display: flex;
-        flex-direction: column;
-        justify-content: center;
-        height: 100%;
-    }
-    li {
-        list-style: none; 
-        margin-bottom: 10px; 
-        a {
-            text-decoration: none; 
-            color: black; 
-            display: flex;
-            align-items: center; 
-            color: ohma.$colors-white;
-            font-size: ohma.$fonts-l;
-            font-weight: ohma.$fonts-weight-l;
-            &:hover {
-                color: ohma.$colors-primary;
-                svg {
+        flex-direction: row;
+        justify-content: start;
+        flex-wrap: wrap;
+
+        div {
+            list-style: none;
+            margin: ohma.$gap;
+            a {
+                width: 30 * ohma.$gap;
+                text-decoration: none;
+                padding: 2 * ohma.$gap;
+                @include ohma.layer();
+                border-radius: ohma.$rounding;
+                color: ohma.$colors-text;
+                display: flex;
+                align-items: center;
+                font-size: ohma.$fonts-l;
+                font-weight: ohma.$fonts-weight-l;
+                &:hover {
                     color: ohma.$colors-primary;
+                    svg {
+                        color: ohma.$colors-primary;
+                    }
                 }
-            }
-            svg {
-                margin-right: 5px;
-                color: ohma.$colors-white;
+                svg {
+                    margin-right: ohma.$gap;
+                    color: ohma.$colors-text;
+                }
             }
         }
     }
+
     animation: radiate .4s ease-out forwards;
     &.closeMenu {
         animation: deradiate .4s ease-in forwards;
@@ -79,36 +79,37 @@
 
 @keyframes radiate {
     0% {
-        clip-path: circle(0% at top left);
+        clip-path: inset(0 100% 0 0);
     }
     100% {
-        clip-path: circle(100% at top left);
+        clip-path: inset(0 0% 0 0);
     }
 }
 
 @keyframes deradiate {
     0% {
-        clip-path: circle(100% at top left);
+        clip-path: inset(0 0 0 0);
     }
     100% {
-        clip-path: circle(0% at top left);
+        clip-path: inset(0 100% 0 0);
     }
 }
 
 @media screen and (max-width: ohma.$mobileBreakpoint) {
     .Menu {
-        width: auto;
-        height: auto;
+        width: 100dvw;
+        max-width: unset;
+        height: calc(100dvh - 59px);
+        top: 0;
         bottom: 0;
         right: 0;
-        padding: 0;
-        border-end-end-radius: 0; 
-        border: collapse;
-        background: radial-gradient(ellipse at bottom right, ohma.$colors-secondary 70%, transparent);
-        animation: none;
-        > ul {
-            justify-content: flex-end;
-            padding-bottom: 5em;
+        > div {
+            top: 0;
+            justify-content: center;
+            > div > a {
+                font-size: x-large;
+                width: calc(100dvw - (ohma.$gap * 4));
+            }
         }
         &.closeMenu {
             animation: none;
@@ -116,11 +117,9 @@
         > .close {
             width: 3em;
             height: 3em;
-            top: auto;
-            left: auto;
-            bottom: 0;
-            right: 0;
             margin: .5em;
+            left: unset;
+            right: 0;
         }
         animation: radiateMobile .4s ease-out forwards;
         &.closeMenu {
@@ -131,19 +130,19 @@
 
 @keyframes radiateMobile {
     0% {
-        clip-path: ellipse(0% 0% at bottom right);
+      clip-path: inset(100% 0 0 0);
     }
     100% {
-        clip-path: ellipse(150% 150% at bottom right);
+      clip-path: inset(0% 0 0 0);
     }
 }
 
 @keyframes deradiateMobile {
     0% {
-        clip-path: ellipse(150% 150% at bottom right);
+      clip-path: inset(0% 0 0 0);
     }
     100% {
-        clip-path: ellipse(0% 0% at bottom right);
+      clip-path: inset(100% 0 0 0);
     }
 }
 

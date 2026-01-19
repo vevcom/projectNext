@@ -15,28 +15,36 @@ export default function Nav({ username }: PropTypes) {
     return (
         <aside className={styles.Nav}>
             <Link
+                href={`/users/${username}`}
+            >
+                <div className={styles.Text}>Profil</div>
+            </Link>
+            <Link
                 href={`/users/${username}/dots`}
                 className={page === 'dots' ? styles.selected : undefined}
             >
                 <FontAwesomeIcon icon={faCircleDot} />
+                <div className={styles.Text}>Prikker</div>
             </Link>
             <Link
                 href={`/users/${username}/notifications`}
                 className={page === 'notifications' ? styles.selected : undefined}
             >
                 <FontAwesomeIcon icon={faPaperPlane} />
+                <div className={styles.Text}>Notifikasjoner</div>
             </Link>
             <Link
                 href={`/users/${username}/permissions`}
                 className={page === 'permissions' ? styles.selected : undefined}
             >
                 <FontAwesomeIcon icon={faKey} />
+                <div className={styles.Text}>Tilganger</div>
             </Link>
             <Link
                 href={`/users/${username}/settings`}
                 className={page === 'settings' ? styles.selected : undefined}
             >
-                <FontAwesomeIcon icon={faCog} />
+                <FontAwesomeIcon icon={faCog} />test
             </Link>
         </aside>
     )

@@ -4,6 +4,7 @@
     margin-top: 1em;
     position: relative;
     width: 100%;
+    color: ohma.$colors-text;
     > h1 {
         margin-left: ohma.$gap;
     }
@@ -11,12 +12,7 @@
         border-radius: ohma.$rounding;
         padding: ohma.$rounding;
         margin: ohma.$gap;
-        &:nth-child(2n) {
-            background-color: ohma.$colors-secondary;
-        }
-        &:nth-child(2n+1) {
-            background-color: lighten(ohma.$colors-secondary, 20);
-        }
+        @include ohma.layer;
         font-size: ohma.$fonts-m;
         table {
             margin: ohma.$gap 0;

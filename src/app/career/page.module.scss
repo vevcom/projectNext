@@ -18,6 +18,17 @@
         grid-template-rows: 1fr 1fr 1fr;
         gap: 1em;
         > a {
+            @include ohma.card;
+            background: linear-gradient(
+                to top right,
+                ohma.$colors-secondary,
+                rgba(red(ohma.$colors-secondary), green(ohma.$colors-secondary), blue(ohma.$colors-secondary), 0.1)
+            );
+            transition: box-shadow 0.3s;
+            @include ohma.boxShadow('');
+            &:hover {
+                @include ohma.boxShadow('hover');
+            }
             text-decoration: none;
             color: ohma.$colors-gray-800;
             display: flex;
@@ -29,9 +40,9 @@
                 ohma.$colors-secondary,
                 color.change(ohma.$colors-secondary, $alpha: 0.1)
             );
-            @include ohma.card;
+            @include ohma.boxShadow('');
             &:hover {
-                @include ohma.boxShadow;
+                @include ohma.boxShadow('hover');
             }
             > h2 {
                 flex: 1;

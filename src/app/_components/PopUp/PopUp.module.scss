@@ -11,7 +11,7 @@
         @include ohma.card;
         z-index: 9;
         max-height: 95svh;
-        background-color: ohma.$colors-white;
+        background-color: ohma.$colors-secondary;
         > .overflow {
             overflow-y: auto;
             margin: 0;

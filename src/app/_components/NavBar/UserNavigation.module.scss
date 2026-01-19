@@ -13,7 +13,10 @@
         transform: translateY(calc(100% + .5em));
         min-width: 300px;
         max-height: 90vh;
-        @include ohma.boxShadow();
+        @include ohma.boxShadow('');
+        &:hover {
+            @include ohma.boxShadow('hover');
+        }
         @include ohma.round();
     }
     @include ohma.screenMobile {
@@ -26,6 +29,7 @@
         width: 100vw;
         height: calc(100vh - 50px);
     }
+    @include ohma.layer;
     h2 {
         color: ohma.$colors-black;
         font-size: ohma.$fonts-xl;

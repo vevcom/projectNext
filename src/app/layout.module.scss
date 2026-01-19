@@ -1,24 +1,24 @@
 @use "@/styles/ohma";
 
-$nav-height: 60px;
-
 .body {
     background-color: ohma.$colors-body-background;
+    color: ohma.$colors-text;
 }
 
 .wrapper {
     display: flex;
     flex-direction: column;
-    min-height: calc(100vh - $nav-height);
-    margin-top: $nav-height;
+    min-height: calc(100vh - ohma.$nav-height);
+    margin-top: ohma.$nav-height;
 }
 
 .navBar {
-    height: $nav-height;
+    height: ohma.$nav-height;
     z-index: 3;
     position: fixed;
     top: 0;
     width: 100%;
+    background-color: ohma.$colors-secondary;
 } 
 
 .content {
@@ -29,6 +29,7 @@ $nav-height: 60px;
     display: flex;
     flex-direction: column;
     overflow: visible;
+    min-height: calc(100dvh - ohma.$nav-height);
 }
 
 .footer {
@@ -44,7 +45,7 @@ $nav-height: 60px;
     bottom: 0;
     display: none;
     z-index: 3;
-    height: $nav-height;
+    height: ohma.$nav-height;
 }
 
 @media (max-width: ohma.$mobileBreakpoint) {

@@ -6,20 +6,20 @@
 
     .image {
         position: absolute;
-        translate: 40% 0;
         right: 0;
         bottom: 0;
         z-index: -1;
-        width: 400px;
-        height: 400px;
+        width: 240px;
         opacity: 0.0;
         display: flex;
         align-items: flex-end;
         animation: fadein 1s ease-in forwards;
         animation-delay: 1s;
+        overflow: hidden;
 
         * {
-            width: 100% !important;
+            width: 400px;
+            height: 400px;
         }
         .gray {
             filter: grayscale(100%) brightness(0.5) contrast(1.5);

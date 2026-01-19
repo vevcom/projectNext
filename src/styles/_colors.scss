@@ -26,8 +26,35 @@ $gray-850: #1F2326;
 $gray-900: #1c1c1c;
 $black:  #000;
 
-$body-background: $gray-150;
 
-$primary: $yellow;
-$secondary: $slate;
+$primary:    hsl(210, 70%, 50%);
+$secondary:  hsl(210, 5%, 12%);
+$layer:      hsl(210, 0%, 0%, 20%);
+$text:       hsl(0, 0%, 80%);
+$text-muted: hsl(0, 0%, 70%);
+$shadowColor:rgba(0, 0, 0, 0.1);
+
+$primary:    hsl(207, 91%, 65%);
+$secondary:  hsl(202, 64%, 10%);
+$layer:      hsl(207, 0%, 30%, 20%);
+$text:       hsl(0, 0%, 80%);
+$text-muted: hsl(0, 0%, 70%);
+
+.light {
+    $primary:    hsl(210, 98%, 50%);
+    $secondary:  hsl(210, 18%, 95%);
+    $layer:      hsl(0, 0%, 0%, 5%);
+    $text:       hsl(0, 0%, 10%);
+    $text-muted: hsl(0, 0%, 20%);
+}
+
+.solarized {
+    $primary:    hsl(210, 98%, 50%);
+    $secondary:  hsl(44, 87%, 94%);   /* Base 3 */
+    $layer:      hsl(0, 0%, 50%, 15%); /* "Base 2" */
+    $text:       hsl(196, 13%, 45%);  /* Base 00 */
+    $text-muted: hsl(180, 7%, 60%);   /* Base 1 */
+}
+
 $error: $red;
+$body-background: $secondary;

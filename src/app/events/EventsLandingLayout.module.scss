@@ -36,11 +36,14 @@
             gap: 1em;
             align-items: center;
             a {
-                color: ohma.$colors-gray-800;
+                color: ohma.$colors-text;
                 svg {
                     width: 2.1em;
                     height: 2.1em;
                 }
+            }
+            button {
+                color: ohma.$colors-text;
             }
         }
     }
