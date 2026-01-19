@@ -8,7 +8,7 @@ import { PrismaPg } from '@prisma/adapter-pg'
 // This is how the Prisma docs recommend doing it
 const globalForPrisma = global as unknown as { prisma: PrismaClient }
 
-export const prisma = globalForPrisma.prisma || new PrismaClient({ 
+export const prisma = globalForPrisma.prisma || new PrismaClient({
     adapter: new PrismaPg(
         { connectionString: process.env.DB_URI },
         { schema: process.env.DB_SCHEMA },

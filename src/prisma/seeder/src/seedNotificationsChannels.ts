@@ -206,7 +206,7 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
     })).id
 
     // The root is its own parent so we need to set its id explicitly.
-    // To do so we find the next available id. This might not be safe in 
+    // To do so we find the next available id. This might not be safe in
     // a highly concurrent environment, but for seeding it should be fine.
     const availableId = (await prisma.notificationChannel.aggregate({
         _max: {
