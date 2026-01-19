@@ -49,7 +49,7 @@ export default async function GroupAdmin({ params }: PropTypes) {
                 <GroupMembers group={group} />
                 {
                     canEasilyManageMembership ? (
-                        <PopUp PopUpKey={`Add user ${group.id}`} showButtonClass={styles.addUsers} showButtonContent={
+                        <PopUp popUpKey={`Add user ${group.id}`} showButtonClass={styles.addUsers} showButtonContent={
                             <>Legg til brukere</>
                         }>
                             <UserPagingProvider

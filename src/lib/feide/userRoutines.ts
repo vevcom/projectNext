@@ -2,7 +2,7 @@ import '@pn-server-only'
 import { fetchStudyProgrammesFromFeide } from './api'
 import { upsertStudyProgrammes } from '@/services/groups/studyProgrammes/create'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
-import { prisma } from '@/prisma/client'
+import { prisma } from '@/prisma-pn-client-instance'
 
 export async function updateUserStudyProgrammes(userId: number, accessToken: string) {
     const feideStudyProgrammes = await fetchStudyProgrammesFromFeide(accessToken)

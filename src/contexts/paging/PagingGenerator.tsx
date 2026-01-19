@@ -1,6 +1,6 @@
 'use client'
 
-import React, { createContext, useState, useRef, useEffect } from 'react'
+import React, { createContext, useState, useRef, useEffect, useCallback, useEffectEvent } from 'react'
 import type { ActionReturn } from '@/services/actionTypes'
 import type { ReadPageInput, Page } from '@/lib/paging/types'
 import type { Context as ReactContextType } from 'react'
@@ -19,7 +19,7 @@ export type PagingData<Data, Cursor, PageSize extends number, FetcherDetails> = 
     serverRenderedData: Data[],
     startPage: Omit<Page<PageSize, Cursor>, 'cursor'>,
     loading: boolean,
-    deatils: FetcherDetails,
+    details: FetcherDetails,
 }
 
 export type PagingContext<Data, Cursor, PageSize extends number, FetcherDetails> =
@@ -83,7 +83,7 @@ export function generatePaging<Data, Cursor, PageSize extends number = number, F
         children,
         details: givenDetails
     }: PagingProviderProps<Data, Cursor, PageSize, FetcherDetails>) {
-        const generateDefaultState = () => {
+        const generateDefaultState = useCallback(() => {
             const cursor = getCursorAfterFetch(serverRenderedData)
             const page: Page<PageSize, Cursor> = cursor ? {
                 ...startPage,
@@ -98,39 +98,39 @@ export function generatePaging<Data, Cursor, PageSize extends number = number, F
                 page,
                 allLoaded: false
             }
-        }
+        }, [serverRenderedData, startPage])
         const [state, setState_] = useState<PagingState<Data, Cursor, PageSize>>(
             generateDefaultState()
         )
         const [loading, setLoading_] = useState(false)
         const loadingRef = useRef(loading)
-        const setLoading = (newLoading: boolean) => {
+        const setLoading = useCallback((newLoading: boolean) => {
             loadingRef.current = newLoading
             setLoading_(newLoading)
-        }
+        }, [setLoading_])
 
 
         //Update state if you want to cause a rerender, else update ref.current
         const stateRef = useRef(state)
-        const setState = (newState: PagingState<Data, Cursor, PageSize>) => {
+        const setState = useCallback((newState: PagingState<Data, Cursor, PageSize>) => {
             stateRef.current = newState
             setState_(newState)
-        }
-        const resetState = () => {
+        }, [setState_])
+        const resetState = useCallback(() => {
             stateRef.current = generateDefaultState()
             loadingRef.current = false
-        }
+        }, [generateDefaultState])
 
-        const details = useRef(givenDetails)
+        const [details, setDetailsState_] = useState(givenDetails)
 
-        const loadMore = async () => {
+        const loadMore = useCallback(async () => {
             if (loadingRef.current || stateRef.current.allLoaded) return []
             loadingRef.current = true
-            const oldDetails = details.current //if the user changes the details while loading, we should not set the data
+            const oldDetails = details //if the user changes the details while loading, we should not set the data
             const result = await fetcher({
                 paging: {
                     page: stateRef.current.page,
-                    details: details.current,
+                    details,
                 },
             })
             if (!result.success || !result.data) {
@@ -144,7 +144,7 @@ export function generatePaging<Data, Cursor, PageSize extends number = number, F
                 return []
             }
             // If the details have changed, we should not set the data
-            if (oldDetails !== details.current) {
+            if (oldDetails !== details) {
                 setLoading(false)
                 return []
             }
@@ -182,8 +182,9 @@ export function generatePaging<Data, Cursor, PageSize extends number = number, F
             setState(newState)
             setLoading(false)
             return result.data
-        }
-        const refetch = async () => {
+        }, [details, setLoading, setState])
+
+        const refetch = useCallback(async () => {
             const toPage = stateRef.current.page.page
             resetState()
             let data: Data[] = []
@@ -191,25 +192,32 @@ export function generatePaging<Data, Cursor, PageSize extends number = number, F
                 data = [...data, ...(await loadMore())]
             }
             return data
-        }
+        }, [loadMore, resetState])
 
-        const setDetails = (newDetails: FetcherDetails, withFetch: boolean = true) => {
-            details.current = newDetails
+        const setDetails = useCallback((newDetails: FetcherDetails, withFetch: boolean = true) => {
+            setDetailsState_(newDetails)
             resetState()
             if (withFetch) {
                 loadMore()
             }
-        }
+        }, [loadMore, resetState])
 
         const initialRender = useRef(true)
-        useEffect(() => {
+
+        const handleGivenDetailsChange = useEffectEvent(() => {
             if (initialRender.current) {
-                setDetails(givenDetails, false)
+                setDetailsState_(givenDetails)
                 initialRender.current = false
             } else {
-                setDetails(givenDetails)
+                setDetailsState_(givenDetails)
+                resetState()
+                loadMore()
             }
-        }, [givenDetails])
+        })
+
+        useEffect(() => {
+            handleGivenDetailsChange()
+        }, [givenDetails, resetState, loadMore])
 
         return (
             <Context.Provider value={{
@@ -220,7 +228,7 @@ export function generatePaging<Data, Cursor, PageSize extends number = number, F
                 startPage,
                 setDetails,
                 loading,
-                deatils: details.current,
+                details,
             }}>
                 {children}
             </Context.Provider>

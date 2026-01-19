@@ -14,7 +14,7 @@ export default async function NotificationChannels() {
     return <PageWrapper
         title="Varslingskanaler"
         headerItem={
-            <AddHeaderItemPopUp PopUpKey="createNewsPop">
+            <AddHeaderItemPopUp popUpKey="createNewsPop">
                 <AddNotificationChannel channels={channels}/>
             </AddHeaderItemPopUp>
         }

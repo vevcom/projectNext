@@ -89,7 +89,7 @@ export default async function ApplicationPeriod({ params }: PropTypes) {
 
     return (
         <PageWrapper title={`Søknadsperiode: ${period.name}`} headerItem={
-            <SettingsHeaderItemPopUp PopUpKey={`period-${period.name}-settings`} scale={35}>
+            <SettingsHeaderItemPopUp popUpKey={`period-${period.name}-settings`} scale={35}>
                 <CreateUpdateApplicationPeriodForm
                     committees={committees}
                     closePopUpOnSuccess={`period-${period.name}-settings`}
@@ -183,7 +183,7 @@ export default async function ApplicationPeriod({ params }: PropTypes) {
                                         {
                                             userId ? (
                                                 <PopUp
-                                                    PopUpKey={`committee-${part.committee.shortName}-apply`}
+                                                    popUpKey={`committee-${part.committee.shortName}-apply`}
                                                     showButtonContent={
                                                         <span>{part.priority === null ? 'Søk nå!' : 'Endre søknad'}</span>
                                                     }
@@ -247,7 +247,7 @@ export default async function ApplicationPeriod({ params }: PropTypes) {
                                             Les mer
                                         </Link>
                                         <PopUp
-                                            PopUpKey={`committee-${part.committee.shortName}-video`}
+                                            popUpKey={`committee-${part.committee.shortName}-video`}
                                             showButtonContent={
                                                 <FontAwesomeIcon icon={faVideo} />
                                             }

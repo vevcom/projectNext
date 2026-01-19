@@ -2,7 +2,7 @@ import '@pn-server-only'
 import { SchoolFilteredSelection } from './ConfigVars'
 import { updateSchoolValidation } from './validation'
 import { prismaCall } from '@/services/prismaCall'
-import { prisma } from '@/prisma/client'
+import { prisma } from '@/prisma-pn-client-instance'
 import type { SchoolFiltered } from './types'
 import type { UpdateSchoolTypes } from './validation'
 

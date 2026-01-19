@@ -3,7 +3,7 @@ import { createShopProductConnectionAction } from '@/services/shop/actions'
 import Form from '@/app/_components/Form/Form'
 import NumberInput from '@/app/_components/UI/NumberInput'
 import { SelectNumber } from '@/app/_components/UI/Select'
-import type { Product } from '@prisma/client'
+import type { Product } from '@/prisma-generated-pn-types'
 
 
 export default function FindProductForm({

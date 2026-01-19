@@ -14,7 +14,7 @@ import {
 import { ServerSession } from '@/auth/session/ServerSession'
 import { displayDate } from '@/lib/dates/displayDate'
 import { cabinBookingAuth } from '@/services/cabin/booking/auth'
-import type { ReleasePeriod } from '@prisma/client'
+import type { ReleasePeriod } from '@/prisma-generated-pn-types'
 
 function findCurrentReleasePeriod(releasePeriods: ReleasePeriod[]) {
     const filtered = releasePeriods.filter(releasePeriod => {

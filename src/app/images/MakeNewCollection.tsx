@@ -8,7 +8,7 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { v4 as uuid } from 'uuid'
-import type { ImageCollection } from '@prisma/client'
+import type { ImageCollection } from '@/prisma-generated-pn-types'
 
 export default function MakeNewCollection() {
     const router = useRouter()
@@ -17,7 +17,7 @@ export default function MakeNewCollection() {
         router.refresh()
     }
     return (
-        <PopUp PopUpKey={uuid()} showButtonContent={<FontAwesomeIcon icon={faPlus} />}>
+        <PopUp popUpKey={uuid()} showButtonContent={<FontAwesomeIcon icon={faPlus} />}>
             <div className={styles.MakeNewCollection}>
                 <Form successCallback={collectionCreatedCallback}
                     title="Lag et album" submitText="Lag album" action={createImageCollectionAction}>

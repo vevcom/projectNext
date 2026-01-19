@@ -4,7 +4,7 @@ export default function useKeyPress(targetKey: string, callback: (event: Keyboar
     const [keyPressed, setKeyPressed] = useState(false)
 
     useEffect(() => {
-        function downHandler(event: KeyboardEvent) {
+        const downHandler = (event: KeyboardEvent) => {
             const { key } = event
             if (key === targetKey) {
                 setKeyPressed(true)

@@ -3,7 +3,7 @@ import type { baseSchema } from './schemas'
 import type { z } from 'zod'
 import type { ActionFromSubServiceOperation } from '@/services/actionTypes'
 import type { articleSectionOperations } from './operations'
-import type { Prisma } from '@prisma/client'
+import type { Prisma } from '@/prisma-generated-pn-types'
 
 export type ArticleSectionPart = z.input<typeof baseSchema>['part']
 

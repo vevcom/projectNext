@@ -1,11 +1,11 @@
 generator veven {
-  provider = "prisma-client-js"
-  output   = "../../../node_modules/.prisma-dobbel-omega"
+  provider = "prisma-client"
+  // Generate outside of src folder.
+  output   = "../../../generated/ow-prisma"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("VEVEN_DB_URI")
 }
 
 model AliasAssociations {

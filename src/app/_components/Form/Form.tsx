@@ -3,7 +3,7 @@ import styles from './Form.module.scss'
 import { SUCCESS_FEEDBACK_TIME } from './constants'
 import { PopUpContext } from '@/contexts/PopUp'
 import SubmitButton from '@/components/UI/SubmitButton'
-import React, { Children, useContext, useEffect, useState } from 'react'
+import React, { Children, useContext, useEffect, useState, useEffectEvent } from 'react'
 import { useFormStatus } from 'react-dom'
 import { useRouter } from 'next/navigation'
 import type { PopUpKeyType } from '@/contexts/PopUp'
@@ -27,7 +27,8 @@ export type PropTypes<ReturnType> = Omit<FormType, 'action' | 'children'> & {
     buttonClassName?: string,
 }
 type InputType = {
-    input: ReactNode & { label?: string },
+    input: ReactNode,
+    label?: string,
     errors: ErrorMessage[],
 }
 type Inputs = InputType[]
@@ -48,16 +49,31 @@ function Input({ input, errors }: InputType) {
     )
 }
 
+function hasProps(obj: unknown): obj is { props: { name?: string; id?: string } } {
+    return typeof obj === 'object' &&
+        obj !== null && 'props' in obj &&
+        typeof obj.props === 'object'
+        && obj.props !== null
+}
+
 const makeInputArray = (children: ReactNode): Inputs =>
-    Children.toArray(children).map((child: ReactNode & { props?: {id?: string} }) => {
-        if (typeof child !== 'object') {
+    Children.toArray(children).map((child) => {
+        if (typeof child !== 'object' || !child) {
             return {
                 input: child,
+                label: undefined,
                 errors: [],
             }
         }
+        let name: string | undefined = undefined
+        let id: string | undefined = undefined
+        if (hasProps(child)) {
+            if (typeof child.props.name === 'string') name = child.props.name
+            if (typeof child.props.id === 'string') id = child.props.id
+        }
         return {
-            input: { ...child, label: child.props.name || child.props.id },
+            input: child,
+            label: name || id,
             errors: [],
         }
     })
@@ -85,8 +101,12 @@ export default function Form<GiveActionReturn>({
     const PopUpCtx = useContext(PopUpContext)
     const { refresh, push } = useRouter()
 
+    const updateInputs = useEffectEvent(() => {
+        setInputs(makeInputArray(children))
+    })
+
     useEffect(() => {
-        setInputs(() => makeInputArray(children))
+        updateInputs()
     }, [children])
 
     const actionWithError = async (formData: FormData) => {
@@ -132,7 +152,7 @@ export default function Form<GiveActionReturn>({
         //sort errors
         res.error.forEach(error => {
             if (error.path === undefined) return setGeneralErrors((prev) => (prev ? [...prev, error] : [error]))
-            const inputWithError = inputs_.find((input) => input.input.label === (error.path ?? [])[0])
+            const inputWithError = inputs_.find((input) => input.label === (error.path ?? [])[0])
             if (inputWithError) return inputWithError.errors.push(error)
             return setGeneralErrors((prev) => (prev ? [...prev, error] : [error]))
         })

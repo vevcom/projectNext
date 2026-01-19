@@ -75,7 +75,7 @@ export default function Company({
                 <p>{company.description}</p>
                 {
                     !disableEdit && (canUpdate.authorized || canDestroy.authorized) ? (
-                        <SettingsHeaderItemPopUp showButtonClass={styles.showSettings} PopUpKey={`Edit ${company.id}`}>
+                        <SettingsHeaderItemPopUp showButtonClass={styles.showSettings} popUpKey={`Edit ${company.id}`}>
                             <Form
                                 title="Rediger Bedrift"
                                 action={configureAction(updateCompanyAction, { params: { id: company.id } })}

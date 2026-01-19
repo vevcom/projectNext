@@ -12,7 +12,7 @@ import { findValidParents } from '@/services/notifications/channel/schemas'
 import { configureAction } from '@/services/configureAction'
 import { useState } from 'react'
 import type { ExpandedNotificationChannel } from '@/services/notifications/types'
-import type { MailAlias } from '@prisma/client'
+import type { MailAlias } from '@/prisma-generated-pn-types'
 
 export default function ChannelSettings({
     currentChannel,

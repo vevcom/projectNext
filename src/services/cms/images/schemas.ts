@@ -1,4 +1,4 @@
-import { ImageSize, SpecialCmsImage } from '@prisma/client'
+import { ImageSize, SpecialCmsImage } from '@/prisma-generated-pn-types'
 import { z } from 'zod'
 
 const baseSchema = z.object({

@@ -11,7 +11,7 @@ export default async function CabinProducs() {
     return <PageWrapper
         title="Heutte produkter"
 
-        headerItem={<AddHeaderItemPopUp PopUpKey="UpdateCabinProductForm">
+        headerItem={<AddHeaderItemPopUp popUpKey="UpdateCabinProductForm">
             <UpdateCabinProductForm />
         </AddHeaderItemPopUp>}
     >

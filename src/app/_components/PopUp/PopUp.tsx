@@ -5,7 +5,7 @@ import { PopUpContext } from '@/contexts/PopUp'
 import useClickOutsideRef from '@/hooks/useClickOutsideRef'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faX } from '@fortawesome/free-solid-svg-icons'
-import { useContext, useEffect, useState, useRef, useCallback } from 'react'
+import { useContext, useEffect, useState, useRef, useCallback, useEffectEvent } from 'react'
 import type { ReactNode, CSSProperties } from 'react'
 import type { PopUpKeyType } from '@/contexts/PopUp'
 
@@ -13,19 +13,18 @@ export type PropTypes = {
     children: ReactNode,
     showButtonContent: ReactNode,
     showButtonClass?: string,
-    PopUpKey: PopUpKeyType,
+    popUpKey: PopUpKeyType,
     showButtonStyle?: CSSProperties,
 }
 
 export default function PopUp({
-    PopUpKey,
+    popUpKey,
     children,
     showButtonContent,
     showButtonClass,
     showButtonStyle,
 }: PropTypes) {
     const [isOpen, setIsOpen] = useState(false)
-
 
     const popUpContext = useContext(PopUpContext)
     useKeyPress('Escape', () => setIsOpen(false))
@@ -34,19 +33,29 @@ export default function PopUp({
 
     if (!popUpContext) throw new Error('Pop up context needed for popups')
 
-    useEffect(() => {
+    const { teleport, remove, keyOfCurrentNode } = popUpContext
+
+    const handleTeleportOrRemove = useEffectEvent(() => {
         if (isOpen) {
-            popUpContext.teleport(contentRef.current, PopUpKey)
+            teleport(contentRef.current, popUpKey)
         } else {
-            popUpContext.remove(PopUpKey)
+            remove(popUpKey)
         }
-    }, [isOpen])
+    })
 
     useEffect(() => {
-        if (popUpContext.keyOfCurrentNode !== PopUpKey) {
+        handleTeleportOrRemove()
+    }, [isOpen, popUpKey])
+
+    const handleCloseIfNotCurrent = useEffectEvent(() => {
+        if (popUpContext.keyOfCurrentNode !== popUpKey) {
             setIsOpen(false)
         }
-    }, [popUpContext.keyOfCurrentNode])
+    })
+
+    useEffect(() => {
+        handleCloseIfNotCurrent()
+    }, [keyOfCurrentNode, popUpKey])
 
     useEffect(() => {
         contentRef.current = (
@@ -64,9 +73,9 @@ export default function PopUp({
             </div>
         )
         if (isOpen) {
-            popUpContext.teleport(contentRef.current, PopUpKey)
+            teleport(contentRef.current, popUpKey)
         }
-    }, [children])
+    }, [children, isOpen, popUpKey, teleport, ref])
 
     const handleOpening = useCallback(() => {
         setIsOpen(true)

@@ -2,8 +2,9 @@ import { convertMdToHtml } from '@/seeder/src/seedCms'
 import { readFile } from 'fs/promises'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
-import type { Prisma, PrismaClient as PrismaClientPn } from '@prisma/client'
-import type { PrismaClient as PrismaClientVeven } from '@/prisma-dobbel-omega/client'
+import type { PrismaClient as PrismaClientPn } from '@/prisma-generated-pn-client'
+import type { Prisma } from '@/prisma-generated-pn-types'
+import type { PrismaClient as PrismaClientOw } from '@/prisma-generated-ow-basic/client'
 import type { UserMigrator } from './migrateUsers'
 
 const fileName = fileURLToPath(import.meta.url)
@@ -39,10 +40,10 @@ async function readCommitteArticle(filename: string): Promise<{ create: Prisma.A
 
 export default async function migrateCommittees(
     pnPrisma: PrismaClientPn,
-    vevenPrisma: PrismaClientVeven,
+    owPrisma: PrismaClientOw,
     userMigrator: UserMigrator,
 ) {
-    const committees = await vevenPrisma.committees.findMany({
+    const committees = await owPrisma.committees.findMany({
         include: {
             CommitteeMembers: true,
             CommitteeMembersHist: true,

@@ -1,6 +1,6 @@
 import { jobAdOperations } from '@/services/career/jobAds/operations'
-import type { JobType, PrismaClient } from '@prisma/client'
-
+import type { PrismaClient } from '@/prisma-generated-pn-client'
+import type { JobType } from '@/prisma-generated-pn-types'
 
 export default async function seedDevJobAds(prisma: PrismaClient) {
     const tomorrow = new Date()

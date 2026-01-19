@@ -1,6 +1,6 @@
 import { createSelection } from '@/services/createSelection'
-import { EventCanView } from '@prisma/client'
-import type { Event } from '@prisma/client'
+import { EventCanView } from '@/prisma-generated-pn-types'
+import type { Event } from '@/prisma-generated-pn-types'
 
 export const eventCanBeViewdBy = {
     ALL: { label: 'Alle' },

@@ -1,4 +1,4 @@
-import type { Article, ArticleCategory, Image } from '@prisma/client'
+import type { Article, ArticleCategory, Image } from '@/prisma-generated-pn-types'
 
 export type ExpandedArticleCategory = ArticleCategory & { articles: Article[] }
 

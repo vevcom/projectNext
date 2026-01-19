@@ -1,4 +1,5 @@
-import type { Permission, OmegaMembershipLevel, PrismaClient as PrismaClientPn } from '@prisma/client'
+import type { PrismaClient as PrismaClientPn } from '@/prisma-generated-pn-client'
+import type { OmegaMembershipLevel, Permission } from '@/prisma-generated-pn-types'
 
 export function checkForPermissionDuplicates(arr: Permission[], failMessage: string) {
     const permissionSet = new Set(arr)

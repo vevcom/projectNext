@@ -39,7 +39,7 @@ export default async function page({ searchParams }: PropTypes) {
 
     return (
         <PageWrapper title="Bedrifter" headerItem={
-            <AddHeaderItemPopUp PopUpKey="CreateCompany">
+            <AddHeaderItemPopUp popUpKey="CreateCompany">
                 <Form
                     title="Ny bedrift"
                     action={createCompanyAction}

@@ -1,6 +1,6 @@
 import { Zpn } from '@/lib/fields/zpn'
+import { JobType } from '@/prisma-generated-pn-types'
 import { z } from 'zod'
-import { JobType } from '@prisma/client'
 
 const baseSchema = z.object({
     companyId: z.coerce.number({

@@ -12,7 +12,7 @@ import {
 import { updateMailingListAction, destroyMailingListAction } from '@/services/mail/list/actions'
 import { useSession } from '@/auth/session/useSession'
 import { useRouter } from 'next/navigation'
-import type { MailAddressExternal, MailAlias } from '@prisma/client'
+import type { MailAddressExternal, MailAlias } from '@/prisma-generated-pn-types'
 import type { MailFlowObject } from '@/services/mail/types'
 
 

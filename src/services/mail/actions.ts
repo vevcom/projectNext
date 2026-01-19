@@ -29,7 +29,7 @@ import type { UserFiltered } from '@/services/users/types'
 import type { MailAliasMailingList,
     MailingListGroup,
     MailingListMailAddressExternal,
-    MailingListUser, MailAddressExternal, MailAlias, MailingList } from '@prisma/client'
+    MailingListUser, MailAddressExternal, MailAlias, MailingList } from '@/prisma-generated-pn-types'
 
 export async function createAliasMailingListRelationAction(formdata: FormData):
     Promise<ActionReturn<MailAliasMailingList>> {

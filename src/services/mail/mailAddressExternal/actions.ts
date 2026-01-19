@@ -9,7 +9,7 @@ import {
     updateMailAddressExternalValidation,
 } from '@/services/mail/mailAddressExternal/validation'
 import type { ActionReturn } from '@/services/actionTypes'
-import type { MailAddressExternal } from '@prisma/client'
+import type { MailAddressExternal } from '@/prisma-generated-pn-types'
 
 export async function createMailAddressExternalAction(rawdata: FormData):
     Promise<ActionReturn<MailAddressExternal>> {

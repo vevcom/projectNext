@@ -10,10 +10,10 @@ import { sexConfig } from '@/services/users/constants'
 import { readUserFlairsAction } from '@/services/flairs/actions'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import Image from '@/components/Image/Image'
+import { RelationshipStatus } from '@/prisma-generated-pn-types'
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { v4 as uuid } from 'uuid'
-import { RelationshipStatus } from '@prisma/client'
 import React from 'react'
 
 
@@ -151,7 +151,7 @@ export default async function User({ params }: PropTypes) {
                         {(profile.user.relationshipStatus !== RelationshipStatus.NOT_SPECIFIED) &&
                         <p>
                             <span className={styles.relationshipStatus}>Sivilstatus: </span>
-                            {profile.user.relationshipstatusText ? profile.user.relationshipstatusText :
+                            {profile.user.relationshipStatusText ? profile.user.relationshipStatusText :
                                 profile.user.relationshipStatus === RelationshipStatus.SINGLE && 'Singel' ||
                             profile.user.relationshipStatus === RelationshipStatus.ITS_COMPLICATED && 'Det er komplisert' ||
                             profile.user.relationshipStatus === RelationshipStatus.TAKEN && 'I et forhold'

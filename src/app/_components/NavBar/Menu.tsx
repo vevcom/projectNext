@@ -17,14 +17,13 @@ type PropTypes = {
 
 export default function Menu({ items, openBtnContent }: PropTypes) {
     const [isOpen, setIsOpen] = useState(false)
-    let menuRef: React.RefObject<HTMLDivElement> | null = null
-    function closeMenu() {
-        menuRef?.current?.classList.add(styles.closeMenu)
+    function closeMenu(ref: React.RefObject<HTMLDivElement | null>) {
+        ref?.current?.classList.add(styles.closeMenu)
         setTimeout(() => setIsOpen(false), 400)
     }
-    menuRef = useClickOutsideRef(closeMenu)
+    const menuRef = useClickOutsideRef((_, ref) => closeMenu(ref))
     useOnNavigation(() => setIsOpen(false)) //done with no animation
-    useKeyPress('Escape', closeMenu)
+    useKeyPress('Escape', () => closeMenu(menuRef))
 
     return (
         <>
@@ -32,7 +31,7 @@ export default function Menu({ items, openBtnContent }: PropTypes) {
                 isOpen ? (
                     <>
                         <div ref={menuRef} className={styles.Menu}>
-                            <FontAwesomeIcon className={styles.close} icon={faTimes} onClick={closeMenu}/>
+                            <FontAwesomeIcon className={styles.close} icon={faTimes} onClick={() => closeMenu(menuRef)}/>
                             <ul>
                                 {items.map((item) => (
                                     <li key={item.name}>

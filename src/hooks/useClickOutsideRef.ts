@@ -1,5 +1,6 @@
 
 import { useEffect, useRef } from 'react'
+import type { RefObject } from 'react'
 
 /**
  * A hook that returns a ref to a DOM element that can be used to detect clicks outside of the element
@@ -8,13 +9,13 @@ import { useEffect, useRef } from 'react'
  * @returns A ref to the DOM element to detect clicks outside of
  */
 export default function useClickOutsideRef(
-    callback: (event: MouseEvent | TouchEvent) => void
+    callback: (event: MouseEvent | TouchEvent, ref: RefObject<HTMLDivElement | null>) => void
 ) {
     const ref = useRef<HTMLDivElement>(null)
     useEffect(() => {
         function handleClickOutside(event: MouseEvent | TouchEvent) {
             if (ref.current && !ref.current.contains(event.target as Node)) {
-                return callback(event)
+                return callback(event, ref)
             }
             return null
         }

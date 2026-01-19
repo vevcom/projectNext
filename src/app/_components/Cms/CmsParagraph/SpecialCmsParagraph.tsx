@@ -2,7 +2,7 @@ import CmsParagraph from './CmsParagraph'
 import { configureAction } from '@/services/configureAction'
 import React from 'react'
 import type { PropTypes as PropTypesCmsParapraph } from './CmsParagraph'
-import type { SpecialCmsParagraph as SpecialCmsParagraphT } from '@prisma/client'
+import type { SpecialCmsParagraph as SpecialCmsParagraphT } from '@/prisma-generated-pn-types'
 import type { ReadSpecialCmsParagraphAction } from '@/cms/paragraphs/types'
 
 type PropTypes = Omit<PropTypesCmsParapraph, 'cmsParagraph'> & {
