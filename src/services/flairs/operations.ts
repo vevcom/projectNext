@@ -68,7 +68,8 @@ export const flairOperations = {
     readAll: defineOperation({
         authorizer: () => flairAuth.readAll.dynamicFields({}),
         operation: async ({ prisma }) => {
-            const flairs = await prisma.flair.findMany({
+            // Fetch all flairs
+            let flairs = await prisma.flair.findMany({
                 include: {
                     cmsImage: {
                         include: {
@@ -77,7 +78,30 @@ export const flairOperations = {
                     }
                 }
             })
-            return flairs
+            // Sort by current rank ascending, then id as tiebreaker
+            flairs = flairs.sort((a, b) => a.rank - b.rank || a.id - b.id)
+            // Assign new ranks: 1, 2, 3, ...
+            for (let i = 0; i < flairs.length; i++) {
+                const newRank = i + 1
+                if (flairs[i].rank !== newRank) {
+                    await prisma.flair.update({
+                        where: { id: flairs[i].id },
+                        data: { rank: newRank }
+                    })
+                }
+            }
+            // Re-fetch with updated ranks
+            const normalizedFlairs = await prisma.flair.findMany({
+                include: {
+                    cmsImage: {
+                        include: {
+                            image: true
+                        }
+                    }
+                },
+                orderBy: { rank: 'asc' }
+            })
+            return normalizedFlairs
         }
     }),
     readUserFlairs: defineOperation({
