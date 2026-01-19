@@ -19,7 +19,7 @@ export default function Flair({ flair, width = 50, session }: PropTypes) {
         <CmsImage
             cmsImage={flair.cmsImage}
             width={width}
-            canEdit={flairAuth.updateCmsImage.dynamicFields({ }).auth(session)}
+            canEdit={flairAuth.updateCmsImage.dynamicFields({ }).auth(session).toJsObject()}
             updateCmsImageAction={
                 configureAction(
                     updateFlairCmsImageAction,

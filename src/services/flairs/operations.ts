@@ -50,7 +50,7 @@ export const flairOperations = {
         paramsSchema: z.object({
             flairId: z.number()
         }),
-        operation: async ({ prisma, params, data }) => {
+        operation: async ({ prisma, params, data }) =>
             prisma.flair.update({
                 where: {
                     id: params.flairId,
@@ -62,7 +62,6 @@ export const flairOperations = {
                     colorB: data.color?.blue,
                 }
             })
-        }
     }),
     read,
     readAll: defineOperation({

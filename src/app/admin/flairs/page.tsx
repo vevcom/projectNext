@@ -24,7 +24,6 @@ export default async function FlairUpdatePage() {
                     action={createFlairAction}
                     closePopUpOnSuccess="CreateFlair"
                     refreshOnSuccess
-                    navigateOnSuccess={data => `/admin/flairs/${data?.id}`}
                 >
                     <TextInput label="Navn" name="name" />
                     <ColorInput label="Farge" name="color" />

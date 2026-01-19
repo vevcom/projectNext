@@ -1,5 +1,4 @@
 'use server'
-
 import { makeAction } from '@/services/serverAction'
 import { flairOperations } from '@/services/flairs/operations'
 

@@ -224,12 +224,8 @@ const navigations = [
                 href: '/admin/licenses'
             },
             {
-                title: 'Opprett kappe',
-                href: '/admin/flairs/create'
-            },
-            {
-                title: 'Endre kappe',
-                href: '/admin/flairs/update'
+                title: 'Flairs',
+                href: '/admin/flairs'
             },
         ]
     }

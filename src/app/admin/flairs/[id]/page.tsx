@@ -29,14 +29,19 @@ export default async function FlairUpdatePage({ params }: PropTypes) {
                 action={configureAction(updateFlairAction, { params: { flairId: flair.id } })}
                 refreshOnSuccess
             >
-                <TextInput label="Navn" name="name" />
-                <ColorInput label="Farge" name="color" />
+                <TextInput defaultValue={flair.name} label="Navn" name="name" />
+                <ColorInput defaultValueRGB={{
+                    red: flair.colorR,
+                    green: flair.colorG,
+                    blue: flair.colorB
+                }} label="Farge" name="color" />
             </Form>
             <Form
                 title="Slett flair"
                 submitText="Slett flair"
                 action={configureAction(destroyFlairAction, { params: { flairId: flair.id } })}
                 navigateOnSuccess="/admin/flairs"
+                submitColor="red"
                 confirmation={{
                     confirm: true,
                     text: `
