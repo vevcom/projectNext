@@ -34,7 +34,7 @@ export default function Menu({ items, openBtnContext }: PropTypes) {
                     <>
                         <div ref={menuRef} className={styles.Menu}>
                             <FontAwesomeIcon className={styles.close} icon={faTimes} onClick={() => closeMenu(menuRef)}/>
-                            <ul>
+                            <div>
                                 {items.map((item) => (
                                     <div key={item.name}>
                                         <Link href={item.href}>
@@ -43,7 +43,7 @@ export default function Menu({ items, openBtnContext }: PropTypes) {
                                         </Link>
                                     </div>
                                 ))}
-                            </ul>
+                            </div>
                         </div>
                     </>
                 ) : null
