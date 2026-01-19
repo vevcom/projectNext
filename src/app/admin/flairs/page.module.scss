@@ -1,42 +1,10 @@
 @use '@/styles/ohma';
 
-.wrapper {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
-    >.container {
-        display: flex;
-        flex-direction: row;
-    }
-}
-
-
-
-.flairContainer {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-
-
-    :hover {
-        * {
-            cursor: pointer;
-            background-color: darken(ohma.$colors-white, 20%);
+.flairList {
+    @include ohma.table;
+    a {
+        svg {
+            margin-right: 0.5rem;
         }
-
-
     }
-    
-
-    .imageContainer {
-        display: flex;
-        flex-direction: column;
-        text-align: center;
-        color: black;
-        text-decoration: none;
-        margin: 1%;
-    }
-
 }

@@ -24,6 +24,10 @@ export default async function FlairAdmin({ params }: PropTypes) {
     return (
         <div className={styles.wrapper}>
             <div className={styles.flairContainer}>
+                <p>
+                    Flairen med lavest rank er den som vises først på brukerens profil, og
+                    den som bestemmer fargen på brukerprofilen.
+                </p>
                 <table className={styles.flairList}>
                     <thead>
                         <tr>
