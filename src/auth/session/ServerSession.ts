@@ -9,14 +9,18 @@ import { getServerSession as getSessionNextAuth } from 'next-auth'
 
 export class ServerSession<UserGuarantee extends UserGuaranteeOption> extends Session<UserGuarantee> {
     public static async fromNextAuth(): Promise<Session<'NO_USER'> | Session<'HAS_USER'>> {
-        const {
-            user = null,
-            permissions = await permissionOperations.readDefaultPermissions({
-                bypassAuth: true,
-            }),
-            memberships = [],
-        } = await getSessionNextAuth(authOptions) ?? {}
-        return new Session({ user, permissions, memberships })
+        const session = await getSessionNextAuth(authOptions)
+
+        if (!session) {
+            const defaultPermissions = await permissionOperations.readDefaultPermissions({ bypassAuth: true })
+            return ServerSession.fromDefaultPermissions(defaultPermissions)
+        }
+
+        return new Session({ 
+            user: session.user, 
+            permissions: session.permissions, 
+            memberships: session.memberships
+        })
     }
 
     /**
