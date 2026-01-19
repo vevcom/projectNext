@@ -2,57 +2,47 @@ import '@pn-server-only'
 import { flairAuth } from './auth'
 import { flairSchema } from './schemas'
 import { defineOperation } from '@/services/serviceOperation'
-import { ServerError } from '@/services/error'
-import { createImageAction, readImageAction } from '@/services/images/actions'
-import { unwrapActionReturn } from '@/app/redirectToErrorPage'
+import { cmsImageOperations } from '@/cms/images/operations'
 import { z } from 'zod'
-import type { FlairImageType, FlairWithImage } from '@/services/flairs/types'
 
+const read = defineOperation({
+    authorizer: () => flairAuth.read.dynamicFields({}),
+    paramsSchema: z.object({
+        flairId: z.number(),
+    }),
+    operation: async ({ prisma, params: { flairId } }) =>
+        await prisma.flair.findUniqueOrThrow({
+            where: {
+                id: flairId,
+            },
+            include: {
+                cmsImage: {
+                    include: {
+                        image: true
+                    }
+                }
+            }
+        })
+})
 
 export const flairOperations = {
     create: defineOperation({
         authorizer: () => flairAuth.create.dynamicFields({}),
         dataSchema: flairSchema.create,
-        operation: async ({ prisma, data }) => {
-            const emptyVisibility = await prisma.visibility.create({
-                data: {}
-            })
-
-            const flairImageCollection = await prisma.imageCollection.upsert({
-                where: {
-                    special: 'FLAIRIMAGES'
-                },
-                create: {
-                    name: 'FLAIRIMAGES',
-                    visibilityAdmin: {
-                        connect: emptyVisibility
-                    },
-                    visibilityRead: {
-                        connect: emptyVisibility
-                    }
-
-                },
-                update: {}
-            })
-            const image = unwrapActionReturn(await createImageAction(
-                { params: { collectionId: flairImageCollection.id } },
-                {
-                    data: {
-                        file: data.file,
-                        alt: data.flairName,
-                        name: data.flairName,
-                    }
-                }
-            ))
-            return await prisma.flair.create({
+        operation: async ({ prisma, data }) =>
+            await prisma.flair.create({
                 data: {
-                    image: {
-                        connect: { id: image.id }
+                    cmsImage: {
+                        create: {
+
+                        }
                     },
-                    name: data.flairName,
+                    name: data.name,
+                    colorR: data.color.red,
+                    colorG: data.color.green,
+                    colorB: data.color.blue,
                 }
             })
-        }
     }),
     update: defineOperation({
         authorizer: () => flairAuth.update.dynamicFields({}),
@@ -67,27 +57,16 @@ export const flairOperations = {
                 },
                 data: {
                     name: data.name,
+                    colorR: data.color?.red,
+                    colorG: data.color?.green,
+                    colorB: data.color?.blue,
                 }
             })
         }
     }),
-    read: defineOperation({
-        authorizer: () => flairAuth.read.dynamicFields({}),
-        paramsSchema: z.object({
-            flairId: z.number(),
-        }),
-        operation: async ({ prisma, params: { flairId } }) => {
-            const flair = await prisma.flair.findUnique({
-                where: {
-                    id: flairId,
-                }
-            })
-            if (!flair) throw new ServerError('NOT FOUND', 'Flair not found')
-            return unwrapActionReturn(await readImageAction({ params: { id: flair.imageId } }))
-        }
-    }),
+    read,
     readAll: defineOperation({
-        authorizer: () => flairAuth.read.dynamicFields({}),
+        authorizer: () => flairAuth.readAll.dynamicFields({}),
         operation: async ({ prisma }) => {
             const flairs = await prisma.flair.findMany({
                 include: {
@@ -97,56 +76,35 @@ export const flairOperations = {
                         }
                     }
                 }
-
             })
-            return flairs
-        }
-    }),
-    readUserFlairsId: defineOperation({
-        authorizer: () => flairAuth.read.dynamicFields({}),
-        paramsSchema: z.object({
-            userId: z.number(),
-        }),
-        operation: async ({ prisma, params: { userId } }) => {
-            const flairs = await prisma.user.findUnique({
-                where: {
-                    id: userId,
-                },
-                select: {
-                    Flairs: true,
-                }
-            })
-            if (!flairs) throw new ServerError('NOT FOUND', 'Flair not found')
             return flairs
         }
     }),
     readUserFlairs: defineOperation({
-        authorizer: () => flairAuth.read.dynamicFields({}),
+        authorizer: ({ params }) => flairAuth.readUserFlairs.dynamicFields({ userId: params.userId }),
         paramsSchema: z.object({
             userId: z.number(),
         }),
-        operation: async ({ prisma, params: { userId } }) => {
-            const flairs = await prisma.flair.findMany({
+        operation: async ({ prisma, params: { userId } }) =>
+            await prisma.user.findUniqueOrThrow({
                 where: {
-                    User: {
-                        some: {
-                            id: userId
+                    id: userId,
+                },
+                select: {
+                    Flairs: {
+                        include: {
+                            cmsImage: {
+                                include: {
+                                    image: true
+                                }
+                            }
                         }
-                    }
+                    },
                 }
-            })
-            if (!flairs) throw new ServerError('NOT FOUND', 'Flair not found')
-            const images: FlairImageType[] = []
-            for (const flair of flairs) {
-                const imageData = unwrapActionReturn(await readImageAction({ params: { id: flair.imageId } }))
-                const flairImage = { ...imageData, flairId: flair.id }
-                images.push(flairImage)
-            }
-            return images
-        }
+            }).then(user => user.Flairs)
     }),
     assignToUser: defineOperation({
-        authorizer: () => flairAuth.assign.dynamicFields({}),
+        authorizer: () => flairAuth.assignToUser.dynamicFields({}),
         paramsSchema: z.object({
             flairId: z.number(),
             userId: z.number(),
@@ -176,7 +134,7 @@ export const flairOperations = {
         ,
     }),
     unAssignToUser: defineOperation({
-        authorizer: () => flairAuth.assign.dynamicFields({}),
+        authorizer: () => flairAuth.unAssignToUser.dynamicFields({}),
         paramsSchema: z.object({
             flairId: z.number(),
             userId: z.number(),
@@ -197,23 +155,36 @@ export const flairOperations = {
         ,
     }),
     destroy: defineOperation({
-        authorizer: () => flairAuth.assign.dynamicFields({}),
+        authorizer: () => flairAuth.destroy.dynamicFields({}),
         paramsSchema: z.object({
             flairId: z.number(),
         }),
+        opensTransaction: true,
         operation: async ({ prisma, params: { flairId } }) => {
-            const flair = await prisma.flair.delete({
-                where: {
-                    id: flairId,
-                }
-            })
-            if (flair.imageId) {
-                await prisma.image.delete({
+            prisma.$transaction(async tx => {
+                const flair = await tx.flair.delete({
                     where: {
-                        id: flair.imageId,
+                        id: flairId,
                     }
                 })
-            }
+                await cmsImageOperations.destroy({
+                    bypassAuth: true,
+                    prisma: tx,
+                    params: {
+                        cmsImageId: flair.imageId,
+                    }
+                })
+            })
+        }
+    }),
+    updateCmsImage: cmsImageOperations.update.implement({
+        authorizer: () => flairAuth.updateCmsImage.dynamicFields({}),
+        implementationParamsSchema: z.object({
+            flairId: z.number(),
+        }),
+        ownershipCheck: async ({ params, implementationParams }) => {
+            const flair = await read({ params: { flairId: implementationParams.flairId } })
+            return flair.cmsImage.id === params.cmsImageId
         }
     })
 }
