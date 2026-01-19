@@ -51,7 +51,10 @@ export const userOperations = {
                 },
             })
 
-            setTimeout(() => sendUserInvitationEmail(user), 1000)
+            // Don't send mail during testing.
+            if (process.env.NODE_ENV !== 'test') {
+                setTimeout(() => sendUserInvitationEmail(user), 1000)
+            }
             // The timeout is here to make sure the user is fully created before we send the email.
             // If we don't wait the validation token will be generated first, and will not be valid since
             // the user has changed after the token was generated.

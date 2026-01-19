@@ -1,0 +1,14 @@
+@use "@/styles/ohma";
+
+.checkoutFormContainer {
+    width: 500px; // TODO: Is there a better way to do this?
+    margin: ohma.$gap * 3;
+}
+
+.paymentDetails {
+    min-height: 50px;
+}
+
+.submitButton {
+    width: 200px;
+}

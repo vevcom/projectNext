@@ -136,7 +136,6 @@ export default async function User({ params }: PropTypes) {
                             )
                             }
                         </div>
-
                     </div>
                     <div className={styles.profileMain}>
 

@@ -145,7 +145,7 @@ export const itemsForMenu: NavItem[] = [
         icon: faIdCard,
     },
     {
-        name: 'Admin',
+        name: 'Administrasjon',
         href: '/admin',
         show: 'admin',
         icon: faTools,

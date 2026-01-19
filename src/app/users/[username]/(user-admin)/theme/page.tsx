@@ -6,9 +6,10 @@ import ThemeForm from "@/app/users/[username]/(user-admin)/theme/ThemeForm";
 
 export default async function UserSettings({ params }: PropTypes) {
     const profileRes = await readUserProfileAction({ params: { username: (await params).username } })
+
     if (!profileRes.success) return notFound()
 
     return (
-        <ThemeForm></ThemeForm>
+        <ThemeForm />
     )
 }

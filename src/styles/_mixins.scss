@@ -55,14 +55,14 @@
     }
 }
 
-@mixin btn($color: colors.$white) {
+@mixin btn($color: colors.$white, $textColor: colors.$black) {
     text-align: center;
     text-decoration: none;
     font-size: fonts.$m;
     background: $color;
     padding: 2*variables.$gap;
     margin: variables.$gap;
-    color: colors.$black;
+    color: $textColor;
     border: none;
     transition: .5s background;
     &:hover {

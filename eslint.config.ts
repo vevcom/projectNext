@@ -173,7 +173,7 @@ const eslintConfig = defineConfig([
             // specify the maximum depth callbacks can be nested
             'max-nested-callbacks': [
                 'error',
-                3
+                4
             ],
             // disallow the omission of parentheses when invoking a constructor with no arguments
             'new-parens': 'error',
