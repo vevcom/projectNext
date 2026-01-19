@@ -1,38 +1,5 @@
 @use '@/styles/ohma';
 
 .flairContainer {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-
-    .imageContainer {
-        margin: 1%;
-
-        :hover {
-            cursor: pointer;
-
-            .ownedFlair {
-                background-color: darken(ohma.$colors-primary, 20%);
-            }
-
-            .unOwnedFlair {
-                background-color: darken(ohma.$colors-white, 20%);
-            }
-
-        }
-
-        * {
-            padding: 2%;
-        }
-
-        .ownedFlair {
-            background-color: ohma.$colors-primary;
-        }
-
-        .unOwnedFlair {
-            background-color: ohma.$colors-white;
-        }
-
-    }
-
+    @include ohma.table;
 }

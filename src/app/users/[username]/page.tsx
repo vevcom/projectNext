@@ -9,7 +9,7 @@ import { ServerSession } from '@/auth/session/ServerSession'
 import { sexConfig } from '@/services/users/constants'
 import { readUserFlairsAction } from '@/services/flairs/actions'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
-import Image from '@/components/Image/Image'
+import Flair from '@/components/Flair/Flair'
 import { RelationshipStatus } from '@/prisma-generated-pn-types'
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
@@ -47,7 +47,9 @@ export default async function User({ params }: PropTypes) {
     if (!omegaMembership) {
         throw new Error('Failed to load the omega membership level')
     }
-    const flairs = unwrapActionReturn(await readUserFlairsAction({ params: { userId: profile.user.id } }))
+    const flairs = unwrapActionReturn(await readUserFlairsAction({ params: { userId: profile.user.id } })).sort(
+        (a, b) => a.rank - b.rank
+    )
 
     const profileImage = profile.user.image ? profile.user.image : await readSpecialImageAction.bind(
         null, { params: { special: 'DEFAULT_PROFILE_IMAGE' } }
@@ -68,13 +70,17 @@ export default async function User({ params }: PropTypes) {
         [RelationshipStatus.NOT_SPECIFIED]: 'white'
     }
 
-    // Not ideal to use typecast here, but this is the simplest way.
     const borderColour = { '--border-colour': relationshipColour[profile.user.relationshipStatus] } as React.CSSProperties
 
     return (
         <div className={styles.wrapper}>
             <div className={styles.profile}>
-                <div className={`${styles.top} ${styles.standard}`} />
+                <div
+                    style={ flairs.length > 0 ? {
+                        backgroundColor: `rgb(${flairs[0].colorR}, ${flairs[0].colorG}, ${flairs[0].colorB})`
+                    } : {} }
+                    className={`${styles.top} ${styles.standardFlairColor}`}
+                />
 
                 <div className={styles.profileContent} style={borderColour}>
                     <ProfilePicture width={240} profileImage={profileImage} className={styles.profilePicture}/>
@@ -84,12 +90,8 @@ export default async function User({ params }: PropTypes) {
                                 <h1><UserDisplayName user={profile.user} /></h1>
                             </div>
                             <div className={styles.flairContainer}>
-                                {flairs.map((data, index) => (
-                                    <Image className={styles.flairImage}
-                                        key={index}
-                                        width={50}
-                                        alt={data.alt}
-                                        image={data}></Image>
+                                {flairs.map((flair, index) => (
+                                    <Flair key={index} flair={flair} session={session} width={40} />
                                 ))
                                 }
                             </div>
