@@ -1,6 +1,6 @@
 import { ValidationBase } from '@/services/Validation'
+import { ScreenPageType } from '@/prisma-generated-pn-types'
 import { z } from 'zod'
-import { ScreenPageType } from '@prisma/client'
 import type { ValidationTypes } from '@/services/Validation'
 
 const basePageValidation = new ValidationBase({

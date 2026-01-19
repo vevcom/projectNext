@@ -9,7 +9,7 @@ import { sendSystemMail } from '@/services/notifications/email/send'
 import { userFilterSelection } from '@/services/users/constants'
 import { defineOperation } from '@/services/serviceOperation'
 import { z } from 'zod'
-import type { Prisma } from '@prisma/client'
+import type { Prisma } from '@/prisma-generated-pn-types'
 import type { EventRegistrationExpanded } from './types'
 
 async function preValidateRegistration(

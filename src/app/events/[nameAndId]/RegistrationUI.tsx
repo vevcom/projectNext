@@ -13,7 +13,7 @@ import { configureAction } from '@/services/configureAction'
 import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import type { EventExpanded } from '@/services/events/types'
-import type { EventRegistration } from '@prisma/client'
+import type { EventRegistration } from '@/prisma-generated-pn-types'
 
 enum RegistrationButtonState {
     NOT_REGISTERED = 'NOT_REGISTERED',

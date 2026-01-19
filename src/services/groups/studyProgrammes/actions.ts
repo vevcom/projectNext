@@ -6,7 +6,7 @@ import { readStudyProgrammes } from '@/services/groups/studyProgrammes/read'
 import { updateStudyProgramme } from '@/services/groups/studyProgrammes/update'
 import { createStudyProgrammeValidation, updateStudyProgrammeValidation } from '@/services/groups/studyProgrammes/validation'
 import type { ActionReturn } from '@/services/actionTypes'
-import type { StudyProgramme } from '@prisma/client'
+import type { StudyProgramme } from '@/prisma-generated-pn-types'
 
 export async function createStudyProgrammeAction(rawdata: FormData): Promise<ActionReturn<StudyProgramme>> {
     const parse = createStudyProgrammeValidation.typeValidate(rawdata)

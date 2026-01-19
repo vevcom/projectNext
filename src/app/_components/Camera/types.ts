@@ -1,15 +1,13 @@
 import type { Dispatch, SetStateAction, RefObject } from 'react'
 
-
 export type CameraState = 'Off' | 'Pending' | 'On'
 
-export interface CameraFeedProps {
-    videoRef: RefObject<HTMLVideoElement>,
+export type CameraFeedProps = {
+    videoRef: RefObject<HTMLVideoElement | null>,
     cameraState: CameraState,
     setCameraState: Dispatch<SetStateAction<CameraState>>,
-    constraints: MediaStreamConstraints
+    constraints: globalThis.MediaStreamConstraints,
     callbackFunction?: () => void,
     width?: number,
     height?: number
 }
-

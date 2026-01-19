@@ -2,7 +2,7 @@
 import useAuthorizer from './useAuthorizer'
 import { EditModeContext } from '@/contexts/EditMode'
 import { RequireNothing } from '@/auth/authorizer/RequireNothing'
-import { useContext, useEffect, useRef } from 'react'
+import { useContext, useEffect, useMemo } from 'react'
 import { v4 as uuid } from 'uuid'
 import type { AuthorizerDynamicFieldsBound } from '@/auth/authorizer/Authorizer'
 import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
@@ -29,7 +29,7 @@ export default function useEditMode({
     authResult: AuthResultTypeAny
 }): boolean {
     const editModeCtx = useContext(EditModeContext)
-    const uniqueKey = useRef(uuid()).current
+    const uniqueKey = useMemo(() => uuid(), [])
     const authorizerAuthResult = useAuthorizer({
         authorizer: authorizer ? authorizer : RequireNothing.staticFields({}).dynamicFields({})
     })

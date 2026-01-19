@@ -1,5 +1,5 @@
 import type { MembershipSelectorType } from '@/services/groups/memberships/types'
-import type { Prisma } from '@prisma/client'
+import type { Prisma } from '@/prisma-generated-pn-types'
 
 /**
  * A function to return a filter that only selects valid memberships of a order.

@@ -47,11 +47,11 @@ export default function ImageList({
         }>
             {
                 withUpload && (
-                    <PopUp PopUpKey={uuid()} showButtonClass={styles.uploadImage} showButtonContent={
+                    <PopUp popUpKey={uuid()} showButtonClass={styles.uploadImage} showButtonContent={
                         <>Legg til bilde</>
                     }>
                         <ImageUploader
-                            collectionId={context.deatils.collectionId}
+                            collectionId={context.details.collectionId}
                             successCallback={handleUpload}
                         />
                     </PopUp>

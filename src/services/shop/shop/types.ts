@@ -1,4 +1,4 @@
-import type { Shop } from '@prisma/client'
+import type { Shop } from '@/prisma-generated-pn-types'
 import type { ExtendedProduct } from '@/services/shop/product/types'
 
 

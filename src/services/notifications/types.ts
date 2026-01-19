@@ -1,6 +1,6 @@
 import type { availableNotificationMethodIncluder } from './channel/constants'
 import type { notificationMethodsArray, notificationMethodTypes } from './constants'
-import type { Notification, NotificationMethod, Prisma } from '@prisma/client'
+import type { Notification, NotificationMethod, Prisma } from '@/prisma-generated-pn-types'
 
 export type NotificationMethodTypes = typeof notificationMethodTypes[number]
 

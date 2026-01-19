@@ -17,7 +17,7 @@ export default async function ProductPage() {
     return <PageWrapper
         title="Produkter"
         headerItem={
-            <AddHeaderItemPopUp PopUpKey="ProductForm">
+            <AddHeaderItemPopUp popUpKey="ProductForm">
                 <ProductForm />
             </AddHeaderItemPopUp>
         }

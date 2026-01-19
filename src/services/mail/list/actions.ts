@@ -10,7 +10,7 @@ import {
     updateMailingListValidation
 } from '@/services/mail/list/validation'
 import type { ActionReturn } from '@/services/actionTypes'
-import type { MailingList } from '@prisma/client'
+import type { MailingList } from '@/prisma-generated-pn-types'
 
 export async function createMailingListAction(rawdata: FormData):
     Promise<ActionReturn<MailingList>> {

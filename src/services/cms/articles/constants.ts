@@ -1,5 +1,5 @@
 import { articleSectionsRealtionsIncluder } from '@/cms/articleSections/constants'
-import type { Prisma } from '@prisma/client'
+import type { Prisma } from '@/prisma-generated-pn-types'
 
 export const maxSections = 10 // Max 10 sections in an article
 

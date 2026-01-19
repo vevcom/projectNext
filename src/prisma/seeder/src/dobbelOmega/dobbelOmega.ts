@@ -10,37 +10,42 @@ import { UserMigrator } from './migrateUsers'
 import migrateCommittees from './migrateCommittees'
 import seedProdPermissions from './seedProdPermissions'
 import manifest from '@/seeder/src/logger'
-import { PrismaClient as PrismaClientVeven } from '@/prisma-dobbel-omega/client'
-import type { PrismaClient as PrismaClientPn } from '@prisma/client'
+import { PrismaPg } from '@prisma/adapter-pg'
+import type { PrismaClient as PrismaClientPn } from '@/prisma-generated-pn-client'
+import { PrismaClient as PrismaClientOw } from '@/prisma-generated-ow-basic/client'
 
 /**
  * !DobbelOmega!
- * This function migrates data from Veven to ProjectNext
+ * This function migrates data from OW basic to ProjectNext
  * @param pnPrisma - PrismaClientPn
  */
 export default async function dobbelOmega(pnPrisma: PrismaClientPn) {
     manifest.info('============================================')
     manifest.info('==========!!!Dobbel Omega!!!================')
-    const vevenPrisma = new PrismaClientVeven()
+    const owPrisma = new PrismaClientOw({
+        adapter: new PrismaPg({
+            connectionString: process.env.OW_DB_URI,
+        }),
+    })
 
     const limits = getLimits()
 
-    const imageCollectionIdMap = await migrateImageCollections(pnPrisma, vevenPrisma)
-    const imageIdMap = await migrateImages(pnPrisma, vevenPrisma, imageCollectionIdMap, limits)
+    const imageCollectionIdMap = await migrateImageCollections(pnPrisma, owPrisma)
+    const imageIdMap = await migrateImages(pnPrisma, owPrisma, imageCollectionIdMap, limits)
 
-    const userMigrator = new UserMigrator(pnPrisma, vevenPrisma, imageIdMap)
+    const userMigrator = new UserMigrator(pnPrisma, owPrisma, imageIdMap)
     await userMigrator.initSpecialGroups()
     await userMigrator.migrateUsers(limits)
 
-    await migrateOmbul(pnPrisma, vevenPrisma, imageIdMap, limits)
-    await migrateOmegaquotes(pnPrisma, vevenPrisma, userMigrator, limits)
-    await migrateArticles(pnPrisma, vevenPrisma, imageIdMap, limits)
-    await migrateMailAliases(pnPrisma, vevenPrisma, limits)
-    await migrateCommittees(pnPrisma, vevenPrisma, userMigrator)
-    await migrateEvents(pnPrisma, vevenPrisma, imageIdMap, userMigrator, limits)
+    await migrateOmbul(pnPrisma, owPrisma, imageIdMap, limits)
+    await migrateOmegaquotes(pnPrisma, owPrisma, userMigrator, limits)
+    await migrateArticles(pnPrisma, owPrisma, imageIdMap, limits)
+    await migrateMailAliases(pnPrisma, owPrisma, limits)
+    await migrateCommittees(pnPrisma, owPrisma, userMigrator)
+    await migrateEvents(pnPrisma, owPrisma, imageIdMap, userMigrator, limits)
 
     await seedProdPermissions(pnPrisma)
 
-    vevenPrisma.$disconnect()
+    owPrisma.$disconnect()
     manifest.info('=======Dobbel Omega ferdig, dagen derpå=======')
 }

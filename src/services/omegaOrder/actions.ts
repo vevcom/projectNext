@@ -3,7 +3,7 @@ import { safeServerCall } from '@/services/actionError'
 import { createOmegaOrder } from '@/services/omegaOrder/create'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import type { ActionReturn } from '@/services/actionTypes'
-import type { OmegaOrder } from '@prisma/client'
+import type { OmegaOrder } from '@/prisma-generated-pn-types'
 
 export async function createOmegaOrderAction(): Promise<ActionReturn<void>> {
     return safeServerCall(createOmegaOrder)

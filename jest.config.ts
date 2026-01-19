@@ -1,3 +1,5 @@
+/** @jest-config-loader esbuild-register */
+
 import nextJest from 'next/jest.js'
 import type { Config } from 'jest'
 

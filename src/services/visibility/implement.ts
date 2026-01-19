@@ -1,7 +1,7 @@
 import { visibilityOperations } from './operations'
 import type { ArgsAuthGetterAndOwnershipCheck, PrismaPossibleTransaction } from '@/services/serviceOperation'
 import type { AuthorizerDynamicFieldsBound } from '@/auth/authorizer/Authorizer'
-import type { Prisma } from '@prisma/client'
+import type { Prisma } from '@/prisma-generated-pn-types'
 import type { visibilitySchemas } from './schemas'
 import type { z } from 'zod'
 

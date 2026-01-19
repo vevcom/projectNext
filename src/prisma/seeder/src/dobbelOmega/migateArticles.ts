@@ -1,7 +1,7 @@
-import { vevenIdToPnId } from './IdMapper'
+import { owIdToPnId } from './IdMapper'
 import upsertOrderBasedOnDate from './upsertOrderBasedOnDate'
-import type { PrismaClient as PrismaClientPn } from '@prisma/client'
-import type { PrismaClient as PrismaClientVeven } from '@/prisma-dobbel-omega/client'
+import type { PrismaClient as PrismaClientPn } from '@/prisma-generated-pn-client'
+import type { PrismaClient as PrismaClientOw } from '@/prisma-generated-ow-basic/client'
 import type { IdMapper } from './IdMapper'
 import type { Limits } from './migrationLimits'
 
@@ -9,24 +9,24 @@ import type { Limits } from './migrationLimits'
  * WARNING: This function is not complete, it does not migrate the InfoPages, only the articles (news)
  * WARNING: The text formatting is still bad, and needs to be fixed
  *
- * This function migrates articles from Veven to PN,
+ * This function migrates articles from Omegaweb-basic to PN,
  * Both Articles -> NewsAricle (with Article relation)
  * And InfoPages -> Articles (belonging to a Article collection)
  * @param pnPrisma - PrismaClientPn
- * @param vevenPrisma - PrismaClientVeven
+ * @param owPrisma - PrismaClientOw
  * @param imageIdMap - IdMapper - A map of the old and new id's of the images to get cover images
  * @param limits - Limits - used to limit the number of articles to migrate
  */
 export default async function migrateArticles(
     pnPrisma: PrismaClientPn,
-    vevenPrisma: PrismaClientVeven,
+    owPrisma: PrismaClientOw,
     imageIdMap: IdMapper,
     limits: Limits,
 ) {
-    const articles = await vevenPrisma.articles.findMany({ take: limits.articles ? limits.articles : undefined })
+    const articles = await owPrisma.articles.findMany({ take: limits.articles ? limits.articles : undefined })
 
     const articlesPn = await Promise.all(articles.map(async (article, i) => {
-        const coverId = vevenIdToPnId(imageIdMap, article.ImageId) || undefined
+        const coverId = owIdToPnId(imageIdMap, article.ImageId) || undefined
 
 
         const coverName = `${article.title.split(' ').join('_')}_cover${i}`
@@ -70,7 +70,7 @@ export default async function migrateArticles(
             }
         })
 
-        //TODO: link Article to a group (comitteee on veven)
+        //TODO: link Article to a group (comitteee on omegaweb-basic).
         const articlePn = await pnPrisma.article.create({
             data: {
                 name: article.title,

@@ -14,7 +14,7 @@ import PopUpProvider from '@/contexts/PopUp'
 import ImageSelectionProvider from '@/contexts/ImageSelection'
 import { useState } from 'react'
 import Link from 'next/link'
-import type { CmsImage, Image as ImageT } from '@prisma/client'
+import type { CmsImage, Image as ImageT } from '@/prisma-generated-pn-types'
 import type { UpdateCmsImageAction } from '@/cms/images/types'
 import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
 
@@ -42,7 +42,7 @@ export default function CmsImageEditor({ cmsImage, updateCmsImageAction, canEdit
     if (!editable) return null
     return (
         <PopUp
-            PopUpKey={`EditCmsImage${cmsImage.id}`}
+            popUpKey={`EditCmsImage${cmsImage.id}`}
             showButtonContent={<EditOverlay />}
             showButtonClass={styles.showBtn}
         >

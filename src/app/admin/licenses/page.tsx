@@ -39,7 +39,7 @@ export default async function Licenses() {
                                 </Link>
                             </td>
                             <td>
-                                <SettingsHeaderItemPopUp PopUpKey={`LicenseSettings ${license.id}`}>
+                                <SettingsHeaderItemPopUp popUpKey={`LicenseSettings ${license.id}`}>
                                     <Form
                                         action={configureAction(updateLicenseAction, { params: { id: license.id } })}
                                         title="Endre lisens"

@@ -3,11 +3,18 @@ import { useEffect, useRef, useCallback } from 'react'
 import type { CameraFeedProps } from './types'
 
 
-export default function CameraFeed(props: CameraFeedProps) {
+export default function CameraFeed({
+    setCameraState,
+    constraints,
+    videoRef,
+    cameraState,
+    callbackFunction,
+    width,
+    height
+}: CameraFeedProps) {
     const streamRef = useRef<MediaStream | null>(null)
     const animationFrameRef = useRef<number | null>(null)
-    const callbackFunctionRef = useRef<(() => void) | undefined>(props.callbackFunction)
-
+    const callbackFunctionRef = useRef<(() => void) | undefined>(callbackFunction)
 
     const handleVideoPlay = useCallback(() => {
         const callbackWrapper = () => {
@@ -17,33 +24,33 @@ export default function CameraFeed(props: CameraFeedProps) {
             }
         }
         callbackWrapper()
-        props.setCameraState('On')
-    }, [])
+        setCameraState('On')
+    }, [setCameraState])
 
 
     const start = useCallback(async () => {
-        streamRef.current = await navigator.mediaDevices.getUserMedia(props.constraints)
+        streamRef.current = await navigator.mediaDevices.getUserMedia(constraints)
             .catch((error: Error) => {
-                props.setCameraState('Off')
+                setCameraState('Off')
                 console.error(error)
                 return null
             })
         if (!streamRef.current) {
             return
         }
-        const video = props.videoRef.current
+        const video = videoRef.current
         if (!video) {
             console.error('videoRef must be linked to a HTMLVideoElement')
             return
         }
         video.srcObject = streamRef.current
         video.play().catch((error: Error) => {
-            props.setCameraState('Off')
+            setCameraState('Off')
             console.error(error)
             return
         })
         video.addEventListener('loadedmetadata', handleVideoPlay)
-    }, [props.constraints])
+    }, [setCameraState, videoRef, handleVideoPlay, constraints])
 
 
     const stop = useCallback(() => {
@@ -56,14 +63,14 @@ export default function CameraFeed(props: CameraFeedProps) {
             cancelAnimationFrame(animationFrameRef.current)
             animationFrameRef.current = null
         }
-        if (props.videoRef.current) {
-            props.videoRef.current.removeEventListener('loadedmetadata', handleVideoPlay)
+        if (videoRef.current) {
+            videoRef.current.removeEventListener('loadedmetadata', handleVideoPlay)
         }
-    }, [])
+    }, [videoRef, handleVideoPlay])
 
 
     useEffect(() => {
-        switch (props.cameraState) {
+        switch (cameraState) {
             case 'Pending':
                 start()
                 break
@@ -76,19 +83,19 @@ export default function CameraFeed(props: CameraFeedProps) {
                 return undefined
         }
         return undefined
-    }, [props.cameraState])
+    }, [cameraState, start, stop])
 
 
     useEffect(() => {
-        callbackFunctionRef.current = props.callbackFunction
-    }, [props.callbackFunction])
+        callbackFunctionRef.current = callbackFunction
+    }, [callbackFunction])
 
 
     return (
         <video
-            width={props.width}
-            height={props.height}
-            ref={props.videoRef}
+            width={width}
+            height={height}
+            ref={videoRef}
             playsInline
             style={{ backgroundColor: 'black' }}
         >

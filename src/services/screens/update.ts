@@ -2,10 +2,10 @@ import { updateScreenValidation } from './validation'
 import { readScreen } from './read'
 import { ServerError } from '@/services/error'
 import { prismaCall } from '@/services/prismaCall'
-import { prisma } from '@/prisma/client'
+import { prisma } from '@/prisma-pn-client-instance'
 import type { ScreenPageMoveDirection } from './types'
 import type { UpdateScreenTypes } from './validation'
-import type { Screen } from '@prisma/client'
+import type { Screen } from '@/prisma-generated-pn-types'
 
 export async function updateScreen(id: number, rawdata: UpdateScreenTypes['Detailed']): Promise<Screen> {
     const { orientation, name, connectToPages } = updateScreenValidation.detailedValidate(rawdata)

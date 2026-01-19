@@ -1,5 +1,5 @@
 import type { notificationMethodIncluder } from './constants'
-import type { Prisma } from '@prisma/client'
+import type { Prisma } from '@/prisma-generated-pn-types'
 
 
 export type Subscription = Prisma.NotificationSubscriptionGetPayload<{

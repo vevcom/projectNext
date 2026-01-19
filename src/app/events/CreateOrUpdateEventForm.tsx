@@ -14,7 +14,7 @@ import { FIELD_IS_PRESENT_VALUE } from '@/lib/fields/constants'
 import { configureAction } from '@/services/configureAction'
 import { formatVevenUri } from '@/lib/urlEncoding'
 import { useState } from 'react'
-import type { Event, EventTag as EventTagT } from '@prisma/client'
+import type { Event, EventTag as EventTagT } from '@/prisma-generated-pn-types'
 import type { ChangeEvent } from 'react'
 
 type PropTypes = {

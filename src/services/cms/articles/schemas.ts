@@ -1,5 +1,5 @@
 import { baseSchema as baseSchemaArticleSections } from '@/cms/articleSections/schemas'
-import { SpecialCmsArticle } from '@prisma/client'
+import { SpecialCmsArticle } from '@/prisma-generated-pn-types'
 import { z } from 'zod'
 
 const baseSchema = z.object({

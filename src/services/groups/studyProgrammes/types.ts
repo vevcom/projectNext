@@ -1,3 +1,3 @@
-import type { StudyProgramme } from '@prisma/client'
+import type { StudyProgramme } from '@/prisma-generated-pn-types'
 
 export type ExpandedStudyProgramme = StudyProgramme
