@@ -11,10 +11,10 @@
 
 @mixin boxShadow($state) {
     @if $state=='hover' {
-        box-shadow: colors.$shadowColor 0px 3px 6px, colors.$shadowColor 0px 3px 6px;
+        box-shadow: colors.$boxShadow 0px 3px 6px, colors.$boxShadow 0px 3px 6px;
         transition: box-shadow 0.3s;
     } @else {
-        box-shadow: colors.$shadowColor 0px 1px 3px, colors.$shadowColor 0px 1px 2px;
+        box-shadow: colors.$boxShadow 0px 1px 3px, colors.$boxShadow 0px 1px 2px;
         transition: box-shadow 0.3s;
     }
 }
@@ -45,10 +45,10 @@
         padding: variables.$gap
     }
     th {
-        background-color: lighten(colors.$secondary, 4%)
+        background-color: color-mix(in srgb, colors.$secondary, white 2%); // TODO Perhaps change
     }
     tr:nth-child(even) {
-        background-color: lighten(colors.$secondary, 2%)
+        background-color: color-mix(in srgb, colors.$secondary, white 2%); // TODO Perhaps change
     }
     tr:hover {
         @include layer;
@@ -66,21 +66,21 @@
     border: none;
     transition: .5s background;
     &:hover {
-        background-color: color.adjust($color, $lightness: -10%);
+        background-color: color-mix(in srgb, $color, white 10%); // TODO Perhaps change
         cursor: pointer;
     }
     @include round;
 }
 
 //NOTE: also made to work for <Link /> (<a> tag)
-@mixin borderBtn($color: colors.$white, $hoverColor: color.adjust($color, $lightness: 40%)) { 
+@mixin borderBtn($color: colors.$white) {
     @include btn($color);
     background: transparent;
     border: solid $color 2px;
     color: $color;
     &:hover {
         background: $color;
-        color: $hoverColor;
+        color: color-mix(in srgb, $color, white 40%);
     }
 }
 
@@ -117,7 +117,7 @@
     justify-content: center;
     align-items: center;
     &:hover {
-        background-color: color.adjust($color, $lightness: -10%);
+        background-color: color-mix(in srgb, $color, black 10%); // TODO Perhaps change
     }
 }
 
@@ -127,7 +127,7 @@
     width: 30px;
     height: 30px;
     &:hover {
-        color: color.adjust(colors.$primary, $lightness: -10%);
+        color: color-mix(in srgb, colors.$primary, black 10%); // TODO Perhaps change
         cursor: pointer;
     }
 }
@@ -160,6 +160,23 @@
     margin: 1em 0;
     display: grid;
     grid-template-columns: repeat(3, calc((100% - 2em) / 3));
+    grid-gap: 1em;
+    @media screen and (max-width: variables.$mobileBreakpoint) {
+        grid-template-columns: repeat(2, calc((100% - 2em) / 2));
+    }
+    @media screen and (max-width: 500px) {
+        grid-template-columns: 1fr;
+        place-items: center;
+        > * {
+            width: 100%;
+        }
+    }
+}
+
+@mixin EventCardListLayout {
+    margin: 1em 0;
+    display: grid;
+    grid-template-columns: repeat(2, calc((100% - 2em) / 2));
     grid-gap: 1em;
     @media screen and (max-width: variables.$mobileBreakpoint) {
         grid-template-columns: repeat(2, calc((100% - 2em) / 2));

@@ -59,7 +59,7 @@
         }
         > button:hover {
             cursor: pointer;
-            background-color: darken(ohma.$colors-primary, 10%);
+            background-color: color-mix(in srgb, ohma.$colors-primary, black 10%);
         }
         display: flex;
         flex-flow: row wrap;

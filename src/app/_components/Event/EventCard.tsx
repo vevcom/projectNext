@@ -1,51 +1,59 @@
 import SmallEventTag from './SmallEventTag'
 import styles from './EventCard.module.scss'
-import ImageCard from '@/components/ImageCard/ImageCard'
-import { formatVevenUri } from '@/lib/urlEncoding'
 import React from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCalendar, faLocationDot, faUsers } from '@fortawesome/free-solid-svg-icons'
 import type { EventExpanded } from '@/services/events/types'
 
 export default function EventCard({ event }: {
     event: EventExpanded,
 }) {
-    return <ImageCard
-        href={`/events/${formatVevenUri(event.name, event.id)}`}
-        title={event.name}
-        image={event.coverImage.image}
-    >
-        <ul className={styles.tags}>
-            {event.tags.map(tag => (
+    const attendance = `${event.numOfRegistrations / event.places * 100}%`
+    const months = ['January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December']
+    const link = `/events/${event.name}-${event.id}`
+    return <a href={link} className={styles.EventWrapper}>
+        <div className={styles.EventHeader}>
+            <div className={styles.EventMainTime}>
+                <b>{event.eventStart.getDate()}</b> - {months[event.eventStart.getMonth()]}
+            </div>
+            <div className={styles.tags}>
+                {event.tags.map(tag => (
 
-                <li key={tag.id}>
-                    <SmallEventTag eventTag={tag} />
-                </li>
-            ))}
-        </ul>
-        <ul>
-            <li>
-                <FontAwesomeIcon icon={faCalendar} />
-                {event.eventStart.toLocaleDateString()} - {event.eventEnd.toLocaleDateString()}
-            </li>
-            <li>
-                <FontAwesomeIcon icon={faLocationDot} />
-                {event.location}
-            </li>
+                    <div key={tag.id}>
+                        <SmallEventTag eventTag={tag} />
+                    </div>
+                ))}
+            </div>
+        </div>
+        <div className={styles.EventAttendanceBar}>
+            {event.takesRegistration ? <>
+                <div style={{ width: attendance }}></div>
+            </> : <></>}
+        </div>
+        <div className={styles.EventImage}>
             {
-                event.takesRegistration ? (
-                    <>
-                        <li>
-                            <FontAwesomeIcon icon={faUsers} />
-                            {event.numOfRegistrations} / {event.places}
-                        </li>
-                        <li>
-                            <FontAwesomeIcon icon={faCalendar} />
-                            {event.registrationStart.toLocaleDateString()} - {event.registrationEnd.toLocaleDateString()}
-                        </li>
-                    </>
-                ) : <></>
+                event.coverImage.image && (
+
+                    <div></div>
+                )
             }
-        </ul>
-    </ImageCard>
+        </div>
+        <div className={styles.EventMain}>
+            <h2>{event.name}</h2>
+            <h4>{event.eventStart.toLocaleDateString()} - {event.eventEnd.toLocaleDateString()}</h4>
+            <p>Event description</p>
+        </div>
+        <div className={styles.EventFooter}>
+            <div>
+                {event.numOfRegistrations} / {event.places}
+            </div>
+            <div>
+                {event.places}
+            </div>
+            {event.takesRegistration ? <>
+                <div>
+                    kl. {event.registrationStart.getHours()} - {event.registrationEnd.getHours()}
+                </div>
+            </> : <></>}
+        </div>
+    </a>
 }

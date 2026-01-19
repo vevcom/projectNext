@@ -1,0 +1,51 @@
+@use "@/styles/ohma";
+
+.ThemeWrapper {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.Theme {
+    width: 192px * 2;
+    height: 168px;
+    @include ohma.layer;
+    border-radius: ohma.$cardRounding;
+    padding: ohma.$gap * 2;
+    margin: ohma.$gap;
+}
+
+.ThemeHeader {
+    @include ohma.layer;
+    height: 58%;
+    border-radius: ohma.$cardRounding;
+    margin: -2 * ohma.$gap;
+    padding: ohma.$gap * 2;
+    font-size: xx-large;
+    line-height: 50px;
+}
+
+.ThemeBody {
+    margin-top: ohma.$gap * 3;
+    display: flex;
+    justify-content: space-between;
+    > div {
+        border-radius: ohma.$rounding;
+        height: 64px;
+        width: 64px;
+    }
+    > .primary {
+        background-color: ohma.$colors-primary;
+    }
+    > .secondary {
+        background-color: ohma.$colors-secondary;
+    }
+    > .layer {
+        background-color: ohma.$colors-layer;
+    }
+    > .text {
+        background-color: ohma.$colors-text;
+    }
+    > .textMuted {
+        background-color: ohma.$colors-text-muted;
+    }
+}

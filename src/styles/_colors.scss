@@ -1,3 +1,14 @@
+.html {
+    --primary: hsl(207, 91%, 65%);
+    --secondary: hsl(202, 64%, 10%);
+    --layer: hsla(211, 48.1%, 35.5%, 0.18);
+    --boxShadow: hsl(210, 0%, 0%, 20%);
+    --text: hsl(0, 0%, 80%);
+    --text-muted: hsl(0, 0%, 70%);
+    --text-inv: hsl(0, 0%, 10%);
+    --text-sec: hsl(0, 0%, 10%);
+}
+
 $blue:    #007bff;
 $slate:   #556a82;
 $indigo:  #6610f2;
@@ -26,35 +37,19 @@ $gray-850: #1F2326;
 $gray-900: #1c1c1c;
 $black:  #000;
 
+$primary:    var(--primary);
+$secondary:  var(--secondary);
+$tertiary:   var(--secondary);
+$border:     var(--primary);
 
-$primary:    hsl(210, 70%, 50%);
-$secondary:  hsl(210, 5%, 12%);
-$layer:      hsl(210, 0%, 0%, 20%);
-$text:       hsl(0, 0%, 80%);
-$text-muted: hsl(0, 0%, 70%);
-$shadowColor:rgba(0, 0, 0, 0.1);
+$layer:      var(--layer);
+$layerone:   var(--layer); // TODO Emulate secondary with one layer.
+$boxShadow:  var(--boxShadow);
 
-$primary:    hsl(207, 91%, 65%);
-$secondary:  hsl(202, 64%, 10%);
-$layer:      hsl(207, 0%, 30%, 20%);
-$text:       hsl(0, 0%, 80%);
-$text-muted: hsl(0, 0%, 70%);
-
-.light {
-    $primary:    hsl(210, 98%, 50%);
-    $secondary:  hsl(210, 18%, 95%);
-    $layer:      hsl(0, 0%, 0%, 5%);
-    $text:       hsl(0, 0%, 10%);
-    $text-muted: hsl(0, 0%, 20%);
-}
-
-.solarized {
-    $primary:    hsl(210, 98%, 50%);
-    $secondary:  hsl(44, 87%, 94%);   /* Base 3 */
-    $layer:      hsl(0, 0%, 50%, 15%); /* "Base 2" */
-    $text:       hsl(196, 13%, 45%);  /* Base 00 */
-    $text-muted: hsl(180, 7%, 60%);   /* Base 1 */
-}
+$text:       var(--text);
+$text-muted: var(--text-muted);
+$text-inv:   var(--text-inv);
+$text-sec:   var(--text-sec);
 
 $error: $red;
 $body-background: $secondary;

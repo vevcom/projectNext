@@ -59,18 +59,21 @@
             justify-content: center;
             text-decoration: none;
             color: ohma.$colors-white;
-            transition: color .6s;
+            * {
+                transition: 300ms; // TODO Add transition variable
+            }
+            @include ohma.boxShadow('');
             svg {
                 width: 20px;
                 height: 20px;
                 color: ohma.$colors-white;
-                transition: color .6s;
                 margin: .3em;
             }
             &:hover {
-                color: ohma.$colors-black;
+                @include ohma.boxShadow('hover');
+                color: ohma.$colors-primary;
                 svg {
-                    color: ohma.$colors-black;
+                    color: ohma.$colors-primary;
                 }
             }
         }

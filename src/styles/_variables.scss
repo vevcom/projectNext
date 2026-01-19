@@ -1,10 +1,14 @@
+.html {
+    --rounding: 12px;
+}
+
 $gap: 8px;
 
 $mobileBreakpoint: 800px;
 
-$rounding: 12px;
-$cardRounding: 3 * $rounding;
-$cardPadding: 3 * $rounding;
+$rounding: var(--rounding);
+$cardRounding: calc(3 * $rounding);
+$cardPadding: calc(3 * $rounding);
 
 $transitionTime: 0.3s;
 
