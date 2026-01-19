@@ -11,7 +11,7 @@ import { RelationshipStatus } from '@/prisma-generated-pn-types'
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { v4 as uuid } from 'uuid'
-import React from 'react'
+import React, { ReactNode } from 'react'
 
 export type PropTypes = {
     params: Promise<{
@@ -65,6 +65,22 @@ export default async function User({ params }: PropTypes) {
     // Not ideal to use typecast here, but this is the simplest way.
     const borderColour = { '--border-colour': relationshipColour[profile.user.relationshipStatus] } as React.CSSProperties
 
+    function memberhipTitle(): string {
+        switch (omegaMembership?.group.omegaMembershipGroup?.omegaMembershipLevel) {
+            case 'SOELLE':
+                return 'Soelle Noviice (avsky!)'
+            case 'MEMBER':
+                return `
+                    ${sexConfig[profile.user.sex ?? 'OTHER'].title}
+                    uudaf ${omegaMembership.order}´dis orden i Sanctus Omega Broderskab
+                `
+            case 'EXTERNAL':
+                return 'Ekstern'
+            default:
+        }
+        return 'Kunne ikke finne tittel'
+    }
+
     return (
         <div className={styles.wrapper}>
             <div className={styles.profile}>
@@ -98,8 +114,7 @@ export default async function User({ params }: PropTypes) {
                         </div>
                         <hr />
                         <p className={styles.orderText}>
-                            {sexConfig[profile.user.sex ?? 'OTHER'].title
-                            } uudaf {omegaMembership.order}´dis orden i Sanctus Omega Broderskab
+                            { memberhipTitle() }
                         </p>
                     </div>
                     <div className={styles.leftSection}>

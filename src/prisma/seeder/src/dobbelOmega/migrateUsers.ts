@@ -200,8 +200,8 @@ export class UserMigrator {
         }
 
         const userData = {
-            username: user.username,
-            email: user.email ?? `dobbel@omega.${user.id}.no`,
+            username: user.username.toLowerCase(),
+            email: user.email ? user.email.toLowerCase() : `dobbel-${user.id}@omega.ntnu.no`,
             firstname: user.firstname,
             lastname: user.lastname,
             bio: user.bio ?? '',
