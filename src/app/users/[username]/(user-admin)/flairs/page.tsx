@@ -83,7 +83,7 @@ export default function Flair({ params }: PropTypes) {
                 {flairs.map((data, index) => (
                     <div
                         className={styles.imageContainer}
-                        onClick={e => (changeAssignmentHandler(userId, data.flairId, setUpdate, update))}
+                        onClick={() => (changeAssignmentHandler(userId, data.flairId, setUpdate, update))}
                         key={index}
                     >
                         {ownedFlairs.includes(data.flairId)
