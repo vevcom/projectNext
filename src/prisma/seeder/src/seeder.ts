@@ -34,9 +34,10 @@ export default async function seed(
 ) {
     const enableLogging = logging === undefined ? true : logging
     const prisma = new PrismaClient({
-        adapter: new PrismaPg({
-            connectionString: process.env.DB_URI,
-        })
+        adapter: new PrismaPg(
+            { connectionString: process.env.DB_URI },
+            { schema: process.env.DB_SCHEMA },
+        )
     })
 
     if (enableLogging) console.log('seeding standard data....')

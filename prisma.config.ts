@@ -7,7 +7,7 @@ export default defineConfig({
         url: process.env.DB_URI,
     },
     migrations: {
-        path: '', //TODO
+        path: '', // TODO: Add migrations before production.
         seed: 'npx tsx src/prisma/seeder/seed.ts',
     }
 })

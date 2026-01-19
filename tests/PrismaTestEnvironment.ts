@@ -40,11 +40,12 @@ export default class PrismaTestEnvironment extends NodeEnvironment {
         this.schema = `test-${v4()}`
         this.dbUrl = generateDatabaseURL(this.schema)
         this.global.process.env.DB_URI = this.dbUrl
+        this.global.process.env.DB_SCHEMA = this.schema
     }
 
     async setup() {
         // Run migrations to create tables and columns in the new schema.
-        execSync('npx prisma db push', { env: this.global.process.env })
+        execSync(`npx prisma db push --url ${this.dbUrl}`, { env: this.global.process.env })
 
         return super.setup()
     }
@@ -52,10 +53,12 @@ export default class PrismaTestEnvironment extends NodeEnvironment {
     async teardown() {
         // Delete the schema and all its tables after tests have run.
         const prisma = new PrismaClient({
-            adapter: new PrismaPg({
-                connectionString: this.dbUrl,
-            })
+            adapter: new PrismaPg(
+                { connectionString: this.dbUrl },
+                { schema: this.schema },
+            )
         })
+
         await prisma.$executeRawUnsafe(`DROP SCHEMA "${this.schema}" CASCADE`)
         await prisma.$disconnect()
     }
