@@ -1,6 +1,7 @@
 generator veven {
   provider = "prisma-client"
-  output   = "../generated/ow-prisma"
+  // Generate outside of src folder.
+  output   = "../../../generated/ow-prisma"
 }
 
 datasource db {

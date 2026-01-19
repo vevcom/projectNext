@@ -547,8 +547,7 @@ const eslintConfig = defineConfig([
         'next-env.d.ts',
         'pncli/**',
         'docs/**',
-        'src/prisma/generated/**',
-        'src/prisma/generated/**',
+        'generated/**',
     ]),
 ])
 

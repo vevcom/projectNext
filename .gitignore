@@ -13,7 +13,7 @@ pncli-config.json
 .pnp.js
 
 # generated prisma client(s)
-/src/prisma/generated
+/generated
 
 # testing
 /coverage

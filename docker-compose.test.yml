@@ -9,7 +9,6 @@ services:
         volumes:
             - ${PROJECT_ROOT:-.}/src:/usr/src/app/src
             - ${PROJECT_ROOT:-.}/tests:/usr/src/app/tests
-            - /usr/src/app/src/prisma/generated # Exclude prisma generated files from volume
     
     db:
         extends:

@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -11,7 +15,7 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "incremental": true,
     "plugins": [
       {
@@ -20,32 +24,85 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@/lib/*": ["src/lib/*"],
-      "@pn-server-only": ["src/lib/pn-server-only"],
-      "@/components/*": ["src/app/_components/*"],
-      "@/UI/*": ["src/app/_components/UI/*"],
-      "@/styles/*": ["src/styles/*"],
-
-      "@/prisma/*": ["src/prisma/*"],
-      "@/prisma-generated-pn/*": ["src/prisma/generated/pn-prisma/*"],
-      "@/prisma-generated-pn-client": ["src/prisma/generated/pn-prisma/client.ts"],
-      "@/prisma-generated-pn-types": ["src/prisma/generated/pn-prisma/browser.ts"],
-      "@/prisma-pn-client-instance": ["src/prisma/client.ts"],
-      "@/prisma-generated-ow-basic/*": ["src/prisma/generated/ow-prisma/*"],
-
-      "@/contexts/*": ["src/contexts/*"],
-      "@/hooks/*": ["src/hooks/*"],
-      "@/cms/*": ["src/app/_components/Cms/*", "src/services/cms/*"],
-      "@/services/*": ["src/services/*"],
-      "@/utils/*": ["src/utils/*"],
-      "@/jwt/*": ["src/lib/jwt/*"],
-      "@/api/*": ["src/app/api/*"],
-      "@/education/*": ["src/services/education/*", "src/app/education/*"],
-      "@/career/*": ["src/services/career/*", "src/app/career/*"],
-      "@/seeder/*": ["src/prisma/seeder/*"],
-      "@/*": ["./src/*"]
+      "@/lib/*": [
+        "src/lib/*"
+      ],
+      "@pn-server-only": [
+        "src/lib/pn-server-only"
+      ],
+      "@/components/*": [
+        "src/app/_components/*"
+      ],
+      "@/UI/*": [
+        "src/app/_components/UI/*"
+      ],
+      "@/styles/*": [
+        "src/styles/*"
+      ],
+      "@/prisma/*": [
+        "src/prisma/*"
+      ],
+      "@/prisma-generated-pn/*": [
+        "generated/pn-prisma/*"
+      ],
+      "@/prisma-generated-pn-client": [
+        "generated/pn-prisma/client.ts"
+      ],
+      "@/prisma-generated-pn-types": [
+        "generated/pn-prisma/browser.ts"
+      ],
+      "@/prisma-pn-client-instance": [
+        "src/prisma/client.ts"
+      ],
+      "@/prisma-generated-ow-basic/*": [
+        "generated/ow-prisma/*"
+      ],
+      "@/contexts/*": [
+        "src/contexts/*"
+      ],
+      "@/hooks/*": [
+        "src/hooks/*"
+      ],
+      "@/cms/*": [
+        "src/app/_components/Cms/*",
+        "src/services/cms/*"
+      ],
+      "@/services/*": [
+        "src/services/*"
+      ],
+      "@/utils/*": [
+        "src/utils/*"
+      ],
+      "@/jwt/*": [
+        "src/lib/jwt/*"
+      ],
+      "@/api/*": [
+        "src/app/api/*"
+      ],
+      "@/education/*": [
+        "src/services/education/*",
+        "src/app/education/*"
+      ],
+      "@/career/*": [
+        "src/services/career/*",
+        "src/app/career/*"
+      ],
+      "@/seeder/*": [
+        "src/prisma/seeder/*"
+      ],
+      "@/*": [
+        "./src/*"
+      ]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
