@@ -1,0 +1,26 @@
+@use '@/styles/ohma';
+
+.navBarContainer {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top:100px;
+    left: 10px;
+    width: max((100% - min(100%, 900px)) / 2 - 20px + 2em, 0px);
+    background-color: ohma.$colors-layer;
+    padding: 16px calc(16px - ohma.$gap);
+    border-radius: ohma.$rounding;
+}
+
+@media (max-width: ohma.$mobileBreakpoint) {
+    .navBarContainer {
+        
+        background-color: ohma.$colors-black;
+        width: calc(100vw - 2 * ohma.$gap);
+        left: ohma.$gap;
+        top: calc(100dvh - 2 * ohma.$nav-height - ohma.$gap);
+        flex-direction: row;
+        z-index: 3;
+        height: ohma.$nav-height;
+    }
+}
