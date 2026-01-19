@@ -18,20 +18,13 @@ export type PropTypes = {
     showButtonClass?: string,
     showButtonStyle?: CSSProperties,
     storeInUrl?: boolean,
-} & (
     // The prop `PopUpKey` should actually be `popUpKey`.
     // For backwards compatibility, we support both for now.
     // TODO: Fully remove PopUpKey.
-    {
-        /** @deprecated Use `popUpKey` instead. */
-        PopUpKey: PopUpKeyType,
-        popUpKey?: never
-    } | {
-        popUpKey: PopUpKeyType,
-        /** @deprecated Use `popUpKey` instead. */
-        PopUpKey?: never
-    }
-)
+    /** @deprecated Use `popUpKey` instead. */
+    PopUpKey?: PopUpKeyType,
+    popUpKey?: PopUpKeyType
+}
 
 export default function PopUp({
     PopUpKey,
