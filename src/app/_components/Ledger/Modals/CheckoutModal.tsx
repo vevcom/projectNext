@@ -6,7 +6,7 @@ import Button from '@/components/UI/Button'
 import { createActionError } from '@/services/actionError'
 import React, { useState, lazy, useRef } from 'react'
 import type { ExpandedLedgerTransaction } from '@/services/ledger/transactions/types'
-import type { PaymentProvider } from '@prisma/client'
+import type { PaymentProvider } from '@/prisma-generated-pn-types'
 import type { StripePaymentRef } from '@/components/Stripe/StripePayment'
 import type { ActionReturn } from '@/services/actionTypes'
 
@@ -101,7 +101,7 @@ export default function CheckoutModal({
 
     return (
         <PopUp
-            PopUpKey={title}
+            popUpKey={title}
             showButtonContent={title}
             customShowButton={(open) => <Button onClick={open} color="primary">{title}</Button>}
         >

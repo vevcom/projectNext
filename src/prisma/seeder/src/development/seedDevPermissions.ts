@@ -1,6 +1,6 @@
 import { COMMITTEE_PERMISSIONS } from '@/seeder/src/seedPermissions'
-import { Permission } from '@prisma/client'
-import type { PrismaClient } from '@prisma/client'
+import { Permission } from '@/prisma-generated-pn-types'
+import type { PrismaClient } from '@/prisma-generated-pn-client'
 
 export default async function seedDevPermissions(prisma: PrismaClient) {
     const allPermissions = Object.values(Permission).map(permission => ({ permission }))

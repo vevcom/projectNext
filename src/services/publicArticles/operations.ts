@@ -3,7 +3,7 @@ import { publicArticleAuth } from './auth'
 import { articleOperations } from '@/services/cms/articles/operations'
 import { implementUpdateArticleOperations } from '@/cms/articles/implement'
 import { z } from 'zod'
-import type { SpecialCmsArticle } from '@prisma/client'
+import type { SpecialCmsArticle } from '@/prisma-generated-pn-types'
 
 const publicSpecialArticles: SpecialCmsArticle[] = [
     'NEW_STUDENT_PAGE', 'REPORT_PAGE'

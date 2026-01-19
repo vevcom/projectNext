@@ -1,5 +1,5 @@
-ARG NODE_VERSION="22.14"
-ARG ALPINE_VERSION="3.20"
+ARG NODE_VERSION="24.12"
+ARG ALPINE_VERSION="3.23"
 
 FROM node:${NODE_VERSION}-alpine${ALPINE_VERSION} AS base
 WORKDIR /usr/src/app
@@ -17,9 +17,10 @@ RUN npm ci
 # Generate prisma client
 RUN mkdir -p src/prisma
 COPY src/prisma/schema src/prisma/schema
+COPY prisma.config.ts .
 RUN npx prisma generate
 
-COPY src/prisma/vevenSchema src/prisma/vevenSchema
+COPY src/prisma/owSchema src/prisma/owSchema
 RUN npm run dobbelOmega:generate
 
 RUN mkdir -p usr/src/app/store/images
@@ -27,7 +28,7 @@ RUN mkdir -p usr/src/app/store/images
 # Copy remaining files except src
 # (src is binded in dev so there is no need to copy it here)
 COPY public public
-COPY next-env.d.t[s] next.config.mjs tsconfig.json ./
+COPY next-env.d.t[s] next.config.ts tsconfig.json ./
 
 ############################################################
 FROM base AS prod

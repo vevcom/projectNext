@@ -1,5 +1,5 @@
 import { prismaCall } from '@/services/prismaCall'
-import { prisma } from '@/prisma/client'
+import { prisma } from '@/prisma-pn-client-instance'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import type { ExpandedManualGroup } from './types'
 

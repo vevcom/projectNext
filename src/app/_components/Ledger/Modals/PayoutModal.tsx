@@ -21,7 +21,7 @@ export default function PayoutModal({ ledgerAccountId, defaultFunds = 0, default
     const [fees, setFees] = useState(defaultFees)
 
     return <PopUp
-        PopUpKey="payoutModal"
+        popUpKey="payoutModal"
         customShowButton={(open) => <Button onClick={open} color="primary">Registrer utbetaling</Button>}
     >
         <h2>Ny utbetaling</h2>

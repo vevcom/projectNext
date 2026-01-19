@@ -6,10 +6,10 @@ import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { ServerError } from '@/services/error'
 import { defineOperation } from '@/services/serviceOperation'
 import { RequireNothing } from '@/auth/authorizer/RequireNothing'
-import { LedgerTransactionPurpose } from '@prisma/client'
 import { z } from 'zod'
 import type { ExpandedLedgerTransaction } from './types'
-import type { Prisma } from '@prisma/client'
+import type { Prisma } from '@/prisma-generated-pn-types'
+import { LedgerTransactionPurpose } from '@/prisma-generated-pn-types'
 
 export const ledgerTransactionOperations = {
     /**

@@ -1,12 +1,12 @@
 import '@pn-server-only'
-import { prisma } from '@/prisma/client'
+import { prisma } from '@/prisma-pn-client-instance'
 import logger from '@/lib/logger'
 import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { imageOperations } from '@/services/images/operations'
 import { visibilityOperations } from '@/services/visibility/operations'
-import type { SpecialCollection, ImageCollection, Image } from '@prisma/client'
+import type { SpecialCollection, ImageCollection, Image } from '@/prisma-generated-pn-types'
 import type {
     ExpandedImageCollection,
     ImageCollectionCursor,

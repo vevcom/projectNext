@@ -1,7 +1,7 @@
 import styles from './CommitteeCard.module.scss'
 import Image from '@/components/Image/Image'
 import Link from 'next/link'
-import type { Image as ImageT } from '@prisma/client'
+import type { Image as ImageT } from '@/prisma-generated-pn-types'
 import type { ReactNode } from 'react'
 
 type PropTypes = {

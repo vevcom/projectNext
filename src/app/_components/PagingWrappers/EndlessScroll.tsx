@@ -7,7 +7,8 @@ import React, {
     useMemo,
     useCallback,
     useState,
-    useRef
+    useRef,
+    useEffectEvent
 } from 'react'
 import { useInView } from 'react-intersection-observer'
 import type { PagingContext } from '@/contexts/paging/PagingGenerator'
@@ -35,7 +36,7 @@ export default function EndlessScroll<Data, Cursor, const PageSize extends numbe
         if (context.state.allLoaded) return
         if (!inView) return
         await context.loadMore()
-    }, [context.state.allLoaded, inView, context.loadMore])
+    }, [context, inView])
 
     useEffect(() => {
         loadMore()
@@ -45,13 +46,13 @@ export default function EndlessScroll<Data, Cursor, const PageSize extends numbe
     const renderedPageData = useMemo(() => context.state.data.map((dataEntry, i) => {
         if (i < context.startPage.pageSize * context.startPage.page) return null
         return renderer(dataEntry, i)
-    }), [context.state.data, renderer, context.state.allLoaded])
+    }), [context, renderer])
 
     // Do not show button right away if allLoaded is true, it can cause flicker
     const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
     const [showButton, setShowButton] = useState(false)
 
-    useEffect(() => {
+    const updateShowButton = useEffectEvent(() => {
         if (!context.state.allLoaded) {
             timerRef.current = setTimeout(() => {
                 setShowButton(true)
@@ -59,6 +60,10 @@ export default function EndlessScroll<Data, Cursor, const PageSize extends numbe
         } else {
             setShowButton(false)
         }
+    })
+
+    useEffect(() => {
+        updateShowButton()
         return () => {
             if (timerRef.current) clearTimeout(timerRef.current)
         }

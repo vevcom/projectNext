@@ -1,4 +1,4 @@
-import type { User } from '@prisma/client'
+import type { User } from '@/prisma-generated-pn-types'
 
 
 // TODO: Fix flairs / badges

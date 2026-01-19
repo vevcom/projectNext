@@ -16,7 +16,7 @@ export default async function Shops() {
     return <PageWrapper
         title="Butikker"
         headerItem={
-            <AddHeaderItemPopUp PopUpKey="createShopForm">
+            <AddHeaderItemPopUp popUpKey="createShopForm">
                 <ShopForm />
             </AddHeaderItemPopUp>
         }

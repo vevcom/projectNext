@@ -1,6 +1,6 @@
 import { ServerError, Smorekopp } from './error'
 import logger from '@/lib/logger'
-import { Prisma } from '@prisma/client'
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/client'
 import type { ServerErrorCode } from './error'
 
 const errorMessagesMap: { [key: string]: [ServerErrorCode, string] } = {
@@ -27,7 +27,7 @@ export async function prismaCall<T>(call: () => T | Promise<T>): Promise<T> {
 
         console.error(error)
 
-        if (!(error instanceof Prisma.PrismaClientKnownRequestError)) {
+        if (!(error instanceof PrismaClientKnownRequestError)) {
             logger.error('Unknown error:', error)
             throw new ServerError('UNKNOWN ERROR', 'unknown error')
         }

@@ -1,7 +1,7 @@
 import '@pn-server-only'
 import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
-import { prisma } from '@/prisma/client'
+import { prisma } from '@/prisma-pn-client-instance'
 
 export async function destroySchool(id: number): Promise<void> {
     const school = await prismaCall(() => prisma.school.findUniqueOrThrow({

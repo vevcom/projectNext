@@ -14,7 +14,8 @@ import remarkRehype from 'remark-rehype'
 import { dirname, join } from 'path'
 import { readFile } from 'fs/promises'
 import { fileURLToPath } from 'url'
-import type { PrismaClient, SpecialCmsArticle, SpecialCmsImage, SpecialCmsParagraph } from '@prisma/client'
+import type { PrismaClient } from '@/prisma-generated-pn-client'
+import type { SpecialCmsImage, SpecialCmsParagraph, SpecialCmsArticle } from '@/prisma-generated-pn-types'
 import type {
     SeedCmsImage,
     SeedCmsParagraph,

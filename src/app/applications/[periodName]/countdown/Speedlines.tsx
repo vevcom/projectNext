@@ -1,17 +1,20 @@
 import styles from './Speedlines.module.scss'
 import type { CSSProperties } from 'react'
 
-export default function Speedlines() {
-    const lines = Array.from({ length: 80 })
+const generateLines = () =>
+    Array.from({ length: 80 }).map(() => ({
+        randomRotate: Math.random() * 360,
+        randomDelay: Math.random() * 2,
+        randomLength: Math.random() * 100 - 50,
+    }))
 
+const lines = generateLines()
+
+export default function Speedlines() {
     return (
         <div className={styles.container}>
-            {lines.map((_, index) => {
-                const randomRotate = Math.random() * 360 // Random rotation between 0 and 360 degrees
-                const randomDelay = Math.random() * 2 // Random delay between 0 and 2 seconds
-                const randomLength = Math.random() * 100 - 50 // Random length between -50 and 50
-
-                return (
+            {lines.map(({ randomRotate, randomDelay, randomLength }, index) =>
+                (
                     <svg
                         key={index}
                         className={styles.speedline}
@@ -24,7 +27,7 @@ export default function Speedlines() {
                         <line x1="50" y1="50" x2="50" y2={randomLength} />
                     </svg>
                 )
-            })}
+            )}
         </div>
     )
 }

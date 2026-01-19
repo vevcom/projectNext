@@ -6,8 +6,8 @@ import { PopUpContext } from '@/contexts/PopUp'
 import useClickOutsideRef from '@/hooks/useClickOutsideRef'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
-import { useContext, useEffect, useState, useRef, useCallback } from 'react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { useContext, useEffect, useState, useRef, useCallback, useEffectEvent } from 'react'
 import type { ReactNode, CSSProperties } from 'react'
 import type { PopUpKeyType } from '@/contexts/PopUp'
 
@@ -18,16 +18,10 @@ export type PropTypes = {
     showButtonClass?: string,
     showButtonStyle?: CSSProperties,
     storeInUrl?: boolean,
-    // The prop `PopUpKey` should actually be `popUpKey`.
-    // For backwards compatibility, we support both for now.
-    // TODO: Fully remove PopUpKey.
-    /** @deprecated Use `popUpKey` instead. */
-    PopUpKey?: PopUpKeyType,
-    popUpKey?: PopUpKeyType
+    popUpKey: PopUpKeyType
 }
 
 export default function PopUp({
-    PopUpKey,
     popUpKey,
     children,
     customShowButton,
@@ -41,14 +35,6 @@ export default function PopUp({
     const pathName = usePathname()
     const [isOpen, setIsOpen] = useState(false)
 
-    const effectivePopUpKey = popUpKey ?? PopUpKey
-
-    // This should never happen due to static type checks, but
-    // TypeScript isn't smart enough to see that in this case.
-    if (!effectivePopUpKey) {
-        throw new Error('The popUpKey prop is required for the PopUp component')
-    }
-
     const popUpContext = useContext(PopUpContext)
     useKeyPress('Escape', () => setIsOpen(false))
     const ref = useClickOutsideRef(() => setIsOpen(false))
@@ -56,19 +42,29 @@ export default function PopUp({
 
     if (!popUpContext) throw new Error('Pop up context needed for popups')
 
-    useEffect(() => {
+    const { teleport, remove, keyOfCurrentNode } = popUpContext
+
+    const handleTeleportOrRemove = useEffectEvent(() => {
         if (isOpen) {
-            popUpContext.teleport(contentRef.current, effectivePopUpKey)
+            teleport(contentRef.current, popUpKey)
         } else {
-            popUpContext.remove(effectivePopUpKey)
+            remove(popUpKey)
         }
-    }, [isOpen])
+    })
 
     useEffect(() => {
-        if (popUpContext.keyOfCurrentNode !== effectivePopUpKey) {
+        handleTeleportOrRemove()
+    }, [isOpen, popUpKey])
+
+    const handleCloseIfNotCurrent = useEffectEvent(() => {
+        if (popUpContext.keyOfCurrentNode !== popUpKey) {
             setIsOpen(false)
         }
-    }, [popUpContext.keyOfCurrentNode])
+    })
+
+    useEffect(() => {
+        handleCloseIfNotCurrent()
+    }, [keyOfCurrentNode, popUpKey])
 
     useEffect(() => {
         contentRef.current = (
@@ -86,31 +82,31 @@ export default function PopUp({
             </div>
         )
         if (isOpen) {
-            popUpContext.teleport(contentRef.current, effectivePopUpKey)
+            teleport(contentRef.current, popUpKey)
         }
-    }, [children])
+    }, [children, isOpen, popUpKey, teleport, ref])
 
     useEffect(() => {
         if (!storeInUrl) return
 
         const params = new URLSearchParams(searchParams.toString())
-        const keyInUrl = params.get('pop-up-key') === effectivePopUpKey
+        const keyInUrl = params.get('pop-up-key') === popUpKey
 
         if (keyInUrl && !isOpen) {
             setIsOpen(true)
         }
-    }, [storeInUrl, isOpen, searchParams, effectivePopUpKey])
+    }, [storeInUrl, isOpen, searchParams, popUpKey])
 
     useEffect(() => {
         if (!storeInUrl) return
 
         const params = new URLSearchParams(searchParams.toString())
-        const keyInUrl = params.get('pop-up-key') === effectivePopUpKey
+        const keyInUrl = params.get('pop-up-key') === popUpKey
 
         if (isOpen) {
             // Set the pop-up key in the URL to indicate that this pop-up is open.
             // There should only be one pop-up open at a time, so we can just set it directly.
-            params.set('pop-up-key', String(effectivePopUpKey))
+            params.set('pop-up-key', String(popUpKey))
         } else if (keyInUrl) {
             // We check if the key is our key to avoid removing another pop-up's key.
             params.delete('pop-up-key')
@@ -122,7 +118,7 @@ export default function PopUp({
         if (newUrl !== oldUrl) {
             router.replace(`${pathName}?${params.toString()}`)
         }
-    }, [storeInUrl, pathName, searchParams, isOpen, effectivePopUpKey])
+    }, [storeInUrl, pathName, searchParams, isOpen, popUpKey])
 
     const handleOpening = useCallback(() => {
         setIsOpen(true)

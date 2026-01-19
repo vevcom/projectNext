@@ -10,7 +10,7 @@ import useEditMode from '@/hooks/useEditMode'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
-import type { CmsParagraph } from '@prisma/client'
+import type { CmsParagraph } from '@/prisma-generated-pn-types'
 import type { UpdateCmsParagraphAction } from '@/cms/paragraphs/types'
 import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
 
@@ -44,7 +44,7 @@ export default function CmsParagraphEditor({ cmsParagraph, editorClassName, upda
     if (!editable) return null
     return (
         <PopUp
-            PopUpKey={cmsParagraph.id}
+            popUpKey={cmsParagraph.id}
             showButtonClass={styles.openBtn}
             showButtonContent={
                 <EditOverlay />

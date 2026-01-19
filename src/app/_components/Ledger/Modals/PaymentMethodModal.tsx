@@ -41,7 +41,7 @@ export default function PaymentMethodModal({ userId }: PropTypes) {
 
     return (
         <PopUp
-            PopUpKey="PaymentMethodModal"
+            popUpKey="PaymentMethodModal"
             customShowButton={(open) => <Button onClick={open}>Legg til bankkort</Button>}
         >
             <h3>Legg til bankkort</h3>

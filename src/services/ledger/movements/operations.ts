@@ -3,7 +3,7 @@ import { paymentOperations } from '@/services/ledger/payments/operations'
 import { defineOperation } from '@/services/serviceOperation'
 import { RequireNothing } from '@/auth/authorizer/RequireNothing'
 import { z } from 'zod'
-import { PaymentProvider } from '@prisma/client'
+import { PaymentProvider } from '@/prisma-generated-pn-types'
 
 // `ledgerMovementOperations` provides functions to orchestrate account related actions,
 // such as depositing funds or creating payouts. If the ledger is needed for

@@ -5,8 +5,8 @@ import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { defineOperation } from '@/services/serviceOperation'
 import { RequireNothing } from '@/auth/authorizer/RequireNothing'
 import { z } from 'zod'
-import { LedgerAccountType } from '@prisma/client'
-import type { LedgerAccount } from '@prisma/client'
+import type { LedgerAccount } from '@/prisma-generated-pn-types'
+import { LedgerAccountType } from '@/prisma-generated-pn-types'
 import type { Balance, BalanceRecord } from './types'
 
 export const ledgerAccountOperations = {

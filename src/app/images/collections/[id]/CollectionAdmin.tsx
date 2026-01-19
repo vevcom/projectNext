@@ -46,7 +46,7 @@ export default function CollectionAdmin({ collection, visibilityAdmin, visibilit
     return (
         <>
             <div className={styles.CollectionAdmin}>
-                <PopUp PopUpKey="UploadImages" showButtonClass={styles.adminOption} showButtonContent={
+                <PopUp popUpKey="UploadImages" showButtonClass={styles.adminOption} showButtonContent={
                     <FontAwesomeIcon icon={faUpload} />
                 }>
                     <div className={styles.upload}>
@@ -77,7 +77,7 @@ export default function CollectionAdmin({ collection, visibilityAdmin, visibilit
                         }
                     </div>
                 </PopUp>
-                <PopUp PopUpKey="Edit" showButtonClass={styles.adminOption} showButtonContent={
+                <PopUp popUpKey="Edit" showButtonClass={styles.adminOption} showButtonContent={
                     <FontAwesomeIcon icon={faCog} />
                 }>
                     <Form
@@ -111,7 +111,7 @@ export default function CollectionAdmin({ collection, visibilityAdmin, visibilit
                         }}
                     />
                 </PopUp>
-                <PopUp PopUpKey="Visibility" showButtonClass={styles.adminOption} showButtonContent={
+                <PopUp popUpKey="Visibility" showButtonClass={styles.adminOption} showButtonContent={
                     <FontAwesomeIcon icon={faEye} />
                 }>
                     <div className={styles.visibility}>

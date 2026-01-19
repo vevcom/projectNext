@@ -8,7 +8,7 @@ import { createStripeCustomerSessionAction } from '@/services/stripeCustomers/ac
 import { ServerSession } from '@/auth/session/ServerSession'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faWarning } from '@fortawesome/free-solid-svg-icons'
-import type { LedgerAccount } from '@prisma/client'
+import type { LedgerAccount } from '@/prisma-generated-pn-types'
 
 type Props = {
     ledgerAccount: LedgerAccount,

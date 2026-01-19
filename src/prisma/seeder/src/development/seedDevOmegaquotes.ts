@@ -1,4 +1,4 @@
-import type { PrismaClient } from '@prisma/client'
+import type { PrismaClient } from '@/prisma-generated-pn-client'
 
 export default async function seedDevOmegaquotes(prisma: PrismaClient) {
     const user = await prisma.user.findFirst()

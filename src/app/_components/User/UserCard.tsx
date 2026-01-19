@@ -2,7 +2,7 @@ import UserDisplayName from './UserDisplayName'
 import styles from './UserCard.module.scss'
 import ProfilePicture from './ProfilePicture'
 import Link from 'next/link'
-import type { Image } from '@prisma/client'
+import type { Image } from '@/prisma-generated-pn-types'
 import type { UserFiltered } from '@/services/users/types'
 
 // TODO: Make nice and add picture

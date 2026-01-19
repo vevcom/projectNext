@@ -7,7 +7,7 @@ import type {
     ManualGroup,
     OmegaMembershipGroup,
     StudyProgramme
-} from '@prisma/client'
+} from '@/prisma-generated-pn-types'
 
 type PartialNullable<T> = {
     [P in keyof T]?: T[P] | null;

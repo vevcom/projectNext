@@ -10,10 +10,10 @@
 // }))
 
 import { Smorekopp } from '@/services/error'
-import { PaymentMethods } from '@/services/ledger/payments/operations'
+import { paymentOperations } from '@/services/ledger/payments/operations'
 import { stripeWebhookCallback } from '@/services/ledger/payments/stripeWebhookCallback'
 import { prisma } from '@/prisma/client'
-import { PaymentProvider } from '@prisma/client'
+import { PaymentProvider } from '@/prisma-generated-pn-types'
 import { describe, test, expect, beforeEach, beforeAll } from '@jest/globals'
 import type Stripe from 'stripe'
 
@@ -38,7 +38,7 @@ describe.skip('payments', () => {
     })
 
     test.each([PaymentProvider.MANUAL, PaymentProvider.STRIPE])('payment flow', async (provider) => {
-        let payment = await PaymentMethods.create({
+        let payment = await paymentOperations.create({
             params: {
                 ...TEST_PAYMENT_DEFAULTS,
                 provider,
@@ -46,7 +46,7 @@ describe.skip('payments', () => {
         })
 
         if (payment.state === 'PENDING') {
-            payment = await PaymentMethods.initiate({
+            payment = await paymentOperations.initiate({
                 params: {
                     paymentId: payment.id,
                 },
@@ -73,7 +73,7 @@ describe.skip('payments', () => {
     })
 
     test('initiate manual payment', async () => {
-        const payment = await PaymentMethods.create({
+        const payment = await paymentOperations.create({
             params: {
                 ledgerAccountId: 0,
                 amount: 100, // 1 kr
@@ -83,7 +83,7 @@ describe.skip('payments', () => {
             },
         })
 
-        expect(PaymentMethods.initiate({ params: { paymentId: payment.id } }))
+        expect(paymentOperations.initiate({ params: { paymentId: payment.id } }))
             .rejects.toThrow(new Smorekopp('BAD DATA'))
     })
 })

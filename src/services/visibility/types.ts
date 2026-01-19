@@ -1,4 +1,4 @@
-import type { VisibilityRequirementGroupType } from '@prisma/client'
+import type { VisibilityRequirementGroupType } from '@/prisma-generated-pn-types'
 
 export type VisibilityCondition = {
     type: Extract<VisibilityRequirementGroupType, 'ORDER'>

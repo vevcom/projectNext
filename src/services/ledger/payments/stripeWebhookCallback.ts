@@ -2,7 +2,7 @@ import logger from '@/lib/logger'
 import { stripe } from '@/lib/stripe'
 import { prisma } from '@/prisma/client'
 import type Stripe from 'stripe'
-import type { PaymentState } from '@prisma/client'
+import type { PaymentState } from '@/prisma-generated-pn-types'
 
 /**
  * Utility function which extracts the `latest_charge.balance_transaction` object

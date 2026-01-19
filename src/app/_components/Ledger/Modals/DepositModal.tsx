@@ -12,7 +12,7 @@ import Checkbox from '@/components/UI/Checkbox'
 import TextInput from '@/components/UI/TextInput'
 import { createDepositAction } from '@/services/ledger/movements/actions'
 import { lazy, useRef, useState } from 'react'
-import type { PaymentProvider } from '@prisma/client'
+import type { PaymentProvider } from '@/prisma-generated-pn-types'
 import type { ExpandedPayment } from '@/services/ledger/payments/types'
 import type { StripePaymentRef } from '@/components/Stripe/StripePayment'
 
@@ -85,7 +85,7 @@ export default function DepositModal({ ledgerAccountId, customerSessionClientSec
     }
 
     return <PopUp
-        PopUpKey={'depositModal'}
+        popUpKey={'depositModal'}
         customShowButton={(open) => <Button onClick={open} color="primary">Sett inn</Button>}
     >
         <div className={styles.checkoutFormContainer}>

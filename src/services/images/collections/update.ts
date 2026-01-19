@@ -1,8 +1,8 @@
 import '@pn-server-only'
 import { updateImageCollectionValidation } from './validation'
-import { prisma } from '@/prisma/client'
+import { prisma } from '@/prisma-pn-client-instance'
 import { prismaCall } from '@/services/prismaCall'
-import type { ImageCollection } from '@prisma/client'
+import type { ImageCollection } from '@/prisma-generated-pn-types'
 import type { UpdateImageCollectionTypes } from './validation'
 
 /**

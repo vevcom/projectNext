@@ -1,6 +1,6 @@
 import { Zpn } from '@/lib/fields/zpn'
+import { EventCanView } from '@/prisma-generated-pn-types'
 import { z } from 'zod'
-import { EventCanView } from '@prisma/client'
 
 const baseSchema = z.object({
     name: z.string().min(5, 'Navnet må være minst 5 tegn').max(70, 'Navnet må være maks 70 tegn'),

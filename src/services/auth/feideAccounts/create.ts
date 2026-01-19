@@ -1,7 +1,7 @@
 import '@pn-server-only'
 import { prismaCall } from '@/services/prismaCall'
-import { prisma } from '@/prisma/client'
-import type { FeideAccount } from '@prisma/client'
+import { prisma } from '@/prisma-pn-client-instance'
+import type { FeideAccount } from '@/prisma-generated-pn-types'
 
 export async function createFeideAccount({
     id,

@@ -1,4 +1,4 @@
-import type { Dot, DotWrapper, User } from '@prisma/client'
+import type { Dot, DotWrapper, User } from '@/prisma-generated-pn-types'
 
 export type DotDetails = {
     userId: number | null,

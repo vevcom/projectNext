@@ -3,7 +3,7 @@
 import Button from '@/components/UI/Button'
 import { updateLedgerAccountAction } from '@/services/ledger/accounts/actions'
 import { useRouter } from 'next/navigation'
-import type { LedgerAccount } from '@prisma/client'
+import type { LedgerAccount } from '@/prisma-generated-pn-types'
 
 export default function LedgerAccountFreezeButton({
     ledgerAccount,

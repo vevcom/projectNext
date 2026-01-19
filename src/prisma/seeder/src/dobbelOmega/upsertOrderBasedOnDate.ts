@@ -1,7 +1,7 @@
-import type { PrismaClient as PrismaClientPn } from '@prisma/client'
+import type { PrismaClient as PrismaClientPn } from '@/prisma-generated-pn-client'
 
 /**
- * Veven did not have the consept of omegaOrder. This function infers the order based on a date and
+ * Omegaweb-basic did not have the consept of omegaOrder. This function infers the order based on a date and
  * also upserts the order into the database.
  * @param date - Date of thing
  */
