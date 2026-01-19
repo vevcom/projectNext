@@ -9,5 +9,5 @@ export default async function Transactions() {
 
     const account = { id: 2 }
 
-    return <TransactionList accountId={account.id}/>
+    return <TransactionList accountId={account.id} showFees/>
 }

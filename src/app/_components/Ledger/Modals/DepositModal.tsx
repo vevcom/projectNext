@@ -67,7 +67,7 @@ export default function DepositModal({ ledgerAccountId, customerSessionClientSec
         }
 
         // Call the server action to create the deposit
-        const createResult = await createDepositAction({ params: { ledgerAccountId, funds, provider: selectedProvider } })
+        const createResult = await createDepositAction({ params: { ledgerAccountId, funds, manualFees, provider: selectedProvider } })
         if (!createResult.success) return createResult
 
         // The returned transaction should have a payment
@@ -90,7 +90,7 @@ export default function DepositModal({ ledgerAccountId, customerSessionClientSec
     >
         <div className={styles.checkoutFormContainer}>
             <h2>Nytt innskudd</h2>
-            <Form action={handleSubmit} submitText="Sett inn">
+            <Form action={handleSubmit} submitText="Sett inn" refreshOnSuccess closePopUpOnSuccess="depositModal">
                 <NumberInput
                     label="Beløp"
                     name="funds"

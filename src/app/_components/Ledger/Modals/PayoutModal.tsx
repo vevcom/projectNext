@@ -30,6 +30,8 @@ export default function PayoutModal({ ledgerAccountId, defaultFunds = 0, default
                 action={configureAction(createPayoutAction, { params: { ledgerAccountId, fees, funds } })}
                 submitText="Registrer utbetaling"
                 buttonClassName={styles.submitButton}
+                refreshOnSuccess
+                closePopUpOnSuccess="payoutModal"
             >
                 <NumberInput
                     label="Beløp"

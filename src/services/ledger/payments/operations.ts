@@ -19,7 +19,7 @@ export const paymentOperations = {
             descriptionLong: z.string().optional(),
             descriptionShort: z.string().optional(),
             provider: z.nativeEnum(PaymentProvider),
-            manualFees: z.number().nonnegative().optional(),
+            manualFees: z.number().optional(),
             bankAccountNumber: z.string().optional(),
         }),
         operation: async ({ prisma, params }) => prisma.payment.create({

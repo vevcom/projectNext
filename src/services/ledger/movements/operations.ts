@@ -25,7 +25,8 @@ export const ledgerMovementOperations = {
         paramsSchema: z.object({
             ledgerAccountId: z.number(),
             provider: z.nativeEnum(PaymentProvider),
-            funds: z.coerce.number().positive(),
+            funds: z.coerce.number().nonnegative(),
+            manualFees: z.coerce.number().nonnegative().default(0),
         }),
         operation: async ({ prisma, params }) => {
             const transaction = await prisma.$transaction(async tx => {
@@ -33,6 +34,7 @@ export const ledgerMovementOperations = {
                     params: {
                         provider: params.provider,
                         funds: params.funds,
+                        manualFees: params.manualFees,
                         descriptionLong: 'Innskudd til veven',
                         descriptionShort: 'Innskudd',
                     },
@@ -86,6 +88,7 @@ export const ledgerMovementOperations = {
                     descriptionLong: 'Utbetaling fra veven',
                     descriptionShort: 'Utbetaling',
                     funds: -params.funds,
+                    manualFees: -params.fees,
                 },
                 prisma: tx,
             })
@@ -96,6 +99,7 @@ export const ledgerMovementOperations = {
                     ledgerEntries: [{
                         ledgerAccountId: params.ledgerAccountId,
                         funds: -params.funds,
+                        fees: -params.fees,
                     }],
                     paymentId: payment.id,
                 },

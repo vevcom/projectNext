@@ -180,6 +180,7 @@ export const ledgerTransactionOperations = {
             purpose: z.nativeEnum(LedgerTransactionPurpose),
             ledgerEntries: z.object({
                 funds: z.number(),
+                fees: z.number().optional(),
                 ledgerAccountId: z.number(),
             }).array(),
             paymentId: z.number().optional(),
@@ -205,7 +206,7 @@ export const ledgerTransactionOperations = {
             const fees = calculateDebitFees(params.ledgerEntries, balances)
             const entries = params.ledgerEntries.map(entry => ({
                 ...entry,
-                fees: fees[entry.ledgerAccountId] ?? null
+                fees: entry.fees ?? fees[entry.ledgerAccountId] ?? null
             }))
 
             const { id } = await prisma.ledgerTransaction.create({

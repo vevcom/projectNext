@@ -4,18 +4,25 @@ import type { ExpandedLedgerTransaction } from '@/services/ledger/transactions/t
 
 type Props = {
     transaction: ExpandedLedgerTransaction,
+    accountId: number,
     showFees?: boolean,
 }
 
-export default function LedgerTransactionRow({ transaction, showFees }: Props) {
-    const totalFunds = transaction.ledgerEntries?.reduce((sum, entry) => sum + entry.funds, 0)
-    const totalFees = transaction.ledgerEntries?.reduce((sum, entry) => sum + (entry.fees ?? 0), 0)
+export default function LedgerTransactionRow({ transaction, accountId, showFees }: Props) {
+    const totalFunds = (
+        transaction.ledgerEntries?.reduce((sum, entry) => sum + Math.abs(entry.funds), 0)
+        + Math.abs(transaction.payment?.funds ?? 0)
+    ) / 2
 
-    return <span key={transaction.id} className={styles.TransactionRow}>
-        <p>{transaction.createdAt.toLocaleString()}</p>
-        <p><b>{displayAmount(totalFunds)}</b></p>
-        {showFees && <p><i>{transaction.ledgerEntries ? displayAmount(totalFees) : '-'}</i></p>}
-        <p>{transaction.purpose}</p>
-        <p>{transaction.state}</p>
-    </span>
+    const fundsChange = transaction.ledgerEntries.find(entry => entry.ledgerAccountId === accountId)?.funds ?? null
+    const feesChange = transaction.ledgerEntries.find(entry => entry.ledgerAccountId === accountId)?.fees ?? null
+    
+    return <tr>
+        <td>{transaction.createdAt.toLocaleString()}</td>
+        <td>{transaction.purpose}</td>
+        <td>{transaction.state}</td>
+        <td><b>{displayAmount(totalFunds)}</b></td>
+        <td><b>{fundsChange !== null ? displayAmount(fundsChange) : '-'}</b></td>
+        {showFees && <td><i>{feesChange !== null ? displayAmount(feesChange) : '-'}</i></td>}
+    </tr>
 }
