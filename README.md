@@ -59,10 +59,14 @@ inside projectnext-container
 
 ## Production
 
-This project is not meant to be deployed, but a build can be made by running
-
+To set up for production run this command. The command will not change the database, therefore some sort of seeding is needed such as dobbelOmega.
 ```bash
-docker compose -f docker-compose.prod.yml up --build
+docker compose -f docker-compose.prod.yml up --build -d
+```
+
+To load data from Omegaweb-basic run dobbelOmega from within a projectnext container using the command below. Keep in mind that the command will delete all the data in the database.
+```bash
+docker compose -f docker-compose.prod.yml exec projectnext npm run dobbelOmega:run
 ```
 
 ## Lint

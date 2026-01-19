@@ -11,7 +11,7 @@ import { RelationshipStatus } from '@/prisma-generated-pn-types'
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { v4 as uuid } from 'uuid'
-import React, { ReactNode } from 'react'
+import React from 'react'
 
 export type PropTypes = {
     params: Promise<{
