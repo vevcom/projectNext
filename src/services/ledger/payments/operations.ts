@@ -22,34 +22,32 @@ export const paymentOperations = {
             manualFees: z.number().nonnegative().optional(),
             bankAccountNumber: z.string().optional(),
         }),
-        operation: async ({ prisma, params }) => {            
-            return prisma.payment.create({
-                data: {
-                    provider: params.provider,
-                    funds: params.funds,
-                    
-                    ...(params.provider === 'STRIPE' && {
-                        create: {},
-                    }),
+        operation: async ({ prisma, params }) => prisma.payment.create({
+            data: {
+                provider: params.provider,
+                funds: params.funds,
 
-                    // Manual payments are special in that they automatically succeed
-                    // and fees are determined manually by the user.
-                    ...(params.provider === 'MANUAL' && {
-                        state: 'SUCCEEDED',
-                        fees: params.manualFees,
-                        manualPayment: {
-                            create: {
-                                bankAccountNumber: params.bankAccountNumber,
-                            },
+                ...(params.provider === 'STRIPE' && {
+                    create: {},
+                }),
+
+                // Manual payments are special in that they automatically succeed
+                // and fees are determined manually by the user.
+                ...(params.provider === 'MANUAL' && {
+                    state: 'SUCCEEDED',
+                    fees: params.manualFees,
+                    manualPayment: {
+                        create: {
+                            bankAccountNumber: params.bankAccountNumber,
                         },
-                    })
-                },
-                include: {
-                    stripePayment: true,
-                    manualPayment: true,
-                }
-            })
-        },
+                    },
+                })
+            },
+            include: {
+                stripePayment: true,
+                manualPayment: true,
+            }
+        }),
     }),
 
     /**
