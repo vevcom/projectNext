@@ -16,10 +16,10 @@ export class ServerSession<UserGuarantee extends UserGuaranteeOption> extends Se
             return ServerSession.fromDefaultPermissions(defaultPermissions)
         }
 
-        return new Session({ 
-            user: session.user, 
-            permissions: session.permissions, 
-            memberships: session.memberships
+        return new Session({
+            user: session.user,
+            permissions: session.permissions,
+            memberships: session.memberships,
         })
     }
 

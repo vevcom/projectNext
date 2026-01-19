@@ -7,9 +7,9 @@ import useClickOutsideRef from '@/hooks/useClickOutsideRef'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import { useContext, useEffect, useState, useRef, useCallback } from 'react'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import type { ReactNode, CSSProperties } from 'react'
 import type { PopUpKeyType } from '@/contexts/PopUp'
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 export type PropTypes = {
     children: ReactNode,
@@ -22,7 +22,7 @@ export type PropTypes = {
     // The prop `PopUpKey` should actually be `popUpKey`.
     // For backwards compatibility, we support both for now.
     // TODO: Fully remove PopUpKey.
-    | { 
+    {
         /** @deprecated Use `popUpKey` instead. */
         PopUpKey: PopUpKeyType,
         popUpKey?: never
@@ -123,11 +123,11 @@ export default function PopUp({
             params.delete('pop-up-key')
         }
 
-        const newUrl = pathName + '?' + params.toString()
-        const oldUrl = pathName + '?' + searchParams.toString()
+        const newUrl = `${pathName}?${params.toString()}`
+        const oldUrl = `${pathName}?${searchParams.toString()}`
 
         if (newUrl !== oldUrl) {
-            router.replace(pathName + '?' + params.toString())
+            router.replace(`${pathName}?${params.toString()}`)
         }
     }, [storeInUrl, pathName, searchParams, isOpen, effectivePopUpKey])
 
