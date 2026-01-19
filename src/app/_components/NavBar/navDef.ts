@@ -91,12 +91,6 @@ export const itemsForMenu: NavItem[] = [
         icon: faNewspaper
     },
     {
-        name: 'Bulshit',
-        href: '/bulshit',
-        show: 'all',
-        icon: faPoo,
-    },
-    {
         name: 'Omegashop',
         href: '/money/shop',
         show: 'loggedIn',
@@ -131,12 +125,6 @@ export const itemsForMenu: NavItem[] = [
         href: '/articles/om%20omega',
         show: 'all',
         icon: faCircleInfo,
-    },
-    {
-        name: 'Omegafond',
-        href: '/omegafund',
-        show: 'all',
-        icon: faChartLine,
     },
     {
         name: 'Intressegrupper',
