@@ -2,6 +2,8 @@ import upsertOrderBasedOnDate from './upsertOrderBasedOnDate'
 import { type IdMapper, owIdToPnId } from './IdMapper'
 import manifest from '@/seeder/src/logger'
 import { Prisma, type PrismaClient as PrismaClientPn, type SEX } from '@/prisma-generated-pn-client'
+import { v4 as uuid } from 'uuid'
+import type { User } from '@/prisma-generated-pn-client'
 import type {
     Prisma as OwPrisma,
     PrismaClient as PrismaClientOw,
@@ -162,24 +164,38 @@ export class UserMigrator {
     }
 
     private async createUser(user: userExtended) {
-        let pnUser
-
-        function collosionError(e: unknown) {
-            if (!(e instanceof Prisma.PrismaClientKnownRequestError)) {
-                throw e
+        function collosionError(err: unknown) {
+            if (!(err instanceof Prisma.PrismaClientKnownRequestError)) {
+                throw err
             }
 
-            if (e.code !== 'P2002') {
-                throw e
+            if (err.code !== 'P2002' || !err.meta) {
+                throw err
             }
 
-            const target = e.meta?.target as string[]
+            const meta = err.meta as {
+                driverAdapterError: {
+                    cause: {
+                        constraint: {
+                            fields: string[]
+                        }
+                    }
+                }
+            }
+
+
+            const target = meta.driverAdapterError.cause.constraint.fields
+            if (!target) {
+                throw err
+            }
+
             const usernameCollision = target.includes('username')
             const emailCollision = target.includes('email')
 
             if (!usernameCollision && !emailCollision) {
-                throw e
+                throw err
             }
+
             return [usernameCollision, emailCollision]
         }
 
@@ -200,26 +216,39 @@ export class UserMigrator {
             archived: user.archived,
         } satisfies Prisma.UserUncheckedCreateInput
 
-        try {
-            pnUser = await this.pnPrisma.user.create({
-                data: userData
-            })
-        } catch (e) {
-            const [usernameCollision, emailCollision] = collosionError(e)
+        let pnUser: User | undefined
 
-            if (usernameCollision) {
-                manifest.error(`User ${user.id} has a colliding username: ${user.username}. Generating new username.`)
-                userData.username = `${user.username}${user.id}`
-            }
-            if (emailCollision) {
-                manifest.error(`User ${user.id} has a colliding email: ${user.email}. Generating new email.`)
-                userData.email = (user.email !== null) ? `dobbel@omega.${user.id}.no` : `dobbel2@omega.${user.id}.no`
-            }
+        const createUserRetryOnFail = async (retries: number) => {
+            try {
+                pnUser = await this.pnPrisma.user.create({
+                    data: userData
+                })
+            } catch (e) {
+                const [usernameCollision, emailCollision] = collosionError(e)
 
-            pnUser = await this.pnPrisma.user.create({
-                data: userData
-            })
+                if (usernameCollision) {
+                    manifest.error(`User ${user.id} has a colliding username: ${user.username}. Generating new username.`)
+                    userData.username = `${user.username}-${user.id}-${uuid()}`
+                }
+
+                if (emailCollision) {
+                    manifest.error(`User ${user.id} has a colliding email: ${user.email}. Generating new email.`)
+                    userData.email = `dobbelomega-${user.id}-${uuid()}@omega.ntnu.no`
+                }
+
+                if (retries > 0) {
+                    await createUserRetryOnFail(retries - 1)
+                }
+            }
         }
+
+        await createUserRetryOnFail(2)
+
+        if (!pnUser) {
+            throw new Error('Failed to migrate user to projectNext due to unique constraint violation in username or email.')
+        }
+
+
         this.userIdMap[user.id] = pnUser.id
 
         // Try to add the studentCard, this can throw an unique contraint exception
