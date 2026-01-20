@@ -52,6 +52,7 @@ enum SpecialCollection {
   OMBULCOVERS
   PROFILEIMAGES
   COMMITTEELOGOS
+  FLAIRIMAGES
 }
 
 model ImageCollection {

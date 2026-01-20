@@ -99,7 +99,7 @@ export async function seedImage(
                 connect: {
                     name: image.collection
                 }
-            }
+            },
         }
     })
 }

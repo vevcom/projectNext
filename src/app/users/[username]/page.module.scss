@@ -2,30 +2,14 @@
 
 .profile {
     background: ohma.$colors-white;
-    box-shadow: 0 3px 6px rgba(0,0,0,.16),0 3px 6px rgba(0,0,0,.23);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, .16), 0 3px 6px rgba(0, 0, 0, .23);
     border-radius: 1em;
     margin: 2em;
     padding-bottom: 2em;
 }
 
-.standard {
+.standardFlairColor {
     background-color: ohma.$colors-secondary;
-}
-
-.bronze {
-    background: linear-gradient(to bottom right, #673208, #db6c2b);
-}
-
-.silver {
-    background: linear-gradient(to bottom right, #ededed, #bdbdbd);
-}
-
-.gold {
-    background: linear-gradient(to bottom right, #B69312, #FFDF6F);
-}
-
-.diamond {
-    background: linear-gradient(to bottom right, #1CA9A7, #6FFFEF);
 }
 
 .top {
@@ -37,7 +21,7 @@
 .shine::before {
     content: '';
     position: absolute;
-    background:  linear-gradient(to bottom right, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.3));
+    background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.3));
     height: 100%;
     width: 60px;
     left: -100px;
@@ -51,15 +35,18 @@
     display: flex;
     flex-flow: row wrap;
     align-items: center;
-    > h1 {
+
+    >h1 {
         margin-right: .2em;
-    } 
-    > .omegaIdOpen {
+    }
+
+    >.omegaIdOpen {
         width: 2em;
         height: 2em;
         background-color: transparent;
         border: none;
     }
+
     @include ohma.screenMobile {
         justify-content: center;
     }
@@ -70,7 +57,8 @@
     min-height: min(50vw, 400px);
     display: grid;
     place-items: center;
-    > * {
+
+    >* {
         width: 100%;
         height: 100%;
     }
@@ -80,6 +68,7 @@
     0% {
         left: -80px;
     }
+
     100% {
         left: 100%;
     }
@@ -92,16 +81,27 @@
     grid-template-columns: max(300px) 1fr;
 
     gap: 0.5em;
-    
+
     .header {
         display: flex;
         flex-direction: column;
         justify-content: center;
-        
+
         h1 {
             font-size: 3em;
         }
-        
+
+        .nameAndFlairContainer {
+            display: flex;
+            flex-direction: row;
+
+            .flairContainer {
+                display: flex;
+                flex-direction: row;
+            }
+        }
+
+
         hr {
             border: none;
             height: 1px;
@@ -118,6 +118,7 @@
 
             .committee {
                 margin-top: 0.5em;
+
                 p {
                     border-radius: 0.3em;
                     padding: 0.5em;
@@ -126,7 +127,7 @@
                 }
             }
         }
-            
+
 
         .orderText {
             color: ohma.$colors-gray-500;
@@ -145,15 +146,16 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+
             p {
                 width: 8em;
             }
-        } 
+        }
     }
 
     .profileMain {
         .bio {
-            margin-bottom: 2em; 
+            margin-bottom: 2em;
         }
 
         .email, .username, .relationshipStatus {
@@ -177,6 +179,17 @@
             text-align: center;
             align-items: center;
             margin: 1em 2em;
+
+            .nameAndFlairContainer {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                .flairContainer {
+                    display: flex;
+                    flex-direction: row;
+                }
+            }
+
 
             hr {
                 width: 80%;

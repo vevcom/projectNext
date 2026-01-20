@@ -42,9 +42,9 @@ model ScreenPage {
   jobAd            JobAd?             @relation(fields: [jobAdId], references: [id])
   jobAdId          Int?
   cmsImage         CmsImage           @relation(fields: [cmsImageId], references: [id])
-  cmsImageId       Int
+  cmsImageId       Int                @unique
   cmsParagraph     CmsParagraph       @relation(fields: [cmsParagraphId], references: [id])
-  cmsParagraphId   Int
+  cmsParagraphId   Int                @unique
   screenPageScreen ScreenPageScreen[]
   event            Event?             @relation(fields: [eventId], references: [id])
   eventId          Int?
