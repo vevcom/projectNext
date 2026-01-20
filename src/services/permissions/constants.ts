@@ -206,11 +206,6 @@ export const permissionConfig = {
         description: 'kan oppdatere bruker',
         category: 'brukere',
     },
-    IMAGE_ADMIN: {
-        name: 'Bildeadministrator',
-        description: 'kan administrere bilder',
-        category: 'bilder',
-    },
     IMAGE_COLLECTION_CREATE: {
         name: 'Lage bilde samling',
         description: 'kan lage bilde samling',

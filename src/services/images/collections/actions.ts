@@ -1,5 +1,4 @@
 'use server'
-
 import { createActionError, createZodActionError, safeServerCall } from '@/services/actionError'
 import { createImageCollection } from '@/services/images/collections/create'
 import { destroyImageCollection } from '@/services/images/collections/destroy'
