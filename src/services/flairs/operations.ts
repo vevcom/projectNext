@@ -68,8 +68,7 @@ export const flairOperations = {
     readAll: defineOperation({
         authorizer: () => flairAuth.readAll.dynamicFields({}),
         operation: async ({ prisma }) => {
-            // Fetch all flairs
-            let flairs = await prisma.flair.findMany({
+            const flairs = (await prisma.flair.findMany({
                 include: {
                     cmsImage: {
                         include: {
@@ -77,10 +76,8 @@ export const flairOperations = {
                         }
                     }
                 }
-            })
-            // Sort by current rank ascending, then id as tiebreaker
-            flairs = flairs.sort((a, b) => a.rank - b.rank || a.id - b.id)
-            // Assign new ranks: 1, 2, 3, ...
+            })).sort((a, b) => a.rank - b.rank || a.id - b.id)
+            // Assign new ranks: 1, 2, 3, ... so there are no gaps
             for (let i = 0; i < flairs.length; i++) {
                 const newRank = i + 1
                 if (flairs[i].rank !== newRank) {
@@ -90,7 +87,6 @@ export const flairOperations = {
                     })
                 }
             }
-            // Re-fetch with updated ranks
             const normalizedFlairs = await prisma.flair.findMany({
                 include: {
                     cmsImage: {
@@ -115,7 +111,7 @@ export const flairOperations = {
                     id: userId,
                 },
                 select: {
-                    Flairs: {
+                    flairs: {
                         include: {
                             cmsImage: {
                                 include: {
@@ -125,7 +121,7 @@ export const flairOperations = {
                         }
                     },
                 }
-            }).then(user => user.Flairs)
+            }).then(user => user.flairs)
     }),
     assignToUser: defineOperation({
         authorizer: () => flairAuth.assignToUser.dynamicFields({}),
@@ -147,7 +143,7 @@ export const flairOperations = {
                     id: params.flairId,
                 },
                 data: {
-                    User: {
+                    user: {
                         connect: {
                             id: params.userId
                         }
@@ -169,7 +165,7 @@ export const flairOperations = {
                     id: params.flairId,
                 },
                 data: {
-                    User: {
+                    user: {
                         disconnect: {
                             id: params.userId
                         }

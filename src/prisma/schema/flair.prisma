@@ -6,7 +6,7 @@ model Flair {
   colorR   Int      @default(0)
   colorG   Int      @default(0)
   colorB   Int      @default(0)
-  rank     Int      @default(autoincrement()) @unique
+  rank     Int      @unique @default(autoincrement())
 
-  User User[] @relation(name: "userFlairs")
+  user User[] @relation(name: "userFlairs")
 }

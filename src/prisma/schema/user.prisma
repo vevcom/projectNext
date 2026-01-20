@@ -51,7 +51,7 @@ model User {
 
   cabinBooking Booking[] @relation()
 
-  Flairs Flair[] @relation(name: "userFlairs")
+  flairs Flair[] @relation(name: "userFlairs")
 
   // We need to explicitly mark the combination of 'id', 'username' and 'email' as
   // unique to make the relation to 'Credentials' work.
