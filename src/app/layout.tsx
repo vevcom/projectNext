@@ -25,9 +25,9 @@ config.autoAddCss = false
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-    title: 'Sanctus Omega Broderskab',
+    title: 'Sct. Omega Broderskab',
     description: 'Hjemmesiden for linjeforeningen Sanctus Omega Broderskab ved NTNU.',
-    keywords: ['Sanctus Omega Broderskab', 'Sanctus Omega', 'Sct. Omega', 'Omega'],
+    keywords: ['Sanctus Omega Broderskab', 'Sct. Omega Broderskab', 'Sanctus Omega', 'Sct. Omega', 'Omega'],
 }
 
 type PropTypes = {
