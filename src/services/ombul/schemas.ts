@@ -5,7 +5,7 @@ import { File } from 'node:buffer'
 
 export const baseSchema = z.object({
     ombulFile: z.instanceof(File).refine(file => file.size < maxOmbulFileSize, 'Fil må være mindre enn 10mb'),
-    ombulCoverImage: imageFileSchema,
+    ombulCoverImage: imageFileSchema, //TODO: Let image subservice handle this.
     year: z.coerce.number().int().refine(val =>
         (val === undefined) || (val >= 1919 && val <= (new Date()).getFullYear()),
     'Må være mellom 1919 og nåværende år'

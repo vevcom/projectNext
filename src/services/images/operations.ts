@@ -137,7 +137,6 @@ export const imageOperations = {
             params: { useFileName, collectionId },
             data,
         }) => {
-            console.log('data', data)
             for (const file of data.files) {
                 console.log('file', file)
                 const name = useFileName ? file.name.split('.')[0] : undefined
