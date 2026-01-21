@@ -56,7 +56,7 @@ export const authOptions: AuthOptions = {
     },
     jwt: {
         async encode(params) {
-            params.token = await compressJwt(params.token!)
+            params.token = await compressJwt(params.token)
             return encode(params)
         },
 
