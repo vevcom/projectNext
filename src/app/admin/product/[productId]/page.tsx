@@ -2,7 +2,7 @@ import styles from './page.module.scss'
 import ProductForm from '@/app/admin/product/productForm'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import PageWrapper from '@/app/_components/PageWrapper/PageWrapper'
-import { displayPrice } from '@/lib/money/convert'
+import { displayAmount } from '@/lib/currency/convert'
 import { readProductAction } from '@/services/shop/actions'
 import { v4 as uuid } from 'uuid'
 import Link from 'next/link'
@@ -33,7 +33,7 @@ export default async function ProductPage({ params }: PropTypes) {
                 {product.ShopProduct.map(shopProduct => <tr key={uuid()}>
                     <td><Link href={`/admin/shop/${shopProduct.shopId}`}>{shopProduct.shop.name}</Link></td>
                     <td>{shopProduct.active ? 'AKTIV' : 'INAKTIV'}</td>
-                    <td>{displayPrice(shopProduct.price, false)}</td>
+                    <td>{displayAmount(shopProduct.price, false)}</td>
                 </tr>)}
             </tbody>
         </table>

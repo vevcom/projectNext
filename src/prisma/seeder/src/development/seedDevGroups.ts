@@ -13,14 +13,14 @@ export default async function seedDevGroups(prisma: PrismaClient) {
 
     await prisma.committee.create({
         data: {
-            name: 'Harambe\'s komité',
+            name: 'Harambes komité',
             shortName: 'harcom',
             committeeArticle: {
                 create: {
-                    name: 'Harambe\'s komité',
+                    name: 'Harambes komité',
                     coverImage: {
                         create: {
-                            name: 'Harambe\'s bilde'
+                            name: 'Harambes bilde'
                         }
                     }
                 }
@@ -35,6 +35,12 @@ export default async function seedDevGroups(prisma: PrismaClient) {
                 create: {
                     groupType: 'COMMITTEE',
                     order: order.order,
+                    ledgerAccount: {
+                        create: {
+                            name: 'Kontoen til Harambes komité',
+                            type: 'GROUP',
+                        },
+                    },
                 },
             },
             logoImage: {

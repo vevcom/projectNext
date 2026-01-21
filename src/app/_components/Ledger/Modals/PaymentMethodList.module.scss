@@ -1,0 +1,24 @@
+@use '@/styles/ohma';
+
+.paymentMethodElement {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+
+    border-radius: ohma.$rounding;
+    border-width: 2px;
+    border-style: solid;
+    border-color: ohma.$colors-gray-600;
+    
+    margin: ohma.$gap 0;
+    padding: 2*ohma.$gap;
+
+    font-size: ohma.$fonts-l;
+    align-items: center;
+}
+
+.deletePaymentMethodButton {
+    font-size: ohma.$fonts-l;
+    color: ohma.$colors-gray-600;
+    justify-self: end;
+    @include ohma.roundBtn;
+}
