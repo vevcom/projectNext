@@ -87,4 +87,16 @@ export namespace Zpn {
             }
         }
     })
+
+    export const colorInput = () => z.string().regex(
+        /^#[0-9A-Fa-f]{6}$/, 'Farge må være en gyldig hex-farge'
+    ).transform(
+        value => value.toUpperCase()
+    ).transform(
+        value => ({
+            red: parseInt(value.slice(1, 3), 16),
+            green: parseInt(value.slice(3, 5), 16),
+            blue: parseInt(value.slice(5, 7), 16),
+        })
+    )
 }

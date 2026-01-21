@@ -2,7 +2,7 @@
 import styles from './Nav.module.scss'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Link from 'next/link'
-import { faCircleDot, faCog, faKey, faMoneyBillWave, faPaperPlane } from '@fortawesome/free-solid-svg-icons'
+import { faCircleDot, faCog, faHatWizard, faMoneyBillWave, faKey, faPaperPlane } from '@fortawesome/free-solid-svg-icons'
 import { usePathname } from 'next/navigation'
 
 type PropTypes = {
@@ -43,6 +43,12 @@ export default function Nav({ username }: PropTypes) {
                 className={page === 'settings' ? styles.selected : undefined}
             >
                 <FontAwesomeIcon icon={faCog} />
+            </Link>
+            <Link
+                href={`/users/${username}/flairs`}
+                className={page === 'flairs' ? styles.selected : undefined}
+            >
+                <FontAwesomeIcon icon={faHatWizard} />
             </Link>
         </aside>
     )

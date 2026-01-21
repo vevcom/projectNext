@@ -51,19 +51,15 @@ export const eventTagOperations = {
     create: defineOperation({
         dataSchema: eventTagSchemas.create,
         authorizer: () => eventTagAuth.create.dynamicFields({}),
-        operation: async ({ prisma, data: { color, ...data } }) => {
-            const colorR = parseInt(color.slice(1, 3), 16)
-            const colorG = parseInt(color.slice(3, 5), 16)
-            const colorB = parseInt(color.slice(5, 7), 16)
-            return await prisma.eventTag.create({
+        operation: async ({ prisma, data: { color, ...data } }) =>
+            await prisma.eventTag.create({
                 data: {
                     ...data,
-                    colorR,
-                    colorG,
-                    colorB,
+                    colorR: color.red,
+                    colorG: color.green,
+                    colorB: color.blue
                 }
             })
-        }
     }),
     update: defineOperation({
         paramsSchema: z.object({
@@ -72,9 +68,9 @@ export const eventTagOperations = {
         dataSchema: eventTagSchemas.update,
         authorizer: () => eventAuth.update.dynamicFields({}),
         operation: async ({ prisma, params: { id }, data: { color, ...data } }) => {
-            const colorR = color ? parseInt(color.slice(1, 3), 16) : undefined
-            const colorG = color ? parseInt(color.slice(3, 5), 16) : undefined
-            const colorB = color ? parseInt(color.slice(5, 7), 16) : undefined
+            const colorR = color ? color.red : undefined
+            const colorG = color ? color.green : undefined
+            const colorB = color ? color.blue : undefined
             return await prisma.eventTag.update({
                 where: {
                     id

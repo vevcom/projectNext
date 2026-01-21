@@ -80,6 +80,9 @@ model User {
   // Which cabin bookings the user has made.
   cabinBooking Booking[] @relation()
 
+  // The flairs to display next to the user's name.
+  flairs Flair[] @relation(name: "userFlairs")
+
   // We need to explicitly mark the combination of 'id', 'username' and 'email' as
   // unique to make the relation to 'Credentials' work.
   @@unique([id, username, email])

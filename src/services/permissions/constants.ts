@@ -436,6 +436,12 @@ export const permissionConfig = {
         description: 'kan administrere prikker',
         category: 'brukere'
     },
+    FLAIR_ADMIN: {
+        name: 'Kappe redigering',
+        description: `
+            Opprette, endre og gi kapper`,
+        category: 'brukere',
+    },
     SHOP_READ: {
         name: 'Les butikker',
         description: 'kan lese butikker',

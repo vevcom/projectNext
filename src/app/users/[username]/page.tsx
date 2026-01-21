@@ -7,11 +7,15 @@ import { readUserProfileAction } from '@/services/users/actions'
 import { readSpecialImageAction } from '@/services/images/actions'
 import { ServerSession } from '@/auth/session/ServerSession'
 import { sexConfig } from '@/services/users/constants'
+import { readUserFlairsAction } from '@/services/flairs/actions'
+import { unwrapActionReturn } from '@/app/redirectToErrorPage'
+import Flair from '@/components/Flair/Flair'
 import { RelationshipStatus } from '@/prisma-generated-pn-types'
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { v4 as uuid } from 'uuid'
 import React from 'react'
+
 
 export type PropTypes = {
     params: Promise<{
@@ -43,6 +47,9 @@ export default async function User({ params }: PropTypes) {
     if (!omegaMembership) {
         throw new Error('Failed to load the omega membership level')
     }
+    const flairs = unwrapActionReturn(await readUserFlairsAction({ params: { userId: profile.user.id } })).sort(
+        (a, b) => a.rank - b.rank
+    )
 
     const profileImage = profile.user.image ? profile.user.image : await readSpecialImageAction.bind(
         null, { params: { special: 'DEFAULT_PROFILE_IMAGE' } }
@@ -50,6 +57,7 @@ export default async function User({ params }: PropTypes) {
         if (!res.success) throw new Error('Kunne ikke finne standard profilbilde')
         return res.data
     })
+
 
     const { authorized: canAdministrate } = userAuth.updateProfile.dynamicFields(
         { username: profile.user.username }
@@ -62,26 +70,54 @@ export default async function User({ params }: PropTypes) {
         [RelationshipStatus.NOT_SPECIFIED]: 'white'
     }
 
-    // Not ideal to use typecast here, but this is the simplest way.
     const borderColour = { '--border-colour': relationshipColour[profile.user.relationshipStatus] } as React.CSSProperties
+
+    function memberhipTitle(): string {
+        switch (omegaMembership?.group.omegaMembershipGroup?.omegaMembershipLevel) {
+            case 'SOELLE':
+                return 'Soelle Noviice (avsky!)'
+            case 'MEMBER':
+                return `
+                    ${sexConfig[profile.user.sex ?? 'OTHER'].title}
+                    uudaf ${omegaMembership.order}´dis orden i Sanctus Omega Broderskab
+                `
+            case 'EXTERNAL':
+                return 'Ekstern'
+            default:
+        }
+        return 'Kunne ikke finne tittel'
+    }
 
     return (
         <div className={styles.wrapper}>
             <div className={styles.profile}>
-                <div className={`${styles.top} ${styles.standard}`} /> {/* TODO change style based on flair */}
+                <div
+                    style={ flairs.length > 0 ? {
+                        backgroundColor: `rgb(${flairs[0].colorR}, ${flairs[0].colorG}, ${flairs[0].colorB})`
+                    } : {} }
+                    className={`${styles.top} ${styles.standardFlairColor}`}
+                />
 
                 <div className={styles.profileContent} style={borderColour}>
                     <ProfilePicture width={240} profileImage={profileImage} className={styles.profilePicture}/>
                     <div className={styles.header}>
-                        <div className={styles.nameAndId}>
-                            <h1><UserDisplayName user={profile.user} /></h1>
+                        <div className={styles.nameAndFlairContainer}>
+                            <div className={styles.nameAndId}>
+                                <h1><UserDisplayName user={profile.user} /></h1>
+                            </div>
+                            <div className={styles.flairContainer}>
+                                {flairs.map((flair, index) => (
+                                    <Flair key={index} flair={flair} session={session} width={40} />
+                                ))
+                                }
+                            </div>
                         </div>
-                        { studyProgrammes.map((studyProgramme, i) =>
+                        {studyProgrammes.map((studyProgramme, i) =>
                             <p key={i} className={styles.studyProgramme}>
                                 {studyProgramme.name} {`(${studyProgramme.code})`}
                             </p>
                         )}
-                        { classes.map((classGroup, i) =>
+                        {classes.map((classGroup, i) =>
                             <p key={i} className={styles.studyProgramme}>{classGroup.year}. årstrinn</p>
                         )}
                         <div className={styles.committeesWrapper}>
@@ -98,8 +134,7 @@ export default async function User({ params }: PropTypes) {
                         </div>
                         <hr />
                         <p className={styles.orderText}>
-                            {sexConfig[profile.user.sex ?? 'OTHER'].title
-                            } uudaf {omegaMembership.order}´dis orden i Sanctus Omega Broderskab
+                            { memberhipTitle() }
                         </p>
                     </div>
                     <div className={styles.leftSection}>
@@ -155,7 +190,7 @@ export default async function User({ params }: PropTypes) {
                             {profile.user.mobile}
                         </p>
 
-                        { (committeeMemberships.length > 0) && <div>
+                        {(committeeMemberships.length > 0) && <div>
                             <h2>Medlemsskap</h2>
                             {committeeMemberships.map((membership, i) => (
                                 <Link
@@ -165,7 +200,7 @@ export default async function User({ params }: PropTypes) {
                                     <p>{membership.title} i {membership.group.committee?.name}</p>
                                 </Link>
                             ))}
-                        </div> }
+                        </div>}
                     </div>
                 </div>
             </div>

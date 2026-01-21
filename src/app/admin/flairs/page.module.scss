@@ -1,0 +1,10 @@
+@use '@/styles/ohma';
+
+.flairList {
+    @include ohma.table;
+    a {
+        svg {
+            margin-right: 0.5rem;
+        }
+    }
+}

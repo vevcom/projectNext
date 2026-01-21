@@ -16,7 +16,7 @@ type FormType = DetailedHTMLProps<FormHTMLAttributes<HTMLFormElement>, HTMLFormE
 export type PropTypes<ReturnType> = Omit<FormType, 'action' | 'children'> & {
     children?: ReactNode,
     title?: string,
-    submitText?: string,
+    submitText?: ReactNode,
     submitColor?: Colors,
     confirmation?: Confirmation,
     action: ActionFormData<ReturnType>,
