@@ -1,7 +1,6 @@
 import Company from './Company'
 import type { SessionMaybeUser } from '@/auth/session/Session'
 import type { CompanyExpanded } from '@/services/career/companies/types'
-import { v4 } from 'uuid'
 
 /**
  * Used to render schools server side and client side in consistent way
@@ -19,4 +18,4 @@ export const companyListRenderer = ({
     disableEditing?: boolean
 // eslint-disable-next-line react/display-name
 }) => (company: CompanyExpanded) =>
-    <Company disableEdit={disableEditing} session={session} key={v4()} company={company} asClient={asClient} />
+    <Company disableEdit={disableEditing} session={session} key={company.id} company={company} asClient={asClient} />

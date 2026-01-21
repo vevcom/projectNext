@@ -111,10 +111,15 @@ export function generatePaging<Data, Cursor, PageSize extends number = number, F
 
         useEffect(() => {
             handleDetailsChange()
-        }, [details, startDetails])
+        }, [details])
+
+        useEffect(() => {
+            setDetails(startDetails)
+        }, [startDetails])
 
         const loadMore = useCallback(async () => {
             if (state.allLoaded) return []
+            if (loading) return []
             setLoading(true)
             const data = await fetcher({
                 paging: {
@@ -141,7 +146,7 @@ export function generatePaging<Data, Cursor, PageSize extends number = number, F
                 allLoaded: newData.length < prevState.page.pageSize,
             }))
             return newData
-        }, [details, state])
+        }, [details, state, loading])
 
         const refetch = useCallback(async () => {
             const toPage = state.page.page

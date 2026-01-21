@@ -4,8 +4,6 @@
 import {
     faGamepad,
     faBook,
-    faPoo,
-    faShoppingCart,
     faComment,
     faCamera,
     faCircleInfo,
@@ -17,7 +15,6 @@ import {
     faBriefcase,
     faGraduationCap,
     faTools,
-    faChartLine,
     faSignature,
     faSchool,
     faHouseChimneyWindow,
