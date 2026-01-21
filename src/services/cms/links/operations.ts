@@ -66,7 +66,7 @@ export const cmsLinkOperations = {
             })
             if (!cmsLink) {
                 logger.error(`Could not find special cms link with special ${special} - creating it!`)
-                return await create({ data: { special, url: './', text: 'Default text' } })
+                return await create({ data: { special, url: './', text: 'Default text' }, bypassAuth: true })
             }
             return cmsLink
         }
