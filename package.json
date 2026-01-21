@@ -8,6 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "lint:fix": "eslint --fix --quiet",
     "test": "IGNORE_SERVER_ONLY=true jest",
     "docker:dev": "./development-entrypoint.sh",
     "docker:test": "docker compose -f docker-compose.test.yml up --build --abort-on-container-exit --exit-code-from projectnext --attach projectnext --no-log-prefix",
