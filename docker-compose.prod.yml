@@ -10,6 +10,7 @@ services:
             - logs:/usr/src/app/logs
         deploy:
             replicas: 2
+        restart: always
 
     db:
         extends:
