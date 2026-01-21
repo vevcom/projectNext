@@ -196,6 +196,9 @@ export const authOptions: AuthOptions = {
     adapter: VevenAdapter(prisma),
     logger: {
         error(code, metadata) {
+            // When in development mode JWT are invalidated at each restart,
+            // thus producing a lot of noise in both the logs and in the browser.
+            // Therefore, we log these as warnings instead of errors.
             const logFunction = code === 'JWT_SESSION_ERROR' ? console.warn : console.error
             logFunction(`NextAuth error: ${code}`, metadata)
         },
