@@ -18,6 +18,7 @@ export default async function UserAdmin({ children, params }: PropTypes & { chil
         username = session.user.username
     }
     const { user } = unwrapActionReturn(await readUserProfileAction({ params: { username } }))
+    const hrefPrefix = `/users/${username}`
     return (
         <PageWrapper title={`Innstillinger for ${user.firstname} ${user.lastname}`}>
             <div className={styles.userAdminLayout}>
@@ -26,14 +27,13 @@ export default async function UserAdmin({ children, params }: PropTypes & { chil
                 <main>
                     {children}
                 </main>
-                {/* <Nav username={username} /> */}
                 <SubPageNavBar>
-                    <SubPageNavBarItem icon={faUser} href={`/users/${username}`}>Profil</SubPageNavBarItem>
-                    <SubPageNavBarItem icon={faCircleDot} href={`/user/${username}/dots`}>Prikker</SubPageNavBarItem>
-                    <SubPageNavBarItem icon={faPaperPlane} href={`/users/${username}/notifications`}>Notifikasjoner</SubPageNavBarItem>
-                    <SubPageNavBarItem icon={faMoneyBill1Wave} href={`/users/${username}/konto`}>Konto</SubPageNavBarItem>
-                    <SubPageNavBarItem icon={faKey} href={`/users/${username}/permissions`}>Tilganger</SubPageNavBarItem>
-                    <SubPageNavBarItem icon={faCog} href={`/users/${username}/settings`}>Innstillinger</SubPageNavBarItem>
+                    <SubPageNavBarItem icon={faUser} href={hrefPrefix}>Profil</SubPageNavBarItem>
+                    <SubPageNavBarItem icon={faCircleDot} href={`${hrefPrefix}/dots`}>Prikker</SubPageNavBarItem>
+                    <SubPageNavBarItem icon={faPaperPlane} href={`${hrefPrefix}/notifications`}>Notifikasjoner</SubPageNavBarItem>
+                    <SubPageNavBarItem icon={faMoneyBill1Wave} href={`${hrefPrefix}/konto`}>Konto</SubPageNavBarItem>
+                    <SubPageNavBarItem icon={faKey} href={`${hrefPrefix}/permissions`}>Tilganger</SubPageNavBarItem>
+                    <SubPageNavBarItem icon={faCog} href={`${hrefPrefix}/settings`}>Innstillinger</SubPageNavBarItem>
                 </SubPageNavBar>
             </div>
         </PageWrapper>
