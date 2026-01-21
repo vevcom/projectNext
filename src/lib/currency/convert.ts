@@ -11,12 +11,11 @@ export function convertAmount(amount: string | number): number {
 }
 
 export function displayAmount(amount: number, short: boolean = true, withSign: boolean = false): string {
-    const convertedamount = amount / 100
-    const amountString = convertedamount.toFixed(2)
+    const convertedAmount = amount / 100
+    const amountString = convertedAmount.toFixed(2)
     if (short) return amountString
 
-    const sign = withSign && amount !== 0
-        ? convertedamount > 0 ? '+' : '-'
-        : ''
-    return `${sign}${amountString} ${currencySymbol}`
+    const sign = convertedAmount > 0 ? '+' : '-'
+
+    return `${withSign && convertedAmount !== 0 ? sign : ''}${amountString} ${currencySymbol}`
 }
