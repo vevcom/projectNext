@@ -19,7 +19,9 @@ export default async function UserSettings({ params }: PropTypes) {
             <h2>Grupper ID-er:</h2>
             <p><i>Hvilke grupper du er medlem av avgjør hvilke tilganger du har.</i></p>
             <ul>
-                {profile.memberships.map(membership => <li style={{ listStyleType: 'none' }} key={uuid()}>{membership.groupId}</li>)}
+                {profile.memberships.map(membership =>
+                    <li style={{ listStyleType: 'none' }} key={uuid()}>{membership.groupId}</li>
+                )}
             </ul>
         </div>
     )

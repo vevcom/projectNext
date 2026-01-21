@@ -18,20 +18,25 @@ export default function TransactionList({ accountId, showFees }: Props) {
         <EndlessScroll
             pagingContext={LedgerTransactionPagingContext}
             renderer={
-                transaction => <LedgerTransactionRow key={transaction.id} accountId={accountId} transaction={transaction} showFees={showFees} />
+                transaction => <LedgerTransactionRow
+                    key={transaction.id}
+                    accountId={accountId}
+                    transaction={transaction}
+                    showFees={showFees}
+                />
             }
             wrapper={children =>
                 <table className={styles.transactionList}>
-                <thead>
-                    <tr>
-                        <th>Dato</th>
-                        <th>Beskrivelse</th>
-                        <th>Status</th>
-                        <th>Beløp</th>
-                        <th>Saldoendring</th>
-                        {showFees && <th>Gebyrendring</th>}
-                    </tr>
-                </thead>
+                    <thead>
+                        <tr>
+                            <th>Dato</th>
+                            <th>Beskrivelse</th>
+                            <th>Status</th>
+                            <th>Beløp</th>
+                            <th>Saldoendring</th>
+                            {showFees && <th>Gebyrendring</th>}
+                        </tr>
+                    </thead>
                     <tbody>
                         {children}
                     </tbody>

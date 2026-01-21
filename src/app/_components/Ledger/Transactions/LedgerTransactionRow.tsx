@@ -16,7 +16,7 @@ export default function LedgerTransactionRow({ transaction, accountId, showFees 
 
     const fundsChange = transaction.ledgerEntries.find(entry => entry.ledgerAccountId === accountId)?.funds ?? null
     const feesChange = transaction.ledgerEntries.find(entry => entry.ledgerAccountId === accountId)?.fees ?? null
-    
+
     return <tr>
         <td>{transaction.createdAt.toLocaleString()}</td>
         <td>{transaction.purpose}</td>

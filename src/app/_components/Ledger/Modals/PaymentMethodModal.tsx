@@ -11,6 +11,8 @@ import { createSetupIntentAction } from '@/services/stripeCustomers/actions'
 import { useRef } from 'react'
 import type { StripePaymentRef } from '@/components/Stripe/StripePayment'
 
+const stripePublishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
+
 type PropTypes = {
     userId: number,
 }
@@ -47,7 +49,7 @@ export default function PaymentMethodModal({ userId }: PropTypes) {
             <h3>Legg til bankkort</h3>
             <div className={styles.bankCardFormContainer}>
                 <Form action={handleSubmit} submitText="Legg til bankkort">
-                    <StripeProvider mode="setup">
+                    <StripeProvider stripePublishableKey={stripePublishableKey} mode="setup">
                         <StripePayment ref={stripePaymentRef} />
                     </StripeProvider>
                 </Form>

@@ -15,8 +15,6 @@ export function displayAmount(amount: number, short: boolean = true, withSign: b
     const amountString = convertedamount.toFixed(2)
     if (short) return amountString
 
-    const sign = withSign && amount !== 0
-        ? convertedamount > 0 ? '+' : '-'
-        : ''
-    return `${sign}${amountString} ${currencySymbol}`
+    const sign = convertedamount > 0 ? '+' : '-'
+    return `${withSign && amount !== 0 ? sign : ''}${amountString} ${currencySymbol}`
 }

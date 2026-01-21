@@ -5,26 +5,39 @@ import { Elements } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
 import type { ReactNode } from 'react'
 
-// To avoid inlining of the publishable key during build time (where the 
-// environment variable is not set) we use a variable for the key name.
-// See the non inlined examples here: 
-// https://nextjs.org/docs/app/guides/environment-variables#bundling-environment-variables-for-the-browser
-const NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY = 'NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY'
+// Next Js. can expose environment variables using the NEXT_PUBLIC_ prefix.
+// However, this bakes them in during buildtime. Our setup doesn't load
+// environment variables until runtime, so we have to pass the key down
+// from a higher level component. When doing this, we want to avoid
+// loading stripe multiple times so we cache it like so.
+// TODO: Revisit this when/if we add environment variables during build.
 
-if (!process.env[NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY]) {
-    throw new Error('Stripe publishable key not set')
+const stripePromiseCache = new Map<string, ReturnType<typeof loadStripe>>()
+
+function getStripePromise(stripePublishableKey: string) {
+    const cachedStripePromise = stripePromiseCache.get(stripePublishableKey)
+
+    if (cachedStripePromise) {
+        return cachedStripePromise
+    }
+
+    const stripePromise = loadStripe(stripePublishableKey)
+    stripePromiseCache.set(stripePublishableKey, stripePromise)
+
+    return stripePromise
 }
-
-const stripe = loadStripe(process.env[NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY]!)
 
 type Props = {
     children?: ReactNode,
+    stripePublishableKey: string,
     mode: 'payment' | 'setup',
     amount?: number,
     customerSessionClientSecret?: string,
 }
 
-export default function StripeProvider({ children, mode, amount, customerSessionClientSecret }: Props) {
+export default function StripeProvider({ children, stripePublishableKey, mode, amount, customerSessionClientSecret }: Props) {
+    const stripe = getStripePromise(stripePublishableKey)
+
     return (
         <Elements stripe={stripe} options={{
             mode,

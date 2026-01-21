@@ -20,6 +20,8 @@ import type { StripePaymentRef } from '@/components/Stripe/StripePayment'
 const StripePayment = lazy(() => import('@/components/Stripe/StripePayment'))
 const StripeProvider = lazy(() => import('@/components/Stripe/StripeProvider'))
 
+const stripePublishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
+
 const defaultPaymentProvider: PaymentProvider = 'STRIPE'
 const paymentProviderNames: Record<PaymentProvider, string> = {
     STRIPE: 'Stripe',
@@ -119,7 +121,12 @@ export default function DepositModal({ ledgerAccountId, customerSessionClientSec
                 </fieldset>
 
                 {selectedProvider === 'STRIPE' && (
-                    <StripeProvider mode="payment" amount={funds} customerSessionClientSecret={customerSessionClientSecret} >
+                    <StripeProvider
+                        stripePublishableKey={stripePublishableKey}
+                        mode="payment"
+                        amount={funds}
+                        customerSessionClientSecret={customerSessionClientSecret}
+                    >
                         <StripePayment ref={stripePaymentRef} />
                     </StripeProvider>
                 )}
