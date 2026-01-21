@@ -226,11 +226,6 @@ export const permissionConfig = {
         description: 'kan lage notifikasjonskanal',
         category: 'notifikasjoner',
     },
-    NOTIFICATION_CHANNEL_READ: {
-        name: 'Les notifikasjonskanal',
-        description: 'kan lese notifikasjonskanal',
-        category: 'notifikasjoner',
-    },
     NOTIFICATION_CHANNEL_UPDATE: {
         name: 'Oppdatere notifikasjonskanal',
         description: 'kan oppdatere notifikasjonskanal',
