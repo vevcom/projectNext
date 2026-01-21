@@ -10,6 +10,7 @@ import { UserSelectionContext } from '@/contexts/UserSelection'
 import { readGroupsForPageFilteringAction } from '@/services/users/actions'
 import { useContext, useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { v4 } from 'uuid'
 import { faCheck } from '@fortawesome/free-solid-svg-icons'
 import type { UserPagingReturn } from '@/services/users/types'
 import type { ChangeEvent, ReactNode } from 'react'
@@ -264,7 +265,7 @@ export default function UserList({
                 </span>
 
                 <EndlessScroll pagingContext={UserPagingContext} renderer={user => (
-                    <span className={styles.row} key={user.id}>
+                    <span className={styles.row} key={v4()}>
                         { usersSelection &&
                             <button
                                 className={usersSelection.includes(user) ? styles.selected : ''}
