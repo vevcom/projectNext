@@ -138,10 +138,6 @@ export default function RegistrationUI({
     }
 
     return <>
-        {btnState === RegistrationButtonState.REGISTRATION_NOT_OPEN && (
-            <p>Påmeldingen åpner om <CountDown referenceDate={event.registrationStart} /></p>
-        )}
-
         <SubmitButton
             success={false}
             confirmation={
@@ -181,6 +177,10 @@ export default function RegistrationUI({
             {btnState === RegistrationButtonState.ERROR && errorText}
             {btnState === RegistrationButtonState.REGISTRATION_CLOSED && 'Påmeldingen er over'}
         </SubmitButton>
+
+        {btnState === RegistrationButtonState.REGISTRATION_NOT_OPEN && (
+            <p>Påmeldingen åpner om <CountDown referenceDate={event.registrationStart} /></p>
+        )}
 
         {registrationState && event.registrationEnd > new Date() && <Form
             action={configureAction(
