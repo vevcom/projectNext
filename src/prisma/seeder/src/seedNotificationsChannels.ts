@@ -1,8 +1,7 @@
-import { allNotificationMethodsOn } from '@/services/notifications/constants'
+import { allNotificationMethodsOff, allNotificationMethodsOn } from '@/services/notifications/constants'
+import { SpecialNotificationChannel } from '@/prisma-generated-pn-types'
 import type { PrismaClient } from '@/prisma-generated-pn-client'
 import type { NotificationMethod } from '@/prisma-generated-pn-types'
-import { SpecialNotificationChannel } from '@/prisma-generated-pn-types'
-import { connect } from 'http2'
 
 type ChannelInfo = {
     special?: SpecialNotificationChannel
@@ -38,28 +37,31 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
             special: 'NEW_OMBUL',
             name: 'Ny ombul',
             description: 'Varsling når det kommer ny ombul',
-            defaultMethods: allNotificationMethodsOn,
+            defaultMethods: allNotificationMethodsOff,
             availableMethods: allNotificationMethodsOn,
         },
         {
             special: 'NEW_NEWS_ARTICLE',
             name: 'Ny nyhetsartikkel',
             description: 'Varslinger om nye artikler',
-            defaultMethods: allNotificationMethodsOn,
+            defaultMethods: allNotificationMethodsOff,
             availableMethods: allNotificationMethodsOn,
         },
         {
             special: 'NEW_JOBAD',
             name: 'Ny jobbannonse',
             description: 'Varslinger at en ny jobbanonse er ute',
-            defaultMethods: allNotificationMethodsOn,
+            defaultMethods: {
+                email: false,
+                emailWeekly: true,
+            },
             availableMethods: allNotificationMethodsOn,
         },
         {
             special: 'NEW_OMEGAQUOTE',
             name: 'Ny omegaquote',
             description: 'Varslinger om en ny omega quote',
-            defaultMethods: allNotificationMethodsOn,
+            defaultMethods: allNotificationMethodsOff,
             availableMethods: allNotificationMethodsOn,
         },
         {

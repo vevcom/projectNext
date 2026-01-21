@@ -30,19 +30,21 @@ export default function EndlessScroll<Data, Cursor, const PageSize extends numbe
 
     //This component must be rendered inside ContextProvider
     if (!context) throw new Error('No context')
+
+    const { loading, state, loadMore } = context
+
     const [ref, inView] = useInView({
         threshold: 0,
     })
 
-    const loadMore = useCallback(async () => {
-        if (context.state.allLoaded) return
+    const loadMoreCallback = useCallback(async () => {
         if (!inView) return
-        await context.loadMore()
-    }, [context, inView])
+        await loadMore()
+    }, [loadMore, inView])
 
     useEffect(() => {
-        loadMore()
-    }, [inView, loadMore])
+        loadMoreCallback()
+    }, [inView, loadMoreCallback])
 
 
     const renderedPageData = useMemo(() => context.state.data.map((dataEntry, i) => {
@@ -69,18 +71,26 @@ export default function EndlessScroll<Data, Cursor, const PageSize extends numbe
         return () => {
             if (timerRef.current) clearTimeout(timerRef.current)
         }
-    }, [context.state.allLoaded])
+    }, [state])
 
     return (
         <>
             {wrapper(renderedPageData)}
             <span ref={ref} className={`${styles.loadingControl} ${loadingInfoClassName}`}>
-                <i style={{ opacity: showButton ? 0 : 1 }}>{
-                    context.state.data.length === 0
-                        ? 'Ingen data å laste inn'
-                        : 'Ingen flere å laste inn'
-                }</i>
-                <Button style={{ opacity: showButton ? 1 : 0 }} onClick={loadMore}>Last inn flere</Button>
+                {
+                    loading ? (
+                        <i>Laster inn flere...</i>
+                    ) : (
+                        <>
+                            <i style={{ opacity: showButton ? 0 : 1 }}>
+                                Ingen flere å laste inn.
+                            </i>
+                            <Button style={{ opacity: showButton ? 1 : 0 }} onClick={loadMoreCallback}>
+                                Last inn flere.
+                            </Button>
+                        </>
+                    )
+                }
             </span>
         </>
     )

@@ -357,6 +357,7 @@ const eslintConfig = defineConfig([
             'no-sequences': 'error',
             // disallow usage of expressions in statement position
             'no-unused-expressions': 'error',
+            '@typescript-eslint/no-unused-vars': 'error',
             // disallow unused labels
             'no-unused-labels': 'error',
             // disallow usage of configurable warning terms in comments: e.g. todo
