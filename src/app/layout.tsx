@@ -18,15 +18,16 @@ import { readUserProfileAction } from '@/services/users/actions'
 import { unwrapActionReturn } from './redirectToErrorPage'
 import { frontpageAuth } from '@/services/frontpage/auth'
 import { ServerSession } from '@/auth/session/ServerSession'
+import type { Metadata } from 'next'
 
 config.autoAddCss = false
 
 const inter = Inter({ subsets: ['latin'] })
 
-export const metadata = {
-    title: 'projectnext',
-    description: '',
-    charset: 'utf-8',
+export const metadata: Metadata = {
+    title: 'Sanctus Omega Broderskab',
+    description: 'Hjemmesiden for linjeforeningen Sanctus Omega Broderskab ved NTNU.',
+    keywords: ['Sanctus Omega Broderskab', 'Sanctus Omega', 'Sct. Omega', 'Omega'],
 }
 
 type PropTypes = {
