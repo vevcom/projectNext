@@ -3,13 +3,14 @@
 $background: ohma.$colors-white;
 
 .Card {
-    border-radius: ohma.$cardRounding;
     padding: ohma.$cardRounding;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, .16), 0 3px 6px rgba(0, 0, 0, .23); // TODO: Make this reusable
+    // box-shadow: 0 3px 6px rgba(0, 0, 0, .16), 0 3px 6px rgba(0, 0, 0, .23); // TODO: Make this reusable
     margin: 5*ohma.$gap 0;
-    overflow: hidden;
-    background-color: $background;
+    // overflow: hidden;
     
+    @include ohma.card();
+    @include ohma.layer();
+
     > h2 {
         font-size: ohma.$fonts-xl;
     }
