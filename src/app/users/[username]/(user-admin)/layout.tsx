@@ -29,11 +29,11 @@ export default async function UserAdmin({ children, params }: PropTypes & { chil
                 </main>
                 <SubPageNavBar>
                     <SubPageNavBarItem icon={faUser} href={hrefPrefix}>Profil</SubPageNavBarItem>
-                    <SubPageNavBarItem icon={faCircleDot} href={`${hrefPrefix}/dots`}>Prikker</SubPageNavBarItem>
+                    <SubPageNavBarItem icon={faCog} href={`${hrefPrefix}/settings`}>Innstillinger</SubPageNavBarItem>
                     <SubPageNavBarItem icon={faPaperPlane} href={`${hrefPrefix}/notifications`}>Notifikasjoner</SubPageNavBarItem>
+                    <SubPageNavBarItem icon={faCircleDot} href={`${hrefPrefix}/dots`}>Prikker</SubPageNavBarItem>
                     <SubPageNavBarItem icon={faMoneyBill1Wave} href={`${hrefPrefix}/konto`}>Konto</SubPageNavBarItem>
                     <SubPageNavBarItem icon={faKey} href={`${hrefPrefix}/permissions`}>Tilganger</SubPageNavBarItem>
-                    <SubPageNavBarItem icon={faCog} href={`${hrefPrefix}/settings`}>Innstillinger</SubPageNavBarItem>
                 </SubPageNavBar>
             </div>
         </PageWrapper>

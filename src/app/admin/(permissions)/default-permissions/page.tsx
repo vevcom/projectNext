@@ -7,7 +7,7 @@ export default async function Defaults() {
     const defaultPermissionsRes = await readDefaultPermissionsAction()
 
     if (!defaultPermissionsRes.success) {
-        throw new Error(`Kunne ikke hente standard tillganger. ${defaultPermissionsRes.errorCode}`)
+        throw new Error(`Kunne ikke hente standard tilganger. ${defaultPermissionsRes.errorCode}`)
     }
 
     const defaultPermissions = defaultPermissionsRes.data

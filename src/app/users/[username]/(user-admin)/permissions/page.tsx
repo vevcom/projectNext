@@ -9,15 +9,17 @@ export default async function UserSettings({ params }: PropTypes) {
 
     return (
         <div className={styles.wrapper}>
-            <h2>Tillganger:</h2>
+            <h2>Tilganger:</h2>
+            <p><i>Her ser du hvilke funksjoner brukeren din har tilgang til. Kun administratorere kan endre disse.</i></p>
             <ul>
                 {profile.permissions.map(permission =>
                     <Permission key={uuid()} permission={permission} className={styles.permission} />
                 )}
             </ul>
-            <h2>Grupper:</h2>
+            <h2>Grupper ID-er:</h2>
+            <p><i>Hvilke grupper du er medlem av avgjør hvilke tilganger du har.</i></p>
             <ul>
-                {profile.memberships.map(membership => <li key={uuid()}>{membership.groupId}</li>)}
+                {profile.memberships.map(membership => <li style={{ listStyleType: 'none' }} key={uuid()}>{membership.groupId}</li>)}
             </ul>
         </div>
     )
