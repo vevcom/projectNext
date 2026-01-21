@@ -99,7 +99,7 @@ export default function CommitteeLogoRoll({ committees, periodName }: PropTypes)
 
     return (
         <div className={styles.CommitteeLogoRoll}>
-            {dispays.map((displayKey, i) => {
+            {dispays.map((displayKey) => {
                 const idx = currentCommitteeIndexes[displayKey]
                 if (idx === null) return null
 
