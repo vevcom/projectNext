@@ -31,7 +31,9 @@ export default function LogIn() {
             <TextInput label="Passord" name="password" type="password"/>
             <BorderButton>Logg inn</BorderButton>
             <p><Link href="/send-reset-password-email" className={styles.resetPasswordLink}>Glemt passord?</Link></p>
-            <p style={{ color: 'red', visibility: error === 'CredentialsSignin' ? 'visible' : 'hidden' }}>{"Feil brukernavn eller passord. :("}</p>
+            <p style={{ color: 'red', visibility: error === 'CredentialsSignin' ? 'visible' : 'hidden' }}>
+                {'Feil brukernavn eller passord. :('}
+            </p>
         </form>
         <BorderButton onClick={() => signIn('feide', {
             redirect: true,

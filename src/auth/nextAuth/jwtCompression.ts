@@ -18,7 +18,7 @@ async function compressField(data: any): Promise<any> {
         return buffer.toString('base64')
     } catch (error) {
         console.error('Failed to compress JWT field: ', error)
-        
+
         return null
     }
 }
