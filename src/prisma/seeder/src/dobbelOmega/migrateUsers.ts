@@ -10,6 +10,7 @@ import type {
     enum_Users_sex as SEXOW,
 } from '@/prisma-generated-ow-basic/client'
 import type { Limits } from './migrationLimits'
+import { Record } from '@prisma/client/runtime/client'
 
 /**
  * TODO: Need migrate reservations (mail reservations) ?, and flairs
@@ -53,6 +54,15 @@ const userIncluder = {
 type userExtended = OwPrisma.UsersGetPayload<{
     include: typeof userIncluder
 }>
+
+// Map from flair-number in ow to the rank in pn
+const flairMap: Record<number, number> = {
+    1: 3, // Gull
+    2: 4, // Sølv
+    3: 5, // Bronse
+    5: 2, // Diamant
+    7: 1, // Påske kappe
+}
 
 export class UserMigrator {
     private userIdMap: Record<number, number> = {}
@@ -267,6 +277,28 @@ export class UserMigrator {
                     `Failed to conenct StudentCard to user. StudentCard: ${user.MoneySourceAccounts?.NTNUCard} `,
                     `User: ${pnUser} Error: ${e}`
                 )
+            }
+        }
+
+        // Add a flair
+        if (user.flair > 0 && user.flair !== 6) {
+            // I'm sorry wilhelwi100 and magnmaeh100 your Piinligheed Cringemeisteren dies in this migration
+            const flairRank = flairMap[user.flair]
+            if (!flairRank) {
+                console.error(`Unknown flair found: ${user.flair}`)
+            } else {
+                await this.pnPrisma.flair.update({
+                    where: {
+                        rank: flairRank
+                    },
+                    data: {
+                        user: {
+                            connect: {
+                                id: pnUser.id
+                            }
+                        }
+                    }
+                })
             }
         }
 
