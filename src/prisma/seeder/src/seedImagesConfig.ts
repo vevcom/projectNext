@@ -111,7 +111,47 @@ export const seedImageConfig: ImageSeedConfig = [
         collection: 'PROFILEIMAGES',
         credit: null,
         license: null,
-    }
+    },
+    {
+        name: 'kappemann_bronse',
+        alt: 'Kappemann bronse',
+        fsLocation: 'kappemann_bronse.png',
+        collection: 'FLAIRIMAGES',
+        credit: null,
+        license: null,
+    },
+    {
+        name: 'kappemann_solv',
+        alt: 'Kappemann solv',
+        fsLocation: 'kappemann_solv.png',
+        collection: 'FLAIRIMAGES',
+        credit: null,
+        license: null,
+    },
+    {
+        name: 'kappemann_gull',
+        alt: 'Kappemann gull',
+        fsLocation: 'kappemann_gull.png',
+        collection: 'FLAIRIMAGES',
+        credit: null,
+        license: null,
+    },
+    {
+        name: 'kappemann_diamant',
+        alt: 'Kappemann diamant',
+        fsLocation: 'kappemann_diamant.png',
+        collection: 'FLAIRIMAGES',
+        credit: null,
+        license: null,
+    },
+    {
+        name: 'kappemann_paske',
+        alt: 'Kappemann paske',
+        fsLocation: 'kappemann_paske.png',
+        collection: 'FLAIRIMAGES',
+        credit: null,
+        license: null,
+    },
 ]
 
 /**
