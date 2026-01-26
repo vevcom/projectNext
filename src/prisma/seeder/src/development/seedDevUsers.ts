@@ -69,6 +69,7 @@ export default async function seedDevUsers(prisma: PrismaClient) {
     const allStudyProgrammes = await prisma.studyProgramme.findMany()
     const allCommittees = await prisma.committee.findMany()
     const allClasses = await prisma.class.findMany()
+    const allFlairs = await prisma.flair.findMany()
 
     Promise.all(firstNames.map(async (firstName, i) => {
         await Promise.all(lastNames.map(async (lastName, j) => {
@@ -156,6 +157,23 @@ export default async function seedDevUsers(prisma: PrismaClient) {
             await prisma.membership.createMany({
                 data: memberships
             })
+
+            if (Math.random() < 0.05) {
+                const flair = allFlairs[randomInt(allFlairs.length)]
+
+                await prisma.flair.update({
+                    where: {
+                        id: flair.id,
+                    },
+                    data: {
+                        user: {
+                            connect: {
+                                id: user.id
+                            }
+                        }
+                    }
+                })
+            }
         }))
     }))
 
