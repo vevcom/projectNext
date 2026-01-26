@@ -71,23 +71,3 @@ export async function readSpecialImageCollectionAction(special: SpecialCollectio
     //TODO: Check permission associated with the special collection
     return await safeServerCall(() => readSpecialImageCollection(special))
 }
-
-/**
- * A action that updates an image collection
- * @param collectionId - the id of the collection to update
- * @param coverImageId - the id of the image to set as the cover image (optional)
- * @param rawdata - the data to update the collection with
- * @returns - the updated collection in ActionReturn
- */
-export async function updateImageCollectionAction(
-    collectionId: number,
-    coverImageId: number | undefined,
-    rawdata: FormData | UpdateImageCollectionTypes['Type']
-): Promise<ActionReturn<ImageCollection>> {
-    const parse = updateImageCollectionValidation.typeValidate(rawdata)
-
-    if (!parse.success) return createZodActionError(parse)
-    const data = parse.data
-
-    return await safeServerCall(() => updateImageCollection(collectionId, coverImageId, data))
-}

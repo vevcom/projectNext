@@ -2,8 +2,8 @@ import '@pn-server-only'
 import { visibilitySchemas } from './schemas'
 import { defineOperation, defineSubOperation } from '@/services/serviceOperation'
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
-import { ServerOnly } from '@/auth/authorizer/ServerOnly'
 import { ServerError } from '@/services/error'
+import { ServerOnly } from '@/auth/authorizer/ServerOnly'
 import type { VisibilityMatrix } from './types'
 
 export const visibilityOperations = {

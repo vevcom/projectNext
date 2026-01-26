@@ -20,6 +20,8 @@ type OwnedVisibility = Prisma.ArticleGetPayload<{
 }>
 /**
  * This utility implements the read and update operations for visibility
+ * The update and destroy operations are normal operations meant only for
+ * internal use (server-only).
  */
 export function implementVisibilityOperations<
     const ImplementationParamsSchema extends z.ZodTypeAny
