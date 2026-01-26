@@ -8,6 +8,11 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import type { ReactNode } from 'react'
 import type { PropTypes } from '@/app/users/[username]/page'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+    title: 'Innstillinger',
+}
 
 export default async function UserAdmin({ children, params }: PropTypes & { children: ReactNode }) {
     const session = await ServerSession.fromNextAuth()

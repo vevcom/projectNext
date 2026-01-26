@@ -25,19 +25,20 @@ export default function LogIn() {
         })
     }
 
-    return <>
+    return <div className={styles.loginContainer}>
         <form onSubmit={handleSignIn}>
             <TextInput label="Brukernavn" name="username" type="text"/>
             <TextInput label="Passord" name="password" type="password"/>
             <BorderButton>Logg inn</BorderButton>
-            <p style={{ color: 'red' }}>{error === 'CredentialsSignin' ? 'Feil brukernavn eller passord :(' : ''}</p>
+            <p><Link href="/send-reset-password-email" className={styles.resetPasswordLink}>Glemt passord?</Link></p>
+            <p style={{ color: 'red', visibility: error === 'CredentialsSignin' ? 'visible' : 'hidden' }}>
+                {'Feil brukernavn eller passord. :('}
+            </p>
         </form>
         <BorderButton onClick={() => signIn('feide', {
             redirect: true,
             callbackUrl: searchParams.get('callbackUrl') || '/users/me'
-        })}>Logg inn med Feide</BorderButton>
-        <br />
-        <Link href="/send-reset-password-email" className={styles.resetPasswordLink}>Glemt passord?</Link>
-        <p>Er det første gang du logger inn? Da er det bare å logge inn med feide for å lage en bruker.</p>
-    </>
+        })}>Fortsett med Feide</BorderButton>
+        <p>For å opprette bruker logg inn med Feide.</p>
+    </div>
 }
