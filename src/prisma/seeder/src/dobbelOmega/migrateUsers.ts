@@ -3,6 +3,7 @@ import { type IdMapper, owIdToPnId } from './IdMapper'
 import manifest from '@/seeder/src/logger'
 import { Prisma, type PrismaClient as PrismaClientPn, type SEX } from '@/prisma-generated-pn-client'
 import { v4 as uuid } from 'uuid'
+import type { Record } from '@prisma/client/runtime/client'
 import type { User } from '@/prisma-generated-pn-client'
 import type {
     Prisma as OwPrisma,
@@ -10,7 +11,6 @@ import type {
     enum_Users_sex as SEXOW,
 } from '@/prisma-generated-ow-basic/client'
 import type { Limits } from './migrationLimits'
-import { Record } from '@prisma/client/runtime/client'
 
 /**
  * TODO: Need migrate reservations (mail reservations) ?, and flairs
@@ -381,212 +381,212 @@ export class UserMigrator {
                     manifest.error(`User ${user.id} has no years in programme or no programme`)
                     break
                 case 2:
-                {
-                    //ASSUME 2 years masters. The user can be member of 4 5 and 6 (siving)
-                    let yearOfStudy2 = user.yearOfStudy
-                    if (yearOfStudy2 < 4) {
-                        manifest.error(
-                            `User ${user.id} is in 2 year programme but has year of study less than 4 - setting to 4`
-                        )
-                        yearOfStudy2 = 4
-                    }
-                    if (yearOfStudy2 > 6) {
-                        manifest.error(
-                            `User ${user.id} is in 2 year programme but has year of study greater than 6 - setting to 6`
-                        )
-                        yearOfStudy2 = 6
-                    }
-                    if (yearOfStudy2 === 6) {
-                        const orderBecameSiving = user.order + 2
-                        await this.pnPrisma.membership.create({
-                            data: {
-                                groupId: this.yearIdMap(6),
-                                userId: pnUser.id,
-                                active: true,
-                                admin: false,
-                                order: orderBecameSiving,
-                            }
-                        })
-                        await this.pnPrisma.membership.create({
-                            data: {
-                                groupId: this.yearIdMap(5),
-                                userId: pnUser.id,
-                                active: false,
-                                admin: false,
-                                order: orderBecameSiving - 1,
-                            }
-                        })
-                        await this.pnPrisma.membership.create({
-                            data: {
-                                groupId: this.yearIdMap(4),
-                                userId: pnUser.id,
-                                active: false,
-                                admin: false,
-                                order: orderBecameSiving - 2,
-                            }
-                        })
-                    } else if (yearOfStudy2 === 5) {
-                        const orderBecame5 = user.order + 1
-                        await this.pnPrisma.membership.create({
-                            data: {
-                                groupId: this.yearIdMap(5),
-                                userId: pnUser.id,
-                                active: true,
-                                admin: false,
-                                order: orderBecame5,
-                            }
-                        })
-                        await this.pnPrisma.membership.create({
-                            data: {
-                                groupId: this.yearIdMap(4),
-                                userId: pnUser.id,
-                                active: false,
-                                admin: false,
-                                order: orderBecame5 - 1,
-                            }
-                        })
-                    } else if (yearOfStudy2 === 4) {
-                        await this.pnPrisma.membership.create({
-                            data: {
-                                groupId: this.yearIdMap(4),
-                                userId: pnUser.id,
-                                active: true,
-                                admin: false,
-                                order: user.order,
-                            }
-                        })
-                    } else {
-                        manifest.error(`User ${user.id} is in a 2 year programme but not in year 4, 5 or 6`)
-                    }
-                    break
-                }
-                case 3:
-                {
-                    //ASSUME 3 years bachelors. The user can be member of 1 2 and 3, and cannot be siving.
-                    let yearOfStudy3 = user.yearOfStudy
-                    if (yearOfStudy3 < 1) {
-                        manifest.error(`User ${user.id} has year of study less than 1 - setting to 1`)
-                        yearOfStudy3 = 1
-                    }
-                    if (yearOfStudy3 > 3) {
-                        manifest.error(`User ${user.id} has year of study greater than 3 - setting to 3`)
-                        yearOfStudy3 = 3
-                    }
-                    if (yearOfStudy3 === 1) {
-                        await this.pnPrisma.membership.create({
-                            data: {
-                                groupId: this.yearIdMap(1),
-                                userId: pnUser.id,
-                                active: true,
-                                admin: false,
-                                order: user.order,
-                            }
-                        })
-                    } else if (yearOfStudy3 === 2) {
-                        await this.pnPrisma.membership.create({
-                            data: {
-                                groupId: this.yearIdMap(2),
-                                userId: pnUser.id,
-                                active: true,
-                                admin: false,
-                                order: user.order,
-                            }
-                        })
-                        await this.pnPrisma.membership.create({
-                            data: {
-                                groupId: this.yearIdMap(1),
-                                userId: pnUser.id,
-                                active: false,
-                                admin: false,
-                                order: user.order - 1,
-                            }
-                        })
-                    } else if (yearOfStudy3 === 3) {
-                        // This is a nut - it is hard to say if the user still is in 3. grade.
-                        // We will assume that the user is in 3. grade if the order is gte 103
-                        await this.pnPrisma.membership.create({
-                            data: {
-                                groupId: this.yearIdMap(3),
-                                userId: pnUser.id,
-                                active: user.order >= 103,
-                                admin: false,
-                                order: user.order,
-                            }
-                        })
-                        await this.pnPrisma.membership.create({
-                            data: {
-                                groupId: this.yearIdMap(2),
-                                userId: pnUser.id,
-                                active: false,
-                                admin: false,
-                                order: user.order - 1,
-                            }
-                        })
-                        await this.pnPrisma.membership.create({
-                            data: {
-                                groupId: this.yearIdMap(1),
-                                userId: pnUser.id,
-                                active: false,
-                                admin: false,
-                                order: user.order - 2,
-                            }
-                        })
-                    }
-                    break
-                }
-                case 5:
-                {
-                    // Assuming 5 year masters. The user can be member of 1 2 3 4 5 and 6 (siving)
-                    let yearOfStudy5 = user.yearOfStudy
-                    if (yearOfStudy5 < 1) {
-                        manifest.error(
-                            `User ${user.id} is in 5 year programme but has year of study less than 1 - setting to 1`
-                        )
-                        yearOfStudy5 = 1
-                    }
-                    if (yearOfStudy5 > 6) {
-                        manifest.error(
-                            `User ${user.id} is in 5 year programme but has year of study greater than 6 - setting to 6`
-                        )
-                        yearOfStudy5 = 6
-                    }
-                    if (yearOfStudy5 === 6) {
-                        const orderBecameSiving = user.order + 5 // Assume the user used 5 years to get to sivin
-                        await this.pnPrisma.membership.create({
-                            data: {
-                                groupId: this.yearIdMap(6),
-                                userId: pnUser.id,
-                                active: true,
-                                admin: false,
-                                order: orderBecameSiving,
-                            }
-                        })
-                        for (let i = 5; i >= 1; i--) {
+                    {
+                        //ASSUME 2 years masters. The user can be member of 4 5 and 6 (siving)
+                        let yearOfStudy2 = user.yearOfStudy
+                        if (yearOfStudy2 < 4) {
+                            manifest.error(
+                                `User ${user.id} is in 2 year programme but has year of study less than 4 - setting to 4`
+                            )
+                            yearOfStudy2 = 4
+                        }
+                        if (yearOfStudy2 > 6) {
+                            manifest.error(
+                                `User ${user.id} is in 2 year programme but has year of study greater than 6 - setting to 6`
+                            )
+                            yearOfStudy2 = 6
+                        }
+                        if (yearOfStudy2 === 6) {
+                            const orderBecameSiving = user.order + 2
                             await this.pnPrisma.membership.create({
                                 data: {
-                                    groupId: this.yearIdMap(i),
+                                    groupId: this.yearIdMap(6),
+                                    userId: pnUser.id,
+                                    active: true,
+                                    admin: false,
+                                    order: orderBecameSiving,
+                                }
+                            })
+                            await this.pnPrisma.membership.create({
+                                data: {
+                                    groupId: this.yearIdMap(5),
                                     userId: pnUser.id,
                                     active: false,
                                     admin: false,
-                                    order: orderBecameSiving - (6 - i),
+                                    order: orderBecameSiving - 1,
                                 }
                             })
-                        }
-                    } else {
-                        for (let year = 1; year <= yearOfStudy5; year++) {
                             await this.pnPrisma.membership.create({
                                 data: {
-                                    groupId: this.yearIdMap(year),
+                                    groupId: this.yearIdMap(4),
                                     userId: pnUser.id,
-                                    active: year === yearOfStudy5,
+                                    active: false,
                                     admin: false,
-                                    order: user.order + year - 1,
+                                    order: orderBecameSiving - 2,
+                                }
+                            })
+                        } else if (yearOfStudy2 === 5) {
+                            const orderBecame5 = user.order + 1
+                            await this.pnPrisma.membership.create({
+                                data: {
+                                    groupId: this.yearIdMap(5),
+                                    userId: pnUser.id,
+                                    active: true,
+                                    admin: false,
+                                    order: orderBecame5,
+                                }
+                            })
+                            await this.pnPrisma.membership.create({
+                                data: {
+                                    groupId: this.yearIdMap(4),
+                                    userId: pnUser.id,
+                                    active: false,
+                                    admin: false,
+                                    order: orderBecame5 - 1,
+                                }
+                            })
+                        } else if (yearOfStudy2 === 4) {
+                            await this.pnPrisma.membership.create({
+                                data: {
+                                    groupId: this.yearIdMap(4),
+                                    userId: pnUser.id,
+                                    active: true,
+                                    admin: false,
+                                    order: user.order,
+                                }
+                            })
+                        } else {
+                            manifest.error(`User ${user.id} is in a 2 year programme but not in year 4, 5 or 6`)
+                        }
+                        break
+                    }
+                case 3:
+                    {
+                        //ASSUME 3 years bachelors. The user can be member of 1 2 and 3, and cannot be siving.
+                        let yearOfStudy3 = user.yearOfStudy
+                        if (yearOfStudy3 < 1) {
+                            manifest.error(`User ${user.id} has year of study less than 1 - setting to 1`)
+                            yearOfStudy3 = 1
+                        }
+                        if (yearOfStudy3 > 3) {
+                            manifest.error(`User ${user.id} has year of study greater than 3 - setting to 3`)
+                            yearOfStudy3 = 3
+                        }
+                        if (yearOfStudy3 === 1) {
+                            await this.pnPrisma.membership.create({
+                                data: {
+                                    groupId: this.yearIdMap(1),
+                                    userId: pnUser.id,
+                                    active: true,
+                                    admin: false,
+                                    order: user.order,
+                                }
+                            })
+                        } else if (yearOfStudy3 === 2) {
+                            await this.pnPrisma.membership.create({
+                                data: {
+                                    groupId: this.yearIdMap(2),
+                                    userId: pnUser.id,
+                                    active: true,
+                                    admin: false,
+                                    order: user.order,
+                                }
+                            })
+                            await this.pnPrisma.membership.create({
+                                data: {
+                                    groupId: this.yearIdMap(1),
+                                    userId: pnUser.id,
+                                    active: false,
+                                    admin: false,
+                                    order: user.order - 1,
+                                }
+                            })
+                        } else if (yearOfStudy3 === 3) {
+                            // This is a nut - it is hard to say if the user still is in 3. grade.
+                            // We will assume that the user is in 3. grade if the order is gte 103
+                            await this.pnPrisma.membership.create({
+                                data: {
+                                    groupId: this.yearIdMap(3),
+                                    userId: pnUser.id,
+                                    active: user.order >= 103,
+                                    admin: false,
+                                    order: user.order,
+                                }
+                            })
+                            await this.pnPrisma.membership.create({
+                                data: {
+                                    groupId: this.yearIdMap(2),
+                                    userId: pnUser.id,
+                                    active: false,
+                                    admin: false,
+                                    order: user.order - 1,
+                                }
+                            })
+                            await this.pnPrisma.membership.create({
+                                data: {
+                                    groupId: this.yearIdMap(1),
+                                    userId: pnUser.id,
+                                    active: false,
+                                    admin: false,
+                                    order: user.order - 2,
                                 }
                             })
                         }
+                        break
                     }
-                    break
-                }
+                case 5:
+                    {
+                        // Assuming 5 year masters. The user can be member of 1 2 3 4 5 and 6 (siving)
+                        let yearOfStudy5 = user.yearOfStudy
+                        if (yearOfStudy5 < 1) {
+                            manifest.error(
+                                `User ${user.id} is in 5 year programme but has year of study less than 1 - setting to 1`
+                            )
+                            yearOfStudy5 = 1
+                        }
+                        if (yearOfStudy5 > 6) {
+                            manifest.error(
+                                `User ${user.id} is in 5 year programme but has year of study greater than 6 - setting to 6`
+                            )
+                            yearOfStudy5 = 6
+                        }
+                        if (yearOfStudy5 === 6) {
+                            const orderBecameSiving = user.order + 5 // Assume the user used 5 years to get to sivin
+                            await this.pnPrisma.membership.create({
+                                data: {
+                                    groupId: this.yearIdMap(6),
+                                    userId: pnUser.id,
+                                    active: true,
+                                    admin: false,
+                                    order: orderBecameSiving,
+                                }
+                            })
+                            for (let i = 5; i >= 1; i--) {
+                                await this.pnPrisma.membership.create({
+                                    data: {
+                                        groupId: this.yearIdMap(i),
+                                        userId: pnUser.id,
+                                        active: false,
+                                        admin: false,
+                                        order: orderBecameSiving - (6 - i),
+                                    }
+                                })
+                            }
+                        } else {
+                            for (let year = 1; year <= yearOfStudy5; year++) {
+                                await this.pnPrisma.membership.create({
+                                    data: {
+                                        groupId: this.yearIdMap(year),
+                                        userId: pnUser.id,
+                                        active: year === yearOfStudy5,
+                                        admin: false,
+                                        order: user.order + year - 1,
+                                    }
+                                })
+                            }
+                        }
+                        break
+                    }
                 default:
                     manifest.error(`User ${user.id} has ${yearsInProgramme} years in programme - dobbelOmega failed :(`)
             }

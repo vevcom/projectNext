@@ -10,7 +10,7 @@ const flairConfig: {
     {
         imageName: 'kappemann_paske',
         data: {
-            name: 'Påske kappe',
+            name: 'Påskekappe',
             rank: 1,
             colorR: 255,
             colorG: 255,
@@ -20,7 +20,7 @@ const flairConfig: {
     {
         imageName: 'kappemann_diamant',
         data: {
-            name: 'Diamant kappe',
+            name: 'Diamantkappe',
             rank: 2,
             colorR: 0,
             colorG: 204,
@@ -30,7 +30,7 @@ const flairConfig: {
     {
         imageName: 'kappemann_gull',
         data: {
-            name: 'Gull kappe',
+            name: 'Gullkappe',
             rank: 3,
             colorR: 255,
             colorG: 215,
@@ -40,7 +40,7 @@ const flairConfig: {
     {
         imageName: 'kappemann_solv',
         data: {
-            name: 'Solv kappe',
+            name: 'Solvkappe',
             rank: 4,
             colorR: 217,
             colorG: 217,
@@ -50,7 +50,7 @@ const flairConfig: {
     {
         imageName: 'kappemann_bronse',
         data: {
-            name: 'Bronse kappe',
+            name: 'Bronsekappe',
             rank: 5,
             colorR: 255,
             colorG: 153,

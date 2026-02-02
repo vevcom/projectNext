@@ -1,5 +1,4 @@
 import Flair from '@/components/Flair/Flair'
-import { Session } from '@/auth/session/Session'
 import type { UserFiltered } from '@/services/users/types'
 import styles from './UserDisplayName.module.scss'
 
