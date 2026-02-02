@@ -4,17 +4,33 @@ import type { SessionType, UserGuaranteeOption } from '@/auth/session/Session'
 
 export type AuthStatus = 'AUTHORIZED' | 'UNAUTHORIZED' | 'AUTHORIZED_NO_USER' | 'UNAUTHENTICATED'
 
-export type AuthResultType<UserGuatantee extends UserGuaranteeOption, Authorized extends boolean> = {
+export type AuthResultTypeWithoutStatus<
+    UserGuatantee extends UserGuaranteeOption,
+    Authorized extends boolean,
+    PrismaWhereFilter extends object | undefined = undefined
+> = {
     session: SessionType<UserGuatantee>,
     errorMessage?: string,
     authorized: Authorized,
-    status: AuthStatus,
+    prismaWhereFilter: PrismaWhereFilter,
 }
 
-export type AuthResultTypeAny = AuthResultType<UserGuaranteeOption, boolean>
+export type AuthResultType<
+    UserGuatantee extends UserGuaranteeOption,
+    Authorized extends boolean,
+    PrismaWhereFilter extends object | undefined = undefined
+> = AuthResultTypeWithoutStatus<UserGuatantee, Authorized, PrismaWhereFilter> & {
+    status: AuthStatus
+}
 
-export class AuthResult<const UserGuatantee extends UserGuaranteeOption, const Authorized extends boolean> {
-    private authResult: Omit<AuthResultType<UserGuatantee, Authorized>, 'status'>
+export type AuthResultTypeAny = AuthResultType<UserGuaranteeOption, boolean, object | undefined>
+
+export class AuthResult<
+    const UserGuatantee extends UserGuaranteeOption,
+    const Authorized extends boolean,
+    const PrismaWhereFilter extends object | undefined = undefined
+> {
+    private authResult: AuthResultTypeWithoutStatus<UserGuatantee, Authorized, PrismaWhereFilter>
     public get authorized() {
         return this.authResult.authorized
     }
@@ -23,10 +39,16 @@ export class AuthResult<const UserGuatantee extends UserGuaranteeOption, const A
         return this.authResult.session
     }
 
-    public constructor(session: SessionType<UserGuatantee>, authorized: Authorized, errorMessage?: string) {
+    public constructor(
+        session: SessionType<UserGuatantee>,
+        authorized: Authorized,
+        prismaWhereFilter: PrismaWhereFilter,
+        errorMessage?: string
+    ) {
         this.authResult = {
             session,
             authorized,
+            prismaWhereFilter,
             errorMessage,
         }
     }
@@ -51,7 +73,7 @@ export class AuthResult<const UserGuatantee extends UserGuaranteeOption, const A
      * as you cannot send class instances to a client component from a server component.
      * @returns A javascript object representation of the AuthResult
      */
-    public toJsObject(): AuthResultType<UserGuatantee, Authorized> {
+    public toJsObject(): AuthResultType<UserGuatantee, Authorized, PrismaWhereFilter> {
         return {
             session: {
                 // Note: spread is neccessary if the session stored on the AuthResult is the Session class and
@@ -61,16 +83,25 @@ export class AuthResult<const UserGuatantee extends UserGuaranteeOption, const A
             authorized: this.authorized,
             errorMessage: this.getErrorMessage,
             status: this.status,
+            prismaWhereFilter: this.authResult.prismaWhereFilter,
         }
     }
 
-    public static fromJsObject<const UserGuatantee_ extends UserGuaranteeOption, const Authorized_ extends boolean>(
-        authResult: AuthResultType<UserGuatantee_, Authorized_>
-    ): AuthResult<UserGuatantee_, Authorized_> {
-        return new AuthResult(authResult.session, authResult.authorized, authResult.errorMessage)
+    public static fromJsObject<
+        const UserGuatantee_ extends UserGuaranteeOption,
+        const Authorized_ extends boolean,
+        const PrismaWhereFilter_ extends object | undefined = undefined
+    >(
+        authResult: AuthResultType<UserGuatantee_, Authorized_, PrismaWhereFilter_>
+    ): AuthResult<UserGuatantee_, Authorized_, PrismaWhereFilter_> {
+        return new AuthResult(
+            authResult.session, authResult.authorized, authResult.prismaWhereFilter, authResult.errorMessage
+        )
     }
 
-    public redirectOnUnauthorized({ returnUrl }: { returnUrl?: string }) : AuthResult<UserGuatantee, true> {
+    public redirectOnUnauthorized(
+        { returnUrl }: { returnUrl?: string }
+    ) : AuthResult<UserGuatantee, true, PrismaWhereFilter> {
         if (!this.authorized) {
             if (this.session.user) {
                 if (!this.session.user.acceptedTerms) {
@@ -86,6 +117,6 @@ export class AuthResult<const UserGuatantee extends UserGuaranteeOption, const A
             }
             redirect('/login')
         }
-        return new AuthResult(this.session, true)
+        return new AuthResult(this.session, true, this.authResult.prismaWhereFilter)
     }
 }
