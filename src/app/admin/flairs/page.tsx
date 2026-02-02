@@ -58,7 +58,7 @@ export default async function FlairUpdatePage() {
                     {flairs.map((flair, i) => (
                         <tr key={flair.id}>
                             <td>
-                                <Flair session={session} flair={flair} width={100} />
+                                <Flair asClient={false} session={session} flair={flair} width={100} />
                             </td>
                             <td>{flair.name}</td>
                             <td style={{

@@ -9,7 +9,6 @@ import { ServerSession } from '@/auth/session/ServerSession'
 import { sexConfig } from '@/services/users/constants'
 import { readUserFlairsAction } from '@/services/flairs/actions'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
-import Flair from '@/components/Flair/Flair'
 import { RelationshipStatus } from '@/prisma-generated-pn-types'
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
@@ -101,16 +100,12 @@ export default async function User({ params }: PropTypes) {
                 <div className={styles.profileContent} style={borderColour}>
                     <ProfilePicture width={240} profileImage={profileImage} className={styles.profilePicture}/>
                     <div className={styles.header}>
-                        <div className={styles.nameAndFlairContainer}>
-                            <div className={styles.nameAndId}>
-                                <h1><UserDisplayName user={profile.user} /></h1>
-                            </div>
-                            <div className={styles.flairContainer}>
-                                {flairs.map((flair, index) => (
-                                    <Flair key={index} flair={flair} session={session} width={40} />
-                                ))
-                                }
-                            </div>
+                        <div className={styles.nameAndId}>
+                            <h1><UserDisplayName
+                                user={profile.user}
+                                width={40}
+                                asClient={false}
+                            /></h1>
                         </div>
                         {studyProgrammes.map((studyProgramme, i) =>
                             <p key={i} className={styles.studyProgramme}>

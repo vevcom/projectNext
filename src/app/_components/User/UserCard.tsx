@@ -10,12 +10,14 @@ export default function UserCard({
     user,
     className,
     subText,
+    asClient,
 }: {
     user: UserFiltered & {
         image: Image
     },
     className?: string,
     subText?: string,
+    asClient: boolean
 }) {
     return <Link
         className={`${styles.UserCard} ${className ? className : ''}`}
@@ -24,7 +26,7 @@ export default function UserCard({
         <ProfilePicture profileImage={user.image} width={60} />
         <div>
             <h6>
-                <UserDisplayName user={user} />
+                <UserDisplayName user={user} width={18} asClient={asClient}/>
             </h6>
             {subText && <p>{subText}</p>}
         </div>

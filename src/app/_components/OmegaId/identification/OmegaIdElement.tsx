@@ -43,11 +43,11 @@ export default function OmegaIdElement({ token }: {
     })
 
     if (session.loading) return <p>Loading...</p>
-    if (!session.session.user) return <p>Could not load OmegaID, since the user is not loggedin.</p>
+    if (!session.session.user) return <p>Could not load Omega-ID, since the user is not loggedin.</p>
     const user = session.session.user
 
     return <div className={styles.OmegaIdElement}>
-        <h2>Omega ID</h2>
+        <h2>Omega-ID</h2>
         <SVG
             text={compressOmegaId(tokenState)}
         />
