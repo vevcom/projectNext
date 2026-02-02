@@ -419,7 +419,8 @@ async function readUserTraversal(id: number): Promise<MailFlowObject> {
         where: {
             id,
         },
-        include: {
+        select: {
+            ...userFilterSelection,
             mailingLists: {
                 include: {
                     mailingList: {

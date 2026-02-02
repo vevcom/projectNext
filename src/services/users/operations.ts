@@ -49,6 +49,7 @@ export const userOperations = {
                         }]
                     }
                 },
+                select: userFilterSelection
             })
 
             setTimeout(() => sendUserInvitationEmail(user), 1000)
