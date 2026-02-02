@@ -1,11 +1,24 @@
-import type { User } from '@/prisma-generated-pn-types'
+import Flair from '@/components/Flair/Flair'
+import { Session } from '@/auth/session/Session'
+import type { UserFiltered } from '@/services/users/types'
+import styles from './UserDisplayName.module.scss'
 
 
 // TODO: Fix flairs / badges
 export default function UserDisplayName({
-    user
+    user,
+    width,
+    asClient
 }: {
-    user: Pick<User, 'firstname' | 'lastname'>
+    user: Pick<UserFiltered, 'firstname' | 'lastname' | 'flairs'>,
+    width: number,
+    asClient: boolean
 }) {
-    return <>{user.firstname} {user.lastname}</>
+    return <div className={styles.userDisplayName}>
+        <span>{user.firstname} {user.lastname}</span>
+
+        {user.flairs.map((flair, index) => (
+            <Flair key={index} flair={flair} disableEditor={true} width={width} asClient={asClient} />
+        ))}
+    </div>
 }
