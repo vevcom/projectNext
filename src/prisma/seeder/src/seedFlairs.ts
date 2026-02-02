@@ -1,7 +1,5 @@
-import { FlairCreateArgs } from '@/prisma-generated-pn/models'
 import type { FlairCreateInput } from '@/prisma-generated-pn/models'
 import type { PrismaClient } from '@/prisma-generated-pn-client'
-import { create } from 'domain'
 
 const flairConfig: {
     imageName: string,
