@@ -27,6 +27,6 @@ export const RequireJWT = AuthorizerFactory<
 
     return {
         success: true,
-        session
+        session,
     }
 })

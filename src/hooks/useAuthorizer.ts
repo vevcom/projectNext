@@ -12,20 +12,20 @@ function useAuthorizer({
     authorizer
 }: {
     authorizer: AuthorizerDynamicFieldsBound<'USER_NOT_REQUIERED_FOR_AUTHORIZED'>
-}): AuthResult<UserGuaranteeOption, boolean>
+}): AuthResult<UserGuaranteeOption, boolean, object | undefined>
 function useAuthorizer({
     authorizer
 }: {
     authorizer: AuthorizerDynamicFieldsBound<'USER_REQUIERED_FOR_AUTHORIZED'>
-}): AuthResult<UserGuaranteeOption, false> | AuthResult<'HAS_USER', true>
+}): AuthResult<UserGuaranteeOption, false, object | undefined> | AuthResult<'HAS_USER', true, object | undefined>
 function useAuthorizer({
     authorizer
 }: {
     authorizer: AuthorizerDynamicFieldsBound
-}): AuthResult<UserGuaranteeOption, boolean> {
+}): AuthResult<UserGuaranteeOption, boolean, object | undefined> {
     const session = useSession()
     if (session.loading) {
-        return new AuthResult(Session.empty(), false)
+        return new AuthResult(Session.empty(), false, undefined)
     }
     return authorizer.auth(session.session)
 }
