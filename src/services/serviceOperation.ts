@@ -377,23 +377,28 @@ export function defineSubOperation<
 
                 // Then, authorize user.
                 // This has to be done after the validation because the authorizer might use the data to authorize the user.
-                if (!bypassAuth) {
-                    if (!implementationArgs.authorizer) {
-                        throw new Smorekopp(
-                            'UNAUTHENTICATED',
-                            'This service operation is not externally callable.'
+                const prismaWhereFilter = await (async () => {
+                    if (!bypassAuth) {
+                        if (!implementationArgs.authorizer) {
+                            throw new Smorekopp(
+                                'UNAUTHENTICATED',
+                                'This service operation is not externally callable.'
+                            )
+                        }
+
+                        const authorizer = await prismaErrorWrapper(
+                            () => implementationArgs.authorizer({ ...args, prisma })
                         )
-                    }
+                        const authResult = authorizer.auth(session)
 
-                    const authorizer = await prismaErrorWrapper(
-                        () => implementationArgs.authorizer({ ...args, prisma })
-                    )
-                    const authResult = authorizer.auth(session)
+                        if (!authResult.authorized) {
+                            throw new Smorekopp(authResult.status, authResult.getErrorMessage)
+                        }
 
-                    if (!authResult.authorized) {
-                        throw new Smorekopp(authResult.status, authResult.getErrorMessage)
+                        return authResult.prismaWhereFilter
                     }
-                }
+                    return undefined
+                })()
 
                 const ownershipCheckResult = await prismaErrorWrapper(
                     () => implementationArgs.ownershipCheck({

@@ -39,6 +39,10 @@ export class AuthResult<
         return this.authResult.session
     }
 
+    public get prismaWhereFilter(): PrismaWhereFilter {
+        return this.authResult.prismaWhereFilter
+    }
+
     public constructor(
         session: SessionType<UserGuatantee>,
         authorized: Authorized,
