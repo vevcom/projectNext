@@ -1,10 +1,10 @@
 'use client'
+import { useSession } from '@/auth/session/useSession'
 import Form from '@/components/Form/Form'
 import { SelectNumber } from '@/components/UI/Select'
 import { createMailingListGroupRelationAction } from '@/services/mail/actions'
-import { useUser } from '@/auth/session/useUser'
 import type { MailFlowObject } from '@/services/mail/types'
-import type { MailingList } from '@prisma/client'
+import type { MailingList } from '@/prisma-generated-pn-types'
 
 
 export default function EditGroup({
@@ -19,9 +19,8 @@ export default function EditGroup({
     if (!focusedGroup) {
         throw Error('Could not find group')
     }
-
-    const uResults = useUser()
-    const permissions = uResults.permissions ?? []
+    const session = useSession()
+    const permissions = !session.loading ? session.session.permissions : []
 
     return <div>
         <h2>{focusedGroup.id}</h2>

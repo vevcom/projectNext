@@ -1,5 +1,5 @@
 import type { newsArticleRealtionsIncluder } from './constants'
-import type { NewsArticle, Image, Prisma } from '@prisma/client'
+import type { NewsArticle, Image, Prisma } from '@/prisma-generated-pn-types'
 
 export type ExpandedNewsArticle = Prisma.NewsArticleGetPayload<{
     include: typeof newsArticleRealtionsIncluder

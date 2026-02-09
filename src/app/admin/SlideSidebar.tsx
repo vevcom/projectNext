@@ -223,6 +223,10 @@ const navigations = [
                 title: 'Lisenser',
                 href: '/admin/licenses'
             },
+            {
+                title: 'Flairs',
+                href: '/admin/flairs'
+            },
         ]
     }
 ] satisfies {

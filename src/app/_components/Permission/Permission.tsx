@@ -1,7 +1,7 @@
 import styles from './Permission.module.scss'
 import { permissionConfig } from '@/services/permissions/constants'
 import type { ReactNode } from 'react'
-import type { Permission as PermissionT } from '@prisma/client'
+import type { Permission as PermissionT } from '@/prisma-generated-pn-types'
 
 type PropTypes = {
     permission: PermissionT

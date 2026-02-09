@@ -2,7 +2,7 @@ import 'next-auth'
 import 'next-auth/adapters'
 
 import type { MembershipFiltered } from '@/services/groups/types'
-import type { Permission } from '@prisma/client'
+import type { Permission } from '@/prisma-generated-pn-types'
 import type { UserFiltered } from '@/services/users/types'
 
 declare module 'next-auth' {

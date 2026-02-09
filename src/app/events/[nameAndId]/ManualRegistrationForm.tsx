@@ -8,7 +8,7 @@ import TextInput from '@/components/UI/TextInput'
 import { createEventRegistrationAction, createGuestEventRegistrationAction } from '@/services/events/registration/actions'
 import { configureAction } from '@/services/configureAction'
 import { useContext } from 'react'
-import type { EventRegistration } from '@prisma/client'
+import type { EventRegistration } from '@/prisma-generated-pn-types'
 import type { ActionReturn } from '@/services/actionTypes'
 
 function ManualRegistrationFormInner({

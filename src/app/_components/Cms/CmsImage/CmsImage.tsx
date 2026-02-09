@@ -5,12 +5,14 @@ import { readSpecialImageAction } from '@/services/images/actions'
 import React from 'react'
 import type { ExpandedCmsImage, UpdateCmsImageAction } from '@/cms/images/types'
 import type { PropTypes as ImagePropTypes } from '@/components/Image/Image'
+import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
 
 export type PropTypes = Omit<
     ImagePropTypes, 'className' | 'imageSize' | 'smallSize' | 'largeSize' | 'image' | 'children'
 > & {
     cmsImage: ExpandedCmsImage,
     updateCmsImageAction: UpdateCmsImageAction,
+    canEdit: AuthResultTypeAny
     children?: React.ReactNode
     className?: string
     classNameImage?: string
@@ -31,6 +33,7 @@ export const fallbackImage = '/images/fallback.jpg'
 export default async function CmsImage({
     cmsImage,
     updateCmsImageAction,
+    canEdit,
     children,
     className = '',
     classNameImage,
@@ -49,6 +52,7 @@ export default async function CmsImage({
             {!disableEditor && <CmsImageEditor
                 cmsImage={{ ...cmsImage, image }}
                 updateCmsImageAction={updateCmsImageAction}
+                canEdit={canEdit}
             />}
             <Image className={classNameImage} imageSize={cmsImage.imageSize} image={image} {...props}/>
             <div className={styles.children}>{children}</div>

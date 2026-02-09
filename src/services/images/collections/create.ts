@@ -1,10 +1,10 @@
 import '@pn-server-only'
 import { createImageCollectionValidation } from './validation'
-import { prisma } from '@/prisma/client'
+import { prisma } from '@/prisma-pn-client-instance'
 import { prismaCall } from '@/services/prismaCall'
 import { visibilityOperations } from '@/services/visibility/operations'
 import type { CreateImageCollectionTypes } from './validation'
-import type { ImageCollection } from '@prisma/client'
+import type { ImageCollection } from '@/prisma-generated-pn-types'
 
 export async function createImageCollection(
     rawdata: CreateImageCollectionTypes['Detailed']

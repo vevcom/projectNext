@@ -1,4 +1,4 @@
-import { RequireNothing } from '@/auth/auther/RequireNothing'
+import { RequireNothing } from '@/auth/authorizer/RequireNothing'
 
 
 export const newsAuth = {

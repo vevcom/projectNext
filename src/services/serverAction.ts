@@ -1,6 +1,6 @@
 import '@pn-server-only'
 import { safeServerCall } from './actionError'
-import { Session } from '@/auth/session/Session'
+import { ServerSession } from '@/auth/session/ServerSession'
 import type { Action, ActionReturn } from './actionTypes'
 import type { ServiceOperation } from '@/services/serviceOperation'
 import type { z } from 'zod'
@@ -93,7 +93,7 @@ export function makeAction<
         params: { params: unknown },
         data: { data: unknown } | FormData,
     ): Promise<ActionReturn<Return>> => {
-        const session = await Session.fromNextAuth()
+        const session = await ServerSession.fromNextAuth()
 
         let processedData: unknown
         if (data instanceof FormData) {

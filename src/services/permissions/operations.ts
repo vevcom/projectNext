@@ -1,11 +1,11 @@
 import '@pn-server-only'
 import { permissionsAuth } from './auth'
 import { defineOperation } from '@/services/serviceOperation'
-import { ServerOnlyAuther } from '@/auth/auther/RequireServer'
+import { ServerOnlyAuthorizer } from '@/auth/authorizer/RequireServer'
 import { invalidateAllUserSessionData, invalidateManyUserSessionData } from '@/services/auth/invalidateSession'
 import { groupsWithRelationsIncluder } from '@/services/groups/constants'
 import { checkGroupValidity, inferGroupName } from '@/services/groups/operations'
-import { Permission } from '@prisma/client'
+import { Permission } from '@/prisma-generated-pn-types'
 import { z } from 'zod'
 
 
@@ -17,7 +17,7 @@ export const permissionOperations = {
     }),
 
     readPermissionsOfUser: defineOperation({
-        authorizer: ServerOnlyAuther,
+        authorizer: ServerOnlyAuthorizer,
         paramsSchema: z.object({
             userId: z.number(),
         }),

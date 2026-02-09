@@ -1,7 +1,6 @@
 'use server'
 
 import { createActionError, createZodActionError, safeServerCall } from '@/services/actionError'
-import { getUser } from '@/auth/session/getUser'
 import { createImageCollection } from '@/services/images/collections/create'
 import { destroyImageCollection } from '@/services/images/collections/destroy'
 import {
@@ -10,23 +9,18 @@ import {
     readSpecialImageCollection } from '@/services/images/collections/read'
 import { updateImageCollection } from '@/services/images/collections/update'
 import { createImageCollectionValidation, updateImageCollectionValidation } from '@/services/images/collections/validation'
-import { SpecialCollection } from '@prisma/client'
+import { SpecialCollection } from '@/prisma-generated-pn-types'
 import type { CreateImageCollectionTypes, UpdateImageCollectionTypes } from '@/services/images/collections/validation'
 import type { ExpandedImageCollection,
     ImageCollectionCursor,
     ImageCollectionPageReturn } from '@/services/images/collections/types'
 import type { ReadPageInput } from '@/lib/paging/types'
 import type { ActionReturn } from '@/services/actionTypes'
-import type { ImageCollection } from '@prisma/client'
+import type { ImageCollection } from '@/prisma-generated-pn-types'
 
 export async function createImageCollectionAction(
     rawdata: FormData | CreateImageCollectionTypes['Type']
 ): Promise<ActionReturn<ImageCollection>> {
-    const { authorized, status } = await getUser({
-        requiredPermissions: [['IMAGE_COLLECTION_CREATE']]
-    })
-    if (!authorized) return createActionError(status)
-
     const parse = createImageCollectionValidation.typeValidate(rawdata)
     if (!parse.success) return createZodActionError(parse)
     const data = parse.data

@@ -1,6 +1,7 @@
-import { allNotificationMethodsOn } from '@/services/notifications/constants'
-import { SpecialNotificationChannel } from '@prisma/client'
-import type { NotificationMethod, PrismaClient } from '@prisma/client'
+import { allNotificationMethodsOff, allNotificationMethodsOn } from '@/services/notifications/constants'
+import { SpecialNotificationChannel } from '@/prisma-generated-pn-types'
+import type { PrismaClient } from '@/prisma-generated-pn-client'
+import type { NotificationMethod } from '@/prisma-generated-pn-types'
 
 type ChannelInfo = {
     special?: SpecialNotificationChannel
@@ -36,28 +37,31 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
             special: 'NEW_OMBUL',
             name: 'Ny ombul',
             description: 'Varsling når det kommer ny ombul',
-            defaultMethods: allNotificationMethodsOn,
+            defaultMethods: allNotificationMethodsOff,
             availableMethods: allNotificationMethodsOn,
         },
         {
             special: 'NEW_NEWS_ARTICLE',
             name: 'Ny nyhetsartikkel',
             description: 'Varslinger om nye artikler',
-            defaultMethods: allNotificationMethodsOn,
+            defaultMethods: allNotificationMethodsOff,
             availableMethods: allNotificationMethodsOn,
         },
         {
             special: 'NEW_JOBAD',
             name: 'Ny jobbannonse',
             description: 'Varslinger at en ny jobbanonse er ute',
-            defaultMethods: allNotificationMethodsOn,
+            defaultMethods: {
+                email: false,
+                emailWeekly: true,
+            },
             availableMethods: allNotificationMethodsOn,
         },
         {
             special: 'NEW_OMEGAQUOTE',
             name: 'Ny omegaquote',
             description: 'Varslinger om en ny omega quote',
-            defaultMethods: allNotificationMethodsOn,
+            defaultMethods: allNotificationMethodsOff,
             availableMethods: allNotificationMethodsOn,
         },
         {
@@ -203,26 +207,26 @@ export default async function seedNotificationChannels(prisma: PrismaClient) {
         }
     })).id
 
-    await prisma.$queryRaw`INSERT INTO
-        "NotificationChannel" (
-            id,
-            "parentId",
-            name,
-            description,
-            special,
-            "defaultMethodsId",
-            "availableMethodsId",
-            "mailAliasId"
-        ) values (
-            default,
-            lastval(),
-            ${rChan.name},
-            ${rChan.description},
-            'ROOT',
-            ${rootDefault},
-            ${rootAvailable},
-            ${rootMailAlias}
-        );`
+    // The root is its own parent so we need to set its id explicitly.
+    // To do so we find the next available id. This might not be safe in
+    // a highly concurrent environment, but for seeding it should be fine.
+    const availableId = (await prisma.notificationChannel.aggregate({
+        _max: {
+            id: true,
+        },
+    }))._max.id || 1
+
+    await prisma.notificationChannel.create({
+        data: {
+            parentId: availableId,
+            name: rChan.name,
+            description: rChan.description,
+            special: 'ROOT',
+            defaultMethodsId: rootDefault,
+            availableMethodsId: rootAvailable,
+            mailAliasId: rootMailAlias,
+        }
+    })
 
     await Promise.all(channels
         .filter(channel => channel.special !== 'ROOT')

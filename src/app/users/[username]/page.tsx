@@ -1,15 +1,20 @@
 import styles from './page.module.scss'
 import BorderButton from '@/components/UI/BorderButton'
-import { Session } from '@/auth/session/Session'
 import { userAuth } from '@/services/users/auth'
 import ProfilePicture from '@/components/User/ProfilePicture'
 import UserDisplayName from '@/components/User/UserDisplayName'
 import { readUserProfileAction } from '@/services/users/actions'
 import { readSpecialImageAction } from '@/services/images/actions'
+import { ServerSession } from '@/auth/session/ServerSession'
 import { sexConfig } from '@/services/users/constants'
+import { readUserFlairsAction } from '@/services/flairs/actions'
+import { unwrapActionReturn } from '@/app/redirectToErrorPage'
+import { RelationshipStatus } from '@/prisma-generated-pn-types'
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { v4 as uuid } from 'uuid'
+import React from 'react'
+
 
 export type PropTypes = {
     params: Promise<{
@@ -18,7 +23,7 @@ export type PropTypes = {
 }
 
 export default async function User({ params }: PropTypes) {
-    const session = await Session.fromNextAuth()
+    const session = await ServerSession.fromNextAuth()
     if ((await params).username === 'me') {
         if (!session.user) redirect('/login')
         redirect(`/users/${session.user.username}`) //This throws.
@@ -41,6 +46,9 @@ export default async function User({ params }: PropTypes) {
     if (!omegaMembership) {
         throw new Error('Failed to load the omega membership level')
     }
+    const flairs = unwrapActionReturn(await readUserFlairsAction({ params: { userId: profile.user.id } })).sort(
+        (a, b) => a.rank - b.rank
+    )
 
     const profileImage = profile.user.image ? profile.user.image : await readSpecialImageAction.bind(
         null, { params: { special: 'DEFAULT_PROFILE_IMAGE' } }
@@ -49,27 +57,62 @@ export default async function User({ params }: PropTypes) {
         return res.data
     })
 
+
     const { authorized: canAdministrate } = userAuth.updateProfile.dynamicFields(
         { username: profile.user.username }
     ).auth(session)
 
+    const relationshipColour = {
+        [RelationshipStatus.SINGLE]: 'green',
+        [RelationshipStatus.ITS_COMPLICATED]: 'yellow',
+        [RelationshipStatus.TAKEN]: 'red',
+        [RelationshipStatus.NOT_SPECIFIED]: 'white'
+    }
+
+    const borderColour = { '--border-colour': relationshipColour[profile.user.relationshipStatus] } as React.CSSProperties
+
+    function memberhipTitle(): string {
+        switch (omegaMembership?.group.omegaMembershipGroup?.omegaMembershipLevel) {
+            case 'SOELLE':
+                return 'Soelle Noviice (avsky!)'
+            case 'MEMBER':
+                return `
+                    ${sexConfig[profile.user.sex ?? 'OTHER'].title}
+                    uudaf ${omegaMembership.order}´dis orden i Sanctus Omega Broderskab
+                `
+            case 'EXTERNAL':
+                return 'Ekstern'
+            default:
+        }
+        return 'Kunne ikke finne tittel'
+    }
+
     return (
         <div className={styles.wrapper}>
             <div className={styles.profile}>
-                <div className={`${styles.top} ${styles.standard}`} /> {/* TODO change style based on flair */}
+                <div
+                    style={ flairs.length > 0 ? {
+                        backgroundColor: `rgb(${flairs[0].colorR}, ${flairs[0].colorG}, ${flairs[0].colorB})`
+                    } : {} }
+                    className={`${styles.top} ${styles.standardFlairColor}`}
+                />
 
-                <div className={styles.profileContent}>
-                    <ProfilePicture width={240} profileImage={profileImage} />
+                <div className={styles.profileContent} style={borderColour}>
+                    <ProfilePicture width={240} profileImage={profileImage} className={styles.profilePicture}/>
                     <div className={styles.header}>
                         <div className={styles.nameAndId}>
-                            <h1><UserDisplayName user={profile.user} /></h1>
+                            <h1><UserDisplayName
+                                user={profile.user}
+                                width={40}
+                                asClient={false}
+                            /></h1>
                         </div>
-                        { studyProgrammes.map((studyProgramme, i) =>
+                        {studyProgrammes.map((studyProgramme, i) =>
                             <p key={i} className={styles.studyProgramme}>
                                 {studyProgramme.name} {`(${studyProgramme.code})`}
                             </p>
                         )}
-                        { classes.map((classGroup, i) =>
+                        {classes.map((classGroup, i) =>
                             <p key={i} className={styles.studyProgramme}>{classGroup.year}. årstrinn</p>
                         )}
                         <div className={styles.committeesWrapper}>
@@ -86,8 +129,7 @@ export default async function User({ params }: PropTypes) {
                         </div>
                         <hr />
                         <p className={styles.orderText}>
-                            {sexConfig[profile.user.sex ?? 'OTHER'].title}
-                            uudaf {omegaMembership.order}´dis orden i Sanctus Omega Broderskab
+                            { memberhipTitle() }
                         </p>
                     </div>
                     <div className={styles.leftSection}>
@@ -109,12 +151,29 @@ export default async function User({ params }: PropTypes) {
 
                     </div>
                     <div className={styles.profileMain}>
+
+
                         {(profile.user.bio !== '') &&
                             <div className={styles.bio}>
                                 <h2>Bio:</h2>
                                 <p>{profile.user.bio}</p>
                             </div>
                         }
+
+                        {(profile.user.relationshipStatus !== RelationshipStatus.NOT_SPECIFIED) &&
+                        <p>
+                            <span className={styles.relationshipStatus}>Sivilstatus: </span>
+                            {profile.user.relationshipStatusText ? profile.user.relationshipStatusText :
+                                profile.user.relationshipStatus === RelationshipStatus.SINGLE && 'Singel' ||
+                            profile.user.relationshipStatus === RelationshipStatus.ITS_COMPLICATED && 'Det er komplisert' ||
+                            profile.user.relationshipStatus === RelationshipStatus.TAKEN && 'I et forhold'
+
+                            }
+
+                        </p>
+                        }
+
+
                         <p>
                             <span className={styles.email}>E-post:</span>
                             {profile.user.email}
@@ -128,7 +187,7 @@ export default async function User({ params }: PropTypes) {
                             {profile.user.mobile}
                         </p>
 
-                        { (committeeMemberships.length > 0) && <div>
+                        {(committeeMemberships.length > 0) && <div>
                             <h2>Medlemsskap</h2>
                             {committeeMemberships.map((membership, i) => (
                                 <Link
@@ -138,7 +197,7 @@ export default async function User({ params }: PropTypes) {
                                     <p>{membership.title} i {membership.group.committee?.name}</p>
                                 </Link>
                             ))}
-                        </div> }
+                        </div>}
                     </div>
                 </div>
             </div>

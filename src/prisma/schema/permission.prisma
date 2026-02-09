@@ -83,7 +83,6 @@ enum Permission {
 
   // Notifications
   NOTIFICATION_CHANNEL_CREATE
-  NOTIFICATION_CHANNEL_READ
   NOTIFICATION_CHANNEL_UPDATE
 
   NOTIFICATION_SUBSCRIPTION_READ
@@ -100,7 +99,7 @@ enum Permission {
   MAILALIAS_CREATE
   MAILALIAS_READ
   MAILALIAS_UPDATE
-  MAILALIAS_DESTORY
+  MAILALIAS_DESTROY
 
   // Mailing list
   MAILINGLIST_CREATE
@@ -178,6 +177,9 @@ enum Permission {
 
   // Public articles
   PUBLIC_ARTICLE_ADMIN
+
+  //Flair/badge/cape
+  FLAIR_ADMIN
 }
 
 model GroupPermission {

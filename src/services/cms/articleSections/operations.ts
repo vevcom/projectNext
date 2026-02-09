@@ -1,7 +1,7 @@
 import '@pn-server-only'
 import { articleSectionSchemas } from './schemas'
 import { articleSectionsRealtionsIncluder } from './constants'
-import { ServerOnly } from '@/auth/auther/ServerOnly'
+import { ServerOnly } from '@/auth/authorizer/ServerOnly'
 import { ServerError } from '@/services/error'
 import { cmsImageOperations } from '@/cms/images/operations'
 import { cmsParagraphOperations } from '@/cms/paragraphs/operations'

@@ -1,6 +1,6 @@
-import { RequireNothing } from '@/auth/auther/RequireNothing'
+import { RequireNothing } from '@/auth/authorizer/RequireNothing'
 
-//TODO: Implement proper authers
+//TODO: Implement proper authorizers
 export const imageAuth = {
     create: RequireNothing.staticFields({}),
     createMany: RequireNothing.staticFields({}),

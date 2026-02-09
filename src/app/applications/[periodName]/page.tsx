@@ -7,7 +7,6 @@ import CountDown from '@/components/countDown/CountDown'
 import BackdropImage from '@/components/BackdropImage/BackdropImage'
 import CmsParagraph from '@/components/Cms/CmsParagraph/CmsParagraph'
 import PopUp from '@/components/PopUp/PopUp'
-import { Session } from '@/auth/session/Session'
 import Textarea from '@/components/UI/Textarea'
 import Form from '@/components/Form/Form'
 import { SettingsHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
@@ -25,7 +24,9 @@ import {
     readApplicationPeriodAction
 } from '@/services/applications/periods/actions'
 import { readSpecialImageAction } from '@/services/images/actions'
+import { ServerSession } from '@/auth/session/ServerSession'
 import { configureAction } from '@/services/configureAction'
+import { committeeAuth } from '@/services/groups/committees/auth'
 import { faVideo } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Link from 'next/link'
@@ -37,7 +38,8 @@ export type PropTypes = {
 }
 
 export default async function ApplicationPeriod({ params }: PropTypes) {
-    const userId = (await Session.fromNextAuth()).user?.id
+    const session = await ServerSession.fromNextAuth()
+    const userId = session.user?.id
     const period = unwrapActionReturn(
         await readApplicationPeriodAction({ params: { name: (await params).periodName } })
     )
@@ -87,7 +89,7 @@ export default async function ApplicationPeriod({ params }: PropTypes) {
 
     return (
         <PageWrapper title={`Søknadsperiode: ${period.name}`} headerItem={
-            <SettingsHeaderItemPopUp PopUpKey={`period-${period.name}-settings`} scale={35}>
+            <SettingsHeaderItemPopUp popUpKey={`period-${period.name}-settings`} scale={35}>
                 <CreateUpdateApplicationPeriodForm
                     committees={committees}
                     closePopUpOnSuccess={`period-${period.name}-settings`}
@@ -162,6 +164,13 @@ export default async function ApplicationPeriod({ params }: PropTypes) {
                                 >
                                     <h1>{part.committee.name}</h1>
                                     <CmsParagraph
+                                        canEdit={
+                                            committeeAuth.updateParagraphContent.dynamicFields(
+                                                { groupId: part.committee.groupId }
+                                            ).auth(
+                                                session
+                                            ).toJsObject()
+                                        }
                                         cmsParagraph={part.committee.paragraph}
                                         updateCmsParagraphAction={
                                             configureAction(
@@ -174,7 +183,7 @@ export default async function ApplicationPeriod({ params }: PropTypes) {
                                         {
                                             userId ? (
                                                 <PopUp
-                                                    PopUpKey={`committee-${part.committee.shortName}-apply`}
+                                                    popUpKey={`committee-${part.committee.shortName}-apply`}
                                                     showButtonContent={
                                                         <span>{part.priority === null ? 'Søk nå!' : 'Endre søknad'}</span>
                                                     }
@@ -238,7 +247,7 @@ export default async function ApplicationPeriod({ params }: PropTypes) {
                                             Les mer
                                         </Link>
                                         <PopUp
-                                            PopUpKey={`committee-${part.committee.shortName}-video`}
+                                            popUpKey={`committee-${part.committee.shortName}-video`}
                                             showButtonContent={
                                                 <FontAwesomeIcon icon={faVideo} />
                                             }

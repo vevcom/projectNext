@@ -8,3 +8,11 @@ export const readSpecialCmsParagraphCareerInfo = makeAction(
 export const updateSpecialCmsParagraphContentCareerInfo = makeAction(
     careerOperations.updateSpecialCmsParagraphContentCareerInfo
 )
+
+export const readCareerSpecialCmsLinkAction = makeAction(
+    careerOperations.readSpecialCmsLink
+)
+
+export const updateCareerSpecialCmsLinkAction = makeAction(
+    careerOperations.updateSpecialCmsLink
+)

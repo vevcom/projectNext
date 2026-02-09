@@ -55,9 +55,9 @@ export default function Dropzone({ label, name, files, setFiles, ...props }: Pro
         infoContainerRef.current.children[uploadingIndex]?.scrollIntoView({ behavior: 'smooth' })
     }, [files])
 
-    const getFiles = (files_: FileList | null) => Array.from(files_ ?? []).map(
+    const getFiles = useCallback((files_: FileList | null) => Array.from(files_ ?? []).map(
         file => ({ file, uploadStatus: 'pending' as const })
-    )
+    ), [])
 
     const onDrop = useCallback((event: DragEvent<HTMLDivElement>) => {
         event.preventDefault()
@@ -67,7 +67,7 @@ export default function Dropzone({ label, name, files, setFiles, ...props }: Pro
         if (input.current) {
             input.current.blur()
         }
-    }, [])
+    }, [getFiles, setFiles])
     const filesUpdated = useCallback((event: ChangeEvent<HTMLInputElement>) => {
         event.preventDefault()
         const newFiles = getFiles(event.target.files)
@@ -75,7 +75,7 @@ export default function Dropzone({ label, name, files, setFiles, ...props }: Pro
         if (input.current) {
             input.current.blur()
         }
-    }, [])
+    }, [getFiles, setFiles])
 
     const onDragOver = (event: DragEvent<HTMLDivElement>) => {
         event.preventDefault()

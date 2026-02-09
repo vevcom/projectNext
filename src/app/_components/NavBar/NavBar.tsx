@@ -8,13 +8,15 @@ import EditModeSwitch from '@/components/EditModeSwitch/EditModeSwitch'
 import SpecialCmsImage from '@/components/Cms/CmsImage/SpecialCmsImage'
 import { readSpecialCmsImageFrontpage, updateSpecialCmsImageFrontpage } from '@/services/frontpage/actions'
 import Link from 'next/link'
+import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
 import type { Profile } from '@/services/users/types'
 
 export type PropTypes = {
     profile: Profile | null
+    canEditSpecialCmsImage: AuthResultTypeAny
 }
 
-export default async function NavBar({ profile }: PropTypes) {
+export default async function NavBar({ profile, canEditSpecialCmsImage }: PropTypes) {
     const user = profile?.user ?? null
     const isLoggedIn = user !== null
     // TODO: Actual application period check
@@ -32,6 +34,7 @@ export default async function NavBar({ profile }: PropTypes) {
             <ul>
                 <li className={styles.logo}>
                     <SpecialCmsImage
+                        canEdit={canEditSpecialCmsImage}
                         special="NAV_PRIMARY_BUTTON"
                         width={30}
                         alt="omega logo"
@@ -57,6 +60,7 @@ export default async function NavBar({ profile }: PropTypes) {
                     <ReportButton/>
                     <div className={styles.magicHat}>
                         <SpecialCmsImage
+                            canEdit={canEditSpecialCmsImage}
                             special="NAV_LOGIN_BUTTON"
                             width={25}
                             height={25}

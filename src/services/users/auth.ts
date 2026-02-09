@@ -1,9 +1,9 @@
-import { RequirePermission } from '@/auth/auther/RequirePermission'
-import { RequireUser } from '@/auth/auther/RequireUser'
-import { RequireUserFieldOrPermission } from '@/auth/auther/RequireUserFieldOrPermission'
-import { RequireUserId } from '@/auth/auther/RequireUserId'
-import { RequireUserIdOrPermission } from '@/auth/auther/RequireUserIdOrPermission'
-import { RequireUsernameOrPermission } from '@/auth/auther/RequireUsernameOrPermission'
+import { RequirePermission } from '@/auth/authorizer/RequirePermission'
+import { RequireUser } from '@/auth/authorizer/RequireUser'
+import { RequireUserFieldOrPermission } from '@/auth/authorizer/RequireUserFieldOrPermission'
+import { RequireUserId } from '@/auth/authorizer/RequireUserId'
+import { RequireUserIdOrPermission } from '@/auth/authorizer/RequireUserIdOrPermission'
+import { RequireUsernameOrPermission } from '@/auth/authorizer/RequireUsernameOrPermission'
 
 export const userAuth = {
     readProfile: RequireUsernameOrPermission.staticFields({ permission: 'USERS_READ' }),

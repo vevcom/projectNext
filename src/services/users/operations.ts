@@ -49,6 +49,7 @@ export const userOperations = {
                         }]
                     }
                 },
+                select: userFilterSelection
             })
 
             setTimeout(() => sendUserInvitationEmail(user), 1000)
@@ -332,7 +333,7 @@ export const userOperations = {
         authorizer: ({ params }) => userAuth.updateProfile.dynamicFields({ username: params.username }),
         operation: ({ prisma, data, params }) => prisma.user.update({
             where: params,
-            data
+            data,
         })
     }),
 

@@ -3,7 +3,7 @@ import { canEasilyManageMembershipOfGroup, canEasilyManageMembershipOfGroups } f
 import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
 import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
-import { prisma } from '@/prisma/client'
+import { prisma } from '@/prisma-pn-client-instance'
 import { invalidateManyUserSessionData, invalidateOneUserSessionData } from '@/services/auth/invalidateSession'
 import { groupOperations } from '@/services/groups/operations'
 import type { ExpandedMembership } from './types'

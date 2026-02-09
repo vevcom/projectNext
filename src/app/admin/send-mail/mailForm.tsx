@@ -1,6 +1,6 @@
 'use client'
 import styles from './mailForm.module.scss'
-import sendMail from '@/services/sendmail/actions'
+import { sendMailAction } from '@/services/notifications/actions'
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
 import Textarea from '@/components/UI/Textarea'
@@ -8,7 +8,7 @@ import Textarea from '@/components/UI/Textarea'
 
 export default function MailForm() {
     return <Form
-        action={sendMail}
+        action={sendMailAction}
         submitText="Send elektronisk post"
         className={styles.mailForm}
         buttonClassName={styles.mailButton}

@@ -1,4 +1,4 @@
-import type { PrismaClient } from '@prisma/client'
+import type { PrismaClient } from '@/prisma-generated-pn-client'
 
 export default async function seedDevSchools(prisma: PrismaClient) {
     await Promise.all([0, 1, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].map(async i => {

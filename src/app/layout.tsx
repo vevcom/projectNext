@@ -1,5 +1,5 @@
 import styles from './layout.module.scss'
-import { SessionProvider } from '@/auth/session/useUser'
+import { SessionProvider } from '@/auth/session/useSession'
 import MobileNavBar from '@/components/NavBar/MobileNavBar'
 import NavBar from '@/components/NavBar/NavBar'
 import Footer from '@/components/Footer/Footer'
@@ -16,6 +16,8 @@ import { getServerSession } from 'next-auth'
 import type { ReactNode } from 'react'
 import { readUserProfileAction } from '@/services/users/actions'
 import { unwrapActionReturn } from './redirectToErrorPage'
+import { frontpageAuth } from '@/services/frontpage/auth'
+import { ServerSession } from '@/auth/session/ServerSession'
 
 config.autoAddCss = false
 
@@ -38,6 +40,10 @@ export default async function RootLayout({ children }: PropTypes) {
     const profile = session?.user ?
         unwrapActionReturn(await readUserProfileAction({ params: { username: session.user.username } })) : null
 
+    const canEditSpecialCmsImage = frontpageAuth.updateSpecialCmsImage.dynamicFields({}).auth(
+        await ServerSession.fromNextAuth()
+    ).toJsObject()
+
     return (
         <html lang="en">
             <body className={`${inter.className} ${styles.body}`}>
@@ -47,16 +53,16 @@ export default async function RootLayout({ children }: PropTypes) {
                             <PopUpProvider>
                                 <div className={styles.wrapper}>
                                     <div className={styles.navBar}>
-                                        <NavBar profile={profile} />
+                                        <NavBar profile={profile} canEditSpecialCmsImage={canEditSpecialCmsImage} />
                                     </div>
                                     <div className={styles.content}>
                                         {children}
                                     </div>
                                     <div className={styles.footer}>
-                                        <Footer />
+                                        <Footer canEditSpecialCmsImage={canEditSpecialCmsImage} />
                                     </div>
                                     <div className={styles.mobileNavBar}>
-                                        <MobileNavBar profile={profile} />
+                                        <MobileNavBar profile={profile} canEditSpecialCmsImage={canEditSpecialCmsImage} />
                                     </div>
                                 </div>
                             </PopUpProvider>

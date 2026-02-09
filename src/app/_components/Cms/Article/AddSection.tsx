@@ -1,25 +1,27 @@
 'use client'
-
 import styles from './AddSection.module.scss'
 import AddParts from '@/cms/AddParts'
 import { maxSections } from '@/cms/articles/constants'
-import useEditing from '@/hooks/useEditing'
+import useEditMode from '@/hooks/useEditMode'
 import { useRouter } from 'next/navigation'
 import type { ArticleSectionPart } from '@/cms/articleSections/types'
 import type { AddSectionToArticleAction } from '@/cms/articles/types'
 import type { ConfiguredAction } from '@/services/actionTypes'
+import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
 
 type PropTypes = {
     currentNumberSections: number,
     addSectionToArticleAction: ConfiguredAction<AddSectionToArticleAction>
+    canEdit: AuthResultTypeAny
 }
 
 export default function AddSection({
     currentNumberSections,
-    addSectionToArticleAction
+    addSectionToArticleAction,
+    canEdit,
 }: PropTypes) {
     const { refresh } = useRouter()
-    const canEdit = useEditing({}) //TODO: check visibility of article for user and pass it to useEditing
+    const editable = useEditMode({ authResult: canEdit })
 
     const handleAdd = async (includePart: ArticleSectionPart) => {
         await addSectionToArticleAction({
@@ -31,7 +33,8 @@ export default function AddSection({
         })
         refresh()
     }
-    if (!canEdit) return null
+
+    if (!editable) return null
     return (
         <span className={styles.AddSection}>
             {

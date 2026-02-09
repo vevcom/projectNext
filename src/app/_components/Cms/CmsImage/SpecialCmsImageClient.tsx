@@ -17,10 +17,10 @@ export default function SpecialCmsImageClient({
     readSpecialCmsImageAction,
     ...props
 }: PropTypes) {
-    const action = useCallback(configureAction(
+    const action = useCallback(() => configureAction(
         readSpecialCmsImageAction,
         { params: { special } }
-    ), [special])
+    )(), [readSpecialCmsImageAction, special])
     const { data: cmsImage, error } = useActionCall(action)
     if (error) throw new Error(`No special cms image found for ${special}`)
 

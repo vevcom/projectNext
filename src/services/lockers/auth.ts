@@ -1,4 +1,4 @@
-import { RequirePermission } from '@/auth/auther/RequirePermission'
+import { RequirePermission } from '@/auth/authorizer/RequirePermission'
 
 export const lockerAuth = {
     create: RequirePermission.staticFields({ permission: 'LOCKER_ADMIN' }),

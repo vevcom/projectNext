@@ -1,4 +1,4 @@
-'use server'
+'use server' //todo: why is this use server???
 
 import MailFlow from './MailFlow'
 import styles from './page.module.scss'

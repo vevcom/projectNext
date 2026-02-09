@@ -13,7 +13,7 @@ export default async function Applications() {
 
     return (
         <PageWrapper title="Søknadsperioder" headerItem={
-            <AddHeaderItemPopUp PopUpKey="addApplicationPeriod">
+            <AddHeaderItemPopUp popUpKey="addApplicationPeriod">
                 <CreateUpdateApplicationPeriodForm committees={committees} closePopUpOnSuccess="addApplicationPeriod" />
             </AddHeaderItemPopUp>
         }>

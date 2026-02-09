@@ -1,11 +1,11 @@
 import '@pn-server-only'
 import { cmsLinkSchemas } from './schemas'
-import { ServerOnly } from '@/auth/auther/ServerOnly'
+import { ServerOnly } from '@/auth/authorizer/ServerOnly'
 import { defineOperation, defineSubOperation } from '@/services/serviceOperation'
 import logger from '@/lib/logger'
 import { ServerError } from '@/services/error'
+import { SpecialCmsLink } from '@/prisma-generated-pn-types'
 import { z } from 'zod'
-import { SpecialCmsLink } from '@prisma/client'
 
 const create = defineOperation({
     authorizer: ServerOnly,
@@ -66,7 +66,7 @@ export const cmsLinkOperations = {
             })
             if (!cmsLink) {
                 logger.error(`Could not find special cms link with special ${special} - creating it!`)
-                return await create({ data: { special, url: './', text: 'Default text' } })
+                return await create({ data: { special, url: './', text: 'Default text' }, bypassAuth: true })
             }
             return cmsLink
         }

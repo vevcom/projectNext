@@ -17,6 +17,8 @@ import {
 } from '@/services/articleCategories/actions'
 import { decodeVevenUriHandleError } from '@/lib/urlEncoding'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
+import { ServerSession } from '@/auth/session/ServerSession'
+import { articleCategoryAuth } from '@/services/articleCategories/auth'
 
 type PropTypes = {
     params: Promise<{
@@ -45,9 +47,14 @@ export default async function ArticleCategoryPage({ params }: PropTypes) {
         })
     )
 
+    const canEdit = articleCategoryAuth.updateArticle.dynamicFields({}).auth(
+        await ServerSession.fromNextAuth()
+    ).toJsObject()
+
     return (
         <div className={styles.wrapper}>
             <Article
+                canEdit={canEdit}
                 coverImageClass={styles.coverImage}
                 article={article}
                 actions={{

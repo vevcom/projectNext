@@ -1,5 +1,5 @@
-import { SpecialCollection } from '@prisma/client'
-import type { PrismaClient } from '@prisma/client'
+import type { PrismaClient } from '@/prisma-generated-pn-client'
+import { SpecialCollection } from '@/prisma-generated-pn-types'
 
 export default async function SeedSpecialImageCollections(prisma: PrismaClient) {
     const keys = Object.keys(SpecialCollection) as SpecialCollection[]

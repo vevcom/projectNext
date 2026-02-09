@@ -1,5 +1,5 @@
 import { createSelection } from '@/services/createSelection'
-import type { Prisma, User, SEX } from '@prisma/client'
+import type { Prisma, User, SEX } from '@/prisma-generated-pn-types'
 
 export const maxNumberOfGroupsInFilter = 7
 
@@ -17,10 +17,25 @@ export const userFieldsToExpose = [
     'acceptedTerms',
     'sex',
     'allergies',
-    'imageConsent'
+    'imageConsent',
+    'relationshipStatus',
+    'relationshipStatusText',
+    'bio',
 ] as const satisfies (keyof User)[]
 
-export const userFilterSelection = createSelection([...userFieldsToExpose])
+export const userFilterSelection = {
+    ...createSelection([...userFieldsToExpose]),
+    flairs: {
+        select: {
+            id: true,
+            cmsImage: {
+                include: {
+                    image: true,
+                }
+            },
+        },
+    },
+} as const satisfies Prisma.UserSelect
 
 export const standardMembershipSelection = [
     {
@@ -53,8 +68,23 @@ export const sexConfig = {
         label: 'Kvinne',
     },
     OTHER: {
-        title: 'Søsken',
+        title: 'Sysken',
         pronoun: 'Hends',
         label: 'Annet',
     }
 } as const satisfies { [key in SEX]: { title: string, pronoun: string, label: string } }
+
+export const relationshipStatusConfig = {
+    SINGLE: {
+        label: 'Singel'
+    },
+    TAKEN: {
+        label: 'I et forhold'
+    },
+    ITS_COMPLICATED: {
+        label: 'Det er komplisert'
+    },
+    NOT_SPECIFIED: {
+        label: 'Ikke spesifisert'
+    }
+}

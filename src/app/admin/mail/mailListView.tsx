@@ -1,7 +1,7 @@
 
 import styles from './mailListView.module.scss'
 import MailList from './mailList'
-import type { MailAddressExternal, MailAlias, MailingList } from '@prisma/client'
+import type { MailAddressExternal, MailAlias, MailingList } from '@/prisma-generated-pn-types'
 
 
 export default function MailListView({

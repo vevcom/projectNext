@@ -7,7 +7,8 @@ import React, {
     useMemo,
     useCallback,
     useState,
-    useRef
+    useRef,
+    useEffectEvent
 } from 'react'
 import { useInView } from 'react-intersection-observer'
 import type { PagingContext } from '@/contexts/paging/PagingGenerator'
@@ -27,31 +28,33 @@ export default function EndlessScroll<Data, Cursor, const PageSize extends numbe
 
     //This component must be rendered inside ContextProvider
     if (!context) throw new Error('No context')
+
+    const { loading, state, loadMore } = context
+
     const [ref, inView] = useInView({
         threshold: 0,
     })
 
-    const loadMore = useCallback(async () => {
-        if (context.state.allLoaded) return
+    const loadMoreCallback = useCallback(async () => {
         if (!inView) return
-        await context.loadMore()
-    }, [context.state.allLoaded, inView, context.loadMore])
+        await loadMore()
+    }, [loadMore, inView])
 
     useEffect(() => {
-        loadMore()
-    }, [inView, loadMore])
+        loadMoreCallback()
+    }, [inView, loadMoreCallback])
 
 
     const renderedPageData = useMemo(() => context.state.data.map((dataEntry, i) => {
         if (i < context.startPage.pageSize * context.startPage.page) return null
         return renderer(dataEntry, i)
-    }), [context.state.data, renderer, context.state.allLoaded])
+    }), [context, renderer])
 
     // Do not show button right away if allLoaded is true, it can cause flicker
     const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
     const [showButton, setShowButton] = useState(false)
 
-    useEffect(() => {
+    const updateShowButton = useEffectEvent(() => {
         if (!context.state.allLoaded) {
             timerRef.current = setTimeout(() => {
                 setShowButton(true)
@@ -59,17 +62,33 @@ export default function EndlessScroll<Data, Cursor, const PageSize extends numbe
         } else {
             setShowButton(false)
         }
+    })
+
+    useEffect(() => {
+        updateShowButton()
         return () => {
             if (timerRef.current) clearTimeout(timerRef.current)
         }
-    }, [context.state.allLoaded])
+    }, [state])
 
     return (
         <>
             {renderedPageData}
             <span ref={ref} className={`${styles.loadingControl} ${loadingInfoClassName}`}>
-                <i style={{ opacity: showButton ? 0 : 1 }}>Ingen flere å laste inn</i>
-                <Button style={{ opacity: showButton ? 1 : 0 }} onClick={loadMore}>Last inn flere</Button>
+                {
+                    loading ? (
+                        <i>Laster inn flere...</i>
+                    ) : (
+                        <>
+                            <i style={{ opacity: showButton ? 0 : 1 }}>
+                                Ingen flere å laste inn
+                            </i>
+                            <Button style={{ opacity: showButton ? 1 : 0 }} onClick={loadMoreCallback}>
+                                Last inn flere
+                            </Button>
+                        </>
+                    )
+                }
             </span>
         </>
     )

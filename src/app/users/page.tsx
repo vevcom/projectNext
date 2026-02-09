@@ -8,7 +8,7 @@ import { UserPagingProvider } from '@/contexts/paging/UserPaging'
 export default async function Users() {
     return (
         <PageWrapper title="Broedre item Systre" headerItem={
-            <AddHeaderItemPopUp PopUpKey="createUser">
+            <AddHeaderItemPopUp popUpKey="createUser">
                 <CreateUserForm className={styles.makeUser} />
             </AddHeaderItemPopUp>
         }>

@@ -1,8 +1,8 @@
-import { RequireNothing } from '@/auth/auther/RequireNothing'
-import { RequireServerOnly } from '@/auth/auther/ServerOnly'
+import { RequireNothing } from '@/auth/authorizer/RequireNothing'
+import { RequireServerOnly } from '@/auth/authorizer/ServerOnly'
 import { Session } from '@/auth/session/Session'
 import { defineOperation } from '@/services/serviceOperation'
-import { prisma as globalPrisma } from '@/prisma/client'
+import { prisma as globalPrisma } from '@/prisma-pn-client-instance'
 import { describe, expect, test } from '@jest/globals'
 import { z } from 'zod'
 

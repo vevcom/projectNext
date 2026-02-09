@@ -4,7 +4,7 @@ import { CompanySelectionContext } from '@/contexts/CompanySelection'
 import { faCheck } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useContext } from 'react'
-import type { Company } from '@prisma/client'
+import type { Company } from '@/prisma-generated-pn-types'
 
 type PropTypes = {
     company: Company

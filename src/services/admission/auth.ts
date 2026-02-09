@@ -1,5 +1,5 @@
-import { RequireNothing } from '@/auth/auther/RequireNothing'
-import { RequirePermissionAndUser } from '@/auth/auther/RequirePermissionAndUser'
+import { RequireNothing } from '@/auth/authorizer/RequireNothing'
+import { RequirePermissionAndUser } from '@/auth/authorizer/RequirePermissionAndUser'
 
 export const admissionAuth = {
     createTrial: RequirePermissionAndUser.staticFields({

@@ -31,7 +31,7 @@ model Company {
   name        String   @unique
   description String
   logo        CmsImage @relation(fields: [logoId], references: [id])
-  logoId      Int
+  logoId      Int      @unique
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

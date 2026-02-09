@@ -1,6 +1,6 @@
 import { createSelection } from '@/services/createSelection'
 import type { CreateSchoolTypes } from './validation'
-import type { Prisma, School, StandardSchool } from '@prisma/client'
+import type { Prisma, School, StandardSchool } from '@/prisma-generated-pn-types'
 
 export const StandardSchoolsConfig = {
     NTNU: {

@@ -172,6 +172,9 @@ export const eventOperations = {
                         gte: getOsloTime()
                     },
                     eventTagEvents: eventTagSelector(params.tags)
+                },
+                orderBy: {
+                    eventStart: 'asc'
                 }
             })
             return events.map(event => ({

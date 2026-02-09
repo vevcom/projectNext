@@ -13,7 +13,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck } from '@fortawesome/free-solid-svg-icons'
 import type { UserPagingReturn } from '@/services/users/types'
 import type { ChangeEvent, ReactNode } from 'react'
-import type { GroupType } from '@prisma/client'
+import type { GroupType } from '@/prisma-generated-pn-types'
 import type { ExpandedGroup } from '@/services/groups/types'
 
 type GroupSelectionType = Exclude<GroupType, 'INTEREST_GROUP' | 'MANUAL_GROUP'>
@@ -88,7 +88,7 @@ export default function UserList({
     const usersSelection = useContext(UsersSelectionContext)
     const userSelection = useContext(UserSelectionContext)
 
-    const groupSelected = !!userPaging?.deatils.selectedGroup
+    const groupSelected = !!userPaging?.details.selectedGroup
 
     const { data: groups } = useActionCall(readGroupsForPageFilteringAction)
     const [groupSelection, setGroupSelection] = useState<{
@@ -117,7 +117,7 @@ export default function UserList({
 
     useEffect(() => {
         userPaging?.setDetails({
-            ...userPaging.deatils,
+            ...userPaging.details,
             groups: Object.values(groupSelection).reduce((acc, { group, groupOrder }) => {
                 if (group) {
                     acc.push({
@@ -134,7 +134,7 @@ export default function UserList({
 
 
     const handleChangeName = (e: ChangeEvent<HTMLInputElement>) => {
-        userPaging.setDetails({ ...userPaging.deatils, partOfName: e.target.value })
+        userPaging.setDetails({ ...userPaging.details, partOfName: e.target.value })
     }
 
     const handleGroupSelect = (groupId: number | 'NULL', type: GroupSelectionType) => {

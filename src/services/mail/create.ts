@@ -6,13 +6,13 @@ import {
     createMailingListUserValidation
 } from './validation'
 import { prismaCall } from '@/services/prismaCall'
-import { prisma } from '@/prisma/client'
+import { prisma } from '@/prisma-pn-client-instance'
 import type {
     MailAliasMailingList,
     MailingListGroup,
     MailingListMailAddressExternal,
     MailingListUser
-} from '@prisma/client'
+} from '@/prisma-generated-pn-types'
 import type {
     CreateAliasMailingListType,
     CreateMailingListExternalType,
