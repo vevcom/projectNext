@@ -41,7 +41,7 @@ export default async function FlairAdmin({ params }: PropTypes) {
                     <tbody>
                         {flairs.map((flair) => (
                             <tr key={flair.id}>
-                                <td><Flair flair={flair} width={100} session={session} /></td>
+                                <td><Flair asClient={false} flair={flair} width={100} session={session} /></td>
                                 <td>{flair.name}</td>
                                 <td>{flair.rank}</td>
                                 <td style={{ backgroundColor: `rgb(${flair.colorR}, ${flair.colorG}, ${flair.colorB})` }}>

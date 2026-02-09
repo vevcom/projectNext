@@ -49,6 +49,7 @@ export const userOperations = {
                         }]
                     }
                 },
+                select: userFilterSelection
             })
 
             // Don't send mail during testing.

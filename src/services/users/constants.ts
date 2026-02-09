@@ -24,7 +24,19 @@ export const userFieldsToExpose = [
     'bio',
 ] as const satisfies (keyof User)[]
 
-export const userFilterSelection = createSelection([...userFieldsToExpose])
+export const userFilterSelection = {
+    ...createSelection([...userFieldsToExpose]),
+    flairs: {
+        select: {
+            id: true,
+            cmsImage: {
+                include: {
+                    image: true,
+                }
+            },
+        },
+    },
+} as const satisfies Prisma.UserSelect
 
 export const standardMembershipSelection = [
     {

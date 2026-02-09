@@ -22,7 +22,7 @@ export default async function FlairUpdatePage({ params }: PropTypes) {
 
     return (
         <PageWrapper title={`Rediger flair: ${flair.name}`}>
-            <Flair session={session} flair={flair} width={200} />
+            <Flair session={session} flair={flair} width={200} asClient={false} />
             <Form
                 title="Oppdater flair"
                 submitText="Oppdater flair"
