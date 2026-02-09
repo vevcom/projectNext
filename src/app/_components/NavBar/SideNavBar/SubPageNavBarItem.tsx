@@ -15,7 +15,7 @@ export default function SubPageNavBarItem({children, icon, href}:NavBarItemProps
     const pathname = usePathname();
     const page = pathname.split('/').pop();
     const thisPage = href?.split('/').pop();
-    console.log(page + " " + thisPage + " " + (thisPage == page));
+    
     return (
         <div className={styles.linkContainer}>
             <a href={href} className={styles.link}>

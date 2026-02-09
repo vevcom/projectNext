@@ -10,16 +10,21 @@
     flex-direction: row;
     align-items: center;
     @include ohma.boxShadow('');
+    padding: 0px;
+    height: ohma.$nav-height;
+    justify-content: center;
+    padding: 0;
+    border: 0;
 }
 .container:hover {
     color: ohma.$colors-text;
-    @include ohma.boxShadow('hover');
 }
 .linkContainer > a {
     text-decoration: none;
 }
 .linkContainer {
     margin-bottom: 10px;
+    flex-grow: 1;
 }
 .linkContainer:last-child {
     margin-bottom: 0px;
@@ -27,27 +32,21 @@
 .selected {
     color: ohma.$colors-primary;
 }
+.selected * {
+    color: ohma.$colors-primary;
+}
+.icon {
+    width: 25px;
+    height: 25px;
+}
+.text {
+    line-height: calc(ohma.$nav-height - (2 * 16px));
+    text-align: center;
+    padding-left: 16px;
+}
 
 @media (max-width: ohma.$mobileBreakpoint) {
-    .container {
-        padding: 0px;
-        height: calc(ohma.$nav-height - 2 * 16px);
-        justify-content: center;
-        padding: 0;
-        border: 0;
-    }
     .text {
         display: none;
-    }
-    .linkContainer {
-        flex-grow: 1;
-    }
-    .icon {
-        width: 25px;
-        height: 25px;
-        color: white;
-    }
-    .selected * {
-        color: ohma.$colors-primary;
     }
 }
