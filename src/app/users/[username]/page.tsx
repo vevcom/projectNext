@@ -14,7 +14,11 @@ import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
 import { v4 as uuid } from 'uuid'
 import React from 'react'
+import type { Metadata } from 'next'
 
+export const metadata: Metadata = {
+    title: 'Profil',
+}
 
 export type PropTypes = {
     params: Promise<{
