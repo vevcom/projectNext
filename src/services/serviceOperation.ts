@@ -59,11 +59,13 @@ export type ServiceOperationOperation<
     ParamsSchema extends z.ZodTypeAny | undefined,
     DataSchema extends z.ZodTypeAny | undefined,
     Return,
+    PrismaWhereFilter extends object | undefined
 > = (
     args:
         & ParamsObject<ParamsSchema, 'INFERED'>
         & DataObject<DataSchema, 'INFERED'>
         & ServiceOperationContext<OpensTransaction>
+    , prismaWhereFilter: PrismaWhereFilter | undefined
 ) => Promise<Return> | Return
 
 export type SubServiceOperationConfig<
@@ -74,12 +76,13 @@ export type SubServiceOperationConfig<
     OperationImplementationFields extends object | undefined,
     Return,
     OpensTransaction extends boolean = false,
+    PrismaWhereFilter extends object | undefined = undefined
 > = {
     paramsSchema?: ((implementationFields: ParamsSchemaImplementationFields) => ParamsSchema) | undefined,
     dataSchema?: ((implementationFields: DataSchemaImplementationFields) => DataSchema) | undefined,
     opensTransaction?: OpensTransaction,
     operation: (implementationFields: OperationImplementationFields) =>
-        ServiceOperationOperation<OpensTransaction, ParamsSchema, DataSchema, Return>
+        ServiceOperationOperation<OpensTransaction, ParamsSchema, DataSchema, Return, PrismaWhereFilter>
 }
 
 export type ArgsAuthGetterAndOwnershipCheck<
@@ -97,16 +100,23 @@ export type AuthorizerGetter<
     OpensTransaction extends boolean,
     ParamsSchema extends z.ZodTypeAny | undefined,
     DataSchema extends z.ZodTypeAny | undefined,
-    ImplementationParamsSchema extends z.ZodTypeAny | undefined
+    ImplementationParamsSchema extends z.ZodTypeAny | undefined,
+    PrismaWhereFilter extends object | undefined
 > = (
     args: ArgsAuthGetterAndOwnershipCheck<OpensTransaction, ParamsSchema, DataSchema, ImplementationParamsSchema>
-) => AuthorizerDynamicFieldsBound | Promise<AuthorizerDynamicFieldsBound>
+) =>
+    | AuthorizerDynamicFieldsBound<'USER_NOT_REQUIERED_FOR_AUTHORIZED' | 'USER_REQUIERED_FOR_AUTHORIZED', PrismaWhereFilter>
+    | Promise<
+        AuthorizerDynamicFieldsBound<
+            'USER_NOT_REQUIERED_FOR_AUTHORIZED' | 'USER_REQUIERED_FOR_AUTHORIZED', PrismaWhereFilter
+        >
+    >
 
 export type OwnershipCheck<
     OpensTransaction extends boolean,
     ParamsSchema extends z.ZodTypeAny | undefined,
     DataSchema extends z.ZodTypeAny | undefined,
-    ImplementationParamsSchema extends z.ZodTypeAny | undefined
+    ImplementationParamsSchema extends z.ZodTypeAny | undefined,
 > = (
     args: ArgsAuthGetterAndOwnershipCheck<OpensTransaction, ParamsSchema, DataSchema, ImplementationParamsSchema>
 ) => boolean | Promise<boolean>
@@ -143,13 +153,16 @@ export type ServiceOperationImplementationConfig<
     ParamsSchemaImplementationFields extends object | undefined,
     DataSchemaImplementationFields extends object | undefined,
     OperationImplementationFields extends object | undefined,
+    PrismaWhereFilter extends object | undefined
     > = ServiceOperationImplementationConfigInternalCall<
     ImplementationParamsSchema,
     ParamsSchemaImplementationFields,
     DataSchemaImplementationFields,
     OperationImplementationFields
     > & {
-    authorizer: AuthorizerGetter<OpensTransaction, ParamsSchema, DataSchema, ImplementationParamsSchema>,
+    authorizer: AuthorizerGetter<
+        OpensTransaction, ParamsSchema, DataSchema, ImplementationParamsSchema, PrismaWhereFilter | undefined
+    >,
     ownershipCheck: OwnershipCheck<OpensTransaction, ParamsSchema, DataSchema, ImplementationParamsSchema>,
 }
 
@@ -218,7 +231,7 @@ export type ServiceOperation<
     Return,
     ParamsSchema extends z.ZodTypeAny | undefined = undefined,
     DataSchema extends z.ZodTypeAny | undefined = undefined,
-    ImplementationParamsSchema extends z.ZodTypeAny | undefined = undefined
+    ImplementationParamsSchema extends z.ZodTypeAny | undefined = undefined,
 > = {
     /**
      * Pass a specific prisma client to the service operation. Usefull when using the service operation inside a transaction.
@@ -243,6 +256,7 @@ export function defineSubOperation<
     ParamsSchemaImplementationFields extends object | undefined = undefined,
     DataSchemaImplementationFields extends object | undefined = undefined,
     OperationImplementationFields extends object | undefined = undefined,
+    PrismaWhereFilter extends object | undefined = undefined
 >(
     serviceOperationConfig: SubServiceOperationConfig<
         ParamsSchema,
@@ -251,7 +265,8 @@ export function defineSubOperation<
         DataSchemaImplementationFields,
         OperationImplementationFields,
         Return,
-        OpensTransaction
+        OpensTransaction,
+        PrismaWhereFilter
     >
 ) {
     const implement = <ImplementationParamsSchema extends z.ZodTypeAny | undefined = undefined>(
@@ -262,7 +277,8 @@ export function defineSubOperation<
             DataSchema,
             ParamsSchemaImplementationFields,
             DataSchemaImplementationFields,
-            OperationImplementationFields
+            OperationImplementationFields,
+            PrismaWhereFilter
         >
     ): ServiceOperation<OpensTransaction, Return, ParamsSchema, DataSchema, ImplementationParamsSchema> => {
         const expectedArgsArePresent = (
@@ -377,7 +393,9 @@ export function defineSubOperation<
 
                 // Then, authorize user.
                 // This has to be done after the validation because the authorizer might use the data to authorize the user.
-                const prismaWhereFilter = await (async () => {
+                // Disable es lint next line:
+
+                const prismaWhereFilter: PrismaWhereFilter | undefined = await (async () => {
                     if (!bypassAuth) {
                         if (!implementationArgs.authorizer) {
                             throw new Smorekopp(
@@ -413,11 +431,10 @@ export function defineSubOperation<
                     `)
                 }
 
-                // Finally, call the operation.
                 return prismaErrorWrapper(() =>
                     serviceOperationConfig.operation(
                         implementationArgs.operationImplementationFields!
-                    )({ ...args, prisma, bypassAuth, session })
+                    )({ ...args, prisma, bypassAuth, session }, prismaWhereFilter)
                 )
             })
         }
@@ -460,12 +477,13 @@ export function defineOperation<
     Return,
     ParamsSchema extends z.ZodTypeAny | undefined = undefined,
     DataSchema extends z.ZodTypeAny | undefined = undefined,
+    PrismaWhereFilter extends object | undefined = undefined
 >({ paramsSchema, dataSchema, opensTransaction, authorizer, operation }: {
     paramsSchema?: ParamsSchema,
     dataSchema?: DataSchema,
     opensTransaction?: OpensTransaction,
-    authorizer: AuthorizerGetter<OpensTransaction, ParamsSchema, DataSchema, undefined>,
-    operation: ServiceOperationOperation<OpensTransaction, ParamsSchema, DataSchema, Return>
+    authorizer: AuthorizerGetter<OpensTransaction, ParamsSchema, DataSchema, undefined, PrismaWhereFilter>,
+    operation: ServiceOperationOperation<OpensTransaction, ParamsSchema, DataSchema, Return, PrismaWhereFilter>
 }): ServiceOperation<OpensTransaction, Return, ParamsSchema, DataSchema, undefined> {
     return defineSubOperation<
         Return,
@@ -474,7 +492,8 @@ export function defineOperation<
         DataSchema,
         undefined,
         undefined,
-        undefined
+        undefined,
+        PrismaWhereFilter
     >({
         opensTransaction,
         operation: () => operation,
@@ -507,4 +526,3 @@ export type SubServiceOperation<
     DataSchemaImplementationFields,
     OperationImplementationFields
 >>
-
