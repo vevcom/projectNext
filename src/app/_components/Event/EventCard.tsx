@@ -1,7 +1,10 @@
 import SmallEventTag from './SmallEventTag'
 import styles from './EventCard.module.scss'
+import CmsImage from '@/components/Cms/CmsImage/CmsImage'
+import {updateEventCmsCoverImageAction} from "@/services/events/actions";
 import React from 'react'
 import type { EventExpanded } from '@/services/events/types'
+import {configureAction} from "@/services/configureAction";
 
 export default function EventCard({ event }: {
     event: EventExpanded,
@@ -24,17 +27,18 @@ export default function EventCard({ event }: {
                 ))}
             </div>
         </div>
-        <div className={styles.EventAttendanceBar}>
-            {event.takesRegistration ? <>
-                <div style={{ width: attendance }}></div>
-            </> : <></>}
-        </div>
+
         <div className={styles.EventImage}>
             {
-                event.coverImage.image && (
-
-                    <div></div>
-                )
+            /*    <CmsImage
+                    width={200}
+                    cmsImage={event.coverImage as ExpandedCmsImage}
+                    updateCmsImageAction={
+                        configureAction(
+                            updateEventCmsCoverImageAction,
+                            { implementationParams: { eventId: event.id } }
+                        )}
+                />*/
             }
         </div>
         <div className={styles.EventMain}>
@@ -42,18 +46,23 @@ export default function EventCard({ event }: {
             <h4>{event.eventStart.toLocaleDateString()} - {event.eventEnd.toLocaleDateString()}</h4>
             <p>Event description</p>
         </div>
+        <div className={styles.EventAttendanceBar}>
+            {event.takesRegistration ? <>
+                <div style={{ width: attendance }}></div>
+            </> : <></>}
+        </div>
         <div className={styles.EventFooter}>
-            <div>
-                {event.numOfRegistrations} / {event.places}
-            </div>
-            <div>
-                {event.places}
-            </div>
             {event.takesRegistration ? <>
                 <div>
-                    kl. {event.registrationStart.getHours()} - {event.registrationEnd.getHours()}
+                    {event.numOfRegistrations} / {event.places}
                 </div>
             </> : <></>}
+            <div>
+                {event.location}
+            </div>
+            <div>
+                kl. {event.registrationStart.getHours()} - {event.registrationEnd.getHours()}
+            </div>
         </div>
     </a>
 }

@@ -1,7 +1,7 @@
 @use '@/styles/ohma';
 
 .PopUp {
-    backdrop-filter: blur(5px);
+    @include ohma.layer();
     z-index: 8;
     position: fixed;
     top: 0;
@@ -9,7 +9,7 @@
     > .main {
         @include ohma.boxShadow('');
         @include ohma.card;
-        @include ohma.layer();
+        background-color: ohma.$colors-secondary;
         padding: 2*ohma.$gap;
         z-index: 9;
         max-height: 95svh;

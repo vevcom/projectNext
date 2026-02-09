@@ -28,13 +28,13 @@
 }
 
 .EventMainTime {
-    background: ohma.$colors-primary;
+    @include ohma.layer();
+    border-radius: ohma.$cardRounding 0 0 0;
     height: 100%;
     min-width: 180px;
     font-size: x-large;
     line-height: 50px - 2*ohma.$gap;
-    padding: ohma.$gap;
-    padding-left: ohma.$gap*3;
+    padding: ohma.$gap ohma.$gap ohma.$gap ohma.$gap*3;
 }
 
 .EventAttendanceBar {
@@ -43,14 +43,11 @@
         background: color-mix(in srgb, ohma.$colors-primary, black 20%);
         height: 100%;
     }
-    position: relative;
-    z-index: 2;
 }
 
 .EventImage {
     height: 200px;
-    margin-top: -10px;
-    background-image: url('https://media.starcitizen.tools/thumb/d/d9/Ironclad_x2_floating_over_sandy_world_-_Cropped.jpg/800px-Ironclad_x2_floating_over_sandy_world_-_Cropped.jpg.webp');
+    overflow: hidden;
 }
 
 .EventMain {
@@ -64,6 +61,7 @@
     display: flex;
     justify-content: space-evenly;
     text-align: center;
+    font-weight: bold;
     > div {
         line-height: 50px;
         width: 100px;
