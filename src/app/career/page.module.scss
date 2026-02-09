@@ -19,27 +19,18 @@
         gap: 1em;
         > a {
             @include ohma.card;
-            background: linear-gradient(
-                to top right,
-                ohma.$colors-secondary,
-                rgba(red(ohma.$colors-secondary), green(ohma.$colors-secondary), blue(ohma.$colors-secondary), 0.1)
-            );
+            @include ohma.layer();
             transition: box-shadow 0.3s;
             @include ohma.boxShadow('');
             &:hover {
                 @include ohma.boxShadow('hover');
             }
             text-decoration: none;
-            color: ohma.$colors-gray-800;
+            color: ohma.$colors-text;
             display: flex;
             flex-flow: row wrap;
             align-items: center;
             transition: box-shadow 0.3s;
-            background: linear-gradient(
-                to top right,
-                ohma.$colors-secondary,
-                color.change(ohma.$colors-secondary, $alpha: 0.1)
-            );
             @include ohma.boxShadow('');
             &:hover {
                 @include ohma.boxShadow('hover');

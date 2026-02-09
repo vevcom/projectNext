@@ -18,8 +18,8 @@
     width: 66 * ohma.$gap;
     height: calc(100dvh - 60px);
     display: flex;
-    justify-content: start;
-    align-items: start;
+    justify-content: flex-start;
+    align-items: flex-start;
     overflow-y: auto;
     .close {
         position: absolute;
@@ -40,7 +40,7 @@
         position: relative;
         display: flex;
         flex-direction: row;
-        justify-content: start;
+        justify-content: flex-start;
         flex-wrap: wrap;
 
         div {

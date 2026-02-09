@@ -1,5 +1,10 @@
 import styles from './page.module.scss'
+<<<<<<< HEAD
 import BorderButton from '@/components/UI/BorderButton'
+=======
+import ProfileButton from '@/components/UI/ProfileButton'
+import { Session } from '@/auth/session/Session'
+>>>>>>> refactor/style-changes
 import { userAuth } from '@/services/users/auth'
 import ProfilePicture from '@/components/User/ProfilePicture'
 import UserDisplayName from '@/components/User/UserDisplayName'
@@ -11,9 +16,11 @@ import { readUserFlairsAction } from '@/services/flairs/actions'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { RelationshipStatus } from '@/prisma-generated-pn-types'
 import Link from 'next/link'
+import { faCog, faMoneyBill, faQrcode, faSignOut, faUser } from '@fortawesome/free-solid-svg-icons'
 import { notFound, redirect } from 'next/navigation'
 import { v4 as uuid } from 'uuid'
 import React from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 
 export type PropTypes = {
@@ -134,17 +141,17 @@ export default async function User({ params }: PropTypes) {
                     </div>
                     <div className={styles.leftSection}>
                         <div className={styles.buttons}>
-                            {canAdministrate && <Link href={`/users/${profile.user.username}/settings`}>
-                                <BorderButton color="secondary">
-                                    <p>Instillinger</p>
-                                </BorderButton>
-                            </Link>}
+                            {canAdministrate &&
+                                <ProfileButton href={`/users/${profile.user.username}/settings`}>
+                                    <FontAwesomeIcon icon={faCog} />
+                                    <p>Innstillinger</p>
+                                </ProfileButton>
+                            }
                             {profile.user.id === session?.user?.id && (
-                                <Link href="/logout">
-                                    <BorderButton color="secondary">
-                                        <p>Logg ut</p>
-                                    </BorderButton>
-                                </Link>
+                                <ProfileButton href={'/logout'}>
+                                    <FontAwesomeIcon icon={faSignOut} />
+                                    <p>Logg ut</p>
+                                </ProfileButton>
                             )
                             }
                         </div>

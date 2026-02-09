@@ -9,8 +9,17 @@
 
 html {
     scroll-behavior: smooth;
-    background-color: black;
+    background-color: ohma.$colors-secondary;
     z-index: 5;
+
+    --primary:     hsl(207, 91%,   65%);
+    --secondary:   hsl(207, 64%,   10%);
+    --layer:       hsl(207, 48.1%, 35.5%, 0.18);
+    --boxShadow:   hsl(207, 0%,    0%,    20%);
+    --text:        hsl(0,   0%,    80%);
+    --text-muted:  hsl(0,   0%,    70%);
+    --text-inv:    hsl(0,   0%,    10%);
+    --text-sec:    hsl(0,   0%,    10%);
 }
 
 body {
@@ -18,7 +27,7 @@ body {
     font-weight: ohma.$fonts-weight-s;
     overflow-x: hidden;
     overscroll-behavior-y:contain;
-    background-color: ohma.$colors-gray-100;
+    background-color: ohma.$colors-secondary;
 }
 
 h1 {
