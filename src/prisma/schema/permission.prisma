@@ -1,44 +1,50 @@
+// This is the master list of which permissions exist.
+// A single permission represents a set of actions a user can do.
+// In general, a permissions should be added if there is a need 
+// to have fine grained control over who can do the set of actions.
+
+// Key questions to ask yourself before adding a permissions:
+// 1. Will all users always have it, or can the service be open to everyone?
+//    E.g. reading which notification methods exist is something all users should be able to do.
+//    There is no need to have a permission for it since it will never be restricted. 
+// 2. Can the authorizatin be inferred by another way?
+//    E.g. a user should always be able to edit his own profile, no need for a permission to edit user profiles.
+// 3. Does this really need to be a separate permission, or can it be covered by an existing one?
+//    E.g. most of the time separate permissions for creating, updating and deleting a resource is
+//    is not necessary as a "admin" and "read" permission cover all the use cases.
+
 enum Permission {
   // Job ads
-  JOBAD_CREATE
+  JOBAD_ADMIN
   JOBAD_READ
-  JOBAD_UPDATE
-  JOBAD_DESTROY
 
   // Omega Quotes
   OMEGAQUOTES_WRITE
   OMEGAQUOTES_READ
 
   // Ombul
-  OMBUL_CREATE
+  OMBUL_ADMIN
   OMBUL_READ
-  OMBUL_UPDATE
-  OMBUL_DESTROY
 
-  // Groups - Generic
-  GROUP_READ
-  GROUP_DESTROY
-  GROUP_ADMIN //TODO: Temp needs discussion about this
-  // Since groups can only be created with a specific type, there is no need to
-  // have permissions to create or update a generic group.
-
-  // omega order
+  // Omega Order
   OMEGA_ORDER_READ
   OMEGA_ORDER_CREATE
   // Since groups can only be created with a specific type, there is no need to
   // have permissions to create or update a generic group.
 
+  // Groups - Generic
+  GROUP_READ
+  GROUP_DESTROYGROUP_ADMIN
+  GROUP_ADMIN //TODO: Temp needs discussion about this
+  // Since groups can only be created with a specific type, there is no need to
+  // have permissions to create or update a generic group.
+
   // Groups - Classes
-  CLASS_CREATE
-  CLASS_READ
-  CLASS_UPDATE
-  CLASS_DESTROY
+  // No permissions exist for classes.
 
   // Groups - Committess
-  COMMITTEE_CREATE
+  COMMITTEE_ADMIN
   COMMITTEE_READ
-  COMMITTEE_UPDATE
-  COMMITTEE_DESTROY
 
   // Groups - InterestGroups
   INTEREST_GROUP_ADMIN
@@ -51,10 +57,8 @@ enum Permission {
   // permissions to create or destroy them.
 
   // Groups - StudyProgramme
-  STUDY_PROGRAMME_CREATE
+  STUDY_PROGRAMME_ADMIN
   STUDY_PROGRAMME_READ
-  STUDY_PROGRAMME_UPDATE
-  STUDY_PROGRAMME_DESTROY
 
   // Lockers
   LOCKER_ADMIN
@@ -66,14 +70,14 @@ enum Permission {
   // User list permissions - theese are admin permissions, and do not have anything
   // to do with a user´s ability to edit its own user.
   // USER_READ for example means that the user can read the list of users.
+  USERS_ADMIN
   USERS_READ
-  USERS_UPDATE
-  USERS_DESTROY
-  USERS_CREATE
 
-  IMAGE_COLLECTION_CREATE
+  // Images
   IMAGE_ADMIN
+  IMAGE_COLLECTION_CREATE
 
+  // Events
   EVENT_CREATE
   EVENT_ADMIN
   EVENT_READ
@@ -123,11 +127,13 @@ enum Permission {
   MAILADDRESS_EXTERNAL_UPDATE
   MAILADDRESS_EXTERNAL_DESTROY
 
-  // Admisstion
+  // Admissions
   ADMISSION_TRIAL_CREATE
 
   // API keys
   APIKEY_ADMIN
+
+  // Info screens
   SCREEN_READ
   SCREEN_ADMIN
 
@@ -178,7 +184,7 @@ enum Permission {
   // Public articles
   PUBLIC_ARTICLE_ADMIN
 
-  //Flair/badge/cape
+  // Flair/badge/cape
   FLAIR_ADMIN
 }
 

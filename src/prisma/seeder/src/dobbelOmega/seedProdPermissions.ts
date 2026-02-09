@@ -10,9 +10,7 @@ export default async function seedProdPermissions(prisma: PrismaClientPn) {
         hs: allPermissions,
         ombul: [
             'OMBUL_READ',
-            'OMBUL_CREATE',
-            'OMBUL_UPDATE',
-            'OMBUL_DESTROY',
+            'OMBUL_ADMIN',
         ],
         hyttecom: [
             'CABIN_ADMIN',

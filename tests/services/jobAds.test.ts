@@ -65,7 +65,7 @@ describe('job ads', () => {
         // will need to use database data of the users.
         const session = Session.fromJsObject({
             memberships: [],
-            permissions: ['JOBAD_CREATE'],
+            permissions: ['JOBAD_ADMIN'],
             user: null,
         })
 
@@ -131,7 +131,7 @@ describe('job ads', () => {
 
         const session = Session.fromJsObject({
             memberships: [],
-            permissions: ['JOBAD_UPDATE'],
+            permissions: ['JOBAD_ADMIN'],
             user: null,
         })
 
@@ -170,7 +170,7 @@ describe('job ads', () => {
 
         const session = Session.fromJsObject({
             memberships: [],
-            permissions: ['JOBAD_DESTROY'],
+            permissions: ['JOBAD_ADMIN'],
             user: null,
         })
 

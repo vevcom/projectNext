@@ -31,24 +31,14 @@ export const permissionConfig = {
         description: 'kan skrive OmegaQuotes',
         category: 'omega quotes',
     },
-    OMBUL_CREATE: {
-        name: 'Lage ombul',
-        description: 'kan lage ombul',
-        category: 'ombul',
-    },
-    OMBUL_UPDATE: {
-        name: 'Oppdatere ombul',
-        description: 'kan oppdatere ombul',
-        category: 'ombul',
-    },
-    OMBUL_DESTROY: {
-        name: 'Slette ombul',
-        description: 'kan slette ombul',
+    OMBUL_ADMIN: {
+        name: 'Administrere OmBul',
+        description: 'Lar opprette, redigere og slette OmBul utgaver.',
         category: 'ombul',
     },
     OMBUL_READ: {
-        name: 'Les ombul',
-        description: 'kan lese ombul',
+        name: 'Lese OmBul',
+        description: 'Gir tilgang til OmBul siden.',
         category: 'ombul',
     },
     OMEGA_MEMBERSHIP_GROUP_READ: {
@@ -56,44 +46,14 @@ export const permissionConfig = {
         description: 'kan lese Omega medlemsgrupper',
         category: 'groups',
     },
-    CLASS_CREATE: {
-        name: 'Lage klasse',
-        description: 'kan lage klasse',
-        category: 'groups',
-    },
-    CLASS_UPDATE: {
-        name: 'Oppdatere klasse',
-        description: 'kan oppdatere klasse',
-        category: 'groups',
-    },
-    CLASS_DESTROY: {
-        name: 'Slette klasse',
-        description: 'kan slette klasse',
-        category: 'groups',
-    },
-    CLASS_READ: {
-        name: 'Les klasse',
-        description: 'kan lese klasse',
-        category: 'groups',
-    },
-    COMMITTEE_CREATE: {
-        name: 'Lage komite',
-        description: 'kan lage komite',
-        category: 'groups',
-    },
-    COMMITTEE_DESTROY: {
-        name: 'Slette komite',
-        description: 'kan slette komite',
+    COMMITTEE_ADMIN: {
+        name: 'Administrere komitéer',
+        description: 'Lar opprette, redigere og slette komiteer.',
         category: 'groups',
     },
     COMMITTEE_READ: {
-        name: 'Les komite',
-        description: 'kan lese komite',
-        category: 'groups',
-    },
-    COMMITTEE_UPDATE: {
-        name: 'Oppdatere komite',
-        description: 'kan oppdatere komite',
+        name: 'Lese komitéer',
+        description: 'Gir tilgang til komitélisten og komitésidene.',
         category: 'groups',
     },
     INTEREST_GROUP_READ: {
@@ -111,24 +71,14 @@ export const permissionConfig = {
         description: 'kan oppdatere Omega medlemsgrupper',
         category: 'groups',
     },
-    STUDY_PROGRAMME_CREATE: {
-        name: 'Lage studieprogram',
-        description: 'kan lage studieprogram',
-        category: 'groups',
-    },
-    STUDY_PROGRAMME_DESTROY: {
-        name: 'Slette studieprogram',
-        description: 'kan slette studieprogram',
+    STUDY_PROGRAMME_ADMIN: {
+        name: 'Administrere studieprogram',
+        description: 'Lar opprette, oppdatere og slette studieprogram.',
         category: 'groups',
     },
     STUDY_PROGRAMME_READ: {
-        name: 'Les studieprogram',
-        description: 'kan lese studieprogram',
-        category: 'groups',
-    },
-    STUDY_PROGRAMME_UPDATE: {
-        name: 'Oppdatere studieprogram',
-        description: 'kan oppdatere studieprogram',
+        name: 'Lese studieprogram',
+        description: 'Gir tilgang til studieprogramsiden.',
         category: 'groups',
     },
     GROUP_READ: {
@@ -146,24 +96,14 @@ export const permissionConfig = {
         description: 'kan administrere grupper',
         category: 'groups',
     },
-    JOBAD_CREATE: {
-        name: 'Lage jobad',
-        description: 'kan lage jobad',
-        category: 'jobad',
-    },
-    JOBAD_UPDATE: {
-        name: 'Oppdatere jobad',
-        description: 'kan oppdatere jobad',
-        category: 'jobad',
-    },
-    JOBAD_DESTROY: {
-        name: 'Slette jobad',
-        description: 'kan slette jobad',
+    JOBAD_ADMIN: {
+        name: 'Administrere jobbannonser',
+        description: 'Lar opprette, redigere og slette jobbannonser.',
         category: 'jobad',
     },
     JOBAD_READ: {
-        name: 'Les jobad',
-        description: 'kan lese jobad',
+        name: 'Lese jobbannonser',
+        description: 'Gir tilgang til jobbannonsesiden.',
         category: 'jobad',
     },
     OMEGA_ORDER_CREATE: {
@@ -186,24 +126,14 @@ export const permissionConfig = {
         description: 'kan administrere offentlige artikler',
         category: 'public',
     },
-    USERS_CREATE: {
-        name: 'Lage bruker',
-        description: 'kan lage bruker',
-        category: 'brukere',
-    },
-    USERS_DESTROY: {
-        name: 'Slette bruker',
-        description: 'kan slette bruker',
+    USERS_ADMIN: {
+        name: 'Administrere brukere',
+        description: 'Lar opprette nye brukere, slette brukere og oppdatere andres brukere.',
         category: 'brukere',
     },
     USERS_READ: {
-        name: 'Les bruker',
-        description: 'kan lese bruker',
-        category: 'brukere',
-    },
-    USERS_UPDATE: {
-        name: 'Oppdatere bruker',
-        description: 'kan oppdatere bruker',
+        name: 'Lese brukere',
+        description: 'Lar tilgang til brukerlisten og brukerprofiler.',
         category: 'brukere',
     },
     IMAGE_ADMIN: {

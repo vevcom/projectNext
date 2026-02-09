@@ -32,7 +32,6 @@ export const COMMITTEE_PERMISSIONS: Permission[] = [
 export default async function seedPermissions(prisma: PrismaClientPn) {
     const defaultPermissions: Permission[] = [
         'GROUP_READ',
-        'CLASS_READ',
         'JOBAD_READ',
         'SCHOOLS_READ',
         'COURSES_READ',
@@ -62,7 +61,6 @@ export default async function seedPermissions(prisma: PrismaClientPn) {
             'EVENT_REGISTRATION_CREATE',
             'PURCHASE_CREATE',
             'USERS_READ',
-            'CLASS_READ',
             'OMEGA_MEMBERSHIP_GROUP_READ',
             'JOBAD_READ',
             'SCHOOLS_READ',
@@ -81,7 +79,6 @@ export default async function seedPermissions(prisma: PrismaClientPn) {
             'EVENT_READ',
             'EVENT_REGISTRATION_READ',
             'USERS_READ',
-            'CLASS_READ',
             'OMEGA_MEMBERSHIP_GROUP_READ',
             'JOBAD_READ',
             'SCHOOLS_READ',
