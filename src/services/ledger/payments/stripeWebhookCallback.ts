@@ -3,36 +3,33 @@ import { stripe } from '@/lib/stripe'
 import { prisma } from '@/prisma/client'
 import type Stripe from 'stripe'
 import type { PaymentState } from '@/prisma-generated-pn-types'
+import { ledgerTransactionOperations } from '@/services/ledger/transactions/operations'
 
 /**
- * Utility function which extracts the `latest_charge.balance_transaction` object
- * from the provided payment intent object if it exists.
- *
- * @param paymentIntent
- * @returns
+ * Utility function to retrieve the Stripe fees for a given payment intent.
  */
-function extractBalanceTransaction(paymentIntent: Stripe.PaymentIntent): Stripe.BalanceTransaction | null {
-    const latestCharge = paymentIntent.latest_charge
+export async function retrieveStripeFees(paymentIntent: Stripe.PaymentIntent): Promise<number> {
+    let totalFees = 0
 
-    if (!latestCharge || typeof latestCharge !== 'object') {
-        logger.error(
-            'Stripe payment intent event was missing latest charge object.' +
-            `'latest_charge': ${latestCharge}`
-        )
-        return null
+    const charges = await stripe.charges.list({
+        payment_intent: paymentIntent.id,
+    })
+
+    for (const charge of charges.data) {
+        if (!charge.balance_transaction) {
+            logger.error(`Charge does not have a balance transaction: ${charge.id}`)
+            continue
+        }
+
+        const balanceTransactionId = typeof charge.balance_transaction === 'string'
+            ? charge.balance_transaction
+            : charge.balance_transaction.id
+
+        const balanceTransaction = await stripe.balanceTransactions.retrieve(balanceTransactionId)
+        totalFees += balanceTransaction.fee
     }
 
-    const balanceTransaction = latestCharge.balance_transaction
-
-    if (!balanceTransaction || typeof balanceTransaction !== 'object') {
-        logger.error(
-            'Stripe payment intent event was missing balance transaction object.' +
-            `'balance_transaction': ${balanceTransaction}`
-        )
-        return null
-    }
-
-    return balanceTransaction
+    return totalFees
 }
 
 // Map between Stripe event types and our internal payment states.
@@ -65,8 +62,10 @@ export async function stripeWebhookCallback(event: Stripe.Event): Promise<Respon
     const paymentState = EVENT_TYPE_TO_STATE[event.type]
 
     if (!paymentState) {
-        logger.error('Received unsupported Stripe event type.')
-        return new Response('Unsupported Stripe event type', { status: 400 })
+        // We return a 200 response even for unsupported event
+        // types to avoid unecessary retries from Stripe.
+        logger.error(`Received unsupported Stripe event type: ${event.type}`)
+        return new Response('', { status: 200 })
     }
 
     // TypeScript cannot figure out that the above if statement narrows the possible event type
@@ -75,18 +74,11 @@ export async function stripeWebhookCallback(event: Stripe.Event): Promise<Respon
 
     // Declare fee, it will be undefined by default
     // which is what we want for the canceled and failed events
-    let fee
+    let fee: number | undefined
 
     // If the payment succeeded we'll extract the fee
     if (event.type === 'payment_intent.succeeded') {
-        const balanceTransaction = extractBalanceTransaction(paymentIntent)
-
-        if (!balanceTransaction) {
-            logger.error('Received successful payment intent event without balance transaction object.')
-            return new Response('', { status: 400 })
-        }
-
-        fee = balanceTransaction.fee
+        fee = await retrieveStripeFees(paymentIntent)
     }
 
     // Update the db model with the updated values
@@ -110,9 +102,28 @@ export async function stripeWebhookCallback(event: Stripe.Event): Promise<Respon
             }
         },
         select: {
-            paymentId: true,
+            payment: {
+                select: {
+                    id: true,
+                    ledgerTransaction: {
+                        select: {
+                            id: true,
+                        },
+                    },
+                },
+            },
         },
     })
+
+    if (stripePayment.payment.ledgerTransaction) {
+        await ledgerTransactionOperations.advance({
+            params: {
+                id: stripePayment.payment.ledgerTransaction.id,
+            },
+        })
+    } else {
+        console.error(`Stripe payment is not part of a ledger transaction: ${stripePayment.payment.id}`)
+    }
 
     // We only allow one payment attempt per payment intent.
     // If this failed we cancel the payment intent to make sure it cannot be used in the future.
@@ -120,7 +131,7 @@ export async function stripeWebhookCallback(event: Stripe.Event): Promise<Respon
         stripe.paymentIntents.cancel(
             paymentIntent.id,
             {},
-            { idempotencyKey: `project-next-payment-id-${stripePayment.paymentId}` },
+            { idempotencyKey: `project-next-payment-id-${paymentIntent.id}` },
         )
     }
 

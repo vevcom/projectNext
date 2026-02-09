@@ -19,7 +19,7 @@ import type Stripe from 'stripe'
 
 const TEST_PAYMENT_DEFAULTS = {
     ledgerAccountId: 0,
-    amount: 100, // 1 kr
+    funds: 100, // 1 kr
     provider: 'STRIPE',
     description: 'Test betaling',
     descriptor: 'Test betaling',
@@ -56,10 +56,10 @@ describe.skip('payments', () => {
                 type: 'payment_intent.succeeded',
                 data: {
                     object: {
-                        amount: payment.amount,
+                        amount: payment.funds,
                         latest_charge: {
                             balance_transaction: {
-                                fee: payment.amount / 100,
+                                fee: payment.funds / 100,
                             },
                         },
                     },
@@ -75,11 +75,10 @@ describe.skip('payments', () => {
     test('initiate manual payment', async () => {
         const payment = await paymentOperations.create({
             params: {
-                ledgerAccountId: 0,
-                amount: 100, // 1 kr
+                funds: 100, // 1 kr
                 provider: 'MANUAL',
-                description: 'Test betaling',
-                descriptor: 'Test betaling',
+                descriptionLong: 'Test betaling',
+                descriptionShort: 'Test betaling',
             },
         })
 

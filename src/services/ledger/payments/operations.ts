@@ -4,7 +4,7 @@ import { defineOperation } from '@/services/serviceOperation'
 import { RequireNothing } from '@/auth/authorizer/RequireNothing'
 import { PaymentProvider } from '@/prisma-generated-pn-types'
 import { z } from 'zod'
-
+import { stripeCustomerOperations } from '@/services/stripeCustomers/operations'
 
 export const paymentOperations = {
     /**
@@ -28,7 +28,10 @@ export const paymentOperations = {
                 funds: params.funds,
 
                 ...(params.provider === 'STRIPE' && {
-                    create: {},
+                    state: 'PENDING',
+                    stripePayment: {
+                        create: {},
+                    }
                 }),
 
                 // Manual payments are special in that they automatically succeed
@@ -63,7 +66,7 @@ export const paymentOperations = {
         // This method does not actually open a transaction. However, it cannot be used
         // inside a transaction as it does external API calls which cannot be reversed.
         opensTransaction: true,
-        operation: async ({ prisma, params }) => {
+        operation: async ({ prisma, params, session }) => {
             const payment = await prisma.payment.findUniqueOrThrow({
                 where: {
                     id: params.paymentId,
@@ -86,11 +89,18 @@ export const paymentOperations = {
             }
 
             if (payment.provider === 'STRIPE') {
+                const customerId = session.user
+                    ? (await stripeCustomerOperations.readOrCreate({
+                        params: { userId: session.user.id },
+                    })).customerId
+                    : undefined
+
                 const paymentIntent = await stripe.paymentIntents.create({
                     amount: payment.funds,
                     currency: 'nok',
                     description: payment.descriptionLong ?? undefined,
                     statement_descriptor_suffix: payment.descriptionShort ?? undefined,
+                    customer: customerId,
                     // Stripe allows us to attach arbitrary metadata to payment intents
                     // Currently, we don't use this for anything, but it might be
                     // useful in the future.
@@ -116,6 +126,7 @@ export const paymentOperations = {
                         stripePayment: {
                             update: {
                                 paymentIntentId: paymentIntent.id,
+                                clientSecret: paymentIntent.client_secret,
                             },
                         },
                         state: 'PROCESSING',

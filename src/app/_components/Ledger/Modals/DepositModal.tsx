@@ -77,8 +77,8 @@ export default function DepositModal({ ledgerAccountId, customerSessionClientSec
         const payment = transaction.payment
         if (!payment) return createActionError('UNKNOWN ERROR', 'Noe gikk galt ved opprettelse av betalingen.')
 
-        // Confirm the payment if its needed
-        if (payment.state === 'PENDING') {
+        // Confirm the payment if needed
+        if (payment.state === 'PROCESSING') {
             const confirmError = await confirmPayment(payment)
             if (confirmError) return createActionError('UNKNOWN ERROR', confirmError)
         }
