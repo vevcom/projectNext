@@ -80,7 +80,7 @@ npm run lint
 To auto-fix linting errors run
 
 ```bash
-npm run lint -- --fix
+npm run lint:fix
 ```
 
 ## Migration from omegaweb basic
@@ -92,3 +92,16 @@ npm run dobbelOmega:run
 ```
 
 If you are connected to our test database on openStack, make sure to be on the ntnu network to be able to connect.
+
+## Testing
+
+To run the tests run
+```bash
+npm run docker:test
+```
+
+The tests can also be run outside of docker using
+```bash
+npm run test
+```
+but this requires starting a database manually.

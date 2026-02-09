@@ -184,4 +184,18 @@ export const authOptions: AuthOptions = {
         newUser: '/register',
     },
     adapter: VevenAdapter(prisma),
+    logger: {
+        // TODO: Before going to production we should use the proper logger here!
+        error(code, metadata) {
+            // Overwrite to use warnings in stead to reduce
+            // noise from invalid JWT in development.
+            console.warn('NextAuth Error:', code, metadata)
+        },
+        warn(code) {
+            console.warn('NextAuth Warning:', code)
+        },
+        debug(code, metadata) {
+            console.debug('NextAuth Debug:', code, metadata)
+        },
+    },
 }

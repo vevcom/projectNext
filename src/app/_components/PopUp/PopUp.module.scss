@@ -13,6 +13,7 @@
         max-height: 95svh;
         background-color: ohma.$colors-white;
         > .overflow {
+            overflow-x: visible;
             overflow-y: auto;
             margin: 0;
             padding: 0;
@@ -23,6 +24,8 @@
 
 .closeBtn {
     background-color: ohma.$colors-red;
+    font-size: ohma.$fonts-xl;
+    color: ohma.$colors-white;
     @include ohma.roundBtn(ohma.$colors-red);
 }
 

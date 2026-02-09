@@ -1,12 +1,12 @@
 import { Zpn } from '@/lib/fields/zpn'
-import { convertPrice } from '@/lib/money/convert'
+import { convertAmount } from '@/lib/currency/convert'
 import { z } from 'zod'
 
 const baseSchema = z.object({
     shopId: z.coerce.number().int(),
     name: z.string().min(3),
     description: z.string(),
-    price: z.coerce.number().int().min(1).transform((val) => convertPrice(val)),
+    price: z.coerce.number().int().min(1).transform((val) => convertAmount(val)),
     barcode: z.string().or(z.number()).optional(),
     active: Zpn.checkboxOrBoolean({ label: 'Active' }),
     productId: z.coerce.number().int(),
