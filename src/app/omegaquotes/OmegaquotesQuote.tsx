@@ -1,5 +1,5 @@
-import Date from '@/components/Date/Date'
 import styles from './OmegaquotesQuote.module.scss'
+import Date from '@/components/Date/Date'
 import type { OmegaquoteFiltered } from '@/services/omegaquotes/types'
 
 export type OmegaquoteQuotePropTypes = {

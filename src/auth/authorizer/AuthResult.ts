@@ -12,7 +12,7 @@ export type AuthResultTypeWithoutStatus<
     session: SessionType<UserGuatantee>,
     errorMessage?: string,
     authorized: Authorized,
-    prismaWhereFilter: PrismaWhereFilter,
+    prismaWhereFilter: PrismaWhereFilter | undefined,
 }
 
 export type AuthResultType<
@@ -39,14 +39,14 @@ export class AuthResult<
         return this.authResult.session
     }
 
-    public get prismaWhereFilter(): PrismaWhereFilter {
+    public get prismaWhereFilter(): PrismaWhereFilter | undefined {
         return this.authResult.prismaWhereFilter
     }
 
     public constructor(
         session: SessionType<UserGuatantee>,
         authorized: Authorized,
-        prismaWhereFilter: PrismaWhereFilter,
+        prismaWhereFilter: PrismaWhereFilter | undefined,
         errorMessage?: string
     ) {
         this.authResult = {

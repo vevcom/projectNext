@@ -1,10 +1,10 @@
 import { PrismaClient } from '@/prisma-generated-pn-client'
 import { v4 } from 'uuid'
 import NodeEnvironment from 'jest-environment-node'
+import { PrismaPg } from '@prisma/adapter-pg'
 import { execSync } from 'child_process'
 import { URL } from 'url'
 import type { EnvironmentContext, JestEnvironmentConfig } from '@jest/environment'
-import { PrismaPg } from '@prisma/adapter-pg'
 
 /**
  * Generates a modified version of the database URL environment variable
