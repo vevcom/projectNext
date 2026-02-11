@@ -75,9 +75,10 @@ The codebase uses a ServiceOperation pattern for all business logic. Services ar
 **Pattern example:**
 ```typescript
 // Define a ServiceOperation
-const myServiceOperation = defineServiceOperation({
+const myServiceOperation = defineOperation({
   paramsSchema: z.object({ id: z.number() }),
   dataSchema: z.object({ name: z.string() }),
+  authorizer: ({ params }) => MyAuthorizer.dynamicFields({ id: params.id }),
   operation: async ({ params, data, session, prisma }) => {
     // Business logic here
   }
