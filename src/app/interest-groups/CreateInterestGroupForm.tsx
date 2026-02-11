@@ -13,7 +13,6 @@ export default function CreateInterestGroupForm() {
                 submitText="Lag interessegruppe"
             >
                 <TextInput name="name" label="Navn" />
-                <TextInput name="shortName" label="Kortnavn" />
             </Form>
         </div>
     )

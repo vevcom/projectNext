@@ -54,13 +54,11 @@ export const interestGroupOperations = {
     read: defineOperation({
         paramsSchema: z.object({
             id: z.number().optional(),
-            shortName: z.string().optional(),
         }),
         authorizer: () => interestGroupAuth.read.dynamicFields({}),
-        operation: async ({ prisma, params: { id, shortName } }) => await prisma.interestGroup.findUniqueOrThrow({
+        operation: async ({ prisma, params: { id } }) => await prisma.interestGroup.findUniqueOrThrow({
             where: {
                 id,
-                shortName,
             },
             include: {
                 articleSection: {
