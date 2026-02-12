@@ -210,3 +210,8 @@
         transform: translate(250%) rotate(5deg);
     }
 }
+
+@mixin neumorphism($size: 20px, $blur: 60px) {
+    box-shadow:  $size      $size      $blur hsl(207, 64%, 5%),
+                 $size*(-1) $size*(-1) $blur hsl(208, 65%, 15%);
+}

@@ -135,10 +135,13 @@ export default async function User({ params }: PropTypes) {
                             <h2>Medlemsskap</h2>
                             {committeeMemberships.map((membership, i) => (
                                 <Link
+                                    className={styles.memberShipInCommitteeLink}
                                     href={`/committees/${membership.group.committee?.shortName}`}
                                     key={i}
                                 >
-                                    <p>{membership.title} i {membership.group.committee?.name}</p>
+                                    <p className={styles.memberShipInCommittee}>
+                                        {membership.title} i {membership.group.committee?.name}
+                                    </p>
                                 </Link>
                             ))}
                         </div> }

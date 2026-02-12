@@ -1,46 +1,40 @@
 @use "@/styles/ohma";
 
 .wrapper {
-    height: 100%;
-    width: 100vw;
+    height: 100dvh;
+    width: 100dvw;
 
-    display: table-cell;
     vertical-align: middle;
+    display: flex;
+    justify-content: center;
 
     > .card {
-        @include ohma.card;
-        margin-top: 4*ohma.$gap;
-        margin-bottom: 4*ohma.$gap;
         padding: 4*ohma.$gap;
-        @include ohma.card();
-        @include ohma.layer();
+        border-radius: ohma.$cardRounding;
+        display: flex;
+        height: min-content;
 
+        @include ohma.neumorphism();
+
+        > .image {
+            display: grid;
+            place-items: center;
+            grid-column: 2/3;
+            filter: invert(1);
+        }
 
         @include ohma.screenLg {
-            @include ohma.pagePadding(650px);
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            grid-template-rows: 1fr;
-
+            margin-top: 6*ohma.$gap;
             > .input {
                 grid-column: 1/2;
                 max-width: 250px;
                 margin: auto;
             }
-    
-            > .image {
-                display: grid;
-                place-items: center;
-                grid-column: 2/3;
-            }
         }
 
         @include ohma.screenMobile {
-            @include ohma.pagePadding(300px);
-
-            > .image {
-                display: none;
-            }
+            flex-direction: column-reverse;
+            margin: 3*ohma.$gap;
         }
     }
 }

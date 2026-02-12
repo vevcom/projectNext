@@ -188,6 +188,22 @@
             margin: 1em 2em;
         }
     }
+}
 
+.memberShipInCommitteeLink {
+    text-decoration: none;
+}
+
+.memberShipInCommittee {
+    @include ohma.layer;
+    @include ohma.boxShadow('');
+    color: ohma.$colors-text;
+    padding: ohma.$gap;
+    border-radius: ohma.$rounding;
+    margin-top: ohma.$gap;
+
+    &:hover {
+        @include ohma.boxShadow('hover');
+    }
 }
 
