@@ -91,24 +91,4 @@ export default async function seedDevGroups(prisma: PrismaClient) {
             },
         }
     })))
-
-    await Promise.all([1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(i => prisma.interestGroup.create({
-        data: {
-            name: `Interessegruppe ${i}`,
-            shortName: `IG${i}`,
-            articleSection: {
-                create: {
-                    cmsImage: { create: {} },
-                    cmsParagraph: { create: {} },
-                    cmsLink: { create: {} },
-                }
-            },
-            group: {
-                create: {
-                    groupType: 'INTEREST_GROUP',
-                    order: order.order,
-                },
-            },
-        }
-    })))
 }
