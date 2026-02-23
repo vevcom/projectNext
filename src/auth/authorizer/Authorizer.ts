@@ -46,7 +46,10 @@ export function AuthorizerFactory<
                 session: SessionUser,
                 errorMessage?: string,
                 prismaWhereFilter?: PrismaWhereFilter,
-            } & (PrismaWhereFilter extends undefined ? object : { prismaWhereFilter: PrismaWhereFilter })) | {
+            } & (
+                PrismaWhereFilter extends undefined ? object : { prismaWhereFilter: PrismaWhereFilter }
+            )
+            ) | {
                 success: false,
                 session: SessionMaybeUser,
                 errorMessage?: string,
