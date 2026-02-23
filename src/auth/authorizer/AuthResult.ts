@@ -105,22 +105,25 @@ export class AuthResult<
 
     public redirectOnUnauthorized(
         { returnUrl }: { returnUrl?: string }
-    ) : AuthResult<UserGuatantee, true, PrismaWhereFilter> {
-        if (!this.authorized) {
-            if (this.session.user) {
-                if (!this.session.user.acceptedTerms) {
-                    if (returnUrl) {
-                        redirect(`/register?callbackUrl=${encodeURI(returnUrl)}`)
-                    }
-                    redirect('/register')
-                }
-                redirectToErrorPage('UNAUTHORIZED', this.getErrorMessage)
-            }
-            if (returnUrl) {
-                redirect(`/login?callbackUrl=${encodeURI(returnUrl)}`)
-            }
-            redirect('/login')
+    ) : Authorized extends true ? AuthResult<UserGuatantee, true, PrismaWhereFilter> : never {
+        if (this.authorized) {
+            return new AuthResult<UserGuatantee, true, PrismaWhereFilter>(
+                this.session, true, this.authResult.prismaWhereFilter
+            ) as Authorized extends true ? AuthResult<UserGuatantee, true, PrismaWhereFilter> : never
         }
-        return new AuthResult(this.session, true, this.authResult.prismaWhereFilter)
+        if (this.session.user) {
+            if (!this.session.user.acceptedTerms) {
+                if (returnUrl) {
+                    redirect(`/register?callbackUrl=${encodeURI(returnUrl)}`)
+                }
+                redirect('/register')
+            }
+            redirectToErrorPage('UNAUTHORIZED', this.getErrorMessage)
+        }
+        if (returnUrl) {
+            redirect(`/login?callbackUrl=${encodeURI(returnUrl)}`)
+        }
+        redirect('/login')
+        throw new Error('Unreachable code reached in redirectOnUnauthorized, this means that the redirect did not work')
     }
 }
