@@ -26,8 +26,7 @@ export const lockerReservationOperations = {
             // TODO: Use authorizers for authing in stead of this
             // Verify that user is in group
             if (data.groupId) {
-                const groupUsers = await groupOperations.readUsersOfGroups({
-                    bypassAuth: true,
+                const groupUsers = await groupOperations.readUsersOfGroups.internalCall({
                     params: {
                         groups: [{ groupId: data.groupId, admin: false }]
                     }
@@ -107,8 +106,7 @@ export const lockerReservationOperations = {
 
             // Verify that user is in group
             if (data.groupId) {
-                const groupUsers = await groupOperations.readUsersOfGroups({
-                    bypassAuth: true,
+                const groupUsers = await groupOperations.readUsersOfGroups.internalCall({
                     params: {
                         groups: [{ groupId: data.groupId, admin: false }]
                     }

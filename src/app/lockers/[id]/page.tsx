@@ -32,8 +32,7 @@ export default async function Locker({ params }: PropTypes) {
         returnUrl: `/lockers/${lockerId}`
     }).session.user
 
-    const groups = await groupOperations.readGroupsOfUser({
-        bypassAuth: true,
+    const groups = await groupOperations.readGroupsOfUser.internalCall({
         params: {
             userId: user.id,
         },

@@ -14,7 +14,7 @@ export const companyOperations = {
         authorizer: () => companyAuth.create.dynamicFields({}),
         operation: async ({ prisma, data }) => {
             //TODO: tranaction when createCmsImage is service operation.
-            const logo = await cmsImageOperations.create({ data: {}, bypassAuth: true })
+            const logo = await cmsImageOperations.create.internalCall({ data: {} })
             return await prisma.company.create({
                 data: {
                     ...data,

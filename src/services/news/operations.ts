@@ -37,7 +37,7 @@ export const newsOperations = {
             const backupEndDateTime = new Date()
             backupEndDateTime.setDate(backupEndDateTime.getDate() + defaultNewsArticleOldCutoff)
 
-            const article = await articleOperations.create({ data: { name }, bypassAuth: true })
+            const article = await articleOperations.create.internalCall({ data: { name } })
 
             const news = await prisma.newsArticle.create({
                 data: {
@@ -63,7 +63,7 @@ export const newsOperations = {
             const news = await prisma.newsArticle.delete({
                 where: { id: params.id },
             })
-            await articleOperations.destroy({ params: { articleId: news.articleId }, bypassAuth: true })
+            await articleOperations.destroy.internalCall({ params: { articleId: news.articleId } })
         }
     }),
     readCurrent: defineOperation({

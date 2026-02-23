@@ -35,7 +35,7 @@ export const jobAdOperations = {
         dataSchema: jobAdSchemas.create,
         authorizer: () => jobAdAuth.create.dynamicFields({}),
         operation: async ({ prisma, data: { articleName, companyId, ...data } }) => {
-            const article = await articleOperations.create({ data: { name: articleName }, bypassAuth: true })
+            const article = await articleOperations.create.internalCall({ data: { name: articleName } })
 
             return await prisma.jobAd.create({
                 data: {
@@ -159,7 +159,7 @@ export const jobAdOperations = {
             const jobAd = await prisma.jobAd.delete({
                 where: { id },
             })
-            await articleOperations.destroy({ params: { articleId: jobAd.articleId }, bypassAuth: true })
+            await articleOperations.destroy.internalCall({ params: { articleId: jobAd.articleId } })
         }
     }),
 }

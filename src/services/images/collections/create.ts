@@ -10,8 +10,8 @@ export async function createImageCollection(
     rawdata: CreateImageCollectionTypes['Detailed']
 ): Promise<ImageCollection> {
     const data = createImageCollectionValidation.detailedValidate(rawdata)
-    const visibilityRead = await visibilityOperations.create({ bypassAuth: true })
-    const visibilityAdmin = await visibilityOperations.create({ bypassAuth: true })
+    const visibilityRead = await visibilityOperations.create.internalCall({})
+    const visibilityAdmin = await visibilityOperations.create.internalCall({})
 
     return await prismaCall(() => prisma.imageCollection.create({
         data: {

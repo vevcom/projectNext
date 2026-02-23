@@ -26,8 +26,7 @@ export const purchaseOperations = {
                 throw e
             }
 
-            const permissions = await permissionOperations.readPermissionsOfUser({
-                bypassAuth: true,
+            const permissions = await permissionOperations.readPermissionsOfUser.internalCall({
                 params: {
                     userId: user.id,
                 },
