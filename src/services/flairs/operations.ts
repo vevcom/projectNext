@@ -187,8 +187,7 @@ export const flairOperations = {
                         id: flairId,
                     }
                 })
-                await cmsImageOperations.destroy({
-                    bypassAuth: true,
+                await cmsImageOperations.destroy.internalCall({
                     prisma: tx,
                     params: {
                         cmsImageId: flair.imageId,

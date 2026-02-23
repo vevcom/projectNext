@@ -21,7 +21,7 @@ export async function destroyImageCollection(collectionId: number): Promise<Imag
         },
     }))
 
-    await visibilityOperations.destroy({ params: { visibilityId: collection.visibilityAdminId }, bypassAuth: true })
-    await visibilityOperations.destroy({ params: { visibilityId: collection.visibilityReadId }, bypassAuth: true })
+    await visibilityOperations.destroy.internalCall({ params: { visibilityId: collection.visibilityAdminId } })
+    await visibilityOperations.destroy.internalCall({ params: { visibilityId: collection.visibilityReadId } })
     return collection
 }

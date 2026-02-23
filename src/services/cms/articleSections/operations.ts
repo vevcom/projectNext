@@ -1,30 +1,26 @@
 import '@pn-server-only'
 import { articleSectionSchemas } from './schemas'
 import { articleSectionsRealtionsIncluder } from './constants'
-import { ServerOnly } from '@/auth/authorizer/ServerOnly'
 import { ServerError } from '@/services/error'
 import { cmsImageOperations } from '@/cms/images/operations'
 import { cmsParagraphOperations } from '@/cms/paragraphs/operations'
 import { cmsLinkOperations } from '@/cms/links/operations'
 import {
-    defineOperation,
     defineSubOperation,
 } from '@/services/serviceOperation'
 
-const create = defineOperation({
-    authorizer: ServerOnly,
-    dataSchema: articleSectionSchemas.create,
-    operation: ({ prisma, data }) =>
+const create = defineSubOperation({
+    dataSchema: () => articleSectionSchemas.create,
+    operation: () => ({ prisma, data }) =>
         prisma.articleSection.create({
             data,
             include: articleSectionsRealtionsIncluder
         })
 })
 
-const destroy = defineOperation({
-    authorizer: ServerOnly,
-    paramsSchema: articleSectionSchemas.params,
-    operation: ({ prisma, params }) =>
+const destroy = defineSubOperation({
+    paramsSchema: () => articleSectionSchemas.params,
+    operation: () => ({ prisma, params }) =>
         prisma.articleSection.delete({
             where: params.articleSectionId ? { id: params.articleSectionId } : { name: params.articleSectionName },
             include: articleSectionsRealtionsIncluder
@@ -88,7 +84,7 @@ export const articleSectionOperations = {
             switch (data.part) {
                 case 'cmsImage':
                 {
-                    const cmsImage = await cmsImageOperations.create({ data: {}, bypassAuth: true })
+                    const cmsImage = await cmsImageOperations.create.internalCall({ data: {} })
                     return await prisma.articleSection.update({
                         where,
                         data: { cmsImage: { connect: { id: cmsImage.id } } },
@@ -97,7 +93,7 @@ export const articleSectionOperations = {
                 }
                 case 'cmsParagraph':
                 {
-                    const cmsParagraph = await cmsParagraphOperations.create({ data: {}, bypassAuth: true })
+                    const cmsParagraph = await cmsParagraphOperations.create.internalCall({ data: {} })
                     return await prisma.articleSection.update({
                         where,
                         data: { cmsParagraph: { connect: { id: cmsParagraph.id } } },
@@ -106,7 +102,7 @@ export const articleSectionOperations = {
                 }
                 case 'cmsLink':
                 {
-                    const cmsLink = await cmsLinkOperations.create({ data: { text: 'lenke', url: './' }, bypassAuth: true })
+                    const cmsLink = await cmsLinkOperations.create.internalCall({ data: { text: 'lenke', url: './' } })
                     return await prisma.articleSection.update({
                         where,
                         data: { cmsLink: { connect: { id: cmsLink.id } } },
@@ -150,25 +146,22 @@ export const articleSectionOperations = {
             switch (data.part) {
                 case 'cmsLink':
                     if (articleSection.cmsLink) {
-                        await cmsLinkOperations.destroy({
+                        await cmsLinkOperations.destroy.internalCall({
                             params: { linkId: articleSection.cmsLink.id },
-                            bypassAuth: true
                         })
                     }
                     break
                 case 'cmsParagraph':
                     if (articleSection.cmsParagraph) {
-                        await cmsParagraphOperations.destroy({
+                        await cmsParagraphOperations.destroy.internalCall({
                             params: { paragraphId: articleSection.cmsParagraph.id },
-                            bypassAuth: true
                         })
                     }
                     break
                 case 'cmsImage':
                     if (articleSection.cmsImage) {
-                        await cmsImageOperations.destroy({
+                        await cmsImageOperations.destroy.internalCall({
                             params: { cmsImageId: articleSection.cmsImage.id },
-                            bypassAuth: true
                         })
                     }
                     break
@@ -191,9 +184,8 @@ export const articleSectionOperations = {
                 !afterDelete.cmsParagraph &&
                 !afterDelete.cmsLink
             ) {
-                return await destroy({
+                return await destroy.internalCall({
                     params: { articleSectionId: articleSection.id },
-                    bypassAuth: true
                 })
             }
 

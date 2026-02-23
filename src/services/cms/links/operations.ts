@@ -1,16 +1,14 @@
 import '@pn-server-only'
 import { cmsLinkSchemas } from './schemas'
-import { ServerOnly } from '@/auth/authorizer/ServerOnly'
-import { defineOperation, defineSubOperation } from '@/services/serviceOperation'
+import { defineSubOperation } from '@/services/serviceOperation'
 import logger from '@/lib/logger'
 import { ServerError } from '@/services/error'
 import { SpecialCmsLink } from '@/prisma-generated-pn-types'
 import { z } from 'zod'
 
-const create = defineOperation({
-    authorizer: ServerOnly,
-    dataSchema: cmsLinkSchemas.create,
-    operation: ({ data, prisma }) =>
+const create = defineSubOperation({
+    dataSchema: () => cmsLinkSchemas.create,
+    operation: () => ({ data, prisma }) =>
         prisma.cmsLink.create({
             data
         })
@@ -19,12 +17,11 @@ const create = defineOperation({
 export const cmsLinkOperations = {
     create,
 
-    destroy: defineOperation({
-        authorizer: ServerOnly,
-        paramsSchema: z.object({
+    destroy: defineSubOperation({
+        paramsSchema: () => z.object({
             linkId: z.number()
         }),
-        operation: async ({ params, prisma }) => {
+        operation: () => async ({ params, prisma }) => {
             const cmsLink = await prisma.cmsLink.findUniqueOrThrow({
                 where: {
                     id: params.linkId
@@ -66,7 +63,7 @@ export const cmsLinkOperations = {
             })
             if (!cmsLink) {
                 logger.error(`Could not find special cms link with special ${special} - creating it!`)
-                return await create({ data: { special, url: './', text: 'Default text' }, bypassAuth: true })
+                return await create.internalCall({ data: { special, url: './', text: 'Default text' } })
             }
             return cmsLink
         }
@@ -77,13 +74,12 @@ export const cmsLinkOperations = {
      * in the provided special array
      * This is useful to do ownership checks for services using special links.
      */
-    isSpecial: defineOperation({
-        authorizer: ServerOnly,
-        paramsSchema: z.object({
+    isSpecial: defineSubOperation({
+        paramsSchema: () => z.object({
             linkId: z.number(),
             special: z.array(z.nativeEnum(SpecialCmsLink))
         }),
-        operation: async ({ params, prisma }) => {
+        operation: () => async ({ params, prisma }) => {
             const link = await prisma.cmsLink.findUnique({
                 where: {
                     id: params.linkId,

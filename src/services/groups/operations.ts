@@ -3,8 +3,7 @@ import { groupsExpandedIncluder, groupTypesConfig, OmegaMembershipLevelConfig, r
 import { groupAuth } from './auth'
 import { userFilterSelection } from '@/services/users/constants'
 import { ServerError } from '@/services/error'
-import { defineOperation } from '@/services/serviceOperation'
-import { ServerOnlyAuthorizer } from '@/auth/authorizer/RequireServer'
+import { defineOperation, defineSubOperation } from '@/services/serviceOperation'
 import { getMembershipFilter } from '@/auth/getMembershipFilter'
 import logger from '@/lib/logger'
 import { z } from 'zod'
@@ -193,12 +192,11 @@ export const groupOperations = {
         operation: async ({ prisma }) => prisma.group.findMany()
     }),
 
-    readCurrentGroupOrder: defineOperation({
-        authorizer: ServerOnlyAuthorizer,
-        paramsSchema: z.object({
+    readCurrentGroupOrder: defineSubOperation({
+        paramsSchema: () => z.object({
             id: z.number(),
         }),
-        operation: async ({ prisma, params }) => (await prisma.group.findUniqueOrThrow({
+        operation: () => async ({ prisma, params }) => (await prisma.group.findUniqueOrThrow({
             where: {
                 id: params.id,
             },
@@ -208,12 +206,11 @@ export const groupOperations = {
         })).order
     }),
 
-    readCurrentGroupOrders: defineOperation({
-        authorizer: ServerOnlyAuthorizer,
-        paramsSchema: z.object({
+    readCurrentGroupOrders: defineSubOperation({
+        paramsSchema: () => z.object({
             ids: z.number().array(),
         }),
-        operation: async ({ prisma, params }) => prisma.group.findMany({
+        operation: () => async ({ prisma, params }) => prisma.group.findMany({
             where: {
                 id: {
                     in: params.ids,
@@ -226,12 +223,11 @@ export const groupOperations = {
         })
     }),
 
-    readGroup: defineOperation({
-        authorizer: ServerOnlyAuthorizer,
-        paramsSchema: z.object({
+    readGroup: defineSubOperation({
+        paramsSchema: () => z.object({
             id: z.number(),
         }),
-        operation: async ({ prisma, params }) => prisma.group.findUniqueOrThrow({
+        operation: () => async ({ prisma, params }) => prisma.group.findUniqueOrThrow({
             where: {
                 id: params.id,
             },
@@ -305,15 +301,14 @@ export const groupOperations = {
         }
     }),
 
-    readUsersOfGroups: defineOperation({
-        authorizer: ServerOnlyAuthorizer,
-        paramsSchema: z.object({
+    readUsersOfGroups: defineSubOperation({
+        paramsSchema: () => z.object({
             groups: z.array(z.object({
                 groupId: z.number(),
                 admin: z.boolean(),
             })),
         }),
-        operation: async ({ prisma, params }): Promise<UserFiltered[]> => {
+        operation: () => async ({ prisma, params }): Promise<UserFiltered[]> => {
             const memberships = await prisma.membership.findMany({
                 where: {
                     OR: params.groups.map(({ admin, groupId }) => ({
@@ -332,12 +327,11 @@ export const groupOperations = {
         }
     }),
 
-    readGroupsOfUser: defineOperation({
-        authorizer: ServerOnlyAuthorizer,
-        paramsSchema: z.object({
+    readGroupsOfUser: defineSubOperation({
+        paramsSchema: () => z.object({
             userId: z.number(),
         }),
-        operation: async ({ prisma, params }) => {
+        operation: () => async ({ prisma, params }) => {
             const memberships = await prisma.membership.findMany({
                 where: {
                     userId: params.userId,

@@ -372,7 +372,7 @@ export const eventRegistrationOperations = {
             const message = `Gratulerer! Du har rykket opp fra venteliste på arrangementet ${registration.event.name}.`
 
             if (nextInLine.user) {
-                await notificationOperations.createSpecial({
+                await notificationOperations.createSpecial.internalCall({
                     params: {
                         special: 'EVENT_WAITINGLIST_PROMOTION',
                     },
@@ -381,7 +381,6 @@ export const eventRegistrationOperations = {
                         message,
                         userIdList: [nextInLine.user.id],
                     },
-                    bypassAuth: true,
                 })
             }
 
