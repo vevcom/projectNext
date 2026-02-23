@@ -165,9 +165,8 @@ const create = defineOperation({
             },
         })
 
-        const cmsCoverImage = await cmsImageOperations.create({
+        const cmsCoverImage = await cmsImageOperations.create.internalCall({
             data: { imageId: coverImage.id },
-            bypassAuth: true
         })
 
         const ombul = await prisma.ombul.create({
@@ -184,7 +183,7 @@ const create = defineOperation({
             }
         })
 
-        notificationOperations.createSpecial({
+        notificationOperations.createSpecial.internalCall({
             params: {
                 special: 'NEW_OMBUL',
             },
@@ -192,7 +191,6 @@ const create = defineOperation({
                 title: 'Ny ombul',
                 message: `Ny ombul er ute! ${ombul.name}`,
             },
-            bypassAuth: true,
         })
 
         return ombul

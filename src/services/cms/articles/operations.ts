@@ -1,10 +1,9 @@
 import '@pn-server-only'
 import { articleRealtionsIncluder, maxSections } from './constants'
 import { articleSchemas } from './schemas'
-import { defineOperation, defineSubOperation } from '@/services/serviceOperation'
+import { defineSubOperation } from '@/services/serviceOperation'
 import { articleSectionOperations } from '@/cms/articleSections/operations'
 import { cmsImageOperations } from '@/cms/images/operations'
-import { ServerOnly } from '@/auth/authorizer/ServerOnly'
 import logger from '@/lib/logger'
 import { ServerError } from '@/services/error'
 import { SpecialCmsArticle } from '@/prisma-generated-pn-types'
@@ -12,10 +11,9 @@ import { z } from 'zod'
 import { v4 } from 'uuid'
 import type { ArticleSectionPart } from '@/cms/articleSections/types'
 
-const create = defineOperation({
-    authorizer: ServerOnly,
-    dataSchema: articleSchemas.create,
-    operation: async ({ prisma, data }) => {
+const create = defineSubOperation({
+    dataSchema: () => articleSchemas.create,
+    operation: () => async ({ prisma, data }) => {
         let newName = 'Ny artikkel'
         let i = 1
         if (!data.name) {
@@ -43,16 +41,15 @@ const create = defineOperation({
 
 export const articleOperations = {
     create,
-    destroy: defineOperation({
-        authorizer: ServerOnly,
-        paramsSchema: articleSchemas.params,
-        operation: async ({ prisma, params }) => {
+    destroy: defineSubOperation({
+        paramsSchema: () => articleSchemas.params,
+        operation: () => async ({ prisma, params }) => {
             const article = await prisma.article.delete({
                 where: {
                     id: params.articleId
                 }
             })
-            cmsImageOperations.destroy({ params: { cmsImageId: article.coverImageId }, bypassAuth: true })
+            cmsImageOperations.destroy.internalCall({ params: { cmsImageId: article.coverImageId } })
         }
     }),
     readSpecial: defineSubOperation({
@@ -68,9 +65,8 @@ export const articleOperations = {
             })
             if (!article) {
                 logger.error(`Special article ${params.special} not found - creating it`)
-                return create({
+                return create.internalCall({
                     data: { special: params.special, name: `Regenerert spesiell ${params.special}` },
-                    bypassAuth: true
                 })
             }
             return {

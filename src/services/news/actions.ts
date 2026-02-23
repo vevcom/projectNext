@@ -52,7 +52,7 @@ export async function publishNewsAction(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     shouldPublish: boolean
 ): Promise<ActionReturn<Omit<SimpleNewsArticle, 'coverImage'>>> {
-    notificationOperations.createSpecial({
+    notificationOperations.createSpecial.internalCall({
         params: {
             special: 'NEW_NEWS_ARTICLE',
         },
@@ -60,7 +60,6 @@ export async function publishNewsAction(
             title: 'Ny nyhetsartikkel', // TODO: Add info about the article
             message: 'En ny nyhetsartikkel er publisert',
         },
-        bypassAuth: true,
     })
 
     return createActionError('UNKNOWN ERROR', 'Not implemented')

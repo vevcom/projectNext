@@ -79,8 +79,8 @@ export const eventOperations = {
         dataSchema: eventSchemas.create,
         authorizer: () => eventAuth.create.dynamicFields({}),
         operation: async ({ prisma, data, session }) => {
-            const cmsParagraph = await cmsParagraphOperations.create({ data: {}, bypassAuth: true })
-            const cmsImage = await cmsImageOperations.create({ data: {}, bypassAuth: true })
+            const cmsParagraph = await cmsParagraphOperations.create.internalCall({ data: {} })
+            const cmsImage = await cmsImageOperations.create.internalCall({ data: {} })
 
             if (data.eventStart > data.eventEnd) {
                 throw new ServerError('BAD PARAMETERS', 'Event må jo strate før den slutter')
@@ -131,7 +131,7 @@ export const eventOperations = {
                 }))
             })
 
-            await notificationOperations.createSpecial({
+            await notificationOperations.createSpecial.internalCall({
                 params: {
                     special: 'NEW_EVENT',
                 },
@@ -139,7 +139,6 @@ export const eventOperations = {
                     title: `Hva der hender: ${event.name}`,
                     message: `${event.name}, 🕓 ${displayDate(event.eventStart, false)},📍 ${event.location}`,
                 },
-                bypassAuth: true,
             })
             return event
         }

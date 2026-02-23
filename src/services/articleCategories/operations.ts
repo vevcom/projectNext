@@ -38,7 +38,7 @@ export const articleCategoryOperations = {
                 }
             })
             await Promise.all(allArticles.map(article =>
-                articleOperations.destroy({ params: { articleId: article.id }, bypassAuth: true })
+                articleOperations.destroy.internalCall({ params: { articleId: article.id } })
             ))
 
             return await prisma.articleCategory.delete({
@@ -78,7 +78,7 @@ export const articleCategoryOperations = {
         opensTransaction: true,
         operation: ({ prisma, params }) => {
             prisma.$transaction(async (tx) => {
-                const article = await articleOperations.create({ data: { }, prisma: tx, bypassAuth: true })
+                const article = await articleOperations.create.internalCall({ data: { }, prisma: tx })
                 await tx.articleCategory.update({
                     where: {
                         id: params.id
@@ -116,7 +116,7 @@ export const articleCategoryOperations = {
                 )
             }
 
-            await articleOperations.destroy({ params: { articleId: params.articleId }, bypassAuth: true })
+            await articleOperations.destroy.internalCall({ params: { articleId: params.articleId } })
         }
     }),
 

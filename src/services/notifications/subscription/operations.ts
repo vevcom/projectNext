@@ -5,8 +5,7 @@ import { validateMethods } from '@/services/notifications/channel/schemas'
 import { allNotificationMethodsOff, allNotificationMethodsOn } from '@/services/notifications/constants'
 import { availableNotificationMethodIncluder } from '@/services/notifications/channel/constants'
 import { notificationChannelOperations } from '@/services/notifications/channel/operations'
-import { defineOperation } from '@/services/serviceOperation'
-import { ServerOnly } from '@/auth/authorizer/ServerOnly'
+import { defineOperation, defineSubOperation } from '@/services/serviceOperation'
 import { ServerError } from '@/services/error'
 import { z } from 'zod'
 import type { Prisma } from '@/prisma-generated-pn-types'
@@ -122,13 +121,12 @@ export const notificationSubscriptionOperations = {
         }),
     }),
 
-    createDefault: defineOperation({
-        authorizer: ServerOnly,
-        paramsSchema: z.object({
+    createDefault: defineSubOperation({
+        paramsSchema: () => z.object({
             userId: z.number(),
         }),
         opensTransaction: true,
-        operation: async ({ prisma, params, session }) => {
+        operation: () => async ({ prisma, params, session }) => {
             const channels = await notificationChannelOperations.readDefault({
                 session,
                 bypassAuth: true,

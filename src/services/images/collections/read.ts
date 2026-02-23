@@ -101,8 +101,8 @@ export async function readSpecialImageCollection(special: SpecialCollection): Pr
         //but the schema requires them to exist - believe this implementation to be better than for
         //regular collections to maybe be in invalid state with no visibility.
         // TODO: use create method.
-        const visibilityAdmin = await visibilityOperations.create({ bypassAuth: true })
-        const visibilityRead = await visibilityOperations.create({ bypassAuth: true })
+        const visibilityAdmin = await visibilityOperations.create.internalCall({})
+        const visibilityRead = await visibilityOperations.create.internalCall({})
 
         const newCollection = await prismaCall(() => prisma.imageCollection.create({
             data: {
