@@ -393,8 +393,6 @@ export function defineSubOperation<
 
                 // Then, authorize user.
                 // This has to be done after the validation because the authorizer might use the data to authorize the user.
-                // Disable es lint next line:
-
                 const prismaWhereFilter: PrismaWhereFilter | undefined = await (async () => {
                     if (!bypassAuth) {
                         if (!implementationArgs.authorizer) {
