@@ -10,9 +10,9 @@ import { UserMigrator } from './migrateUsers'
 import migrateCommittees from './migrateCommittees'
 import seedProdPermissions from './seedProdPermissions'
 import manifest from '@/seeder/src/logger'
+import { PrismaClient as PrismaClientOw } from '@/prisma-generated-ow-basic/client'
 import { PrismaPg } from '@prisma/adapter-pg'
 import type { PrismaClient as PrismaClientPn } from '@/prisma-generated-pn-client'
-import { PrismaClient as PrismaClientOw } from '@/prisma-generated-ow-basic/client'
 
 /**
  * !DobbelOmega!
