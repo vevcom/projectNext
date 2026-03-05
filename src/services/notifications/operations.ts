@@ -7,8 +7,7 @@ import { availableNotificationMethodIncluder } from './channel/constants'
 import { sendMail } from './email/send'
 import { emailSchemas } from './email/schemas'
 import { userFilterSelection } from '@/services/users/constants'
-import { defineOperation } from '@/services/serviceOperation'
-import { ServerOnly } from '@/auth/authorizer/ServerOnly'
+import { defineOperation, defineSubOperation } from '@/services/serviceOperation'
 import { SpecialNotificationChannel } from '@/prisma-generated-pn-types'
 import { z } from 'zod'
 import type { Notification } from '@/prisma-generated-pn-types'
@@ -125,13 +124,12 @@ export const notificationOperations = {
      * @param message - The message content of the notification.
      * @returns A promise that resolves with an object containing the dispatched notification and the number of recipients.
      */
-    createSpecial: defineOperation({
-        authorizer: ServerOnly,
-        paramsSchema: z.object({
+    createSpecial: defineSubOperation({
+        paramsSchema: () => z.object({
             special: z.nativeEnum(SpecialNotificationChannel),
         }),
-        dataSchema: notificationSchemas.createSpecial,
-        operation: async ({ prisma, params, data, session }): Promise<NotificationResult> => {
+        dataSchema: () => notificationSchemas.createSpecial,
+        operation: () => async ({ prisma, params, data, session }): Promise<NotificationResult> => {
             const channel = await prisma.notificationChannel.findUniqueOrThrow({
                 where: {
                     special: params.special,

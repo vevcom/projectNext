@@ -14,15 +14,13 @@ import type { CreateSchoolTypes } from './validation'
 export async function createSchool(rawdata: CreateSchoolTypes['Detailed']): Promise<SchoolFiltered> {
     const data = createSchoolValidation.detailedValidate(rawdata)
 
-    const cmsImage = await cmsImageOperations.create({
+    const cmsImage = await cmsImageOperations.create.internalCall({
         data: {},
-        bypassAuth: true
     })
-    const cmsParagraph = await cmsParagraphOperations.create({
+    const cmsParagraph = await cmsParagraphOperations.create.internalCall({
         data: {},
-        bypassAuth: true
     })
-    const cmsLink = await cmsLinkOperations.create({ data: { text: 'link', url: './' }, bypassAuth: true })
+    const cmsLink = await cmsLinkOperations.create.internalCall({ data: { text: 'link', url: './' } })
 
     return await prismaCall(() => prisma.school.create({
         data: {

@@ -12,9 +12,8 @@ export const careerOperations = {
     updateSpecialCmsParagraphContentCareerInfo: cmsParagraphOperations.updateContent.implement({
         authorizer: () => careerAuth.updateSpecialCmsParagraphContentCareerInfo.dynamicFields({}),
         ownershipCheck: async ({ params }) =>
-            await cmsParagraphOperations.isSpecial({
+            await cmsParagraphOperations.isSpecial.internalCall({
                 params: { paragraphId: params.paragraphId, special: ['CAREER_INFO'] },
-                bypassAuth: true,
             })
     }),
 
@@ -26,7 +25,7 @@ export const careerOperations = {
     updateSpecialCmsLink: cmsLinkOperations.update.implement({
         authorizer: () => careerAuth.updateSpecialCmsLink.dynamicFields({}),
         ownershipCheck: ({ params }) =>
-            cmsLinkOperations.isSpecial({
+            cmsLinkOperations.isSpecial.internalCall({
                 params: {
                     linkId: params.linkId,
                     special: ['CAREER_LINK_TO_CONTACTOR']

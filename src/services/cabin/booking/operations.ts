@@ -5,8 +5,7 @@ import { cabinBookingAuth } from './auth'
 import { cabinBookingFilerSelection, cabinBookingIncluder } from './constants'
 import { cabinPricePeriodOperations } from '@/services/cabin/pricePeriod/operations'
 import { cabinProductPriceIncluder } from '@/services/cabin/product/constants'
-import { defineOperation } from '@/services/serviceOperation'
-import { ServerOnlyAuthorizer } from '@/auth/authorizer/RequireServer'
+import { defineOperation, defineSubOperation } from '@/services/serviceOperation'
 import { ServerError } from '@/services/error'
 import { cabinReleasePeriodOperations } from '@/services/cabin/releasePeriod/operations'
 import { sendSystemMail } from '@/services/notifications/email/send'
@@ -22,13 +21,12 @@ const mailData = {
 Dette skal være en bookingbekreftelse, så det bør nok komme noe nyttig info her snart.`,
 }
 
-const cabinAvailable = defineOperation({
-    paramsSchema: z.object({
+const cabinAvailable = defineSubOperation({
+    paramsSchema: () => z.object({
         start: z.date(),
         end: z.date()
     }),
-    authorizer: ServerOnlyAuthorizer,
-    operation: async ({ prisma, params }) => {
+    operation: () => async ({ prisma, params }) => {
         const results = await prisma.booking.findMany({
             where: {
                 start: {
@@ -49,14 +47,13 @@ const bookingProductParams = z.array(z.object({
 }))
 
 
-const create = defineOperation({
-    paramsSchema: z.object({
+const create = defineSubOperation({
+    paramsSchema: () => z.object({
         bookingType: z.nativeEnum(BookingType),
         bookingProducts: bookingProductParams,
     }),
-    authorizer: ServerOnlyAuthorizer,
-    dataSchema: cabinBookingSchemas.createBookingUserAttached,
-    operation: async ({ prisma, params, data }) => {
+    dataSchema: () => cabinBookingSchemas.createBookingUserAttached,
+    operation: () => async ({ prisma, params, data }) => {
         // TODO: Prevent Race conditions
 
         const latestReleaseDate = await cabinReleasePeriodOperations.getCurrentReleasePeriod({
@@ -71,9 +68,8 @@ const create = defineOperation({
             throw new ServerError('BAD PARAMETERS', 'Hytta kan ikke bookes etter siste slippdato.')
         }
 
-        if (!await cabinAvailable({
+        if (!await cabinAvailable.internalCall({
             params: data,
-            bypassAuth: true,
         })) {
             throw new ServerError('BAD PARAMETERS', 'Hytta er ikke tilgjengelig i den perioden.')
         }
@@ -157,19 +153,17 @@ const create = defineOperation({
     }
 })
 
-const createBookingWithUser = defineOperation({
-    paramsSchema: z.object({
+const createBookingWithUser = defineSubOperation({
+    paramsSchema: () => z.object({
         userId: z.number(),
         bookingType: z.nativeEnum(BookingType),
         bookingProducts: bookingProductParams,
     }),
-    authorizer: ServerOnlyAuthorizer,
-    dataSchema: cabinBookingSchemas.createBookingUserAttached,
-    operation: async ({ prisma, params, data }) => {
-        const result = await create({
+    dataSchema: () => cabinBookingSchemas.createBookingUserAttached,
+    operation: () => async ({ prisma, params, data }) => {
+        const result = await create.internalCall({
             params,
             data,
-            bypassAuth: true,
         })
 
         await prisma.booking.update({
@@ -185,7 +179,7 @@ const createBookingWithUser = defineOperation({
             }
         })
 
-        await notificationOperations.createSpecial({
+        await notificationOperations.createSpecial.internalCall({
             params: {
                 special: 'CABIN_BOOKING_CONFIRMATION',
             },
@@ -193,27 +187,24 @@ const createBookingWithUser = defineOperation({
                 ...mailData,
                 userIdList: [params.userId],
             },
-            bypassAuth: true,
         })
     }
 })
 
-const createBookingNoUser = defineOperation({
-    paramsSchema: z.object({
+const createBookingNoUser = defineSubOperation({
+    paramsSchema: () => z.object({
         bookingType: z.nativeEnum(BookingType),
         bookingProducts: bookingProductParams,
     }),
-    authorizer: ServerOnlyAuthorizer,
-    dataSchema: cabinBookingSchemas.createBookingNoUser,
-    operation: async ({ prisma, params, data }) => {
-        const result = await create({
+    dataSchema: () => cabinBookingSchemas.createBookingNoUser,
+    operation: () => async ({ prisma, params, data }) => {
+        const result = await create.internalCall({
             params,
             data: {
                 ...data,
                 numberOfMembers: 0,
                 numberOfNonMembers: 0,
             },
-            bypassAuth: true,
         })
 
         await prisma.booking.update({
@@ -251,14 +242,13 @@ export const cabinBookingOperations = {
         }),
         dataSchema: cabinBookingSchemas.createBookingUserAttached,
         operation: async ({ params, data }) =>
-            createBookingWithUser({
+            createBookingWithUser.internalCall({
                 params: {
                     userId: params.userId,
                     bookingType: BookingType.CABIN,
                     bookingProducts: params.bookingProducts,
                 },
                 data,
-                bypassAuth: true,
             })
     }),
 
@@ -272,14 +262,13 @@ export const cabinBookingOperations = {
         }),
         dataSchema: cabinBookingSchemas.createBookingUserAttached,
         operation: async ({ params, data }) =>
-            createBookingWithUser({
+            createBookingWithUser.internalCall({
                 params: {
                     userId: params.userId,
                     bookingType: BookingType.BED,
                     bookingProducts: params.bookingProducts,
                 },
                 data,
-                bypassAuth: true,
             })
     }),
 
@@ -289,13 +278,12 @@ export const cabinBookingOperations = {
         }),
         authorizer: () => cabinBookingAuth.createCabinBookingNoUser.dynamicFields({}),
         dataSchema: cabinBookingSchemas.createBookingNoUser,
-        operation: async ({ params, data }) => createBookingNoUser({
+        operation: async ({ params, data }) => createBookingNoUser.internalCall({
             params: {
                 bookingType: BookingType.CABIN,
                 bookingProducts: params.bookingProducts,
             },
             data,
-            bypassAuth: true,
         })
     }),
 
@@ -305,13 +293,12 @@ export const cabinBookingOperations = {
         }),
         authorizer: () => cabinBookingAuth.createBedBookingNoUser.dynamicFields({}),
         dataSchema: cabinBookingSchemas.createBookingNoUser,
-        operation: async ({ params, data }) => createBookingNoUser({
+        operation: async ({ params, data }) => createBookingNoUser.internalCall({
             params: {
                 bookingType: BookingType.BED,
                 bookingProducts: params.bookingProducts,
             },
             data,
-            bypassAuth: true,
         })
     }),
 
@@ -376,12 +363,11 @@ export const cabinBookingOperations = {
             .updateSpecialCmsParagraphContentCabinContract
             .dynamicFields({}),
         ownershipCheck: async ({ params }) =>
-            await cmsParagraphOperations.isSpecial({
+            await cmsParagraphOperations.isSpecial.internalCall({
                 params: {
                     paragraphId: params.paragraphId,
                     special: ['CABIN_CONTRACT']
                 },
-                bypassAuth: true
             })
     })
 }
