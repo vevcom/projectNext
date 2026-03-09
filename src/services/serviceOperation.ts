@@ -67,8 +67,8 @@ export type SubServiceOperationConfig<
     Return,
     OpensTransaction extends boolean = false,
 > = {
-    paramsSchema?: ((implementationFields: ParamsSchemaImplementationFields) => ParamsSchema) | undefined,
-    dataSchema?: ((implementationFields: DataSchemaImplementationFields) => DataSchema) | undefined,
+    paramsSchema?: ((implementationFields: ParamsSchemaImplementationFields) => ParamsSchema) | ParamsSchema,
+    dataSchema?: ((implementationFields: DataSchemaImplementationFields) => DataSchema) | DataSchema,
     opensTransaction?: OpensTransaction,
     operation: (implementationFields: OperationImplementationFields) =>
         ServiceOperationOperation<OpensTransaction, ParamsSchema, DataSchema, Return>
@@ -209,6 +209,41 @@ export type ServiceOperation<
     implementationParamsSchema?: ImplementationParamsSchema,
 }
 
+function parseArgumentOrThrow<S extends z.ZodTypeAny | undefined, A = undefined>(
+    data: unknown, 
+    schema: S | ((arg: A) => S),
+    arg: A, 
+    name: 'params' | 'data' | 'implementation params',
+) {
+    if (!data) return data
+
+    const resolvedSchema = typeof schema == "function"
+        ? schema(arg)
+        : schema
+
+    if (!resolvedSchema) {
+        throw new Smorekopp(
+            'BAD PARAMETERS', `Service operation recieved ${name}, but has no data ${name}.`
+        )
+    }
+
+    const parse = name == 'data'
+        ? zfd.formData(resolvedSchema).safeParse(data)
+        : resolvedSchema.safeParse(data)
+
+    if (!parse.success) {
+        if (name == 'data') {
+            throw new ParseError(parse)
+        }
+
+        // TODO: This needs to be returned to give good error message.
+        console.log(parse)
+        throw new Smorekopp('BAD PARAMETERS', `Invalid ${name} passed to service operation.`)
+    }
+    
+    return parse.data
+}
+
 export function defineSubOperation<
     Return,
     OpensTransaction extends boolean = false,
@@ -241,13 +276,10 @@ export function defineSubOperation<
     ): ServiceOperation<OpensTransaction, Return, ParamsSchema, DataSchema, ImplementationParamsSchema> => {
         const expectedArgsArePresent = (
             args: ServiceOperationExecuteArgs<'UNSAFE', ParamsSchema, DataSchema, ImplementationParamsSchema>
-        ): args is ServiceOperationExecuteArgs<'SAFE', ParamsSchema, DataSchema, ImplementationParamsSchema> => {
-            const paramsMatch = Boolean(args.params) === Boolean(serviceOperationConfig.paramsSchema)
-            const dataMatches = Boolean(args.data) === Boolean(serviceOperationConfig.dataSchema)
-            const implementationParamsMatch =
+        ): args is ServiceOperationExecuteArgs<'SAFE', ParamsSchema, DataSchema, ImplementationParamsSchema> =>
+            Boolean(args.params) === Boolean(serviceOperationConfig.paramsSchema) &&
+            Boolean(args.data) === Boolean(serviceOperationConfig.dataSchema) &&
             Boolean(args.implementationParams) === Boolean(implementationArgs.implementationParamsSchema)
-            return paramsMatch && dataMatches && implementationParamsMatch
-        }
 
         // Guard to check if the prisma client can be used for this service operation.
         const isAppropriateClient = (
@@ -261,77 +293,28 @@ export function defineSubOperation<
             & ServiceOperationExecuteArgs<'UNSAFE', ParamsSchema, DataSchema, ImplementationParamsSchema>
             & Partial<ServiceOperationContext<OpensTransaction>>
         ): Promise<Return> => {
-            const args = {
-                implementationParams,
-                params,
-                data,
+            const parsedArgs = {
+                params: parseArgumentOrThrow(
+                    data,
+                    serviceOperationConfig.paramsSchema,
+                    implementationArgs.paramsSchemaImplementationFields!,
+                    'params'
+                ),
+                data: parseArgumentOrThrow(
+                    data,
+                    serviceOperationConfig.dataSchema,
+                    implementationArgs.dataSchemaImplementationFields!,
+                    'data',
+                ),
+                implementationParams: parseArgumentOrThrow(
+                    implementationParams,
+                    implementationArgs.implementationParamsSchema,
+                    undefined,
+                    'implementation params',
+                ),
             }
 
-            if (args.params) {
-                if (!serviceOperationConfig.paramsSchema) {
-                    throw new Smorekopp(
-                        'BAD PARAMETERS', 'Service operation recieved params, but has no params schema.'
-                    )
-                }
-                const paramsSchema = serviceOperationConfig.paramsSchema(
-                    implementationArgs.paramsSchemaImplementationFields!
-                )
-                if (!paramsSchema) {
-                    throw new Smorekopp(
-                        'BAD PARAMETERS', 'Service operation recieved params, but has no params schema.'
-                    )
-                }
-                const paramsParse = paramsSchema.safeParse(args.params)
-
-                if (!paramsParse.success) {
-                    console.log(paramsParse) // TODO: This needs to be returned to give good error message.
-                    throw new Smorekopp('BAD PARAMETERS', 'Invalid params passed to service operation.')
-                }
-
-                args.params = paramsParse.data
-            }
-            if (args.data) {
-                if (!serviceOperationConfig.dataSchema) {
-                    throw new Smorekopp(
-                        'BAD PARAMETERS', 'Service operation recieved data, but has no data schema. 1'
-                    )
-                }
-                const dataSchema = serviceOperationConfig.dataSchema(
-                    implementationArgs.dataSchemaImplementationFields!
-                )
-                if (!dataSchema) {
-                    throw new Smorekopp(
-                        'BAD PARAMETERS', 'Service operation recieved data, but has no data schema. 2'
-                    )
-                }
-                const dataParse = zfd.formData(dataSchema).safeParse(args.data)
-                if (!dataParse.success) {
-                    console.log(dataParse)
-                    throw new ParseError(dataParse)
-                }
-                args.data = dataParse.data
-            }
-
-            if (args.implementationParams) {
-                if (!implementationArgs.implementationParamsSchema) {
-                    throw new Smorekopp(
-                        'BAD PARAMETERS',
-                        'Service operation recieved implementation params, but has no implementation params schema.'
-                    )
-                }
-                const implementationParamsSchema = implementationArgs.implementationParamsSchema
-                const implementationParamsParse = implementationParamsSchema.safeParse(
-                    args.implementationParams
-                )
-                if (!implementationParamsParse.success) {
-                    // TODO: This needs to be returned to give good error message.
-                    console.log(implementationParamsParse)
-                    throw new Smorekopp('BAD PARAMETERS', 'Invalid implementation params passed to service operation.')
-                }
-                args.implementationParams = implementationParamsParse.data
-            }
-
-            if (!expectedArgsArePresent(args)) {
+            if (!expectedArgsArePresent(parsedArgs)) {
                 throw new Smorekopp(
                     'SERVER ERROR',
                     'Service operation recieved invalid arguments.'
@@ -360,7 +343,7 @@ export function defineSubOperation<
                     }
 
                     const authorizer = await prismaErrorWrapper(
-                        () => implementationArgs.authorizer({ ...args, prisma })
+                        () => implementationArgs.authorizer({ ...parsedArgs, prisma })
                     )
                     const authResult = authorizer.auth(session)
 
@@ -371,7 +354,7 @@ export function defineSubOperation<
 
                 const ownershipCheckResult = await prismaErrorWrapper(
                     () => implementationArgs.ownershipCheck({
-                        ...args,
+                        ...parsedArgs,
                         prisma,
                     })
                 )
@@ -386,17 +369,17 @@ export function defineSubOperation<
                 return prismaErrorWrapper(() =>
                     serviceOperationConfig.operation(
                         implementationArgs.operationImplementationFields!
-                    )({ ...args, prisma, bypassAuth, session })
+                    )({ ...parsedArgs, prisma, bypassAuth, session })
                 )
             })
         }
 
-        executeOperation.paramsSchema = serviceOperationConfig.paramsSchema
+        executeOperation.paramsSchema = typeof serviceOperationConfig.paramsSchema == "function" 
             ? serviceOperationConfig.paramsSchema(implementationArgs.paramsSchemaImplementationFields!)
-            : undefined
-        executeOperation.dataSchema = serviceOperationConfig.dataSchema
+            : serviceOperationConfig.paramsSchema
+        executeOperation.dataSchema = typeof serviceOperationConfig.dataSchema == "function" 
             ? serviceOperationConfig.dataSchema(implementationArgs.dataSchemaImplementationFields!)
-            : undefined
+            : serviceOperationConfig.dataSchema
         executeOperation.implementationParamsSchema = implementationArgs.implementationParamsSchema
 
         return executeOperation
@@ -436,12 +419,7 @@ export function defineOperation<
     authorizer: ServiceOperationGuard<AuthorizerDynamicFieldsBound, OpensTransaction, ParamsSchema, DataSchema, undefined>,
     operation: ServiceOperationOperation<OpensTransaction, ParamsSchema, DataSchema, Return>
 }): ServiceOperation<OpensTransaction, Return, ParamsSchema, DataSchema, undefined> {
-    return defineSubOperation<
-        Return,
-        OpensTransaction,
-        ParamsSchema,
-        DataSchema
-    >({
+    return defineSubOperation({
         opensTransaction,
         operation: () => operation,
         paramsSchema: paramsSchema !== undefined ? () => paramsSchema : undefined,
