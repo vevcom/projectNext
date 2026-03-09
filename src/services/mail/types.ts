@@ -1,5 +1,5 @@
 
-import type { Group, MailAddressExternal, MailAlias, MailingList } from '@prisma/client'
+import type { Group, MailAddressExternal, MailAlias, MailingList } from '@/prisma-generated-pn-types'
 import type { UserFiltered } from '@/services/users/types'
 
 

@@ -1,7 +1,5 @@
 'use server'
-
-import { createActionError, createZodActionError, safeServerCall } from '@/services/actionError'
-import { getUser } from '@/auth/session/getUser'
+import { createZodActionError, safeServerCall } from '@/services/actionError'
 import { createMailAddressExternal } from '@/services/mail/mailAddressExternal/create'
 import { destroyMailAddressExternal } from '@/services/mail/mailAddressExternal/destroy'
 import { updateMailAddressExternal } from '@/services/mail/mailAddressExternal/update'
@@ -11,15 +9,10 @@ import {
     updateMailAddressExternalValidation,
 } from '@/services/mail/mailAddressExternal/validation'
 import type { ActionReturn } from '@/services/actionTypes'
-import type { MailAddressExternal } from '@prisma/client'
+import type { MailAddressExternal } from '@/prisma-generated-pn-types'
 
 export async function createMailAddressExternalAction(rawdata: FormData):
     Promise<ActionReturn<MailAddressExternal>> {
-    const { authorized, status } = await getUser({
-        requiredPermissions: [['MAILADDRESS_EXTERNAL_CREATE']]
-    })
-    if (!authorized) return createActionError(status)
-
     const parse = createMailAddressExternalValidation.typeValidate(rawdata)
     if (!parse.success) return createZodActionError(parse)
 
@@ -27,11 +20,6 @@ export async function createMailAddressExternalAction(rawdata: FormData):
 }
 
 export async function destroyMailAddressExternalAction(id: number): Promise<ActionReturn<MailAddressExternal>> {
-    const { authorized, status } = await getUser({
-        requiredPermissions: [['MAILADDRESS_EXTERNAL_DESTROY']],
-    })
-    if (!authorized) return createActionError(status)
-
     const parse = readMailAddressExternalValidation.typeValidate({ id })
     if (!parse.success) return createZodActionError(parse)
 
@@ -40,11 +28,6 @@ export async function destroyMailAddressExternalAction(id: number): Promise<Acti
 
 export async function updateMailAddressExternalAction(data: FormData):
 Promise<ActionReturn<MailAddressExternal>> {
-    const { authorized, status } = await getUser({
-        requiredPermissions: [['MAILADDRESS_EXTERNAL_UPDATE']],
-    })
-    if (!authorized) return createActionError(status)
-
     const parse = updateMailAddressExternalValidation.typeValidate(data)
     if (!parse.success) return createZodActionError(parse)
 

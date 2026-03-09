@@ -78,3 +78,26 @@ export class NumberQueryParam extends QueryParam<number> {
         return null
     }
 }
+
+export class EnumQueryParam<const T extends string> extends QueryParam<T> {
+    private enumValues: T[]
+
+    constructor(name: string, enumValues: T[]) {
+        super(name)
+        this.enumValues = enumValues
+    }
+
+    encode(value: T): string {
+        if (!this.enumValues.includes(value)) {
+            throw new Error(`Value ${value} is not a valid enum value for ${this.name}`)
+        }
+        return value
+    }
+
+    decodeValue(value: string | string[] | undefined): T | null {
+        if (typeof value === 'string' && this.enumValues.includes(value as T)) {
+            return value as T
+        }
+        return null
+    }
+}

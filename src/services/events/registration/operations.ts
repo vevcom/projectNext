@@ -9,7 +9,7 @@ import { sendSystemMail } from '@/services/notifications/email/send'
 import { userFilterSelection } from '@/services/users/constants'
 import { defineOperation } from '@/services/serviceOperation'
 import { z } from 'zod'
-import type { Prisma } from '@prisma/client'
+import type { Prisma } from '@/prisma-generated-pn-types'
 import type { EventRegistrationExpanded } from './types'
 
 async function preValidateRegistration(
@@ -372,7 +372,7 @@ export const eventRegistrationOperations = {
             const message = `Gratulerer! Du har rykket opp fra venteliste på arrangementet ${registration.event.name}.`
 
             if (nextInLine.user) {
-                await notificationOperations.createSpecial({
+                await notificationOperations.createSpecial.internalCall({
                     params: {
                         special: 'EVENT_WAITINGLIST_PROMOTION',
                     },
@@ -381,7 +381,6 @@ export const eventRegistrationOperations = {
                         message,
                         userIdList: [nextInLine.user.id],
                     },
-                    bypassAuth: true,
                 })
             }
 

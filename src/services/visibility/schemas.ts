@@ -1,4 +1,4 @@
-import { VisibilityRequirementGroupType } from '@prisma/client'
+import { VisibilityRequirementGroupType } from '@/prisma-generated-pn-types'
 import { z } from 'zod'
 
 

@@ -24,7 +24,10 @@ import seedDevEvents from './development/seedDevEvents'
 import seedEvents from './seedEvent'
 import seedCabin from './seedCabin'
 import seedPermissions from './seedPermissions'
-import { PrismaClient } from '@prisma/client'
+import seedFlairs from './seedFlairs'
+import { PrismaClient } from '@/prisma-generated-pn-client'
+import { PrismaPg } from '@prisma/adapter-pg'
+import seedInterestGroups from './seedInterestGroups'
 
 export default async function seed(
     shouldMigrate: boolean,
@@ -32,7 +35,12 @@ export default async function seed(
     logging?: boolean,
 ) {
     const enableLogging = logging === undefined ? true : logging
-    const prisma = new PrismaClient()
+    const prisma = new PrismaClient({
+        adapter: new PrismaPg(
+            { connectionString: process.env.DB_URI },
+            { schema: process.env.DB_SCHEMA },
+        )
+    })
 
     if (enableLogging) console.log('seeding standard data....')
     await seedOrder(prisma)
@@ -48,6 +56,8 @@ export default async function seed(
     await seedShop(prisma)
     await seedEvents(prisma)
     await seedPermissions(prisma)
+    await seedFlairs(prisma)
+    await seedInterestGroups(prisma)
     if (enableLogging) console.log('seed standard done')
 
     if (enableLogging) console.log(shouldMigrate ? 'migrating from veven' : 'not migrating from veven')

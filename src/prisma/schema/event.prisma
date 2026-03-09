@@ -9,7 +9,7 @@ model Event {
   paragraph      CmsParagraph    @relation(fields: [cmsParagraphId], references: [id])
   cmsParagraphId Int             @unique
   coverImage     CmsImage        @relation(fields: [coverImageId], references: [id])
-  coverImageId   Int
+  coverImageId   Int             @unique
   eventTagEvents EventTagEvent[]
   location       String?
 
@@ -28,10 +28,10 @@ model Event {
   waitingList        Boolean
   eventRegistrations EventRegistration[]
 
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
-  ScreenPage ScreenPage[]
-  cabinEvent Booking[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  screenPages ScreenPage[]
+  cabinEvent  Booking[]
 
   // Legacy from old database
   company     Boolean @default(false) // If a plus one is allowed

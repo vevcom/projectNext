@@ -3,7 +3,7 @@ import { companyListRenderer } from './CompanyListRenderer'
 import styles from './CompanyList.module.scss'
 import { CompanyPagingContext } from '@/contexts/paging/CompanyPaging'
 import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
-import { useUser } from '@/auth/session/useUser'
+import { useSession } from '@/auth/session/useSession'
 import type { ReactNode } from 'react'
 
 type PropTypes = {
@@ -12,18 +12,16 @@ type PropTypes = {
 }
 
 export default function CompanyList({ serverRenderedData, disableEditing }: PropTypes) {
-    const ses = useUser()
-    const session = {
-        user: ses.user ?? null,
-        permissions: ses.permissions ?? [],
-        memberships: ses.memberships ?? [],
+    const session = useSession()
+    if (session.loading) {
+        return <>laster session...</>
     }
     return (
         <div className={styles.CompanyList}>
             {serverRenderedData}
             <EndlessScroll
                 pagingContext={CompanyPagingContext}
-                renderer={data => companyListRenderer({ asClient: true, session, disableEditing })(data)}
+                renderer={data => companyListRenderer({ asClient: true, session: session.session, disableEditing })(data)}
             />
         </div>
     )

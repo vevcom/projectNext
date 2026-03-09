@@ -1,4 +1,4 @@
-import type { SpecialEventTags } from '@prisma/client'
+import type { SpecialEventTags } from '@/prisma-generated-pn-types'
 
 export const specialEventTags = {
     COMPANY_PRESENTATION: {

@@ -5,7 +5,6 @@ import CompanySelectionProvider from '@/contexts/CompanySelection'
 import { CompanyPagingProvider } from '@/contexts/paging/CompanyPaging'
 import Company from '@/components/Company/Company'
 import Date from '@/components/Date/Date'
-import { Session } from '@/auth/session/Session'
 import {
     readJobAdAction,
     updateJobAdArticleAction,
@@ -21,7 +20,9 @@ import {
 } from '@/services/career/jobAds/actions'
 import { jobAdType } from '@/services/career/jobAds/constants'
 import { decodeVevenUriHandleError } from '@/lib/urlEncoding'
+import { ServerSession } from '@/auth/session/ServerSession'
 import { configureAction } from '@/services/configureAction'
+import { jobAdAuth } from '@/services/career/jobAds/auth'
 import { notFound } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -42,7 +43,7 @@ type PropTypes = {
 export default async function JobAd({ params }: PropTypes) {
     const nameAndId = (await params).nameAndId
 
-    const session = await Session.fromNextAuth()
+    const session = await ServerSession.fromNextAuth()
     const jobAdRes = await readJobAdAction({ params: { id: decodeVevenUriHandleError(nameAndId) } })
     if (!jobAdRes.success) {
         //TODO: Handle error in idiomatic way
@@ -50,10 +51,16 @@ export default async function JobAd({ params }: PropTypes) {
         throw new Error('Failed to read jobAd')
     }
     const jobAd = jobAdRes.data
+
+    const canEdit = jobAdAuth.updateArticle.dynamicFields({}).auth(
+        session
+    ).toJsObject()
+
     return (
         <div className={styles.wrapper}>
             <main>
                 <Article
+                    canEdit={canEdit}
                     article={jobAd.article}
                     sideBarClassName={styles.sideBar}
                     actions={{

@@ -1,6 +1,6 @@
 import { Session } from '@/auth/session/Session'
 import { Smorekopp } from '@/services/error'
-import { prisma } from '@/prisma/client'
+import { prisma } from '@/prisma-pn-client-instance'
 import { jobAdOperations } from '@/services/career/jobAds/operations'
 import { afterEach, beforeAll, describe, expect, test } from '@jest/globals'
 

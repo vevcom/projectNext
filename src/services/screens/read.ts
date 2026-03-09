@@ -1,8 +1,8 @@
 import { screenPageIncluder } from './pages/ConfigVars'
 import { prismaCall } from '@/services/prismaCall'
-import { prisma } from '@/prisma/client'
+import { prisma } from '@/prisma-pn-client-instance'
 import type { ExpandedScreen } from './types'
-import type { Screen } from '@prisma/client'
+import type { Screen } from '@/prisma-generated-pn-types'
 
 export async function readScreen(id: number): Promise<ExpandedScreen> {
     const screen = await prismaCall(() => prisma.screen.findUniqueOrThrow({

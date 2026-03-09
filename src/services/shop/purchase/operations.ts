@@ -6,7 +6,7 @@ import { defineOperation } from '@/services/serviceOperation'
 import { userOperations } from '@/services/users/operations'
 import { permissionOperations } from '@/services/permissions/operations'
 import { userFilterSelection } from '@/services/users/constants'
-import { PurchaseMethod } from '@prisma/client'
+import { PurchaseMethod } from '@/prisma-generated-pn-types'
 
 export const purchaseOperations = {
     createByStudentCard: defineOperation({
@@ -26,8 +26,7 @@ export const purchaseOperations = {
                 throw e
             }
 
-            const permissions = await permissionOperations.readPermissionsOfUser({
-                bypassAuth: true,
+            const permissions = await permissionOperations.readPermissionsOfUser.internalCall({
                 params: {
                     userId: user.id,
                 },

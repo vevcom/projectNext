@@ -1,13 +1,15 @@
 import { committeeAuth } from './auth'
 import { committeeExpandedIncluder, committeeLogoIncluder, membershipIncluder } from './constants'
-import { ServerOnlyAuther } from '@/auth/auther/RequireServer'
+import { committeeSchemas } from './validation'
 import { cmsImageOperations } from '@/cms/images/operations'
 import { cmsParagraphOperations } from '@/cms/paragraphs/operations'
 import { imageOperations } from '@/services/images/operations'
-import { defineOperation } from '@/services/serviceOperation'
+import { defineOperation, defineSubOperation } from '@/services/serviceOperation'
 import { articleRealtionsIncluder } from '@/cms/articles/constants'
 import { implementUpdateArticleOperations } from '@/cms/articles/implement'
 import { articleOperations } from '@/cms/articles/operations'
+import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
+import { GroupType } from '@/prisma-generated-pn-types'
 import { z } from 'zod'
 
 
@@ -52,12 +54,11 @@ const read = defineOperation({
     }
 })
 
-const readFromGroupIds = defineOperation({
-    authorizer: ServerOnlyAuther,
-    paramsSchema: z.object({
+const readFromGroupIds = defineSubOperation({
+    paramsSchema: () => z.object({
         ids: z.number().int().array()
     }),
-    operation: async ({ prisma, params }) => await prisma.committee.findMany({
+    operation: () => async ({ prisma, params }) => await prisma.committee.findMany({
         where: {
             groupId: {
                 in: params.ids
@@ -190,12 +191,117 @@ const destroy = defineOperation({
                 }
             }
         })
-        articleOperations.destroy({ params: { articleId: committee.committeeArticleId }, bypassAuth: true })
+        articleOperations.destroy.internalCall({ params: { articleId: committee.committeeArticleId } })
         return committee
     }
 })
 
+const create = defineOperation({
+    authorizer: () => committeeAuth.create.dynamicFields({}),
+    dataSchema: committeeSchemas.create,
+    operation: async ({ prisma, data }) => {
+        const { name, shortName, logoImageId } = data
+        const defaultLogoImageId = await imageOperations.readSpecial({
+            params: { special: 'DAFAULT_COMMITTEE_LOGO' },
+        }).then(res => res.id)
+        const article = await articleOperations.create.internalCall({ data: {} })
+
+        const paragraph = await cmsParagraphOperations.create.internalCall({
+            data: { name: `Paragraph for ${name}` },
+        })
+        const applicationParagraph = await cmsParagraphOperations.create.internalCall({
+            data: { name: `Søknadstekst for ${name}` },
+        })
+
+        const order = (await readCurrentOmegaOrder()).order
+
+        return await prisma.committee.create({
+            data: {
+                name,
+                shortName,
+                logoImage: {
+                    create: {
+                        name: `Komitélogoen til ${name}`,
+                        image: {
+                            connect: {
+                                id: logoImageId ?? defaultLogoImageId,
+                            },
+                        },
+                    },
+                },
+                paragraph: {
+                    connect: {
+                        id: paragraph.id,
+                    }
+                },
+                group: {
+                    create: {
+                        groupType: GroupType.COMMITTEE,
+                        order,
+                    }
+                },
+                committeeArticle: {
+                    connect: {
+                        id: article.id
+                    }
+                },
+                applicationParagraph: {
+                    connect: {
+                        id: applicationParagraph.id
+                    }
+                }
+            },
+            include: {
+                logoImage: {
+                    include: {
+                        image: true,
+                    },
+                },
+            },
+        })
+    }
+})
+
+const update = defineOperation({
+    authorizer: () => committeeAuth.update.dynamicFields({}),
+    paramsSchema: z.object({
+        id: z.number()
+    }),
+    dataSchema: committeeSchemas.update,
+    operation: async ({ prisma, params, data }) => {
+        const { name, shortName, logoImageId } = data
+
+        const defaultLogoImageId = await imageOperations.readSpecial({
+            params: { special: 'DAFAULT_COMMITTEE_LOGO' },
+        }).then(res => res.id)
+
+        return await prisma.committee.update({
+            where: {
+                id: params.id,
+            },
+            data: {
+                name,
+                shortName,
+                logoImage: {
+                    update: {
+                        imageId: logoImageId ?? defaultLogoImageId,
+                    },
+                },
+            },
+            include: {
+                logoImage: {
+                    include: {
+                        image: true,
+                    },
+                },
+            },
+        })
+    }
+})
+
 export const committeeOperations = {
+    create,
+    update,
     readAll,
     read,
     readFromGroupIds,

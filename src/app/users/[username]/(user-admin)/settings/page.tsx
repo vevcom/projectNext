@@ -14,7 +14,7 @@ export default async function UserSettings({ params }: PropTypes) {
 
     return (
         <div>
-            <UserSettingsForm userData={userDataFull} />
+            <UserSettingsForm user={userDataFull} />
             {/* TODO: add Email registration form and admin user settings */},.
             <h2>Generelle Instillinger</h2>
             <Image width={300} image={profile.user.image} />

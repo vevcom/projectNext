@@ -2,13 +2,13 @@
 
 import MailList from './mailList'
 import styles from './MailFlow.module.scss'
-import { useUser } from '@/auth/session/useUser'
 import {
     destroyAliasMailingListRelationAction,
     destroyMailingListExternalRelationAction,
     destroyMailingListGroupRelationAction,
     destroyMailingListUserRelationAction
 } from '@/services/mail/actions'
+import { useSession } from '@/auth/session/useSession'
 import type { ActionReturn } from '@/services/actionTypes'
 import type { MailFlowObject, MailListTypes } from '@/services/mail/types'
 
@@ -29,8 +29,8 @@ export default function MailFlow({
     let userDestroy: DestroyFunction = null
     let addressExternalDestroy: DestroyFunction = null
 
-    const uResults = useUser()
-    const permissions = uResults.permissions ?? []
+    const session = useSession()
+    const permissions = !session.loading ? session.session.permissions : []
 
     if (filter === 'mailingList') {
         if (permissions.includes('MAILINGLIST_ALIAS_DESTROY')) {

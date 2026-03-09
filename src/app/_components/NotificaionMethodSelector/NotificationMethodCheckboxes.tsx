@@ -20,9 +20,9 @@ export default function NotificationMethodCheckboxes({
 }) {
     const [state, setState] = useState(methods)
 
-    function handleChange(this: keyof (NotificationMethodGeneral), event: React.ChangeEvent<HTMLInputElement>) {
+    function handleChange(key: keyof NotificationMethodGeneral, event: React.ChangeEvent<HTMLInputElement>) {
         const newState = { ...state }
-        newState[this] = event.target.checked
+        newState[key] = event.target.checked
         if (onChange) onChange(newState)
         setState(newState)
     }
@@ -38,7 +38,7 @@ export default function NotificationMethodCheckboxes({
             {...(onChange ? { checked: canEdit && value } : { defaultChecked: value })}
             {...(label ? { label: notificationMethodsDisplayMap[key] } : {})}
             disabled={!canEdit}
-            onChange={handleChange.bind(key)}
+            onChange={event => handleChange(key, event)}
         />
     })
 }

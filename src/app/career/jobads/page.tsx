@@ -14,7 +14,7 @@ export default async function JobAds() {
         <PageWrapper title="jobbannonser"
             headerItem={
                 <>
-                    <AddHeaderItemPopUp PopUpKey={'jobAdForm'}>
+                    <AddHeaderItemPopUp popUpKey={'jobAdForm'}>
                         <CompanyPagingProvider
                             serverRenderedData={[]}
                             startPage={{

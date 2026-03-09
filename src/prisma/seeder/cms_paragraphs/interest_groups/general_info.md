@@ -6,6 +6,7 @@ Har du en interesse du har lyst til å dele med andre? Interessegrupper er noe v
 
 **Ønsker du å opprette en gruppe?** Send en mail til hs@omega.ntnu.no, så tar vi kontakt.
 
-Få støtte! Ønsker din gruppe å søke støtte, send en søknad til scatmeister@omega.ntnu.no. For å få penger må gruppen bestå av flere aktive medlemmer i Omega, samt ha klart et budsjett over hva de planlegger å bruke pengene på. Søknaden vil så bli vurdert av fondsstyret. Det er altså ikke en garanti å få penger, men hvis formålet er noe Broedre iitem systre kan nyte godt av lover det godt for søknaden.
+**Få støtte!** Ønsker din gruppe å søke støtte, send en søknad til scatmeister@omega.ntnu.no. For å få penger må gruppen bestå av flere aktive medlemmer i Omega, samt ha klart et budsjett over hva de planlegger å bruke pengene på. Søknaden vil så bli vurdert av fondsstyret. Det er altså ikke en garanti å få penger, men hvis formålet er noe Broedre iitem systre kan nyte godt av lover det godt for søknaden.
 
-Høres dette vrient ut, så fortvil ikke: Vi er her for å hjelpe dere.
+**Har du noen spørsmål rundt noen av interessegruppene?**
+Ta kontakt med HS

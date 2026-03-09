@@ -2,7 +2,7 @@ import '@pn-server-only'
 import { userFilterSelection } from '@/services/users/constants'
 import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
-import { prisma } from '@/prisma/client'
+import { prisma } from '@/prisma-pn-client-instance'
 import type { MailFlowObject, MailListTypes, ViaArrayType, ViaType } from './types'
 
 
@@ -419,7 +419,8 @@ async function readUserTraversal(id: number): Promise<MailFlowObject> {
         where: {
             id,
         },
-        include: {
+        select: {
+            ...userFilterSelection,
             mailingLists: {
                 include: {
                     mailingList: {

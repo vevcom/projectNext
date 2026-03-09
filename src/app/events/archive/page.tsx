@@ -3,9 +3,9 @@ import TagHeaderItem from '@/app/events/TagHeaderItem'
 import { readEventTagsAction } from '@/services/events/tags/actions'
 import EventsLandingLayout from '@/app/events/EventsLandingLayout'
 import { EventArchivePagingProvider } from '@/contexts/paging/EventArchivePaging'
+import { ServerSession } from '@/auth/session/ServerSession'
 import { QueryParams } from '@/lib/queryParams/queryParams'
 import { eventTagAuth } from '@/services/events/tags/auth'
-import { Session } from '@/auth/session/Session'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import type { SearchParamsServerSide } from '@/lib/queryParams/types'
 
@@ -22,7 +22,7 @@ export default async function EventArchive({
     const { data: eventTags } = eventTagsResponse
     const selectedTags = selectedTagNames ? eventTags.filter(tag => selectedTagNames.includes(tag.name)) : []
 
-    const session = await Session.fromNextAuth()
+    const session = await ServerSession.fromNextAuth()
 
     const canUpdate = eventTagAuth.update.dynamicFields({}).auth(session)
     const canCreate = eventTagAuth.create.dynamicFields({}).auth(session)

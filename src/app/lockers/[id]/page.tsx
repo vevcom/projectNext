@@ -4,10 +4,9 @@ import CreateLockerReservationForm from './CreateLockerReservationForm'
 import UpdateLockerReservationForm from './UpdateLockerReservationForm'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { readLockerAction } from '@/services/lockers/actions'
-import { getUser } from '@/auth/session/getUser'
 import { checkGroupValidity, groupOperations, inferGroupName } from '@/services/groups/operations'
-import { notFound } from 'next/navigation'
-
+import { RequireUser } from '@/auth/authorizer/RequireUser'
+import { ServerSession } from '@/auth/session/ServerSession'
 
 type PropTypes = {
     params: Promise<{
@@ -16,13 +15,6 @@ type PropTypes = {
 }
 
 export default async function Locker({ params }: PropTypes) {
-    const { user, authorized } = await getUser({
-        userRequired: true,
-        shouldRedirect: true,
-        requiredPermissions: [['LOCKER_USE']],
-    })
-    if (!authorized) notFound()
-
     const lockerId = parseInt((await params).id, 10)
 
     const locker = await readLockerAction({ params: { id: lockerId } })
@@ -34,8 +26,13 @@ export default async function Locker({ params }: PropTypes) {
     const reservation = locker.data.LockerReservation[0]
     const groupName = (isReserved && reservation.group) ? inferGroupName(checkGroupValidity(reservation.group)) : ''
 
-    const groups = await groupOperations.readGroupsOfUser({
-        bypassAuth: true,
+    const user = RequireUser.staticFields({}).dynamicFields({}).auth(
+        await ServerSession.fromNextAuth()
+    ).redirectOnUnauthorized({
+        returnUrl: `/lockers/${lockerId}`
+    }).session.user
+
+    const groups = await groupOperations.readGroupsOfUser.internalCall({
         params: {
             userId: user.id,
         },

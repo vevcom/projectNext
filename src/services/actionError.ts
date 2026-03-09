@@ -1,6 +1,6 @@
 import { errorCodes, type ErrorCode, type ErrorMessage } from '@/services/error'
 import { ParseError, Smorekopp } from '@/services/error'
-import type { AuthStatus } from '@/auth/session/getUser'
+import type { AuthStatus } from '@/auth/authorizer/AuthResult'
 import type { SafeParseError } from 'zod'
 import type { ActionError, ActionReturn } from './actionTypes'
 
@@ -42,6 +42,7 @@ export function createZodActionError<T>(parse: SafeParseError<T>): ActionError {
  * A function that calls a server function. If all goes well, it returns a ActionReturn with the data.
  * If an error is thrown it returns ActionReturn of success false and the error.
  * The function handles ServerErrors class, and treats all other errors as unknown.
+ * @warning This should not be called directly. The service operation system handles this internally.
  * @param call - A async server function to call.
  * @returns - A promise that resolves to an ActionReturn.
  */

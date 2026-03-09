@@ -1,21 +1,20 @@
 import styles from './page.module.scss'
 import CreateOrder from './CreateOrder'
-import { getUser } from '@/auth/session/getUser'
 import { readCurrentOmegaOrderAction } from '@/services/omegaOrder/actions'
-import { notFound } from 'next/navigation'
+import { omegaOrderAuth } from '@/services/omegaOrder/auth'
+import { unwrapActionReturn } from '@/app/redirectToErrorPage'
+import { ServerSession } from '@/auth/session/ServerSession'
 
 export default async function stateOfOmega() {
-    const { authorized } = await getUser({
-        requiredPermissions: [['OMEGA_ORDER_CREATE']]
-    })
-    if (!authorized) return notFound() //TODO: improve error handling
+    omegaOrderAuth.create.dynamicFields({}).auth(
+        await ServerSession.fromNextAuth()
+    ).redirectOnUnauthorized({ returnUrl: '/admin/state-of-omega' })
 
-    const currentOreder = await readCurrentOmegaOrderAction()
-    if (!currentOreder.success) return notFound() //TODO: improve error handling
+    const currentOrder = unwrapActionReturn(await readCurrentOmegaOrderAction())
 
     return (
         <div className={styles.wrapper}>
-            <h1>Omega er i orden: { currentOreder.data.order }</h1>
+            <h1>Omega er i orden: { currentOrder.order }</h1>
             <CreateOrder />
         </div>
     )

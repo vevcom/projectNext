@@ -16,7 +16,7 @@ export default async function NewsArtilces() {
                     <Link className={styles.archiveBtn} href="news/archive">Arkivet</Link>
                     {
                         canCreateNews && (
-                            <AddHeaderItemPopUp PopUpKey="createNewsPop">
+                            <AddHeaderItemPopUp popUpKey="createNewsPop">
                                 <AddNews />
                             </AddHeaderItemPopUp>
                         )

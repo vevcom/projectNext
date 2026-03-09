@@ -3,12 +3,18 @@ import SocialIcons from '@/components/SocialIcons/SocialIcons'
 import SpecialCmsImage from '@/components/Cms/CmsImage/SpecialCmsImage'
 import { readSpecialCmsImageFrontpage, updateSpecialCmsImageFrontpage } from '@/services/frontpage/actions'
 import Link from 'next/link'
+import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
 
-function Footer() {
+type PropTypes = {
+    canEditSpecialCmsImage: AuthResultTypeAny
+}
+
+async function Footer({ canEditSpecialCmsImage }: PropTypes) {
     return (
         <footer className={styles.Footer}>
             <div>
                 <SpecialCmsImage
+                    canEdit={canEditSpecialCmsImage}
                     special="FOOTER_LOGO"
                     width={350}
                     readSpecialCmsImageAction={readSpecialCmsImageFrontpage}
@@ -23,6 +29,7 @@ function Footer() {
                 <div>
                     {/* Uncomment when PWA an SVG
                     <SpecialCmsImage
+                        canEdit={canEditSpecialCmsImage}
                         special="FOOTER_1"
                         width={200}
                         readSpecialCmsImageAction={readSpecialCmsImageFrontpage}
@@ -52,6 +59,7 @@ function Footer() {
             </div>
             <div className={styles.sponsors}>
                 <SpecialCmsImage
+                    canEdit={canEditSpecialCmsImage}
                     special="FOOTER_2"
                     width={170}
                     readSpecialCmsImageAction={readSpecialCmsImageFrontpage}
@@ -60,6 +68,7 @@ function Footer() {
                     <Link href="http://www.nordicsemi.com" target="_blank" />
                 </SpecialCmsImage>
                 <SpecialCmsImage
+                    canEdit={canEditSpecialCmsImage}
                     special="FOOTER_3"
                     width={100}
                     readSpecialCmsImageAction={readSpecialCmsImageFrontpage}

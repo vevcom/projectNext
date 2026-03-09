@@ -6,7 +6,7 @@ import PopUp from '@/components/PopUp/PopUp'
 import NumberInput from '@/components/UI/NumberInput'
 import TextInput from '@/components/UI/TextInput'
 import UserList from '@/components/User/UserList/UserList'
-import { useUser } from '@/auth/session/useUser'
+import { useSession } from '@/auth/session/useSession'
 import { PopUpContext } from '@/contexts/PopUp'
 import { UserSelectionContext } from '@/contexts/UserSelection'
 import { configureAction } from '@/services/configureAction'
@@ -15,10 +15,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 
 export default function CreateDotForm() {
-    const session = useUser()
+    const session = useSession()
     const userSelectionContext = useContext(UserSelectionContext)
     const popUpContext = useContext(PopUpContext)
-    if (!session.user) return <></>
+    if (session.loading) return <>loading...</>
+    if (!session.session.user) return <></>
     if (!userSelectionContext) return <></>
 
     userSelectionContext.onSelection(() => {
@@ -39,14 +40,14 @@ export default function CreateDotForm() {
                             'ingen bruker valgt'
                     }
                 </p>
-                <PopUp PopUpKey="selectUserDot" showButtonClass={styles.openUserList} showButtonContent={
+                <PopUp popUpKey="selectUserDot" showButtonClass={styles.openUserList} showButtonContent={
                     <>Velg Bruker</>
                 }>
                     <UserList />
                 </PopUp>
             </div>
             <Form
-                action={configureAction(createDotAction, { params: { accuserId: session.user.id } })}
+                action={configureAction(createDotAction, { params: { accuserId: session.session.user.id } })}
                 submitText="Lag prikk"
                 refreshOnSuccess
             >

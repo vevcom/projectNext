@@ -4,7 +4,7 @@ import { ImageSelectionContext } from '@/contexts/ImageSelection'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck } from '@fortawesome/free-solid-svg-icons'
 import { useContext } from 'react'
-import type { Image } from '@prisma/client'
+import type { Image } from '@/prisma-generated-pn-types'
 
 type PropTypes = {
     image: Image,

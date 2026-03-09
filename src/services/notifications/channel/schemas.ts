@@ -1,6 +1,6 @@
 import { INFINITE_LOOP_PREVENTION_MAX_ITERATIONS } from './constants'
 import { notificationMethodsArray } from '@/services/notifications/constants'
-import { SpecialNotificationChannel } from '@prisma/client'
+import { SpecialNotificationChannel } from '@/prisma-generated-pn-types'
 import { z } from 'zod'
 import type {
     ExpandedNotificationChannel,
@@ -8,6 +8,7 @@ import type {
     NotificationMethodTypes
 } from '@/services/notifications/types'
 
+//TODO: This is unused ??
 export function parseMethods(data: FormData, prefix?: NotificationMethodTypes) {
     return Object.fromEntries(
         notificationMethodsArray.filter(method => notificationMethodsArray.includes(method)).map(method => {

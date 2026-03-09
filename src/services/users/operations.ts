@@ -49,6 +49,7 @@ export const userOperations = {
                         }]
                     }
                 },
+                select: userFilterSelection
             })
 
             setTimeout(() => sendUserInvitationEmail(user), 1000)
@@ -155,8 +156,7 @@ export const userOperations = {
             }))
 
             const memberships = await readMembershipsOfUser(user.id)
-            const permissions = await permissionOperations.readPermissionsOfUser({
-                bypassAuth: true,
+            const permissions = await permissionOperations.readPermissionsOfUser.internalCall({
                 params: {
                     userId: user.id
                 }
@@ -332,7 +332,7 @@ export const userOperations = {
         authorizer: ({ params }) => userAuth.updateProfile.dynamicFields({ username: params.username }),
         operation: ({ prisma, data, params }) => prisma.user.update({
             where: params,
-            data
+            data,
         })
     }),
 
@@ -502,11 +502,10 @@ export const userOperations = {
             ])
 
             try {
-                await notificationSubscriptionOperations.createDefault({
+                await notificationSubscriptionOperations.createDefault.internalCall({
                     params: {
                         userId: params.id,
                     },
-                    bypassAuth: true,
                 })
             } catch (error) {
                 if (!(error instanceof ServerError) || error.errorCode !== 'DUPLICATE') {

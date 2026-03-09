@@ -4,7 +4,7 @@ import { admissionAuth } from './auth'
 import { userFilterSelection } from '@/services/users/constants'
 import { defineOperation } from '@/services/serviceOperation'
 import { updateUserOmegaMembershipGroup } from '@/services/groups/omegaMembershipGroups/update'
-import { Admission } from '@prisma/client'
+import { Admission } from '@/prisma-generated-pn-types'
 import { z } from 'zod'
 import type { ExpandedAdmissionTrail } from './types'
 

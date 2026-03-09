@@ -3,6 +3,13 @@ $omegamai: url("backgroundimages/Omegamai.jpeg");
 $frontImg: url("backgroundimages/frontImg.jpeg");
 $taktlause: url("backgroundimages/taktlause.jpeg");
 
+.link {
+    position: absolute;
+    top: ohma.$gap;
+    right: ohma.$gap;
+    @include ohma.btn();
+}
+
 .wrapper {
     font-size: 40px;
     > .part {

@@ -6,7 +6,7 @@ import PopUp from '@/components/PopUp/PopUp'
 import { faPencil } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { v4 as uuid } from 'uuid'
-import type { StudyProgramme } from '@prisma/client'
+import type { StudyProgramme } from '@/prisma-generated-pn-types'
 
 
 export default function StudyProgrammeTableBody({
@@ -22,7 +22,7 @@ export default function StudyProgrammeTableBody({
                 {canEdit && <td className={styles.editButtonWrapper}><PopUp
                     showButtonContent={<FontAwesomeIcon icon={faPencil} />}
                     showButtonClass={styles.editButton}
-                    PopUpKey={uuid()}
+                    popUpKey={uuid()}
                 >
                     <UpdateStudyProgrammeForm studyProgramme={studyProgramme} />
                 </PopUp></td>}

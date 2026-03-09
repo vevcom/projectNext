@@ -1,4 +1,4 @@
-import type { Permission } from '@prisma/client'
+import type { Permission } from '@/prisma-generated-pn-types'
 import type { PermissionInfo } from './types'
 
 export const permissionCategories = [
@@ -231,11 +231,6 @@ export const permissionConfig = {
         description: 'kan lage notifikasjonskanal',
         category: 'notifikasjoner',
     },
-    NOTIFICATION_CHANNEL_READ: {
-        name: 'Les notifikasjonskanal',
-        description: 'kan lese notifikasjonskanal',
-        category: 'notifikasjoner',
-    },
     NOTIFICATION_CHANNEL_UPDATE: {
         name: 'Oppdatere notifikasjonskanal',
         description: 'kan oppdatere notifikasjonskanal',
@@ -296,7 +291,7 @@ export const permissionConfig = {
         description: 'kan lage epostalias',
         category: 'mail',
     },
-    MAILALIAS_DESTORY: {
+    MAILALIAS_DESTROY: {
         name: 'Slette epostalias',
         description: 'kan slette epostalias',
         category: 'mail',
@@ -435,6 +430,12 @@ export const permissionConfig = {
         name: 'Prikkadministrator',
         description: 'kan administrere prikker',
         category: 'brukere'
+    },
+    FLAIR_ADMIN: {
+        name: 'Kappe redigering',
+        description: `
+            Opprette, endre og gi kapper`,
+        category: 'brukere',
     },
     SHOP_READ: {
         name: 'Les butikker',

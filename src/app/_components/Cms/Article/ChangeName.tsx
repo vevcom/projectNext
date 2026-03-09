@@ -1,19 +1,24 @@
 'use client'
 import styles from './ChangeName.module.scss'
 import EditableTextField from '@/components/EditableTextField/EditableTextField'
+import useEditMode from '@/hooks/useEditMode'
 import React, { useState } from 'react'
 import { usePathname } from 'next/navigation'
 import type { ExpandedArticle, UpdateArticleAction } from '@/cms/articles/types'
 import type { ConfiguredAction } from '@/services/actionTypes'
+import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
 
 type PropTypes = {
     article: ExpandedArticle
     updateArticleAction: ConfiguredAction<UpdateArticleAction>
+    canEdit: AuthResultTypeAny,
 }
 
-export default function ChangeName({ article, updateArticleAction }: PropTypes) {
+export default function ChangeName({ article, updateArticleAction, canEdit }: PropTypes) {
     const currentPath = usePathname()
     const [currentName, setCurrentName] = useState(article.name)
+    const editable = useEditMode({ authResult: canEdit })
+
     const successCallback = (data: ExpandedArticle | undefined) => {
         const oldName = encodeURIComponent(currentName)
         const newName = encodeURIComponent(data ? data.name : '')
@@ -23,6 +28,7 @@ export default function ChangeName({ article, updateArticleAction }: PropTypes) 
             window.history.replaceState({}, '', newPath)
         }
     }
+
     return (
         <EditableTextField
             formProps={
@@ -36,7 +42,7 @@ export default function ChangeName({ article, updateArticleAction }: PropTypes) 
                 text: 'lagre',
                 className: styles.submitNameButton
             }}
-            editable={true}
+            editable={editable}
         >
             <h1 className={styles.title}>{currentName}</h1>
         </EditableTextField>

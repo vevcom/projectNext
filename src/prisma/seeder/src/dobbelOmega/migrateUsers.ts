@@ -1,23 +1,26 @@
 import upsertOrderBasedOnDate from './upsertOrderBasedOnDate'
-import { type IdMapper, vevenIdToPnId } from './IdMapper'
+import { type IdMapper, owIdToPnId } from './IdMapper'
 import manifest from '@/seeder/src/logger'
-import { Prisma, type PrismaClient as PrismaClientPn, type SEX } from '@prisma/client'
+import { Prisma, type PrismaClient as PrismaClientPn, type SEX } from '@/prisma-generated-pn-client'
+import { v4 as uuid } from 'uuid'
+import type { User } from '@/prisma-generated-pn-client'
 import type {
-    Prisma as VevenPrisma,
-    PrismaClient as PrismaClientVeven,
-    enum_Users_sex as SEXVEVEN
-} from '@/prisma-dobbel-omega/client'
+    Prisma as OwPrisma,
+    PrismaClient as PrismaClientOw,
+    enum_Users_sex as SEXOW,
+} from '@/prisma-generated-ow-basic/client'
 import type { Limits } from './migrationLimits'
+import type { Record } from '@prisma/client/runtime/client'
 
 /**
  * TODO: Need migrate reservations (mail reservations) ?, and flairs
- * This function migrates users from Veven to PN. It only migrates to theUser model, not FeideAccounts
+ * This function migrates users from Omegaweb-basic to PN. It only migrates to theUser model, not FeideAccounts
  * or Credentials. These should be linked when people log in for the first time.
- * If a user has the soelle field true on veven it will get a relation to the soelle group
+ * If a user has the soelle field true on Omegaweb-basic it will get a relation to the soelle group
  * - else it is assumed to be a member and an inactive relation to the soelle group.
  * i.e. no users are assumed to be external.
  * @param pnPrisma - PrismaClientPn
- * @param vevenPrisma - PrismaClientVeven
+ * @param owPrisma - PrismaClientOw
  * @param limits - Limits - used to limit the number of users to migrate
  */
 
@@ -27,7 +30,7 @@ const sexMap = {
     // eslint-disable-next-line id-length
     f: 'FEMALE',
     other: 'OTHER',
-} as const satisfies Record<SEXVEVEN, SEX>
+} as const satisfies Record<SEXOW, SEX>
 
 type ExtendedMemberGroup = Prisma.OmegaMembershipGroupGetPayload<{
     include: {
@@ -46,18 +49,27 @@ const userIncluder = {
             NTNUCard: true,
         },
     },
-} satisfies VevenPrisma.UsersInclude
+} satisfies OwPrisma.UsersInclude
 
-type userExtended = VevenPrisma.UsersGetPayload<{
+type userExtended = OwPrisma.UsersGetPayload<{
     include: typeof userIncluder
 }>
+
+// Map from flair-number in ow to the rank in pn
+const flairMap: Record<number, number> = {
+    1: 3, // Gull
+    2: 4, // Sølv
+    3: 5, // Bronse
+    5: 2, // Diamant
+    7: 1, // Påske kappe
+}
 
 export class UserMigrator {
     private userIdMap: Record<number, number> = {}
     private currentlyMigratingIds: Record<number, Promise<unknown>> = {}
 
     private pnPrisma: PrismaClientPn
-    private vevenPrisma: PrismaClientVeven
+    private owPrisma: PrismaClientOw
     private imageIdMap: IdMapper
 
 
@@ -71,11 +83,11 @@ export class UserMigrator {
 
     constructor(
         pnPrisma: PrismaClientPn,
-        vevenPrisma: PrismaClientVeven,
+        owPrisma: PrismaClientOw,
         imageIdMap: IdMapper,
     ) {
         this.pnPrisma = pnPrisma
-        this.vevenPrisma = vevenPrisma
+        this.owPrisma = owPrisma
         this.imageIdMap = imageIdMap
     }
 
@@ -114,7 +126,7 @@ export class UserMigrator {
     }
 
     async migrateUsers(limits: Limits) {
-        const users = await this.vevenPrisma.users.findMany({
+        const users = await this.owPrisma.users.findMany({
             take: limits.users ? limits.users : undefined,
             select: {
                 id: true,
@@ -128,7 +140,7 @@ export class UserMigrator {
                 'johanhst103',
                 'pauliusj103'
             ].map(async uname =>
-                await this.vevenPrisma.users.findUnique({
+                await this.owPrisma.users.findUnique({
                     where: {
                         username_order: {
                             username: uname.slice(0, -3),
@@ -150,42 +162,56 @@ export class UserMigrator {
         return await this.migrateBulk(userIds)
     }
 
-    async getPnUserId(vevenId: number) {
-        if (!this.userIdMap[vevenId]) {
-            await this.migrateUser(vevenId)
+    async getPnUserId(owId: number) {
+        if (!this.userIdMap[owId]) {
+            await this.migrateUser(owId)
         }
-        return this.userIdMap[vevenId]
+        return this.userIdMap[owId]
     }
 
-    async migrateUser(vevenId: number) {
-        return await this.migrateBulk([vevenId])
+    async migrateUser(owId: number) {
+        return await this.migrateBulk([owId])
     }
 
     private async createUser(user: userExtended) {
-        let pnUser
-
-        function collosionError(e: unknown) {
-            if (!(e instanceof Prisma.PrismaClientKnownRequestError)) {
-                throw e
+        function collosionError(err: unknown) {
+            if (!(err instanceof Prisma.PrismaClientKnownRequestError)) {
+                throw err
             }
 
-            if (e.code !== 'P2002') {
-                throw e
+            if (err.code !== 'P2002' || !err.meta) {
+                throw err
             }
 
-            const target = e.meta?.target as string[]
+            const meta = err.meta as {
+                driverAdapterError: {
+                    cause: {
+                        constraint: {
+                            fields: string[]
+                        }
+                    }
+                }
+            }
+
+
+            const target = meta.driverAdapterError.cause.constraint.fields
+            if (!target) {
+                throw err
+            }
+
             const usernameCollision = target.includes('username')
             const emailCollision = target.includes('email')
 
             if (!usernameCollision && !emailCollision) {
-                throw e
+                throw err
             }
+
             return [usernameCollision, emailCollision]
         }
 
         const userData = {
-            username: user.username,
-            email: user.email ?? `dobbel@omega.${user.id}.no`,
+            username: user.username.toLowerCase(),
+            email: user.email ? user.email.toLowerCase() : `dobbel-${user.id}@omega.ntnu.no`,
             firstname: user.firstname,
             lastname: user.lastname,
             bio: user.bio ?? '',
@@ -196,30 +222,43 @@ export class UserMigrator {
             emailVerified: undefined,
             createdAt: user.createdAt,
             updatedAt: user.updatedAt,
-            imageId: vevenIdToPnId(this.imageIdMap, user.ImageId),
+            imageId: owIdToPnId(this.imageIdMap, user.ImageId),
             archived: user.archived,
         } satisfies Prisma.UserUncheckedCreateInput
 
-        try {
-            pnUser = await this.pnPrisma.user.create({
-                data: userData
-            })
-        } catch (e) {
-            const [usernameCollision, emailCollision] = collosionError(e)
+        let pnUser: User | undefined
 
-            if (usernameCollision) {
-                manifest.error(`User ${user.id} has a colliding username: ${user.username}. Generating new username.`)
-                userData.username = `${user.username}${user.id}`
-            }
-            if (emailCollision) {
-                manifest.error(`User ${user.id} has a colliding email: ${user.email}. Generating new email.`)
-                userData.email = (user.email !== null) ? `dobbel@omega.${user.id}.no` : `dobbel2@omega.${user.id}.no`
-            }
+        const createUserRetryOnFail = async (retries: number) => {
+            try {
+                pnUser = await this.pnPrisma.user.create({
+                    data: userData
+                })
+            } catch (e) {
+                const [usernameCollision, emailCollision] = collosionError(e)
 
-            pnUser = await this.pnPrisma.user.create({
-                data: userData
-            })
+                if (usernameCollision) {
+                    manifest.error(`User ${user.id} has a colliding username: ${user.username}. Generating new username.`)
+                    userData.username = `${user.username}-${user.id}-${uuid()}`
+                }
+
+                if (emailCollision) {
+                    manifest.error(`User ${user.id} has a colliding email: ${user.email}. Generating new email.`)
+                    userData.email = `dobbelomega-${user.id}-${uuid()}@omega.ntnu.no`
+                }
+
+                if (retries > 0) {
+                    await createUserRetryOnFail(retries - 1)
+                }
+            }
         }
+
+        await createUserRetryOnFail(2)
+
+        if (!pnUser) {
+            throw new Error('Failed to migrate user to projectNext due to unique constraint violation in username or email.')
+        }
+
+
         this.userIdMap[user.id] = pnUser.id
 
         // Try to add the studentCard, this can throw an unique contraint exception
@@ -241,18 +280,40 @@ export class UserMigrator {
             }
         }
 
+        // Add a flair
+        if (user.flair > 0 && user.flair !== 6) {
+            // I'm sorry wilhelwi100 and magnmaeh100 your Piinligheed Cringemeisteren dies in this migration
+            const flairRank = flairMap[user.flair]
+            if (!flairRank) {
+                console.error(`Unknown flair found: ${user.flair}`)
+            } else {
+                await this.pnPrisma.flair.update({
+                    where: {
+                        rank: flairRank
+                    },
+                    data: {
+                        user: {
+                            connect: {
+                                id: pnUser.id
+                            }
+                        }
+                    }
+                })
+            }
+        }
+
         return pnUser
     }
 
-    async migrateBulk(vevenIds: number[]) {
-        const vevenIdsToMigrate = vevenIds.filter(id => !this.userIdMap[id])
+    async migrateBulk(owIds: number[]) {
+        const owIdsToMigrate = owIds.filter(id => !this.userIdMap[id])
         const waitForParalell: Promise<unknown>[] = []
         const resolveWhenFinished: ((value: unknown) => void)[] = []
-        for (let i = vevenIdsToMigrate.length - 1; i >= 0; i--) {
-            const id = vevenIdsToMigrate[i]
+        for (let i = owIdsToMigrate.length - 1; i >= 0; i--) {
+            const id = owIdsToMigrate[i]
             if (this.currentlyMigratingIds.hasOwnProperty(id)) {
                 waitForParalell.push(this.currentlyMigratingIds[id])
-                vevenIdsToMigrate.splice(i, 1)
+                owIdsToMigrate.splice(i, 1)
             } else {
                 this.currentlyMigratingIds[id] = new Promise((resolve) => {
                     resolveWhenFinished.push(resolve)
@@ -260,15 +321,15 @@ export class UserMigrator {
             }
         }
 
-        if (vevenIdsToMigrate.length === 0 && resolveWhenFinished.length === 0) {
+        if (owIdsToMigrate.length === 0 && resolveWhenFinished.length === 0) {
             await Promise.all(waitForParalell)
             return
         }
 
-        const users = await this.vevenPrisma.users.findMany({
+        const users = await this.owPrisma.users.findMany({
             where: {
                 id: {
-                    in: vevenIdsToMigrate,
+                    in: owIdsToMigrate,
                 }
             },
             include: userIncluder,

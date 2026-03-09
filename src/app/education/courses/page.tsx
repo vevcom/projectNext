@@ -7,7 +7,7 @@ import { createCourseAction } from '@/education/courses/actions'
 export default function Courses() {
     return (
         <PageWrapper title="Courses" headerItem={
-            <AddHeaderItemPopUp PopUpKey="create-couses">
+            <AddHeaderItemPopUp popUpKey="create-couses">
                 <Form
                     action={createCourseAction}
                 >

@@ -5,6 +5,8 @@ import { readSpecialImageAction } from '@/services/images/actions'
 import BackdropImage from '@/components/BackdropImage/BackdropImage'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import CommitteeImage from '@/components/CommitteeImage/CommitteeImage'
+import { committeeAuth } from '@/services/groups/committees/auth'
+import { ServerSession } from '@/auth/session/ServerSession'
 import type { ReactNode } from 'react'
 
 export type PropTypes = {
@@ -26,9 +28,18 @@ export default async function Committee({ params, children }: PropTypes) {
         committeeLogo = res.data
     }
 
+    const canEditCoverImage = committeeAuth.updateArticle.dynamicFields({ groupId: committee.groupId }).auth(
+        await ServerSession.fromNextAuth()
+    ).toJsObject()
+
     return (
         <BackdropImage image={committeeLogo}>
-            <CommitteeImage shortName={committee.shortName} logoImage={committeeLogo} coverImage={committee.coverImage} />
+            <CommitteeImage
+                canEditCoverImage={canEditCoverImage}
+                shortName={committee.shortName}
+                logoImage={committeeLogo}
+                coverImage={committee.coverImage}
+            />
             <PageWrapper title={committee.name}>
                 <div className={styles.layout}>
                     <div className={styles.content}>

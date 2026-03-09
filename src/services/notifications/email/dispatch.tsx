@@ -1,13 +1,13 @@
 import { sendBulkMail } from './send'
 import { DEFAULT_NOTIFICATION_ALIAS } from './constants'
-import { sendEmailValidation } from './validation'
+import { emailSchemas } from './schemas'
 import { DefaultEmailTemplate } from './templates/default'
 import { repalceSpecialSymbols } from '@/services/notifications/operations'
 import { prismaCall } from '@/services/prismaCall'
-import { prisma } from '@/prisma/client'
+import { prisma } from '@/prisma-pn-client-instance'
 import { render } from '@react-email/render'
 import type { ExpandedNotificationChannel } from '@/services/notifications/types'
-import type { Notification } from '@prisma/client'
+import type { Notification } from '@/prisma-generated-pn-types'
 import type { UserFiltered } from '@/services/users/types'
 
 
@@ -36,7 +36,7 @@ export async function dispatchEmailNotifications(
     const senderAlias = results.mailAlias ? results.mailAlias.address : DEFAULT_NOTIFICATION_ALIAS
 
     const mails = await Promise.all(users.map(async user => {
-        const parsed = sendEmailValidation.detailedValidate({
+        const parsed = emailSchemas.sendMail.parse({
             from: senderAlias,
             to: user.email,
             subject: repalceSpecialSymbols(notificaion.title, user),

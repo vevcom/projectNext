@@ -46,7 +46,7 @@ export default function DotList({ onlyActive }: PropTypes) {
                             <p>Viser prikker for alle brukere</p>
                         </div>
                 }
-                <PopUp PopUpKey="selectUser" showButtonClass={styles.openUserList} showButtonContent={
+                <PopUp popUpKey="selectUser" showButtonClass={styles.openUserList} showButtonContent={
                     <>Velg Bruker</>
                 }>
                     <UserList />

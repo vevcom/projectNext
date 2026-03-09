@@ -1,16 +1,21 @@
 import styles from './layout.module.scss'
 import Nav from './Nav'
-import { Session } from '@/auth/session/Session'
 import { readUserProfileAction } from '@/services/users/actions'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
+import { ServerSession } from '@/auth/session/ServerSession'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import type { ReactNode } from 'react'
 import type { PropTypes } from '@/app/users/[username]/page'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+    title: 'Innstillinger',
+}
 
 export default async function UserAdmin({ children, params }: PropTypes & { children: ReactNode }) {
-    const session = await Session.fromNextAuth()
+    const session = await ServerSession.fromNextAuth()
     let username = (await params).username
     if (username === 'me') {
         if (!session.user) return notFound()

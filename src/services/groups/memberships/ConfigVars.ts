@@ -1,5 +1,5 @@
 import { createSelection } from '@/services/createSelection'
-import type { GroupType, Membership } from '@prisma/client'
+import type { GroupType, Membership } from '@/prisma-generated-pn-types'
 
 export const membershipFieldsToExpose = [
     'active',

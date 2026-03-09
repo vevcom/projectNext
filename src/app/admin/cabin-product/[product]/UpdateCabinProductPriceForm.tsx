@@ -6,7 +6,7 @@ import NumberInput from '@/app/_components/UI/NumberInput'
 import { SelectNumber } from '@/app/_components/UI/Select'
 import TextInput from '@/app/_components/UI/TextInput'
 import { displayDate } from '@/lib/dates/displayDate'
-import type { BookingType, PricePeriod } from '@prisma/client'
+import type { BookingType, PricePeriod } from '@/prisma-generated-pn-types'
 
 
 export function UpdateCabinProductPriceForm({
