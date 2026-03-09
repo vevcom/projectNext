@@ -7,7 +7,7 @@ import type { articleSectionSchemas } from './schemas'
 import type { AuthorizerDynamicFieldsBound } from '@/auth/authorizer/Authorizer'
 import type { Prisma } from '@/prisma-generated-pn-types'
 import type { z } from 'zod'
-import type { ArgsAuthGetterAndOwnershipCheck, PrismaPossibleTransaction } from '@/services/serviceOperation'
+import type { ServiceOperationGuardArgs, PrismaPossibleTransaction } from '@/services/serviceOperation'
 
 type ParamsSchema = typeof articleSectionSchemas.params
 type OwnedArticleSection = Prisma.ArticleSectionGetPayload<{
@@ -45,7 +45,7 @@ export function implementUpdateArticleSectionOperations<
     destroyOnEmpty: boolean
 }) {
     const ownershipCheckArticleSection = async (
-        args: Omit<ArgsAuthGetterAndOwnershipCheck<false, ParamsSchema, undefined, ImplementationParamsSchema>, 'data'>
+        args: Omit<ServiceOperationGuardArgs<false, ParamsSchema, undefined, ImplementationParamsSchema>, 'data'>
     ) => {
         const ownedArticleSectionsComputed = await ownedArticleSections(args)
         const ownedIds = ownedArticleSectionsComputed.map(section => section.id)

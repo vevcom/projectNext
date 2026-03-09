@@ -13,15 +13,15 @@ import type { Prisma, PrismaClient } from '@/prisma-generated-pn-client'
 
 type IsNever<T> = [T] extends [never] ? true : false;
 
-export type RequiredIfDefined<T> = T & {
+type RequiredIfDefined<T> = T & {
   [K in keyof T as undefined extends Required<T>[K] ? never : IsNever<Required<T>[K]> extends true ? never : K]-?: T[K];
 };
 
-export type SchemaOutput<Key extends string, Schema extends z.ZodTypeAny | undefined> = Schema extends undefined
+type SchemaOutput<Key extends string, Schema extends z.ZodTypeAny | undefined> = Schema extends undefined
     ? object
     : { [K in Key]: z.infer<NonNullable<Schema>> }
 
-export type SchemaInput<Key extends string, Schema extends z.ZodTypeAny | undefined> = Schema extends undefined
+type SchemaInput<Key extends string, Schema extends z.ZodTypeAny | undefined> = Schema extends undefined
     ? object
     : { [K in Key]: z.input<NonNullable<Schema>> }
 
@@ -74,7 +74,7 @@ export type SubServiceOperationConfig<
         ServiceOperationOperation<OpensTransaction, ParamsSchema, DataSchema, Return>
 }
 
-export type ArgsAuthGetterAndOwnershipCheck<
+export type ServiceOperationGuardArgs<
     OpensTransaction extends boolean,
     ParamsSchema extends z.ZodTypeAny | undefined,
     DataSchema extends z.ZodTypeAny | undefined,
@@ -85,23 +85,16 @@ export type ArgsAuthGetterAndOwnershipCheck<
     & SchemaOutput<'data', DataSchema>
     & Pick<ServiceOperationContext<OpensTransaction>, 'prisma'>
 )
-export type AuthorizerGetter<
-    OpensTransaction extends boolean,
-    ParamsSchema extends z.ZodTypeAny | undefined,
-    DataSchema extends z.ZodTypeAny | undefined,
-    ImplementationParamsSchema extends z.ZodTypeAny | undefined
-> = (
-    args: ArgsAuthGetterAndOwnershipCheck<OpensTransaction, ParamsSchema, DataSchema, ImplementationParamsSchema>
-) => AuthorizerDynamicFieldsBound | Promise<AuthorizerDynamicFieldsBound>
 
-export type OwnershipCheck<
+export type ServiceOperationGuard<
+    Return,
     OpensTransaction extends boolean,
     ParamsSchema extends z.ZodTypeAny | undefined,
     DataSchema extends z.ZodTypeAny | undefined,
     ImplementationParamsSchema extends z.ZodTypeAny | undefined
 > = (
-    args: ArgsAuthGetterAndOwnershipCheck<OpensTransaction, ParamsSchema, DataSchema, ImplementationParamsSchema>
-) => boolean | Promise<boolean>
+    args: ServiceOperationGuardArgs<OpensTransaction, ParamsSchema, DataSchema, ImplementationParamsSchema>
+) => Return | Promise<Return>
 
 export type ServiceOperationImplementationConfigInternalCall<
     ImplementationParamsSchema extends z.ZodTypeAny | undefined,
@@ -130,8 +123,8 @@ export type ServiceOperationImplementationConfig<
         DataSchemaImplementationFields,
         OperationImplementationFields
     > & {
-    authorizer: AuthorizerGetter<OpensTransaction, ParamsSchema, DataSchema, ImplementationParamsSchema>,
-    ownershipCheck: OwnershipCheck<OpensTransaction, ParamsSchema, DataSchema, ImplementationParamsSchema>,
+    authorizer: ServiceOperationGuard<AuthorizerDynamicFieldsBound, OpensTransaction, ParamsSchema, DataSchema, ImplementationParamsSchema>,
+    ownershipCheck: ServiceOperationGuard<Boolean, OpensTransaction, ParamsSchema, DataSchema, ImplementationParamsSchema>,
 }
 
 /**
@@ -440,7 +433,7 @@ export function defineOperation<
     paramsSchema?: ParamsSchema,
     dataSchema?: DataSchema,
     opensTransaction?: OpensTransaction,
-    authorizer: AuthorizerGetter<OpensTransaction, ParamsSchema, DataSchema, undefined>,
+    authorizer: ServiceOperationGuard<AuthorizerDynamicFieldsBound, OpensTransaction, ParamsSchema, DataSchema, undefined>,
     operation: ServiceOperationOperation<OpensTransaction, ParamsSchema, DataSchema, Return>
 }): ServiceOperation<OpensTransaction, Return, ParamsSchema, DataSchema, undefined> {
     return defineSubOperation<

@@ -1,7 +1,7 @@
 import { articleOperations } from './operations'
 import { implementUpdateArticleSectionOperations } from '@/cms/articleSections/implement'
 import { cmsImageOperations } from '@/cms/images/operations'
-import type { ArgsAuthGetterAndOwnershipCheck, PrismaPossibleTransaction } from '@/services/serviceOperation'
+import type { ServiceOperationGuardArgs, PrismaPossibleTransaction } from '@/services/serviceOperation'
 import type { AuthorizerDynamicFieldsBound } from '@/auth/authorizer/Authorizer'
 import type { Prisma } from '@/prisma-generated-pn-types'
 import type { articleSchemas } from './schemas'
@@ -46,7 +46,7 @@ export function implementUpdateArticleOperations<
     ) => Promise<OwnedArticle[]>
 }) {
     const ownershipCheckArticle = async (
-        args: Omit<ArgsAuthGetterAndOwnershipCheck<false, ParamsSchema, undefined, ImplementationParamsSchema>, 'data'>
+        args: Omit<ServiceOperationGuardArgs<false, ParamsSchema, undefined, ImplementationParamsSchema>, 'data'>
     ) => {
         const ownedArticleIds = (await ownedArticles(args)).map(article => article.id)
         return ownedArticleIds.includes(args.params.articleId)

@@ -1,5 +1,5 @@
 import { visibilityOperations } from './operations'
-import type { ArgsAuthGetterAndOwnershipCheck, PrismaPossibleTransaction } from '@/services/serviceOperation'
+import type { ServiceOperationGuardArgs, PrismaPossibleTransaction } from '@/services/serviceOperation'
 import type { AuthorizerDynamicFieldsBound } from '@/auth/authorizer/Authorizer'
 import type { Prisma } from '@/prisma-generated-pn-types'
 import type { visibilitySchemas } from './schemas'
@@ -51,7 +51,7 @@ export function implementVisibilityOperations<
     ) => Promise<OwnedVisibility>
 }) {
     const ownershipCheckVisibility = async (
-        args: Omit<ArgsAuthGetterAndOwnershipCheck<false, ParamsSchema, undefined, ImplementationParamsSchema>, 'data'>
+        args: Omit<ServiceOperationGuardArgs<false, ParamsSchema, undefined, ImplementationParamsSchema>, 'data'>
     ) => (await ownedVisibility(args)).id === args.params.visibilityId
 
     return {
