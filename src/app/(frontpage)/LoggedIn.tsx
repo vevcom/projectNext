@@ -12,6 +12,7 @@ import { readActiveJobAdsAction } from '@/services/career/jobAds/actions'
 import { readCurrentEventsAction } from '@/services/events/actions'
 import { readSpecialCmsImageFrontpage, updateSpecialCmsImageFrontpage } from '@/services/frontpage/actions'
 import { frontpageAuth } from '@/services/frontpage/auth'
+import { eventAuth } from '@/services/events/auth'
 import { ServerSession } from '@/auth/session/ServerSession'
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -30,6 +31,10 @@ export default async function LoggedInLandingPage() {
         await ServerSession.fromNextAuth()
     ).toJsObject()
 
+    const canEditEventCmsImage = eventAuth.updateCmsCoverImage.dynamicFields({}).auth(
+        await ServerSession.fromNextAuth()
+    ).toJsObject()
+
     return (
         <div className={styles.wrapper}>
             <div className={`${styles.part} ${styles.frontImg}`}>
@@ -45,7 +50,7 @@ export default async function LoggedInLandingPage() {
                         <div className={styles.socials}>
                             <SocialIcons />
                         </div>
-                        <Link className={styles.scrollDown} href="#firstSection">
+                        <Link className={styles.scrollDown}>
                             <FontAwesomeIcon icon={faAngleDown} />
                         </Link>
                     </div>
@@ -60,7 +65,7 @@ export default async function LoggedInLandingPage() {
                     </LoggedInSection>
                     <LoggedInSection title="Hvad der hender" link="/events">
                         {events.map((event, key) => (
-                            <EventCard key={key} event={event} />
+                            <EventCard key={key} event={event} canEdit={canEditEventCmsImage} />
                         ))}
                     </LoggedInSection>
                     <LoggedInSection title="Jobb annonser" link="/career/jobads">

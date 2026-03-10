@@ -8,13 +8,12 @@ import type { EventExpanded } from '@/services/events/types'
 import type { ExpandedCmsImage } from '@/cms/images/types'
 import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
 
-export type PropTypes = {
+type PropTypes = {
+    event: EventExpanded
     canEdit: AuthResultTypeAny
 }
 
-export default function EventCard({ event, canEdit, }: {
-    event: EventExpanded,
-}) {
+export default function EventCard({ event, canEdit }: PropTypes) {
     const attendance = `${event.numOfRegistrations / event.places * 100}%`
     const months = ['January', 'February', 'March', 'April', 'May', 'June',
         'July', 'August', 'September', 'October', 'November', 'December']
@@ -50,7 +49,7 @@ export default function EventCard({ event, canEdit, }: {
         <div className={styles.EventMain}>
             <h2>{event.name}</h2>
             <h4>{event.eventStart.toLocaleDateString()} - {event.eventEnd.toLocaleDateString()}</h4>
-            <p>Event description</p>
+            {/*<p>{event.description}</p>*/}
         </div>
         <div className={styles.EventAttendanceBar}>
             {event.takesRegistration ? <>
