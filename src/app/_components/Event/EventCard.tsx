@@ -1,12 +1,12 @@
 import SmallEventTag from './SmallEventTag'
 import styles from './EventCard.module.scss'
 import CmsImage from '@/components/Cms/CmsImage/CmsImage'
-import {updateEventCmsCoverImageAction} from "@/services/events/actions"
+import { updateEventCmsCoverImageAction } from '@/services/events/actions'
+import { configureAction } from '@/services/configureAction'
 import React from 'react'
 import type { EventExpanded } from '@/services/events/types'
-import {configureAction} from '@/services/configureAction'
-import {ExpandedCmsImage} from '@/cms/images/types'
-import type {AuthResultTypeAny} from '@/auth/authorizer/AuthResult'
+import type { ExpandedCmsImage } from '@/cms/images/types'
+import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
 
 export type PropTypes = {
     canEdit: AuthResultTypeAny
@@ -19,9 +19,9 @@ export default function EventCard({ event, canEdit, }: {
     const months = ['January', 'February', 'March', 'April', 'May', 'June',
         'July', 'August', 'September', 'October', 'November', 'December']
     const link = `/events/${event.name}-${event.id}`
-    return <a href={link} className={styles.EventWrapper}>
-        <div className={styles.EventHeader}>
-            <div className={styles.EventMainTime}>
+    return <a href={ link } className={ styles.EventWrapper }>
+        <div className={ styles.EventHeader }>
+            <div className={ styles.EventMainTime }>
                 <b>{event.eventStart.getDate()}</b> - {months[event.eventStart.getMonth()]}
             </div>
             <div className={styles.tags}>
@@ -41,7 +41,7 @@ export default function EventCard({ event, canEdit, }: {
                     cmsImage={event.coverImage as ExpandedCmsImage}
                     updateCmsImageAction={configureAction(
                         updateEventCmsCoverImageAction,
-                        {implementationParams: {eventId: event.id}}
+                        { implementationParams: { eventId: event.id } }
                     )}
                     canEdit={canEdit}
                 />
