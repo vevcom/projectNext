@@ -1,12 +1,18 @@
 import SmallEventTag from './SmallEventTag'
 import styles from './EventCard.module.scss'
 import CmsImage from '@/components/Cms/CmsImage/CmsImage'
-import {updateEventCmsCoverImageAction} from "@/services/events/actions";
+import {updateEventCmsCoverImageAction} from "@/services/events/actions"
 import React from 'react'
 import type { EventExpanded } from '@/services/events/types'
-import {configureAction} from "@/services/configureAction";
+import {configureAction} from '@/services/configureAction'
+import {ExpandedCmsImage} from '@/cms/images/types'
+import type {AuthResultTypeAny} from '@/auth/authorizer/AuthResult'
 
-export default function EventCard({ event }: {
+export type PropTypes = {
+    canEdit: AuthResultTypeAny
+}
+
+export default function EventCard({ event, canEdit, }: {
     event: EventExpanded,
 }) {
     const attendance = `${event.numOfRegistrations / event.places * 100}%`
@@ -30,15 +36,15 @@ export default function EventCard({ event }: {
 
         <div className={styles.EventImage}>
             {
-            /*    <CmsImage
-                    width={200}
+                <CmsImage
+                    width={500}
                     cmsImage={event.coverImage as ExpandedCmsImage}
-                    updateCmsImageAction={
-                        configureAction(
-                            updateEventCmsCoverImageAction,
-                            { implementationParams: { eventId: event.id } }
-                        )}
-                />*/
+                    updateCmsImageAction={configureAction(
+                        updateEventCmsCoverImageAction,
+                        {implementationParams: {eventId: event.id}}
+                    )}
+                    canEdit={canEdit}
+                />
             }
         </div>
         <div className={styles.EventMain}>
