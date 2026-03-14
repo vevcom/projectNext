@@ -2,7 +2,68 @@
 
 .tags {
     display: flex;
-    gap: 0 .3em;
+    align-items: center;
     list-style-type: none;
-    padding-bottom: 1rem;
+    margin-left: ohma.$gap;
+}
+
+.EventWrapper {
+    @include ohma.layer();
+    @include ohma.boxShadow('');
+    border-radius: ohma.$cardRounding;
+    overflow: hidden;
+    text-decoration: none;
+    color: unset;
+    margin: ohma.$gap;
+}
+
+.EventWrapper:hover {
+    @include ohma.boxShadow('hover');
+}
+
+.EventHeader {
+    display: flex;
+    height: 50px;
+    @include ohma.layer();
+}
+
+.EventMainTime {
+    @include ohma.layer();
+    border-radius: ohma.$cardRounding 0 0 0;
+    height: 100%;
+    min-width: 180px;
+    font-size: x-large;
+    line-height: 50px - 2*ohma.$gap;
+    padding: ohma.$gap ohma.$gap ohma.$gap ohma.$gap*3;
+}
+
+.EventAttendanceBar {
+    height: 10px;
+    > div {
+        background: color-mix(in srgb, ohma.$colors-primary, black 20%);
+        height: 100%;
+    }
+}
+
+.EventImage {
+    height: 200px;
+    overflow: hidden;
+}
+
+.EventMain {
+    height: 150px;
+    padding: ohma.$gap;
+}
+
+.EventFooter {
+    @include ohma.layer();
+    height: 50px;
+    display: flex;
+    justify-content: space-evenly;
+    text-align: center;
+    font-weight: bold;
+    > div {
+        line-height: 50px;
+        width: 100px;
+    }
 }

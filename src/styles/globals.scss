@@ -9,8 +9,35 @@
 
 html {
     scroll-behavior: smooth;
-    background-color: black;
+    background-color: ohma.$colors-secondary;
     z-index: 5;
+
+    --rounding: 12px;
+
+    --primary: oklch(0.727 0.137 245.985);
+    --primary-l: 0.727;
+    --primary-c: 0.137;
+    --primary-h: 245.985;
+
+/*
+    --secondary: oklch(0.215 0.038 245.949);
+    --secondary-l: 0.215;
+    --secondary-c: 0.038;
+    --secondary-h: 245.949;
+    --layer:       hsl(207, 48.1%, 35.5%, 0.18);
+*/
+    --secondary: oklch(0.238 0.004 228.952);
+    --secondary-l: 0.238;
+    --secondary-c: 0.004;
+    --secondary-h: 228.952;
+    --layer: hsl(210, 0%, 0%, 20%);
+
+
+    --boxShadow:   hsl(207, 0%,    0%,    20%);
+    --text:        hsl(0,   0%,    90%);
+    --text-muted:  hsl(0,   0%,    75%);
+    --text-inv:    hsl(0,   0%,    10%);
+    --text-sec:    hsl(0,   0%,    10%);
 }
 
 body {
@@ -18,7 +45,7 @@ body {
     font-weight: ohma.$fonts-weight-s;
     overflow-x: hidden;
     overscroll-behavior-y:contain;
-    background-color: ohma.$colors-gray-100;
+    background-color: ohma.$colors-secondary;
 }
 
 h1 {
