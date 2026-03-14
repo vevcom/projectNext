@@ -33,7 +33,7 @@ export default function Menu({ items, openBtnContext }: PropTypes) {
                 isOpen ? (
                     <>
                         <div ref={menuRef} className={styles.Menu}>
-                            <FontAwesomeIcon className={styles.close} icon={faTimes} onClick={() => closeMenu}/>
+                            <FontAwesomeIcon className={styles.close} icon={faTimes} onClick={() => closeMenu(menuRef)}/>
                             <div>
                                 {items.map((item) => (
                                     <div key={item.name}>
@@ -65,8 +65,6 @@ export default function Menu({ items, openBtnContext }: PropTypes) {
                 {openBtnContext === 'desktop' && isOpen &&
                     <p className={stylesNav.openMenu}>Mindre</p>
                 }
-
-
             </button>
         </>
     )

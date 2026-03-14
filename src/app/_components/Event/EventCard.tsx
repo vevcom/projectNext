@@ -14,7 +14,8 @@ type PropTypes = {
 }
 
 export default function EventCard({ event, canEdit }: PropTypes) {
-    const attendance = `${event.numOfRegistrations / event.places * 100}%`
+    const attendanceRatio = event.places > 0 ? event.numOfRegistrations / event.places : 0
+    const attendance = `${Math.max(0, Math.min(attendanceRatio, 1)) * 100}%`
     const months = ['January', 'February', 'March', 'April', 'May', 'June',
         'July', 'August', 'September', 'October', 'November', 'December']
     const link = `/events/${event.name}-${event.id}`

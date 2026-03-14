@@ -32,8 +32,7 @@ $taktlause: url("backgroundimages/taktlause.jpeg");
 
 .frontInfo {
     width: 100%;
-    min-height: 100vh;
-    height: 100%;
+    height: calc(100dvh - 60px);
     display: grid;
     place-items: center;
     background: radial-gradient(ohma.$colors-black, transparent);

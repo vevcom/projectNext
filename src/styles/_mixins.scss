@@ -43,7 +43,7 @@
     font-size: 18px;
     text-align: left;
     th, td {
-        padding: variables.$gap
+        padding: variables.$gap;
     }
     th {
         background-color: color-mix(in srgb, colors.$secondary, white 2%); // TODO Perhaps change
