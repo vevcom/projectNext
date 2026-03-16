@@ -24,7 +24,7 @@ import type {
     GroupWithRelationsNameInferencer
 } from './types'
 import type { UserFiltered } from '@/services/users/types'
-import { RequireNothing } from '@/auth/auther/RequireNothing'
+import { RequireNothing } from '@/auth/authorizer/RequireNothing'
 
 async function expandGroup(group: GroupWithRelationsNameInferencer & {
     membershipsToInferFirstOrder: { order: number }[]
@@ -302,14 +302,15 @@ export const groupOperations = {
         }
     }),
 
-    readUsersOfGroups: defineSubOperation({
-        paramsSchema: () => z.object({
+    readUsersOfGroups: defineOperation({
+        authorizer: () => RequireNothing.staticFields({}).dynamicFields({}),
+        paramsSchema: z.object({
             groups: z.array(z.object({
                 groupId: z.number(),
                 admin: z.boolean(),
             })),
         }),
-        operation: () => async ({ prisma, params }): Promise<UserFiltered[]> => {
+        operation: async ({ prisma, params }): Promise<UserFiltered[]> => {
             const memberships = await prisma.membership.findMany({
                 where: {
                     OR: params.groups.map(({ admin, groupId }) => ({

@@ -1,11 +1,11 @@
-import { notFound } from 'next/navigation'
-import styles from './page.module.scss'
+import Knapper from './Knapper'
 import { readUsersOfGroupsAction } from '@/services/groups/actions'
-import { prisma } from '@/prisma/client'
 import { readUserProfileAction } from '@/services/users/actions'
-import ProfilePicture from '@/components/User/ProfilePicture'
+import PageWrapper from '@/components/PageWrapper/PageWrapper'
+import { notFound } from 'next/navigation'
 
-export type PropTypes = {
+//
+type PropTypes = {
     params: Promise<{
         groupId: string,
         order: string
@@ -16,28 +16,26 @@ export default async function navnquiz({ params }: PropTypes) {
     const groupId = Number((await params).groupId)
 
     const users = await readUsersOfGroupsAction({
-        params:{
-           groups:[{
-            groupId: groupId,
-            admin:false,
-           }
-            
-           ] 
+        params: {
+            groups: [{
+                groupId,
+                admin: false,
+            }]
         }
     })
 
-    if (users.success==false){
+    if (users.success === false) {
         notFound()
     }
 
     const profileImages = await Promise.all(users.data.map(async user => {
         const profile = await readUserProfileAction({
             params: {
-                username: "harambe",
+                username: user.username,
             }
         })
 
-        if (profile.success==false){
+        if (profile.success === false) {
             notFound()
         }
 
@@ -45,16 +43,7 @@ export default async function navnquiz({ params }: PropTypes) {
     }))
 
 
-    return (
-    <div>
-    <h1>Navnquiz</h1>
-    {users.data.map((user, i)=><div>
-        <p>{user.firstname} {user.lastname}</p>
-        <ProfilePicture width={100} profileImage={profileImages[i]} />
-    </div>)}
-    <p>---</p>
-    
-    </div>
-
-    )
+    return <PageWrapper title="Navnquiz">
+        <Knapper users={users.data} profileImages={profileImages}></Knapper>
+    </PageWrapper>
 }

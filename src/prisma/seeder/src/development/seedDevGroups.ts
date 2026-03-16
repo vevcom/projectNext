@@ -58,20 +58,30 @@ export default async function seedDevGroups(prisma: PrismaClient) {
         }
     })))
 
-    await Promise.all([1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(async i => {
-        const group = await prisma.committee.create({
-            data: {
-                name: `Testkomité ${i}`,
-                shortName: `TK${i}`,
-                committeeArticle: {
-                    create: {
-                        name: `Testkomité ${i}`,
-                        coverImage: {
-                            create: {
-                                name: `Bilde for testkomité ${i}`
-                            }
+    await Promise.all([1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(i => prisma.committee.create({
+        data: {
+            name: `Testkomité ${i}`,
+            shortName: `TK${i}`,
+            committeeArticle: {
+                create: {
+                    name: `Testkomité ${i}`,
+                    coverImage: {
+                        create: {
+                            name: `Bilde for testkomité ${i}`
                         }
                     }
+                }
+            },
+            paragraph: {
+                create: {}
+            },
+            applicationParagraph: {
+                create: {}
+            },
+            group: {
+                create: {
+                    groupType: 'COMMITTEE',
+                    order: order.order,
                 },
             },
             logoImage: {
