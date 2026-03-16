@@ -36,7 +36,7 @@ services:
     
     stripe:
         image: stripe/stripe-cli:v1.37.3
-        command: listen --forward-to http://nginx:80/api/stripe-event --skip-verify
+        command: listen --forward-to http://nginx:80/api/stripe-events --skip-verify
         environment:
             STRIPE_API_KEY: ${STRIPE_SECRET_KEY} 
 
