@@ -1,10 +1,7 @@
 import styles from './page.module.scss'
-<<<<<<< HEAD
 import BorderButton from '@/components/UI/BorderButton'
-=======
 import ProfileButton from '@/components/UI/ProfileButton'
 import { Session } from '@/auth/session/Session'
->>>>>>> refactor/style-changes
 import { userAuth } from '@/services/users/auth'
 import ProfilePicture from '@/components/User/ProfilePicture'
 import UserDisplayName from '@/components/User/UserDisplayName'
