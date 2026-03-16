@@ -1,19 +1,16 @@
 // Join table between groups and their ledger accounts
 model GroupLedgerAccount {
-  id Int @id @default(autoincrement())
-  // TODO: Finnish this
-
-  // group         Group         @relation(fields: [groupId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  // groupId       Int
-  // ledgerAccount LedgerAccount @relation(fields: [ledgerAccountId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  // ledgerAccountId Int
+  id              Int           @id @default(autoincrement())
+  group           Group         @relation(fields: [groupId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  groupId         Int
+  ledgerAccount   LedgerAccount @relation(fields: [ledgerAccountId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  ledgerAccountId Int
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   // Index on IDs for faster look up
-  // @@index([groupId])
-  // @@index([ledgerAccountId])
+  @@unique([groupId, ledgerAccountId])
 }
 
 // In theory the type of a ledger accounts could be inferred from its relations,
@@ -32,13 +29,12 @@ enum LedgerAccountType {
 // A ledger account is equivalent to you real life bank account
 // It is used to store internal funds for either users or groups
 model LedgerAccount {
-  id                  Int               @id @default(autoincrement())
-  user                User?             @relation(fields: [userId], references: [id], onDelete: SetNull, onUpdate: Cascade)
-  userId              Int?              @unique
-  group               Group?            @relation(fields: [groupId], references: [id], onDelete: SetNull, onUpdate: Cascade)
-  groupId             Int?              @unique
+  id                  Int                  @id @default(autoincrement())
+  user                User?                @relation(fields: [userId], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  userId              Int?                 @unique
+  groups              GroupLedgerAccount[]
   type                LedgerAccountType
-  frozen              Boolean           @default(false) // If true, no transactions may be made on this account.
+  frozen              Boolean              @default(false) // If true, no transactions may be made on this account.
   name                String? // Optional display name for the account, only used for group accounts
   payoutAccountNumber String? // For display only, only used for group accounts
 

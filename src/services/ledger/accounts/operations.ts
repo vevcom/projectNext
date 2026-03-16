@@ -1,5 +1,4 @@
 import { ledgerAccountSchemas } from './schemas'
-import { ServerError } from '@/services/error'
 import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { defineOperation } from '@/services/serviceOperation'
@@ -16,7 +15,7 @@ export const ledgerAccountOperations = {
      * Will throw an error if both `userId` and `groupId` are set, or if neither are set.
      *
      * @param data.userId The ID of the user to create the account for.
-     * @param data.groupId The ID of the group to create the account for.
+     * @param data.groupIds The IDs of the groups to create the account for.
      *
      * @returns The created account.
      */
@@ -24,23 +23,21 @@ export const ledgerAccountOperations = {
         authorizer: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO: Add proper auther
         dataSchema: ledgerAccountSchemas.create,
         operation: async ({ prisma, data }): Promise<LedgerAccount> => {
-            const type = data.userId === undefined ? 'GROUP' : 'USER'
-
-            if (data.userId === undefined && data.groupId === undefined) {
-                throw new ServerError('BAD PARAMETERS', 'Enten bruker-id eller gruppe-id må være spesifisert.')
-            }
-
-            if (data.userId !== undefined && data.groupId !== undefined) {
-                throw new ServerError('BAD PARAMETERS', 'Både bruker-id og gruppe-id kan ikke være spesifisert samtidig.')
-            }
+            const type = data.type ?? data.userId !== undefined ? 'USER' : 'GROUP'
 
             return prisma.ledgerAccount.create({
                 data: {
+                    type,
                     userId: data.userId,
-                    groupId: data.groupId,
+                    groups: data.groupIds ? {
+                        createMany: {
+                            data: data.groupIds.map(groupId => ({
+                                groupId
+                            }))
+                        },
+                    } : undefined,
                     payoutAccountNumber: data.payoutAccountNumber,
                     frozen: data.frozen,
-                    type,
                 }
             })
         },
@@ -48,13 +45,11 @@ export const ledgerAccountOperations = {
 
     /**
      * Reads details of a ledger account by ledger account id, user id, or group id.
-     * If searching by userId/groupId the account will be created if it does not exist.
      *
      * **Note**: The balance of an account is not included in the response.
      * Use the `calculateBalance` method to get the balance.
      *
      * @param params.userId The ID of the user to read the account for.
-     * @param params.groupId The ID of the group to read the account for.
      * @param params.ledgerAccountId The ID of the ledger account to read.
      *
      * @returns The account details.
@@ -64,43 +59,81 @@ export const ledgerAccountOperations = {
         paramsSchema: z.union([
             z.object({
                 userId: z.number(),
-                groupId: z.undefined(),
                 ledgerAccountId: z.undefined(),
             }),
             z.object({
-                groupId: z.number(),
-                userId: z.undefined(),
-                ledgerAccountId: z.undefined(),
-            }),
-            z.object({
-                groupId: z.undefined(),
                 userId: z.undefined(),
                 ledgerAccountId: z.number(),
             }),
         ]),
+        operation: async ({ prisma, params }): Promise<LedgerAccount> => await prisma.ledgerAccount.findUniqueOrThrow({
+            where: {
+                id: params.ledgerAccountId,
+                userId: params.userId,
+            },
+        }),
+    }),
+
+    /**
+     * Reads all ledger accounts associated with a group.
+     *
+     * **Note**: The balance of the accounts are not included in the response.
+     * Use the `calculateBalance` method to get the balance.
+     *
+     * @param params.groupId The ID of the group.
+     *
+     * @returns List of account details.
+     */
+    readMany: defineOperation({
+        authorizer: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO: Add proper auther
+        paramsSchema: z.object({
+            groupId: z.number(),
+        }),
+        operation: async ({ prisma, params }): Promise<LedgerAccount[]> => {
+            const groupLedgerAccounts = await prisma.groupLedgerAccount.findMany({
+                where: {
+                    groupId: params.groupId,
+                },
+                select: {
+                    ledgerAccount: true,
+                },
+            })
+
+            return groupLedgerAccounts.map(account => account.ledgerAccount)
+        }
+    }),
+
+    /**
+     * Reads details of a ledger account by user id.
+     * If the account does not exist it will be created.
+     *
+     * **Note**: The balance of an account is not included in the response.
+     * Use the `calculateBalance` method to get the balance.
+     *
+     * @param params.userId The ID of the user to read the account for.
+     *
+     * @returns The account details.
+     */
+    readOrCreate: defineOperation({
+        authorizer: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO: Add proper auther
+        paramsSchema: z.object({
+            userId: z.number(),
+        }),
         operation: async ({ prisma, session, params }): Promise<LedgerAccount> => {
-            // If searching by ledger account id we don't want to create a new account if it doesn't exist.
-            if (params.ledgerAccountId !== undefined) {
-                return await prisma.ledgerAccount.findUniqueOrThrow({
-                    where: {
-                        id: params.ledgerAccountId,
-                    },
-                })
-            }
-
-            // If searching by userId/groupId we want to create the account if it doesn't exist.
-            // TODO: Is this something we want?
-
             const account = await prisma.ledgerAccount.findUnique({
                 where: {
                     userId: params.userId,
-                    groupId: params.groupId,
                 },
             })
 
             if (account) return account
 
-            return ledgerAccountOperations.create({ session, data: params })
+            return ledgerAccountOperations.create({
+                session,
+                data: {
+                    userId: params.userId,
+                },
+            })
         },
     }),
 
