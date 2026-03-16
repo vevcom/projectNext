@@ -159,8 +159,7 @@ export const userOperations = {
             }))
 
             const memberships = await readMembershipsOfUser(user.id)
-            const permissions = await permissionOperations.readPermissionsOfUser({
-                bypassAuth: true,
+            const permissions = await permissionOperations.readPermissionsOfUser.internalCall({
                 params: {
                     userId: user.id
                 }
@@ -506,11 +505,10 @@ export const userOperations = {
             ])
 
             try {
-                await notificationSubscriptionOperations.createDefault({
+                await notificationSubscriptionOperations.createDefault.internalCall({
                     params: {
                         userId: params.id,
                     },
-                    bypassAuth: true,
                 })
             } catch (error) {
                 if (!(error instanceof ServerError) || error.errorCode !== 'DUPLICATE') {

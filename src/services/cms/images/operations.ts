@@ -1,15 +1,13 @@
 import '@pn-server-only'
 import { cmsImageSchemas } from './schemas'
-import { ServerOnly } from '@/auth/authorizer/ServerOnly'
-import { defineOperation, defineSubOperation } from '@/services/serviceOperation'
+import { defineSubOperation } from '@/services/serviceOperation'
 import { ServerError } from '@/services/error'
 import { SpecialCmsImage } from '@/prisma-generated-pn-types'
 import { z } from 'zod'
 
-const create = defineOperation({
-    authorizer: ServerOnly,
-    dataSchema: cmsImageSchemas.create,
-    operation: ({ prisma, data: { imageId, ...data } }) => prisma.cmsImage.create({
+const create = defineSubOperation({
+    dataSchema: () => cmsImageSchemas.create,
+    operation: () => ({ prisma, data: { imageId, ...data } }) => prisma.cmsImage.create({
         data: {
             ...data,
             image: imageId !== undefined ? {
@@ -41,7 +39,7 @@ export const cmsImageOperations = {
                 }
             })
             if (!image) {
-                return create({
+                return create.internalCall({
                     data: {
                         name: params.special,
                         special: params.special
@@ -75,12 +73,11 @@ export const cmsImageOperations = {
         })
     }),
 
-    destroy: defineOperation({
-        authorizer: ServerOnly,
-        paramsSchema: z.object({
+    destroy: defineSubOperation({
+        paramsSchema: () => z.object({
             cmsImageId: z.number()
         }),
-        operation: async ({ prisma, params }) => {
+        operation: () => async ({ prisma, params }) => {
             const cmsImage = await prisma.cmsImage.findUniqueOrThrow({
                 where: {
                     id: params.cmsImageId
@@ -100,13 +97,12 @@ export const cmsImageOperations = {
      * in the provided special array
      * This is useful to do ownership checks for services using special cms images.
      */
-    isSpecial: defineOperation({
-        authorizer: ServerOnly,
-        paramsSchema: z.object({
+    isSpecial: defineSubOperation({
+        paramsSchema: () => z.object({
             cmsImageId: z.number(),
             special: z.array(z.nativeEnum(SpecialCmsImage))
         }),
-        operation: async ({ prisma, params }) => {
+        operation: () => async ({ prisma, params }) => {
             const image = await prisma.cmsImage.findUnique({
                 where: {
                     id: params.cmsImageId,

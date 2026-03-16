@@ -27,6 +27,7 @@ import seedPermissions from './seedPermissions'
 import seedFlairs from './seedFlairs'
 import { PrismaClient } from '@/prisma-generated-pn-client'
 import { PrismaPg } from '@prisma/adapter-pg'
+import seedInterestGroups from './seedInterestGroups'
 
 export default async function seed(
     shouldMigrate: boolean,
@@ -56,6 +57,7 @@ export default async function seed(
     await seedEvents(prisma)
     await seedPermissions(prisma)
     await seedFlairs(prisma)
+    await seedInterestGroups(prisma)
     if (enableLogging) console.log('seed standard done')
 
     if (enableLogging) console.log(shouldMigrate ? 'migrating from veven' : 'not migrating from veven')

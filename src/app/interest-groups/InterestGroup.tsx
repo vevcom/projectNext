@@ -58,11 +58,6 @@ export default function InterestGroup({ interestGroup, session }: PropTypes) {
                                                 name="name"
                                                 label="Navn"
                                             />
-                                            <TextInput
-                                                defaultValue={interestGroup.shortName}
-                                                name="shortName"
-                                                label="Kortnavn"
-                                            />
                                         </Form>
                                     </>
                                 )
