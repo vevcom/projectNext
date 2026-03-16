@@ -1,4 +1,4 @@
-import type { PrismaClient } from '@prisma/client'
+import type { PrismaClient } from '@/prisma-generated-pn-client'
 
 export default async function seedDevGroups(prisma: PrismaClient) {
     const order = await prisma.omegaOrder.findFirst({
@@ -73,53 +73,11 @@ export default async function seedDevGroups(prisma: PrismaClient) {
                         }
                     }
                 },
-                paragraph: {
-                    create: {}
-                },
-                applicationParagraph: {
-                    create: {}
-                },
-                group: {
-                    create: {
-                        groupType: 'COMMITTEE',
-                        order: order.order,
-                    },
-                },
-                logoImage: {
-                    create: {
-                        name: `Logoen til testkomité ${i}`
-                    }
-                },
-            }
-        })
-
-        await prisma.membership.createMany({
-            data: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(i => ({
-                groupId: group.id,
-                userId: i,
-                admin: false, 
-                order: 106,
-                active: true,
-            }))
-        })
-    }))
-
-    await Promise.all([1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(i => prisma.interestGroup.create({
-        data: {
-            name: `Interessegruppe ${i}`,
-            shortName: `IG${i}`,
-            articleSection: {
-                create: {
-                    cmsImage: { create: {} },
-                    cmsParagraph: { create: {} },
-                    cmsLink: { create: {} },
-                }
             },
-            group: {
+            logoImage: {
                 create: {
-                    groupType: 'INTEREST_GROUP',
-                    order: order.order,
-                },
+                    name: `Logoen til testkomité ${i}`
+                }
             },
         }
     })))

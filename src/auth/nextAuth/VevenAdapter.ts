@@ -5,7 +5,7 @@ import { readUserOrNullOfFeideAccount } from '@/services/auth/feideAccounts/read
 import { userOperations } from '@/services/users/operations'
 import { userFilterSelection } from '@/services/users/constants'
 import type { UserFiltered } from '@/services/users/types'
-import type { PrismaClient } from '@prisma/client'
+import type { PrismaClient } from '@/prisma-generated-pn-client'
 import type { Adapter, AdapterUser, AdapterAccount } from 'next-auth/adapters'
 
 /**
@@ -15,7 +15,7 @@ import type { Adapter, AdapterUser, AdapterAccount } from 'next-auth/adapters'
  * @param user - User of the type used in veven.
  * @returns User object of the type `AdapterUser`.
  */
-function convertToAdapterUser(user: UserFiltered): AdapterUser {
+function convertToAdapterUser(user: Omit<UserFiltered, 'flairs'>): AdapterUser {
     return {
         ...user,
         id: String(user.id),

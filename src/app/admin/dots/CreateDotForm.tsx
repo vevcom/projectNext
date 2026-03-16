@@ -40,7 +40,7 @@ export default function CreateDotForm() {
                             'ingen bruker valgt'
                     }
                 </p>
-                <PopUp PopUpKey="selectUserDot" showButtonClass={styles.openUserList} showButtonContent={
+                <PopUp popUpKey="selectUserDot" showButtonClass={styles.openUserList} showButtonContent={
                     <>Velg Bruker</>
                 }>
                     <UserList />

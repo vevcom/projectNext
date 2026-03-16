@@ -4,7 +4,7 @@ import EditableTextField from '@/components/EditableTextField/EditableTextField'
 import { updateEventAction } from '@/services/events/actions'
 import { configureAction } from '@/services/configureAction'
 import { formatVevenUri } from '@/lib/urlEncoding'
-import type { Event } from '@prisma/client'
+import type { Event } from '@/prisma-generated-pn-types'
 
 type PropTypes = {
     event: Event

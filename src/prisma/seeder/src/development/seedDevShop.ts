@@ -1,6 +1,6 @@
 
 import { FRIDGE_NAME } from '@/seeder/src/seedShop'
-import type { PrismaClient } from '@prisma/client'
+import type { PrismaClient } from '@/prisma-generated-pn-client'
 
 
 export default async function seedDevShop(prisma: PrismaClient) {

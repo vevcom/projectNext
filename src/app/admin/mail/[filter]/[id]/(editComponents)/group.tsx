@@ -4,7 +4,7 @@ import Form from '@/components/Form/Form'
 import { SelectNumber } from '@/components/UI/Select'
 import { createMailingListGroupRelationAction } from '@/services/mail/actions'
 import type { MailFlowObject } from '@/services/mail/types'
-import type { MailingList } from '@prisma/client'
+import type { MailingList } from '@/prisma-generated-pn-types'
 
 
 export default function EditGroup({

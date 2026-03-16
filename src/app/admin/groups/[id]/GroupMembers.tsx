@@ -16,7 +16,7 @@ export default function GroupMembers({ group }: PropTypes) {
         <UserList
             displayForUser={user => (
                 <PopUp
-                    PopUpKey={`Admin for ${user.id}`}
+                    popUpKey={`Admin for ${user.id}`}
                     showButtonContent={
                         <FontAwesomeIcon icon={faCog} />
                     }

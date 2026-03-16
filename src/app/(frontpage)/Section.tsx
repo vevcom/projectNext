@@ -12,7 +12,7 @@ import Link from 'next/link'
 import type {
     SpecialCmsImage as SpecialCmsImageT,
     SpecialCmsParagraph as SpecialCmsParagraphT
-} from '@prisma/client'
+} from '@/prisma-generated-pn-types'
 import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
 
 type PropTypes = {

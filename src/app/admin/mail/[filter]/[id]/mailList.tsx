@@ -7,7 +7,7 @@ import { v4 as uuid } from 'uuid'
 import { useState } from 'react'
 import type { ActionReturn } from '@/services/actionTypes'
 import type { MailListTypes, ViaArrayType } from '@/services/mail/types'
-import type { Group, MailAddressExternal, MailAlias, MailingList } from '@prisma/client'
+import type { Group, MailAddressExternal, MailAlias, MailingList } from '@/prisma-generated-pn-types'
 import type { UserFiltered } from '@/services/users/types'
 
 const typeDisplayName: Record<MailListTypes, string> = {

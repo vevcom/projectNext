@@ -1,7 +1,7 @@
 'use client'
 
 import React, { createContext, useState } from 'react'
-import type { Image } from '@prisma/client'
+import type { Image } from '@/prisma-generated-pn-types'
 
 /**
  * The context for selecting an image from a list of images

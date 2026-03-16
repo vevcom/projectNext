@@ -17,6 +17,9 @@ export default async function Notififcations({ params }: PropTypes) {
         }),
     ])
 
+    console.log(channels)
+    console.log(subscriptions)
+
     if (!channels.success || !subscriptions.success) {
         throw new Error('Failed to load channels or subscriptions')
     }

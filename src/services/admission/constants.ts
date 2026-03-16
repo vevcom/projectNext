@@ -1,4 +1,4 @@
-import { Admission } from '@prisma/client'
+import { Admission } from '@/prisma-generated-pn-types'
 
 export const admissionDisplayNames = {
     PLIKTTIAENESTE: 'Plikttiaeneste',

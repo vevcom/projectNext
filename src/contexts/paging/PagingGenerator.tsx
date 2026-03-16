@@ -1,6 +1,6 @@
 'use client'
 
-import React, { createContext, useState, useRef, useEffect } from 'react'
+import React, { createContext, useState, useEffect, useCallback, useEffectEvent } from 'react'
 import type { ActionReturn } from '@/services/actionTypes'
 import type { ReadPageInput, Page } from '@/lib/paging/types'
 import type { Context as ReactContextType } from 'react'
@@ -19,7 +19,7 @@ export type PagingData<Data, Cursor, PageSize extends number, FetcherDetails> = 
     serverRenderedData: Data[],
     startPage: Omit<Page<PageSize, Cursor>, 'cursor'>,
     loading: boolean,
-    deatils: FetcherDetails,
+    details: FetcherDetails,
 }
 
 export type PagingContext<Data, Cursor, PageSize extends number, FetcherDetails> =
@@ -69,7 +69,6 @@ export function generatePaging<Data, Cursor, PageSize extends number = number, F
     getCursor,
 }: GeneratePagingProviderProps<Data, Cursor, PageSize, FetcherDetails>
 ) {
-    // Wrap `getCursor` to return null if no data is fetched.
     const getCursorAfterFetch = (data: Data[]) => {
         if (!data.length) return null
         return getCursor({ lastElement: data[data.length - 1], fetchedCount: data.length })
@@ -81,9 +80,9 @@ export function generatePaging<Data, Cursor, PageSize extends number = number, F
         serverRenderedData,
         startPage,
         children,
-        details: givenDetails
+        details: startDetails,
     }: PagingProviderProps<Data, Cursor, PageSize, FetcherDetails>) {
-        const generateDefaultState = () => {
+        const generateStartState = useCallback((): PagingState<Data, Cursor, PageSize> => {
             const cursor = getCursorAfterFetch(serverRenderedData)
             const page: Page<PageSize, Cursor> = cursor ? {
                 ...startPage,
@@ -98,118 +97,66 @@ export function generatePaging<Data, Cursor, PageSize extends number = number, F
                 page,
                 allLoaded: false
             }
-        }
-        const [state, setState_] = useState<PagingState<Data, Cursor, PageSize>>(
-            generateDefaultState()
-        )
-        const [loading, setLoading_] = useState(false)
-        const loadingRef = useRef(loading)
-        const setLoading = (newLoading: boolean) => {
-            loadingRef.current = newLoading
-            setLoading_(newLoading)
-        }
+        }, [serverRenderedData, startPage])
 
+        const [state, setState] = useState<PagingState<Data, Cursor, PageSize>>(generateStartState())
+        const [details, setDetails] = useState<FetcherDetails>(startDetails)
+        const [loading, setLoading] = useState<boolean>(false)
 
-        //Update state if you want to cause a rerender, else update ref.current
-        const stateRef = useRef(state)
-        const setState = (newState: PagingState<Data, Cursor, PageSize>) => {
-            stateRef.current = newState
-            setState_(newState)
-        }
-        const resetState = () => {
-            stateRef.current = generateDefaultState()
-            loadingRef.current = false
-        }
+        const resetState = useCallback(() => {
+            setState(generateStartState())
+        }, [generateStartState])
 
-        const details = useRef(givenDetails)
+        const handleDetailsChange = useEffectEvent(resetState)
 
-        const loadMore = async () => {
-            if (loadingRef.current || stateRef.current.allLoaded) return []
-            loadingRef.current = true
-            const oldDetails = details.current //if the user changes the details while loading, we should not set the data
-            const result = await fetcher({
+        useEffect(() => {
+            handleDetailsChange()
+        }, [details])
+
+        useEffect(() => {
+            setDetails(startDetails)
+        }, [startDetails])
+
+        const loadMore = useCallback(async () => {
+            if (state.allLoaded) return []
+            if (loading) return []
+            setLoading(true)
+            const data = await fetcher({
                 paging: {
-                    page: stateRef.current.page,
-                    details: details.current,
-                },
-            })
-            if (!result.success || !result.data) {
-                setState({ ...stateRef.current })
-                setLoading(false)
-                return []
-            }
-            if (!result.data.length) {
-                setState({ ...stateRef.current, allLoaded: true })
-                setLoading(false)
-                return []
-            }
-            // If the details have changed, we should not set the data
-            if (oldDetails !== details.current) {
-                setLoading(false)
-                return []
-            }
-
-            if (!result.data.length) {
-                const newState = {
-                    data: stateRef.current.data,
-                    loading: false,
-                    allLoaded: true,
-                    page: {
-                        ...stateRef.current.page,
-                    }
+                    details,
+                    page: state.page,
                 }
-                setState(newState)
-                setLoading(false)
-                return result.data
-            }
-            const newCursor = getCursorAfterFetch(result.data) ?? stateRef.current.page.cursor
-            const newPage: Page<PageSize, Cursor> = newCursor ? {
-                ...stateRef.current.page,
-                cursor: newCursor,
-                page: stateRef.current.page.page + 1
-            } : {
-                ...stateRef.current.page,
-                cursor: null,
-                page: 0
-            }
-
-            const newState = {
-                data: [...stateRef.current.data, ...result.data],
-                loading: false,
-                allLoaded: !newCursor,
-                page: newPage
-            }
-            setState(newState)
+            })
             setLoading(false)
-            return result.data
-        }
-        const refetch = async () => {
-            const toPage = stateRef.current.page.page
+            const nextPageNumber = state.page.page + 1
+            if (!data.success) {
+                return []
+            }
+            const newData = data.data
+            const newCursor = getCursorAfterFetch(newData)
+            setState((prevState) => ({
+                data: [...prevState.data, ...newData],
+                page: newCursor ? {
+                    page: nextPageNumber,
+                    cursor: newCursor,
+                    pageSize: prevState.page.pageSize,
+                } : {
+                    ...prevState.page,
+                },
+                allLoaded: newData.length < prevState.page.pageSize,
+            }))
+            return newData
+        }, [details, state, loading])
+
+        const refetch = useCallback(async () => {
+            const toPage = state.page.page
             resetState()
             let data: Data[] = []
-            for (let i = 0; i < toPage; i++) {
+            for (let pageNumber = 1; pageNumber <= toPage; pageNumber++) {
                 data = [...data, ...(await loadMore())]
             }
             return data
-        }
-
-        const setDetails = (newDetails: FetcherDetails, withFetch: boolean = true) => {
-            details.current = newDetails
-            resetState()
-            if (withFetch) {
-                loadMore()
-            }
-        }
-
-        const initialRender = useRef(true)
-        useEffect(() => {
-            if (initialRender.current) {
-                setDetails(givenDetails, false)
-                initialRender.current = false
-            } else {
-                setDetails(givenDetails)
-            }
-        }, [givenDetails])
+        }, [loadMore, state, resetState])
 
         return (
             <Context.Provider value={{
@@ -220,7 +167,7 @@ export function generatePaging<Data, Cursor, PageSize extends number = number, F
                 startPage,
                 setDetails,
                 loading,
-                deatils: details.current,
+                details,
             }}>
                 {children}
             </Context.Provider>

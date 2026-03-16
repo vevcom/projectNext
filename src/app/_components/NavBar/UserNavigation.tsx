@@ -37,7 +37,7 @@ export default function UserNavigation({ profile }: PropTypes) {
     return (
         <div ref={ref} className={styles.UserNavigation}>
             <ProfilePicture profileImage={profile.user.image} width={180} />
-            <h2><UserDisplayName user={profile.user} /></h2>
+            <h2><UserDisplayName user={profile.user} asClient={true} width={26} /></h2>
 
             <Link href="/logout" className={styles.logout}>
                 <BorderButton color="secondary">
@@ -52,7 +52,7 @@ export default function UserNavigation({ profile }: PropTypes) {
                 </Link>
                 <Link href="/users/me/omegaid">
                     <FontAwesomeIcon icon={faQrcode} />
-                    <p>OmegaId</p>
+                    <p>Omega-ID</p>
                 </Link>
                 <Link href="/users/me/money">
                     <FontAwesomeIcon icon={faMoneyBill} />

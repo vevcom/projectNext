@@ -1,6 +1,6 @@
 import styles from './ProfilePicture.module.scss'
 import Image from '@/components/Image/Image'
-import type { Image as ImageT } from '@prisma/client'
+import type { Image as ImageT } from '@/prisma-generated-pn-types'
 
 type PropTypes = {
     profileImage: ImageT,

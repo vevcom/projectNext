@@ -1,6 +1,6 @@
 import { ValidationBase } from '@/services/Validation'
+import { StandardSchool } from '@/prisma-generated-pn-types'
 import { z } from 'zod'
-import { StandardSchool } from '@prisma/client'
 import type { ValidationTypes } from '@/services/Validation'
 
 const baseSchoolValidation = new ValidationBase({

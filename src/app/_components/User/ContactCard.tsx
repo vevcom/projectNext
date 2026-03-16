@@ -1,7 +1,7 @@
 import styles from './UserCard.module.scss'
 import ProfilePicture from './ProfilePicture'
 import Link from 'next/link'
-import type { Image } from '@prisma/client'
+import type { Image } from '@/prisma-generated-pn-types'
 
 export default function ContactCard({
     name,

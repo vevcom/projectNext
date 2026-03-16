@@ -11,7 +11,7 @@ import {
     updateMailAliasValidation,
 } from '@/services/mail/alias/validation'
 import type { ActionReturn } from '@/services/actionTypes'
-import type { MailAlias } from '@prisma/client'
+import type { MailAlias } from '@/prisma-generated-pn-types'
 
 export async function createMailAliasAction(rawdata: FormData):
     Promise<ActionReturn<MailAlias>> {

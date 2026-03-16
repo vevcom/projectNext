@@ -1,7 +1,7 @@
 'use client'
 import { generatePaging } from './PagingGenerator'
 import { readImagesPageAction } from '@/services/images/actions'
-import type { Image } from '@prisma/client'
+import type { Image } from '@/prisma-generated-pn-types'
 import type { ImageCursor, ImageDetails } from '@/services/images/types'
 
 export type PageSizeImage = 30

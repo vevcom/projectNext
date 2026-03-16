@@ -3,14 +3,15 @@ import VevenAdapter from './VevenAdapter'
 import { decryptAndComparePassword } from '@/auth/passwordHash'
 import FeideProvider from '@/lib/feide/FeideProvider'
 import { updateUserStudyProgrammes } from '@/lib/feide/userRoutines'
-import { prisma } from '@/prisma/client'
+import { prisma } from '@/prisma-pn-client-instance'
 import { readMembershipsOfUser } from '@/services/groups/memberships/read'
 import { updateEmailForFeideAccount } from '@/services/auth/feideAccounts/update'
 import { userOperations } from '@/services/users/operations'
 import { permissionOperations } from '@/services/permissions/operations'
 import CredentialsProvider from 'next-auth/providers/credentials'
-import { decode } from 'next-auth/jwt'
+import { encode, decode } from 'next-auth/jwt'
 import type { AuthOptions } from 'next-auth'
+import { compressJwt, decompressJwt } from './jwtCompression'
 
 export const authOptions: AuthOptions = {
     providers: [
@@ -54,8 +55,17 @@ export const authOptions: AuthOptions = {
         strategy: 'jwt'
     },
     jwt: {
+        async encode(params) {
+            params.token = await compressJwt(params.token)
+            return encode(params)
+        },
+
         async decode(params) {
-            const token = await decode(params)
+            const decodedToken = await decode(params)
+
+            if (!decodedToken) return null
+
+            const token = await decompressJwt(decodedToken)
 
             // iat = issued at (timestamp given in seconds since epoch)
             if (!token || !token.iat) return null
@@ -168,8 +178,7 @@ export const authOptions: AuthOptions = {
                     params: { id: userId },
                     bypassAuth: true,
                 }),
-                permissions: await permissionOperations.readPermissionsOfUser({
-                    bypassAuth: true,
+                permissions: await permissionOperations.readPermissionsOfUser.internalCall({
                     params: {
                         userId,
                     }
@@ -184,4 +193,19 @@ export const authOptions: AuthOptions = {
         newUser: '/register',
     },
     adapter: VevenAdapter(prisma),
+    logger: {
+        error(code, metadata) {
+            // When in development mode JWT are invalidated at each restart,
+            // thus producing a lot of noise in both the logs and in the browser.
+            // Therefore, we log these as warnings instead of errors.
+            const logFunction = code === 'JWT_SESSION_ERROR' ? console.warn : console.error
+            logFunction(`NextAuth error: ${code}`, metadata)
+        },
+        warn(code) {
+            console.warn(`NextAuth warning: ${code}`)
+        },
+        debug(code, metadata) {
+            console.debug(`NextAuth debug: ${code}`, metadata)
+        },
+    }
 }

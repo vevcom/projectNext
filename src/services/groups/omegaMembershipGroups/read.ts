@@ -1,7 +1,7 @@
 import { prismaCall } from '@/services/prismaCall'
-import { prisma } from '@/prisma/client'
+import { prisma } from '@/prisma-pn-client-instance'
 import { ServerError } from '@/services/error'
-import type { OmegaMembershipLevel } from '@prisma/client'
+import type { OmegaMembershipLevel } from '@/prisma-generated-pn-types'
 import type { ExpandedOmegaMembershipGroup } from './types'
 
 export async function readOmegaMembershipGroups(): Promise<ExpandedOmegaMembershipGroup[]> {
@@ -37,7 +37,8 @@ export async function readUserOmegaMembershipLevel(userId: number): Promise<Omeg
             userId,
             groupId: {
                 in: omegaMembershipGroups.map(group => group.groupId),
-            }
+            },
+            active: true
         }
     }))
 

@@ -32,7 +32,7 @@ export default async function Ombuls() {
             title="Ombul"
             headerItem={
                 showCreateButton && (
-                    <AddHeaderItemPopUp PopUpKey="create ombul">
+                    <AddHeaderItemPopUp popUpKey="create ombul">
                         <CreateOmbul latestOmbul={latestOmbul} />
                     </AddHeaderItemPopUp>
                 )

@@ -3,7 +3,7 @@ import PermissionCheckbox from './PermissionCheckbox'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { permissionConfig } from '@/services/permissions/constants'
 import { readPermissionMatrixAction } from '@/services/permissions/actions'
-import type { Permission } from '@prisma/client'
+import type { Permission } from '@/prisma-generated-pn-types'
 
 export default async function PermissionGroups() {
     const permissionMatrix = unwrapActionReturn(await readPermissionMatrixAction())

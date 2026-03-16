@@ -5,15 +5,14 @@ import { validateMethods } from '@/services/notifications/channel/schemas'
 import { allNotificationMethodsOff, allNotificationMethodsOn } from '@/services/notifications/constants'
 import { availableNotificationMethodIncluder } from '@/services/notifications/channel/constants'
 import { notificationChannelOperations } from '@/services/notifications/channel/operations'
-import { defineOperation } from '@/services/serviceOperation'
-import { ServerOnly } from '@/auth/authorizer/ServerOnly'
+import { defineOperation, defineSubOperation } from '@/services/serviceOperation'
 import { ServerError } from '@/services/error'
 import { z } from 'zod'
-import type { Prisma } from '@prisma/client'
+import type { Prisma } from '@/prisma-generated-pn-types'
 import type { Subscription } from './types'
 import type { NotificationMethodGeneral } from '@/services/notifications/types'
 
-// eslint-disable-next-line
+
 async function createTransactionPart(
     prisma: Prisma.TransactionClient,
     userId: number,
@@ -122,13 +121,12 @@ export const notificationSubscriptionOperations = {
         }),
     }),
 
-    createDefault: defineOperation({
-        authorizer: ServerOnly,
-        paramsSchema: z.object({
+    createDefault: defineSubOperation({
+        paramsSchema: () => z.object({
             userId: z.number(),
         }),
         opensTransaction: true,
-        operation: async ({ prisma, params, session }) => {
+        operation: () => async ({ prisma, params, session }) => {
             const channels = await notificationChannelOperations.readDefault({
                 session,
                 bypassAuth: true,
@@ -169,7 +167,7 @@ export const notificationSubscriptionOperations = {
                 data.subscriptions.map(subscription =>
                     createTransactionPart(prisma, params.userId, subscription.channelId, subscription.methods)
                 )
-            )).filter(i => i) as (() => Promise<Subscription>)[]
+            )).filter(i => i !== null)
 
             // Update the subscriptions
             return await Promise.all(

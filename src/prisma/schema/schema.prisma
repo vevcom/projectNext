@@ -1,9 +1,9 @@
 generator projectnext {
-  provider = "prisma-client-js"
-  output   = "../../../node_modules/.prisma/client"
+  provider = "prisma-client"
+  // Generate outside of src folder.
+  output   = "../../../generated/pn-prisma"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DB_URI")
 }

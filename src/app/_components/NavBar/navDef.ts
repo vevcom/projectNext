@@ -4,8 +4,6 @@
 import {
     faGamepad,
     faBook,
-    faPoo,
-    faShoppingCart,
     faComment,
     faCamera,
     faCircleInfo,
@@ -17,7 +15,6 @@ import {
     faBriefcase,
     faGraduationCap,
     faTools,
-    faChartLine,
     faSignature,
     faSchool,
     faHouseChimneyWindow,
@@ -91,18 +88,6 @@ export const itemsForMenu: NavItem[] = [
         icon: faNewspaper
     },
     {
-        name: 'Bulshit',
-        href: '/bulshit',
-        show: 'all',
-        icon: faPoo,
-    },
-    {
-        name: 'Omegashop',
-        href: '/money/shop',
-        show: 'loggedIn',
-        icon: faShoppingCart,
-    },
-    {
         name: 'Omegaquotes',
         href: '/omegaquotes',
         show: 'loggedIn',
@@ -131,12 +116,6 @@ export const itemsForMenu: NavItem[] = [
         href: '/articles/om%20omega',
         show: 'all',
         icon: faCircleInfo,
-    },
-    {
-        name: 'Omegafond',
-        href: '/omegafund',
-        show: 'all',
-        icon: faChartLine,
     },
     {
         name: 'Intressegrupper',

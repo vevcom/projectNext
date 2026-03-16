@@ -52,7 +52,7 @@ function DetailedTable({
                         pagingContext={EventRegistrationDetailedPagingContext}
                         renderer={row => {
                             const name = row.user ? <Link href={`/users/${row.user.username}`}>
-                                <UserDisplayName user={row.user} />
+                                <UserDisplayName user={row.user} asClient={true} width={20} />
                             </Link> : row.contact?.name
                             return <tr key={row.id}>
                                 <td>{name}</td>
@@ -108,7 +108,7 @@ function DefaultList({
                         return <UserCard key={i} user={{
                             ...row.user,
                             image: row.image
-                        }} className={styles.userCard} />
+                        }} className={styles.userCard} asClient={true} />
                     }
                     return <ContactCard key={i} name={row.contact?.name ?? 'Ukjent'} image={row.image} />
                 }}

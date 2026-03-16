@@ -1,4 +1,5 @@
-import type { CabinProduct, CabinProductPrice, PrismaClient } from '@prisma/client'
+import type { PrismaClient } from '@/prisma-generated-pn-client'
+import type { CabinProduct, CabinProductPrice } from '@/prisma-generated-pn-types'
 
 export default async function seedCabin(prisma: PrismaClient) {
     const products: (Omit<CabinProduct, 'id' > & {

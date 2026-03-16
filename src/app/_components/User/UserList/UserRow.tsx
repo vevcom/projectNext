@@ -25,7 +25,7 @@ export default function UserRow({
                 router.push(`/users/${user.username}`)
             }}
         >
-            <p><UserDisplayName user={user} /></p>
+            <p><UserDisplayName asClient={true} width={16} user={user} /></p>
             <p>{user.username}</p>
             <p>{user.studyProgramme}</p>
             <p>{user.class}</p>

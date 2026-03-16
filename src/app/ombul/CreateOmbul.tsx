@@ -9,7 +9,7 @@ import { createOmbulAction } from '@/services/ombul/actions'
 import Form from '@/components/Form/Form'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import type { Ombul } from '@prisma/client'
+import type { Ombul } from '@/prisma-generated-pn-types'
 import type { PropTypesPreview } from './OmbulCover'
 import type { ChangeEvent } from 'react'
 

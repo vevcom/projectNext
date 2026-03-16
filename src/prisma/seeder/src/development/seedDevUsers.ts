@@ -1,11 +1,12 @@
 import { hashAndEncryptPassword } from '@/auth/passwordHash'
 import { type SeederImage, seedImage } from '@/seeder/src/seedImages'
+import { OmegaMembershipLevel, type Prisma } from '@/prisma-generated-pn-types'
 import { v4 as uuid } from 'uuid'
-import { OmegaMembershipLevel, type PrismaClient, type Prisma } from '@prisma/client'
 import { randomInt } from 'crypto'
 import { readdir } from 'fs/promises'
 import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
+import type { PrismaClient } from '@/prisma-generated-pn-client'
 
 const fileName = fileURLToPath(import.meta.url)
 const directoryName = dirname(fileName)
@@ -68,6 +69,7 @@ export default async function seedDevUsers(prisma: PrismaClient) {
     const allStudyProgrammes = await prisma.studyProgramme.findMany()
     const allCommittees = await prisma.committee.findMany()
     const allClasses = await prisma.class.findMany()
+    const allFlairs = await prisma.flair.findMany()
 
     Promise.all(firstNames.map(async (firstName, i) => {
         await Promise.all(lastNames.map(async (lastName, j) => {
@@ -155,6 +157,23 @@ export default async function seedDevUsers(prisma: PrismaClient) {
             await prisma.membership.createMany({
                 data: memberships
             })
+
+            if (Math.random() < 0.05) {
+                const flair = allFlairs[randomInt(allFlairs.length)]
+
+                await prisma.flair.update({
+                    where: {
+                        id: flair.id,
+                    },
+                    data: {
+                        user: {
+                            connect: {
+                                id: user.id
+                            }
+                        }
+                    }
+                })
+            }
         }))
     }))
 

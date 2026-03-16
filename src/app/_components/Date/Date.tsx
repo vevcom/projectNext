@@ -1,6 +1,6 @@
 'use client'
 import { displayDate } from '@/lib/dates/displayDate'
-import { useEffect, useState } from 'react'
+import { useEffect, useEffectEvent, useState } from 'react'
 
 type PropTypes = {
     date: Date
@@ -16,9 +16,9 @@ type PropTypes = {
 export default function Date({ date, includeTime = true }: PropTypes) {
     const [isClient, setIsClient] = useState(false)
 
-    useEffect(() => {
-        setIsClient(true)
-    }, [])
+    const handleClientHydration = useEffectEvent(() => setIsClient(true))
+
+    useEffect(() => handleClientHydration(), [])
 
     if (!isClient) {
         return `${date.toISOString().substring(0, includeTime ? 16 : 10)} (UTC)`

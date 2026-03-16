@@ -13,7 +13,7 @@ import { configureAction } from '@/services/configureAction'
 import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import type { EventExpanded } from '@/services/events/types'
-import type { EventRegistration } from '@prisma/client'
+import type { EventRegistration } from '@/prisma-generated-pn-types'
 
 enum RegistrationButtonState {
     NOT_REGISTERED = 'NOT_REGISTERED',
@@ -138,10 +138,6 @@ export default function RegistrationUI({
     }
 
     return <>
-        {btnState === RegistrationButtonState.REGISTRATION_NOT_OPEN && (
-            <p>Påmeldingen åpner om <CountDown referenceDate={event.registrationStart} /></p>
-        )}
-
         <SubmitButton
             success={false}
             confirmation={
@@ -181,6 +177,10 @@ export default function RegistrationUI({
             {btnState === RegistrationButtonState.ERROR && errorText}
             {btnState === RegistrationButtonState.REGISTRATION_CLOSED && 'Påmeldingen er over'}
         </SubmitButton>
+
+        {btnState === RegistrationButtonState.REGISTRATION_NOT_OPEN && (
+            <p>Påmeldingen åpner om <CountDown referenceDate={event.registrationStart} /></p>
+        )}
 
         {registrationState && event.registrationEnd > new Date() && <Form
             action={configureAction(

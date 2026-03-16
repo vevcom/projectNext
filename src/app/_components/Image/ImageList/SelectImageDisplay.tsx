@@ -2,7 +2,7 @@
 import { ImageDisplayContext } from '@/contexts/ImageDisplayProvider'
 import { ImageSelectionContext } from '@/contexts/ImageSelection'
 import { useContext } from 'react'
-import type { Image } from '@prisma/client'
+import type { Image } from '@/prisma-generated-pn-types'
 
 type PropTypes = {
     image: Image

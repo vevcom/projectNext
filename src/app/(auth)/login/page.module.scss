@@ -9,3 +9,19 @@
         color: ohma.$colors-gray-500;
     }
 }
+
+.loginContainer {
+    max-width: 200px;
+    
+    * {
+        width: 100%;
+    }
+
+    button, input, p {
+        margin: ohma.$gap 0;
+    }
+
+    p {
+        font-size: ohma.$fonts-s;
+    }
+}

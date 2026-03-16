@@ -1,7 +1,7 @@
 import styles from './BackdropImage.module.scss'
 import Image from '@/components/Image/Image'
 import type { ReactNode } from 'react'
-import type { Image as ImageT } from '@prisma/client'
+import type { Image as ImageT } from '@/prisma-generated-pn-types'
 
 type PropTypes = {
     children: ReactNode

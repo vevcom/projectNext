@@ -6,7 +6,7 @@ model Course {
   school                         School               @relation(fields: [schoolId], references: [id])
   schoolId                       Int
   cmsParagraph                   CmsParagraph         @relation(fields: [cmsParagraphId], references: [id])
-  cmsParagraphId                 Int
+  cmsParagraphId                 Int                  @unique
   thisCourseHasBeenApprovedAs    CourseApprovedAs[]   @relation("thisCourseHasBeenApprovedAs")
   thisCourseHasBeenUsedToApprove CourseApprovedAs[]   @relation("thisCourseHasBeenUsedToApprove")
   CourseStudyProgram             CourseStudyProgram[]

@@ -1,5 +1,5 @@
 import { eventOperations } from '@/services/events/operations'
-import type { PrismaClient } from '@prisma/client'
+import type { PrismaClient } from '@/prisma-generated-pn-client'
 
 export default async function seedDevEvents(prisma: PrismaClient) {
     const today = new Date()

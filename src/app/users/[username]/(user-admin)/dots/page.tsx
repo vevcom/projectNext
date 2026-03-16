@@ -1,5 +1,4 @@
 import styles from './page.module.scss'
-
 import { readDotWrappersForUserAction } from '@/services/dots/actions'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { getProfileForAdmin } from '@/app/users/[username]/(user-admin)/getProfileForAdmin'

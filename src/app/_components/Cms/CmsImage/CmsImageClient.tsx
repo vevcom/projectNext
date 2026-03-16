@@ -6,7 +6,7 @@ import Image, { SrcImage } from '@/components/Image/Image'
 import { readSpecialImageAction } from '@/services/images/actions'
 import { useState, useEffect } from 'react'
 import type { PropTypes } from './CmsImage'
-import type { Image as ImageT } from '@prisma/client'
+import type { Image as ImageT } from '@/prisma-generated-pn-types'
 
 /**
  * WARNING: This component is only meant for the client

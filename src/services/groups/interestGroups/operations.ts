@@ -54,13 +54,11 @@ export const interestGroupOperations = {
     read: defineOperation({
         paramsSchema: z.object({
             id: z.number().optional(),
-            shortName: z.string().optional(),
         }),
         authorizer: () => interestGroupAuth.read.dynamicFields({}),
-        operation: async ({ prisma, params: { id, shortName } }) => await prisma.interestGroup.findUniqueOrThrow({
+        operation: async ({ prisma, params: { id } }) => await prisma.interestGroup.findUniqueOrThrow({
             where: {
                 id,
-                shortName,
             },
             include: {
                 articleSection: {
@@ -117,7 +115,7 @@ export const interestGroupOperations = {
     updateSpecialCmsParagraphContentGeneralInfo: cmsParagraphOperations.updateContent.implement({
         authorizer: () => interestGroupAuth.updateSpecialCmsParagraphContentGeneralInfo.dynamicFields({}),
         ownershipCheck: async ({ params }) =>
-            await cmsParagraphOperations.isSpecial({
+            await cmsParagraphOperations.isSpecial.internalCall({
                 params: {
                     paragraphId: params.paragraphId,
                     special: ['INTEREST_GROUP_GENERAL_INFO']

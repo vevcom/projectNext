@@ -86,7 +86,7 @@ export function decompressOmegaId(rawdata: string): ActionReturn<string> {
         errorCode: 'JWT INVALID',
         httpCode: 400,
         error: [{
-            message: 'QR code is not an OmegaId',
+            message: 'QR code is not an Omega-ID',
         }],
     }
 

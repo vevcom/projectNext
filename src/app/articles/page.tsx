@@ -17,7 +17,7 @@ export default async function ArticleCategoryList() {
     return (
         <PageWrapper title="Artikler" headerItem={
             canCreateArticleCategories && (
-                <AddHeaderItemPopUp PopUpKey="CreateCategory">
+                <AddHeaderItemPopUp popUpKey="CreateCategory">
                     <AddCategory />
                 </AddHeaderItemPopUp>
             )

@@ -10,7 +10,7 @@ import type { UpdatePageTypes } from '@/services/screens/pages/validation'
 import type { ExpandedScreenPage } from '@/services/screens/pages/types'
 import type { ActionReturn } from '@/services/actionTypes'
 import type { CreateScreenTypes } from '@/services/screens/validation'
-import type { ScreenPage } from '@prisma/client'
+import type { ScreenPage } from '@/prisma-generated-pn-types'
 
 export async function createPageAction(formdata: CreateScreenTypes['Type']): Promise<ActionReturn<ScreenPage>> {
     const parse = createScreenValidation.typeValidate(formdata)

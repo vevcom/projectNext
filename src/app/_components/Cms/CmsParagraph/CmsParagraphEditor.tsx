@@ -6,13 +6,13 @@ import EditOverlay from '@/components/Cms/EditOverlay'
 import Form from '@/components/Form/Form'
 import PopUp from '@/components/PopUp/PopUp'
 import { configureAction } from '@/services/configureAction'
+import useEditMode from '@/hooks/useEditMode'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
-import type { CmsParagraph } from '@prisma/client'
+import type { CmsParagraph } from '@/prisma-generated-pn-types'
 import type { UpdateCmsParagraphAction } from '@/cms/paragraphs/types'
 import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
-import useEditMode from '@/hooks/useEditMode'
 
 // Needed because SimpleMDE is not SSR compatible as it access navigator object
 const DynamicSimpleMDEditor = dynamic(
@@ -44,7 +44,7 @@ export default function CmsParagraphEditor({ cmsParagraph, editorClassName, upda
     if (!editable) return null
     return (
         <PopUp
-            PopUpKey={cmsParagraph.id}
+            popUpKey={cmsParagraph.id}
             showButtonClass={styles.openBtn}
             showButtonContent={
                 <EditOverlay />

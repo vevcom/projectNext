@@ -2,7 +2,7 @@ import '@pn-server-only'
 import { frontpageAuth } from './auth'
 import { cmsParagraphOperations } from '@/cms/paragraphs/operations'
 import { cmsImageOperations } from '@/cms/images/operations'
-import type { SpecialCmsImage, SpecialCmsParagraph } from '@prisma/client'
+import type { SpecialCmsImage, SpecialCmsParagraph } from '@/prisma-generated-pn-types'
 
 const ownedCmsParagraphs: Readonly<SpecialCmsParagraph[]> = [
     'FRONTPAGE_1',
@@ -42,12 +42,11 @@ export const frontpageOperations = {
     updateSpecialCmsParagraphContentSection: cmsParagraphOperations.updateContent.implement({
         authorizer: () => frontpageAuth.updateSpecialCmsParagraphContentSection.dynamicFields({}),
         ownershipCheck: async ({ params }) =>
-            await cmsParagraphOperations.isSpecial({
+            await cmsParagraphOperations.isSpecial.internalCall({
                 params: {
                     paragraphId: params.paragraphId,
                     special: [...ownedCmsParagraphs],
                 },
-                bypassAuth: true
             })
     }),
 
@@ -59,12 +58,11 @@ export const frontpageOperations = {
     updateSpecialCmsImage: cmsImageOperations.update.implement({
         authorizer: () => frontpageAuth.updateSpecialCmsImage.dynamicFields({}),
         ownershipCheck: async ({ params }) =>
-            await cmsImageOperations.isSpecial({
+            await cmsImageOperations.isSpecial.internalCall({
                 params: {
                     cmsImageId: params.cmsImageId,
                     special: [...ownedCmsImages],
                 },
-                bypassAuth: true
             })
     }),
 } as const

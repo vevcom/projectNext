@@ -4,10 +4,10 @@ import { emailSchemas } from './schemas'
 import { DefaultEmailTemplate } from './templates/default'
 import { repalceSpecialSymbols } from '@/services/notifications/operations'
 import { prismaCall } from '@/services/prismaCall'
-import { prisma } from '@/prisma/client'
+import { prisma } from '@/prisma-pn-client-instance'
 import { render } from '@react-email/render'
 import type { ExpandedNotificationChannel } from '@/services/notifications/types'
-import type { Notification } from '@prisma/client'
+import type { Notification } from '@/prisma-generated-pn-types'
 import type { UserFiltered } from '@/services/users/types'
 
 

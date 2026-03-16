@@ -1,12 +1,12 @@
 import '@pn-server-only'
-import { prisma } from '@/prisma/client'
+import { prisma } from '@/prisma-pn-client-instance'
 import logger from '@/lib/logger'
 import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { imageOperations } from '@/services/images/operations'
 import { visibilityOperations } from '@/services/visibility/operations'
-import type { SpecialCollection, ImageCollection, Image } from '@prisma/client'
+import type { SpecialCollection, ImageCollection, Image } from '@/prisma-generated-pn-types'
 import type {
     ExpandedImageCollection,
     ImageCollectionCursor,
@@ -101,8 +101,8 @@ export async function readSpecialImageCollection(special: SpecialCollection): Pr
         //but the schema requires them to exist - believe this implementation to be better than for
         //regular collections to maybe be in invalid state with no visibility.
         // TODO: use create method.
-        const visibilityAdmin = await visibilityOperations.create({ bypassAuth: true })
-        const visibilityRead = await visibilityOperations.create({ bypassAuth: true })
+        const visibilityAdmin = await visibilityOperations.create.internalCall({})
+        const visibilityRead = await visibilityOperations.create.internalCall({})
 
         const newCollection = await prismaCall(() => prisma.imageCollection.create({
             data: {

@@ -6,7 +6,7 @@ import OmegaIdReader from '@/components/OmegaId/reader/OmegaIdReader'
 import TextInput from '@/components/UI/TextInput'
 import { createAdmissionTrialAction } from '@/services/admission/actions'
 import { configureAction } from '@/services/configureAction'
-import type { Admission } from '@prisma/client'
+import type { Admission } from '@/prisma-generated-pn-types'
 
 
 export default function RegisterAdmissiontrial({

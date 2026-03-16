@@ -27,7 +27,7 @@ export default async function InterestGroups() {
     return (
         <PageWrapper title="Interessegrupper" headerItem={
             canCreate.authorized && (
-                <AddHeaderItemPopUp PopUpKey="Create interest group">
+                <AddHeaderItemPopUp popUpKey="Create interest group">
                     <CreateInterestGroupForm />
                 </AddHeaderItemPopUp>
             )

@@ -1,7 +1,7 @@
 import Permission from './Permission'
 import styles from './PermissionCategory.module.scss'
 import { permissionConfig } from '@/services/permissions/constants'
-import { Permission as PermissionEnum } from '@prisma/client'
+import { Permission as PermissionEnum } from '@/prisma-generated-pn-types'
 import type { PermissionCategory } from '@/services/permissions/types'
 import type { ReactNode } from 'react'
 
