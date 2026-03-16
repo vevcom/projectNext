@@ -26,18 +26,36 @@ export default function LogIn() {
     }
 
     return <>
-        <form onSubmit={handleSignIn}>
-            <TextInput label="Brukernavn" name="username" type="text"/>
-            <TextInput label="Passord" name="password" type="password"/>
-            <BorderButton>Logg inn</BorderButton>
-            <p style={{ color: 'red' }}>{error === 'CredentialsSignin' ? 'Feil brukernavn eller passord :(' : ''}</p>
+        <form className={styles.loginForm} onSubmit={handleSignIn}>
+            <TextInput className={styles.textInput} label="Brukernavn" name="username" type="text"/>
+            <TextInput className={styles.textInput} label="Passord" name="password" type="password"/>
+            <BorderButton style={{ width: '100%', margin: '0' }}>
+                Logg inn
+            </BorderButton>
+            <p style={{ color: 'red' }}>
+                {error === 'CredentialsSignin' ? 'Feil brukernavn eller passord :(' : ''}
+            </p>
         </form>
-        <BorderButton onClick={() => signIn('feide', {
+
+        <div className={styles.divider}>
+            <span>eller</span>
+        </div>
+
+        <BorderButton style={{ width: '100%', margin: '0' }} onClick={() => signIn('feide', {
             redirect: true,
             callbackUrl: searchParams.get('callbackUrl') || '/users/me'
-        })}>Logg inn med Feide</BorderButton>
-        <br />
-        <Link href="/send-reset-password-email" className={styles.resetPasswordLink}>Glemt passord?</Link>
-        <p>Er det første gang du logger inn? Da er det bare å logge inn med feide for å lage en bruker.</p>
+        })}>
+            Logg inn med Feide
+        </BorderButton>
+
+        <Link href="/send-reset-password-email" className={styles.resetPasswordLink}>
+            <p>
+                Glemt passord?
+            </p>
+        </Link>
+
+        <p className={styles.firstLoginText}>
+            Er det første gang du logger inn? Da er det bare å logge inn med feide for å lage en bruker.
+        </p>
     </>
 }

@@ -3,6 +3,7 @@
 @use "_fonts";
 
 @use "sass:color";
+@use "sass:math";
 
 @mixin round {
     border-radius: variables.$rounding;
@@ -11,10 +12,10 @@
 
 @mixin boxShadow($state) {
     @if $state=='hover' {
-        box-shadow: colors.$boxShadow 0px 3px 6px, colors.$boxShadow 0px 3px 6px;
+        box-shadow: colors.$boxShadow 0 3px 6px, colors.$boxShadow 0 3px 6px;
         transition: box-shadow 0.3s;
     } @else {
-        box-shadow: colors.$boxShadow 0px 1px 3px, colors.$boxShadow 0px 1px 2px;
+        box-shadow: colors.$boxShadow 0 1px 3px, colors.$boxShadow 0 1px 2px;
         transition: box-shadow 0.3s;
     }
 }
@@ -42,7 +43,7 @@
     font-size: 18px;
     text-align: left;
     th, td {
-        padding: variables.$gap
+        padding: variables.$gap;
     }
     th {
         background-color: color-mix(in srgb, colors.$secondary, white 2%); // TODO Perhaps change
@@ -197,7 +198,7 @@
 }
 
 @mixin screenLg {
-    @media (min-width: calc(variables.$mobileBreakpoint + 1px)) {
+    @media (min-width: calc(#{variables.$mobileBreakpoint} + 1px)) {
         @content;
     }
 }
@@ -208,5 +209,33 @@
     }
     100% {
         transform: translate(250%) rotate(5deg);
+    }
+}
+
+@mixin neumorphism(
+    $l:var(--secondary-l),
+    $c:var(--secondary-c),
+    $h:var(--secondary-h),
+    $size: 20px,
+    $blur: 40px,
+    $intensity: .05,
+    $inset: "",
+    $button: false,
+) {
+    box-shadow:
+        #{$inset} #{$size} #{$size} #{$blur}
+          oklch(calc(#{$l} - #{$intensity}) #{$c} #{$h}),
+        #{$inset} -#{$size} -#{$size} #{$blur}
+          oklch(calc(#{$l} + #{$intensity}) #{$c} #{$h});
+
+
+    @if $button {
+        &:active {
+            box-shadow:
+                inset #{$size} #{$size} #{$blur}
+                    oklch(calc(#{$l} - #{$intensity}) #{$c} #{$h}),
+                  inset -#{$size} -#{$size} #{$blur}
+                    oklch(calc(#{$l} + #{$intensity}) #{$c} #{$h});
+        }
     }
 }

@@ -89,11 +89,9 @@ model InterestGroup {
   id      Int   @id @default(autoincrement())
 
   name      String
-  shortName String @unique
 
   articleSection   ArticleSection @relation(fields: [articleSectionId], references: [id], onDelete: Restrict, onUpdate: Cascade)
   articleSectionId Int            @unique
-  // TODO - add intereset group data
 }
 
 model ManualGroup {

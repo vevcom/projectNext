@@ -10,7 +10,7 @@
         @include ohma.boxShadow('');
         @include ohma.card;
         background-color: ohma.$colors-secondary;
-        padding: 2*ohma.$gap;
+        padding: 3*ohma.$gap;
         z-index: 9;
         max-height: 95svh;
         > .overflow {
@@ -66,11 +66,12 @@
         > .main {
             width: 100svw;
             translate: 0 calc(100svh - 100%);
+            border-radius: ohma.$cardRounding ohma.$cardRounding 0 0;
         }
         .closeBtn {
             position: absolute;
-            top: .3em;
-            right: .3em;
+            top: 2*ohma.$gap;
+            right: 2*ohma.$gap;
             width: 3em;
             height: 3em;
         }

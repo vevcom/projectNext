@@ -13,10 +13,15 @@ import { readUserFlairsAction } from '@/services/flairs/actions'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { RelationshipStatus } from '@/prisma-generated-pn-types'
 import Link from 'next/link'
-import { faCog, faMoneyBill, faQrcode, faSignOut, faUser } from '@fortawesome/free-solid-svg-icons'
+import { faCog, faSignOut } from '@fortawesome/free-solid-svg-icons'
 import { notFound, redirect } from 'next/navigation'
 import { v4 as uuid } from 'uuid'
 import React from 'react'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+    title: 'Profil',
+}
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 
@@ -195,10 +200,13 @@ export default async function User({ params }: PropTypes) {
                             <h2>Medlemsskap</h2>
                             {committeeMemberships.map((membership, i) => (
                                 <Link
+                                    className={styles.memberShipInCommitteeLink}
                                     href={`/committees/${membership.group.committee?.shortName}`}
                                     key={i}
                                 >
-                                    <p>{membership.title} i {membership.group.committee?.name}</p>
+                                    <p className={styles.memberShipInCommittee}>
+                                        {membership.title} i {membership.group.committee?.name}
+                                    </p>
                                 </Link>
                             ))}
                         </div>}

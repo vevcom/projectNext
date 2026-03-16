@@ -31,3 +31,5 @@ export function visibilityFilter(memberships: MembershipFiltered[]) {
         }
     } as const satisfies Prisma.VisibilityWhereInput
 }
+
+export type VisibilityFilter = ReturnType<typeof visibilityFilter>

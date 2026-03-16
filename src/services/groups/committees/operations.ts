@@ -1,11 +1,10 @@
 import { committeeAuth } from './auth'
 import { committeeExpandedIncluder, committeeLogoIncluder, membershipIncluder } from './constants'
 import { committeeSchemas } from './validation'
-import { ServerOnlyAuthorizer } from '@/auth/authorizer/RequireServer'
 import { cmsImageOperations } from '@/cms/images/operations'
 import { cmsParagraphOperations } from '@/cms/paragraphs/operations'
 import { imageOperations } from '@/services/images/operations'
-import { defineOperation } from '@/services/serviceOperation'
+import { defineOperation, defineSubOperation } from '@/services/serviceOperation'
 import { articleRealtionsIncluder } from '@/cms/articles/constants'
 import { implementUpdateArticleOperations } from '@/cms/articles/implement'
 import { articleOperations } from '@/cms/articles/operations'
@@ -55,12 +54,11 @@ const read = defineOperation({
     }
 })
 
-const readFromGroupIds = defineOperation({
-    authorizer: ServerOnlyAuthorizer,
-    paramsSchema: z.object({
+const readFromGroupIds = defineSubOperation({
+    paramsSchema: () => z.object({
         ids: z.number().int().array()
     }),
-    operation: async ({ prisma, params }) => await prisma.committee.findMany({
+    operation: () => async ({ prisma, params }) => await prisma.committee.findMany({
         where: {
             groupId: {
                 in: params.ids
@@ -193,7 +191,7 @@ const destroy = defineOperation({
                 }
             }
         })
-        articleOperations.destroy({ params: { articleId: committee.committeeArticleId }, bypassAuth: true })
+        articleOperations.destroy.internalCall({ params: { articleId: committee.committeeArticleId } })
         return committee
     }
 })
@@ -206,15 +204,13 @@ const create = defineOperation({
         const defaultLogoImageId = await imageOperations.readSpecial({
             params: { special: 'DAFAULT_COMMITTEE_LOGO' },
         }).then(res => res.id)
-        const article = await articleOperations.create({ data: {}, bypassAuth: true })
+        const article = await articleOperations.create.internalCall({ data: {} })
 
-        const paragraph = await cmsParagraphOperations.create({
+        const paragraph = await cmsParagraphOperations.create.internalCall({
             data: { name: `Paragraph for ${name}` },
-            bypassAuth: true
         })
-        const applicationParagraph = await cmsParagraphOperations.create({
+        const applicationParagraph = await cmsParagraphOperations.create.internalCall({
             data: { name: `Søknadstekst for ${name}` },
-            bypassAuth: true
         })
 
         const order = (await readCurrentOmegaOrder()).order

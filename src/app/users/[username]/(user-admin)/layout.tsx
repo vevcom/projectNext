@@ -11,6 +11,11 @@ import type { PropTypes } from '@/app/users/[username]/page'
 import SubPageNavBar from '@/components/NavBar/SideNavBar/SubPageNavBar'
 import SubPageNavBarItem from '@/components/NavBar/SideNavBar/SubPageNavBarItem'
 import { faCircleDot, faCog, faKey, faPaperPlane, faUser } from '@fortawesome/free-solid-svg-icons'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+    title: 'Innstillinger',
+}
 
 export default async function UserAdmin({ children, params }: PropTypes & { children: ReactNode }) {
     const session = await ServerSession.fromNextAuth()

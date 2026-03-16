@@ -18,8 +18,7 @@ export async function updateMembership({
     active?: boolean
 }): Promise<ExpandedMembership> {
     const order = (orderArg && typeof orderArg === 'number') ? orderArg : (
-        await groupOperations.readCurrentGroupOrder({
-            bypassAuth: true,
+        await groupOperations.readCurrentGroupOrder.internalCall({
             params: {
                 id: groupId
             }

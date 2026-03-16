@@ -201,17 +201,33 @@
             margin: 1em 2em;
         }
     }
+}
 
+.memberShipInCommitteeLink {
+    text-decoration: none;
+}
+
+.memberShipInCommittee {
+    @include ohma.layer;
+    @include ohma.boxShadow('');
+    color: ohma.$colors-text;
+    padding: ohma.$gap;
+    border-radius: ohma.$rounding;
+    margin-top: ohma.$gap;
+
+    &:hover {
+        @include ohma.boxShadow('hover');
+    }
 }
 
 img.profilePicture {
     // We have to use "!important" here to override the
     // border color set in "ProfilePicture.module.scss".
     // TODO: Find a better way to do this.
-    
+
 
     border-color: var(--border-colour) !important;
-    
-    
+
+
 }
 

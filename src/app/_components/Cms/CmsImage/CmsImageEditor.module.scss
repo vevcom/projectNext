@@ -35,6 +35,9 @@ $collectionSize: calc(14vmin + 70px);
         }
     }
     > .currentCmsImage {
+        @include ohma.layer;
+        border-radius: ohma.$rounding;
+        padding: ohma.$gap;
         grid-column: 1 / 2;
         grid-row: 1 / 2;
         @include ohma.screenMobile {
@@ -70,14 +73,15 @@ $collectionSize: calc(14vmin + 70px);
     > .selectCollection {
         grid-column: 1 / 3;
         grid-row: 2 / 3;
-        background-color: color-mix(in srgb, ohma.$colors-secondary, white 10%); // TODO Perhaps change
+        @include ohma.layer();
         display: flex;
         max-width: 100%;
-        overflow: scroll;
+        overflow-x: scroll;
         min-height: calc($collectionSize + 5vmin);
         align-items: center;
-        padding: 0;
-        @include ohma.round;
+        padding: 2*ohma.$gap;
+        border-radius: #{ohma.$rounding};
+
         .collection {
             position: relative;
             margin: 0 .2em;

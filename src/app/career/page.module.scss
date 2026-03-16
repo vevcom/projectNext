@@ -13,35 +13,36 @@
         margin-top: 1em;
     }
     .links {
-        display: grid;
-        grid-template-columns: 1fr;
-        grid-template-rows: 1fr 1fr 1fr;
-        gap: 1em;
+        display: flex;
+        flex-direction: column;
+        gap: 2em;
+        margin-bottom: 2em;
         > a {
-            @include ohma.card;
-            @include ohma.layer();
-            transition: box-shadow 0.3s;
-            @include ohma.boxShadow('');
-            &:hover {
-                @include ohma.boxShadow('hover');
-            }
+            @include ohma.neumorphism(var(--secondary-l), var(--secondary-c), var(--secondary-h),5px,10px);
+            border-radius: ohma.$cardRounding;
             text-decoration: none;
+            &:hover {
+                text-decoration: underline;
+            }
             color: ohma.$colors-text;
             display: flex;
             flex-flow: row wrap;
             align-items: center;
-            transition: box-shadow 0.3s;
-            @include ohma.boxShadow('');
-            &:hover {
-                @include ohma.boxShadow('hover');
+            @include ohma.screenMobile {
+                flex-direction: column;
+                width: min-content;
+                align-self: center;
             }
             > h2 {
-                flex: 1;
+                padding: 1em;
+                flex: 2;
                 text-align: center;
                 font-size: ohma.$fonts-xl;
             }
             > .linkImage {
-                border-radius: ohma.$rounding;
+                flex: 1;
+                margin: ohma.$gap;
+                border-radius: calc(#{ohma.$cardRounding} - #{ohma.$gap});
                 overflow: hidden;
             }
         }

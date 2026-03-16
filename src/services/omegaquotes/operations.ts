@@ -26,7 +26,7 @@ export const omegaquoteOperations = {
                 }
             })
 
-            notificationOperations.createSpecial({
+            notificationOperations.createSpecial.internalCall({
                 params: {
                     special: 'NEW_OMEGAQUOTE',
                 },
@@ -34,7 +34,6 @@ export const omegaquoteOperations = {
                     title: 'Ny Omegaquote♪',
                     message: `${results.quote}\n - ${results.author}`,
                 },
-                bypassAuth: true,
             })
             return results
         }
