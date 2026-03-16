@@ -15,7 +15,8 @@ export function displayAmount(amount: number, short: boolean = true, withSign: b
     const amountString = convertedAmount.toFixed(2)
     if (short) return amountString
 
-    const sign = convertedAmount > 0 ? '+' : '-'
+    // For negative numbers '-' is already prefixed.
+    const sign = convertedAmount > 0 ? '+' : ''
 
     return `${withSign && convertedAmount !== 0 ? sign : ''}${amountString} ${currencySymbol}`
 }
