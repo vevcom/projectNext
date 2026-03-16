@@ -6,7 +6,7 @@ import PageWrapper from '@/app/_components/PageWrapper/PageWrapper'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { displayDate } from '@/lib/dates/displayDate'
 import SimpleTable from '@/app/_components/Table/SimpleTable'
-import { displayPrice } from '@/lib/money/convert'
+import { displayAmount } from '@/lib/currency/convert'
 import Link from 'next/link'
 
 export default async function CabinProduct({
@@ -61,7 +61,7 @@ export default async function CabinProduct({
             ]}
             body={product.CabinProductPrice.map(priceObj => [
                 priceObj.description,
-                displayPrice(priceObj.price),
+                displayAmount(priceObj.price),
                 displayDate(priceObj.PricePeriod.validFrom, false),
                 priceObj.memberShare.toString(),
                 priceObj.cronInterval ?? '',
