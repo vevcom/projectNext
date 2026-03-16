@@ -122,7 +122,7 @@ export async function stripeWebhookCallback(event: Stripe.Event): Promise<Respon
             },
         })
     } else {
-        console.error(`Stripe payment is not part of a ledger transaction: ${stripePayment.payment.id}`)
+        logger.error(`Stripe payment is not part of a ledger transaction: ${stripePayment.payment.id}`)
     }
 
     // We only allow one payment attempt per payment intent.

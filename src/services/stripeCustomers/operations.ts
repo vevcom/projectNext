@@ -64,7 +64,7 @@ export const stripeCustomerOperations = {
                         customerId: customer.id,
                     },
                     update: {
-                        // Dont update anything. Let the first created account win.
+                        // Don't update anything. Let the first created account win.
                     },
                     select: {
                         customerId: true,

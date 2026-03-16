@@ -1,5 +1,6 @@
 import { stripe } from '@/lib/stripe'
 import { stripeWebhookCallback } from '@/services/ledger/payments/stripeWebhookCallback'
+import logger from '@/lib/logger'
 
 export async function POST(req: Request) {
     if (!process.env.STRIPE_WEBHOOK_SECRET) {
@@ -17,7 +18,8 @@ export async function POST(req: Request) {
 
     try {
         return await stripeWebhookCallback(event)
-    } catch {
-        return new Response('A server-side error occured.', { status: 500 })
+    } catch (e) {
+        logger.error(`An error occurred during in Stripe webhook callback: ${e}`)
+        return new Response('A server-side error occurred.', { status: 500 })
     }
 }
