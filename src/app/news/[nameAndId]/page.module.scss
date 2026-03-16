@@ -6,6 +6,7 @@
     flex-direction: column;
 }
 .moreNews {
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
     margin: 0 ohma.$minimalPagePadding;

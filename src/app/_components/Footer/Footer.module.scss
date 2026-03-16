@@ -2,8 +2,8 @@
 
 .Footer {
     font-weight: ohma.$fonts-weight-s;
-    background-color: ohma.$colors-gray-800;
-    color: ohma.$colors-white;
+    @include ohma.layer;
+    color: ohma.$colors-text;
     display: grid;
     padding: 10*ohma.$gap 20*ohma.$gap;
     > * {
@@ -32,17 +32,17 @@
             font-weight: ohma.$fonts-weight-m;
             font-size: ohma.$fonts-l
         }
-        border-left: solid 1px ohma.$colors-gray-700;
+        border-left: solid 1px ohma.$colors-text-muted;
         a {
             text-decoration: none;
-            color: ohma.$colors-white;
+            color: ohma.$colors-text;
             &:hover {
                 text-decoration: underline;
             }
         }
     }
     .pwa {
-        @include ohma.yellowIconLink;
+        @include ohma.primaryIconLink;
         padding-left: 0;
         width: 100%;
         height: 100%;
@@ -51,7 +51,7 @@
         display: flex;
         justify-content: flex-start;
         a > * {
-            @include ohma.yellowIconLink;
+            @include ohma.primaryIconLink;
             > *:first-child {
                 padding-left: 0;
             }

@@ -7,7 +7,6 @@ import EditModeSwitch from '@/components/EditModeSwitch/EditModeSwitch'
 import { readSpecialCmsImageFrontpage, updateSpecialCmsImageFrontpage } from '@/services/frontpage/actions'
 import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBars } from '@fortawesome/free-solid-svg-icons'
 import type { PropTypes } from './NavBar'
 
 export default async function MobileNavBar({ profile, canEditSpecialCmsImage }: PropTypes) {
@@ -54,11 +53,10 @@ export default async function MobileNavBar({ profile, canEditSpecialCmsImage }: 
                 />
                 <UserNavigation profile={profile} />
             </div>
-            <Menu items={itemsForMenu} openBtnContent={
-                <div className={styles.menuBtn}>
-                    <FontAwesomeIcon className={styles.icon} icon={faBars}/>
-                </div>
-            }/>
+            <Menu
+                items={itemsForMenu}
+                openBtnContext={'mobile'}
+            />
             <div className={styles.editMode}>
                 <EditModeSwitch />
             </div>
