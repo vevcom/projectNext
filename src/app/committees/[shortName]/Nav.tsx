@@ -3,18 +3,20 @@
 import styles from './Nav.module.scss'
 import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowLeft, faCog, faInfo, faUsers } from '@fortawesome/free-solid-svg-icons'
+import { faArrowLeft, faCog, faInfo, faScroll, faUsers } from '@fortawesome/free-solid-svg-icons'
 import { usePathname } from 'next/navigation'
+import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
 
 type PropTypes = {
-    shortName: string
+    shortName: string,
+    canReadCommitteeApplication: AuthResultTypeAny
 }
 
-export default function Nav({ shortName }: PropTypes) {
+export default function Nav({ shortName, canReadCommitteeApplication }: PropTypes) {
     const pathname = usePathname()
     console.log(pathname)
-
     const adminPath = `/committees/${shortName}/admin`
+    const readPeriodesPath = `/committees/${shortName}/periodes`
     const membersPath = `/committees/${shortName}/members`
     const aboutPath = `/committees/${shortName}/about`
 
@@ -23,6 +25,13 @@ export default function Nav({ shortName }: PropTypes) {
             <Link className={pathname === adminPath ? styles.selected : undefined} href={adminPath}>
                 <FontAwesomeIcon icon={faCog} />
             </Link>
+            {canReadCommitteeApplication.authorized &&
+                <Link
+                    className={pathname === readPeriodesPath ? styles.selected : undefined}
+                    href={readPeriodesPath}>
+                    <FontAwesomeIcon icon={faScroll} />
+                </Link>
+            }
             <Link className={pathname === membersPath ? styles.selected : undefined} href={membersPath}>
                 <FontAwesomeIcon icon={faUsers} />
             </Link>
