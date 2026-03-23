@@ -9,6 +9,7 @@ import { sexConfig, relationshipStatusConfig } from '@/services/users/constants'
 import Textarea from '@/components/UI/Textarea'
 import { RelationshipStatus, SEX } from '@/prisma-generated-pn-types'
 import type { UserFiltered } from '@/services/users/types'
+import styles from './UserProfileSettingsForm.module.scss'
 
 const SeclectRelationshipStatus = SelectConstructor<RelationshipStatus>(
     value => Object.values(RelationshipStatus).find(status => status === value) ?? RelationshipStatus.NOT_SPECIFIED
@@ -45,6 +46,7 @@ export default function UserProfileSettingsForm({ user } : PropTypes) {
                 label="Kjønn"
                 name="sex"
                 options={sexOptions}
+                className={styles.selectBox}
                 defaultValue={user.sex ?? SEX.OTHER}
             />
             <Textarea label="bio" name="bio" defaultValue={user.bio} />
@@ -57,6 +59,7 @@ export default function UserProfileSettingsForm({ user } : PropTypes) {
                 label="Sivilstatus"
                 name="relationshipStatus"
                 options={relationshipOptions}
+                className={styles.selectBox}
                 defaultValue={user.relationshipStatus}
             />
             <Checkbox
