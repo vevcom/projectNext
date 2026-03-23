@@ -28,6 +28,7 @@ import seedFlairs from './seedFlairs'
 import { PrismaClient } from '@/prisma-generated-pn-client'
 import { PrismaPg } from '@prisma/adapter-pg'
 import seedInterestGroups from './seedInterestGroups'
+import seedDevApplicationsAndPeriods from './development/seedDevApplicationsAndPeriods'
 
 export default async function seed(
     shouldMigrate: boolean,
@@ -77,5 +78,6 @@ export default async function seed(
     await seedDevJobAds(prisma)
     await seedDevShop(prisma)
     await seedDevEvents(prisma)
+    await seedDevApplicationsAndPeriods(prisma)
     console.log('seed dev done')
 }
