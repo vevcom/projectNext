@@ -9,7 +9,6 @@ type PropTypes = {
 
 export default function Nav({ shortName }: PropTypes) {
     const pathname = usePathname()
-    console.log(pathname)
 
     const settingsPath = `/committees/${shortName}/admin`
     const membersPath = `/committees/${shortName}/members`

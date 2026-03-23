@@ -41,7 +41,7 @@ export default async function UserAdmin({ children, params }: PropTypes & { chil
                     <SubPageNavBarItem icon={faUser} href={`/users/${username}`}>
                         Profil
                     </SubPageNavBarItem>
-                    <SubPageNavBarItem icon={faCircleDot} href={`/user/${username}/dots`}>
+                    <SubPageNavBarItem icon={faCircleDot} href={`/users/${username}/dots`}>
                         Prikker
                     </SubPageNavBarItem>
                     <SubPageNavBarItem icon={faPaperPlane} href={`/users/${username}/notifications`}>
@@ -50,7 +50,7 @@ export default async function UserAdmin({ children, params }: PropTypes & { chil
                     <SubPageNavBarItem icon={faKey} href={`/users/${username}/permissions`}>
                         Tilganger
                     </SubPageNavBarItem>
-                    {canAssignFlairs.authorized && <SubPageNavBarItem icon={faHatWizard} href={`users/${username}/flairs`}>
+                    {canAssignFlairs.authorized && <SubPageNavBarItem icon={faHatWizard} href={`/users/${username}/flairs`}>
                         Kapper
                     </SubPageNavBarItem>}
                     <SubPageNavBarItem icon={faCog} href={`/users/${username}/settings`}>
