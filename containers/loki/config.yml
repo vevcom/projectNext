@@ -15,6 +15,12 @@ common:
     kvstore:
       store: inmemory
 
+ruler:
+  storage:
+    type: local
+    local:
+      directory: /tmp/loki-rules
+
 schema_config:
   configs:
     - from: 2020-10-24

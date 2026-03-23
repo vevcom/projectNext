@@ -58,7 +58,7 @@ services:
         volumes:
             - ./containers/loki/config.yml:/etc/loki/config.yml:ro
             - loki_data:/data/loki
-        command: -config.file=/etc/loki/config.yml -target=all,-ruler
+        command: -config.file=/etc/loki/config.yml
         restart: unless-stopped
 
     mimir:
