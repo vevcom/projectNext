@@ -3,7 +3,9 @@ import styles from './EventCard.module.scss'
 import CmsImage from '@/components/Cms/CmsImage/CmsImage'
 import { updateEventCmsCoverImageAction } from '@/services/events/actions'
 import { configureAction } from '@/services/configureAction'
+import { formatVevenUri } from '@/lib/urlEncoding'
 import React from 'react'
+import Link from 'next/link'
 import type { EventExpanded } from '@/services/events/types'
 import type { ExpandedCmsImage } from '@/cms/images/types'
 import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
@@ -18,8 +20,8 @@ export default function EventCard({ event, canEdit }: PropTypes) {
     const attendance = `${Math.max(0, Math.min(attendanceRatio, 1)) * 100}%`
     const months = ['January', 'February', 'March', 'April', 'May', 'June',
         'July', 'August', 'September', 'October', 'November', 'December']
-    const link = `/events/${event.name}-${event.id}`
-    return <a href={ link } className={ styles.EventWrapper }>
+    const link = `/events/${formatVevenUri(`${event.name}`, event.id)}`
+    return <Link href={ link } className={ styles.EventWrapper }>
         <div className={ styles.EventHeader }>
             <div className={ styles.EventMainTime }>
                 <b>{event.eventStart.getDate()}</b> - {months[event.eventStart.getMonth()]}
@@ -67,8 +69,10 @@ export default function EventCard({ event, canEdit }: PropTypes) {
                 {event.location}
             </div>
             <div>
-                kl. {event.registrationStart.getHours()} - {event.registrationEnd.getHours()}
+                kl. {(event.takesRegistration ? event.registrationStart : event.eventStart).getHours()}
+                -
+                {(event.takesRegistration ? event.registrationEnd : event.eventEnd).getHours()}
             </div>
         </div>
-    </a>
+    </Link>
 }
