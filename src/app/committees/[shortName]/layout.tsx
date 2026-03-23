@@ -33,6 +33,7 @@ export default async function Committee({ params, children }: PropTypes) {
     ).toJsObject()
 
     return (
+        <>
         <BackdropImage image={committeeLogo}>
             <CommitteeImage
                 canEditCoverImage={canEditCoverImage}
@@ -45,11 +46,11 @@ export default async function Committee({ params, children }: PropTypes) {
                     <div className={styles.content}>
                         { children }
                     </div>
-                    <aside className={styles.navContainer}>
-                        <Nav shortName={(await params).shortName} />
-                    </aside>
+                    
                 </div>
             </PageWrapper>
         </BackdropImage>
+        <Nav shortName={(await params).shortName} />
+        </>
     )
 }
