@@ -55,6 +55,7 @@ services:
 
     loki:
         image: grafana/loki:latest
+        user: root
         volumes:
             - ./containers/loki/config.yml:/etc/loki/config.yml:ro
             - loki_data:/data/loki
