@@ -1,11 +1,9 @@
 import styles from './layout.module.scss'
-import Nav from './Nav'
 import { readUserProfileAction } from '@/services/users/actions'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { ServerSession } from '@/auth/session/ServerSession'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { notFound } from 'next/navigation'
-import Link from 'next/link'
 import type { ReactNode } from 'react'
 import type { PropTypes } from '@/app/users/[username]/page'
 import { SubPageNavBar, SubPageNavBarItem } from '@/components/NavBar/SideNavBar/SubPageNavBar'
@@ -27,7 +25,7 @@ export default async function UserAdmin({ children, params }: PropTypes & { chil
 
     const canAssignFlairs = flairAuth.assignToUser.dynamicFields({}).auth(
         await ServerSession.fromNextAuth()
-    ).toJsObject();
+    ).toJsObject()
 
     const { user } = unwrapActionReturn(await readUserProfileAction({ params: { username } }))
     return (
@@ -40,12 +38,24 @@ export default async function UserAdmin({ children, params }: PropTypes & { chil
                 </main>
                 {/* <Nav username={username} /> */}
                 <SubPageNavBar>
-                    <SubPageNavBarItem icon={faUser} href={`/users/${username}`}>Profil</SubPageNavBarItem>
-                    <SubPageNavBarItem icon={faCircleDot} href={`/user/${username}/dots`}>Prikker</SubPageNavBarItem>
-                    <SubPageNavBarItem icon={faPaperPlane} href={`/users/${username}/notifications`}>Notifikasjoner</SubPageNavBarItem>
-                    <SubPageNavBarItem icon={faKey} href={`/users/${username}/permissions`}>Tilganger</SubPageNavBarItem>
-                    {canAssignFlairs.authorized ? <SubPageNavBarItem icon={faHatWizard} href={`users/${username}/flairs`}>Kapper</SubPageNavBarItem> : null}
-                    <SubPageNavBarItem icon={faCog} href={`/users/${username}/settings`}>Innstillinger</SubPageNavBarItem>
+                    <SubPageNavBarItem icon={faUser} href={`/users/${username}`}>
+                        Profil
+                    </SubPageNavBarItem>
+                    <SubPageNavBarItem icon={faCircleDot} href={`/user/${username}/dots`}>
+                        Prikker
+                    </SubPageNavBarItem>
+                    <SubPageNavBarItem icon={faPaperPlane} href={`/users/${username}/notifications`}>
+                        Notifikasjoner
+                    </SubPageNavBarItem>
+                    <SubPageNavBarItem icon={faKey} href={`/users/${username}/permissions`}>
+                        Tilganger
+                    </SubPageNavBarItem>
+                    {canAssignFlairs.authorized && <SubPageNavBarItem icon={faHatWizard} href={`users/${username}/flairs`}>
+                        Kapper
+                    </SubPageNavBarItem>}
+                    <SubPageNavBarItem icon={faCog} href={`/users/${username}/settings`}>
+                        Innstillinger
+                    </SubPageNavBarItem>
                 </SubPageNavBar>
             </div>
         </PageWrapper>

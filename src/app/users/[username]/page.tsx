@@ -1,7 +1,5 @@
 import styles from './page.module.scss'
-import BorderButton from '@/components/UI/BorderButton'
 import ProfileButton from '@/components/UI/ProfileButton'
-import { Session } from '@/auth/session/Session'
 import { userAuth } from '@/services/users/auth'
 import ProfilePicture from '@/components/User/ProfilePicture'
 import UserDisplayName from '@/components/User/UserDisplayName'

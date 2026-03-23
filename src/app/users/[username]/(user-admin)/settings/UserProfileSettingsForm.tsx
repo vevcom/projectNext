@@ -9,7 +9,7 @@ import { sexConfig, relationshipStatusConfig } from '@/services/users/constants'
 import Textarea from '@/components/UI/Textarea'
 import { RelationshipStatus, SEX } from '@/prisma-generated-pn-types'
 import type { UserFiltered } from '@/services/users/types'
-import styles from "./UserProfileSettingsForm.module.scss"
+import styles from './UserProfileSettingsForm.module.scss'
 
 const SeclectRelationshipStatus = SelectConstructor<RelationshipStatus>(
     value => Object.values(RelationshipStatus).find(status => status === value) ?? RelationshipStatus.NOT_SPECIFIED
