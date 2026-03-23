@@ -320,16 +320,6 @@ export function defineSubOperation<
     DataSchemaImplementationFields,
     OperationImplementationFields
 > {
-    type Implement = SubServiceOperation<
-        Return,
-        OpensTransaction,
-        ParamsSchema,
-        DataSchema,
-        ParamsSchemaImplementationFields,
-        DataSchemaImplementationFields,
-        OperationImplementationFields
-    >['implement']
-
     return {
         implement(implementationArgs) {
             type ImplementationParamsSchema = NonNullable<typeof implementationArgs.implementationParamsSchema>
