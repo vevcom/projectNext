@@ -14,7 +14,7 @@ import type { Prisma, PrismaClient } from '@/prisma-generated-pn-client'
 type IsNever<T> = [T] extends [never] ? true : false;
 
 type RequiredIfDefined<T> = T & {
-  [K in keyof T as undefined extends Required<T>[K] ? never : IsNever<Required<T>[K]> extends true ? never : K]-?: T[K];
+    [K in keyof T as undefined extends Required<T>[K] ? never : IsNever<Required<T>[K]> extends true ? never : K]-?: T[K];
 };
 
 type SchemaOutput<Key extends string, Schema extends z.ZodTypeAny | undefined> = Schema extends undefined
@@ -34,16 +34,26 @@ export type ServiceOperationExecuteArgs<
     DataSchema extends z.ZodTypeAny | undefined,
     ImplementationParamsSchema extends z.ZodTypeAny | undefined
 > = (
-    Unsafe extends 'UNSAFE' ? {
-        params?: unknown,
-        implementationParams?: unknown,
-        data?: unknown,
-    } : (
-        & SchemaInput<'params', ParamsSchema>
-        & SchemaInput<'implementationParams', ImplementationParamsSchema>
-        & SchemaInput<'data', DataSchema>
+        Unsafe extends 'UNSAFE' ? {
+            params?: unknown,
+            implementationParams?: unknown,
+            data?: unknown,
+        } : (
+            & SchemaInput<'params', ParamsSchema>
+            & SchemaInput<'implementationParams', ImplementationParamsSchema>
+            & SchemaInput<'data', DataSchema>
+        )
     )
-)
+
+export type ServiceOperationExecuteArgsOutput<
+    ParamsSchema extends z.ZodTypeAny | undefined,
+    DataSchema extends z.ZodTypeAny | undefined,
+    ImplementationParamsSchema extends z.ZodTypeAny | undefined
+> = (
+        & SchemaOutput<'params', ParamsSchema>
+        & SchemaOutput<'implementationParams', ImplementationParamsSchema>
+        & SchemaOutput<'data', DataSchema>
+    )
 
 export type ServiceOperationOperation<
     OpensTransaction extends boolean,
@@ -61,6 +71,7 @@ export type ServiceOperationOperation<
 export type SubServiceOperationConfig<
     ParamsSchema extends z.ZodTypeAny | undefined,
     DataSchema extends z.ZodTypeAny | undefined,
+    // ImplementationParamsSchema extends z.ZodTypeAny | undefined,
     ParamsSchemaImplementationFields extends object | undefined,
     DataSchemaImplementationFields extends object | undefined,
     OperationImplementationFields extends object | undefined,
@@ -80,11 +91,9 @@ export type ServiceOperationGuardArgs<
     DataSchema extends z.ZodTypeAny | undefined,
     ImplementationParamsSchema extends z.ZodTypeAny | undefined
 > = (
-    & SchemaOutput<'params', ParamsSchema>
-    & SchemaOutput<'implementationParams', ImplementationParamsSchema>
-    & SchemaOutput<'data', DataSchema>
-    & Pick<ServiceOperationContext<OpensTransaction>, 'prisma'>
-)
+        & ServiceOperationExecuteArgsOutput<ParamsSchema, DataSchema, ImplementationParamsSchema>
+        & Pick<ServiceOperationContext<OpensTransaction>, 'prisma'>
+    )
 
 export type ServiceOperationGuard<
     Return,
@@ -118,13 +127,13 @@ export type ServiceOperationImplementationConfig<
     DataSchemaImplementationFields extends object | undefined,
     OperationImplementationFields extends object | undefined,
 > = ServiceOperationImplementationConfigInternalCall<
-        ImplementationParamsSchema,
-        ParamsSchemaImplementationFields,
-        DataSchemaImplementationFields,
-        OperationImplementationFields
-    > & {
+    ImplementationParamsSchema,
+    ParamsSchemaImplementationFields,
+    DataSchemaImplementationFields,
+    OperationImplementationFields
+> & {
     authorizer: ServiceOperationGuard<AuthorizerDynamicFieldsBound, OpensTransaction, ParamsSchema, DataSchema, ImplementationParamsSchema>,
-    ownershipCheck: ServiceOperationGuard<Boolean, OpensTransaction, ParamsSchema, DataSchema, ImplementationParamsSchema>,
+    ownershipCheck: ServiceOperationGuard<boolean, OpensTransaction, ParamsSchema, DataSchema, ImplementationParamsSchema>,
 }
 
 /**
@@ -154,7 +163,7 @@ export type ServiceOperationContext<OpensTransaction extends boolean = boolean> 
  *
  * Read more about async local storage here: https://nodejs.org/api/async_context.html
  */
-const asyncLocalStorage = new AsyncLocalStorage<ServiceOperationContext>()
+const asyncLocalStorage = new AsyncLocalStorage<any>()
 
 /**
  * Runs a callback with a specific service operation context.
@@ -163,21 +172,25 @@ const asyncLocalStorage = new AsyncLocalStorage<ServiceOperationContext>()
  * @param callback The callback to run with the context.
  * @returns The return value of the callback.
  */
-function withContext<T>(
-    contextOverride: Partial<ServiceOperationContext>,
-    callback: (context: ServiceOperationContext) => T,
+function withContext<T, OpensTransaction extends boolean>(
+    contextOverride: Partial<ServiceOperationContext<OpensTransaction>>,
+    opensTransaction: OpensTransaction | undefined,
+    callback: (context: ServiceOperationContext<OpensTransaction>) => T,
 ): T {
     const localContext = asyncLocalStorage.getStore()
 
-    const context: ServiceOperationContext = {
+    const context = {
         prisma: contextOverride.prisma ?? localContext?.prisma ?? globalPrisma,
         session: contextOverride.session ?? localContext?.session ?? Session.empty(),
         bypassAuth: contextOverride.bypassAuth ?? localContext?.bypassAuth ?? false,
     }
 
-    return asyncLocalStorage.run(context, () => callback(context))
-}
+    if (opensTransaction && !('$transaction' in context.prisma)) {
+        throw new Smorekopp('SERVER ERROR', 'Service operation that opens a transaction was called inside a transaction. Nested transaction are not possible.')
+    }
 
+    return asyncLocalStorage.run<T>(context, () => callback(context))
+}
 
 /**
  * This is the return type of the ServiceOperation function. It contains a client function that can be used
@@ -210,12 +223,14 @@ export type ServiceOperation<
 }
 
 function parseArgumentOrThrow<S extends z.ZodTypeAny | undefined, A = undefined>(
-    data: unknown, 
+    data: unknown,
     schema: S | ((arg: A) => S),
-    arg: A, 
+    arg: A,
     name: 'params' | 'data' | 'implementation params',
 ) {
-    if (!data) return data
+    if ((data === undefined) && (schema === undefined)) {
+        return undefined
+    }
 
     const resolvedSchema = typeof schema == "function"
         ? schema(arg)
@@ -223,7 +238,7 @@ function parseArgumentOrThrow<S extends z.ZodTypeAny | undefined, A = undefined>
 
     if (!resolvedSchema) {
         throw new Smorekopp(
-            'BAD PARAMETERS', `Service operation recieved ${name}, but has no data ${name}.`
+            'BAD PARAMETERS', `Service operation recieved ${name}, but has no schema for ${name}.`
         )
     }
 
@@ -240,8 +255,42 @@ function parseArgumentOrThrow<S extends z.ZodTypeAny | undefined, A = undefined>
         console.log(parse)
         throw new Smorekopp('BAD PARAMETERS', `Invalid ${name} passed to service operation.`)
     }
-    
+
     return parse.data
+}
+
+export type SubServiceOperation<
+    Return,
+    OpensTransaction extends boolean,
+    ParamsSchema extends z.ZodTypeAny | undefined,
+    DataSchema extends z.ZodTypeAny | undefined,
+    ParamsSchemaImplementationFields extends object | undefined,
+    DataSchemaImplementationFields extends object | undefined,
+    OperationImplementationFields extends object | undefined,
+> = {
+    implement: <ImplementationParamsSchema extends z.ZodTypeAny | undefined = undefined>(
+        implementationArgs: ServiceOperationImplementationConfig<
+            OpensTransaction,
+            ImplementationParamsSchema,
+            ParamsSchema,
+            DataSchema,
+            ParamsSchemaImplementationFields,
+            DataSchemaImplementationFields,
+            OperationImplementationFields
+        >
+    ) => ServiceOperation<OpensTransaction, Return, ParamsSchema, DataSchema, ImplementationParamsSchema>,
+
+    internalCall: (
+        args:
+            & ServiceOperationImplementationConfigInternalCall<
+                undefined,
+                ParamsSchemaImplementationFields,
+                DataSchemaImplementationFields,
+                OperationImplementationFields
+            >
+            & ServiceOperationExecuteArgs<'SAFE', ParamsSchema, DataSchema, undefined>
+            & Partial<ServiceOperationContext<OpensTransaction>>
+    ) => Promise<Return>,
 }
 
 export function defineSubOperation<
@@ -262,148 +311,122 @@ export function defineSubOperation<
         Return,
         OpensTransaction
     >
-) {
-    const implement = <ImplementationParamsSchema extends z.ZodTypeAny | undefined = undefined>(
-        implementationArgs: ServiceOperationImplementationConfig<
-            OpensTransaction,
-            ImplementationParamsSchema,
-            ParamsSchema,
-            DataSchema,
-            ParamsSchemaImplementationFields,
-            DataSchemaImplementationFields,
-            OperationImplementationFields
-        >
-    ): ServiceOperation<OpensTransaction, Return, ParamsSchema, DataSchema, ImplementationParamsSchema> => {
-        const expectedArgsArePresent = (
-            args: ServiceOperationExecuteArgs<'UNSAFE', ParamsSchema, DataSchema, ImplementationParamsSchema>
-        ): args is ServiceOperationExecuteArgs<'SAFE', ParamsSchema, DataSchema, ImplementationParamsSchema> =>
-            Boolean(args.params) === Boolean(serviceOperationConfig.paramsSchema) &&
-            Boolean(args.data) === Boolean(serviceOperationConfig.dataSchema) &&
-            Boolean(args.implementationParams) === Boolean(implementationArgs.implementationParamsSchema)
+): SubServiceOperation<
+    Return,
+    OpensTransaction,
+    ParamsSchema,
+    DataSchema,
+    ParamsSchemaImplementationFields,
+    DataSchemaImplementationFields,
+    OperationImplementationFields
+> {
+    type Implement = SubServiceOperation<
+        Return,
+        OpensTransaction,
+        ParamsSchema,
+        DataSchema,
+        ParamsSchemaImplementationFields,
+        DataSchemaImplementationFields,
+        OperationImplementationFields
+    >['implement']
 
-        // Guard to check if the prisma client can be used for this service operation.
-        const isAppropriateClient = (
-            prisma: PrismaClient | Prisma.TransactionClient
-        ): prisma is PrismaPossibleTransaction<OpensTransaction> =>
-            !serviceOperationConfig.opensTransaction || '$transaction' in prisma
-
-        const executeOperation = async ({
-            implementationParams, params, data, ...context
-        }:
-            & ServiceOperationExecuteArgs<'UNSAFE', ParamsSchema, DataSchema, ImplementationParamsSchema>
-            & Partial<ServiceOperationContext<OpensTransaction>>
-        ): Promise<Return> => {
-            const parsedArgs = {
-                params: parseArgumentOrThrow(
-                    data,
-                    serviceOperationConfig.paramsSchema,
-                    implementationArgs.paramsSchemaImplementationFields!,
-                    'params'
-                ),
-                data: parseArgumentOrThrow(
-                    data,
-                    serviceOperationConfig.dataSchema,
-                    implementationArgs.dataSchemaImplementationFields!,
-                    'data',
-                ),
-                implementationParams: parseArgumentOrThrow(
-                    implementationParams,
-                    implementationArgs.implementationParamsSchema,
-                    undefined,
-                    'implementation params',
-                ),
-            }
-
-            if (!expectedArgsArePresent(parsedArgs)) {
-                throw new Smorekopp(
-                    'SERVER ERROR',
-                    'Service operation recieved invalid arguments.'
-                )
-            }
-
-            // Then, get the context (which includes the prisma client, the session and the bypassAuth flag).
-            // If a context override is provided, use it. Otherwise, use the context from the async local storage.
-            // If there is no context in the async local storage, use global defaults.
-            return withContext(context, async ({ prisma, bypassAuth, session }) => {
-                if (!isAppropriateClient(prisma)) {
-                    throw new Smorekopp(
-                        'SERVER ERROR',
-                        'Service operation that opens a transaction cannot be called from within a transaction.',
-                    )
-                }
-
-                // Then, authorize user.
-                // This has to be done after the validation because the authorizer might use the data to authorize the user.
-                if (!bypassAuth) {
-                    if (!implementationArgs.authorizer) {
-                        throw new Smorekopp(
-                            'UNAUTHENTICATED',
-                            'This service operation is not externally callable.'
-                        )
-                    }
-
-                    const authorizer = await prismaErrorWrapper(
-                        () => implementationArgs.authorizer({ ...parsedArgs, prisma })
-                    )
-                    const authResult = authorizer.auth(session)
-
-                    if (!authResult.authorized) {
-                        throw new Smorekopp(authResult.status, authResult.getErrorMessage)
-                    }
-                }
-
-                const ownershipCheckResult = await prismaErrorWrapper(
-                    () => implementationArgs.ownershipCheck({
-                        ...parsedArgs,
-                        prisma,
-                    })
-                )
-                if (!ownershipCheckResult) {
-                    throw new Smorekopp('DISSALLOWED', `
-                        This resource cannot be accessed through this implementation
-                        as the resource implementing this resource does not own it.
-                    `)
-                }
-
-                // Finally, call the operation.
-                return prismaErrorWrapper(() =>
-                    serviceOperationConfig.operation(
-                        implementationArgs.operationImplementationFields!
-                    )({ ...parsedArgs, prisma, bypassAuth, session })
-                )
-            })
-        }
-
-        executeOperation.paramsSchema = typeof serviceOperationConfig.paramsSchema == "function" 
-            ? serviceOperationConfig.paramsSchema(implementationArgs.paramsSchemaImplementationFields!)
-            : serviceOperationConfig.paramsSchema
-        executeOperation.dataSchema = typeof serviceOperationConfig.dataSchema == "function" 
-            ? serviceOperationConfig.dataSchema(implementationArgs.dataSchemaImplementationFields!)
-            : serviceOperationConfig.dataSchema
-        executeOperation.implementationParamsSchema = implementationArgs.implementationParamsSchema
-
-        return executeOperation
-    }
     return {
-        implement,
+        implement(implementationArgs) {
+            type ImplementationParamsSchema = NonNullable<typeof implementationArgs.implementationParamsSchema>
+
+            const executeOperation = async ({
+                implementationParams, params, data, ...context
+            }: (
+                    & ServiceOperationExecuteArgs<'UNSAFE', ParamsSchema, DataSchema, ImplementationParamsSchema>
+                    & Partial<ServiceOperationContext<OpensTransaction>>
+                )): Promise<Return> => {
+                const parsedArgs = {
+                    params: parseArgumentOrThrow(
+                        params,
+                        serviceOperationConfig.paramsSchema,
+                        implementationArgs.paramsSchemaImplementationFields!,
+                        'params'
+                    ),
+                    data: parseArgumentOrThrow(
+                        data,
+                        serviceOperationConfig.dataSchema,
+                        implementationArgs.dataSchemaImplementationFields!,
+                        'data',
+                    ),
+                    implementationParams: parseArgumentOrThrow(
+                        implementationParams,
+                        implementationArgs.implementationParamsSchema,
+                        undefined,
+                        'implementation params',
+                    ),
+                } as unknown as ServiceOperationExecuteArgsOutput<ParamsSchema, DataSchema, ImplementationParamsSchema>
+
+                // Then, get the context (which includes the prisma client, the session and the bypassAuth flag).
+                // If a context override is provided, use it. Otherwise, use the context from the async local storage.
+                // If there is no context in the async local storage, use global defaults.
+                return withContext<Promise<Return>, OpensTransaction>(context, serviceOperationConfig.opensTransaction, async ({ prisma, bypassAuth, session }) => {
+                    // Then, authorize user.
+                    // This has to be done after the validation because the authorizer might use the data to authorize the user.
+                    if (!bypassAuth) {
+                        if (!implementationArgs.authorizer) {
+                            throw new Smorekopp(
+                                'UNAUTHENTICATED',
+                                'This service operation is not externally callable.'
+                            )
+                        }
+
+                        const authorizer = await prismaErrorWrapper(
+                            () => implementationArgs.authorizer({ ...parsedArgs, prisma })
+                        )
+                        const authResult = authorizer.auth(session)
+
+                        if (!authResult.authorized) {
+                            throw new Smorekopp(authResult.status, authResult.getErrorMessage)
+                        }
+                    }
+
+                    const ownershipCheckResult = await prismaErrorWrapper(
+                        () => implementationArgs.ownershipCheck({
+                            ...parsedArgs,
+                            prisma,
+                        })
+                    )
+                    if (!ownershipCheckResult) {
+                        throw new Smorekopp('DISSALLOWED', `
+                            This resource cannot be accessed through this implementation
+                            as the resource implementing this resource does not own it.
+                        `)
+                    }
+
+                    // Finally, call the operation.
+                    return prismaErrorWrapper(() =>
+                        serviceOperationConfig.operation(
+                            implementationArgs.operationImplementationFields!
+                        )({ ...parsedArgs, prisma, bypassAuth, session })
+                    )
+                })
+            }
+
+            executeOperation.paramsSchema = typeof serviceOperationConfig.paramsSchema == "function"
+                ? serviceOperationConfig.paramsSchema(implementationArgs.paramsSchemaImplementationFields!)
+                : serviceOperationConfig.paramsSchema
+            executeOperation.dataSchema = typeof serviceOperationConfig.dataSchema == "function"
+                ? serviceOperationConfig.dataSchema(implementationArgs.dataSchemaImplementationFields!)
+                : serviceOperationConfig.dataSchema
+            executeOperation.implementationParamsSchema = implementationArgs.implementationParamsSchema
+
+            return executeOperation
+        },
         /**
          * Implements the sub-operation right away with require-nothing authorizer and "no" ownership check.
          */
-        internalCall: (
-            args:
-            & ServiceOperationImplementationConfigInternalCall<
-                undefined,
-                ParamsSchemaImplementationFields,
-                DataSchemaImplementationFields,
-                OperationImplementationFields
-            >
-            & ServiceOperationExecuteArgs<'SAFE', ParamsSchema, DataSchema, undefined>
-            & Partial<ServiceOperationContext<OpensTransaction>>
-        ) => implement({
-            ...args,
-            authorizer: () => RequireNothing.staticFields({}).dynamicFields({}),
-            ownershipCheck: () => true,
-        })(args)
+        internalCall(args) {
+            return (this.implement<undefined> as any)({
+                ...args,
+                authorizer: () => RequireNothing.staticFields({}).dynamicFields({}),
+                ownershipCheck: () => true,
+            })(args)
+        }
     }
 }
 
@@ -419,31 +442,21 @@ export function defineOperation<
     authorizer: ServiceOperationGuard<AuthorizerDynamicFieldsBound, OpensTransaction, ParamsSchema, DataSchema, undefined>,
     operation: ServiceOperationOperation<OpensTransaction, ParamsSchema, DataSchema, Return>
 }): ServiceOperation<OpensTransaction, Return, ParamsSchema, DataSchema, undefined> {
-    return defineSubOperation({
+    return defineSubOperation<
+        Return,
+        OpensTransaction,
+        ParamsSchema,
+        DataSchema,
+        undefined,
+        undefined,
+        undefined
+    >({
         opensTransaction,
         operation: () => operation,
-        paramsSchema: paramsSchema !== undefined ? () => paramsSchema : undefined,
-        dataSchema: dataSchema !== undefined ? () => dataSchema : undefined,
-    }).implement({
+        paramsSchema,
+        dataSchema,
+    }).implement<undefined>({
         authorizer,
         ownershipCheck: () => true,
     })
 }
-
-export type SubServiceOperation<
-    Return,
-    OpensTransaction extends boolean = false,
-    ParamsSchema extends z.ZodTypeAny | undefined = undefined,
-    DataSchema extends z.ZodTypeAny | undefined = undefined,
-    ParamsSchemaImplementationFields extends object | undefined = undefined,
-    DataSchemaImplementationFields extends object | undefined = undefined,
-    OperationImplementationFields extends object | undefined = undefined,
-> = ReturnType<typeof defineSubOperation<
-    Return,
-    OpensTransaction,
-    ParamsSchema,
-    DataSchema,
-    ParamsSchemaImplementationFields,
-    DataSchemaImplementationFields,
-    OperationImplementationFields
->>
