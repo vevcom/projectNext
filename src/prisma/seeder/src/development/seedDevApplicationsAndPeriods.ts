@@ -43,13 +43,13 @@ export default async function seedDevApplicationsAndPeriods(prisma: PrismaClient
 
         ]
     })
-    const promises = applicationPeriods.map(prevApplicationPeriod => (
+    const promises = applicationPeriods.map(applicationPeriod => (
         committees.map(async (committee) => {
             const participation = await prisma.committeeParticipationInApplicationPeriod.create({
                 data: {
                     applicationPeriod: {
                         connect: {
-                            id: prevApplicationPeriod.id
+                            id: applicationPeriod.id
                         }
                     },
                     committee: {
@@ -63,7 +63,11 @@ export default async function seedDevApplicationsAndPeriods(prisma: PrismaClient
             await prisma.application.createMany({
                 data: users.map(user => ({
                     priority: participation.committeeId,
-                    text: applicationText,
+                    text:
+                        committee.name
+                        + applicationPeriod.startDate.toUTCString()
+                        + applicationPeriod.endDate.toUTCString()
+                        + applicationText,
                     userId: user.id,
                     applicationPeriodCommiteeId: participation.id,
                     applicationPeriodId: participation.applicationPeriodId,
