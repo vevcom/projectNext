@@ -90,6 +90,7 @@ export const committeeParticipationOperations = {
                     applicationPeriod: {
                         select: {
                             startDate: true,
+                            endPriorityDate: true,
                             endDate: true,
                         }
                     }
@@ -100,6 +101,7 @@ export const committeeParticipationOperations = {
                     applicationCount: period._count.applications,
                     startDate: period.applicationPeriod.startDate,
                     endDate: period.applicationPeriod.endDate,
+                    endPriorityDate: period.applicationPeriod.endPriorityDate,
                 })
             )
             )

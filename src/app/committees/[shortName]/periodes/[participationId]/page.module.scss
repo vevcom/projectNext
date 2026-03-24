@@ -1,7 +1,6 @@
 @use '@/styles/ohma';
 //TODO: fix styling to be aligned to the future styling pr
 
-.applicationsContainer {}
 
 .applicationContainer { 
     margin-top: 1em;
@@ -22,12 +21,12 @@
     }
 }
 
-.profilePicture {}
 
 .applicantName {
     color: black;
 }
 
+.applicationsContainer {}
+.profilePicture {}
 .applicationTextContainer {}
-
 .applicationText {}

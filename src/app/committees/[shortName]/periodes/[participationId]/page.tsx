@@ -1,5 +1,4 @@
 import styles from './page.module.scss'
-import getCommittee from '@/app/committees/[shortName]/getCommittee'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { readCommitteeApplicationsInPeriodAction } from '@/services/applications/committeeParticipation/actions'
 import ProfilePicture from '@/components/User/ProfilePicture'
@@ -55,5 +54,4 @@ export default async function PeriodeCommitteePage({ params }: PropTypes) {
         </div >
     )
 }
-
 

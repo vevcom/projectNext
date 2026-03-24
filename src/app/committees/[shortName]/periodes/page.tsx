@@ -11,6 +11,14 @@ export type PropTypes = {
     }>
 }
 
+type periodType = {
+    participationId: number;
+    applicationCount: number;
+    startDate: Date;
+    endDate: Date;
+    endPriorityDate: Date;
+}
+
 export default async function PeriodeCommitteePage({ params }: PropTypes) {
     const committee = await getCommittee(params)
     const shortName = (await params).shortName
@@ -19,26 +27,47 @@ export default async function PeriodeCommitteePage({ params }: PropTypes) {
     )
     if (committeePeriodes.length === 0) { return 'ingen søknadsperioder funnet' }
     return (
-        <table>
-            <tr>
-                <th>Start Dato</th>
-                <th>Slutt Dato</th>
-                <th>Søknader</th>
-                <th>Søknadstall</th>
+        <table className={styles.periodTable}>
+            <tr className={styles.periodHeading}>
+                <th className={styles.tableEntry}>Start dato</th>
+                <th className={styles.tableEntry}>Slutt dato</th>
+                <th className={styles.tableEntry}>Omprioritering slutt dato</th>
+                <th className={styles.tableEntry}>Søknader</th>
+                <th className={styles.tableEntry}>Søknadstall</th>
             </tr>
             {committeePeriodes.map((period, index) => (
-                <tr key={index} >
-                    <td>{period.startDate.toLocaleDateString('en-GB')}</td>
-                    <td>{period.endDate.toLocaleDateString('en-GB')}</td>
-                    <td> <Link href={`/committees/${shortName}/periodes/${period.participationId}`} >
-                        <FontAwesomeIcon icon={faLink}>
-                        </FontAwesomeIcon>
-                    </Link>
-                    </td>
-                    <td>{period.applicationCount}</td>
-                </tr>
+                <PeriodSection shortName={shortName} key={index} period={period}></PeriodSection>
             ))
             }
         </table >
+    )
+}
+
+function PeriodSection({ period, shortName }: { period: periodType, shortName: string }) {
+    'use client' //Use client to show user correct local time
+    const now = Date.now()
+    const isCurrentPeriod = (now > period.startDate.getTime()) && (now < period.endPriorityDate.getTime())
+    const entriesClassName = `${styles.tableEntry} ${isCurrentPeriod && styles.currentPeriodEntry}`
+    return (
+        <tr className={styles.periodSection}>
+            <td className={entriesClassName} >
+                {period.startDate.toLocaleDateString('en-GB')},
+                kl: {period.startDate.toLocaleTimeString('en-GB')}
+            </td>
+            <td className={entriesClassName} >
+                {period.endDate.toLocaleDateString('en-GB')},
+                kl: {period.endDate.toLocaleTimeString('en-GB')}
+            </td>
+            <td className={entriesClassName} >
+                {period.endPriorityDate.toLocaleDateString('en-GB')},
+                kl: {period.endPriorityDate.toLocaleTimeString('en-GB')}
+            </td>
+            <td className={entriesClassName} > <Link href={`/committees/${shortName}/periodes/${period.participationId}`} >
+                <FontAwesomeIcon icon={faLink}>
+                </FontAwesomeIcon>
+            </Link>
+            </td>
+            <td className={entriesClassName} >{period.applicationCount}</td>
+        </tr>
     )
 }
