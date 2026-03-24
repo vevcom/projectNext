@@ -49,7 +49,7 @@ export default async function RootLayout({ children }: PropTypes) {
     ).toJsObject()
 
     return (
-        <html className={'html'} lang="en">
+        <html lang="en">
             <body className={`${inter.className} ${styles.body}`}>
                 <SessionProvider session={session}>
                     <DefaultPermissionsProvider defaultPermissions={defaultPermissions}>

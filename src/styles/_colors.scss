@@ -30,6 +30,7 @@ $primary:    var(--primary);
 $secondary:  var(--secondary);
 $tertiary:   var(--secondary);
 $border:     var(--primary);
+$shadowColor:rgba(0, 0, 0, 0.1);
 
 $layer:      var(--layer);
 $layerone:   var(--layer); // TODO Emulate secondary with one layer.
