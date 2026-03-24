@@ -15,7 +15,7 @@ export default async function seedDevImages(prisma: PrismaClient) {
                 visibilityAdmin: {
                     create: {}
                 },
-                visibilityRead: {
+                visibilityRegular: {
                     create: {}
                 }
             }

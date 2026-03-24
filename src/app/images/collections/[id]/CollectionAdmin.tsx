@@ -14,17 +14,16 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCog, faEye, faUpload } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/navigation'
 import { useContext, useState } from 'react'
-import type { VisibilityMatrix } from '@/services/visibility/types'
+import type { DoubleLevelVisibilityMatrix } from '@/services/visibility/types'
 import type { ExpandedImageCollection } from '@/services/images/collections/types'
 
 type PropTypes = {
     collection: ExpandedImageCollection
-    visibilityAdmin: VisibilityMatrix
-    visibilityRead: VisibilityMatrix
+    doubleLevelVisibilityMatrix: DoubleLevelVisibilityMatrix
 }
 
-export default function CollectionAdmin({ collection, visibilityAdmin, visibilityRead }: PropTypes) {
-    console.log(visibilityAdmin, visibilityRead)
+export default function CollectionAdmin({ collection, doubleLevelVisibilityMatrix }: PropTypes) {
+    console.log(doubleLevelVisibilityMatrix)
     const { id: collectionId } = collection
     const router = useRouter()
     const pagingContext = useContext(ImagePagingContext)

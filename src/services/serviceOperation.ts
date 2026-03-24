@@ -469,7 +469,7 @@ export function defineSubOperation<
             ...args,
             authorizer: () => RequireNothing.staticFields({}).dynamicFields({}),
             ownershipCheck: () => true,
-        })(args)
+        })(args),
     }
 }
 
@@ -483,7 +483,7 @@ export function defineOperation<
     paramsSchema?: ParamsSchema,
     dataSchema?: DataSchema,
     opensTransaction?: OpensTransaction,
-    authorizer: AuthorizerGetter<OpensTransaction, ParamsSchema, DataSchema, undefined, PrismaWhereFilter>,
+    authorizer: AuthorizerGetter<OpensTransaction, ParamsSchema, DataSchema, undefined, PrismaWhereFilter | undefined>,
     operation: ServiceOperationOperation<OpensTransaction, ParamsSchema, DataSchema, Return, PrismaWhereFilter>
 }): ServiceOperation<OpensTransaction, Return, ParamsSchema, DataSchema, undefined> {
     return defineSubOperation<

@@ -1,69 +1,151 @@
+import '@pn-server-only'
 import { visibilityOperations } from './operations'
-import type { ArgsAuthGetterAndOwnershipCheck, PrismaPossibleTransaction } from '@/services/serviceOperation'
+import { defineOperation, type PrismaPossibleTransaction } from '@/services/serviceOperation'
 import type { AuthorizerDynamicFieldsBound } from '@/auth/authorizer/Authorizer'
 import type { Prisma } from '@/prisma-generated-pn-types'
-import type { visibilitySchemas } from './schemas'
 import type { z } from 'zod'
+import type { DoubleLevelVisibilityMatrix, VisibilityMatrix } from './types'
 
-type ParamsSchema = typeof visibilitySchemas.params
-type OwnedVisibility = Prisma.ArticleGetPayload<{
-    include: {
-        coverImage: true,
-        articleSections: {
-            include: {
-                cmsImage: true,
-                cmsParagraph: true,
-                cmsLink: true,
-            }
+type Authorizers<
+    ImplementationParamsSchema extends z.ZodTypeAny,
+> = {
+    readDoubleLevelMatrix: (
+        args: {
+            prisma: PrismaPossibleTransaction<false>,
+            params: z.infer<ImplementationParamsSchema>,
+            doubleLevelMatrix: DoubleLevelVisibilityMatrix,
+        }
+    ) => AuthorizerDynamicFieldsBound | Promise<AuthorizerDynamicFieldsBound>
+    updateRegularLevel: (
+        args: {
+            prisma: PrismaPossibleTransaction<false>,
+            implementationParams: z.infer<ImplementationParamsSchema>,
+            doubleLevelMatrix: DoubleLevelVisibilityMatrix,
+        }
+    ) => AuthorizerDynamicFieldsBound | Promise<AuthorizerDynamicFieldsBound>,
+    updateAdminLevel: (
+        args: {
+            prisma: PrismaPossibleTransaction<false>,
+            implementationParams: z.infer<ImplementationParamsSchema>,
+            doubleLevelMatrix: DoubleLevelVisibilityMatrix,
+        }
+    ) => AuthorizerDynamicFieldsBound | Promise<AuthorizerDynamicFieldsBound>
+}
+
+const prismaInclude = {
+    requirements: {
+        include: {
+            conditions: true
         }
     }
+} as const
+
+type ReadVisibilityDoubleLevel<ImplementationParamsSchema extends z.ZodTypeAny> = (
+    args: {
+        include: typeof prismaInclude,
+        prisma: PrismaPossibleTransaction<false>,
+        implementationParams: z.infer<ImplementationParamsSchema>
+    }
+) => Promise<{
+    regularLevel: Prisma.VisibilityGetPayload<{ include: typeof prismaInclude }>,
+    adminLevel: Prisma.VisibilityGetPayload<{ include: typeof prismaInclude }>
 }>
-/**
- * This utility implements the read and update operations for visibility
- */
-export function implementVisibilityOperations<
+
+export function implementDoubleLevelVisibilityOperations<
     const ImplementationParamsSchema extends z.ZodTypeAny
 >({
     implementationParamsSchema,
     authorizers,
-    ownedVisibility,
+    readDoubleLevel,
 }: {
     implementationParamsSchema: ImplementationParamsSchema,
-    authorizers: {
-        update: (
-            args: {
-                prisma: PrismaPossibleTransaction<false>,
-                implementationParams: z.infer<ImplementationParamsSchema>
-            }
-        ) => AuthorizerDynamicFieldsBound | Promise<AuthorizerDynamicFieldsBound>
-        read: (
-            args: {
-                prisma: PrismaPossibleTransaction<false>,
-                implementationParams: z.infer<ImplementationParamsSchema>
-            }
-        ) => AuthorizerDynamicFieldsBound | Promise<AuthorizerDynamicFieldsBound>
-    },
-    ownedVisibility: (
-        args: {
-            prisma: PrismaPossibleTransaction<false>,
-            implementationParams: z.infer<ImplementationParamsSchema>
-        }
-    ) => Promise<OwnedVisibility>
+    authorizers: Authorizers<ImplementationParamsSchema>,
+    readDoubleLevel: ReadVisibilityDoubleLevel<ImplementationParamsSchema>,
 }) {
-    const ownershipCheckVisibility = async (
-        args: Omit<ArgsAuthGetterAndOwnershipCheck<false, ParamsSchema, undefined, ImplementationParamsSchema>, 'data'>
-    ) => (await ownedVisibility(args)).id === args.params.visibilityId
+    const readDoubleLevelMatrixInternal = async ({
+        prisma,
+        params
+    } : {
+        prisma: PrismaPossibleTransaction<false>,
+        params: z.infer<ImplementationParamsSchema>
+    }): Promise<DoubleLevelVisibilityMatrix> => {
+        const visibilties = await readDoubleLevel({
+            prisma,
+            implementationParams: params,
+            include: prismaInclude
+        })
+
+        return {
+            regularLevel: toMatrix(visibilties.regularLevel),
+            adminLevel: toMatrix(visibilties.adminLevel)
+        }
+    }
 
     return {
-        read: visibilityOperations.read.implement({
-            implementationParamsSchema,
-            authorizer: authorizers.read,
-            ownershipCheck: ownershipCheckVisibility
+        readDoubleLevelMatrixInternal,
+        readDoubleLevelMatrix: defineOperation({
+            paramsSchema: implementationParamsSchema,
+            authorizer: async (args) =>
+                authorizers.readDoubleLevelMatrix({
+                    prisma: args.prisma,
+                    params: args.params,
+                    doubleLevelMatrix: await readDoubleLevelMatrixInternal({
+                        params: args.params, prisma: args.prisma
+                    })
+                }),
+            operation: async args => readDoubleLevelMatrixInternal({
+                params: args.params,
+                prisma: args.prisma
+            })
         }),
-        update: visibilityOperations.update.implement({
+        updateRegularLevel: visibilityOperations.update.implement<ImplementationParamsSchema>({
             implementationParamsSchema,
-            authorizer: authorizers.update,
-            ownershipCheck: ownershipCheckVisibility
+            authorizer: async (args) =>
+                authorizers.updateRegularLevel({
+                    prisma: args.prisma,
+                    implementationParams: args.implementationParams,
+                    doubleLevelMatrix: await readDoubleLevelMatrixInternal({
+                        params: args.implementationParams, prisma: args.prisma
+                    })
+                }),
+            ownershipCheck: async ({ params, prisma, implementationParams }) => (await readDoubleLevel({
+                include: prismaInclude,
+                prisma,
+                implementationParams,
+            })).regularLevel.id === params.visibilityId
+        }),
+        updateAdminLevel: visibilityOperations.update.implement<ImplementationParamsSchema>({
+            implementationParamsSchema,
+            authorizer: async (args) =>
+                authorizers.updateAdminLevel({
+                    prisma: args.prisma,
+                    implementationParams: args.implementationParams,
+                    doubleLevelMatrix: await readDoubleLevelMatrixInternal({
+                        params: args.implementationParams, prisma: args.prisma
+                    })
+                }),
+            ownershipCheck: async ({ params, prisma, implementationParams }) => (await readDoubleLevel({
+                include: prismaInclude,
+                prisma,
+                implementationParams,
+            })).adminLevel.id === params.visibilityId
         })
     } as const
+}
+
+function toMatrix(visibility: Prisma.VisibilityGetPayload<{ include: typeof prismaInclude }>): VisibilityMatrix {
+    return {
+        requirements: visibility.requirements.map(requirement => ({
+            conditions: requirement.conditions.map(condition => (
+                condition.type === 'ORDER' ? {
+                    groupId: condition.groupId,
+                    type: condition.type,
+                    order: condition.order
+                } : {
+                    groupId: condition.groupId,
+                    type: condition.type,
+                }
+            ))
+        }))
+    }
 }

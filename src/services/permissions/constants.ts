@@ -208,7 +208,9 @@ export const permissionConfig = {
     },
     IMAGE_ADMIN: {
         name: 'Bildeadministrator',
-        description: 'kan administrere bilder',
+        description: `
+            Kan administrere alle bilder, uavhengig av synelighet - dette er altså en bypass.
+        `,
         category: 'bilder',
     },
     IMAGE_COLLECTION_CREATE: {

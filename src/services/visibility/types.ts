@@ -16,3 +16,8 @@ export type VisibilityRequirement = {
 export type VisibilityMatrix = {
     requirements: VisibilityRequirement[]
 }
+
+export type DoubleLevelVisibilityMatrix = {
+    regularLevel: VisibilityMatrix,
+    adminLevel: VisibilityMatrix
+}

@@ -7,7 +7,6 @@ import seedDevLockers from './development/seedDevLockers'
 import seedCms from './seedCms'
 import seedDevOmegaquotes from './development/seedDevOmegaquotes'
 import seedOrder from './seedOrder'
-import SeedSpecialImageCollections from './SeedSpecialImageCollections'
 import dobbelOmega from './dobbelOmega/dobbelOmega'
 import seedNotificationChannels from './seedNotificationsChannels'
 import seedDevGroups from './development/seedDevGroups'
@@ -28,7 +27,6 @@ import seedFlairs from './seedFlairs'
 import seedInterestGroups from './seedInterestGroups'
 import { prisma } from '@/prisma/client'
 
-
 export default async function seed(
     shouldMigrate: boolean,
     seedDevData: boolean,
@@ -37,7 +35,6 @@ export default async function seed(
     const enableLogging = logging === undefined ? true : logging
     if (enableLogging) console.log('seeding standard data....')
     await seedOrder(prisma)
-    await SeedSpecialImageCollections(prisma)
     await seedImages(prisma)
     await seedCms(prisma)
     await seedMail(prisma)

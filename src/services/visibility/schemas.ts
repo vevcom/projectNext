@@ -1,7 +1,6 @@
 import { z } from 'zod'
 import { VisibilityRequirementGroupType } from '@/prisma-generated-pn-types'
 
-
 const baseSchema = z.object({
     requirements: z.array(
         z.object({
