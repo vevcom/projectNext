@@ -7,5 +7,5 @@ export type ProfileButtonProps = LinkProps & React.AnchorHTMLAttributes<HTMLAnch
 }
 
 export default function ProfileButton({ children, ...props }: ProfileButtonProps) {
-    return <Link className={styles.button} {...props}>{ children }</Link>
+    return <Link {...props} className={styles.button}>{ children }</Link>
 }

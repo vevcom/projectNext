@@ -69,16 +69,6 @@ export default function ThemeForm() {
             },
         },
         {
-            name: 'Polaris',
-            colors: {
-                primary: 'hsl(229,71%,53%)',
-                secondary: 'hsl(202,19%,20%)',
-                layer: 'hsla(226,67%,36%,0.34)',
-                text: 'hsl(0, 0%, 80%)',
-                textMuted: 'hsl(0, 0%, 70%)',
-            },
-        },
-        {
             name: 'Aegis',
             colors: {
                 primary: 'hsl(0,89%,52%)',
@@ -89,16 +79,6 @@ export default function ThemeForm() {
             },
         },
         {
-            name: 'Origin',
-            colors: {
-                primary: 'hsl(0,0%,100%)',
-                secondary: 'hsl(0,0%,100%)',
-                layer: 'hsla(0,0%,39%,0.1)',
-                text: 'hsl(0,0%,0%)',
-                textMuted: 'hsl(0,0%,20%)',
-            },
-        },
-        {
             name: 'Old timer',
             colors: {
                 primary: 'hsl(50,100%,52%)',
@@ -106,16 +86,6 @@ export default function ThemeForm() {
                 layer: 'hsl(0, 0%, 12%)',
                 text: 'hsl(0,0%,87%)',
                 textMuted: 'hsl(0,0%,64%)',
-            },
-        },
-        {
-            name: 'Dragonlore',
-            colors: {
-                primary: 'linear-gradient(to right, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C)',
-                secondary: 'hsl(210, 5%, 12%)',
-                layer: 'linear-gradient(to right, #BF953F, #FCF6BA, #B38728, #FBF5B7, #AA771C)',
-                text: 'hsl(0,0%,10%)',
-                textMuted: 'hsl(0,0%,20%)',
             },
         },
     ]

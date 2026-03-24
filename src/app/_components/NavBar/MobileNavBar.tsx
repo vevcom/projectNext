@@ -55,7 +55,7 @@ export default async function MobileNavBar({ profile, canEditSpecialCmsImage }: 
             </div>
             <Menu
                 items={itemsForMenu}
-                openBtnContext={'mobile'}
+                openBtnVariant={'mobile'}
             />
             <div className={styles.editMode}>
                 <EditModeSwitch />

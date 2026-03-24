@@ -27,12 +27,13 @@ export default async function LoggedInLandingPage() {
     const events = unwrapActionReturn(await readCurrentEventsAction({ params: { tags: null } }))
         .slice(0, MAX_NUMBER_OF_ELEMENTS)
 
+    const session = await ServerSession.fromNextAuth()
     const canEditFrontpageCmsImage = frontpageAuth.updateSpecialCmsImage.dynamicFields({}).auth(
-        await ServerSession.fromNextAuth()
+        session
     ).toJsObject()
 
     const canEditEventCmsImage = eventAuth.updateCmsCoverImage.dynamicFields({}).auth(
-        await ServerSession.fromNextAuth()
+        session
     ).toJsObject()
 
     return (

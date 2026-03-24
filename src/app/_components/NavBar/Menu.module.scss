@@ -21,20 +21,7 @@
     justify-content: flex-start;
     align-items: flex-start;
     overflow-y: auto;
-    .close {
-        position: absolute;
-        display: none;
-        top: 0;
-        left: 0;
-        margin: .6rem;
-        background-color: transparent;
-        border: none;
-        &:hover {
-            cursor: pointer;
-        }
-        width: 50px;
-        height: 50px;
-    }
+
     div {
         margin: ohma.$gap;
         position: relative;
@@ -108,19 +95,13 @@
             justify-content: center;
             > div > a {
                 font-size: x-large;
-                width: calc(100dvw - (ohma.$gap * 4));
+                width: calc(100dvw - (#{ohma.$gap} * 4));
             }
         }
         &.closeMenu {
             animation: none;
         }
-        > .close {
-            width: 3em;
-            height: 3em;
-            margin: .5em;
-            left: unset;
-            right: 0;
-        }
+
         animation: radiateMobile .4s ease-out forwards;
         &.closeMenu {
             animation: deradiateMobile .4s ease-in forwards;
