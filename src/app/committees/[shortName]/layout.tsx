@@ -7,7 +7,6 @@ import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import CommitteeImage from '@/components/CommitteeImage/CommitteeImage'
 import { committeeAuth } from '@/services/groups/committees/auth'
 import { ServerSession } from '@/auth/session/ServerSession'
-import { applicationAuth } from '@/services/applications/auth'
 import { committeeParticipationAuth } from '@/services/applications/committeeParticipation/auth'
 import type { ReactNode } from 'react'
 
