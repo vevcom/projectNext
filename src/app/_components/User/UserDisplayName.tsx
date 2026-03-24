@@ -1,6 +1,6 @@
+import styles from './UserDisplayName.module.scss'
 import Flair from '@/components/Flair/Flair'
 import type { UserFiltered } from '@/services/users/types'
-import styles from './UserDisplayName.module.scss'
 
 
 // TODO: Fix flairs / badges

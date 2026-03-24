@@ -7,8 +7,8 @@ import { configureAction } from '@/services/configureAction'
 import { updateUserProfileAction } from '@/services/users/actions'
 import { sexConfig, relationshipStatusConfig } from '@/services/users/constants'
 import Textarea from '@/components/UI/Textarea'
-import { RelationshipStatus, SEX } from '@/prisma-generated-pn-types'
 import type { UserFiltered } from '@/services/users/types'
+import { RelationshipStatus, SEX } from '@/prisma-generated-pn-types'
 
 const SeclectRelationshipStatus = SelectConstructor<RelationshipStatus>(
     value => Object.values(RelationshipStatus).find(status => status === value) ?? RelationshipStatus.NOT_SPECIFIED

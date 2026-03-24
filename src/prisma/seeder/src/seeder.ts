@@ -25,9 +25,9 @@ import seedEvents from './seedEvent'
 import seedCabin from './seedCabin'
 import seedPermissions from './seedPermissions'
 import seedFlairs from './seedFlairs'
-import { PrismaClient } from '@/prisma-generated-pn-client'
-import { PrismaPg } from '@prisma/adapter-pg'
 import seedInterestGroups from './seedInterestGroups'
+import { PrismaPg } from '@prisma/adapter-pg'
+import { PrismaClient } from '@/prisma-generated-pn-client'
 
 export default async function seed(
     shouldMigrate: boolean,

@@ -54,7 +54,7 @@ $textBoxBackgroundColor: ohma.$colors-white;
             @include ohma.screenMobile {
 
                 box-shadow: ohma.$colors-secondary 0 0 40px;
-                padding-top: $padding
+                padding-top: $padding;
             }
 
             > h2 {
