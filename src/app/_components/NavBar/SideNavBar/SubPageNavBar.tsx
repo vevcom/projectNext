@@ -16,7 +16,7 @@ export function SubPageNavBarItem({ children, icon, href }:NavBarItemProps) {
     const pathname = usePathname()
     const page = pathname.split('/').pop()
     const thisPage = href?.split('/').pop()
-    
+
     return (
         <div className={styles.linkContainer}>
             <Link href={new URL(href)} className={styles.link}>
