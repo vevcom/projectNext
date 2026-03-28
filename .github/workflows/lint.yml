@@ -29,4 +29,7 @@ jobs:
 
     - name: lint
       run: npm run lint
+      
+    - name: lint style
+      run: npm run style:lint
   
