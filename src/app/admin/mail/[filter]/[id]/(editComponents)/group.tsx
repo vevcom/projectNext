@@ -21,7 +21,8 @@ export default function EditGroup({
         throw Error('Could not find group')
     }
     const session = useSession()
-    const canAddToList = !session.loading && mailAuth.createMailingListGroupRelation.dynamicFields({}).auth(session.session).authorized
+    const canAddToList = !session.loading &&
+        mailAuth.createMailingListGroupRelation.dynamicFields({}).auth(session.session).authorized
 
     return <div>
         <h2>{focusedGroup.id}</h2>

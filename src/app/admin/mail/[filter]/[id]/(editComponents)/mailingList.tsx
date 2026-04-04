@@ -34,7 +34,8 @@ export default function EditMailingList({
 
     const session = useSession()
     const canAdmin = !session.loading && mailingListAuth.update.dynamicFields({}).auth(session.session).authorized
-    const canAddRelation = !session.loading && mailAuth.createAliasMailingListRelation.dynamicFields({}).auth(session.session).authorized
+    const canAddRelation = !session.loading &&
+        mailAuth.createAliasMailingListRelation.dynamicFields({}).auth(session.session).authorized
 
     return <>
         <h2>{focusedMailingList.name}</h2>

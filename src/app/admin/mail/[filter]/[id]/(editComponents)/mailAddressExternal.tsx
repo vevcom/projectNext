@@ -34,7 +34,8 @@ export default function EditMailAddressExternal({
     const session = useSession()
     const canUpdate = !session.loading && mailAddressExternalAuth.update.dynamicFields({}).auth(session.session).authorized
     const canDestroy = !session.loading && mailAddressExternalAuth.destroy.dynamicFields({}).auth(session.session).authorized
-    const canAddToList = !session.loading && mailAuth.createMailingListExternalRelation.dynamicFields({}).auth(session.session).authorized
+    const canAddToList = !session.loading &&
+        mailAuth.createMailingListExternalRelation.dynamicFields({}).auth(session.session).authorized
 
     return <>
         <h2>{focusedAddress.address}</h2>

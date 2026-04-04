@@ -28,7 +28,8 @@ export default function EditMailAlias({
 
     const session = useSession()
     const canAdmin = !session.loading && mailAliasAuth.update.dynamicFields({}).auth(session.session).authorized
-    const canAddToList = !session.loading && mailAuth.createAliasMailingListRelation.dynamicFields({}).auth(session.session).authorized
+    const canAddToList = !session.loading &&
+        mailAuth.createAliasMailingListRelation.dynamicFields({}).auth(session.session).authorized
 
     return <>
         <h2>{focusedAlias.address}</h2>

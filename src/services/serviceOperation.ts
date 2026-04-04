@@ -105,8 +105,9 @@ export type AuthorizerGetter<
 > = (
     args: ArgsAuthGetterAndOwnershipCheck<OpensTransaction, ParamsSchema, DataSchema, ImplementationParamsSchema>
 ) =>
-        | AuthorizerDynamicFieldsBound<'USER_NOT_REQUIERED_FOR_AUTHORIZED' | 'USER_REQUIERED_FOR_AUTHORIZED', PrismaWhereFilter>
-        | Promise<
+        | AuthorizerDynamicFieldsBound<
+            'USER_NOT_REQUIERED_FOR_AUTHORIZED' | 'USER_REQUIERED_FOR_AUTHORIZED', PrismaWhereFilter
+        > | Promise<
             AuthorizerDynamicFieldsBound<
                 'USER_NOT_REQUIERED_FOR_AUTHORIZED' | 'USER_REQUIERED_FOR_AUTHORIZED', PrismaWhereFilter
             >

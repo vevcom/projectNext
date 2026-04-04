@@ -21,7 +21,8 @@ export default function EditUser({
     }
 
     const session = useSession()
-    const canAddToList = !session.loading && mailAuth.createMailingListUserRelation.dynamicFields({}).auth(session.session).authorized
+    const canAddToList = !session.loading &&
+        mailAuth.createMailingListUserRelation.dynamicFields({}).auth(session.session).authorized
 
     return <div>
         <h2>{`${focusedUser.firstname} ${focusedUser.lastname}`}</h2>
