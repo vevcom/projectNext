@@ -1,5 +1,4 @@
-import { NTNUEmailDomain } from './ConfigVars'
-import { validMailAdressDomains } from '@/services/mail/ConfigVars'
+import { NTNUEmailDomain, validMailAdressDomains } from '@/services/mail/constants'
 import { z } from 'zod'
 
 const validAddress = z.string().email().min(2).max(50)

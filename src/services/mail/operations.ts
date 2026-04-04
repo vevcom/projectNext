@@ -646,4 +646,4 @@ export const mailOperations = {
             }
         },
     }),
-}
+} as const

@@ -88,6 +88,26 @@ const myServiceOperation = defineOperation({
 export const myAction = makeAction(myServiceOperation)
 ```
 
+### Service Folder Structure
+
+Each service domain follows a standard file layout. See `src/services/omegaquotes/` as the canonical example:
+
+```
+src/services/[domain]/
+├── actions.ts      # 'use server' — makeAction() wrappers, one per operation
+├── auth.ts         # Authorizer definitions (RequirePermission.staticFields etc.)
+├── constants.ts    # Domain constants and config values (env vars, field selections)
+├── operations.ts   # defineOperation() calls, exported as `{ ... } as const`
+├── schemas.ts      # Plain Zod schemas (no ValidationBase)
+└── types.ts        # TypeScript types specific to this domain (if needed)
+```
+
+Rules:
+- **`constants.ts`** — not `ConfigVars.ts` or any other name
+- **`operations.ts`** — the exported object must end with `as const`
+- **`actions.ts`** — must have `'use server'` at the top; only calls `makeAction()`
+- Sub-domains (e.g. `mail/alias/`) follow the same layout within their subfolder
+
 ### Prisma Schema Organization
 
 Prisma schemas are split into multiple domain-specific files in `src/prisma/schema/`:

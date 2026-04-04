@@ -53,4 +53,4 @@ export const aliasOperations = {
             })
         },
     }),
-}
+} as const

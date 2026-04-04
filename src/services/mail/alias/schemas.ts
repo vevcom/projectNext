@@ -1,4 +1,4 @@
-import { validMailAdressDomains } from '@/services/mail/ConfigVars'
+import { validMailAdressDomains } from '@/services/mail/constants'
 import { z } from 'zod'
 
 const validAddress = z.string().email().refine(

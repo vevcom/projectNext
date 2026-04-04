@@ -39,4 +39,4 @@ export const mailAddressExternalOperations = {
                 where: { id: params.id },
             }),
     }),
-}
+} as const

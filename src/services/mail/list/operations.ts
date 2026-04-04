@@ -39,4 +39,4 @@ export const mailingListOperations = {
                 where: { id: params.id },
             }),
     }),
-}
+} as const
