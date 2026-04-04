@@ -87,7 +87,8 @@ export const imageOperations = {
             const { file, ...meta } = data
             const buffer = Buffer.from(await file.arrayBuffer())
             const avifBuffer = await sharp(buffer).toFormat('avif').avif(avifConvertionOptions).toBuffer()
-            const avifFile = new File([avifBuffer], 'image.avif', { type: 'image/avif' })
+            const avifBlob = avifBuffer as unknown as Uint8Array<ArrayBuffer>
+            const avifFile = new File([avifBlob], 'image.avif', { type: 'image/avif' })
 
             const uploadPromises = [
                 createOneInStore(avifFile, ['avif'], imageSizes.small),

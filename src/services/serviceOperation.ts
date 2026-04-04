@@ -403,7 +403,11 @@ export function defineSubOperation<
                         }
 
                         const authorizer = await prismaErrorWrapper(
-                            () => implementationArgs.authorizer({ ...args, prisma })
+                            () => implementationArgs.authorizer(
+                                { ...args, prisma } as unknown as ArgsAuthGetterAndOwnershipCheck<
+                                    OpensTransaction, ParamsSchema, DataSchema, ImplementationParamsSchema
+                                >
+                            )
                         )
                         const authResult = authorizer.auth(session)
 
@@ -417,10 +421,11 @@ export function defineSubOperation<
                 })()
 
                 const ownershipCheckResult = await prismaErrorWrapper(
-                    () => implementationArgs.ownershipCheck({
-                        ...args,
-                        prisma,
-                    })
+                    () => implementationArgs.ownershipCheck(
+                        { ...args, prisma } as unknown as ArgsAuthGetterAndOwnershipCheck<
+                            OpensTransaction, ParamsSchema, DataSchema, ImplementationParamsSchema
+                        >
+                    )
                 )
                 if (!ownershipCheckResult) {
                     throw new Smorekopp('DISSALLOWED', `
@@ -432,7 +437,14 @@ export function defineSubOperation<
                 return prismaErrorWrapper(() =>
                     serviceOperationConfig.operation(
                         implementationArgs.operationImplementationFields!
-                    )({ ...args, prisma, bypassAuth, session }, prismaWhereFilter)
+                    )(
+                        { ...args, prisma, bypassAuth, session } as unknown as (
+                            ParamsObject<ParamsSchema, 'INFERED'>
+                            & DataObject<DataSchema, 'INFERED'>
+                            & ServiceOperationContext<OpensTransaction>
+                        ),
+                        prismaWhereFilter
+                    )
                 )
             })
         }

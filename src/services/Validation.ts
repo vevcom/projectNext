@@ -1,4 +1,5 @@
 import { ServerError } from './error'
+import type { ErrorMessage } from './error'
 import { z } from 'zod'
 import { zfd } from 'zod-form-data'
 
@@ -169,7 +170,7 @@ export class Validation<
         const parse = this.detailedSchema.refine(
             this.refiner ? this.refiner.fcn : () => true, this.refiner ? this.refiner.message : 'Noe uforusett skjedde'
         ).safeParse(data)
-        if (!parse.success) throw new ServerError('BAD PARAMETERS', parse.error.issues)
+        if (!parse.success) throw new ServerError('BAD PARAMETERS', parse.error.issues as ErrorMessage[])
         return parse.data
     }
 }
@@ -218,15 +219,16 @@ export class ValidationPartial<
         }
         return {
             success: true,
-            data: this.transformer(parse.data)
+            data: this.transformer(parse.data as PureTsTypeOfSchema<Type, true>)
         }
     }
 
     detailedValidate(data: PureTsTypeOfSchema<Detailed, true> | unknown) {
         const parse = this.detailedSchema.partial().refine(
-            this.refiner ? this.refiner.fcn : () => true, this.refiner ? this.refiner.message : 'Noe uforusett skjedde'
+            this.refiner ? (this.refiner.fcn as (data: unknown) => boolean) : () => true,
+            this.refiner ? this.refiner.message : 'Noe uforusett skjedde'
         ).safeParse(data)
-        if (!parse.success) throw new ServerError('BAD PARAMETERS', parse.error.issues)
+        if (!parse.success) throw new ServerError('BAD PARAMETERS', parse.error.issues as ErrorMessage[])
         return parse.data
     }
 }

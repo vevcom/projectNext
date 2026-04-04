@@ -1,7 +1,7 @@
 import { errorCodes, type ErrorCode, type ErrorMessage } from '@/services/error'
 import { ParseError, Smorekopp } from '@/services/error'
 import type { AuthStatus } from '@/auth/authorizer/AuthResult'
-import type { SafeParseError } from 'zod'
+import type { ZodSafeParseError as SafeParseError } from 'zod'
 import type { ActionError, ActionReturn } from './actionTypes'
 
 /**
@@ -34,7 +34,7 @@ export function createZodActionError<T>(parse: SafeParseError<T>): ActionError {
         success: false,
         httpCode: 400,
         errorCode: 'BAD PARAMETERS',
-        error: parse.error.issues,
+        error: parse.error.issues as ErrorMessage[],
     }
 }
 

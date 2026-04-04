@@ -4,7 +4,7 @@ import { z } from 'zod'
 
 const baseSchema = z.object({
     companyId: z.coerce.number({
-        errorMap: () => ({ message: 'Velg en bedrift' }),
+        error: 'Velg en bedrift',
     }).int().positive().int(),
     articleName: z.string().max(50, 'max lengde 50').min(2, 'min lengde 2'),
     description: z.string().max(200, 'max lengde 200').min(2, 'min lengde 2').or(z.literal('')),

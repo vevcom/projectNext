@@ -2,7 +2,9 @@ import { FIELD_IS_PRESENT_VALUE } from './constants'
 import { dateMatchCron } from '@/lib/dates/cron'
 import { z } from 'zod'
 import { zfd } from 'zod-form-data'
-import type { EnumLike } from 'zod'
+
+// EnumLike was removed from zod v4 top-level exports; define it locally
+type EnumLike = Readonly<Record<string, string | number>>
 
 export namespace Zpn {
     /**
@@ -12,7 +14,7 @@ export namespace Zpn {
     export const checkboxOrBoolean = ({ message }: { label: string, message?: string }) => z.union([
         z.boolean(), // mosltly for the backend
         zfd.repeatable(z.literal('on', {
-            errorMap: message ? () => ({ message }) : undefined,
+            error: message ?? undefined,
         }).or(z.literal(FIELD_IS_PRESENT_VALUE)).array()) // mostly for the frontend (forms)
     ]).transform(value => {
         if (typeof value === 'boolean') return value

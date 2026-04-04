@@ -7,7 +7,9 @@ import type { articleSectionSchemas } from './schemas'
 import type { AuthorizerDynamicFieldsBound } from '@/auth/authorizer/Authorizer'
 import type { Prisma } from '@/prisma-generated-pn-types'
 import type { z } from 'zod'
-import type { ArgsAuthGetterAndOwnershipCheck, PrismaPossibleTransaction } from '@/services/serviceOperation'
+import type {
+    ArgsAuthGetterAndOwnershipCheck, AuthorizerGetter, PrismaPossibleTransaction,
+} from '@/services/serviceOperation'
 
 type ParamsSchema = typeof articleSectionSchemas.params
 type OwnedArticleSection = Prisma.ArticleSectionGetPayload<{
@@ -44,10 +46,20 @@ export function implementUpdateArticleSectionOperations<
     ) => Promise<OwnedArticleSection[]>
     destroyOnEmpty: boolean
 }) {
+    // TypeScript 6 + Zod v4: deferred conditional types prevent the compiler from proving
+    // that ArgsAuthGetterAndOwnershipCheck structurally contains { prisma, implementationParams }.
+    // These casts are safe at runtime since the arguments are validated before use.
+    type ImplementArgs = {
+        prisma: PrismaPossibleTransaction<false>,
+        implementationParams: z.infer<ImplementationParamsSchema>
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const castAuthorizer = authorizer as AuthorizerGetter<false, any, any, ImplementationParamsSchema, undefined>
+
     const ownershipCheckArticleSection = async (
         args: Omit<ArgsAuthGetterAndOwnershipCheck<false, ParamsSchema, undefined, ImplementationParamsSchema>, 'data'>
     ) => {
-        const ownedArticleSectionsComputed = await ownedArticleSections(args)
+        const ownedArticleSectionsComputed = await ownedArticleSections(args as unknown as ImplementArgs)
         const ownedIds = ownedArticleSectionsComputed.map(section => section.id)
         const ownedNames = ownedArticleSectionsComputed.map(section => section.name)
         if (args.params.articleSectionId) return ownedIds.includes(args.params.articleSectionId)
@@ -73,41 +85,41 @@ export function implementUpdateArticleSectionOperations<
     return {
         update: articleSectionOperations.update.implement({
             implementationParamsSchema,
-            authorizer,
+            authorizer: castAuthorizer,
             ownershipCheck: ownershipCheckArticleSection,
         }),
         addPart: articleSectionOperations.addPart.implement({
             implementationParamsSchema,
-            authorizer,
+            authorizer: castAuthorizer,
             ownershipCheck: ownershipCheckArticleSection,
         }),
         removePart: articleSectionOperations.removePart.implement({
             implementationParamsSchema,
-            authorizer,
+            authorizer: castAuthorizer,
             ownershipCheck: ownershipCheckArticleSection,
             operationImplementationFields: { destroyOnEmpty }
         }),
         cmsParagraph: cmsParagraphOperations.updateContent.implement({
             implementationParamsSchema,
-            authorizer,
+            authorizer: castAuthorizer,
             ownershipCheck: async (args) => {
-                const { paragraphIds } = await getOwnedIds(args)
+                const { paragraphIds } = await getOwnedIds(args as unknown as ImplementArgs)
                 return paragraphIds.includes(args.params.paragraphId)
             }
         }),
         cmsImage: cmsImageOperations.update.implement({
             implementationParamsSchema,
-            authorizer,
+            authorizer: castAuthorizer,
             ownershipCheck: async (args) => {
-                const { cmsImageIds } = await getOwnedIds(args)
+                const { cmsImageIds } = await getOwnedIds(args as unknown as ImplementArgs)
                 return cmsImageIds.includes(args.params.cmsImageId)
             }
         }),
         cmsLink: cmsLinkOperations.update.implement({
             implementationParamsSchema,
-            authorizer,
+            authorizer: castAuthorizer,
             ownershipCheck: async (args) => {
-                const { linkIds } = await getOwnedIds(args)
+                const { linkIds } = await getOwnedIds(args as unknown as ImplementArgs)
                 return linkIds.includes(args.params.linkId)
             }
         })
