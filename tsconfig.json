@@ -94,7 +94,8 @@
       "@/*": [
         "./src/*"
       ]
-    }
+    },
+    "noUncheckedSideEffectImports": false
   },
   "include": [
     "next-env.d.ts",
