@@ -160,11 +160,20 @@ export const imageOperations = {
     destroyImage: defineSubOperation({
         paramsSchema: () => imageSchemas.paramsSchemaImage,
         operation: () => async ({ prisma, params }) => {
+            const image = await prisma.image.findUniqueOrThrow({
+                where: {
+                    id: params.imageId,
+                },
+            })
             await prisma.image.delete({
                 where: {
                     id: params.imageId,
                 },
             })
+            await imageStore.destroyFile(image.fsLocationOriginal)
+            await imageStore.destroyFile(image.fsLocationSmallSize)
+            await imageStore.destroyFile(image.fsLocationMediumSize)
+            await imageStore.destroyFile(image.fsLocationLargeSize)
         }
     }),
 
