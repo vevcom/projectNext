@@ -296,9 +296,9 @@ export const permissionConfig = {
         description: 'kan opprette, oppdatere og slette epostalias',
         category: 'mail',
     },
-    MAILINGLIST_CREATE: {
-        name: 'Lage epostliste',
-        description: 'kan lage epostliste',
+    MAILINGLIST_READ: {
+        name: 'Les epostliste',
+        description: 'kan lese epostliste',
         category: 'mail',
     },
     MAILINGLIST_ADMIN: {

@@ -100,7 +100,7 @@ enum Permission {
   MAILALIAS_ADMIN
 
   // Mailing list
-  MAILINGLIST_CREATE
+  MAILINGLIST_READ
   MAILINGLIST_ADMIN
 
   // External mail addresses
