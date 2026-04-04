@@ -7,7 +7,7 @@ import { mailAddressExternalOperations } from '@/services/mail/mailAddressExtern
 import { mailOperations } from '@/services/mail/operations'
 import { afterEach, describe, expect, test } from '@jest/globals'
 
-// NOTE: This test doesn't check auth, since I think this should be testing in a seperate file -Theodor
+// NOTE: This test doesn't check auth, since I think this should be testing in a separate file -Theodor
 
 const testGroupIds: number[] = []
 
