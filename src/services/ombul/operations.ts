@@ -4,12 +4,16 @@ import { ombulSchemas } from './schemas'
 import { defineOperation } from '@/services/serviceOperation'
 import { cmsImageOperations } from '@/cms/images/operations'
 import { ServerError } from '@/services/error'
-import { destroyFile } from '@/lib/store/destroyFile'
-import { createFile } from '@/lib/store/createFile'
+import { implementStore } from '@/lib/store/implementStore'
 import { readSpecialImageCollection } from '@/services/images/collections/read'
 import { imageOperations } from '@/services/images/operations'
 import { notificationOperations } from '@/services/notifications/operations'
 import { z } from 'zod'
+
+const ombulStore = implementStore({
+    staticStorePrefix: 'ombul',
+    allowedExtentions: ['pdf'],
+})
 
 const read = defineOperation({
     authorizer: () => ombulAuth.read.dynamicFields({}),
@@ -113,7 +117,7 @@ const destroy = defineOperation({
         })
         if (!ombul) throw new ServerError('NOT FOUND', 'Ombul ikke funnet.')
 
-        await destroyFile('ombul', ombul.fsLocation)
+        await ombulStore.destroyFile(ombul.fsLocation)
 
         await prisma.ombul.delete({
             where: {
@@ -148,11 +152,9 @@ const create = defineOperation({
         }
         const issueNumber = givenIssueNumber || latestIssueNumber
 
-        //upload the file to the store volume
-        const ret = await createFile(ombulFile, 'ombul', ['pdf'])
+        const ret = await ombulStore.createFile(ombulFile, ['pdf'])
         const fsLocation = ret.fsLocation
 
-        // create coverimage
         const ombulCoverCollection = await readSpecialImageCollection('OMBULCOVERS')
         const coverImage = await imageOperations.create({
             params: {
@@ -226,7 +228,7 @@ const updateFile = defineOperation({
         id: z.number()
     }),
     operation: async ({ data, prisma, params }) => {
-        const ret = await createFile(data.ombulFile, 'ombul', ['pdf'])
+        const ret = await createFile(data.ombulFile, ['pdf'])
         const fsLocation = ret.fsLocation
 
         const ombul = await prisma.ombul.findUnique({
@@ -255,7 +257,7 @@ const updateFile = defineOperation({
         })
 
         //delete the old file
-        await destroyFile('ombul', oldFsLocation)
+        await destroyFile(oldFsLocation)
 
         return ombulUpdated
     }

@@ -1,3 +1,4 @@
+import '@pn-server-only'
 import { standardImageAuth } from './auth'
 import { implementSpecialCollection } from '@/services/images/subservice/special/implementSpecialCollection'
 import { defineOperation } from '@/services/serviceOperation'
@@ -13,7 +14,8 @@ const standardImageCollectionOperations = implementSpecialCollection({
         description: `
             Bilder som er nødvendige for nettsiden.
             Denne koleksjonen er helt \'statisk\' og skal og kan ikke modifiseres.
-            Dersom et standardbilde (et bilde i denne kolleksjonen) mangler vil bildet genereres ut fra konfigurasjon.
+            Dersom et standardbilde (et bilde i denne kolleksjonen) mangler vil bildet genereres ut fra
+            sin statisk bestemte konfigurasjon.
         `,
     }
 })

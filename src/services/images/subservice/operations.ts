@@ -4,12 +4,17 @@ import { allowedExtensions, avifConvertionOptions, imageSizes } from './constant
 import { visibilityOperations } from '@/services/visibility/operations'
 import { defineSubOperation } from '@/services/serviceOperation'
 import { ServerError } from '@/services/error'
-import { createFile } from '@/lib/store/createFile'
+import { implementStore } from '@/lib/store/implementStore'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import sharp from 'sharp'
 import { File } from 'node:buffer'
 import type { Prisma } from '@/prisma-generated-pn-types'
 import type { z } from 'zod'
+
+const imageStore = implementStore({
+    staticStorePrefix: 'images',
+    allowedExtentions: [...allowedExtensions, 'avif'],
+})
 
 export const imageOperations = {
     destroyCollection: defineSubOperation({
@@ -72,7 +77,7 @@ export const imageOperations = {
                 createOneInStore(avifFile, ['avif'], imageSizes.small),
                 createOneInStore(avifFile, ['avif'], imageSizes.medium),
                 createOneInStore(avifFile, ['avif'], imageSizes.large),
-                createFile(imageFile, 'images', [...allowedExtensions]),
+                imageStore.createFile(imageFile, [...allowedExtensions]),
             ]
 
             const [smallSize, mediumSize, largeSize, original] = await Promise.all(uploadPromises)
@@ -185,7 +190,7 @@ export const imageOperations = {
  * @returns
  */
 async function createOneInStore(file: File, allowedExt: string[], size: number) {
-    const ret = await createFile(file, 'images', allowedExt, async (buffer) => await sharp(buffer).resize(size, size, {
+    const ret = await imageStore.createFile(file, allowedExt, async (buffer) => await sharp(buffer).resize(size, size, {
         fit: sharp.fit.inside,
         withoutEnlargement: true
     }).toBuffer())
