@@ -225,6 +225,25 @@ const session = useSession()
 const canDoThing = !session.loading && someAuth.operation.dynamicFields({}).auth(session.session).authorized
 ```
 
+### Operation Naming Conventions
+
+For every `defineOperation()` call, the operation key must align with its schema and authorizer keys:
+
+- `dataSchema` and `paramsSchema`: if taken from a schemas object, the key must match the operation name exactly — e.g. operation `destroyFoo` must use `fooSchemas.destroyFoo`, not `fooSchemas.createFoo`.
+- `authorizer`: must reference the same operation name — e.g. `fooAuth.destroyFoo.dynamicFields({})`, not `fooAuth.createFoo`.
+
+When create and destroy operations share the same schema shape, define a shared variable and reference it from both keys in the schemas object:
+
+```typescript
+// schemas.ts
+const fooRelation = z.object({ ... })
+
+export const fooSchemas = {
+    createFoo: fooRelation,
+    destroyFoo: fooRelation,
+}
+```
+
 ### Form Handling
 
 Forms typically use Server Actions with FormData:
