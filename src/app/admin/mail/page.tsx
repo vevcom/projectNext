@@ -1,13 +1,13 @@
-'use server' //todo: why is this use server???
 import styles from './page.module.scss'
 import CreateMailAlias from './createMailAliasForm'
 import CreateMailingList from './createMailingListForm'
 import CreateMailaddressExternal from './createMailaddressExternalForm'
 import MailListView from './mailListView'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
-import { aliasOperations } from '@/services/mail/alias/operations'
-import { mailingListOperations } from '@/services/mail/list/operations'
-import { mailAddressExternalOperations } from '@/services/mail/mailAddressExternal/operations'
+import { readMailAliasesAction } from '@/services/mail/alias/actions'
+import { readMailingListsAction } from '@/services/mail/list/actions'
+import { readMailAddressExternalAction } from '@/services/mail/mailAddressExternal/actions'
+import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { ServerSession } from '@/auth/session/ServerSession'
 
 export default async function MailSettings() {
@@ -24,9 +24,9 @@ export default async function MailSettings() {
         mailingLists,
         mailAddressesExternal,
     ] = await Promise.all([
-        aliasOperations.readMany({ bypassAuth: true }),
-        mailingListOperations.readMany({ bypassAuth: true }),
-        mailAddressExternalOperations.readMany({ bypassAuth: true }),
+        readMailAliasesAction().then(unwrapActionReturn),
+        readMailingListsAction().then(unwrapActionReturn),
+        readMailAddressExternalAction().then(unwrapActionReturn),
     ])
 
     return (

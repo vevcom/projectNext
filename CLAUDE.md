@@ -189,6 +189,25 @@ Files that must run only on the server import `'@pn-server-only'` at the top. Th
 - `ParseError` - Validation/parsing errors
 - Error handling is managed internally by the ServiceOperation system via `makeAction()`
 
+### Calling Actions from the Frontend
+
+**IMPORTANT**: Frontend code (`src/app/`) must NEVER import from `operations.ts` directly. Always go through `actions.ts`. This applies to both server components (pages) and client components.
+
+In server components (pages), use `unwrapActionReturn` from `@/app/redirectToErrorPage` to unwrap the result — it returns the data directly on success and redirects to the error page on failure:
+
+```typescript
+import { readMailAliasesAction } from '@/services/mail/alias/actions'
+import { unwrapActionReturn } from '@/app/redirectToErrorPage'
+
+const aliases = unwrapActionReturn(await readMailAliasesAction())
+```
+
+Action call signatures depend on whether the operation has `paramsSchema` and/or `dataSchema`:
+- No schemas → `action()`
+- `paramsSchema` only → `action({ params: { ... } })`
+- `dataSchema` only → `action({ data: { ... } })` or `action(formData)`
+- Both → `action({ params: { ... } }, { data: { ... } })`
+
 ### Form Handling
 
 Forms typically use Server Actions with FormData:
