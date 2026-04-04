@@ -1,5 +1,5 @@
 'use client'
-import { useSession } from '@/auth/session/useSession'
+import useAuthorizer from '@/hooks/useAuthorizer'
 import Form from '@/components/Form/Form'
 import { SelectNumber } from '@/components/UI/Select'
 import { createMailingListGroupRelationAction } from '@/services/mail/actions'
@@ -20,9 +20,7 @@ export default function EditGroup({
     if (!focusedGroup) {
         throw Error('Could not find group')
     }
-    const session = useSession()
-    const canAddToList = !session.loading &&
-        mailAuth.createMailingListGroupRelation.dynamicFields({}).auth(session.session).authorized
+    const canAddToList = useAuthorizer({ authorizer: mailAuth.createMailingListGroupRelation.dynamicFields({}) }).authorized
 
     return <div>
         <h2>{focusedGroup.id}</h2>

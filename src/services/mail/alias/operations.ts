@@ -14,7 +14,7 @@ export const aliasOperations = {
     }),
 
     readMany: defineOperation({
-        authorizer: () => mailAliasAuth.read.dynamicFields({}),
+        authorizer: () => mailAliasAuth.readMany.dynamicFields({}),
         operation: async ({ prisma }): Promise<MailAlias[]> =>
             prisma.mailAlias.findMany(),
     }),

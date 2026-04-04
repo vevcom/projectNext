@@ -12,7 +12,7 @@ import {
 import { updateMailingListAction, destroyMailingListAction } from '@/services/mail/list/actions'
 import { mailingListAuth } from '@/services/mail/list/auth'
 import { mailAuth } from '@/services/mail/auth'
-import { useSession } from '@/auth/session/useSession'
+import useAuthorizer from '@/hooks/useAuthorizer'
 import { useRouter } from 'next/navigation'
 import type { MailAddressExternal, MailAlias } from '@/prisma-generated-pn-types'
 import type { MailFlowObject } from '@/services/mail/types'
@@ -32,10 +32,10 @@ export default function EditMailingList({
 
     const focusedMailingList = data.mailingList[0]
 
-    const session = useSession()
-    const canAdmin = !session.loading && mailingListAuth.update.dynamicFields({}).auth(session.session).authorized
-    const canAddRelation = !session.loading &&
-        mailAuth.createAliasMailingListRelation.dynamicFields({}).auth(session.session).authorized
+    const canAdmin = useAuthorizer({ authorizer: mailingListAuth.update.dynamicFields({}) }).authorized
+    const canAddRelation = useAuthorizer({
+        authorizer: mailAuth.createAliasMailingListRelation.dynamicFields({})
+    }).authorized
 
     return <>
         <h2>{focusedMailingList.name}</h2>

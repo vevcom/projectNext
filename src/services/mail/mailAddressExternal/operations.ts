@@ -13,7 +13,7 @@ export const mailAddressExternalOperations = {
     }),
 
     readMany: defineOperation({
-        authorizer: () => mailAddressExternalAuth.read.dynamicFields({}),
+        authorizer: () => mailAddressExternalAuth.readMany.dynamicFields({}),
         operation: async ({ prisma }): Promise<MailAddressExternal[]> =>
             prisma.mailAddressExternal.findMany(),
     }),

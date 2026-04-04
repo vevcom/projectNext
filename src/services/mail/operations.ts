@@ -568,7 +568,7 @@ export const mailOperations = {
     }),
 
     destroyAliasMailingListRelation: defineOperation({
-        dataSchema: mailSchemas.createAliasMailingListRelation,
+        dataSchema: mailSchemas.destroyAliasMailingListRelation,
         authorizer: () => mailAuth.destroyAliasMailingListRelation.dynamicFields({}),
         operation: async ({ prisma, data }): Promise<MailAliasMailingList> =>
             prisma.mailAliasMailingList.delete({
@@ -579,7 +579,7 @@ export const mailOperations = {
     }),
 
     destroyMailingListExternalRelation: defineOperation({
-        dataSchema: mailSchemas.createMailingListExternalRelation,
+        dataSchema: mailSchemas.destroyMailingListExternalRelation,
         authorizer: () => mailAuth.destroyMailingListExternalRelation.dynamicFields({}),
         operation: async ({ prisma, data }): Promise<MailingListMailAddressExternal> =>
             prisma.mailingListMailAddressExternal.delete({
@@ -590,7 +590,7 @@ export const mailOperations = {
     }),
 
     destroyMailingListUserRelation: defineOperation({
-        dataSchema: mailSchemas.createMailingListUserRelation,
+        dataSchema: mailSchemas.destroyMailingListUserRelation,
         authorizer: () => mailAuth.destroyMailingListUserRelation.dynamicFields({}),
         operation: async ({ prisma, data }): Promise<MailingListUser> =>
             prisma.mailingListUser.delete({
@@ -601,7 +601,7 @@ export const mailOperations = {
     }),
 
     destroyMailingListGroupRelation: defineOperation({
-        dataSchema: mailSchemas.createMailingListGroupRelation,
+        dataSchema: mailSchemas.destroyMailingListGroupRelation,
         authorizer: () => mailAuth.destroyMailingListGroupRelation.dynamicFields({}),
         operation: async ({ prisma, data }): Promise<MailingListGroup> =>
             prisma.mailingListGroup.delete({

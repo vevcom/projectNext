@@ -6,7 +6,7 @@ import { createAliasMailingListRelationAction } from '@/services/mail/actions'
 import { updateMailAliasAction, destroyMailAliasAction } from '@/services/mail/alias/actions'
 import { mailAliasAuth } from '@/services/mail/alias/auth'
 import { mailAuth } from '@/services/mail/auth'
-import { useSession } from '@/auth/session/useSession'
+import useAuthorizer from '@/hooks/useAuthorizer'
 import { useRouter } from 'next/navigation'
 import type { MailFlowObject } from '@/services/mail/types'
 import type { MailingList } from '@/prisma-generated-pn-types'
@@ -26,10 +26,8 @@ export default function EditMailAlias({
         throw Error('Could not find alias')
     }
 
-    const session = useSession()
-    const canAdmin = !session.loading && mailAliasAuth.update.dynamicFields({}).auth(session.session).authorized
-    const canAddToList = !session.loading &&
-        mailAuth.createAliasMailingListRelation.dynamicFields({}).auth(session.session).authorized
+    const canAdmin = useAuthorizer({ authorizer: mailAliasAuth.update.dynamicFields({}) }).authorized
+    const canAddToList = useAuthorizer({ authorizer: mailAuth.createAliasMailingListRelation.dynamicFields({}) }).authorized
 
     return <>
         <h2>{focusedAlias.address}</h2>

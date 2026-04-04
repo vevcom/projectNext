@@ -1,5 +1,5 @@
 'use client'
-import { useSession } from '@/auth/session/useSession'
+import useAuthorizer from '@/hooks/useAuthorizer'
 import Form from '@/components/Form/Form'
 import { SelectNumber } from '@/components/UI/Select'
 import { createMailingListUserRelationAction } from '@/services/mail/actions'
@@ -20,9 +20,7 @@ export default function EditUser({
         throw Error('Could not find user')
     }
 
-    const session = useSession()
-    const canAddToList = !session.loading &&
-        mailAuth.createMailingListUserRelation.dynamicFields({}).auth(session.session).authorized
+    const canAddToList = useAuthorizer({ authorizer: mailAuth.createMailingListUserRelation.dynamicFields({}) }).authorized
 
     return <div>
         <h2>{`${focusedUser.firstname} ${focusedUser.lastname}`}</h2>

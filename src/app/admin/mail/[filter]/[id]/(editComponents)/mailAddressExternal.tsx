@@ -10,7 +10,7 @@ import {
 } from '@/services/mail/mailAddressExternal/actions'
 import { mailAddressExternalAuth } from '@/services/mail/mailAddressExternal/auth'
 import { mailAuth } from '@/services/mail/auth'
-import { useSession } from '@/auth/session/useSession'
+import useAuthorizer from '@/hooks/useAuthorizer'
 import { useRouter } from 'next/navigation'
 import type { MailingList } from '@/prisma-generated-pn-types'
 import type { MailFlowObject } from '@/services/mail/types'
@@ -31,11 +31,11 @@ export default function EditMailAddressExternal({
         throw Error('Could not find external mail address')
     }
 
-    const session = useSession()
-    const canUpdate = !session.loading && mailAddressExternalAuth.update.dynamicFields({}).auth(session.session).authorized
-    const canDestroy = !session.loading && mailAddressExternalAuth.destroy.dynamicFields({}).auth(session.session).authorized
-    const canAddToList = !session.loading &&
-        mailAuth.createMailingListExternalRelation.dynamicFields({}).auth(session.session).authorized
+    const canUpdate = useAuthorizer({ authorizer: mailAddressExternalAuth.update.dynamicFields({}) }).authorized
+    const canDestroy = useAuthorizer({ authorizer: mailAddressExternalAuth.destroy.dynamicFields({}) }).authorized
+    const canAddToList = useAuthorizer({
+        authorizer: mailAuth.createMailingListExternalRelation.dynamicFields({})
+    }).authorized
 
     return <>
         <h2>{focusedAddress.address}</h2>

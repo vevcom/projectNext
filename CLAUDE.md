@@ -208,6 +208,23 @@ Action call signatures depend on whether the operation has `paramsSchema` and/or
 - `dataSchema` only → `action({ data: { ... } })` or `action(formData)`
 - Both → `action({ params: { ... } }, { data: { ... } })`
 
+### Authorization in Client Components
+
+In `'use client'` components, use the `useAuthorizer` hook from `@/hooks/useAuthorizer` instead of calling `useSession()` and checking `session.loading` manually. It handles the loading state internally and returns an `AuthResult` with an `authorized` boolean:
+
+```typescript
+import useAuthorizer from '@/hooks/useAuthorizer'
+import { someAuth } from '@/services/some/auth'
+
+const canDoThing = useAuthorizer({ authorizer: someAuth.operation.dynamicFields({}) }).authorized
+```
+
+Never do this manually in client components:
+```typescript
+const session = useSession()
+const canDoThing = !session.loading && someAuth.operation.dynamicFields({}).auth(session.session).authorized
+```
+
 ### Form Handling
 
 Forms typically use Server Actions with FormData:

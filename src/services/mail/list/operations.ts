@@ -13,7 +13,7 @@ export const mailingListOperations = {
     }),
 
     readMany: defineOperation({
-        authorizer: () => mailingListAuth.read.dynamicFields({}),
+        authorizer: () => mailingListAuth.readMany.dynamicFields({}),
         operation: async ({ prisma }): Promise<MailingList[]> =>
             prisma.mailingList.findMany(),
     }),

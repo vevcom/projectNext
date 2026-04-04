@@ -9,7 +9,7 @@ import {
     destroyMailingListUserRelationAction
 } from '@/services/mail/actions'
 import { mailAuth } from '@/services/mail/auth'
-import { useSession } from '@/auth/session/useSession'
+import useAuthorizer from '@/hooks/useAuthorizer'
 import type { ActionReturn } from '@/services/actionTypes'
 import type { MailFlowObject, MailListTypes } from '@/services/mail/types'
 
@@ -30,9 +30,9 @@ export default function MailFlow({
     let userDestroy: DestroyFunction = null
     let addressExternalDestroy: DestroyFunction = null
 
-    const session = useSession()
-    const canAdminMailingList =
-        !session.loading && mailAuth.destroyAliasMailingListRelation.dynamicFields({}).auth(session.session).authorized
+    const canAdminMailingList = useAuthorizer({
+        authorizer: mailAuth.destroyAliasMailingListRelation.dynamicFields({})
+    }).authorized
 
     if (filter === 'mailingList' && canAdminMailingList) {
         aliasDestroy = async (mailAliasId: number) => {
