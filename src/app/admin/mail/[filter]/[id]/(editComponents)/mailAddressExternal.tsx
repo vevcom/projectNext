@@ -8,6 +8,8 @@ import {
     updateMailAddressExternalAction,
     destroyMailAddressExternalAction
 } from '@/services/mail/mailAddressExternal/actions'
+import { mailAddressExternalAuth } from '@/services/mail/mailAddressExternal/auth'
+import { mailAuth } from '@/services/mail/auth'
 import { useSession } from '@/auth/session/useSession'
 import { useRouter } from 'next/navigation'
 import type { MailingList } from '@/prisma-generated-pn-types'
@@ -30,11 +32,13 @@ export default function EditMailAddressExternal({
     }
 
     const session = useSession()
-    const permissions = !session.loading ? session.session.permissions : []
+    const canUpdate = !session.loading && mailAddressExternalAuth.update.dynamicFields({}).auth(session.session).authorized
+    const canDestroy = !session.loading && mailAddressExternalAuth.destroy.dynamicFields({}).auth(session.session).authorized
+    const canAddToList = !session.loading && mailAuth.createMailingListExternalRelation.dynamicFields({}).auth(session.session).authorized
 
     return <>
         <h2>{focusedAddress.address}</h2>
-        { permissions.includes('MAILADDRESS_EXTERNAL_UPDATE') && <div>
+        { canUpdate && <div>
             <Form
                 title="Ekstern mailaddresse"
                 submitText="Oppdater"
@@ -45,7 +49,7 @@ export default function EditMailAddressExternal({
                 <TextInput name="description" label="Beskrivelse" defaultValue={focusedAddress.description} />
             </Form>
         </div>}
-        { permissions.includes('MAILADDRESS_EXTERNAL_DESTROY') && <div>
+        { canDestroy && <div>
             <Form
                 action={destroyMailAddressExternalAction.bind(null, { params: { id: focusedAddress.id } })}
                 successCallback={() => push('/admin/mail')}
@@ -57,7 +61,7 @@ export default function EditMailAddressExternal({
                 }}
             />
         </div> }
-        { permissions.includes('MAILINGLIST_ADMIN') && <div>
+        { canAddToList && <div>
             <Form
                 title="Legg til mailliste"
                 submitText="Legg til"

@@ -4,6 +4,8 @@ import Form from '@/components/Form/Form'
 import { SelectNumber } from '@/components/UI/Select'
 import { createAliasMailingListRelationAction } from '@/services/mail/actions'
 import { updateMailAliasAction, destroyMailAliasAction } from '@/services/mail/alias/actions'
+import { mailAliasAuth } from '@/services/mail/alias/auth'
+import { mailAuth } from '@/services/mail/auth'
 import { useSession } from '@/auth/session/useSession'
 import { useRouter } from 'next/navigation'
 import type { MailFlowObject } from '@/services/mail/types'
@@ -25,12 +27,12 @@ export default function EditMailAlias({
     }
 
     const session = useSession()
-    const permissions = !session.loading ? session.session.permissions : []
+    const canAdmin = !session.loading && mailAliasAuth.update.dynamicFields({}).auth(session.session).authorized
+    const canAddToList = !session.loading && mailAuth.createAliasMailingListRelation.dynamicFields({}).auth(session.session).authorized
 
     return <>
         <h2>{focusedAlias.address}</h2>
-        { /** TODO: Call authorizer */ }
-        { permissions.includes('MAILALIAS_ADMIN') && <div>
+        { canAdmin && <div>
             <Form
                 title="Alias"
                 submitText="Oppdater"
@@ -41,7 +43,7 @@ export default function EditMailAlias({
                 <TextInput name="description" label="Beskrivelse" defaultValue={focusedAlias.description} />
             </Form>
         </div>}
-        { permissions.includes('MAILALIAS_ADMIN') && <div>
+        { canAdmin && <div>
             <Form
                 action={destroyMailAliasAction.bind(null, { params: { id: focusedAlias.id } })}
                 successCallback={() => push('/admin/mail')}
@@ -53,7 +55,7 @@ export default function EditMailAlias({
                 }}
             />
         </div> }
-        { permissions.includes('MAILINGLIST_ADMIN') && <div>
+        { canAddToList && <div>
             <Form
                 title="Legg til mailliste"
                 submitText="Legg til"

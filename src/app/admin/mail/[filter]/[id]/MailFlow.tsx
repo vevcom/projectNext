@@ -8,6 +8,7 @@ import {
     destroyMailingListGroupRelationAction,
     destroyMailingListUserRelationAction
 } from '@/services/mail/actions'
+import { mailAuth } from '@/services/mail/auth'
 import { useSession } from '@/auth/session/useSession'
 import type { ActionReturn } from '@/services/actionTypes'
 import type { MailFlowObject, MailListTypes } from '@/services/mail/types'
@@ -30,9 +31,10 @@ export default function MailFlow({
     let addressExternalDestroy: DestroyFunction = null
 
     const session = useSession()
-    const permissions = !session.loading ? session.session.permissions : []
+    const canAdminMailingList =
+        !session.loading && mailAuth.destroyAliasMailingListRelation.dynamicFields({}).auth(session.session).authorized
 
-    if (filter === 'mailingList' && permissions.includes('MAILINGLIST_ADMIN')) {
+    if (filter === 'mailingList' && canAdminMailingList) {
         aliasDestroy = async (mailAliasId: number) => {
             const ret = await destroyAliasMailingListRelationAction({
                 data: { mailingListId: id, mailAliasId },
@@ -62,7 +64,7 @@ export default function MailFlow({
         }
     }
 
-    if (filter === 'alias' && permissions.includes('MAILINGLIST_ADMIN')) {
+    if (filter === 'alias' && canAdminMailingList) {
         mailingListDestroy = async (mailingListId: number) => {
             const ret = await destroyAliasMailingListRelationAction({
                 data: { mailAliasId: id, mailingListId },
@@ -74,7 +76,7 @@ export default function MailFlow({
         }
     }
 
-    if (filter === 'mailaddressExternal' && permissions.includes('MAILINGLIST_ADMIN')) {
+    if (filter === 'mailaddressExternal' && canAdminMailingList) {
         mailingListDestroy = async (mailingListId: number) => {
             const ret = await destroyMailingListExternalRelationAction({
                 data: { mailAddressExternalId: id, mailingListId },
@@ -86,7 +88,7 @@ export default function MailFlow({
         }
     }
 
-    if (filter === 'user' && permissions.includes('MAILINGLIST_ADMIN')) {
+    if (filter === 'user' && canAdminMailingList) {
         mailingListDestroy = async (mailingListId: number) => {
             const ret = await destroyMailingListUserRelationAction({
                 data: { userId: id, mailingListId },
@@ -98,7 +100,7 @@ export default function MailFlow({
         }
     }
 
-    if (filter === 'group' && permissions.includes('MAILINGLIST_ADMIN')) {
+    if (filter === 'group' && canAdminMailingList) {
         mailingListDestroy = async (mailingListId: number) => {
             const ret = await destroyMailingListGroupRelationAction({
                 data: { groupId: id, mailingListId },

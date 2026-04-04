@@ -7,15 +7,18 @@ import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { readMailAliasesAction } from '@/services/mail/alias/actions'
 import { readMailingListsAction } from '@/services/mail/list/actions'
 import { readMailAddressExternalAction } from '@/services/mail/mailAddressExternal/actions'
+import { mailAliasAuth } from '@/services/mail/alias/auth'
+import { mailingListAuth } from '@/services/mail/list/auth'
+import { mailAddressExternalAuth } from '@/services/mail/mailAddressExternal/auth'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { ServerSession } from '@/auth/session/ServerSession'
 
 export default async function MailSettings() {
-    const { permissions } = await ServerSession.fromNextAuth()
+    const session = await ServerSession.fromNextAuth()
 
-    const createMailAlias = permissions.includes('MAILALIAS_ADMIN')
-    const createMailingList = permissions.includes('MAILINGLIST_CREATE')
-    const createMailaddressExternal = permissions.includes('MAILADDRESS_EXTERNAL_CREATE')
+    const createMailAlias = mailAliasAuth.create.dynamicFields({}).auth(session).authorized
+    const createMailingList = mailingListAuth.create.dynamicFields({}).auth(session).authorized
+    const createMailaddressExternal = mailAddressExternalAuth.create.dynamicFields({}).auth(session).authorized
 
     const showAdminPanel = createMailAlias || createMailingList || createMailaddressExternal
 

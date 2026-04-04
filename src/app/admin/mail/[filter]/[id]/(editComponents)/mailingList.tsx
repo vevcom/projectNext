@@ -10,6 +10,8 @@ import {
     createMailingListUserRelationAction
 } from '@/services/mail/actions'
 import { updateMailingListAction, destroyMailingListAction } from '@/services/mail/list/actions'
+import { mailingListAuth } from '@/services/mail/list/auth'
+import { mailAuth } from '@/services/mail/auth'
 import { useSession } from '@/auth/session/useSession'
 import { useRouter } from 'next/navigation'
 import type { MailAddressExternal, MailAlias } from '@/prisma-generated-pn-types'
@@ -31,12 +33,12 @@ export default function EditMailingList({
     const focusedMailingList = data.mailingList[0]
 
     const session = useSession()
-    const permissions = !session.loading ? session.session.permissions : []
+    const canAdmin = !session.loading && mailingListAuth.update.dynamicFields({}).auth(session.session).authorized
+    const canAddRelation = !session.loading && mailAuth.createAliasMailingListRelation.dynamicFields({}).auth(session.session).authorized
 
     return <>
         <h2>{focusedMailingList.name}</h2>
-        {/** TODO: Call author */}
-        { permissions.includes('MAILINGLIST_ADMIN') && <div>
+        { canAdmin && <div>
             <Form
                 title="Mailliste"
                 submitText="Oppdater"
@@ -48,7 +50,7 @@ export default function EditMailingList({
 
             </Form>
         </div>}
-        { permissions.includes('MAILINGLIST_ADMIN') && <div>
+        { canAdmin && <div>
             <Form
                 action={destroyMailingListAction.bind(null, { params: { id: focusedMailingList.id } })}
                 successCallback={() => push('/admin/mail')}
@@ -60,7 +62,7 @@ export default function EditMailingList({
                 }}
             />
         </div> }
-        { permissions.includes('MAILINGLIST_ADMIN') && <div>
+        { canAddRelation && <div>
             <Form
                 title="Legg til mailalias"
                 submitText="Legg til"
@@ -74,7 +76,7 @@ export default function EditMailingList({
                 />
             </Form>
         </div>}
-        { permissions.includes('MAILINGLIST_ADMIN') && <div>
+        { canAddRelation && <div>
             <Form
                 title="Grupper"
                 submitText="Legg til"
@@ -84,7 +86,7 @@ export default function EditMailingList({
                 <TextInput type="text" name="groupId" label="Gruppe id" />
             </Form>
         </div>}
-        { permissions.includes('MAILINGLIST_ADMIN') && <div>
+        { canAddRelation && <div>
             <Form
                 title="Brukere"
                 submitText="Legg til"
@@ -94,7 +96,7 @@ export default function EditMailingList({
                 <TextInput type="text" name="userId" label="Bruker id" />
             </Form>
         </div>}
-        { permissions.includes('MAILINGLIST_ADMIN') && <div>
+        { canAddRelation && <div>
             <Form
                 title="Ekstern mailadresse"
                 submitText="Legg til"
