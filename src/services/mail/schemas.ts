@@ -1,46 +1,36 @@
-import { z } from 'zod'
 import { MailListTypeArray } from './types'
+import { z } from 'zod'
+
+const aliasMailingListRelation = z.object({
+    mailAliasId: z.coerce.number().min(1),
+    mailingListId: z.coerce.number().min(1),
+})
+
+const mailingListExternalRelation = z.object({
+    mailAddressExternalId: z.coerce.number().min(1),
+    mailingListId: z.coerce.number().min(1),
+})
+
+const mailingListUserRelation = z.object({
+    userId: z.coerce.number().min(1),
+    mailingListId: z.coerce.number().min(1),
+})
+
+const mailingListGroupRelation = z.object({
+    groupId: z.coerce.number().min(1),
+    mailingListId: z.coerce.number().min(1),
+})
 
 export const mailSchemas = {
-    createAliasMailingListRelation: z.object({
-        mailAliasId: z.coerce.number().min(1),
-        mailingListId: z.coerce.number().min(1),
-    }),
+    createAliasMailingListRelation: aliasMailingListRelation,
+    createMailingListExternalRelation: mailingListExternalRelation,
+    createMailingListUserRelation: mailingListUserRelation,
+    createMailingListGroupRelation: mailingListGroupRelation,
 
-    createMailingListExternalRelation: z.object({
-        mailAddressExternalId: z.coerce.number().min(1),
-        mailingListId: z.coerce.number().min(1),
-    }),
-
-    createMailingListUserRelation: z.object({
-        userId: z.coerce.number().min(1),
-        mailingListId: z.coerce.number().min(1),
-    }),
-
-    createMailingListGroupRelation: z.object({
-        groupId: z.coerce.number().min(1),
-        mailingListId: z.coerce.number().min(1),
-    }),
-
-    destroyAliasMailingListRelation: z.object({
-        mailAliasId: z.coerce.number().min(1),
-        mailingListId: z.coerce.number().min(1),
-    }),
-
-    destroyMailingListExternalRelation: z.object({
-        mailAddressExternalId: z.coerce.number().min(1),
-        mailingListId: z.coerce.number().min(1),
-    }),
-
-    destroyMailingListUserRelation: z.object({
-        userId: z.coerce.number().min(1),
-        mailingListId: z.coerce.number().min(1),
-    }),
-
-    destroyMailingListGroupRelation: z.object({
-        groupId: z.coerce.number().min(1),
-        mailingListId: z.coerce.number().min(1),
-    }),
+    destroyAliasMailingListRelation: aliasMailingListRelation,
+    destroyMailingListExternalRelation: mailingListExternalRelation,
+    destroyMailingListUserRelation: mailingListUserRelation,
+    destroyMailingListGroupRelation: mailingListGroupRelation,
 
     readMailFlow: z.object({
         filter: z.enum(MailListTypeArray),
