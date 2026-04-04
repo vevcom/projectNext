@@ -36,7 +36,7 @@ export default function EditMailingList({
     return <>
         <h2>{focusedMailingList.name}</h2>
         {/** TODO: Call author */}
-        { permissions.includes('MAILINGLIST_UPDATE') && <div>
+        { permissions.includes('MAILINGLIST_ADMIN') && <div>
             <Form
                 title="Mailliste"
                 submitText="Oppdater"
@@ -48,9 +48,9 @@ export default function EditMailingList({
 
             </Form>
         </div>}
-        { permissions.includes('MAILINGLIST_DESTROY') && <div>
+        { permissions.includes('MAILINGLIST_ADMIN') && <div>
             <Form
-                action={destroyMailingListAction.bind(null, focusedMailingList.id)}
+                action={destroyMailingListAction.bind(null, { params: { id: focusedMailingList.id } })}
                 successCallback={() => push('/admin/mail')}
                 submitText="Slett"
                 submitColor="red"
@@ -60,7 +60,7 @@ export default function EditMailingList({
                 }}
             />
         </div> }
-        { permissions.includes('MAILINGLIST_ALIAS_CREATE') && <div>
+        { permissions.includes('MAILINGLIST_ADMIN') && <div>
             <Form
                 title="Legg til mailalias"
                 submitText="Legg til"
@@ -74,7 +74,7 @@ export default function EditMailingList({
                 />
             </Form>
         </div>}
-        { permissions.includes('MAILINGLIST_GROUP_CREATE') && <div>
+        { permissions.includes('MAILINGLIST_ADMIN') && <div>
             <Form
                 title="Grupper"
                 submitText="Legg til"
@@ -84,7 +84,7 @@ export default function EditMailingList({
                 <TextInput type="text" name="groupId" label="Gruppe id" />
             </Form>
         </div>}
-        { permissions.includes('MAILINGLIST_USER_CREATE') && <div>
+        { permissions.includes('MAILINGLIST_ADMIN') && <div>
             <Form
                 title="Brukere"
                 submitText="Legg til"
@@ -94,7 +94,7 @@ export default function EditMailingList({
                 <TextInput type="text" name="userId" label="Bruker id" />
             </Form>
         </div>}
-        { permissions.includes('MAILADDRESS_EXTERNAL_CREATE') && <div>
+        { permissions.includes('MAILINGLIST_ADMIN') && <div>
             <Form
                 title="Ekstern mailadresse"
                 submitText="Legg til"

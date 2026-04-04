@@ -30,7 +30,7 @@ export default function EditMailAlias({
     return <>
         <h2>{focusedAlias.address}</h2>
         { /** TODO: Call authorizer */ }
-        { permissions.includes('MAILALIAS_UPDATE') && <div>
+        { permissions.includes('MAILALIAS_ADMIN') && <div>
             <Form
                 title="Alias"
                 submitText="Oppdater"
@@ -41,9 +41,9 @@ export default function EditMailAlias({
                 <TextInput name="description" label="Beskrivelse" defaultValue={focusedAlias.description} />
             </Form>
         </div>}
-        { permissions.includes('MAILALIAS_DESTROY') && <div>
+        { permissions.includes('MAILALIAS_ADMIN') && <div>
             <Form
-                action={destroyMailAliasAction.bind(null, focusedAlias.id)}
+                action={destroyMailAliasAction.bind(null, { params: { id: focusedAlias.id } })}
                 successCallback={() => push('/admin/mail')}
                 submitText="Slett"
                 submitColor="red"
@@ -53,7 +53,7 @@ export default function EditMailAlias({
                 }}
             />
         </div> }
-        { permissions.includes('MAILINGLIST_ALIAS_CREATE') && <div>
+        { permissions.includes('MAILINGLIST_ADMIN') && <div>
             <Form
                 title="Legg til mailliste"
                 submitText="Legg til"

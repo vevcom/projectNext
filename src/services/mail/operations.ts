@@ -1,9 +1,24 @@
 import '@pn-server-only'
+import { mailAuth } from './auth'
+import { mailSchemas } from './schemas'
+import { aliasOperations } from './alias/operations'
+import { mailingListOperations } from './list/operations'
+import { mailAddressExternalOperations } from './mailAddressExternal/operations'
 import { userFilterSelection } from '@/services/users/constants'
-import { prismaCall } from '@/services/prismaCall'
+import { defineOperation } from '@/services/serviceOperation'
 import { ServerError } from '@/services/error'
-import { prisma } from '@/prisma-pn-client-instance'
-import type { MailFlowObject, MailListTypes, ViaArrayType, ViaType } from './types'
+import type { Prisma } from '@/prisma-generated-pn-client'
+import type { MailFlowObject, ViaArrayType, ViaType } from './types'
+import type { UserFiltered } from '@/services/users/types'
+import type {
+    MailAlias,
+    MailAliasMailingList,
+    MailAddressExternal,
+    MailingList,
+    MailingListGroup,
+    MailingListMailAddressExternal,
+    MailingListUser,
+} from '@/prisma-generated-pn-types'
 
 
 /**
@@ -66,13 +81,8 @@ function removeDuplicates<T extends {
     return ret
 }
 
-/**
- * Reads the mail flow based on a mailalias with the provided ID.
- * @param id - The ID of the mail alias.
- * @returns A Promise that resolves to a MailFlowObject.
- */
-async function readAliasTraversal(id: number): Promise<MailFlowObject> {
-    const results = await prismaCall(() => prisma.mailAlias.findUniqueOrThrow({
+async function readAliasTraversal(prisma: Prisma.TransactionClient, id: number): Promise<MailFlowObject> {
+    const results = await prisma.mailAlias.findUniqueOrThrow({
         where: {
             id,
         },
@@ -114,7 +124,7 @@ async function readAliasTraversal(id: number): Promise<MailFlowObject> {
                 }
             }
         }
-    }))
+    })
 
     const mailAlias = results
 
@@ -150,7 +160,7 @@ async function readAliasTraversal(id: number): Promise<MailFlowObject> {
                 const via: ViaType = {
                     type: 'group',
                     id: groupItem.groupId,
-                    label: groupItem.groupId.toString()
+                    label: String(groupItem.groupId)
                 }
 
                 return {
@@ -194,13 +204,8 @@ async function readAliasTraversal(id: number): Promise<MailFlowObject> {
     }
 }
 
-/**
- * Reads the mail flow based on a mailinglist with the provided ID.
- * @param id - The ID of the mailing list.
- * @returns A Promise that resolves to a MailFlowObject.
- */
-async function readMailingListTraversal(id: number): Promise<MailFlowObject> {
-    const results = await prismaCall(() => prisma.mailingList.findUniqueOrThrow({
+async function readMailingListTraversal(prisma: Prisma.TransactionClient, id: number): Promise<MailFlowObject> {
+    const results = await prisma.mailingList.findUniqueOrThrow({
         where: {
             id,
         },
@@ -241,7 +246,7 @@ async function readMailingListTraversal(id: number): Promise<MailFlowObject> {
                 },
             },
         }
-    }))
+    })
 
     const mailingList = results
     const alias = mailingList.mailAliases.map(aliasItem => aliasItem.mailAlias)
@@ -283,13 +288,8 @@ async function readMailingListTraversal(id: number): Promise<MailFlowObject> {
     }
 }
 
-/**
- * Reads the mail flow based on an external mail address with the provided ID.
- * @param id - The ID of the external mail address.
- * @returns A Promise that resolves to a MailFlowObject.
- */
-async function readMailaddressExternalTraversal(id: number): Promise<MailFlowObject> {
-    const results = await prismaCall(() => prisma.mailAddressExternal.findUniqueOrThrow({
+async function readMailaddressExternalTraversal(prisma: Prisma.TransactionClient, id: number): Promise<MailFlowObject> {
+    const results = await prisma.mailAddressExternal.findUniqueOrThrow({
         where: {
             id,
         },
@@ -308,7 +308,7 @@ async function readMailaddressExternalTraversal(id: number): Promise<MailFlowObj
                 }
             }
         }
-    }))
+    })
 
     const mailAddressExternal = results
     const mailingList = results.mailingLists.map(list => list.mailingList)
@@ -332,7 +332,7 @@ async function readMailaddressExternalTraversal(id: number): Promise<MailFlowObj
     return {
         mailaddressExternal: [mailAddressExternal],
         mailingList: mailingList.map(list => {
-            Reflect.deleteProperty(mailingList, 'mailAliases')
+            Reflect.deleteProperty(list, 'mailAliases')
             return list
         }),
         alias: removeDuplicates(aliases),
@@ -341,13 +341,8 @@ async function readMailaddressExternalTraversal(id: number): Promise<MailFlowObj
     }
 }
 
-/**
- * Reads the mail flow based on a group with the provided ID.
- * @param id - The ID of the group.
- * @returns A Promise that resolves to a MailFlowObject.
- */
-async function readGroupTraversal(id: number): Promise<MailFlowObject> {
-    const results = await prismaCall(() => prisma.group.findUniqueOrThrow({
+async function readGroupTraversal(prisma: Prisma.TransactionClient, id: number): Promise<MailFlowObject> {
+    const results = await prisma.group.findUniqueOrThrow({
         where: {
             id,
         },
@@ -373,7 +368,7 @@ async function readGroupTraversal(id: number): Promise<MailFlowObject> {
                 },
             },
         }
-    }))
+    })
 
     const group = results
     const mailingList = results.mailingLists.map(list => list.mailingList)
@@ -409,13 +404,8 @@ async function readGroupTraversal(id: number): Promise<MailFlowObject> {
     }
 }
 
-/**
- * Reads the mail flow based on an user with the provided ID.
- * @param id - The ID of the user.
- * @returns A Promise that resolves to a MailFlowObject.
- */
-async function readUserTraversal(id: number): Promise<MailFlowObject> {
-    const results = await prismaCall(() => prisma.user.findUniqueOrThrow({
+async function readUserTraversal(prisma: Prisma.TransactionClient, id: number): Promise<MailFlowObject> {
+    const results = await prisma.user.findUniqueOrThrow({
         where: {
             id,
         },
@@ -456,7 +446,7 @@ async function readUserTraversal(id: number): Promise<MailFlowObject> {
                 }
             }
         }
-    }))
+    })
 
     const user = results
     const mailingList = results.mailingLists
@@ -466,7 +456,7 @@ async function readUserTraversal(id: number): Promise<MailFlowObject> {
                 const via: ViaType = {
                     type: 'group',
                     id: membership.groupId,
-                    label: membership.groupId.toString()
+                    label: String(membership.groupId)
                 }
 
                 return {
@@ -515,7 +505,7 @@ async function readUserTraversal(id: number): Promise<MailFlowObject> {
     return {
         mailaddressExternal: [],
         mailingList: removeDuplicates(mailingList.map(mlist => {
-            Reflect.deleteProperty(mlist, 'mailAlases')
+            Reflect.deleteProperty(mlist, 'mailAliases')
             return mlist
         })),
         alias: removeDuplicates(alias),
@@ -528,41 +518,132 @@ async function readUserTraversal(id: number): Promise<MailFlowObject> {
 }
 
 
-/**
- * Reads the mail traversal based on a source node.
- *
- * @param {Object} options - The options object.
- * @param {MailListTypes} options.filter - The filter to apply.
- * @param {number} options.id - The ID of the source object to propertate.
- * @returns {Promise<MailFlowObject>} The mail flow object.
- * @throws {ServerError} If the filter is invalid.
- */
-export async function readMailTraversal({
-    filter,
-    id,
-}: {
-    filter: MailListTypes,
-    id: number,
-}): Promise<MailFlowObject> {
-    if (filter === 'alias') {
-        return await readAliasTraversal(id)
-    }
+export const mailOperations = {
+    createAliasMailingListRelation: defineOperation({
+        dataSchema: mailSchemas.createAliasMailingListRelation,
+        authorizer: () => mailAuth.createAliasMailingListRelation.dynamicFields({}),
+        operation: async ({ prisma, data }): Promise<MailAliasMailingList> =>
+            prisma.mailAliasMailingList.create({
+                data: {
+                    mailAlias: { connect: { id: data.mailAliasId } },
+                    mailingList: { connect: { id: data.mailingListId } },
+                },
+            }),
+    }),
 
-    if (filter === 'mailingList') {
-        return await readMailingListTraversal(id)
-    }
+    createMailingListExternalRelation: defineOperation({
+        dataSchema: mailSchemas.createMailingListExternalRelation,
+        authorizer: () => mailAuth.createMailingListExternalRelation.dynamicFields({}),
+        operation: async ({ prisma, data }): Promise<MailingListMailAddressExternal> =>
+            prisma.mailingListMailAddressExternal.create({
+                data: {
+                    mailingList: { connect: { id: data.mailingListId } },
+                    mailAddressExternal: { connect: { id: data.mailAddressExternalId } },
+                },
+            }),
+    }),
 
-    if (filter === 'mailaddressExternal') {
-        return await readMailaddressExternalTraversal(id)
-    }
+    createMailingListUserRelation: defineOperation({
+        dataSchema: mailSchemas.createMailingListUserRelation,
+        authorizer: () => mailAuth.createMailingListUserRelation.dynamicFields({}),
+        operation: async ({ prisma, data }): Promise<MailingListUser> =>
+            prisma.mailingListUser.create({
+                data: {
+                    mailingList: { connect: { id: data.mailingListId } },
+                    user: { connect: { id: data.userId } },
+                },
+            }),
+    }),
 
-    if (filter === 'group') {
-        return await readGroupTraversal(id)
-    }
+    createMailingListGroupRelation: defineOperation({
+        dataSchema: mailSchemas.createMailingListGroupRelation,
+        authorizer: () => mailAuth.createMailingListGroupRelation.dynamicFields({}),
+        operation: async ({ prisma, data }): Promise<MailingListGroup> =>
+            prisma.mailingListGroup.create({
+                data: {
+                    mailingList: { connect: { id: data.mailingListId } },
+                    group: { connect: { id: data.groupId } },
+                },
+            }),
+    }),
 
-    if (filter === 'user') {
-        return await readUserTraversal(id)
-    }
+    destroyAliasMailingListRelation: defineOperation({
+        dataSchema: mailSchemas.createAliasMailingListRelation,
+        authorizer: () => mailAuth.destroyAliasMailingListRelation.dynamicFields({}),
+        operation: async ({ prisma, data }): Promise<MailAliasMailingList> =>
+            prisma.mailAliasMailingList.delete({
+                where: {
+                    mailAliasId_mailingListId: data,
+                },
+            }),
+    }),
 
-    throw new ServerError('BAD PARAMETERS', `The filter ${filter} is not a valid MailListTypes`)
+    destroyMailingListExternalRelation: defineOperation({
+        dataSchema: mailSchemas.createMailingListExternalRelation,
+        authorizer: () => mailAuth.destroyMailingListExternalRelation.dynamicFields({}),
+        operation: async ({ prisma, data }): Promise<MailingListMailAddressExternal> =>
+            prisma.mailingListMailAddressExternal.delete({
+                where: {
+                    mailingListId_mailAddressExternalId: data,
+                },
+            }),
+    }),
+
+    destroyMailingListUserRelation: defineOperation({
+        dataSchema: mailSchemas.createMailingListUserRelation,
+        authorizer: () => mailAuth.destroyMailingListUserRelation.dynamicFields({}),
+        operation: async ({ prisma, data }): Promise<MailingListUser> =>
+            prisma.mailingListUser.delete({
+                where: {
+                    mailingListId_userId: data,
+                },
+            }),
+    }),
+
+    destroyMailingListGroupRelation: defineOperation({
+        dataSchema: mailSchemas.createMailingListGroupRelation,
+        authorizer: () => mailAuth.destroyMailingListGroupRelation.dynamicFields({}),
+        operation: async ({ prisma, data }): Promise<MailingListGroup> =>
+            prisma.mailingListGroup.delete({
+                where: {
+                    mailingListId_groupId: data,
+                },
+            }),
+    }),
+
+    readMailTraversal: defineOperation({
+        paramsSchema: mailSchemas.readMailFlow,
+        authorizer: () => mailAuth.readMailFlow.dynamicFields({}),
+        operation: async ({ prisma, params }): Promise<MailFlowObject> => {
+            if (params.filter === 'alias') return readAliasTraversal(prisma, params.id)
+            if (params.filter === 'mailingList') return readMailingListTraversal(prisma, params.id)
+            if (params.filter === 'mailaddressExternal') return readMailaddressExternalTraversal(prisma, params.id)
+            if (params.filter === 'group') return readGroupTraversal(prisma, params.id)
+            if (params.filter === 'user') return readUserTraversal(prisma, params.id)
+            throw new ServerError('BAD PARAMETERS', `The filter ${params.filter} is not a valid MailListTypes`)
+        },
+    }),
+
+    readMailOptions: defineOperation({
+        authorizer: () => mailAuth.readMailOptions.dynamicFields({}),
+        operation: async (): Promise<{
+            alias: MailAlias[],
+            mailingList: MailingList[],
+            mailaddressExternal: MailAddressExternal[],
+            users: UserFiltered[],
+        }> => {
+            const results = await Promise.all([
+                aliasOperations.readMany({ bypassAuth: true }),
+                mailingListOperations.readMany({ bypassAuth: true }),
+                mailAddressExternalOperations.readMany({ bypassAuth: true }),
+            ])
+
+            return {
+                alias: results[0],
+                mailingList: results[1],
+                mailaddressExternal: results[2],
+                users: [],
+            }
+        },
+    }),
 }

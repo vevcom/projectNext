@@ -1,125 +1,16 @@
 'use server'
-import { createZodActionError, safeServerCall } from '@/services/actionError'
-import { readMailAliases } from '@/services/mail/alias/read'
-import {
-    createAliasMailingListRelation,
-    createMailingListExternalRelation,
-    createMailingListGroupRelation,
-    createMailingListUserRelation } from '@/services/mail/create'
-import {
-    destroyAliasMailingListRelation,
-    destroyMailingListExternalRelation,
-    destroyMailingListGroupRelation,
-    destroyMailingListUserRelation } from '@/services/mail/destroy'
-import { readMailingLists } from '@/services/mail/list/read'
-import { readMailAddressExternal } from '@/services/mail/mailAddressExternal/read'
-import { readMailTraversal } from '@/services/mail/read'
-import {
-    createAliasMailingListValidation,
-    createMailingListExternalValidation,
-    createMailingListGroupValidation,
-    createMailingListUserValidation } from '@/services/mail/validation'
-import type { MailListTypes } from '@/services/mail/types'
-import type { ActionReturn } from '@/services/actionTypes'
-import type { CreateAliasMailingListType,
-    CreateMailingListExternalType,
-    CreateMailingListGroupType,
-    CreateMailingListUserType } from '@/services/mail/validation'
-import type { UserFiltered } from '@/services/users/types'
-import type { MailAliasMailingList,
-    MailingListGroup,
-    MailingListMailAddressExternal,
-    MailingListUser, MailAddressExternal, MailAlias, MailingList } from '@/prisma-generated-pn-types'
+import { makeAction } from '@/services/serverAction'
+import { mailOperations } from '@/services/mail/operations'
 
-export async function createAliasMailingListRelationAction(formdata: FormData):
-    Promise<ActionReturn<MailAliasMailingList>> {
-    const parse = createAliasMailingListValidation.typeValidate(formdata)
-    if (!parse.success) return createZodActionError(parse)
+export const createAliasMailingListRelationAction = makeAction(mailOperations.createAliasMailingListRelation)
+export const createMailingListExternalRelationAction = makeAction(mailOperations.createMailingListExternalRelation)
+export const createMailingListUserRelationAction = makeAction(mailOperations.createMailingListUserRelation)
+export const createMailingListGroupRelationAction = makeAction(mailOperations.createMailingListGroupRelation)
 
-    return safeServerCall(() => createAliasMailingListRelation(parse.data))
-}
+export const destroyAliasMailingListRelationAction = makeAction(mailOperations.destroyAliasMailingListRelation)
+export const destroyMailingListExternalRelationAction = makeAction(mailOperations.destroyMailingListExternalRelation)
+export const destroyMailingListUserRelationAction = makeAction(mailOperations.destroyMailingListUserRelation)
+export const destroyMailingListGroupRelationAction = makeAction(mailOperations.destroyMailingListGroupRelation)
 
-export async function createMailingListExternalRelationAction(formdata: FormData):
-    Promise<ActionReturn<MailingListMailAddressExternal>> {
-    const parse = createMailingListExternalValidation.typeValidate(formdata)
-    if (!parse.success) return createZodActionError(parse)
-
-    return safeServerCall(() => createMailingListExternalRelation(parse.data))
-}
-
-export async function createMailingListUserRelationAction(formdata: FormData):
-    Promise<ActionReturn<MailingListUser>> {
-    const parse = createMailingListUserValidation.typeValidate(formdata)
-    if (!parse.success) return createZodActionError(parse)
-
-    return safeServerCall(() => createMailingListUserRelation(parse.data))
-}
-
-export async function createMailingListGroupRelationAction(formdata: FormData):
-    Promise<ActionReturn<MailingListGroup>> {
-    const parse = createMailingListGroupValidation.typeValidate(formdata)
-    if (!parse.success) return createZodActionError(parse)
-
-    return safeServerCall(() => createMailingListGroupRelation(parse.data))
-}
-
-export async function destroyAliasMailingListRelationAction(formdata: FormData | CreateAliasMailingListType['Type']):
-    Promise<ActionReturn<MailAliasMailingList>> {
-    const parse = createAliasMailingListValidation.typeValidate(formdata)
-    if (!parse.success) return createZodActionError(parse)
-
-    return safeServerCall(() => destroyAliasMailingListRelation(parse.data))
-}
-
-export async function destroyMailingListExternalRelationAction(formdata: FormData | CreateMailingListExternalType['Type']):
-    Promise<ActionReturn<MailingListMailAddressExternal>> {
-    const parse = createMailingListExternalValidation.typeValidate(formdata)
-    if (!parse.success) return createZodActionError(parse)
-
-    return safeServerCall(() => destroyMailingListExternalRelation(parse.data))
-}
-
-export async function destroyMailingListUserRelationAction(formdata: FormData | CreateMailingListUserType['Type']):
-    Promise<ActionReturn<MailingListUser>> {
-    const parse = createMailingListUserValidation.typeValidate(formdata)
-    if (!parse.success) return createZodActionError(parse)
-
-    return safeServerCall(() => destroyMailingListUserRelation(parse.data))
-}
-
-export async function destroyMailingListGroupRelationAction(formdata: FormData | CreateMailingListGroupType['Type']):
-    Promise<ActionReturn<MailingListGroup>> {
-    const parse = createMailingListGroupValidation.typeValidate(formdata)
-    if (!parse.success) return createZodActionError(parse)
-
-    return safeServerCall(() => destroyMailingListGroupRelation(parse.data))
-}
-
-export async function readMailFlowAction(filter: MailListTypes, id: number) {
-    return safeServerCall(() => readMailTraversal({
-        filter,
-        id,
-    }))
-}
-
-export async function readMailOptions(): Promise<ActionReturn<{
-    alias: MailAlias[],
-    mailingList: MailingList[],
-    mailaddressExternal: MailAddressExternal[],
-    users: UserFiltered[],
-}>> {
-    return await safeServerCall(async () => {
-        const results = await Promise.all([
-            readMailAliases(),
-            readMailingLists(),
-            readMailAddressExternal(),
-        ])
-
-        return {
-            alias: results[0],
-            mailingList: results[1],
-            mailaddressExternal: results[2],
-            users: []
-        }
-    })
-}
+export const readMailFlowAction = makeAction(mailOperations.readMailTraversal)
+export const readMailOptions = makeAction(mailOperations.readMailOptions)

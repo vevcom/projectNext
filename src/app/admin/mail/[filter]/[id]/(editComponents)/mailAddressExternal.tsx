@@ -26,7 +26,7 @@ export default function EditMailAddressExternal({
 
     const focusedAddress = data.mailaddressExternal[0]
     if (!focusedAddress) {
-        throw Error('Could not find alias')
+        throw Error('Could not find external mail address')
     }
 
     const session = useSession()
@@ -47,7 +47,7 @@ export default function EditMailAddressExternal({
         </div>}
         { permissions.includes('MAILADDRESS_EXTERNAL_DESTROY') && <div>
             <Form
-                action={destroyMailAddressExternalAction.bind(null, focusedAddress.id)}
+                action={destroyMailAddressExternalAction.bind(null, { params: { id: focusedAddress.id } })}
                 successCallback={() => push('/admin/mail')}
                 submitText="Slett"
                 submitColor="red"
@@ -57,7 +57,7 @@ export default function EditMailAddressExternal({
                 }}
             />
         </div> }
-        { permissions.includes('MAILINGLIST_EXTERNAL_ADDRESS_CREATE') && <div>
+        { permissions.includes('MAILINGLIST_ADMIN') && <div>
             <Form
                 title="Legg til mailliste"
                 submitText="Legg til"

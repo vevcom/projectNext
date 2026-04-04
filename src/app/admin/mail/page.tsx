@@ -5,15 +5,15 @@ import CreateMailingList from './createMailingListForm'
 import CreateMailaddressExternal from './createMailaddressExternalForm'
 import MailListView from './mailListView'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
-import { readMailAliases } from '@/services/mail/alias/read'
-import { readMailingLists } from '@/services/mail/list/read'
-import { readMailAddressExternal } from '@/services/mail/mailAddressExternal/read'
+import { aliasOperations } from '@/services/mail/alias/operations'
+import { mailingListOperations } from '@/services/mail/list/operations'
+import { mailAddressExternalOperations } from '@/services/mail/mailAddressExternal/operations'
 import { ServerSession } from '@/auth/session/ServerSession'
 
 export default async function MailSettings() {
     const { permissions } = await ServerSession.fromNextAuth()
 
-    const createMailAlias = permissions.includes('MAILALIAS_CREATE')
+    const createMailAlias = permissions.includes('MAILALIAS_ADMIN')
     const createMailingList = permissions.includes('MAILINGLIST_CREATE')
     const createMailaddressExternal = permissions.includes('MAILADDRESS_EXTERNAL_CREATE')
 
@@ -24,9 +24,9 @@ export default async function MailSettings() {
         mailingLists,
         mailAddressesExternal,
     ] = await Promise.all([
-        readMailAliases(),
-        readMailingLists(),
-        readMailAddressExternal(),
+        aliasOperations.readMany({ bypassAuth: true }),
+        mailingListOperations.readMany({ bypassAuth: true }),
+        mailAddressExternalOperations.readMany({ bypassAuth: true }),
     ])
 
     return (

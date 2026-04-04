@@ -1,9 +1,8 @@
 import { RequirePermission } from '@/auth/authorizer/RequirePermission'
 
-//TODO: Use authorizers when refactoring to operations.ts
 export const mailAliasAuth = {
-    create: RequirePermission.staticFields({ permission: 'MAILALIAS_CREATE' }),
-    destroy: RequirePermission.staticFields({ permission: 'MAILALIAS_DESTROY' }),
+    create: RequirePermission.staticFields({ permission: 'MAILALIAS_ADMIN' }),
     read: RequirePermission.staticFields({ permission: 'MAILALIAS_READ' }),
-    update: RequirePermission.staticFields({ permission: 'MAILALIAS_UPDATE' }),
+    update: RequirePermission.staticFields({ permission: 'MAILALIAS_ADMIN' }),
+    destroy: RequirePermission.staticFields({ permission: 'MAILALIAS_ADMIN' }),
 } as const

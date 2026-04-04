@@ -24,7 +24,7 @@ export default function EditGroup({
 
     return <div>
         <h2>{focusedGroup.id}</h2>
-        { permissions.includes('MAILINGLIST_GROUP_CREATE') && <Form
+        { permissions.includes('MAILINGLIST_ADMIN') && <Form
             title="Legg til mailliste"
             submitText="Legg til"
             action={createMailingListGroupRelationAction}

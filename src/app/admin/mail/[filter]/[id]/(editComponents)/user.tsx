@@ -25,7 +25,7 @@ export default function EditUser({
     return <div>
         <h2>{`${focusedUser.firstname} ${focusedUser.lastname}`}</h2>
         {/** TODO: Call author */}
-        { permissions.includes('MAILINGLIST_USER_CREATE') && <Form
+        { permissions.includes('MAILINGLIST_ADMIN') && <Form
             title="Legg til mailliste"
             submitText="Legg til"
             action={createMailingListUserRelationAction}
