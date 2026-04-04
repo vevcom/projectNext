@@ -8,7 +8,7 @@ const createJestConfig = nextJest({ dir: './' })
 const config: Config = {
     coverageProvider: 'v8',
     testEnvironment: './tests/PrismaTestEnvironment.ts',
-    setupFilesAfterEnv: ['./tests/setup.ts'],
+    setupFilesAfterEnv: ['./tests/setup.ts', './tests/cleanup.ts'],
     collectCoverage: true,
     collectCoverageFrom: ['src/**/*.{ts,tsx}'],
     coverageReporters: ['text-summary'],

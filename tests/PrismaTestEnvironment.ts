@@ -61,5 +61,7 @@ export default class PrismaTestEnvironment extends NodeEnvironment {
 
         await prisma.$executeRawUnsafe(`DROP SCHEMA "${this.schema}" CASCADE`)
         await prisma.$disconnect()
+
+        return super.teardown()
     }
 }

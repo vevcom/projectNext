@@ -222,6 +222,7 @@ Forms typically use Server Actions with FormData:
 - Custom Prisma test environment (`tests/PrismaTestEnvironment.ts`)
 - Test setup in `tests/setup.ts`
 - Use `IGNORE_SERVER_ONLY=true` environment variable when running tests
+- Use full variable names in callbacks — no single-letter identifiers (ESLint `id-length` rule). Use the domain name itself (e.g. `group => group.id`, `user => user.id`) as long as there are no collisions.
 
 ## Migration from OmegaWeb Basic
 
