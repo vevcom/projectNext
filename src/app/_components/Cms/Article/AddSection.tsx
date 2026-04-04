@@ -27,7 +27,9 @@ export default function AddSection({
         await addSectionToArticleAction({
             data: {
                 includeParts: {
-                    [includePart]: true,
+                    cmsImage: includePart === 'cmsImage',
+                    cmsParagraph: includePart === 'cmsParagraph',
+                    cmsLink: includePart === 'cmsLink',
                 }
             }
         })
