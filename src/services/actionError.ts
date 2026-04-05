@@ -34,7 +34,7 @@ export function createZodActionError<T>(parse: SafeParseError<T>): ActionError {
         success: false,
         httpCode: 400,
         errorCode: 'BAD PARAMETERS',
-        error: parse.error.issues as ErrorMessage[],
+        error: parse.error.issues.map(issue => ({ message: issue.message, path: issue.path.filter((p): p is string | number => typeof p === "string" || typeof p === "number") })),
     }
 }
 

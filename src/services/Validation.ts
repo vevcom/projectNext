@@ -170,7 +170,7 @@ export class Validation<
         const parse = this.detailedSchema.refine(
             this.refiner ? this.refiner.fcn : () => true, this.refiner ? this.refiner.message : 'Noe uforusett skjedde'
         ).safeParse(data)
-        if (!parse.success) throw new ServerError('BAD PARAMETERS', parse.error.issues as ErrorMessage[])
+        if (!parse.success) throw new ServerError('BAD PARAMETERS', parse.error.issues.map(issue => ({ message: issue.message, path: issue.path.filter((p): p is string | number => typeof p === 'string' || typeof p === 'number') })))
         return parse.data
     }
 }
@@ -219,16 +219,16 @@ export class ValidationPartial<
         }
         return {
             success: true,
-            data: this.transformer(parse.data as PureTsTypeOfSchema<Type, true>)
+            data: this.transformer(parse.data)
         }
     }
 
     detailedValidate(data: PureTsTypeOfSchema<Detailed, true> | unknown) {
         const parse = this.detailedSchema.partial().refine(
-            this.refiner ? (this.refiner.fcn as (data: unknown) => boolean) : () => true,
+            this.refiner ? this.refiner.fcn : () => true,
             this.refiner ? this.refiner.message : 'Noe uforusett skjedde'
         ).safeParse(data)
-        if (!parse.success) throw new ServerError('BAD PARAMETERS', parse.error.issues as ErrorMessage[])
+        if (!parse.success) throw new ServerError('BAD PARAMETERS', parse.error.issues.map(issue => ({ message: issue.message, path: issue.path.filter((p): p is string | number => typeof p === 'string' || typeof p === 'number') })))
         return parse.data
     }
 }

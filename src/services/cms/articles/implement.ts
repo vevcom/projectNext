@@ -47,44 +47,34 @@ export function implementUpdateArticleOperations<
         }
     ) => Promise<OwnedArticle[]>
 }) {
-    // TypeScript 6 + Zod v4: deferred conditional types prevent the compiler from proving
-    // that ArgsAuthGetterAndOwnershipCheck structurally contains { prisma, implementationParams }.
-    // These casts are safe at runtime since the arguments are validated before use.
-    type ImplementArgs = {
-        prisma: PrismaPossibleTransaction<false>,
-        implementationParams: z.infer<ImplementationParamsSchema>
-    }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const castAuthorizer = authorizer as AuthorizerGetter<boolean, any, any, ImplementationParamsSchema, undefined>
-
     const ownershipCheckArticle = async (
         args: Omit<ArgsAuthGetterAndOwnershipCheck<false, ParamsSchema, undefined, ImplementationParamsSchema>, 'data'>
     ) => {
-        const ownedArticleIds = (await ownedArticles(args as unknown as ImplementArgs)).map(article => article.id)
+        const ownedArticleIds = (await ownedArticles(args)).map(article => article.id)
         return ownedArticleIds.includes(args.params.articleId)
     }
 
     return {
         update: articleOperations.update.implement({
             implementationParamsSchema,
-            authorizer: castAuthorizer,
+            authorizer,
             ownershipCheck: ownershipCheckArticle
         }),
         addSection: articleOperations.addSection.implement({
             implementationParamsSchema,
-            authorizer: castAuthorizer,
+            authorizer,
             ownershipCheck: ownershipCheckArticle
         }),
         reorderSections: articleOperations.reorderSections.implement({
             implementationParamsSchema,
-            authorizer: castAuthorizer,
+            authorizer,
             ownershipCheck: ownershipCheckArticle
         }),
         coverImage: cmsImageOperations.update.implement({
             implementationParamsSchema,
-            authorizer: castAuthorizer,
+            authorizer,
             ownershipCheck: async (args) => {
-                const ownedArts = await ownedArticles(args as unknown as ImplementArgs)
+                const ownedArts = await ownedArticles(args)
                 const coverCmsImagesIds = ownedArts.map(article => article.coverImage.id)
                 return coverCmsImagesIds.includes(args.params.cmsImageId)
             }

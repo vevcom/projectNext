@@ -404,9 +404,7 @@ export function defineSubOperation<
 
                         const authorizer = await prismaErrorWrapper(
                             () => implementationArgs.authorizer(
-                                { ...args, prisma } as unknown as ArgsAuthGetterAndOwnershipCheck<
-                                    OpensTransaction, ParamsSchema, DataSchema, ImplementationParamsSchema
-                                >
+                                { ...args, prisma }
                             )
                         )
                         const authResult = authorizer.auth(session)
@@ -422,9 +420,7 @@ export function defineSubOperation<
 
                 const ownershipCheckResult = await prismaErrorWrapper(
                     () => implementationArgs.ownershipCheck(
-                        { ...args, prisma } as unknown as ArgsAuthGetterAndOwnershipCheck<
-                            OpensTransaction, ParamsSchema, DataSchema, ImplementationParamsSchema
-                        >
+                        { ...args, prisma }
                     )
                 )
                 if (!ownershipCheckResult) {
@@ -438,11 +434,7 @@ export function defineSubOperation<
                     serviceOperationConfig.operation(
                         implementationArgs.operationImplementationFields!
                     )(
-                        { ...args, prisma, bypassAuth, session } as unknown as (
-                            ParamsObject<ParamsSchema, 'INFERED'>
-                            & DataObject<DataSchema, 'INFERED'>
-                            & ServiceOperationContext<OpensTransaction>
-                        ),
+                        { ...args, prisma, bypassAuth, session },
                         prismaWhereFilter
                     )
                 )
