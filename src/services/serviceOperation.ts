@@ -283,7 +283,7 @@ export function defineSubOperation<
     ): ServiceOperation<OpensTransaction, Return, ParamsSchema, DataSchema, ImplementationParamsSchema> => {
         const expectedArgsArePresent = (
             args: ServiceOperationExecuteArgs<'UNSAFE', ParamsSchema, DataSchema, ImplementationParamsSchema>
-        ): args is ServiceOperationExecuteArgs<'SAFE', ParamsSchema, DataSchema, ImplementationParamsSchema> => {
+        ): args is Omit<ArgsAuthGetterAndOwnershipCheck<OpensTransaction, ParamsSchema, DataSchema, ImplementationParamsSchema>, 'prisma'> => {
             const paramsMatch = Boolean(args.params) === Boolean(serviceOperationConfig.paramsSchema)
             const dataMatches = Boolean(args.data) === Boolean(serviceOperationConfig.dataSchema)
             const implementationParamsMatch =

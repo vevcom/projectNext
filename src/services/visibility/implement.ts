@@ -1,6 +1,6 @@
 import { visibilityOperations } from './operations'
 import type {
-    ArgsAuthGetterAndOwnershipCheck, AuthorizerGetter, PrismaPossibleTransaction,
+    ArgsAuthGetterAndOwnershipCheck,
 } from '@/services/serviceOperation'
 import type { AuthorizerDynamicFieldsBound } from '@/auth/authorizer/Authorizer'
 import type { Prisma } from '@/prisma-generated-pn-types'
@@ -33,23 +33,14 @@ export function implementVisibilityOperations<
     implementationParamsSchema: ImplementationParamsSchema,
     authorizers: {
         update: (
-            args: {
-                prisma: PrismaPossibleTransaction<false>,
-                implementationParams: z.infer<ImplementationParamsSchema>
-            }
+            args: Omit<ArgsAuthGetterAndOwnershipCheck<false, z.ZodTypeAny, z.ZodTypeAny, ImplementationParamsSchema>, 'params' | 'data'>
         ) => AuthorizerDynamicFieldsBound | Promise<AuthorizerDynamicFieldsBound>
         read: (
-            args: {
-                prisma: PrismaPossibleTransaction<false>,
-                implementationParams: z.infer<ImplementationParamsSchema>
-            }
+            args: Omit<ArgsAuthGetterAndOwnershipCheck<false, z.ZodTypeAny, z.ZodTypeAny, ImplementationParamsSchema>, 'params' | 'data'>
         ) => AuthorizerDynamicFieldsBound | Promise<AuthorizerDynamicFieldsBound>
     },
     ownedVisibility: (
-        args: {
-            prisma: PrismaPossibleTransaction<false>,
-            implementationParams: z.infer<ImplementationParamsSchema>
-        }
+        args: Omit<ArgsAuthGetterAndOwnershipCheck<false, z.ZodTypeAny, z.ZodTypeAny, ImplementationParamsSchema>, 'params' | 'data'>
     ) => Promise<OwnedVisibility>
 }) {
     const ownershipCheckVisibility = async (

@@ -18,7 +18,9 @@ type SameKeys<T, U> = {
 type PureTsTypeOfSchema<
     T extends z.ZodRawShape,
     Partialized extends boolean = false
-> = Partialized extends true ? Partial<z.infer<ReturnType<typeof z.object<T>>>> : z.infer<ReturnType<typeof z.object<T>>>
+> = Partialized extends true
+    ? z.infer<ReturnType<ReturnType<typeof z.object<T>>["partial"]>>
+    : z.infer<ReturnType<typeof z.object<T>>>
 
 /**
  * Type for the Transformer to transfer between type and detailed types.

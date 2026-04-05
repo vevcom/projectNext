@@ -2,7 +2,7 @@ import { articleOperations } from './operations'
 import { implementUpdateArticleSectionOperations } from '@/cms/articleSections/implement'
 import { cmsImageOperations } from '@/cms/images/operations'
 import type {
-    ArgsAuthGetterAndOwnershipCheck, AuthorizerGetter, PrismaPossibleTransaction,
+    ArgsAuthGetterAndOwnershipCheck,
 } from '@/services/serviceOperation'
 import type { AuthorizerDynamicFieldsBound } from '@/auth/authorizer/Authorizer'
 import type { Prisma } from '@/prisma-generated-pn-types'
@@ -35,16 +35,10 @@ export function implementUpdateArticleOperations<
 }: {
     implementationParamsSchema: ImplementationParamsSchema,
     authorizer: (
-        args: {
-            prisma: PrismaPossibleTransaction<false>,
-            implementationParams: z.infer<ImplementationParamsSchema>
-        }
+        args: Omit<ArgsAuthGetterAndOwnershipCheck<false, z.ZodTypeAny, z.ZodTypeAny, ImplementationParamsSchema>, 'params' | 'data'>
     ) => AuthorizerDynamicFieldsBound | Promise<AuthorizerDynamicFieldsBound>,
     ownedArticles: (
-        args: {
-            prisma: PrismaPossibleTransaction<false>,
-            implementationParams: z.infer<ImplementationParamsSchema>
-        }
+        args: Omit<ArgsAuthGetterAndOwnershipCheck<false, z.ZodTypeAny, z.ZodTypeAny, ImplementationParamsSchema>, 'params' | 'data'>
     ) => Promise<OwnedArticle[]>
 }) {
     const ownershipCheckArticle = async (

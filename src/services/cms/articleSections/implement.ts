@@ -8,7 +8,7 @@ import type { AuthorizerDynamicFieldsBound } from '@/auth/authorizer/Authorizer'
 import type { Prisma } from '@/prisma-generated-pn-types'
 import type { z } from 'zod'
 import type {
-    ArgsAuthGetterAndOwnershipCheck, AuthorizerGetter, PrismaPossibleTransaction,
+    ArgsAuthGetterAndOwnershipCheck,
 } from '@/services/serviceOperation'
 
 type ParamsSchema = typeof articleSectionSchemas.params
@@ -33,16 +33,10 @@ export function implementUpdateArticleSectionOperations<
 }: {
     implementationParamsSchema: ImplementationParamsSchema,
     authorizer: (
-        args: {
-            prisma: PrismaPossibleTransaction<false>,
-            implementationParams: z.infer<ImplementationParamsSchema>
-        }
+        args: Omit<ArgsAuthGetterAndOwnershipCheck<false, z.ZodTypeAny, z.ZodTypeAny, ImplementationParamsSchema>, 'params' | 'data'>
     ) => AuthorizerDynamicFieldsBound | Promise<AuthorizerDynamicFieldsBound>,
     ownedArticleSections: (
-        args: {
-            prisma: PrismaPossibleTransaction<false>,
-            implementationParams: z.infer<ImplementationParamsSchema>
-        }
+        args: Omit<ArgsAuthGetterAndOwnershipCheck<false, z.ZodTypeAny, z.ZodTypeAny, ImplementationParamsSchema>, 'params' | 'data'>
     ) => Promise<OwnedArticleSection[]>
     destroyOnEmpty: boolean
 }) {
@@ -58,7 +52,7 @@ export function implementUpdateArticleSectionOperations<
     }
 
     const getOwnedIds = async (
-        args: Omit<ArgsAuthGetterAndOwnershipCheck<false, ParamsSchema, undefined, ImplementationParamsSchema>, 'data'>
+        args: Omit<ArgsAuthGetterAndOwnershipCheck<false, z.ZodTypeAny, z.ZodTypeAny, ImplementationParamsSchema>, 'params' | 'data'>
     ) => {
         const ownedArticleSectionsComputed = await ownedArticleSections(args)
         return {
