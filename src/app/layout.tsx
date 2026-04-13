@@ -39,6 +39,7 @@ type PropTypes = {
 
 export default async function RootLayout({ children }: PropTypes) {
     const session = await getServerSession(authOptions)
+
     const defaultPermissionsRes = await readDefaultPermissionsAction()
     const defaultPermissions = defaultPermissionsRes.success ? defaultPermissionsRes.data : []
     const profile = session?.user ?
