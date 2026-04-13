@@ -18,7 +18,7 @@ export default function PaymentMethodList({ paymentMethods }: Params) {
         switch (type) {
             case 'card':
                 return <>
-                    <span>{card?.brand.toUpperCase()}</span>
+                    <span>{card?.brand?.toUpperCase()}</span>
                     <span>**** **** **** {card?.last4}</span>
                     <span>(utløper {card?.exp_month}/{card?.exp_year})</span>
                 </>
