@@ -5,7 +5,7 @@ import { PrismaPg } from '@prisma/adapter-pg'
 // Read more about it in the section "Prevent hot reloading from creating new instances of PrismaClient" here:
 // https://www.prisma.io/docs/orm/prisma-client/setup-and-configuration/databases-connections
 
-// This is how the Prisma docs recommend doing it in development. Do not use this in production or tests
+// This is how the Prisma docs recommend doing it
 const globalForPrisma = global as unknown as { prisma: PrismaClient }
 
 export const prisma = globalForPrisma.prisma || new PrismaClient({
@@ -15,4 +15,4 @@ export const prisma = globalForPrisma.prisma || new PrismaClient({
     )
 })
 
-if (process.env.NODE_ENV === 'development') globalForPrisma.prisma = prisma
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
