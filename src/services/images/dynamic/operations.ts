@@ -6,7 +6,7 @@ import { implementDoubleLevelVisibilityOperations } from '@/services/visibility/
 import { defineOperation, type PrismaPossibleTransaction } from '@/services/serviceOperation'
 import { imageOperations, uniqueCollectionWhere } from '@/services/images/subservice/operations'
 import { readPageInputSchemaObject } from '@/lib/paging/schema'
-import { standardImageCollection } from '@/services/images/standard/operations'
+import { standardImageCollectionOperations } from '@/services/images/standard/operations'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { z } from 'zod'
 import type { Image, Prisma } from '@/prisma-generated-pn-types'
@@ -93,9 +93,9 @@ const readCollectionPage = defineOperation({
             ],
         })
 
-        const lensCamera = standardImageCollection.readStandardImage({
+        const lensCamera = standardImageCollectionOperations.readStandardImage({
             params: {
-                specialImage: 'DEFAULT_IMAGE_COLLECTION_COVER'
+                standardImage: 'DEFAULT_IMAGE_COLLECTION_COVER'
             }
         })
 
@@ -108,12 +108,12 @@ const readCollectionPage = defineOperation({
             if (lensCamera) return lensCamera
             return null
         }
-        const returnData = collections.map(collection => ({
+
+        return collections.map(collection => ({
             ...collection,
             coverImage: chooseCoverImage(collection),
             numberOfImages: collection._count.images,
         }))
-        return returnData
     }
 })
 
@@ -179,6 +179,7 @@ export const dynamicImageOperations = {
                 }),
             }),
         ownershipCheck,
+        operationImplementationFields: { uploadAsStandardImage: null }
     }),
 
     uploadManyImages: imageOperations.uploadManyImages.implement({

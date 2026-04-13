@@ -1,8 +1,8 @@
-enum SpecialImage {
+enum StandardImage {
   DEFAULT_IMAGE
   DEFAULT_IMAGE_COLLECTION_COVER
   DEFAULT_PROFILE_IMAGE
-  DAFAULT_COMMITTEE_LOGO
+  DEFAULT_COMMITTEE_LOGO
   LOGO_SIMPLE
   LOGO_WHITE
   LOGO_WHITE_TEXT
@@ -33,7 +33,7 @@ model Image {
   licenseName             String?
   licenseLink             String?
   cmsImages               CmsImage[]
-  special                 SpecialImage?    @unique
+  standardImage           StandardImage?   @unique
   User                    User[]
 }
 

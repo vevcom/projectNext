@@ -12,7 +12,6 @@ import {
     updatePublicArticleSectionsAddPartAction,
     updatePublicArticleSectionsRemovePartAction
 } from '@/services/publicArticles/actions'
-import React from 'react'
 
 function PublicArticle(props: Omit<PropTypes, 'actions'>) {
     return (

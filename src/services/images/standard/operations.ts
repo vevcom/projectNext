@@ -1,12 +1,14 @@
 import '@pn-server-only'
 import { standardImageAuth } from './auth'
 import { implementSpecialCollection } from '@/services/images/subservice/special/implementSpecialCollection'
-import { defineOperation } from '@/services/serviceOperation'
+import { defineOperation, defineSubOperation } from '@/services/serviceOperation'
 import logger from '@/lib/logger'
-import { SpecialImage } from '@/prisma-generated-pn-types'
+import { StandardImage } from '@/prisma-generated-pn-types'
 import { z } from 'zod'
+import { imageOperations } from '../subservice/operations'
+import { StandardImageConfig } from './constants'
 
-const standardImageCollectionOperations = implementSpecialCollection({
+const { specialCollectionPanelOperations: standardCollectionPanelOperations } = implementSpecialCollection({
     special: 'STANDARDIMAGES',
     readSpecialCollectionPanelAuther: standardImageAuth.readSpecialCollectionPanel.dynamicFields({}),
     config: {
@@ -20,34 +22,74 @@ const standardImageCollectionOperations = implementSpecialCollection({
     }
 })
 
-export const standardImageCollection = {
+/**
+ * The standard images are housed in the standardcollection - a special image collection.
+ * It exposes the panel operations for reading the images in the collection
+ * but also the method for reading a standard image. If it is not found in the database,
+ * it will be created from the static config on runtime.
+ */
+export const standardImageCollectionOperations = {
     readStandardImage: defineOperation({
         authorizer: () => standardImageAuth.readStandardImage.dynamicFields({}),
         paramsSchema: z.object({
-            specialImage: z.nativeEnum(SpecialImage)
+            standardImage: z.nativeEnum(StandardImage)
         }),
         operation: async ({ prisma, params }) => {
             const image = await prisma.image.findUnique({
                 where: {
-                    special: params.specialImage
+                    standardImage: params.standardImage
                 }
             })
 
-            if (image) return image
+            const standardCollection =
+                await standardCollectionPanelOperations.readCollection({})
+            const standardImageIsPartOfStandardCollection = standardCollection.id === image?.collectionId
 
-            logger.error(`
-                Special image ${params.specialImage} not found in database.
-                This should never happen, as it should be seeded on every environment.
-                Creating it on runtime from the config.
-            `)
+            if (image && standardImageIsPartOfStandardCollection) return image
 
-            return standardImageCollectionOperations.internalOperations.uploadImage.internalCall({
+            if (image) {
+                logger.error(`
+                    Standard image ${params.standardImage} found in database, but not part of the standard collection.
+                    This should never happen, as the standard collection should be the only collection 
+                    that can have standard images.
+                    Removing the image from the database and creating it again from the config to ensure data integrity.
+                `)
+
+                await imageOperations.destroyImage.internalCall({
+                    prisma,
+                    params: { imageId: image.id }
+                })
+            } else {
+                logger.error(`
+                    Standard image ${params.standardImage} not found in database.
+                    This should never happen, as it should be seeded on every environment.
+                    Creating it on runtime from the config.     
+                `)
+            }
+
+            return null
+        }
+    }),
+    generateStandardImageFromConfig: defineSubOperation({
+        paramsSchema: () => z.object({
+            standardImage: z.nativeEnum(StandardImage)
+        }),
+        operation: () => async ({ prisma, params }) => {
+            const config = StandardImageConfig[params.standardImage]
+
+
+            return await imageOperations.uploadImage.internalCall({
                 prisma,
                 data: {
-
-                }
+                    imageFile,
+                    imageAlt: config.alt,
+                    imageName: config.name,
+                    imageLicenseId: ...,
+                    imageCredit: config.credit,
+                },
+                operationImplementationFields: { uploadAsStandardImage: params.standardImage }
             })
         }
     }),
-    panelOperations: standardImageCollectionOperations.specialCollectionPanelOperations,
+    panelOperations: standardCollectionPanelOperations,
 } as const

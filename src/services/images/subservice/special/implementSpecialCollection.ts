@@ -68,17 +68,10 @@ export function implementSpecialCollection({
                             collectionId: (await readCollection({})).id,
                         },
                         data,
+                        operationImplementationFields: { uploadAsStandardImage: null }
                     })
             }),
-            destroyImage: defineSubOperation({
-                paramsSchema: () => imageSchemas.paramsSchemaImage,
-                operation: () => async ({ params }) =>
-                    imageOperations.destroyImage.internalCall({
-                        params: {
-                            imageId: params.imageId,
-                        },
-                    })
-            })
+            destroyImage: imageOperations.destroyImage,
         },
         specialCollectionPanelOperations: {
             readCollection,

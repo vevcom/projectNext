@@ -8,7 +8,7 @@ import { implementStore } from '@/lib/store/implementStore'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import sharp from 'sharp'
 import { File } from 'node:buffer'
-import type { Prisma } from '@/prisma-generated-pn-types'
+import type { Prisma, StandardImage } from '@/prisma-generated-pn-types'
 import type { z } from 'zod'
 
 const imageStore = implementStore({
@@ -67,7 +67,9 @@ export const imageOperations = {
     uploadImage: defineSubOperation({
         paramsSchema: () => imageSchemas.paramsSchemaCollection,
         dataSchema: () => imageSchemas.uploadImage,
-        operation: () => async ({ prisma, params, data }) => {
+        operation: (
+            { uploadAsStandardImage }: { uploadAsStandardImage: StandardImage | null }
+        ) => async ({ prisma, params, data }) => {
             const { imageFile, ...meta } = data
             const buffer = Buffer.from(await imageFile.arrayBuffer())
             const avifBuffer = await sharp(buffer).toFormat('avif').avif(avifConvertionOptions).toBuffer()
@@ -97,6 +99,7 @@ export const imageOperations = {
                     fsLocationMediumSize,
                     fsLocationLargeSize,
                     extOriginal,
+                    standardImage: uploadAsStandardImage,
                     collection: {
                         connect: uniqueCollectionWhere(params)
                     }
@@ -122,6 +125,7 @@ export const imageOperations = {
                         imageLicenseId: data.imageLicenseId,
                         imageCredit: data.imageCredit
                     },
+                    operationImplementationFields: { uploadAsStandardImage: null }
                 })
             }
         }
