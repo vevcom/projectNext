@@ -34,6 +34,7 @@ services:
         volumes:
             - ./containers/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
             - ./containers/nginx/default.conf:/etc/nginx/templates/default.conf.template:ro
+            - ./containers/nginx/auth:/etc/nginx/auth:ro
             - store:/usr/store:ro
             - ./certs/conf:/etc/letsencrypt:ro
             - ./certs/www/:/var/www/certbot:ro
