@@ -52,13 +52,8 @@ export const standardImageCollectionOperations = {
                     Standard image ${params.standardImage} found in database, but not part of the standard collection.
                     This should never happen, as the standard collection should be the only collection 
                     that can have standard images.
-                    Removing the image from the database and creating it again from the config to ensure data integrity.
+                    Generating it again from the config to ensure data integrity.
                 `)
-
-                await imageOperations.destroyImage.internalCall({
-                    prisma,
-                    params: { imageId: image.id }
-                })
             } else {
                 logger.error(`
                     Standard image ${params.standardImage} not found in database.
@@ -67,7 +62,7 @@ export const standardImageCollectionOperations = {
                 `)
             }
 
-            return null
+            return {}
         }
     }),
     generateStandardImageFromConfig: defineSubOperation({
@@ -76,7 +71,11 @@ export const standardImageCollectionOperations = {
         }),
         operation: () => async ({ prisma, params }) => {
             const config = StandardImageConfig[params.standardImage]
-
+            await prisma.image.delete({
+                where: {
+                    standardImage: params.standardImage
+                }
+            })
 
             return await imageOperations.uploadImage.internalCall({
                 prisma,

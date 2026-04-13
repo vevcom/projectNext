@@ -30,6 +30,8 @@ RUN mkdir -p usr/src/app/store/images
 COPY public public
 COPY next-env.d.t[s] next.config.ts tsconfig.json ./
 
+COPY standard_store standard_store
+
 ############################################################
 FROM base AS prod
 
@@ -52,5 +54,6 @@ CMD ["npm", "run", "test"]
 FROM base AS dev
 
 ENV NODE_ENV=development
+# src is expected to be binded in dev
 
 CMD ["npm", "run", "dev-seed"]

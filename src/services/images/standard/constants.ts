@@ -1,27 +1,21 @@
+import { StandardStoreFile, standardStoreFiles } from '@/lib/standardStore/files'
 import type { StandardImage } from '@/prisma-generated-pn/enums'
 import type { StandardLicenseName } from '@/services/licenses/constants'
 
 export const StandardImageConfig = {
     DEFAULT_IMAGE: {
+        standardStoreFile: standardStoreFiles.defaultImage,
         name: 'default_image',
         alt: 'standard bilde (ikke funnet)',
-        standardStoreLocation: 'default_image.jpeg',
-        credit: null,
-        license: null,
     },
     DEFAULT_IMAGE_COLLECTION_COVER: {
+        standardStoreFile: standardStoreFiles.album,
         name: 'lens_camera',
         alt: 'Et kamera med en linse',
-        standardStoreLocation: 'lens_camera.jpeg',
-        credit: null,
-        license: null,
     },
     DEFAULT_PROFILE_IMAGE: {
         name: 'default_profile_image',
         alt: 'standard profilbilde',
-        standardStoreLocation: 'default_profile_image.png',
-        credit: null,
-        license: null,
     },
     DEFAULT_COMMITTEE_LOGO: {
         name: 'default_committee_logo',
@@ -101,9 +95,7 @@ export const StandardImageConfig = {
         // From contactor
     }
 } as const satisfies Record<StandardImage, {
+    standardStoreFile: StandardStoreFile
     name: string
     alt: string
-    standardStoreLocation: string
-    credit: string | null
-    license: StandardLicenseName | null
 }>

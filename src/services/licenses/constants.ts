@@ -1,6 +1,13 @@
 
+export const standardLicenseNames = [
+    'CC BY-SA 4.0',
+    'Paxels',
+] as const
+
+export type StandardLicenseName = typeof standardLicenseNames[number]
+
 type StandardLicenseConfig = {
-    name: string
+    name: StandardLicenseName
     link: string
 }
 
@@ -10,13 +17,12 @@ type StandardLicenseConfig = {
  */
 export const standardLicensesConfig = [
     {
-        name: 'CC BY-SA 4.0',
+        name: standardLicenseNames[0],
         link: 'https://creativecommons.org/licenses/by-sa/4.0/',
     },
     {
-        name: 'Paxels',
+        name: standardLicenseNames[1],
         link: 'https://www.pexels.com/license/',
     },
 ] as const satisfies StandardLicenseConfig[]
 
-export type StandardLicenseName = typeof standardLicensesConfig[number]['name']
