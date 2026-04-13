@@ -128,11 +128,13 @@ export async function stripeWebhookCallback(event: Stripe.Event): Promise<Respon
     // We only allow one payment attempt per payment intent.
     // If this failed we cancel the payment intent to make sure it cannot be used in the future.
     if (event.type === 'payment_intent.payment_failed') {
-        stripe.paymentIntents.cancel(
+        await stripe.paymentIntents.cancel(
             paymentIntent.id,
             {},
             { idempotencyKey: `project-next-payment-id-${paymentIntent.id}` },
-        )
+        ).catch((err) => {
+            logger.error(`Failed to cancel payment intent ${paymentIntent.id}: ${err}`)
+        })
     }
 
     return new Response('', { status: 200 })
