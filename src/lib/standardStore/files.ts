@@ -1,6 +1,7 @@
 import { readFile } from 'fs/promises'
 import { join } from 'path'
 import { fileURLToPath } from 'url'
+import { File } from 'node:buffer'
 import type { StandardLicenseName } from '@/services/licenses/constants'
 
 const standardStoreRoot = fileURLToPath(new URL('../../../standard_store/', import.meta.url))
