@@ -1,10 +1,10 @@
 import UserSettingsForm from './UserProfileSettingsForm'
+import UserProfileSettingsCard from './UserProfileSettingsCard'
 import { getProfileForAdmin } from '@/app/users/[username]/(user-admin)/getProfileForAdmin'
 import Image from '@/components/Image/Image'
 import { readUserProfileAction } from '@/services/users/actions'
 import { notFound } from 'next/navigation'
 import type { PropTypes } from '@/app/users/[username]/page'
-import UserProfileSettingsCard from './UserProfileSettingsCard'
 
 export default async function UserSettings({ params }: PropTypes) {
     const { profile } = await getProfileForAdmin(await params, 'settings')

@@ -3,13 +3,13 @@ import { readUserProfileAction } from '@/services/users/actions'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { ServerSession } from '@/auth/session/ServerSession'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
+import { SubPageNavBar, SubPageNavBarItem } from '@/components/NavBar/SubPageNavBar/SubPageNavBar'
+import { flairAuth } from '@/services/flairs/auth'
 import { notFound } from 'next/navigation'
+import { faCircleDot, faCog, faHatWizard, faKey, faPaperPlane, faUser } from '@fortawesome/free-solid-svg-icons'
 import type { ReactNode } from 'react'
 import type { PropTypes } from '@/app/users/[username]/page'
-import { SubPageNavBar, SubPageNavBarItem } from '@/components/NavBar/SubPageNavBar/SubPageNavBar'
-import { faCircleDot, faCog, faHatWizard, faKey, faPaperPlane, faUser } from '@fortawesome/free-solid-svg-icons'
 import type { Metadata } from 'next'
-import { flairAuth } from '@/services/flairs/auth'
 
 export const metadata: Metadata = {
     title: 'Innstillinger',

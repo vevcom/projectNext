@@ -1,4 +1,5 @@
 'use client'
+import styles from './UserProfileSettingsForm.module.scss'
 import Form from '@/components/Form/Form'
 import Checkbox from '@/components/UI/Checkbox'
 import TextInput from '@/components/UI/TextInput'
@@ -9,7 +10,6 @@ import { sexConfig, relationshipStatusConfig } from '@/services/users/constants'
 import Textarea from '@/components/UI/Textarea'
 import type { UserFiltered } from '@/services/users/types'
 import { RelationshipStatus, SEX } from '@/prisma-generated-pn-types'
-import styles from './UserProfileSettingsForm.module.scss'
 
 const SeclectRelationshipStatus = SelectConstructor<RelationshipStatus>(
     value => Object.values(RelationshipStatus).find(status => status === value) ?? RelationshipStatus.NOT_SPECIFIED

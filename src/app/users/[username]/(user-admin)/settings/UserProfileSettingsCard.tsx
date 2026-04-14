@@ -1,5 +1,5 @@
-import type { ReactNode } from 'react'
 import styles from './UserProfileSettingsCard.module.scss'
+import type { ReactNode } from 'react'
 
 export default function UserProfileSettingsCard({ children } : {children:ReactNode}) {
     return (
