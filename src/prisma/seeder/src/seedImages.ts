@@ -1,150 +1,91 @@
-import {
-    seedImageConfig, seedSpecialImageConfig, seedLicenseConfig
-} from './seedImagesConfig'
-import { v4 as uuid } from 'uuid'
-import sharp from 'sharp'
-import { readdir, copyFile, mkdir } from 'fs/promises'
-import path, { join, dirname } from 'path'
-import { fileURLToPath } from 'url'
-import type { ImageSeedConfigBase } from './seedImagesConfig'
+import { standardImageCollectionOperations } from '@/services/images/standard/operations'
+import { StandardImage } from '@/prisma-generated-pn/enums'
+import { dynamicImageOperations } from '@/services/images/dynamic/operations'
+import { standardStoreFiles } from '@/lib/standardStore/files'
 import type { PrismaClient } from '@/prisma-generated-pn-client'
-import type { Image } from '@/prisma-generated-pn-types'
+import type { StandardStoreFile } from '@/lib/standardStore/files'
+import { getUploadImageData } from '@/lib/standardStore/getUploadImageData'
 
-const fileName = fileURLToPath(import.meta.url)
-const directoryName = dirname(fileName)
+export const seedDynamicImagesForCms = [
+    {
+        standardStoreFile: standardStoreFiles.treaty,
+        name: 'traktat',
+        alt: 'En gammel traktat',
+    },
+    {
+        standardStoreFile: standardStoreFiles.kappemann,
+        name: 'kappemann',
+        alt: 'En kappemann',
+    },
+    {
+        standardStoreFile: standardStoreFiles.kongsberg,
+        name: 'kongsberg',
+        alt: 'Kongsberg',
+    },
+    {
+        standardStoreFile: standardStoreFiles.nordic,
+        name: 'nordic',
+        alt: 'Nordic',
+    },
+    {
+        standardStoreFile: standardStoreFiles.ohma,
+        name: 'ohma',
+        alt: 'Ohma (verdens beste lokomotiv)',
+    },
+    {
+        standardStoreFile: standardStoreFiles.omegaMai,
+        name: 'omega_mai',
+        alt: 'Omega mai',
+    },
+    {
+        standardStoreFile: standardStoreFiles.ov,
+        name: 'ov',
+        alt: 'OV',
+    },
+    {
+        standardStoreFile: standardStoreFiles.pwa,
+        name: 'pwa',
+        alt: 'PWA',
+    },
+] as const satisfies {
+    standardStoreFile: StandardStoreFile,
+    name: string,
+    alt: string,
+}[]
 
-export const imageSizes = {
-    small: 180,
-    medium: 450,
-    large: 700,
-}
-
-const standardLocation = join(directoryName, '..', 'standard_store', 'images')
-export const imageStoreLocation = join(directoryName, '..', '..', '..', '..', 'store', 'images')
-
-export type SeederImage = ImageSeedConfigBase & Pick<Image, 'special'>
-
-export async function seedImage(
-    prisma: PrismaClient,
-    fileLocation: string,
-    files: string[],
-    image: SeederImage
-): Promise<Image | null> {
-    const file = files.find(file_ => file_ === image.fsLocation)
-    if (!file) throw new Error(`File ${image.fsLocation} not found in standard_store/images`)
-
-    const ext = file.split('.')[1]
-    if (!['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext)) {
-        console.log(`skipping image ${file}`)
-        return null
-    }
-
-    const bigPath = path.join(fileLocation, file)
-
-    //full size version of the image
-    const fsLocationOriginal = `${uuid()}.${ext}`
-    await copyFile(
-        bigPath,
-        join(imageStoreLocation, fsLocationOriginal)
+export async function seedImages(prisma: PrismaClient) {
+    await Promise.all(
+        Object.values(StandardImage).map(async (standardImage) => {
+            standardImageCollectionOperations.generateStandardImageFromConfig.internalCall({
+                prisma,
+                params: { standardImage }
+            })
+        })
     )
 
-    //create small size version of the image
-    const fsLocationSmallSize = `${uuid()}.${ext}`
-    const smallPath = path.join(imageStoreLocation, fsLocationSmallSize)
-    await sharp(bigPath).resize(imageSizes.small, imageSizes.small, {
-        fit: sharp.fit.inside,
-        withoutEnlargement: true
-    }).toFile(smallPath)
-
-    //create medium size version of the image
-    const fsLocationMediumSize = `${uuid()}.${ext}`
-    const mediumPath = path.join(imageStoreLocation, fsLocationMediumSize)
-    await sharp(bigPath).resize(imageSizes.medium, imageSizes.medium, {
-        fit: sharp.fit.inside,
-        withoutEnlargement: true
-    }).toFile(mediumPath)
-
-    // Create Large size version of the image
-    const fsLocationLargeSize = `${uuid()}.${ext}`
-    const largePath = path.join(imageStoreLocation, fsLocationLargeSize)
-    await sharp(bigPath).resize(imageSizes.large, imageSizes.large, {
-        fit: sharp.fit.inside,
-        withoutEnlargement: true
-    }).toFile(largePath)
-
-    //Delete all images with image.name
-    await prisma.image.deleteMany({
-        where: {
-            name: image.name
-        }
-    })
-
-    return await prisma.image.create({
+    const collectionForImagesUsedForSeededCms = await dynamicImageOperations.createCollection({
+        prisma,
         data: {
-            name: image.name,
-            alt: image.alt,
-            credit: image.credit,
-            license: image.license ? {
-                connect: {
-                    name: image.license
-                }
-            } : undefined,
-            fsLocationOriginal,
-            fsLocationSmallSize,
-            fsLocationMediumSize,
-            fsLocationLargeSize,
-            extOriginal: ext,
-            special: image.special,
-            collection: {
-                connect: {
-                    name: image.collection
-                }
-            },
+            collectionName: 'seeded cms images',
+            collectionDescription: 'A collection for images used for seeded cms content',
         }
     })
-}
 
-/**
- * This functions seeds all images in standard_store/images,
- * both the ones that are special and the ones that are not.
- * All are seeded to the special collection 'STANDARDIMAGES'
- * @param pisama - the prisma client
- */
-export default async function seedImages(prisma: PrismaClient) {
-    // Seed all licenses
-    await prisma.license.createMany({
-        data: seedLicenseConfig
-    })
+    await Promise.all(seedDynamicImagesForCms.map(async (imageConfig) => {
+        const license = await 
 
-    await mkdir(imageStoreLocation, { recursive: true })
-
-    const files = await readdir(standardLocation)
-
-    //Get the to bjects to a common format
-    const seedSpecialImagesTransformed = transformObject(seedSpecialImageConfig, (value, key) => ({
-        ...value,
-        special: key
-    }))
-    const seedImagesTransformed = seedImageConfig.map((value) => ({
-        ...value,
-        special: null
-    }))
-    const allImages = [...seedSpecialImagesTransformed, ...seedImagesTransformed]
-
-    //Seed all images
-    await Promise.all(allImages.map(async (image) => {
-        await seedImage(prisma, standardLocation, files, image)
+        await dynamicImageOperations.uploadImage({
+            prisma,
+            data: getUploadImageData,
+            params: {
+                collectionId: collectionForImagesUsedForSeededCms.id,
+            }
+        })
     }))
 }
 
-/**
- * A function to transform an object to an array
- * @param obj - the object to transform
- * @param fn - the function to transform the object with
- * @returns
- */
-export function transformObject<KeyType extends string | number | symbol, ValueType, ReturnType>(
-    obj: Record<KeyType, ValueType>, fn: (value: ValueType, key: KeyType) => ReturnType
-): ReturnType[] {
-    return Object.entries(obj).map(([key, value]) => fn(value as ValueType, key as KeyType))
+export type ImagesAvailablieForCms = {
+    name: typeof seedDynamicImagesForCms[number]['name']
+} | {
+    standardImage: StandardImage
 }

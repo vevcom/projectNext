@@ -177,15 +177,6 @@ export default async function seedDevUsers(prisma: PrismaClient) {
         }))
     }))
 
-    const harambeImage = await prisma.image.findFirst({
-        where: {
-            name: 'harambe'
-        }
-    })
-    if (!harambeImage) {
-        throw new Error('Harambe image not found')
-    }
-
     const harambe = await prisma.user.upsert({
         where: {
             email: 'harambe@harambesen.io'

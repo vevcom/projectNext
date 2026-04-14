@@ -6,7 +6,6 @@ import { defineOperation, defineSubOperation } from '@/services/serviceOperation
 import logger from '@/lib/logger'
 import { StandardImage } from '@/prisma-generated-pn-types'
 import { imageOperations } from '@/services/images/subservice/operations'
-import { licenseOperations } from '@/services/licenses/operations'
 import { z } from 'zod'
 
 const { specialCollectionPanelOperations: standardCollectionPanelOperations } = implementSpecialCollection({
@@ -35,21 +34,12 @@ const generateStandardImageFromConfig = defineSubOperation({
             }
         })
 
-        const license = config.standardStoreFile.license ? (
-            await licenseOperations.readStandardLicense.internalCall({
-                params: { standardLicenseName: config.standardStoreFile.license }
-            })
-        ) : null
-
         return await imageOperations.uploadImage.internalCall({
             prisma,
-            data: {
-                imageFile: await config.standardStoreFile.readFile(),
-                imageAlt: config.alt,
-                imageName: config.name,
-                imageLicenseId: license?.id,
-                imageCredit: config.standardStoreFile.credit || undefined,
-            },
+            data: await config.standardStoreFile.imageUploadData({
+                name: config.name,
+                alt: config.alt
+            }),
             params: {
                 collectionId: (await standardCollectionPanelOperations.readCollection({})).id,
             },

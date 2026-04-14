@@ -1,12 +1,16 @@
+import {
+    standardStoreFiles,
+    type StandardStoreFile
+} from '@/lib/standardStore/files'
 import type { FlairCreateInput } from '@/prisma-generated-pn/models'
 import type { PrismaClient } from '@/prisma-generated-pn-client'
 
 const flairConfig: {
-    imageName: string,
+    imageName: StandardStoreFile,
     data: Omit<FlairCreateInput, 'cmsImage'>
 }[] = [
     {
-        imageName: 'kappemann_paske',
+        imageName: standardStoreFiles.kappemannPaske,
         data: {
             name: 'Påskekappe',
             rank: 1,
@@ -16,7 +20,7 @@ const flairConfig: {
         }
     },
     {
-        imageName: 'kappemann_diamant',
+        imageName: standardStoreFiles.kappemannDiamant,
         data: {
             name: 'Diamantkappe',
             rank: 2,
@@ -26,7 +30,7 @@ const flairConfig: {
         }
     },
     {
-        imageName: 'kappemann_gull',
+        imageName: standardStoreFiles.kappemannGull,
         data: {
             name: 'Gullkappe',
             rank: 3,
@@ -36,7 +40,7 @@ const flairConfig: {
         }
     },
     {
-        imageName: 'kappemann_solv',
+        imageName: standardStoreFiles.kappemannSolv,
         data: {
             name: 'Solvkappe',
             rank: 4,
@@ -46,7 +50,7 @@ const flairConfig: {
         }
     },
     {
-        imageName: 'kappemann_bronse',
+        imageName: standardStoreFiles.kappemannBronse,
         data: {
             name: 'Bronsekappe',
             rank: 5,

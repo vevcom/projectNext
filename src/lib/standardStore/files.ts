@@ -1,22 +1,53 @@
+import { licenseOperations } from '@/services/licenses/operations'
 import { readFile } from 'fs/promises'
 import { join } from 'path'
 import { fileURLToPath } from 'url'
 import { File } from 'node:buffer'
 import type { StandardLicenseName } from '@/services/licenses/constants'
+import type { imageSchemas } from '@/services/images/subservice/schemas'
+import type { z } from 'zod'
 
 const standardStoreRoot = fileURLToPath(new URL('../../../standard_store/', import.meta.url))
 
-const standardStoreFile = (location: string) => async (): Promise<File> => {
-    const filePath = join(standardStoreRoot, location)
-    const fileContents = await readFile(filePath)
-    return new File([fileContents], location)
+export type StandardStoreFile = {
+    file: () => Promise<File>,
+    credit: () => string | null,
+    license: () => StandardLicenseName | null,
+    originOfFile: () => URL | string
+    imageUploadData: (imageData: { name: string, alt: string }) => Promise<z.input<typeof imageSchemas.uploadImage>>
 }
 
-export type StandardStoreFile = {
-    readFile: () => Promise<File>,
+const standardStoreFile = (config: {
+    location: string,
     credit: string | null,
     license: StandardLicenseName | null,
     originOfFile: URL | string
+}): StandardStoreFile => {
+    const file = async () => {
+        const filePath = join(standardStoreRoot, config.location)
+        const fileContents = await readFile(filePath)
+        return new File([fileContents], config.location)
+    }
+
+    return {
+        file,
+        credit: () => config.credit,
+        license: () => config.license,
+        originOfFile: () => config.originOfFile,
+        imageUploadData: async (imageData) => {
+            const license = config.license ? await licenseOperations.readStandardLicense.internalCall({
+                params: { standardLicenseName: config.license }
+            }) : null
+
+            return {
+                imageFile: await file(),
+                imageName: imageData.name,
+                imageAlt: imageData.alt,
+                imageCredit: config.credit ?? undefined,
+                imageLicenseId: license ? license.id : undefined,
+            }
+        }
+    }
 }
 
 type StandardStoreFilesMap = {
@@ -25,270 +56,270 @@ type StandardStoreFilesMap = {
 }
 
 export const standardStoreFiles = {
-    defaultImage: {
-        readFile: standardStoreFile('default_image.png'),
+    defaultImage: standardStoreFile({
+        location: 'default_image.png',
         credit: null,
         license: null,
         originOfFile: new URL('https://pixabay.com/vectors/image-media-icon-symbol-visual-2935360/'),
-    },
-    album: {
-        readFile: standardStoreFile('album.jpeg'),
+    }),
+    album: standardStoreFile({
+        location: 'album.jpeg',
         credit: null,
         license: null,
         originOfFile: new URL('https://pixabay.com/photos/photos-nostalgia-retro-photography-7666143/'),
-    },
-    books: {
-        readFile: standardStoreFile('books.jpeg'),
+    }),
+    books: standardStoreFile({
+        location: 'books.jpeg',
         credit: 'Alexander Grey',
         license: 'Paxels',
         originOfFile: new URL('https://www.pexels.com/photo/selective-focus-photo-of-pile-of-assorted-title-books-1148399/'),
-    },
-    fair: {
-        readFile: standardStoreFile('fair.jpeg'),
+    }),
+    fair: standardStoreFile({
+        location: 'fair.jpeg',
         credit: null,
         license: null,
         originOfFile: 'From contractor',
-    },
-    harambe: {
-        readFile: standardStoreFile('harambe.jpg'),
+    }),
+    harambe: standardStoreFile({
+        location: 'harambe.jpg',
         credit: null,
         license: null,
         originOfFile: new URL('https://pixabay.com/photos/silverback-gorilla-male-gorilla-271002/'),
-    },
-    hovedbygget: {
-        readFile: standardStoreFile('hovedbygget.jpeg'),
+    }),
+    hovedbygget: standardStoreFile({
+        location: 'hovedbygget.jpeg',
         credit: 'Thomas Høstad/NTNU',
         license: 'CC BY-SA 4.0',
         originOfFile: new URL('https://ntnu.fotoware.cloud/fotoweb/archives/'),
-    },
-    kongsberg: {
-        readFile: standardStoreFile('kongsberg.png'),
+    }),
+    kongsberg: standardStoreFile({
+        location: 'kongsberg.png',
         credit: null,
         license: null,
         originOfFile: 'Kongsberg Gruppen',
-    },
-    logoSimple: {
-        readFile: standardStoreFile('logo_simple.png'),
+    }),
+    logoSimple: standardStoreFile({
+        location: 'logo_simple.png',
         credit: null,
         license: null,
         originOfFile: 'ow - basic',
-    },
-    logoWhite: {
-        readFile: standardStoreFile('logo_white.png'),
+    }),
+    logoWhite: standardStoreFile({
+        location: 'logo_white.png',
         credit: null,
         license: null,
         originOfFile: 'ow - basic',
-    },
-    machine: {
-        readFile: standardStoreFile('machine.jpeg'),
+    }),
+    machine: standardStoreFile({
+        location: 'machine.jpeg',
         credit: 'Børge Sandnes/NTNU',
         license: 'CC BY-SA 4.0',
         originOfFile: 'https://ntnu.fotoware.cloud/fotoweb/archives/',
-    },
-    magiskHattWhite: {
-        readFile: standardStoreFile('magisk_hatt_white.png'),
+    }),
+    magiskHattWhite: standardStoreFile({
+        location: 'magisk_hatt_white.png',
         credit: null,
         license: null,
         originOfFile: 'ow-basic',
-    },
-    magiskHatt: {
-        readFile: standardStoreFile('magisk_hatt.png'),
+    }),
+    magiskHatt: standardStoreFile({
+        location: 'magisk_hatt.png',
         credit: null,
         license: null,
         originOfFile: 'ow-basic',
-    },
-    omegaLogoWhite: {
-        readFile: standardStoreFile('omega_logo_white.png'),
+    }),
+    omegaLogoWhite: standardStoreFile({
+        location: 'omega_logo_white.png',
         credit: null,
         license: null,
         originOfFile: 'ow - basic',
-    },
-    omegamai: {
-        readFile: standardStoreFile('Omegamai.jpeg'),
+    }),
+    omegaMai: standardStoreFile({
+        location: 'Omegamai.jpeg',
         credit: null,
         license: null,
         originOfFile: 'ow - basic',
-    },
-    ov: {
-        readFile: standardStoreFile('ov.jpeg'),
+    }),
+    ov: standardStoreFile({
+        location: 'ov.jpeg',
         credit: null,
         license: null,
         originOfFile: 'ow - basic',
-    },
-    pwa: {
-        readFile: standardStoreFile('pwa.png'),
+    }),
+    pwa: standardStoreFile({
+        location: 'pwa.png',
         credit: null,
         license: null,
         originOfFile: 'pwa logo',
-    },
-    realfagsbygget: {
-        readFile: standardStoreFile('realfagsbygget.jpeg'),
+    }),
+    realfagsbygget: standardStoreFile({
+        location: 'realfagsbygget.jpeg',
         credit: 'Per Henning/NTNU',
         license: 'CC BY-SA 4.0',
         originOfFile: 'https://ntnu.fotoware.cloud/fotoweb/archives/',
-    },
-    treaty: {
-        readFile: standardStoreFile('treaty.jpg'),
+    }),
+    treaty: standardStoreFile({
+        location: 'treaty.jpg',
         credit: null,
         license: null,
         originOfFile: new URL('https://pixabay.com/photos/paper-document-old-writing-vintage-3212015/'),
-    },
-    vevcomLogo: {
-        readFile: standardStoreFile('vevcom_logo.png'),
+    }),
+    vevcomLogo: standardStoreFile({
+        location: 'vevcom_logo.png',
         credit: null,
         license: null,
         originOfFile: 'ow - basic',
-    },
-    kappemann: {
-        readFile: standardStoreFile('kappemann.jpeg'),
+    }),
+    kappemann: standardStoreFile({
+        location: 'kappemann.jpeg',
         credit: null,
         license: null,
         originOfFile: 'ow - basic',
-    },
-    kappemannBronse: {
-        readFile: standardStoreFile('kappemann_bronse.png'),
+    }),
+    kappemannBronse: standardStoreFile({
+        location: 'kappemann_bronse.png',
         credit: null,
         license: null,
         originOfFile: 'ow - basic',
-    },
-    kappemannDiamant: {
-        readFile: standardStoreFile('kappemann_diamant.png'),
+    }),
+    kappemannDiamant: standardStoreFile({
+        location: 'kappemann_diamant.png',
         credit: null,
         license: null,
         originOfFile: 'ow - basic',
-    },
-    kappemannGull: {
-        readFile: standardStoreFile('kappemann_gull.png'),
+    }),
+    kappemannGull: standardStoreFile({
+        location: 'kappemann_gull.png',
         credit: null,
         license: null,
         originOfFile: 'ow - basic',
-    },
-    kappemannPaske: {
-        readFile: standardStoreFile('kappemann_paske.png'),
+    }),
+    kappemannPaske: standardStoreFile({
+        location: 'kappemann_paske.png',
         credit: null,
         license: null,
         originOfFile: 'ow - basic',
-    },
-    kappemannSolv: {
-        readFile: standardStoreFile('kappemann_solv.png'),
+    }),
+    kappemannSolv: standardStoreFile({
+        location: 'kappemann_solv.png',
         credit: null,
         license: null,
         originOfFile: 'ow - basic',
-    },
-    nordic: {
-        readFile: standardStoreFile('nordic.png'),
+    }),
+    nordic: standardStoreFile({
+        location: 'nordic.png',
         credit: null,
         license: null,
         originOfFile: 'nordic',
-    },
-    ohma: {
-        readFile: standardStoreFile('ohma.jpeg'),
+    }),
+    ohma: standardStoreFile({
+        location: 'ohma.jpeg',
         credit: null,
         license: null,
         originOfFile: 'ow - basic',
-    },
+    }),
     devProfileImage: {
-        Bjørn: {
-            readFile: standardStoreFile('dev_profile_images/Bjørn.jpg'),
+        Bjørn: standardStoreFile({
+            location: 'dev_profile_images/Bjørn.jpg',
             credit: null,
             license: null,
             originOfFile: new URL('https://pixabay.com/photos/bear-head-brown-brown-bear-1283347/'),
-        },
-        Due: {
-            readFile: standardStoreFile('dev_profile_images/Due.jpg'),
+        }),
+        Due: standardStoreFile({
+            location: 'dev_profile_images/Due.jpg',
             credit: null,
             license: null,
             originOfFile: new URL('https://pixabay.com/photos/dove-bird-freedom-flying-pigeon-2680487/'),
-        },
-        Ekorn: {
-            readFile: standardStoreFile('dev_profile_images/Ekorn.jpg'),
+        }),
+        Ekorn: standardStoreFile({
+            location: 'dev_profile_images/Ekorn.jpg',
             credit: null,
             license: null,
             originOfFile: new URL('https://pixabay.com/photos/squirrel-attentive-ears-cute-619968/'),
-        },
-        Elefant: {
-            readFile: standardStoreFile('dev_profile_images/Elefant.jpg'),
+        }),
+        Elefant: standardStoreFile({
+            location: 'dev_profile_images/Elefant.jpg',
             credit: null,
             license: null,
             originOfFile: new URL('https://pixabay.com/photos/elephant-nature-wildlife-safari-9772462/'),
-        },
-        Frosk: {
-            readFile: standardStoreFile('dev_profile_images/Frosk.jpg'),
+        }),
+        Frosk: standardStoreFile({
+            location: 'dev_profile_images/Frosk.jpg',
             credit: null,
             license: null,
             originOfFile: new URL('https://pixabay.com/photos/tree-frog-frog-amphibian-nature-8600329/'),
-        },
-        Gås: {
-            readFile: standardStoreFile('dev_profile_images/Gås.jpg'),
+        }),
+        Gås: standardStoreFile({
+            location: 'dev_profile_images/Gås.jpg',
             credit: null,
             license: null,
             originOfFile: new URL('https://pixabay.com/photos/goose-wild-goose-water-bird-bird-3477674/'),
-        },
-        Hest: {
-            readFile: standardStoreFile('dev_profile_images/Hest.jpg'),
+        }),
+        Hest: standardStoreFile({
+            location: 'dev_profile_images/Hest.jpg',
             credit: null,
             license: null,
             originOfFile: new URL('https://pixabay.com/photos/horse-wild-horse-sligo-ireland-8542469/'),
-        },
-        Kanin: {
-            readFile: standardStoreFile('dev_profile_images/Kanin.jpg'),
+        }),
+        Kanin: standardStoreFile({
+            location: 'dev_profile_images/Kanin.jpg',
             credit: null,
             license: null,
             originOfFile: new URL('https://pixabay.com/photos/eastern-cottontail-wild-rabbit-9604011/'),
-        },
-        Løve: {
-            readFile: standardStoreFile('dev_profile_images/Løve.png'),
+        }),
+        Løve: standardStoreFile({
+            location: 'dev_profile_images/Løve.png',
             credit: null,
             license: null,
             originOfFile: new URL('https://pixabay.com/photos/lion-feline-mane-barbary-lion-8096155/'),
-        },
-        Papegøye: {
-            readFile: standardStoreFile('dev_profile_images/Papegøye.jpg'),
+        }),
+        Papegøye: standardStoreFile({
+            location: 'dev_profile_images/Papegøye.jpg',
             credit: null,
             license: null,
             originOfFile: new URL('https://pixabay.com/photos/bird-parrot-ornithology-species-1823839/'),
-        },
-        Påfugl: {
-            readFile: standardStoreFile('dev_profile_images/Påfugl.jpg'),
+        }),
+        Påfugl: standardStoreFile({
+            location: 'dev_profile_images/Påfugl.jpg',
             credit: null,
             license: null,
             originOfFile: new URL('https://pixabay.com/photos/peacock-bird-multicoloured-poultry-2479685/'),
-        },
-        Rev: {
-            readFile: standardStoreFile('dev_profile_images/Rev.jpg'),
+        }),
+        Rev: standardStoreFile({
+            location: 'dev_profile_images/Rev.jpg',
             credit: null,
             license: null,
             originOfFile: new URL('https://pixabay.com/photos/fox-animal-wilderness-nature-2597803/'),
-        },
-        Sjiraff: {
-            readFile: standardStoreFile('dev_profile_images/Sjiraff.jpg'),
+        }),
+        Sjiraff: standardStoreFile({
+            location: 'dev_profile_images/Sjiraff.jpg',
             credit: null,
             license: null,
             originOfFile: new URL('https://pixabay.com/photos/flower-giraffe-giraffe-look-giraffe-6553711/'),
-        },
-        Skilpadde: {
-            readFile: standardStoreFile('dev_profile_images/Skilpadde.jpg'),
+        }),
+        Skilpadde: standardStoreFile({
+            location: 'dev_profile_images/Skilpadde.jpg',
             credit: null,
             license: null,
             originOfFile: new URL('https://pixabay.com/photos/turtle-tortoise-shell-terrestrial-4277518/'),
-        },
-        Slange: {
-            readFile: standardStoreFile('dev_profile_images/Slange.jpg'),
+        }),
+        Slange: standardStoreFile({
+            location: 'dev_profile_images/Slange.jpg',
             credit: null,
             license: null,
             originOfFile: new URL('https://pixabay.com/photos/green-tree-python-python-snake-9295182/'),
-        },
-        Ugle: {
-            readFile: standardStoreFile('dev_profile_images/Ugle.jpg'),
+        }),
+        Ugle: standardStoreFile({
+            location: 'dev_profile_images/Ugle.jpg',
             credit: null,
             license: null,
             originOfFile: new URL('https://pixabay.com/photos/boobook-owl-little-owl-staring-owl-1655548/'),
-        },
-        Ørn: {
-            readFile: standardStoreFile('dev_profile_images/Ørn.jpg'),
+        }),
+        Ørn: standardStoreFile({
+            location: 'dev_profile_images/Ørn.jpg',
             credit: null,
             license: null,
             originOfFile: new URL('https://pixabay.com/photos/adler-eagle-bird-white-tailed-eagle-2386314/'),
-        },
+        }),
     }
 } as const satisfies StandardStoreFilesMap
