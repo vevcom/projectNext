@@ -1,7 +1,7 @@
 'use client'
 import { faArrowLeft, faCog, faInfo, faUsers } from '@fortawesome/free-solid-svg-icons'
 import { usePathname } from 'next/navigation'
-import { SubPageNavBar, SubPageNavBarItem } from '@/components/NavBar/SideNavBar/SubPageNavBar'
+import { SubPageNavBar, SubPageNavBarItem } from '@/components/NavBar/SubPageNavBar/SubPageNavBar'
 
 type PropTypes = {
     shortName: string
