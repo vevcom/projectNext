@@ -6,6 +6,9 @@ services:
         build:
             target: test
         tty: true # Allows for colorized output
+        environment:
+            DOMAIN: omega.ntnu.no
+            MAIL_DOMAIN: sanctus.omega.ntnu.no
         volumes:
             - ${PROJECT_ROOT:-.}/src:/usr/src/app/src
             - ${PROJECT_ROOT:-.}/tests:/usr/src/app/tests
