@@ -8,4 +8,12 @@
     justify-content: space-between;
     align-items: top;
     gap: 2em;
+
+    form {
+        border-color: black;
+        border-width: 2px;
+        border-style: solid;
+        padding: 0.5rem;
+        border-radius: ohma.$gap;
+    }
 }

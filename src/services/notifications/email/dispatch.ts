@@ -1,11 +1,10 @@
-import { sendBulkMail } from './send'
-import { DEFAULT_NOTIFICATION_ALIAS } from './constants'
 import { emailSchemas } from './schemas'
-import { DefaultEmailTemplate } from './templates/default'
+import { DEFAULT_NOTIFICATION_ALIAS } from '@/lib/email/constants'
+import { sendBulkMail } from '@/lib/email/send'
 import { repalceSpecialSymbols } from '@/services/notifications/operations'
 import { prismaCall } from '@/services/prismaCall'
 import { prisma } from '@/prisma-pn-client-instance'
-import { render } from '@react-email/render'
+import { wrapInHTML } from '@/lib/email/wrapInHTML'
 import type { ExpandedNotificationChannel } from '@/services/notifications/types'
 import type { Notification } from '@/prisma-generated-pn-types'
 import type { UserFiltered } from '@/services/users/types'
@@ -60,10 +59,4 @@ export async function dispatchEmailNotifications(
     console.log(mails)
 
     await sendBulkMail(mails)
-}
-
-async function wrapInHTML(user: UserFiltered, text: string): Promise<string> {
-    // TODO: Would it be possible to do React.createElement here?
-    // It feels cursed to write TSX in backend code.
-    return render(<DefaultEmailTemplate user={user} text={text} />)
 }
