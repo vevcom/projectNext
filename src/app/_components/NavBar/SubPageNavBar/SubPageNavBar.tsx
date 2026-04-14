@@ -6,13 +6,13 @@ import Link from 'next/link'
 import type { IconProp } from '@fortawesome/fontawesome-svg-core'
 import type { ReactNode } from 'react'
 
-type SubNavBarItemProps = {
+type SubPageNavBarProps = {
     children?: ReactNode,
     icon?: IconProp,
     href: string
 }
 
-export function SubPageNavBarItem({ children, icon, href }:SubNavBarItemProps) {
+export function SubPageNavBarItem({ children, icon, href }:SubPageNavBarProps) {
     const pathname = usePathname()
     const page = pathname.split('/').pop()
     const thisPage = href?.split('/').pop()
