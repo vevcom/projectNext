@@ -31,7 +31,7 @@ $image-size: 200px;
         }  
     }
     &:hover {
-        margin: solid 10px ohma.$colors-primary;
+        border: solid 10px ohma.$colors-primary;
         > *:first-child > img {
             transform: scale(1.1);
         }

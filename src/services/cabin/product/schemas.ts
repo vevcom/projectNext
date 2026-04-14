@@ -1,7 +1,7 @@
 import { Zpn } from '@/lib/fields/zpn'
 import { convertPrice } from '@/lib/money/convert'
-import { BookingType } from '@/prisma-generated-pn-types'
 import { z } from 'zod'
+import { BookingType } from '@/prisma-generated-pn-types'
 
 const baseSchema = z.object({
     type: z.nativeEnum(BookingType),

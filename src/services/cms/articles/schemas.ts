@@ -1,6 +1,6 @@
 import { baseSchema as baseSchemaArticleSections } from '@/cms/articleSections/schemas'
-import { SpecialCmsArticle } from '@/prisma-generated-pn-types'
 import { z } from 'zod'
+import { SpecialCmsArticle } from '@/prisma-generated-pn-types'
 
 const baseSchema = z.object({
     name: z.string().min(2, 'Minimum lengde er 2 tegn.').max(20, 'Maksimum lengde er 20 tegn.'),

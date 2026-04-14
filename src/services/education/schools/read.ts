@@ -5,9 +5,9 @@ import { prismaCall } from '@/services/prismaCall'
 import logger from '@/lib/logger'
 import { prisma } from '@/prisma-pn-client-instance'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
-import { StandardSchool } from '@/prisma-generated-pn-types'
 import type { ExpandedSchool, SchoolCursor, SchoolFiltered } from './types'
 import type { ReadPageInput } from '@/lib/paging/types'
+import { StandardSchool } from '@/prisma-generated-pn-types'
 
 export async function readSchoolsPage<const PageSize extends number>({
     page,

@@ -38,14 +38,12 @@ beforeAll(async () => {
 afterEach(async () => {
     const jobAds = await prisma.jobAd.findMany()
 
-    await Promise.all(jobAds.map(jobAd =>
-        jobAdOperations.destroy({
-            params: {
-                id: jobAd.id
-            },
+    for (const jobAd of jobAds) {
+        await jobAdOperations.destroy({
+            params: { id: jobAd.id },
             bypassAuth: true,
         })
-    ))
+    }
 })
 
 describe('job ads', () => {

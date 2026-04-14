@@ -43,7 +43,7 @@
     > span {
         margin-top: 2*ohma.$gap;
         padding: .5em;
-        background-color: lighten(ohma.$colors-primary, 20%);
+        background-color: color-mix(in srgb, ohma.$colors-primary, white 15%);
         > .general {
             display: flex;
             justify-content: space-between;
@@ -90,7 +90,7 @@
                     margin: 0 ohma.$gap;
                 }
                 @include ohma.round;
-                background-color: lighten(ohma.$colors-primary, 40%);;
+                background-color: color-mix(in srgb, ohma.$colors-primary, white 40%);
                 padding: .5em;
                 margin: .3em 0;
             }

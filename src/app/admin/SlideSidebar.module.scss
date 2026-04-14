@@ -1,18 +1,23 @@
 @use '@/styles/ohma';
 
 .SlideSidebar {
-    background-color: ohma.$colors-gray-300;
+    @include ohma.layer;
     margin: .5em;
     padding: 2em;
     border-radius: ohma.$rounding;
-    position: sticky;
-    top: .5rem;
-    @include ohma.screenLg {
-        top: 4.1rem;
-    }
-    height: calc(100vh - 5rem);
+    max-height: calc(100dvh - 74px);
+    overflow-y: scroll;
 
-    .toggle {   
+    @include ohma.screenMobile {
+            margin: 8px;
+            z-index: 3;
+            height: 40dvh;
+            width: calc(100% - 16px);
+            position: fixed;
+            top: 0;
+    }
+
+    .toggle {
         position: absolute;
         right: -.6em;
         top: min(50%, 50vh);
@@ -23,13 +28,20 @@
         background-color: ohma.$colors-gray-500;
         border: none;
         svg {
-            color: ohma.$colors-gray-100;
+            color: ohma.$colors-text;
+        }
+        @include ohma.screenMobile {
+            right: 8px;
+            top: 28px;
         }
     }
 
     &.closed {
         .sidebar {
-            width: .4em;
+            width: ohma.$gap;
+        }
+        @include ohma.screenMobile {
+            height: 7 * ohma.$gap;
         }
         .toggle {
             > svg {
@@ -54,19 +66,19 @@
         margin-top: 1em;
         display: flex;
         flex-direction: column;
-        width: 200px;
         overflow-y: auto;
         height: 100%;
+        color: ohma.$colors-text;
 
         a {
-            color: ohma.$colors-gray-700;
+            color: ohma.$colors-text-muted;
             text-decoration: none;
             padding: .5em;
             border-radius: .5em;
             margin: .5em 0;
             transition: background-color .3s;
             &:hover, &.active {
-                background-color: ohma.$colors-gray-200;
+                @include ohma.layer;
             }
         }
         h3 {

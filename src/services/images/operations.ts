@@ -9,10 +9,10 @@ import { createFile } from '@/services/store/createFile'
 import logger from '@/lib/logger'
 import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
-import { SpecialImage } from '@/prisma-generated-pn-types'
 import sharp from 'sharp'
 import { z } from 'zod'
 import { File } from 'node:buffer'
+import { SpecialImage } from '@/prisma-generated-pn-types'
 
 /**
  * Creates one image from a file.

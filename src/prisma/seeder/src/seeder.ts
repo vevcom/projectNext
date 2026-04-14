@@ -28,6 +28,7 @@ import seedFlairs from './seedFlairs'
 import seedInterestGroups from './seedInterestGroups'
 import { prisma } from '@/prisma/client'
 
+
 export default async function seed(
     shouldMigrate: boolean,
     seedDevData: boolean,

@@ -71,7 +71,7 @@ docker compose -f docker-compose.prod.yml exec projectnext npm run dobbelOmega:r
 
 ## Lint
 
-To lint the project run
+To lint the project (TS/JS) run
 
 ```bash
 npm run lint
@@ -81,6 +81,18 @@ To auto-fix linting errors run
 
 ```bash
 npm run lint -- --fix
+```
+
+To lint style files (CSS/SCSS) run
+
+```bash
+npm run lint:style
+```
+
+To auto-fix style linting errors run
+
+```bash
+npm run lint:style -- --fix
 ```
 
 ## Migration from omegaweb basic

@@ -1,8 +1,8 @@
 import { ValidationBase } from '@/services/Validation'
-import { ScreenOrientation } from '@/prisma-generated-pn-types'
 import { z } from 'zod'
 import { zfd } from 'zod-form-data'
 import type { ValidationTypes } from '@/services/Validation'
+import { ScreenOrientation } from '@/prisma-generated-pn-types'
 
 const baseScreenValidation = new ValidationBase({
     type: {

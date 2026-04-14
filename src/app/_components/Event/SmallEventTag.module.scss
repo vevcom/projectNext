@@ -8,9 +8,8 @@
     }
     p {
         position: absolute; 
-        right: 0;
-        top: 50%;
-        transform: translate(100%, 20%);
+        left: 3*ohma.$gap;
+        top: 0;
         display: none;
     }
     &:hover {

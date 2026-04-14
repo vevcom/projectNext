@@ -11,9 +11,9 @@ import { cabinReleasePeriodOperations } from '@/services/cabin/releasePeriod/ope
 import { sendSystemMail } from '@/lib/email/send'
 import { notificationOperations } from '@/services/notifications/operations'
 import { cmsParagraphOperations } from '@/cms/paragraphs/operations'
-import { BookingType } from '@/prisma-generated-pn-types'
 import { z } from 'zod'
 import type { CabinProductExtended } from '@/services/cabin/product/constants'
+import { BookingType } from '@/prisma-generated-pn-types'
 
 const mailData = {
     title: 'Bekreftelse på hyttebooking',
