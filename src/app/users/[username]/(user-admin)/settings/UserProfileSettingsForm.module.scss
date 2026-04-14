@@ -7,17 +7,7 @@
     @include ohma.layer;
 }
 
-.selectBox {
-    
-}
-
-.selectBox > label {
-
-}
 .selectBox > select {
     background-color: ohma.$colors-secondary;
     color: ohma.$colors-text;
-}
-.selectBox > select > option {
-    // background-color: #2f2f2f;
 }
