@@ -4,7 +4,6 @@ import { dynamicImageOperations } from '@/services/images/dynamic/operations'
 import { standardStoreFiles } from '@/lib/standardStore/files'
 import type { PrismaClient } from '@/prisma-generated-pn-client'
 import type { StandardStoreFile } from '@/lib/standardStore/files'
-import { getUploadImageData } from '@/lib/standardStore/getUploadImageData'
 
 export const seedDynamicImagesForCms = [
     {
@@ -53,7 +52,17 @@ export const seedDynamicImagesForCms = [
     alt: string,
 }[]
 
-export async function seedImages(prisma: PrismaClient) {
+/**
+ * This function seeds
+ *
+ * 1. standard images, using the standardImageCollection api. - note that this is actually not striclty necessary,
+ * as the standard images are generated on the fly when requested, if one uses the
+ * standardImageCollection api to request them.
+ *
+ * 2. A set of dynamic images, which are seeded into a dynamic collection. These are used for dunamic cms constent which is
+ * seeded later on.
+ */
+export default async function seedImages(prisma: PrismaClient) {
     await Promise.all(
         Object.values(StandardImage).map(async (standardImage) => {
             standardImageCollectionOperations.generateStandardImageFromConfig.internalCall({
@@ -72,11 +81,12 @@ export async function seedImages(prisma: PrismaClient) {
     })
 
     await Promise.all(seedDynamicImagesForCms.map(async (imageConfig) => {
-        const license = await 
-
         await dynamicImageOperations.uploadImage({
             prisma,
-            data: getUploadImageData,
+            data: await imageConfig.standardStoreFile.imageUploadData({
+                name: imageConfig.name,
+                alt: imageConfig.alt
+            }),
             params: {
                 collectionId: collectionForImagesUsedForSeededCms.id,
             }
@@ -85,7 +95,7 @@ export async function seedImages(prisma: PrismaClient) {
 }
 
 export type ImagesAvailablieForCms = {
-    name: typeof seedDynamicImagesForCms[number]['name']
+    dynamicImageSeededForCmsName: typeof seedDynamicImagesForCms[number]['name']
 } | {
     standardImage: StandardImage
 }
