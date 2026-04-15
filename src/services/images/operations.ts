@@ -9,10 +9,10 @@ import { createFile } from '@/services/store/createFile'
 import logger from '@/lib/logger'
 import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
-import { SpecialImage } from '@/prisma-generated-pn-types'
 import sharp from 'sharp'
 import { z } from 'zod'
 import { File } from 'node:buffer'
+import { SpecialImage } from '@/prisma-generated-pn-types'
 
 /**
  * Creates one image from a file.
@@ -87,7 +87,7 @@ export const imageOperations = {
             const { file, ...meta } = data
             const buffer = Buffer.from(await file.arrayBuffer())
             const avifBuffer = await sharp(buffer).toFormat('avif').avif(avifConvertionOptions).toBuffer()
-            const avifFile = new File([avifBuffer], 'image.avif', { type: 'image/avif' })
+            const avifFile = new File([new Uint8Array(avifBuffer)], 'image.avif', { type: 'image/avif' })
 
             const uploadPromises = [
                 createOneInStore(avifFile, ['avif'], imageSizes.small),

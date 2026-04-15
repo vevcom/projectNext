@@ -27,8 +27,8 @@ import seedPermissions from './seedPermissions'
 import seedFlairs from './seedFlairs'
 import seedInterestGroups from './seedInterestGroups'
 import seedDevApplicationsAndPeriods from './development/seedDevApplicationsAndPeriods'
-import { PrismaClient } from '@/prisma-generated-pn-client'
-import { PrismaPg } from '@prisma/adapter-pg'
+import { prisma } from '@/prisma/client'
+
 
 export default async function seed(
     shouldMigrate: boolean,
@@ -36,13 +36,6 @@ export default async function seed(
     logging?: boolean,
 ) {
     const enableLogging = logging === undefined ? true : logging
-    const prisma = new PrismaClient({
-        adapter: new PrismaPg(
-            { connectionString: process.env.DB_URI },
-            { schema: process.env.DB_SCHEMA },
-        )
-    })
-
     if (enableLogging) console.log('seeding standard data....')
     await seedOrder(prisma)
     await SeedSpecialImageCollections(prisma)

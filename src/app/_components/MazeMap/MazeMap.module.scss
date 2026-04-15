@@ -3,6 +3,7 @@
 .MazeMap { 
     display: flex;
     justify-content: center;
+    filter: invert(1) hue-rotate(180deg);
 }
 
 .MazeMapIframe {
@@ -11,5 +12,4 @@
     border: none;
     border-radius: ohma.$rounding;
     background-color: white;
-    box-shadow: 10px 10px 15px ohma.$colors-gray-700;
 }

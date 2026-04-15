@@ -17,11 +17,11 @@
 }
 
 .activated {
-    background-color: lighten(ohma.$colors-green, 50%);
+    background-color: color-mix(in srgb, ohma.$colors-green, white 50%);
     color: ohma.$colors-green;
 }
 
 .deactivated {
-    background-color: lighten(ohma.$colors-red, 50%);
+    background-color: color-mix(in srgb, ohma.$colors-red, white 50%);
     color: ohma.$colors-red;
 }

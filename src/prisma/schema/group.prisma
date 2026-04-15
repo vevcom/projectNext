@@ -88,7 +88,7 @@ model InterestGroup {
   groupId Int   @unique
   id      Int   @id @default(autoincrement())
 
-  name      String
+  name String
 
   articleSection   ArticleSection @relation(fields: [articleSectionId], references: [id], onDelete: Restrict, onUpdate: Cascade)
   articleSectionId Int            @unique

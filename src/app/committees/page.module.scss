@@ -3,6 +3,7 @@
 $max-width: 1200px;
 
 .wrapper {
+    color: ohma.$colors-text;
     $width: 100%;
 
     width: $width;
@@ -34,7 +35,7 @@ $max-width: 1200px;
     display: grid;
     grid-template-columns: repeat(auto-fill, 225px);
     gap: 2em;
-    justify-content: space-between;
+    justify-content: center;
     overflow: visible;
 
     @include ohma.screenMobile {

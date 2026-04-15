@@ -51,7 +51,7 @@ export default async function NavBar({ profile, canEditSpecialCmsImage }: PropTy
                 }
                 <li>
                     <Menu
-                        openBtnContent={<p className={styles.openMenu}>Mer</p>}
+                        openBtnVariant={'desktop'}
                         items={itemsForMenu}
                     />
                 </li>

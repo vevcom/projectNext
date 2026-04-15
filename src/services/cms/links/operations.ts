@@ -3,8 +3,8 @@ import { cmsLinkSchemas } from './schemas'
 import { defineSubOperation } from '@/services/serviceOperation'
 import logger from '@/lib/logger'
 import { ServerError } from '@/services/error'
-import { SpecialCmsLink } from '@/prisma-generated-pn-types'
 import { z } from 'zod'
+import { SpecialCmsLink } from '@/prisma-generated-pn-types'
 
 const create = defineSubOperation({
     dataSchema: () => cmsLinkSchemas.create,
