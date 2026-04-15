@@ -21,7 +21,7 @@ export default function Nav({ shortName, canReadCommitteeApplication }: PropType
         <SubPageNavBar>
             <SubPageNavBarItem icon={faCog} href={adminPath}>Innstillinger</SubPageNavBarItem>
             {canReadCommitteeApplication.authorized &&
-                <SubPageNavBarItem icon={faScroll} href={readPeriodesPath}>Innstillinger</SubPageNavBarItem>
+                <SubPageNavBarItem icon={faScroll} href={readPeriodesPath}>Perioder</SubPageNavBarItem>
             }
             <SubPageNavBarItem icon={faUsers} href={membersPath}>Members</SubPageNavBarItem>
             <SubPageNavBarItem icon={faInfo} href={aboutPath}>About</SubPageNavBarItem>
