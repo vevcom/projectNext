@@ -11,7 +11,7 @@ export type PropTypes = {
 }
 
 
-export default async function PeriodeCommitteePage({ params }: PropTypes) {
+export default async function ApplicationPeriods({ params }: PropTypes) {
     const committee = await getCommittee(params)
     const shortName = (await params).shortName
     const committeePeriodes = unwrapActionReturn(
@@ -20,17 +20,21 @@ export default async function PeriodeCommitteePage({ params }: PropTypes) {
     if (committeePeriodes.length === 0) { return 'ingen søknadsperioder funnet' }
     return (
         <table className={styles.periodTable}>
-            <tr className={styles.periodHeading}>
-                <th className={styles.tableEntry}>Start dato</th>
-                <th className={styles.tableEntry}>Slutt dato</th>
-                <th className={styles.tableEntry}>Omprioritering slutt dato</th>
-                <th className={styles.tableEntry}>Søknader</th>
-                <th className={styles.tableEntry}>Søknadstall</th>
-            </tr>
-            {committeePeriodes.map((period, index) => (
-                <PeriodSection shortName={shortName} key={index} period={period}></PeriodSection>
-            ))
-            }
+            <thead>
+                <tr className={styles.periodHeading}>
+                    <th className={styles.tableEntry}>Start dato</th>
+                    <th className={styles.tableEntry}>Slutt dato</th>
+                    <th className={styles.tableEntry}>Omprioritering slutt dato</th>
+                    <th className={styles.tableEntry}>Søknader</th>
+                    <th className={styles.tableEntry}>Søknadstall</th>
+                </tr>
+            </thead>
+            <tbody>
+                {committeePeriodes.map((period, index) => (
+                    <PeriodSection shortName={shortName} key={index} period={period}></PeriodSection>
+                ))
+                }
+            </tbody>
         </table >
     )
 }

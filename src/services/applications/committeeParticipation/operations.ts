@@ -48,17 +48,7 @@ export const committeeParticipationOperations = {
                         }
                     }
                 }
-            }).then((applications) => applications.applications.map((application) => (
-                {
-                    applicationText: application.text,
-                    applicationPriority: application.priority,
-                    firstname: application.user.firstname,
-                    lastname: application.user.lastname,
-                    image: application.user.image,
-                    email: application.user.email,
-                    username: application.user.username,
-                }
-            )))
+            }).then((applications) => applications.applications)
         )
     }),
     readAll: defineOperation({
@@ -95,13 +85,16 @@ export const committeeParticipationOperations = {
                         }
                     }
                 }
-            }).then((periods) => periods.map((period) => (
+            }).then((participationRows) => participationRows.map((participation) => (
                 {
-                    participationId: period.id,
-                    applicationCount: period._count.applications,
-                    startDate: period.applicationPeriod.startDate,
-                    endDate: period.applicationPeriod.endDate,
-                    endPriorityDate: period.applicationPeriod.endPriorityDate,
+                    participationId: participation.id,
+                    applicationCount: participation._count.applications,
+                    startDate: participation.applicationPeriod.startDate,
+                    endDate: participation.applicationPeriod.endDate,
+                    endPriorityDate: participation.applicationPeriod.endPriorityDate,
+                    isOpen: (Date.now() > participation.applicationPeriod.startDate.getTime())
+                            &&
+                            (Date.now() < participation.applicationPeriod.endPriorityDate.getTime())
                 })
             )
             )

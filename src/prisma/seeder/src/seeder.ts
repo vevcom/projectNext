@@ -70,7 +70,7 @@ export default async function seed(
     await seedDevCompanies(prisma)
     await seedDevJobAds(prisma)
     await seedDevShop(prisma)
-    await seedDevEvents(prisma)
     await seedDevApplicationsAndPeriods(prisma)
+    await seedDevEvents(prisma)
     console.log('seed dev done')
 }

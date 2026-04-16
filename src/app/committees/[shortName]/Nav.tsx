@@ -13,7 +13,7 @@ export default function Nav({ shortName, canReadCommitteeApplication }: PropType
     const pathname = usePathname()
 
     const adminPath = `/committees/${shortName}/admin`
-    const readPeriodesPath = `/committees/${shortName}/periodes`
+    const readPeriodesPath = `/committees/${shortName}/applicationPeriods`
     const membersPath = `/committees/${shortName}/members`
     const aboutPath = `/committees/${shortName}/about`
 
@@ -21,14 +21,14 @@ export default function Nav({ shortName, canReadCommitteeApplication }: PropType
         <SubPageNavBar>
             <SubPageNavBarItem icon={faCog} href={adminPath}>Innstillinger</SubPageNavBarItem>
             {canReadCommitteeApplication.authorized &&
-                <SubPageNavBarItem icon={faScroll} href={readPeriodesPath}>Perioder</SubPageNavBarItem>
+                <SubPageNavBarItem icon={faScroll} href={readPeriodesPath}>Søknadsperioder</SubPageNavBarItem>
             }
-            <SubPageNavBarItem icon={faUsers} href={membersPath}>Members</SubPageNavBarItem>
-            <SubPageNavBarItem icon={faInfo} href={aboutPath}>About</SubPageNavBarItem>
+            <SubPageNavBarItem icon={faUsers} href={membersPath}>Medlemmer</SubPageNavBarItem>
+            <SubPageNavBarItem icon={faInfo} href={aboutPath}>Om</SubPageNavBarItem>
             <SubPageNavBarItem icon={faArrowLeft} href={
                 pathname === `/committees/${shortName}` ? '/committees' : `/committees/${shortName}`
             }>
-                Back
+                Tilbake
             </SubPageNavBarItem>
         </SubPageNavBar>
     )

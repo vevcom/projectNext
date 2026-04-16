@@ -13,7 +13,7 @@ export type PropTypes = {
 }
 
 
-async function loadUserImage(image: ImageT | null) {
+async function getFallbackImageIfNoImage(image: ImageT | null) {
     return image ? image : await readSpecialImageAction.bind(
         null, { params: { special: 'DEFAULT_PROFILE_IMAGE' } }
     )().then(res => {
@@ -29,24 +29,24 @@ export default async function PeriodeCommitteePage({ params }: PropTypes) {
         await readCommitteeApplicationsInPeriodAction({ params: { participationId } })
     )
     if (applications.length === 0) { return 'ingen søknader funnet' }
-    const sortedApplications = applications.sort((a, b) => a.applicationPriority - b.applicationPriority)
+    const sortedApplications = applications.sort((a, b) => a.priority - b.priority)
     return (
         <div className={styles.applicationsContainer}>
             {sortedApplications.map(async (application, index) => (
                 <div className={styles.applicationContainer} key={index}>
                     <div className={styles.headingContainer}>
-                        <h3>{application.applicationPriority}.</h3>
+                        <h3>{application.priority}.</h3>
                         <ProfilePicture
                             width={50}
-                            profileImage={(await loadUserImage(application.image))}
+                            profileImage={(await getFallbackImageIfNoImage(application.user.image))}
                             className={styles.profilePicture}
                         />
-                        <Link className={styles.applicantName} href={`/users/${application.username}`}>
-                            <h3>{application.firstname} {application.lastname}</h3>
+                        <Link className={styles.applicantName} href={`/users/${application.user.username}`}>
+                            <h3>{application.user.firstname} {application.user.lastname}</h3>
                         </Link>
                     </div>
                     <div className={styles.applicationTextContainer}>
-                        <p className={styles.applicationText}>{application.applicationText}</p>
+                        <p className={styles.applicationText}>{application.text}</p>
                     </div>
                 </div >
             ))
