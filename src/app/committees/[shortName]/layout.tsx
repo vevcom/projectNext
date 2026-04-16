@@ -7,6 +7,7 @@ import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import CommitteeImage from '@/components/CommitteeImage/CommitteeImage'
 import { committeeAuth } from '@/services/groups/committees/auth'
 import { ServerSession } from '@/auth/session/ServerSession'
+import { committeeParticipationAuth } from '@/services/applications/committeeParticipation/auth'
 import type { ReactNode } from 'react'
 
 export type PropTypes = {
@@ -32,6 +33,14 @@ export default async function Committee({ params, children }: PropTypes) {
         await ServerSession.fromNextAuth()
     ).toJsObject()
 
+    const canReadCommitteeApplication = committeeParticipationAuth.readAll.dynamicFields(
+        {
+            groupId: committee.groupId,
+        }).auth(
+        await ServerSession.fromNextAuth()
+    ).toJsObject()
+
+
     return (
         <>
             <BackdropImage image={committeeLogo}>
@@ -49,7 +58,10 @@ export default async function Committee({ params, children }: PropTypes) {
                     </div>
                 </PageWrapper>
             </BackdropImage>
-            <Nav shortName={(await params).shortName} />
+            <Nav
+                shortName={(await params).shortName}
+                canReadCommitteeApplication={canReadCommitteeApplication}
+            />
         </>
     )
 }
