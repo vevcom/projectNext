@@ -67,7 +67,12 @@ export const StandardImageConfig = {
         standardStoreFile: standardStoreFiles.fair,
         name: 'fair',
         alt: 'Fair',
-    }
+    },
+    PWA: {
+        standardStoreFile: standardStoreFiles.pwa,
+        name: 'pwa',
+        alt: 'PWA',
+    },
 } as const satisfies Record<StandardImage, {
     standardStoreFile: StandardStoreFile
     name: string

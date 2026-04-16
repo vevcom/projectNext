@@ -32,7 +32,8 @@ export default async function seed(
     seedDevData: boolean,
     logging?: boolean,
 ) {
-    const enableLogging = logging === undefined ? true : logging
+    const enableLogging = logging ?? true
+
     if (enableLogging) console.log('seeding standard data....')
     await seedOrder(prisma)
     await seedImages(prisma)
@@ -67,5 +68,5 @@ export default async function seed(
     await seedDevJobAds(prisma)
     await seedDevShop(prisma)
     await seedDevEvents(prisma)
-    console.log('seed dev done')
+    if (enableLogging) console.log('seed dev done')
 }

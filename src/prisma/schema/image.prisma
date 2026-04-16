@@ -12,6 +12,7 @@ enum StandardImage {
   REALFAGSBYGGET
   MACHINE
   FAIR
+  PWA
 }
 
 model Image {

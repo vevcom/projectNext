@@ -41,11 +41,6 @@ export const seedDynamicImagesForCms = [
         name: 'ov',
         alt: 'OV',
     },
-    {
-        standardStoreFile: standardStoreFiles.pwa,
-        name: 'pwa',
-        alt: 'PWA',
-    },
 ] as const satisfies {
     standardStoreFile: StandardStoreFile,
     name: string,
