@@ -61,9 +61,9 @@ export default async function RootLayout({ children }: PropTypes) {
                                     <div className={styles.navBar}>
                                         <NavBar profile={profile} canEditSpecialCmsImage={canEditSpecialCmsImage} />
                                     </div>
-                                    <div className={styles.content}>
+                                    <main className={styles.content}>
                                         {children}
-                                    </div>
+                                    </main>
                                     <div className={styles.footer}>
                                         <Footer canEditSpecialCmsImage={canEditSpecialCmsImage} />
                                     </div>
