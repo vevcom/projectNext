@@ -11,5 +11,5 @@ export default function ThemeEnabler() {
             applyTheme(saved)
         }
     }, [])
-    return (<span></span>)
+    return null
 }
