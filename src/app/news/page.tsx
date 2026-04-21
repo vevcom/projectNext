@@ -13,7 +13,7 @@ export default async function NewsArtilces() {
         <PageWrapper title="Nyheter"
             headerItem={
                 <div className={styles.head}>
-                    <Link className={styles.archiveBtn} href="news/archive">Arkivet</Link>
+                    <Link className={styles.archiveBtn} aria-label={'Go to archive'} href="news/archive">Arkivet</Link>
                     {
                         canCreateNews && (
                             <AddHeaderItemPopUp popUpKey="createNewsPop">

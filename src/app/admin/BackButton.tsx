@@ -17,7 +17,7 @@ export default function BackButton({ className }: PropTypes) {
     const href = `/${pathname?.split('/').slice(1, -1).join('/')}`
 
     return (
-        <Link className={`${styles.BackButton} ${className}`} href={href}>
+        <Link className={`${styles.BackButton} ${className}`} aria-label={'Go back'} href={href}>
             <FontAwesomeIcon icon={faArrowLeft} className={styles.icon}/>
         </Link>
     )

@@ -19,6 +19,7 @@ import { unwrapActionReturn } from './redirectToErrorPage'
 import { frontpageAuth } from '@/services/frontpage/auth'
 import { ServerSession } from '@/auth/session/ServerSession'
 import type { Metadata } from 'next'
+import ThemeEnabler from '@/UI/ThemeEnabler'
 
 config.autoAddCss = false
 
@@ -51,6 +52,7 @@ export default async function RootLayout({ children }: PropTypes) {
     return (
         <html lang="en">
             <body className={`${inter.className} ${styles.body}`}>
+                <ThemeEnabler></ThemeEnabler>
                 <SessionProvider session={session}>
                     <DefaultPermissionsProvider defaultPermissions={defaultPermissions}>
                         <EditModeProvider>
@@ -59,9 +61,9 @@ export default async function RootLayout({ children }: PropTypes) {
                                     <div className={styles.navBar}>
                                         <NavBar profile={profile} canEditSpecialCmsImage={canEditSpecialCmsImage} />
                                     </div>
-                                    <div className={styles.content}>
+                                    <main className={styles.content}>
                                         {children}
-                                    </div>
+                                    </main>
                                     <div className={styles.footer}>
                                         <Footer canEditSpecialCmsImage={canEditSpecialCmsImage} />
                                     </div>

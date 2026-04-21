@@ -37,7 +37,7 @@
                 width: 30 * ohma.$gap;
                 text-decoration: none;
                 padding: 2 * ohma.$gap;
-                @include ohma.layer();
+                background: ohma.$colors-secondary;
                 border-radius: ohma.$rounding;
                 color: ohma.$colors-text;
                 display: flex;

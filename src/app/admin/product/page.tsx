@@ -33,7 +33,12 @@ export default async function ProductPage() {
             <tbody>
                 {sortObjectsByName(products).map(product => <tr key={uuid()}>
                     <td>
-                        <Link style={{ display: 'contents' }} href={`./product/${product.id}`} passHref>
+                        <Link
+                            style={{ display: 'contents' }}
+                            aria-label={`Go to ${product.name} product page`}
+                            href={`./product/${product.id}`}
+                            passHref
+                        >
                             {product.name}
                         </Link>
                     </td>
