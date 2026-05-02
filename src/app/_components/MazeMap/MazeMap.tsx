@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import style from './MazeMap.module.scss'
 
 type PropTypes = {
@@ -25,21 +26,31 @@ export default function MazeMap({
     zoom = 18,
     sharePoi = 83, // lophtet <3
 }: PropTypes) {
-    return <div className={style.MazeMap} style={{ height }}>
-        <iframe
-            title="MazeMap"
-            src={
-                'https://use.mazemap.com/embed.html#v=1&' +
-                `campusid=${campusId}&` +
-                `zlevel=${zLevel}&` +
-                `center=${center.x},${center.y}&` +
-                `zoom=${zoom}&` +
-                'sharepoitype=poi&' +
-                `sharepoi=${sharePoi}&` +
-                'utm_medium=iframe'
+    const [active, setActive] = useState(false)
 
-            }
-            className={style.MazeMapIframe}
-        />
+    return <div className={style.MazeMap} style={{ height }}>
+        <div className={style.MazeMapWrapper} onPointerLeave={() => setActive(false)}>
+            <iframe
+                title="MazeMap"
+                src={
+                    'https://use.mazemap.com/embed.html#v=1&' +
+                    `campusid=${campusId}&` +
+                    `zlevel=${zLevel}&` +
+                    `center=${center.x},${center.y}&` +
+                    `zoom=${zoom}&` +
+                    'sharepoitype=poi&' +
+                    `sharepoi=${sharePoi}&` +
+                    'utm_medium=iframe'
+                }
+                className={style.MazeMapIframe}
+            />
+            {!active && (
+                <div
+                    className={style.MazeMapOverlay}
+                    onClick={() => setActive(true)}
+                    title="Klikk for å interagere med kartet"
+                />
+            )}
+        </div>
     </div>
 }
