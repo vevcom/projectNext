@@ -3,17 +3,13 @@ import styles from './page.module.scss'
 import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLink } from '@fortawesome/free-solid-svg-icons'
+import type { readCommitteeParticipatingPeriodAction } from '@/services/applications/committeeParticipation/actions'
 
-type periodType = {
-    participationId: number;
-    applicationCount: number;
-    startDate: Date;
-    endDate: Date;
-    endPriorityDate: Date;
-    isOpen: boolean;
-}
+export type CommitteeParticipationPeriodType =
+    Pick<Awaited<ReturnType<typeof readCommitteeParticipatingPeriodAction>> & { success: true }, 'data'>['data'][number]
 
-export function PeriodSection({ period, shortName }: { period: periodType, shortName: string }) {
+
+export function PeriodSection({ period, shortName }: { period: CommitteeParticipationPeriodType, shortName: string }) {
     const entriesClassName = `${styles.tableEntry} ${period.isOpen && styles.currentPeriodEntry}`
     return (
         <tr className={styles.periodSection}>
