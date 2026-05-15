@@ -1,0 +1,32 @@
+@use "@/styles/ohma";
+
+.button {
+    border: none;
+    padding: 0;
+    outline: inherit;
+    margin: ohma.$gap;
+    @include ohma.round();
+    background-color: ohma.$colors-secondary;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: ohma.$colors-text;
+    * {
+        transition: 300ms; // TODO Add transition variable
+    }
+    @include ohma.boxShadow('');
+    svg {
+        width: 20px;
+        height: 20px;
+        color: ohma.$colors-text;
+        margin: .3em;
+    }
+    &:hover {
+        @include ohma.boxShadow('hover');
+        color: ohma.$colors-primary;
+        svg {
+            color: ohma.$colors-primary;
+        }
+    }
+}

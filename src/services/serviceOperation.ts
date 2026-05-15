@@ -13,26 +13,26 @@ import type { Prisma, PrismaClient } from '@/prisma-generated-pn-client'
 
 export type InferedOrInput<Schema extends z.ZodTypeAny | undefined, InferedOfInput extends 'INFERED' | 'INPUT'> =
     Schema extends undefined
-        ? object
-        : InferedOfInput extends 'INFERED' ? z.infer<NonNullable<Schema>> : z.input<NonNullable<Schema>>
+    ? object
+    : InferedOfInput extends 'INFERED' ? z.infer<NonNullable<Schema>> : z.input<NonNullable<Schema>>
 
 export type ParamsObject<ParamsSchema extends z.ZodTypeAny | undefined, InferedOfInput extends 'INFERED' | 'INPUT'> =
     ParamsSchema extends undefined
-        ? object
-        : { params: InferedOrInput<ParamsSchema, InferedOfInput> }
+    ? object
+    : { params: InferedOrInput<ParamsSchema, InferedOfInput> }
 
 export type ImplementationParamsObject<
     ImplementationParamsSchema extends z.ZodTypeAny | undefined,
     InferedOfInput extends 'INFERED' | 'INPUT'
 > =
     ImplementationParamsSchema extends undefined
-        ? object
-        : { implementationParams: InferedOrInput<ImplementationParamsSchema, InferedOfInput> }
+    ? object
+    : { implementationParams: InferedOrInput<ImplementationParamsSchema, InferedOfInput> }
 
 export type DataObject<DataSchema extends z.ZodTypeAny | undefined, InferedOfInput extends 'INFERED' | 'INPUT'> =
     DataSchema extends undefined
-        ? object
-        : { data: InferedOrInput<DataSchema, InferedOfInput> }
+    ? object
+    : { data: InferedOrInput<DataSchema, InferedOfInput> }
 
 /**
  * This is the type for the argument that are passed to the execute operation of a service operation.
@@ -43,16 +43,16 @@ export type ServiceOperationExecuteArgs<
     DataSchema extends z.ZodTypeAny | undefined,
     ImplementationParamsSchema extends z.ZodTypeAny | undefined
 > = (
-    Unsafe extends 'UNSAFE' ? {
-        params?: unknown,
-        implementationParams?: unknown,
-        data?: unknown,
-    } : (
-        & ParamsObject<ParamsSchema, 'INPUT'>
-        & ImplementationParamsObject<ImplementationParamsSchema, 'INPUT'>
-        & DataObject<DataSchema, 'INPUT'>
+        Unsafe extends 'UNSAFE' ? {
+            params?: unknown,
+            implementationParams?: unknown,
+            data?: unknown,
+        } : (
+            & ParamsObject<ParamsSchema, 'INPUT'>
+            & ImplementationParamsObject<ImplementationParamsSchema, 'INPUT'>
+            & DataObject<DataSchema, 'INPUT'>
+        )
     )
-)
 
 export type ServiceOperationOperation<
     OpensTransaction extends boolean,
@@ -105,12 +105,13 @@ export type AuthorizerGetter<
 > = (
     args: ArgsAuthGetterAndOwnershipCheck<OpensTransaction, ParamsSchema, DataSchema, ImplementationParamsSchema>
 ) =>
-    | AuthorizerDynamicFieldsBound<'USER_NOT_REQUIERED_FOR_AUTHORIZED' | 'USER_REQUIERED_FOR_AUTHORIZED', PrismaWhereFilter>
-    | Promise<
-        AuthorizerDynamicFieldsBound<
+        | AuthorizerDynamicFieldsBound<
             'USER_NOT_REQUIERED_FOR_AUTHORIZED' | 'USER_REQUIERED_FOR_AUTHORIZED', PrismaWhereFilter
+        > | Promise<
+            AuthorizerDynamicFieldsBound<
+                'USER_NOT_REQUIERED_FOR_AUTHORIZED' | 'USER_REQUIERED_FOR_AUTHORIZED', PrismaWhereFilter
+            >
         >
-    >
 
 export type OwnershipCheck<
     OpensTransaction extends boolean,
@@ -126,24 +127,24 @@ export type ServiceOperationImplementationConfigInternalCall<
     ParamsSchemaImplementationFields extends object | undefined,
     DataSchemaImplementationFields extends object | undefined,
     OperationImplementationFields extends object | undefined,
-    > = {
+> = {
     implementationParamsSchema?: ImplementationParamsSchema,
     paramsSchemaImplementationFields?: ParamsSchemaImplementationFields
     dataSchemaImplementationFields?: DataSchemaImplementationFields
     operationImplementationFields?: OperationImplementationFields
 } & (ParamsSchemaImplementationFields extends undefined ?
     object
- : {
-    paramsSchemaImplementationFields: ParamsSchemaImplementationFields
-}) & (DataSchemaImplementationFields extends undefined ?
-    object
- : {
-    dataSchemaImplementationFields: DataSchemaImplementationFields
-}) & (OperationImplementationFields extends undefined ?
-    object
- : {
-    operationImplementationFields: OperationImplementationFields
-})
+    : {
+        paramsSchemaImplementationFields: ParamsSchemaImplementationFields
+    }) & (DataSchemaImplementationFields extends undefined ?
+        object
+        : {
+            dataSchemaImplementationFields: DataSchemaImplementationFields
+        }) & (OperationImplementationFields extends undefined ?
+            object
+            : {
+                operationImplementationFields: OperationImplementationFields
+            })
 
 export type ServiceOperationImplementationConfig<
     OpensTransaction extends boolean,
@@ -154,12 +155,12 @@ export type ServiceOperationImplementationConfig<
     DataSchemaImplementationFields extends object | undefined,
     OperationImplementationFields extends object | undefined,
     PrismaWhereFilter extends object | undefined
-    > = ServiceOperationImplementationConfigInternalCall<
+> = ServiceOperationImplementationConfigInternalCall<
     ImplementationParamsSchema,
     ParamsSchemaImplementationFields,
     DataSchemaImplementationFields,
     OperationImplementationFields
-    > & {
+> & {
     authorizer: AuthorizerGetter<
         OpensTransaction, ParamsSchema, DataSchema, ImplementationParamsSchema, PrismaWhereFilter | undefined
     >,
@@ -287,7 +288,7 @@ export function defineSubOperation<
             const paramsMatch = Boolean(args.params) === Boolean(serviceOperationConfig.paramsSchema)
             const dataMatches = Boolean(args.data) === Boolean(serviceOperationConfig.dataSchema)
             const implementationParamsMatch =
-            Boolean(args.implementationParams) === Boolean(implementationArgs.implementationParamsSchema)
+                Boolean(args.implementationParams) === Boolean(implementationArgs.implementationParamsSchema)
             return paramsMatch && dataMatches && implementationParamsMatch
         }
 
@@ -348,7 +349,9 @@ export function defineSubOperation<
                 }
                 const dataParse = zfd.formData(dataSchema).safeParse(args.data)
                 if (!dataParse.success) {
-                    console.log(dataParse)
+                    if (process.env.NODE_ENV !== 'test') {
+                        console.log(dataParse)
+                    }
                     throw new ParseError(dataParse)
                 }
                 args.data = dataParse.data
@@ -454,14 +457,14 @@ export function defineSubOperation<
          */
         internalCall: (
             args:
-            & ServiceOperationImplementationConfigInternalCall<
-                undefined,
-                ParamsSchemaImplementationFields,
-                DataSchemaImplementationFields,
-                OperationImplementationFields
-            >
-            & ServiceOperationExecuteArgs<'SAFE', ParamsSchema, DataSchema, undefined>
-            & Partial<ServiceOperationContext<OpensTransaction>>
+                & ServiceOperationImplementationConfigInternalCall<
+                    undefined,
+                    ParamsSchemaImplementationFields,
+                    DataSchemaImplementationFields,
+                    OperationImplementationFields
+                >
+                & ServiceOperationExecuteArgs<'SAFE', ParamsSchema, DataSchema, undefined>
+                & Partial<ServiceOperationContext<OpensTransaction>>
         ) => implement({
             ...args,
             authorizer: () => RequireNothing.staticFields({}).dynamicFields({}),

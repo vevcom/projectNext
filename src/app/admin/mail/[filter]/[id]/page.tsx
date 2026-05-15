@@ -33,7 +33,7 @@ export default async function MailFlowPage({ params }: PropTypes) {
     const filter = (await params).filter as MailListTypes
 
     const [results, mailOptions] = await Promise.all([
-        readMailFlowAction(filter, id),
+        readMailFlowAction({ params: { filter, id } }),
         readMailOptions(),
     ])
 

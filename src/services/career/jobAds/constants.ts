@@ -1,6 +1,6 @@
 import { articleRealtionsIncluder } from '@/cms/articles/constants'
-import { JobType } from '@/prisma-generated-pn-types'
 import type { Prisma } from '@/prisma-generated-pn-types'
+import { JobType } from '@/prisma-generated-pn-types'
 
 
 export const jobAdType = {

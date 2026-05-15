@@ -4,15 +4,15 @@ import { notificationAuth } from './auth'
 import { notificationSchemas } from './schemas'
 import { allNotificationMethodsOn, notificationMethodsArray } from './constants'
 import { availableNotificationMethodIncluder } from './channel/constants'
-import { sendMail } from './email/send'
 import { emailSchemas } from './email/schemas'
+import { sendMail } from '@/lib/email/send'
 import { userFilterSelection } from '@/services/users/constants'
 import { defineOperation, defineSubOperation } from '@/services/serviceOperation'
-import { SpecialNotificationChannel } from '@/prisma-generated-pn-types'
 import { z } from 'zod'
 import type { Notification } from '@/prisma-generated-pn-types'
 import type { ExpandedNotificationChannel, NotificationResult } from './types'
 import type { UserFiltered } from '@/services/users/types'
+import { SpecialNotificationChannel } from '@/prisma-generated-pn-types'
 
 const dispathMethod = {
     email: dispatchEmailNotifications,

@@ -1,4 +1,4 @@
-import type { mailHandlerSingleton } from '@/services/notifications/email/mailHandler'
+import type { mailHandlerSingleton } from '@/lib/email/mailHandler'
 
 declare global {
 

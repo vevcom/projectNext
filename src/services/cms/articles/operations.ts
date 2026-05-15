@@ -6,10 +6,10 @@ import { articleSectionOperations } from '@/cms/articleSections/operations'
 import { cmsImageOperations } from '@/cms/images/operations'
 import logger from '@/lib/logger'
 import { ServerError } from '@/services/error'
-import { SpecialCmsArticle } from '@/prisma-generated-pn-types'
 import { z } from 'zod'
 import { v4 } from 'uuid'
 import type { ArticleSectionPart } from '@/cms/articleSections/types'
+import { SpecialCmsArticle } from '@/prisma-generated-pn-types'
 
 const create = defineSubOperation({
     dataSchema: () => articleSchemas.create,

@@ -1,5 +1,5 @@
-import { SpecialCmsParagraph } from '@/prisma-generated-pn-types'
 import { z } from 'zod'
+import { SpecialCmsParagraph } from '@/prisma-generated-pn-types'
 
 
 const baseSchema = z.object({

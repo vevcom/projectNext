@@ -5,7 +5,7 @@
     padding: 1em;
     border-radius: 1em;
     margin: 1em 1.5em;
-    background-color: ohma.$colors-gray-300;
+    @include ohma.layer;
     .metInfo {
         display: flex;
         flex-direction: column;

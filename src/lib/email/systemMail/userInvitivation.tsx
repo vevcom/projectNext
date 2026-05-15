@@ -1,9 +1,9 @@
 import { generateJWT } from '@/jwt/jwt'
 import type { UserFiltered } from '@/services/users/types'
 import '@pn-server-only'
-import { userInvitationExpiration } from './ConfigVars'
-import { sendSystemMail } from '@/services/notifications/email/send'
-import { UserInvitationTemplate } from '@/services/notifications/email/templates/userInvitation'
+import { userInvitationExpiration } from './constants'
+import { sendSystemMail } from '@/lib/email/send'
+import { UserInvitationTemplate } from '@/lib/email/templates/userInvitation'
 
 
 export async function sendUserInvitationEmail(user: UserFiltered) {

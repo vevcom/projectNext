@@ -12,6 +12,7 @@ import { readActiveJobAdsAction } from '@/services/career/jobAds/actions'
 import { readCurrentEventsAction } from '@/services/events/actions'
 import { readSpecialCmsImageFrontpage, updateSpecialCmsImageFrontpage } from '@/services/frontpage/actions'
 import { frontpageAuth } from '@/services/frontpage/auth'
+import { eventAuth } from '@/services/events/auth'
 import { ServerSession } from '@/auth/session/ServerSession'
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -26,8 +27,13 @@ export default async function LoggedInLandingPage() {
     const events = unwrapActionReturn(await readCurrentEventsAction({ params: { tags: null } }))
         .slice(0, MAX_NUMBER_OF_ELEMENTS)
 
+    const session = await ServerSession.fromNextAuth()
     const canEditFrontpageCmsImage = frontpageAuth.updateSpecialCmsImage.dynamicFields({}).auth(
-        await ServerSession.fromNextAuth()
+        session
+    ).toJsObject()
+
+    const canEditEventCmsImage = eventAuth.updateCmsCoverImage.dynamicFields({}).auth(
+        session
     ).toJsObject()
 
     return (
@@ -51,7 +57,7 @@ export default async function LoggedInLandingPage() {
                     </div>
                 </div>
             </div>
-            <div className={`${styles.part} ${loggedInStyles.loggedInPart}`}>
+            <div id="firstSection" className={`${styles.part} ${loggedInStyles.loggedInPart}`}>
                 <div>
                     <LoggedInSection title="Nyheter" link="/news">
                         {news.map((newsArticle, key) => (
@@ -60,10 +66,10 @@ export default async function LoggedInLandingPage() {
                     </LoggedInSection>
                     <LoggedInSection title="Hvad der hender" link="/events">
                         {events.map((event, key) => (
-                            <EventCard key={key} event={event} />
+                            <EventCard key={key} event={event} canEdit={canEditEventCmsImage} />
                         ))}
                     </LoggedInSection>
-                    <LoggedInSection title="Jobb annonser" link="/career/jobads">
+                    <LoggedInSection title="Jobbannonser" link="/career/jobads">
                         {jobAds.map((jobAd, key) => (
                             <JobAd key={key} jobAd={jobAd} />
                         ))}

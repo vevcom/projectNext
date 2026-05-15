@@ -6,8 +6,8 @@ import { eventAuth } from '@/services/events/auth'
 import logger from '@/lib/logger'
 import { defineOperation } from '@/services/serviceOperation'
 import { ServerError } from '@/services/error'
-import { SpecialEventTags } from '@/prisma-generated-pn-types'
 import { z } from 'zod'
+import { SpecialEventTags } from '@/prisma-generated-pn-types'
 
 export const eventTagOperations = {
     read: defineOperation({

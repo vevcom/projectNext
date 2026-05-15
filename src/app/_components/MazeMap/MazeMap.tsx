@@ -27,6 +27,7 @@ export default function MazeMap({
 }: PropTypes) {
     return <div className={style.MazeMap} style={{ height }}>
         <iframe
+            title="MazeMap"
             src={
                 'https://use.mazemap.com/embed.html#v=1&' +
                 `campusid=${campusId}&` +

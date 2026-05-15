@@ -65,7 +65,7 @@ export default async function LoggedOutLandingPage() {
                     specialCmsImage="FRONTPAGE_2"
                     specialCmsParagraph="FRONTPAGE_2"
                     readMore="/articles"
-                    imgWidth={700}
+                    imgWidth={450}
                 />
 
             </div>
@@ -80,7 +80,7 @@ export default async function LoggedOutLandingPage() {
                     specialCmsImage="FRONTPAGE_3"
                     specialCmsParagraph="FRONTPAGE_3"
                     readMore="/career"
-                    imgWidth={550}
+                    imgWidth={760}
                 />
                 <Section
                     canEditSpecialCmsImage={canEditSpecialCmsImage}
@@ -89,7 +89,7 @@ export default async function LoggedOutLandingPage() {
                     specialCmsImage="FRONTPAGE_4"
                     specialCmsParagraph="FRONTPAGE_4"
                     readMore="infopages/loccom"
-                    imgWidth={750}
+                    imgWidth={1000}
                 />
 
             </div>

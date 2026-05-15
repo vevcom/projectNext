@@ -1,12 +1,43 @@
 @use "@/styles/ohma";
 
 .resetPasswordLink {
-    color: ohma.$colors-black;
+    > p {
+        margin-top: 2*ohma.$gap;
+    }
+    color: ohma.$colors-text;
     transition: color 100ms;
-    padding: 0.3rem;
-
     &:hover {
-        color: ohma.$colors-gray-500;
+        color: ohma.$colors-text-muted;
+    }
+}
+
+.firstLoginText {
+    margin-top: ohma.$gap;
+    color: ohma.$colors-text;
+}
+
+.loginForm {
+    .textInput {
+        max-width: unset;
+        margin-bottom: 2*ohma.$gap;
+    }
+}
+
+.buttonInput {
+    width: 100%;
+}
+
+.divider {
+    display: flex;
+    justify-content: center;
+    margin: 2*ohma.$gap 0;
+    &::before,
+    &::after {
+        margin: ohma.$gap;
+        content: "";
+        flex: 1;
+        height: 0;
+        border-bottom: 1px solid ohma.$colors-text-muted;
     }
 }
 

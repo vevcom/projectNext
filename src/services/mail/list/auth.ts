@@ -1,9 +1,9 @@
 import { RequirePermission } from '@/auth/authorizer/RequirePermission'
 
-//TODO: Use authorizers when refactoring to operations.ts
 export const mailingListAuth = {
-    create: RequirePermission.staticFields({ permission: 'MAILINGLIST_CREATE' }),
-    destroy: RequirePermission.staticFields({ permission: 'MAILINGLIST_DESTROY' }),
+    create: RequirePermission.staticFields({ permission: 'MAILINGLIST_ADMIN' }),
+    readMany: RequirePermission.staticFields({ permission: 'MAILINGLIST_READ' }),
     read: RequirePermission.staticFields({ permission: 'MAILINGLIST_READ' }),
-    update: RequirePermission.staticFields({ permission: 'MAILINGLIST_UPDATE' }),
+    update: RequirePermission.staticFields({ permission: 'MAILINGLIST_ADMIN' }),
+    destroy: RequirePermission.staticFields({ permission: 'MAILINGLIST_ADMIN' }),
 } as const

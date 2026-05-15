@@ -3,8 +3,8 @@ import { readCurrentOmegaOrder } from './read'
 import { AutomaticallyIncreaseOrder } from './ConfigVars'
 import { prismaCall } from '@/services/prismaCall'
 import { prisma } from '@/prisma-pn-client-instance'
-import { GroupType } from '@/prisma-generated-pn-types'
 import type { PrismaPromise } from '@prisma/client/runtime/client'
+import { GroupType } from '@/prisma-generated-pn-types'
 
 /**
  * This function will increment omega, it creates a new order.

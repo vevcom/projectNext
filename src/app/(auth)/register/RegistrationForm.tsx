@@ -6,10 +6,10 @@ import Checkbox from '@/components/UI/Checkbox'
 import { SelectString } from '@/components/UI/Select'
 import TextInput from '@/components/UI/TextInput'
 import { sexConfig } from '@/services/users/constants'
-import { SEX, type User } from '@/prisma-generated-pn-types'
 import { signIn } from 'next-auth/react'
 import { useSearchParams } from 'next/navigation'
 import { useState } from 'react'
+import { SEX, type User } from '@/prisma-generated-pn-types'
 
 export default function RegistrationForm({
     userData,

@@ -2,6 +2,8 @@ import { isBuildPhase } from '@/lib/isBuildPhase'
 import { ServerError } from '@/services/error'
 
 
+export const NTNUEmailDomain = 'stud.ntnu.no'
+
 export const validMailAdressDomains = isBuildPhase() ? ['omega.ntnu.no'] : (() => {
     if (!process.env.DOMAIN || !process.env.MAIL_DOMAIN) {
         throw new ServerError('INVALID CONFIGURATION', 'The environment variables DOMAIN and MAIL_DOMAIN must be set')

@@ -286,64 +286,14 @@ export const permissionConfig = {
         description: 'kan oppdatere ekstern epostadresse',
         category: 'mail',
     },
-    MAILALIAS_CREATE: {
-        name: 'Lage epostalias',
-        description: 'kan lage epostalias',
-        category: 'mail',
-    },
-    MAILALIAS_DESTROY: {
-        name: 'Slette epostalias',
-        description: 'kan slette epostalias',
-        category: 'mail',
-    },
     MAILALIAS_READ: {
         name: 'Les epostalias',
         description: 'kan lese epostalias',
         category: 'mail',
     },
-    MAILALIAS_UPDATE: {
-        name: 'Oppdatere epostalias',
-        description: 'kan oppdatere epostalias',
-        category: 'mail',
-    },
-    MAILINGLIST_ALIAS_CREATE: {
-        name: 'Lage epostliste alias',
-        description: 'kan lage epostliste alias',
-        category: 'mail',
-    },
-    MAILINGLIST_ALIAS_DESTROY: {
-        name: 'Slette epostliste alias',
-        description: 'kan slette epostliste alias',
-        category: 'mail',
-    },
-    MAILINGLIST_CREATE: {
-        name: 'Lage epostliste',
-        description: 'kan lage epostliste',
-        category: 'mail',
-    },
-    MAILINGLIST_DESTROY: {
-        name: 'Slette epostliste',
-        description: 'kan slette epostliste',
-        category: 'mail',
-    },
-    MAILINGLIST_EXTERNAL_ADDRESS_CREATE: {
-        name: 'Lage ekstern epostliste adresse',
-        description: 'kan lage ekstern epostliste adresse',
-        category: 'mail',
-    },
-    MAILINGLIST_EXTERNAL_ADDRESS_DESTROY: {
-        name: 'Slette ekstern epostliste adresse',
-        description: 'kan slette ekstern epostliste adresse',
-        category: 'mail',
-    },
-    MAILINGLIST_GROUP_CREATE: {
-        name: 'Lage epostliste gruppe',
-        description: 'kan lage epostliste gruppe',
-        category: 'mail',
-    },
-    MAILINGLIST_GROUP_DESTROY: {
-        name: 'Slette epostliste gruppe',
-        description: 'kan slette epostliste gruppe',
+    MAILALIAS_ADMIN: {
+        name: 'Administrere epostalias',
+        description: 'kan opprette, oppdatere og slette epostalias',
         category: 'mail',
     },
     MAILINGLIST_READ: {
@@ -351,19 +301,9 @@ export const permissionConfig = {
         description: 'kan lese epostliste',
         category: 'mail',
     },
-    MAILINGLIST_UPDATE: {
-        name: 'Oppdatere epostliste',
-        description: 'kan oppdatere epostliste',
-        category: 'mail',
-    },
-    MAILINGLIST_USER_CREATE: {
-        name: 'Lage epostliste bruker',
-        description: 'kan lage epostliste bruker',
-        category: 'mail',
-    },
-    MAILINGLIST_USER_DESTROY: {
-        name: 'Slette epostliste bruker',
-        description: 'kan slette epostliste bruker',
+    MAILINGLIST_ADMIN: {
+        name: 'Administrere epostliste',
+        description: 'kan administrere epostliste og tilknyttede relasjoner',
         category: 'mail',
     },
     ADMISSION_TRIAL_CREATE: {

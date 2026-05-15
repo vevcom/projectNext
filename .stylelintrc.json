@@ -1,0 +1,7 @@
+{
+  "customSyntax": "postcss-scss",
+  "plugins": ["@stylistic/stylelint-plugin"],
+  "rules": {
+    "@stylistic/declaration-block-trailing-semicolon": "always"
+  }
+}

@@ -2,16 +2,20 @@
 
 .UserCard {
     @include ohma.round;
-    @include ohma.boxShadow;
-    color: ohma.$colors-black;
+    @include ohma.boxShadow('');
+    &:hover {
+        @include ohma.boxShadow('hover');
+    }
     text-decoration: none;
-    margin: 1rem;
-    background-color: ohma.$colors-white;
+    margin: ohma.$gap;
+    margin-bottom: 0;
     box-sizing: border-box;
+    @include ohma.layer;
+    color: ohma.$colors-text;
 
     display: flex;
     align-items: center;
-    gap: calc(2 * ohma.$gap);
+    gap: ohma.$gap;
 
     > div {
         > h6 {

@@ -4,8 +4,8 @@ import { defineOperation, defineSubOperation } from '@/services/serviceOperation
 import { invalidateAllUserSessionData, invalidateManyUserSessionData } from '@/services/auth/invalidateSession'
 import { groupsWithRelationsIncluder } from '@/services/groups/constants'
 import { checkGroupValidity, inferGroupName } from '@/services/groups/operations'
-import { Permission } from '@/prisma-generated-pn-types'
 import { z } from 'zod'
+import { Permission } from '@/prisma-generated-pn-types'
 
 
 export const permissionOperations = {

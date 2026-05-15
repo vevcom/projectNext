@@ -88,6 +88,26 @@ const myServiceOperation = defineOperation({
 export const myAction = makeAction(myServiceOperation)
 ```
 
+### Service Folder Structure
+
+Each service domain follows a standard file layout. See `src/services/omegaquotes/` as the canonical example:
+
+```
+src/services/[domain]/
+├── actions.ts      # 'use server' — makeAction() wrappers, one per operation
+├── auth.ts         # Authorizer definitions (RequirePermission.staticFields etc.)
+├── constants.ts    # Domain constants and config values (env vars, field selections)
+├── operations.ts   # defineOperation() calls, exported as `{ ... } as const`
+├── schemas.ts      # Plain Zod schemas (no ValidationBase)
+└── types.ts        # TypeScript types specific to this domain (if needed)
+```
+
+Rules:
+- **`constants.ts`** — not `ConfigVars.ts` or any other name
+- **`operations.ts`** — the exported object must end with `as const`
+- **`actions.ts`** — must have `'use server'` at the top; only calls `makeAction()`
+- Sub-domains (e.g. `mail/alias/`) follow the same layout within their subfolder
+
 ### Prisma Schema Organization
 
 Prisma schemas are split into multiple domain-specific files in `src/prisma/schema/`:
@@ -169,6 +189,61 @@ Files that must run only on the server import `'@pn-server-only'` at the top. Th
 - `ParseError` - Validation/parsing errors
 - Error handling is managed internally by the ServiceOperation system via `makeAction()`
 
+### Calling Actions from the Frontend
+
+**IMPORTANT**: Frontend code (`src/app/`) must NEVER import from `operations.ts` directly. Always go through `actions.ts`. This applies to both server components (pages) and client components.
+
+In server components (pages), use `unwrapActionReturn` from `@/app/redirectToErrorPage` to unwrap the result — it returns the data directly on success and redirects to the error page on failure:
+
+```typescript
+import { readMailAliasesAction } from '@/services/mail/alias/actions'
+import { unwrapActionReturn } from '@/app/redirectToErrorPage'
+
+const aliases = unwrapActionReturn(await readMailAliasesAction())
+```
+
+Action call signatures depend on whether the operation has `paramsSchema` and/or `dataSchema`:
+- No schemas → `action()`
+- `paramsSchema` only → `action({ params: { ... } })`
+- `dataSchema` only → `action({ data: { ... } })` or `action(formData)`
+- Both → `action({ params: { ... } }, { data: { ... } })`
+
+### Authorization in Client Components
+
+In `'use client'` components, use the `useAuthorizer` hook from `@/hooks/useAuthorizer` instead of calling `useSession()` and checking `session.loading` manually. It handles the loading state internally and returns an `AuthResult` with an `authorized` boolean:
+
+```typescript
+import useAuthorizer from '@/hooks/useAuthorizer'
+import { someAuth } from '@/services/some/auth'
+
+const canDoThing = useAuthorizer({ authorizer: someAuth.operation.dynamicFields({}) }).authorized
+```
+
+Never do this manually in client components:
+```typescript
+const session = useSession()
+const canDoThing = !session.loading && someAuth.operation.dynamicFields({}).auth(session.session).authorized
+```
+
+### Operation Naming Conventions
+
+For every `defineOperation()` call, the operation key must align with its schema and authorizer keys:
+
+- `dataSchema` and `paramsSchema`: if taken from a schemas object, the key must match the operation name exactly — e.g. operation `destroyFoo` must use `fooSchemas.destroyFoo`, not `fooSchemas.createFoo`.
+- `authorizer`: must reference the same operation name — e.g. `fooAuth.destroyFoo.dynamicFields({})`, not `fooAuth.createFoo`.
+
+When create and destroy operations share the same schema shape, define a shared variable and reference it from both keys in the schemas object:
+
+```typescript
+// schemas.ts
+const fooRelation = z.object({ ... })
+
+export const fooSchemas = {
+    createFoo: fooRelation,
+    destroyFoo: fooRelation,
+}
+```
+
 ### Form Handling
 
 Forms typically use Server Actions with FormData:
@@ -183,6 +258,7 @@ Forms typically use Server Actions with FormData:
 - Custom Prisma test environment (`tests/PrismaTestEnvironment.ts`)
 - Test setup in `tests/setup.ts`
 - Use `IGNORE_SERVER_ONLY=true` environment variable when running tests
+- Use full variable names in callbacks — no single-letter identifiers (ESLint `id-length` rule). Use the domain name itself (e.g. `group => group.id`, `user => user.id`) as long as there are no collisions.
 
 ## Migration from OmegaWeb Basic
 

@@ -1,5 +1,6 @@
 import '@pn-server-only'
 import VevenAdapter from './VevenAdapter'
+import { compressJwt, decompressJwt } from './jwtCompression'
 import { decryptAndComparePassword } from '@/auth/passwordHash'
 import FeideProvider from '@/lib/feide/FeideProvider'
 import { updateUserStudyProgrammes } from '@/lib/feide/userRoutines'
@@ -11,7 +12,6 @@ import { permissionOperations } from '@/services/permissions/operations'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { encode, decode } from 'next-auth/jwt'
 import type { AuthOptions } from 'next-auth'
-import { compressJwt, decompressJwt } from './jwtCompression'
 
 export const authOptions: AuthOptions = {
     providers: [

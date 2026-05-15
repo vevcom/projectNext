@@ -7,9 +7,9 @@ import { prisma } from '@/prisma-pn-client-instance'
 import { cmsParagraphOperations } from '@/cms/paragraphs/operations'
 import { cmsLinkOperations } from '@/cms/links/operations'
 import { cmsImageOperations } from '@/cms/images/operations'
-import { StandardSchool } from '@/prisma-generated-pn-types'
 import type { SchoolFiltered } from './types'
 import type { CreateSchoolTypes } from './validation'
+import { StandardSchool } from '@/prisma-generated-pn-types'
 
 export async function createSchool(rawdata: CreateSchoolTypes['Detailed']): Promise<SchoolFiltered> {
     const data = createSchoolValidation.detailedValidate(rawdata)

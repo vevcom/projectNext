@@ -1,6 +1,6 @@
 import { checkForPermissionDuplicates, COMMITTEE_PERMISSIONS } from '@/seeder/src/seedPermissions'
-import { Permission } from '@/prisma-generated-pn-types'
 import type { PrismaClient as PrismaClientPn } from '@/prisma-generated-pn-client'
+import { Permission } from '@/prisma-generated-pn-types'
 
 export default async function seedProdPermissions(prisma: PrismaClientPn) {
     const allPermissions = Object.values(Permission)

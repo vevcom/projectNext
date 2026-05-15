@@ -27,6 +27,7 @@ async function Footer({ canEditSpecialCmsImage }: PropTypes) {
                 </p>
                 <p>Org. Nr. 890 384 692</p>
                 <div>
+                    {/* Uncomment when PWA an SVG
                     <SpecialCmsImage
                         canEdit={canEditSpecialCmsImage}
                         special="FOOTER_1"
@@ -35,7 +36,7 @@ async function Footer({ canEditSpecialCmsImage }: PropTypes) {
                         updateCmsImageAction={updateSpecialCmsImageFrontpage}
                     >
                         <Link className={styles.pwa} href="/infopages/pwa" />
-                    </SpecialCmsImage>
+                    </SpecialCmsImage>*/}
                     <div className={styles.icons}>
                         <SocialIcons />
                     </div>

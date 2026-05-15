@@ -1,5 +1,5 @@
-import { ImageSize, SpecialCmsImage } from '@/prisma-generated-pn-types'
 import { z } from 'zod'
+import { ImageSize, SpecialCmsImage } from '@/prisma-generated-pn-types'
 
 const baseSchema = z.object({
     name: z.string().max(200, 'Maks lengde er 200 tegn.').optional(),

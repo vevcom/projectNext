@@ -1,8 +1,9 @@
 'use client'
-import { useSession } from '@/auth/session/useSession'
+import useAuthorizer from '@/hooks/useAuthorizer'
 import Form from '@/components/Form/Form'
 import { SelectNumber } from '@/components/UI/Select'
 import { createMailingListUserRelationAction } from '@/services/mail/actions'
+import { mailAuth } from '@/services/mail/auth'
 import type { MailFlowObject } from '@/services/mail/types'
 import type { MailingList } from '@/prisma-generated-pn-types'
 
@@ -19,13 +20,11 @@ export default function EditUser({
         throw Error('Could not find user')
     }
 
-    const session = useSession()
-    const permissions = !session.loading ? session.session.permissions : []
+    const canAddToList = useAuthorizer({ authorizer: mailAuth.createMailingListUserRelation.dynamicFields({}) }).authorized
 
     return <div>
         <h2>{`${focusedUser.firstname} ${focusedUser.lastname}`}</h2>
-        {/** TODO: Call author */}
-        { permissions.includes('MAILINGLIST_USER_CREATE') && <Form
+        { canAddToList && <Form
             title="Legg til mailliste"
             submitText="Legg til"
             action={createMailingListUserRelationAction}

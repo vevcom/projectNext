@@ -25,14 +25,15 @@ export async function prismaCall<T>(call: () => T | Promise<T>): Promise<T> {
             throw error
         }
 
-        console.error(error)
+        if (process.env.NODE_ENV !== 'test') {
+            console.error(error) // TODO: Add the details from the error to the ServerError
+        }
 
         if (!(error instanceof PrismaClientKnownRequestError)) {
             logger.error('Unknown error:', error)
             throw new ServerError('UNKNOWN ERROR', 'unknown error')
         }
 
-        console.error(error) // TODO: Add the details from the error to the ServerError
         const pError = errorMessagesMap[error.code]
         if (pError) throw new ServerError(pError[0], pError[1])
         logger.error('Unknown prisma error:', error)

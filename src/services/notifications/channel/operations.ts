@@ -10,7 +10,7 @@ import {
 import { notificationMethodSchema } from '@/services/notifications/schemas'
 import { booleanOperationOnMethods } from '@/services/notifications/notificationMethodOperations'
 import { defineOperation } from '@/services/serviceOperation'
-import { DEFAULT_NOTIFICATION_ALIAS } from '@/services/notifications/email/constants'
+import { DEFAULT_NOTIFICATION_ALIAS } from '@/lib/email/constants'
 import { ServerError } from '@/services/error'
 import { z } from 'zod'
 import type { ExpandedNotificationChannel, NotificationMethodGeneral } from '@/services/notifications/types'

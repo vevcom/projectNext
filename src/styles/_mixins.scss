@@ -3,40 +3,56 @@
 @use "_fonts";
 
 @use "sass:color";
+@use "sass:math";
 
 @mixin round {
     border-radius: variables.$rounding;
     padding: variables.$rounding;
 }
 
-@mixin card {
-    border-radius: variables.$cardRounding;
-    padding: variables.$cardPadding;
+@mixin boxShadow($state) {
+    @if $state=='hover' {
+        box-shadow: colors.$boxShadow 0 3px 6px, colors.$boxShadow 0 3px 6px;
+        transition: box-shadow 0.3s;
+    } @else {
+        box-shadow: colors.$boxShadow 0 1px 3px, colors.$boxShadow 0 1px 2px;
+        transition: box-shadow 0.3s;
+    }
 }
 
-@mixin boxShadow {
-    box-shadow: colors.$gray-700 0 0 10px;
+@mixin card {
+    border-radius: variables.$cardRounding;
+    transition: box-shadow 0.3s;
+    @include boxShadow('');
+    &:hover {
+        @include boxShadow('hover');
+    }
 }
+
+@mixin layer {
+    background: colors.$layer;
+    backdrop-filter: blur(30px);
+}
+
 
 @mixin table {
     width: 100%;
     border-collapse: collapse;
+    border: none;
     margin: 20px 0;
     font-size: 18px;
     text-align: left;
     th, td {
-        border: 1px solid colors.$gray-300;
-        padding: 8px;
+        padding: variables.$gap;
     }
     th {
-        background-color: colors.$gray-200;
-        color: colors.$black;
+        background-color: color-mix(in srgb, colors.$secondary, white 2%); // TODO Perhaps change
     }
     tr:nth-child(even) {
-        background-color: colors.$gray-100;
+        background-color: color-mix(in srgb, colors.$secondary, white 2%); // TODO Perhaps change
     }
     tr:hover {
-        background-color: colors.$gray-200;
+        @include layer;
     }
 }
 
@@ -51,21 +67,21 @@
     border: none;
     transition: .5s background;
     &:hover {
-        background-color: color.adjust($color, $lightness: -10%);
+        background-color: color-mix(in srgb, $color, white 10%); // TODO Perhaps change
         cursor: pointer;
     }
     @include round;
 }
 
 //NOTE: also made to work for <Link /> (<a> tag)
-@mixin borderBtn($color: colors.$white, $hoverColor: color.adjust($color, $lightness: 40%)) { 
+@mixin borderBtn($color: colors.$white) {
     @include btn($color);
     background: transparent;
     border: solid $color 2px;
     color: $color;
     &:hover {
         background: $color;
-        color: $hoverColor;
+        color: color-mix(in srgb, $color, white 40%);
     }
 }
 
@@ -102,17 +118,17 @@
     justify-content: center;
     align-items: center;
     &:hover {
-        background-color: color.adjust($color, $lightness: -10%);
+        background-color: color-mix(in srgb, $color, black 10%); // TODO Perhaps change
     }
 }
 
-@mixin yellowIconLink {
-    color: colors.$yellow;
+@mixin primaryIconLink {
+    color: colors.$primary;
     padding: variables.$gap;
     width: 30px;
     height: 30px;
     &:hover {
-        color: color.adjust(colors.$yellow, $lightness: -10%);
+        color: color-mix(in srgb, colors.$primary, black 10%); // TODO Perhaps change
         cursor: pointer;
     }
 }
@@ -158,6 +174,23 @@
     }
 }
 
+@mixin EventCardListLayout {
+    margin: 1em 0;
+    display: grid;
+    grid-template-columns: repeat(2, calc((100% - 2em) / 2));
+    grid-gap: 1em;
+    @media screen and (max-width: variables.$mobileBreakpoint) {
+        grid-template-columns: repeat(2, calc((100% - 2em) / 2));
+    }
+    @media screen and (max-width: 500px) {
+        grid-template-columns: 1fr;
+        place-items: center;
+        > * {
+            width: 100%;
+        }
+    }
+}
+
 @mixin screenMobile {
     @media (max-width: variables.$mobileBreakpoint) {
         @content;
@@ -165,7 +198,7 @@
 }
 
 @mixin screenLg {
-    @media (min-width: calc(variables.$mobileBreakpoint + 1px)) {
+    @media (min-width: calc(#{variables.$mobileBreakpoint} + 1px)) {
         @content;
     }
 }
@@ -176,5 +209,33 @@
     }
     100% {
         transform: translate(250%) rotate(5deg);
+    }
+}
+
+@mixin neumorphism(
+    $l:var(--secondary-l),
+    $c:var(--secondary-c),
+    $h:var(--secondary-h),
+    $size: 20px,
+    $blur: 40px,
+    $intensity: .05,
+    $inset: "",
+    $button: false,
+) {
+    box-shadow:
+        #{$inset} #{$size} #{$size} #{$blur}
+          oklch(calc(#{$l} - #{$intensity}) #{$c} #{$h}),
+        #{$inset} -#{$size} -#{$size} #{$blur}
+          oklch(calc(#{$l} + #{$intensity}) #{$c} #{$h});
+
+
+    @if $button {
+        &:active {
+            box-shadow:
+                inset #{$size} #{$size} #{$blur}
+                    oklch(calc(#{$l} - #{$intensity}) #{$c} #{$h}),
+                  inset -#{$size} -#{$size} #{$blur}
+                    oklch(calc(#{$l} + #{$intensity}) #{$c} #{$h});
+        }
     }
 }

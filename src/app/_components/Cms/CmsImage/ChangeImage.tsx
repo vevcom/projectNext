@@ -82,7 +82,7 @@ export default function ChangeImage({ currentImage, cmsImageId, currentImageSize
                             }
                             submitText={`change to ${changeToSize.toLocaleLowerCase()}`}
                             refreshOnSuccess
-                            submitColor="secondary"
+                            submitColor="primary"
                         />
                     </div>
                 )

@@ -8,7 +8,9 @@ import {
     updateMailAddressExternalAction,
     destroyMailAddressExternalAction
 } from '@/services/mail/mailAddressExternal/actions'
-import { useSession } from '@/auth/session/useSession'
+import { mailAddressExternalAuth } from '@/services/mail/mailAddressExternal/auth'
+import { mailAuth } from '@/services/mail/auth'
+import useAuthorizer from '@/hooks/useAuthorizer'
 import { useRouter } from 'next/navigation'
 import type { MailingList } from '@/prisma-generated-pn-types'
 import type { MailFlowObject } from '@/services/mail/types'
@@ -26,15 +28,18 @@ export default function EditMailAddressExternal({
 
     const focusedAddress = data.mailaddressExternal[0]
     if (!focusedAddress) {
-        throw Error('Could not find alias')
+        throw Error('Could not find external mail address')
     }
 
-    const session = useSession()
-    const permissions = !session.loading ? session.session.permissions : []
+    const canUpdate = useAuthorizer({ authorizer: mailAddressExternalAuth.update.dynamicFields({}) }).authorized
+    const canDestroy = useAuthorizer({ authorizer: mailAddressExternalAuth.destroy.dynamicFields({}) }).authorized
+    const canAddToList = useAuthorizer({
+        authorizer: mailAuth.createMailingListExternalRelation.dynamicFields({})
+    }).authorized
 
     return <>
         <h2>{focusedAddress.address}</h2>
-        { permissions.includes('MAILADDRESS_EXTERNAL_UPDATE') && <div>
+        { canUpdate && <div>
             <Form
                 title="Ekstern mailaddresse"
                 submitText="Oppdater"
@@ -45,9 +50,9 @@ export default function EditMailAddressExternal({
                 <TextInput name="description" label="Beskrivelse" defaultValue={focusedAddress.description} />
             </Form>
         </div>}
-        { permissions.includes('MAILADDRESS_EXTERNAL_DESTROY') && <div>
+        { canDestroy && <div>
             <Form
-                action={destroyMailAddressExternalAction.bind(null, focusedAddress.id)}
+                action={destroyMailAddressExternalAction.bind(null, { params: { id: focusedAddress.id } })}
                 successCallback={() => push('/admin/mail')}
                 submitText="Slett"
                 submitColor="red"
@@ -57,7 +62,7 @@ export default function EditMailAddressExternal({
                 }}
             />
         </div> }
-        { permissions.includes('MAILINGLIST_EXTERNAL_ADDRESS_CREATE') && <div>
+        { canAddToList && <div>
             <Form
                 title="Legg til mailliste"
                 submitText="Legg til"

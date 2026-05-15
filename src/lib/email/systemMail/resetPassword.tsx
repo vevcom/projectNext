@@ -1,6 +1,6 @@
 import '@pn-server-only'
-import { sendSystemMail } from '@/services/notifications/email/send'
-import { ResetPasswordTemplate } from '@/services/notifications/email/templates/resetPassword'
+import { sendSystemMail } from '@/lib/email/send'
+import { ResetPasswordTemplate } from '@/lib/email/templates/resetPassword'
 import { generateJWT } from '@/jwt/jwt'
 import { userOperations } from '@/services/users/operations'
 import { ServerError } from '@/services/error'

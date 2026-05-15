@@ -49,7 +49,7 @@ $padding: ohma.$minimalPagePadding;
             height: 8em;
             left: 0;
             bottom: 0;
-            background-color: rgba(ohma.$colors-secondary, 0.90);
+            @include ohma.layer;
             padding: 1em 2em;
             display: flex;
             flex-direction: row;
@@ -73,11 +73,11 @@ $padding: ohma.$minimalPagePadding;
     }
 
     >aside {
-        color: ohma.$colors-gray-800;
+        color: ohma.$colors-text;
         grid-column: 1 / 2;
         grid-row: 2 / 3;
         min-width: 350px;
-        background-color: ohma.$colors-gray-500;
+        @include ohma.layer;
         margin-top: 1em;
         border-radius: ohma.$cardRounding;
         padding: ohma.$cardRounding;
