@@ -4,9 +4,11 @@ import Menu from './Menu'
 import getNavItems from './navDef'
 import UserNavigation from './UserNavigation'
 import ReportButton from './ReportButton'
+import NavBarTitle from './NavBarTitle'
 import EditModeSwitch from '@/components/EditModeSwitch/EditModeSwitch'
 import SpecialCmsImage from '@/components/Cms/CmsImage/SpecialCmsImage'
 import { readSpecialCmsImageFrontpage, updateSpecialCmsImageFrontpage } from '@/services/frontpage/actions'
+import PageTitleSetter from '@/contexts/PageTitleSetter'
 import Link from 'next/link'
 import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
 import type { Profile } from '@/services/users/types'
@@ -19,9 +21,7 @@ export type PropTypes = {
 export default async function NavBar({ profile, canEditSpecialCmsImage }: PropTypes) {
     const user = profile?.user ?? null
     const isLoggedIn = user !== null
-    // TODO: Actual application period check
     const applicationPeriod = false
-    // TODO: Actual admin/auth check
     const isAdmin = user?.username === 'harambe'
 
     const navSize = 4
@@ -31,32 +31,37 @@ export default async function NavBar({ profile, canEditSpecialCmsImage }: PropTy
 
     return (
         <nav className={styles.NavBar}>
-            <ul>
-                <li className={styles.logo}>
-                    <SpecialCmsImage
-                        canEdit={canEditSpecialCmsImage}
-                        special="NAV_PRIMARY_BUTTON"
-                        width={30}
-                        alt="omega logo"
-                        readSpecialCmsImageAction={readSpecialCmsImageFrontpage}
-                        updateCmsImageAction={updateSpecialCmsImageFrontpage}
-                    >
-                        <Link aria-label={'Go to homepage'} href="/" />
-                    </SpecialCmsImage>
+            <ul className={styles.list}>
+                <li className={styles.logoContainer}>
+                    <div className={styles.logo}>
+                        <div className={styles.logoWrapper}>
+                            <SpecialCmsImage
+                                canEdit={canEditSpecialCmsImage}
+                                special="NAV_PRIMARY_BUTTON"
+                                width={30}
+                                alt="omega logo"
+                                readSpecialCmsImageAction={readSpecialCmsImageFrontpage}
+                                updateCmsImageAction={updateSpecialCmsImageFrontpage}
+                            >
+                                <Link aria-label={'Go to homepage'} href="/" />
+                            </SpecialCmsImage>
+                        </div>
+                    </div>
                 </li>
+
+                <PageTitleSetter title="" />
+                <li className={styles.pageTitleLi}>
+                    <NavBarTitle />
+                </li>
+                <li className={styles.grower}></li>
                 {
                     itemsForNav.map((item) => (
-                        <Item key={item.name} {...item} />
+                        <li className={styles.navItem} key={item.name}>
+                            <Item key={item.name} {...item} />
+                        </li>
                     ))
                 }
-                <li>
-                    <Menu
-                        openBtnVariant={'desktop'}
-                        items={itemsForMenu}
-                    />
-                </li>
                 <li className={styles.rightSide}>
-                    <EditModeSwitch />
                     <ReportButton/>
                     <div className={styles.magicHat}>
                         <SpecialCmsImage

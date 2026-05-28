@@ -31,7 +31,7 @@
     }
     @include ohma.layer;
     h2 {
-        color: ohma.$colors-black;
+        color: ohma.$colors-text;
         font-size: ohma.$fonts-xl;
     }
 
@@ -58,7 +58,7 @@
             align-items: center;
             justify-content: center;
             text-decoration: none;
-            color: ohma.$colors-white;
+            color: ohma.$colors-text;
             * {
                 transition: 300ms; // TODO Add transition variable
             }
@@ -66,7 +66,7 @@
             svg {
                 width: 20px;
                 height: 20px;
-                color: ohma.$colors-white;
+                color: ohma.$colors-text;
                 margin: .3em;
             }
             &:hover {

@@ -15,16 +15,16 @@
             display: block;
             text-align: left;
             padding: 2rem 3rem;
-            color: #495057;
+            color: ohma.$colors-text;
             font-style: italic;
             border-radius: 25px;
-            background: #FFF;
+            @include ohma.layer();
         }
     }
 
     > .triangle {
         transform: scaleX(2);
-        color: #fff;
+        color: ohma.$colors-layer;
         text-shadow: 0 1px 1px rgba(255,255,255,.3),0 3px 3px rgba(0,0,0,.4);
         font-size: 25px;
         position: absolute;

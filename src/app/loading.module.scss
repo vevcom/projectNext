@@ -1,6 +1,7 @@
 @use '@/styles/ohma';
 
 .wrapper {
+    background: ohma.$colors-base00;
     display: grid;
     place-items: center;
     place-content: center;

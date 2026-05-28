@@ -1,6 +1,6 @@
 //fonts served statically through /public/fonts
 $fonts: (
-  Roboto: (300, 500, 700),
+  Inter: (300, 500, 700),
   PlayfairDisplay: (300, 500, 700)
 );
 
@@ -26,7 +26,7 @@ $fonts: (
   }
 }
 
-$primary: 'Roboto', sans-serif;
+$primary: 'Inter', sans-serif;
 $secondary: 'PlayfairDisplay', serif;
 
 $s: clamp(12px, 2vw, 14px);

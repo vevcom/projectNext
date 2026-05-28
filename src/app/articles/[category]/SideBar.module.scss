@@ -7,21 +7,21 @@
 
 @media screen and not (max-width: ohma.$mobileBreakpoint) {
     .SideBar {
+        height: 100%;
+        gap: ohma.$gap;
         > aside {
-            height: 100%;
+            background: ohma.$colors-base00;
+            border-radius: ohma.$rounding;
             width: 300px;
-            position: fixed;
             left: 0;
             z-index: 2;
-            max-height: calc(100vh - 40px);
         }
         > main {
+            background: ohma.$colors-base00;
+            border-radius: ohma.$rounding;
             z-index: 1;
-            transform: translateX(300px);
-            width: calc(100% - 300px - 2em);
-            margin: 1em;
             overflow: hidden;
-            min-height: 80vh;
+            width: calc(100% - 300px - #{ohma.$gap});
         }
     }
     
@@ -31,16 +31,13 @@
     }
     .SideBarContent {
         opacity: 0; // hide before handleHeight has run once
-    
-        height: calc(100% - 2em);
+
+        height: 100%;
         transition: opacity 0.35s, transform 0.05s ease-out;
         overflow: auto;
         color: ohma.$colors-white;
         margin: 1em 0em 1em 1em;
-        @include ohma.card();
-        @include ohma.layer();
         padding: ohma.$cardRounding;
-        backdrop-filter: blur(10px);
         h2 {
             font-size: ohma.$fonts-l;
         }

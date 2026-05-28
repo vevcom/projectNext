@@ -3,12 +3,14 @@ import { readSpecialCmsImageFrontpage, updateSpecialCmsImageFrontpage } from '@/
 import SpecialCmsImage from '@/components/Cms/CmsImage/SpecialCmsImage'
 import { ServerSession } from '@/auth/session/ServerSession'
 import { frontpageAuth } from '@/services/frontpage/auth'
+import PageTitleSetter from '@/contexts/PageTitleSetter'
 
 export default async function Error404() {
     const session = await ServerSession.fromNextAuth()
 
     return (
         <div className={styles.wrapper}>
+            <PageTitleSetter title={'Page not found'} />
             <div className={styles.info}>
                 <div className={styles.imageContainer}>
                     <SpecialCmsImage

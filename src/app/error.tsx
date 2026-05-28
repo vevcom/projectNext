@@ -6,6 +6,7 @@ import { readSpecialCmsImageFrontpage, updateSpecialCmsImageFrontpage } from '@/
 import { frontpageAuth } from '@/services/frontpage/auth'
 import { useSession } from '@/auth/session/useSession'
 import { Session } from '@/auth/session/Session'
+import PageTitleSetter from '@/contexts/PageTitleSetter'
 
 /**
  * note that passing custom error type to next error boundary is not supported
@@ -17,6 +18,7 @@ export default function ErrorBoundary({ error, reset }: {error: unknown, reset: 
 
     return (
         <div className={styles.wrapper}>
+            <PageTitleSetter title={'Error'} />
             <div className={styles.info}>
                 <div className={styles.imageContainer}>
                     <SpecialCmsImageClient

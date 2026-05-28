@@ -8,9 +8,11 @@ import YouTube from '@/components/YouTube/YouTube'
 import { readSpecialCmsImageFrontpage, updateSpecialCmsImageFrontpage } from '@/services/frontpage/actions'
 import { ServerSession } from '@/auth/session/ServerSession'
 import { frontpageAuth } from '@/services/frontpage/auth'
+import Footer from '@/components/Footer/Footer'
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Link from 'next/link'
+import PageTitleSetter from '@/contexts/PageTitleSetter'
 
 export default async function LoggedOutLandingPage() {
     const session = await ServerSession.fromNextAuth()
@@ -23,6 +25,7 @@ export default async function LoggedOutLandingPage() {
 
     return (
         <div className={styles.wrapper}>
+            <PageTitleSetter title={'Sct. Omega'} />
             <div className={`${styles.part} ${styles.frontImg}`}>
                 <div className={styles.frontInfo}>
                     <div>
@@ -97,6 +100,9 @@ export default async function LoggedOutLandingPage() {
                 <div className={styles.emptyPart} />
                 <MazeMap height={'80vh'}/>
                 <div className={styles.emptyPart} />
+            </div>
+            <div className={styles.footer}>
+                <Footer canEditSpecialCmsImage={canEditSpecialCmsImage} />
             </div>
         </div>
     )

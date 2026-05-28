@@ -60,7 +60,7 @@ export default async function CareerLandingPage() {
                             disableLinkingToLicense
                             imageContainerClassName={styles.linkImage}
                             width={300} image={jobAdImage} /> : <></> }
-                        <h2>Jobbanonser</h2>
+                        <h2>Jobbannonser</h2>
                     </Link>
                     <Link href={`/events?${QueryParams.eventTags.encodeUrl(
                         companyPresentationEventTag ? [companyPresentationEventTag.name] : []

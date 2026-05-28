@@ -30,28 +30,28 @@
     &.primary {
         .label {
             background-color: ohma.$colors-primary;
-            color: ohma.$colors-black;
+            color: ohma.$colors-text-inv;
         }
     }
 
     &.secondary {
         .label {
             background-color: ohma.$colors-secondary;
-            color: ohma.$colors-white;
+            color: ohma.$colors-text;
         }
     }
 
     &.red {
         .label {
             background-color: ohma.$colors-red;
-            color: ohma.$colors-black;
+            color: ohma.$colors-text-inv;
         }
     }
 
     &.black {
         .label {
             background-color: ohma.$colors-black;
-            color: ohma.$colors-white;
+            color: ohma.$colors-text-inv;
         }
     }
 }

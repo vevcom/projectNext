@@ -5,13 +5,14 @@
     margin: 0;
     box-sizing: border-box;
     font-family: ohma.$fonts-primary;
+    color: ohma.$colors-text;
 }
 
 html {
     scroll-behavior: smooth;
     background-color: ohma.$colors-secondary;
 
-    --rounding: 12px;
+    --rounding: 16px;
 
     --primary: oklch(0.727 0.137 245.985);
     --primary-l: 0.727;
@@ -38,6 +39,15 @@ body {
     overflow-x: hidden;
     overscroll-behavior-y:contain;
     background-color: ohma.$colors-secondary;
+}
+
+a {
+    color: ohma.$colors-primary;
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: underline;
+    }
 }
 
 h1 {

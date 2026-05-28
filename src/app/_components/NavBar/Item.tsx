@@ -8,11 +8,9 @@ type PropTypes = {
 
 function Item({ href, name }: PropTypes) {
     return (
-        <li>
-            <Link href={href} className={styles.link}>
-                <div>{name}</div>
-            </Link>
-        </li>
+        <Link href={href} className={styles.link}>
+            <div>{name}</div>
+        </Link>
     )
 }
 

@@ -6,6 +6,7 @@ import CollectionCard from '@/components/Image/Collection/CollectionCard'
 import { ServerSession } from '@/auth/session/ServerSession'
 import { readImageCollectionsPageAction } from '@/services/images/collections/actions'
 import type { PageSizeImageCollection } from '@/contexts/paging/ImageCollectionPaging'
+import PageTitleSetter from "@/contexts/PageTitleSetter";
 
 export default async function Images() {
     const { user } = await ServerSession.fromNextAuth()
@@ -30,6 +31,7 @@ export default async function Images() {
 
     return (
         <div className={styles.wrapper}>
+            <PageTitleSetter title={'Fotogalleri'} />
             <div className={styles.container}>
                 <ImageCollectionPagingProvider
                     startPage={{

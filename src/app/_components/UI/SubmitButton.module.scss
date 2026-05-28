@@ -14,7 +14,7 @@
 .submitButton {
     width: 150px;
     margin: 0;
-    color: ohma.$colors-black;
+    color: ohma.$colors-text-inv;
     transition: background-color 0.3s ease-in-out;
 }
 
@@ -23,7 +23,7 @@
     justify-content: space-between;
     padding: 1px 20px;
     > div {
-        background-color: ohma.$colors-black;
+        background-color: ohma.$colors-text-inv;
         width: 1em;
         height: 1em;
         border-radius: 50%;

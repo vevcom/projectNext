@@ -263,10 +263,6 @@ export default function SlideSidebar({ currentPath }: PropTypes) {
         previousPath.current = currentPath
     })
 
-    const handleToggle = () => {
-        setOpen(!open)
-    }
-
     return <div className={open ? `${styles.SlideSidebar} ${styles.open}` : `${styles.SlideSidebar} ${styles.closed}`}>
         <aside className={styles.sidebar}>
             {
@@ -291,15 +287,5 @@ export default function SlideSidebar({ currentPath }: PropTypes) {
                 ))
             }
         </aside>
-        {
-            !(currentPath === 'admin' && open) && (
-                <button onClick={handleToggle} className={styles.toggle}>
-                    <FontAwesomeIcon icon={faArrowLeft} />
-                </button>
-            )
-        }
-
-        <BackButton className={styles.backButton} />
-
     </div>
 }

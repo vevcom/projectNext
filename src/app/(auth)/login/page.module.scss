@@ -2,17 +2,14 @@
 
 .resetPasswordLink {
     > p {
-        margin-top: 2*ohma.$gap;
+        margin: 2*ohma.$gap 0;
     }
-    color: ohma.$colors-text;
-    transition: color 100ms;
     &:hover {
         color: ohma.$colors-text-muted;
     }
 }
 
 .firstLoginText {
-    margin-top: ohma.$gap;
     color: ohma.$colors-text;
 }
 

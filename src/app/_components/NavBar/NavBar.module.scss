@@ -1,51 +1,141 @@
-@use "@/styles/ohma";
+@use '@/styles/ohma';
 
 .NavBar {
     color: ohma.$colors-text;
     font-size: ohma.$fonts-m;
-    background-color: ohma.$colors-layer;
-    padding: 0 3*ohma.$gap;
+    width: 100%;
+    height: 64px;
+}
+
+.list {
     width: 100%;
     height: 100%;
-    > ul {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    list-style: none;
+}
+
+.logoContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    position: relative;
+    background: ohma.$colors-base00;
+    border-radius: calc(#{ohma.$gap} * 2);
+    padding: ohma.$gap;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logoWrapper {
+    width: 48px;
+    height: 48px;
+    border-radius: #{ohma.$gap};
+    background: ohma.$colors-primary;
+    padding: ohma.$gap;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    a {
         width: 100%;
         height: 100%;
-        display: flex;
-        flex-flow: row;
-        justify-content: flex-start;
-        align-items: center;
-        list-style: none;
-        > li {
-            margin-left: 5*ohma.$gap;
-            &.logo {
-                margin-left: 2*ohma.$gap;
-                a {
-                    width: 100%;
-                    height: 100%;
-                }
-            }
-            &.rightSide {
-                display: flex;
-                width: auto;
-                margin-left: auto;
-                align-items: center;
-            }
-        }
-        .magicHat {
-            position: relative;
-            @include ohma.btn(ohma.$colors-primary);
-            margin: 0;
-        }
+        display: block;
     }
-    .openMenu {
-        font-weight: ohma.$fonts-weight-m;        
-        color: ohma.$colors-text;
-    }
+}
+
+.pageTitleLi {
+    margin-left: ohma.$gap;
+    display: flex;
+    align-items: center;
+}
+
+.pageTitle {
+    font-size: ohma.$fonts-xxl;
+    font-weight: ohma.$fonts-weight-m;
+    color: ohma.$colors-text;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 40ch;
+    margin-left: ohma.$gap;
+}
+
+.pageTitlePlaceholder {
+    margin-left: ohma.$gap;
+    width: 18ch;
+    height: 48px;
+    @include ohma.layer;
+    border-radius: calc(#{ohma.$rounding} / 2);
+    display: inline-block;
+}
+
+.magicHat {
+    position: relative;
+    @include ohma.btn(ohma.$colors-primary);
+    margin: 0;
+}
+
+.grower {
+    flex-grow: 1;
+}
+
+.navItem {
+    background: ohma.$colors-base00;
+    border-radius: calc(#{ohma.$gap} * 2);
+    margin: 0 ohma.$gap 0 0;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 ohma.$gap;
+    display: none;
+}
+
+.mobileMenuOnly {
+    display: none;
+}
+
+.rightSide {
+    display: flex;
+    width: auto;
+    margin-left: auto;
+    align-items: center;
+}
+
+.openMenu {
+    font-weight: ohma.$fonts-weight-m;
+    color: ohma.$colors-text;
 }
 
 @media (max-width: ohma.$mobileBreakpoint) {
     .NavBar {
-        display: none;
+        > ul {
+            > li {
+                &.logoContainer {
+                    display: flex;
+                }
+
+                &.rightSide {
+                    display: none;
+                }
+
+                &.navItem {
+                    display: none;
+                }
+
+                &.menu {
+                    display: none;
+                }
+            }
+        }
     }
 }
 

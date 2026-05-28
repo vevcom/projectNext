@@ -4,6 +4,7 @@ import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import UserList from '@/components/User/UserList/UserList'
 import CreateUserForm from '@/components/User/CreateUserForm'
 import { UserPagingProvider } from '@/contexts/paging/UserPaging'
+import PageTitleSetter from "@/contexts/PageTitleSetter";
 
 export default async function Users() {
     return (
@@ -12,6 +13,7 @@ export default async function Users() {
                 <CreateUserForm className={styles.makeUser} />
             </AddHeaderItemPopUp>
         }>
+            <PageTitleSetter title={'Brukere'}/>
             <div className={styles.wrapper}>
                 <UserPagingProvider
                     serverRenderedData={[]}

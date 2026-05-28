@@ -26,6 +26,7 @@ import { eventAuth } from '@/services/events/auth'
 import Link from 'next/link'
 import { faCalendar, faExclamation, faLocationDot, faUsers } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import PageTitleSetter from "@/contexts/PageTitleSetter";
 
 type PropTypes = {
     params: Promise<{
@@ -57,6 +58,7 @@ export default async function Event({ params }: PropTypes) {
 
     return (
         <div className={styles.wrapper}>
+            <PageTitleSetter title={'Arrangement'} />
             <span className={styles.coverImage}>
                 <CmsImage
                     canEdit={canEditCmsCoverImage}

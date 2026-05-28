@@ -14,6 +14,8 @@ import { readSpecialCmsImageFrontpage, updateSpecialCmsImageFrontpage } from '@/
 import { frontpageAuth } from '@/services/frontpage/auth'
 import { eventAuth } from '@/services/events/auth'
 import { ServerSession } from '@/auth/session/ServerSession'
+import Footer from '@/components/Footer/Footer'
+import PageTitleSetter from '@/contexts/PageTitleSetter'
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Link from 'next/link'
@@ -36,8 +38,13 @@ export default async function LoggedInLandingPage() {
         session
     ).toJsObject()
 
+    const canEditSpecialCmsImage = frontpageAuth.updateSpecialCmsImage.dynamicFields({}).auth(
+        await ServerSession.fromNextAuth()
+    ).toJsObject()
+
     return (
         <div className={styles.wrapper}>
+            <PageTitleSetter title={'Sct. Omega'} />
             <div className={`${styles.part} ${styles.frontImg}`}>
                 <div className={styles.frontInfo}>
                     <div>
@@ -78,6 +85,9 @@ export default async function LoggedInLandingPage() {
                         Her kan man kanskje vise noen bilder ellerno
                     </LoggedInSection>
                 </div>
+            </div>
+            <div className={styles.footer}>
+                <Footer canEditSpecialCmsImage={canEditSpecialCmsImage} />
             </div>
         </div>
     )

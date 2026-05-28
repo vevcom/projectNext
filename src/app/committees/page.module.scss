@@ -1,21 +1,13 @@
 @use '@/styles/ohma';
 
-$max-width: 1200px;
-
 .wrapper {
+    width: 100%;
+    height: 100%;
+    padding: ohma.$gap;
+    background-color: ohma.$colors-base00;
     color: ohma.$colors-text;
-    $width: 100%;
-
-    width: $width;
-    max-width: $max-width;
-    margin-left: max(calc(($width - min($width, $max-width)) / 2), 0px);
-    position: relative;
-    overflow-y: hidden;
 
     align-self: flex-start;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-    padding: 0 2em;
     h1 {
         font-family: ohma.$fonts-secondary;
         font-size: ohma.$fonts-xxl;

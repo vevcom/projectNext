@@ -1,11 +1,11 @@
 @use "@/styles/ohma";
 
 .wrapper {
-    @include ohma.pagePadding();
+    padding: 2*ohma.$gap;
+    min-height: 100%;
+    width: 100%;
     align-self: flex-start;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-    padding: 0 2em;
+    background-color: ohma.$colors-base00;
     h1 {
         font-family: ohma.$fonts-secondary;
         font-size: ohma.$fonts-xxl;

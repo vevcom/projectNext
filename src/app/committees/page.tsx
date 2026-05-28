@@ -2,6 +2,7 @@ import styles from './page.module.scss'
 import CommitteeCard from '@/components/CommitteeCard/CommitteeCard'
 import { readAllCommitteesAction } from '@/services/groups/committees/actions'
 import { readSpecialImageAction } from '@/services/images/actions'
+import PageTitleSetter from '@/contexts/PageTitleSetter'
 
 export default async function Committees() {
     const res = await readAllCommitteesAction()
@@ -15,7 +16,7 @@ export default async function Committees() {
 
     return (
         <div className={styles.wrapper}>
-            <h1>Komitéer</h1>
+            <PageTitleSetter title={'Komiteer'} />
             {
                 committees.length ? (
                     <div className={styles.committeeList}>

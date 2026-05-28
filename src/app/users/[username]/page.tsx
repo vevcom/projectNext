@@ -21,6 +21,7 @@ export const metadata: Metadata = {
     title: 'Profil',
 }
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import PageTitleSetter from "@/contexts/PageTitleSetter";
 
 
 export type PropTypes = {
@@ -96,6 +97,7 @@ export default async function User({ params }: PropTypes) {
 
     return (
         <div className={styles.wrapper}>
+            <PageTitleSetter title={'Bruker'} />
             <div className={styles.profile}>
                 <div
                     style={ flairs.length > 0 ? {

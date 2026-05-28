@@ -1,11 +1,11 @@
 @use '@/styles/ohma';
 
 .SlideSidebar {
-    @include ohma.layer;
-    margin: .5em;
-    padding: 2em;
+    padding: ohma.$gap;
+    margin: ohma.$gap;
+    min-width: 250px;
     border-radius: ohma.$rounding;
-    max-height: calc(100dvh - 74px);
+    max-height: calc(100dvh - ohma.$nav-height - 40px);
     overflow-y: scroll;
 
     @include ohma.screenMobile {
@@ -17,53 +17,7 @@
             top: 0;
     }
 
-    .toggle {
-        position: absolute;
-        right: -.6em;
-        top: min(50%, 50vh);
-        transform: translateY(-50%);
-        width: 3em;
-        height: 3em;
-        border-radius: 50%;
-        background-color: ohma.$colors-gray-500;
-        border: none;
-        svg {
-            color: ohma.$colors-text;
-        }
-        @include ohma.screenMobile {
-            right: 8px;
-            top: 28px;
-        }
-    }
-
-    &.closed {
-        .sidebar {
-            width: ohma.$gap;
-        }
-        @include ohma.screenMobile {
-            height: 7 * ohma.$gap;
-        }
-        .toggle {
-            > svg {
-                transform: rotate(180deg);
-            }
-        }
-    }
-
-    //Closing
-    &.closed .sidebar {
-        transition: width .3s .1s, opacity .1s;
-        opacity: 0;
-    }
-
-    //Opening
-    &:not(.closed) .sidebar {
-        transition: width .3s, opacity .3s .3s;
-        opacity: 1;
-    }
-
     .sidebar {
-        margin-top: 1em;
         display: flex;
         flex-direction: column;
         overflow-y: auto;
@@ -87,11 +41,5 @@
                 margin-right: .2em; 
             }
         }
-    }
-
-    .backButton {
-        position: absolute;
-        top: .5em;
-        left: .5em;
     }
 }

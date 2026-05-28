@@ -12,8 +12,8 @@
     border-radius: 5px;
     padding: 10px;
     font-size: ohma.$fonts-m;
-    color: ohma.$colors-secondary;
-    background-color: #fff;
+    color: ohma.$colors-text;
+    background-color: ohma.$colors-layer;
     box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
 }
 
@@ -25,5 +25,5 @@
 .NumberInput .labe {
     font-size: 14px;
     margin-bottom: 5px;
-    color: #666;
+    color: ohma.$colors-text-muted;
 }

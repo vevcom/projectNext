@@ -1,0 +1,63 @@
+@use "@/styles/ohma";
+
+.DesktopSideBar {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: ohma.$gap;
+    min-height: 0;
+}
+
+.navIcons {
+    border-radius: ohma.$rounding;
+    padding: ohma.$gap;
+    background: ohma.$colors-base00;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: calc(#{ohma.$gap} / 2);
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.navIcon {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    border-radius: calc(#{ohma.$rounding} - #{ohma.$gap});
+    color: ohma.$colors-text;
+    background: transparent;
+    transition: background 0.2s ease, color 0.2s ease;
+
+    &:hover {
+        background: ohma.$colors-primary;
+        color: ohma.$colors-text-inv;
+    }
+}
+
+.icon {
+    width: 24px;
+    height: 24px;
+}
+
+.adminNav {
+    border-radius: ohma.$rounding;
+    padding: ohma.$gap;
+    background: ohma.$colors-base00;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+
+    >.icon {
+
+    }
+}
+
