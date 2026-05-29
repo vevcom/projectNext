@@ -49,7 +49,7 @@ $taktlause: url("backgroundimages/taktlause.jpeg");
             > a {
                 margin: ohma.$gap;
                 color: ohma.$colors-white;
-                transition: color .3s;
+                transition: color ohma.$transitionTime;
                 &:hover {
                     color: ohma.$colors-gray-300;
                 }

@@ -32,7 +32,7 @@
         }
         > svg, p {
             z-index: -1;
-            transition: scale 0.2s;
+            transition: scale ohma.$transitionTime;
         }
         > svg {
             width: 30px;

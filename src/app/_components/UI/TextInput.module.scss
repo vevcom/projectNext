@@ -18,7 +18,7 @@
     font-size: ohma.$fonts-s;
     padding: 7px 0;
     background: transparent;
-    transition: border-color 0.2s;
+    transition: border-color ohma.$transitionTime;
     z-index: 1;
 
     &::placeholder {
@@ -36,7 +36,7 @@
             position: absolute;
             top: 0;
             display: block;
-            transition: 0.2s;
+            transition: ohma.$transitionTime;
             font-size: calc(ohma.$fonts-s * 0.8);
         }
         padding-bottom: 6px;  
@@ -49,7 +49,7 @@
     position: absolute;
     top: 0;
     display: block;
-    transition: 0.2s;
+    transition: ohma.$transitionTime;
     font-size: 1rem;
     z-index: 0;
 }

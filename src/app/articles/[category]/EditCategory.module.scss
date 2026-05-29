@@ -18,7 +18,7 @@
     background-color: transparent;
     border: none;
     color: ohma.$colors-white;
-    transition: color .3s ease-in-out;
+    transition: color ohma.$transitionTime ease-in-out;
     &:hover {
         cursor: pointer;
         color: ohma.$colors-primary;

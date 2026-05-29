@@ -6,6 +6,7 @@ import { signIn } from 'next-auth/react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import type { FormEvent } from 'react'
+import PageTitleSetter from "@/contexts/PageTitleSetter";
 
 export default function LogIn() {
     const searchParams = useSearchParams()
@@ -26,6 +27,7 @@ export default function LogIn() {
     }
 
     return <>
+        <PageTitleSetter title={'Logg inn'}/>
         <form className={styles.loginForm} onSubmit={handleSignIn}>
             <TextInput className={styles.textInput} label="Brukernavn" name="username" type="text"/>
             <TextInput className={styles.textInput} label="Passord" name="password" type="password"/>

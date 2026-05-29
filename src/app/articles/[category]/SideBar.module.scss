@@ -33,7 +33,7 @@
         opacity: 0; // hide before handleHeight has run once
 
         height: 100%;
-        transition: opacity 0.35s, transform 0.05s ease-out;
+        transition: opacity ohma.$transitionTime, transform 0.05s ease-out;
         overflow: auto;
         color: ohma.$colors-white;
         margin: 1em 0em 1em 1em;
@@ -63,7 +63,7 @@
         width: 100vw;
         z-index: 8;
         @include ohma.layer();
-        transition: padding-bottom 0.35s, height 0.35s;
+        transition: padding-bottom ohma.$transitionTime, height ohma.$transitionTime;
         &.SideBarMobileClosed {
             height: 110px;
         }
@@ -95,7 +95,7 @@
 
         }    
         ul > li {
-            margin-left: calc(50px + ohma.$gap);
+            margin-left: calc(50px + #{ohma.$gap});
         }
     }
     .SideBarContent {

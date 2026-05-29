@@ -30,7 +30,7 @@
             padding: .5em;
             border-radius: .5em;
             margin: .5em 0;
-            transition: background-color .3s;
+            transition: background-color ohma.$transitionTime;
             &:hover, &.active {
                 @include ohma.layer;
             }

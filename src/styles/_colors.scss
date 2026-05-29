@@ -44,6 +44,23 @@ $text-sec:   var(--text-sec);
 $error: $red;
 $body-background: $secondary;
 
-$base00: hsl(210, 8%, 5%);
-$base01: hsl(210, 8%, 15%);
-$base02: hsl(210, 8%, 25%);
+$base00: hsl(210, 8%, 5%);   // Default Background
+$base01: hsl(210, 8%, 15%);  // Lighter Background
+$base02: hsl(210, 8%, 25%);  // Selection Background
+$base03: hsl(210, 8%, 35%);  // Invisibles and Line Highlighting
+
+$base04: hsl(210, 8%, 45%);  // Dark Foreground (Inactive text, muted grey-blue)
+$base05: hsl(210, 8%, 55%);  // Default Foreground (Readable off-white with blue tint)
+$base06: hsl(210, 8%, 65%);  // Light Foreground (Hover states)
+$base07: hsl(210, 8%, 75%);  // Brightest text (Rarely used)
+
+$base08: hsl(0, 80%, 60%);   // Red: Error
+$base09: hsl(40, 80%, 60%);  // Orange: Warning
+$base0A: hsl(60, 80%, 60%);  // Yellow: Unused
+$base0B: hsl(120, 80%, 60%); // Green: Success
+$base0C: hsl(180, 80%, 60%); // Cyan: Unused
+
+$base0D: var(--primary);     // Blue: Primary color
+
+$base0E: hsl(300, 80%, 60%); // Magenta/Pink: Keywords, Storage, Selector, Diff Changed
+$base0F: hsl(260, 80%, 60%); // Purple: Deprecated, Opening/Closing Tags

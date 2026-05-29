@@ -97,7 +97,7 @@ export default async function User({ params }: PropTypes) {
 
     return (
         <div className={styles.wrapper}>
-            <PageTitleSetter title={'Bruker'} />
+            <PageTitleSetter title={'Profil'} />
             <div className={styles.profile}>
                 <div
                     style={ flairs.length > 0 ? {

@@ -15,7 +15,7 @@
     width: 150px;
     margin: 0;
     color: ohma.$colors-text-inv;
-    transition: background-color 0.3s ease-in-out;
+    transition: background-color ohma.$transitionTime ease-in-out;
 }
 
 .loader {

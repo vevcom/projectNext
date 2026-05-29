@@ -33,7 +33,7 @@
     border-radius: calc(#{ohma.$rounding} - #{ohma.$gap});
     color: ohma.$colors-text;
     background: transparent;
-    transition: background 0.2s ease, color 0.2s ease;
+    transition: background ohma.$transitionTime ease, color ohma.$transitionTime ease;
 
     &:hover {
         background: ohma.$colors-primary;

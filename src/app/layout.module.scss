@@ -6,39 +6,38 @@
 }
 
 .wrapper {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: ohma.$nav-height 1fr;
+    grid-template-rows: ohma.$nav-height 1fr ohma.$nav-height;
+    gap: ohma.$gap;
+    padding: ohma.$gap;
     height: 100dvh;
+    grid-template-areas:
+        "navBar navBar"
+        "sideBar content"
+        "sideBar content";
 }
 
 .navBar {
+    grid-area: navBar;
+    grid-column: 1 / -1;
     height: ohma.$nav-height;
     z-index: 3;
-    top: 0;
-    margin: ohma.$gap;
-    width: calc(100dvw - (#{ohma.$gap} * 2));
     border-radius: ohma.$rounding;
 }
 
 .sideBar {
-    position: fixed;
-    top: calc(#{ohma.$nav-height} + 2*#{ohma.$gap});
-    left: ohma.$gap;
-    height: calc(100dvh - #{ohma.$nav-height} - (#{ohma.$gap} * 3));
-    width: ohma.$nav-height;
+    grid-area: sideBar;
+    height: 100%;
+    width: 100%;
     z-index: 3;
 }
 
 .content {
-    flex: 1 0 auto;
-    margin: 0 ohma.$gap ohma.$gap;
-    width: calc(100dvw - (#{ohma.$gap} * 2) - #{ohma.$nav-height} - #{ohma.$gap});
-    left: calc(#{ohma.$nav-height} + #{ohma.$gap});
-    position: relative;
+    grid-area: content;
     display: flex;
     flex-direction: column;
     overflow: scroll;
-    height: calc(100dvh - #{ohma.$nav-height} - (#{ohma.$gap} * 3));
     border-radius: ohma.$rounding;
 }
 
@@ -49,29 +48,33 @@
 }
 
 .mobileNavBar {
-    width: calc(100dvw - (#{ohma.$gap} * 2));
-    margin: ohma.$gap ohma.$gap 0;
-    position: sticky;
-    bottom: ohma.$gap;
     display: none;
     z-index: 3;
-    height: ohma.$nav-height;
     border-radius: ohma.$rounding;
     overflow: hidden;
 }
 
 @media (max-width: ohma.$mobileBreakpoint) {
+    .wrapper {
+        grid-template-columns: 1fr;
+        grid-template-rows: ohma.$nav-height 1fr ohma.$nav-height ohma.$nav-height;
+        grid-template-areas:
+            "navBar"
+            "content"
+            "subPageNavBar"
+            "mobileNavBar";
+    }
+
     .sideBar {
         display: none;
     }
 
     .mobileNavBar {
         display: block;
-    }
-    .content {
-        width: calc(100dvw - (#{ohma.$gap} * 2));
-        left: 0;
-        height: calc(100dvh - 2 * #{ohma.$nav-height} - 40px);
+        grid-area: mobileNavBar;
+        height: ohma.$nav-height;
+        width: 100%;
     }
 }
+
 

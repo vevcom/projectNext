@@ -37,7 +37,7 @@ export default async function UserAdmin({ children, params }: PropTypes & { chil
 
     const { user } = unwrapActionReturn(await readUserProfileAction({ params: { username } }))
     return (
-        <PageWrapper title={`Innstillinger for ${user.firstname} ${user.lastname}`}>
+        <PageWrapper title={'Innstillinger'}>
             <div className={styles.userAdminLayout}>
                 <i>Bruker Id: {user.id}</i> <br />
                 <i>Brukernavn: {user.username}</i>
