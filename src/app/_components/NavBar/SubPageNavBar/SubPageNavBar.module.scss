@@ -8,7 +8,6 @@
     transition: background 0.2s ease, color 0.2s ease;
     display: inline-flex;
     align-items: center;
-    @include ohma.boxShadow('');
     height: calc(#{ohma.$nav-height} - #{ohma.$gap} * 2);
     padding: 0 ohma.$gap;
     border: 0;
@@ -62,8 +61,10 @@
 // Sub page nav bar
 
 .navBarContainer {
-    display: flex;
-    grid-area: subPageNavBar;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: max-content;
+    grid-column: 1 / -1;
     border-radius: ohma.$rounding;
     background: ohma.$colors-base00;
     padding: ohma.$gap;
@@ -76,5 +77,5 @@
     justify-content: center;
     gap: calc(#{ohma.$gap} / 2);
     overflow-x: auto;
-    }
+}
 

@@ -1,15 +1,7 @@
 @use '@/styles/ohma';
 
 .userAdminLayout {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
     position: relative;
-    main {
-        margin-top: 1em;
-    }
-}
-
-.toProfile {
-    position: fixed;
-    top: 100px;
-    left: 50px;
-    @include ohma.borderBtn(ohma.$colors-secondary);
 }

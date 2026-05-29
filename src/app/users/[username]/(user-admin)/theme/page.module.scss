@@ -8,20 +8,21 @@
 .Theme {
     width: 192px * 2;
     height: 168px;
-    @include ohma.layer;
+    background: ohma.$colors-base01;
     border-radius: ohma.$cardRounding;
     padding: ohma.$gap * 2;
     margin: ohma.$gap;
 }
 
 .ThemeHeader {
-    @include ohma.layer;
+    background: ohma.$colors-base02;
     height: 58%;
     border-radius: ohma.$cardRounding;
     margin: -2 * ohma.$gap;
     padding: ohma.$gap * 2;
     font-size: xx-large;
     line-height: 50px;
+    color: ohma.$colors-base06;
 }
 
 .ThemeBody {
@@ -34,18 +35,18 @@
         width: 64px;
     }
     > .primary {
-        background-color: ohma.$colors-primary;
+        background-color: ohma.$colors-base0D;
     }
     > .secondary {
-        background-color: ohma.$colors-secondary;
+        background-color: ohma.$colors-base01;
     }
     > .layer {
-        background-color: ohma.$colors-layer;
+        background-color: ohma.$colors-base02;
     }
     > .text {
-        background-color: ohma.$colors-text;
+        background-color: ohma.$colors-base05;
     }
     > .textMuted {
-        background-color: ohma.$colors-text-muted;
+        background-color: ohma.$colors-base04;
     }
 }

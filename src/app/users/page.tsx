@@ -4,7 +4,7 @@ import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import UserList from '@/components/User/UserList/UserList'
 import CreateUserForm from '@/components/User/CreateUserForm'
 import { UserPagingProvider } from '@/contexts/paging/UserPaging'
-import PageTitleSetter from "@/contexts/PageTitleSetter";
+import PageTitleSetter from '@/contexts/PageTitleSetter';
 
 export default async function Users() {
     return (

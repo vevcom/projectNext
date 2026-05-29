@@ -4,6 +4,6 @@
     @include ohma.table();
     .inactive {
         text-decoration: line-through;
-        color: ohma.$colors-red;
+        color: ohma.$colors-base08;
     }
 }

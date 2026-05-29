@@ -6,12 +6,25 @@ import UserDisplayName from '@/components/User/UserDisplayName'
 import { readUserProfileAction } from '@/services/users/actions'
 import { readSpecialImageAction } from '@/services/images/actions'
 import { ServerSession } from '@/auth/session/ServerSession'
+import { flairAuth } from '@/services/flairs/auth'
 import { sexConfig } from '@/services/users/constants'
 import { readUserFlairsAction } from '@/services/flairs/actions'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { RelationshipStatus } from '@/prisma-generated-pn-types'
+import PageTitleSetter from '@/contexts/PageTitleSetter'
+import { SubPageNavBar, SubPageNavBarItem } from '@/components/NavBar/SubPageNavBar/SubPageNavBar'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {
+    faCog,
+    faCircleDot,
+    faHatWizard,
+    faKey,
+    faPaperPlane,
+    faSignOut,
+    faSwatchbook,
+    faUser,
+} from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
-import { faCog, faSignOut } from '@fortawesome/free-solid-svg-icons'
 import { notFound, redirect } from 'next/navigation'
 import { v4 as uuid } from 'uuid'
 import React from 'react'
@@ -20,8 +33,6 @@ import type { Metadata } from 'next'
 export const metadata: Metadata = {
     title: 'Profil',
 }
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import PageTitleSetter from "@/contexts/PageTitleSetter";
 
 
 export type PropTypes = {
@@ -78,6 +89,8 @@ export default async function User({ params }: PropTypes) {
     }
 
     const borderColour = { '--border-colour': relationshipColour[profile.user.relationshipStatus] } as React.CSSProperties
+    const isOwnProfile = profile.user.id === session.user?.id
+    const canAssignFlairs = flairAuth.assignToUser.dynamicFields({}).auth(session)
 
     function memberhipTitle(): string {
         switch (omegaMembership?.group.omegaMembershipGroup?.omegaMembershipLevel) {
@@ -212,6 +225,37 @@ export default async function User({ params }: PropTypes) {
                         </div>}
                     </div>
                 </div>
+
+                {isOwnProfile && (
+                    <div className={styles.subPageNavBar}>
+                        <SubPageNavBar>
+                            <SubPageNavBarItem icon={faUser} href={`/users/${profile.user.username}`}>
+                                Profil
+                            </SubPageNavBarItem>
+                            <SubPageNavBarItem icon={faCircleDot} href={`/users/${profile.user.username}/dots`}>
+                                Prikker
+                            </SubPageNavBarItem>
+                            <SubPageNavBarItem icon={faPaperPlane} href={`/users/${profile.user.username}/notifications`}>
+                                Notifikasjoner
+                            </SubPageNavBarItem>
+                            <SubPageNavBarItem icon={faKey} href={`/users/${profile.user.username}/permissions`}>
+                                Tilganger
+                            </SubPageNavBarItem>
+                            {canAssignFlairs.authorized && (
+                                <SubPageNavBarItem icon={faHatWizard} href={`/users/${profile.user.username}/flairs`}>
+                                    Kapper
+                                </SubPageNavBarItem>
+                            )}
+                            <SubPageNavBarItem icon={faSwatchbook} href={`/users/${profile.user.username}/theme`}>
+                                Tema
+                            </SubPageNavBarItem>
+                            <SubPageNavBarItem icon={faCog} href={`/users/${profile.user.username}/settings`}>
+                                Innstillinger
+                            </SubPageNavBarItem>
+                        </SubPageNavBar>
+                        {/* TODO This is a duplicate code from the user admin layout, should be refactored to avoid this */}
+                    </div>
+                )}
             </div>
         </div>
     )
