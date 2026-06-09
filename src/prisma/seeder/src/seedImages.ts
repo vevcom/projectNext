@@ -52,7 +52,7 @@ export const seedDynamicImagesForCms = [
  *
  * 1. standard images, using the standardImageCollection api. - note that this is actually not striclty necessary,
  * as the standard images are generated on the fly when requested, if one uses the
- * standardImageCollection api to request them.
+ * standardImageCollection api to request them (as one should always do when wanting standard images).
  *
  * 2. A set of dynamic images, which are seeded into a dynamic collection. These are used for dunamic cms constent which is
  * seeded later on.
@@ -89,8 +89,33 @@ export default async function seedImages(prisma: PrismaClient) {
     }))
 }
 
+/**
+ * After seeding of the images is - both standard images and dynamic images we expose a type
+ * declearing which images can be used in the seeding of the cms content later in the seeding pipeline.
+ */
 export type ImagesAvailablieForCms = {
     dynamicImageSeededForCmsName: typeof seedDynamicImagesForCms[number]['name']
 } | {
     standardImage: StandardImage
+}
+
+/**
+ * Function used to obtain image based on imageAvailablieForCms relation.
+ */
+export async function getImageForCmsImageRelation(
+    image: ImagesAvailablieForCms,
+    prisma: PrismaClient
+) {
+    if ('standardImage' in image) {
+        return await prisma.image.findUniqueOrThrow({
+            where: {
+                standardImage: image.standardImage
+            }
+        })
+    }
+    return await prisma.image.findFirstOrThrow({
+        where: {
+            name: image.dynamicImageSeededForCmsName
+        }
+    })
 }

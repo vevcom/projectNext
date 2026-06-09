@@ -9,6 +9,7 @@ import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import { unified } from 'unified'
 import { SpecialCmsParagraph } from '@/prisma-generated-pn-types'
+import logger from '@/lib/logger'
 
 const create = defineSubOperation({
     dataSchema: () => cmsParagraphSchemas.create,
@@ -36,6 +37,7 @@ export const cmsParagraphOperations = {
         operation: () => async ({ params, prisma }) => {
             const paragraph = await prisma.cmsParagraph.findUnique({ where: { special: params.special } })
             if (!paragraph) {
+                logger.error(`Could not find special cms paragraph with special ${params.special} - creating it!`)
                 return await create.internalCall({ data: { special: params.special } })
             }
             return paragraph

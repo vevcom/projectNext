@@ -4,6 +4,7 @@ import { defineSubOperation } from '@/services/serviceOperation'
 import { ServerError } from '@/services/error'
 import { z } from 'zod'
 import { SpecialCmsImage } from '@/prisma-generated-pn-types'
+import logger from '@/lib/logger'
 
 const create = defineSubOperation({
     dataSchema: () => cmsImageSchemas.create,
@@ -39,6 +40,7 @@ export const cmsImageOperations = {
                 }
             })
             if (!image) {
+                logger.error(`Could not find special cms image with special ${params.special} - creating it!`)
                 return create.internalCall({
                     data: {
                         name: params.special,

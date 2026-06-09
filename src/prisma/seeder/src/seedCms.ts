@@ -5,7 +5,6 @@ import {
     standardArticleCategories,
     seedSpecialCmsArticleConfig,
 } from './seedCmsConfig'
-import { transformObject } from './seedImages'
 import { unified } from 'unified'
 import rehypeFormat from 'rehype-format'
 import rehypeStringify from 'rehype-stringify'
@@ -14,6 +13,7 @@ import remarkRehype from 'remark-rehype'
 import { dirname, join } from 'path'
 import { readFile } from 'fs/promises'
 import { fileURLToPath } from 'url'
+import { getImageIdForCmsImageRelation } from './seedImages'
 import type { PrismaClient } from '@/prisma-generated-pn-client'
 import type { SpecialCmsImage, SpecialCmsParagraph, SpecialCmsArticle } from '@/prisma-generated-pn-types'
 import type {

@@ -64,7 +64,7 @@ export const articleOperations = {
                 include: articleRealtionsIncluder
             })
             if (!article) {
-                logger.error(`Special article ${params.special} not found - creating it`)
+                logger.error(`Special article ${params.special} not found - creating it!`)
                 return create.internalCall({
                     data: { special: params.special, name: `Regenerert spesiell ${params.special}` },
                 })

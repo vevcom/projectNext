@@ -5,17 +5,17 @@ import type {
     SpecialCmsParagraph,
     SpecialCmsArticle,
 } from '@/prisma-generated-pn-types'
-
+import type { ImagesAvailablieForCms } from './seedImages'
 
 export type SeedCmsImage = {
     name: string,
-    imageName: string
+    image: ImagesAvailablieForCms,
     imageSize?: ImageSize
 }
 
 export type SeedCmsParagraph = {
     name: string,
-    file: string //location in cms_paragraphs folder
+    file: string
 }
 
 export type SeedCmsLink = {
@@ -59,84 +59,60 @@ export type SeedArticle = {
 } | { category: 'special' })
 
 
-type CmsImageSeedSpecialConfig = {
+type SpecialCmsImageSeederConfig  = {
     [T in SpecialCmsImage]: SeedCmsImage;
 }
 
-export const seedSpecialCmsImageConfig: CmsImageSeedSpecialConfig = {
-    FRONTPAGE_LOGO: {
-        name: 'frontpage_logo',
-        imageName: 'logo_white',
-        imageSize: 'LARGE'
-    },
+/**
+ * This object describes the wanted initial configuration of special cms images.
+ * Note of course that this is no guarantee the special cms image will contain this image forevever
+ * but it creates an initial state (i.e. image relation) that is nice for development.
+ *
+ * Strictly speaking it is not neccesarry to seed any special cms image, as the cms image api will
+ * create the special cms image on runtime if it does not exist - but with a null image relation.
+ */
+export const seedSpecialCmsImageConfig: SpecialCmsImageSeederConfig = {
     FRONTPAGE_1: {
         name: 'frontpage_1',
-        imageName: 'kappemann',
+        image: {
+            dynamicImageSeededForCmsName: 'kappemann'
+        }
     },
     FRONTPAGE_2: {
         name: 'frontpage_2',
-        imageName: 'ohma',
+        image: {
+            dynamicImageSeededForCmsName: 'ohma'
+        }
     },
     FRONTPAGE_3: {
         name: 'frontpage_3',
-        imageName: 'ov',
+        image: {
+            dynamicImageSeededForCmsName: 'ov'
+        },
     },
     FRONTPAGE_4: {
         name: 'frontpage_4',
-        imageName: 'ohma',
+        image: {
+            dynamicImageSeededForCmsName: 'ohma'
+        }
     },
-    SERVER_ERROR: {
-        name: 'server-error',
-        imageName: 'logo_simple',
+    FOOTER_SPONSOR_1: {
+        name: 'footer_sponsor_1',
+        image: {
+            dynamicImageSeededForCmsName: 'nordic'
+        }
     },
-    NOT_FOUND: {
-        name: 'not-found',
-        imageName: 'logo_simple',
+    FOOTER_SPONSOR_2: {
+        name: 'footer_sponsor_2',
+        image: {
+            dynamicImageSeededForCmsName: 'kongsberg'
+        }
     },
-    AUTH_ICON: {
-        name: 'auth_icon',
-        imageName: 'magisk_hatt',
-    },
-    FOOTER_LOGO: {
-        name: 'footer_logo',
-        imageName: 'logo_white_text',
-    },
-    FOOTER_1: {
-        name: 'footer_1',
-        imageName: 'pwa',
-    },
-    FOOTER_2: {
-        name: 'footer_2',
-        imageName: 'nordic',
-        imageSize: 'SMALL'
-    },
-    FOOTER_3: {
-        name: 'footer_3',
-        imageName: 'kongsberg',
-    },
-    LOADER_IMAGE: {
-        name: 'loader_image',
-        imageName: 'logo_simple'
-    },
-    MOBILE_NAV_PRIMARY_BUTTON: {
-        name: 'mobile_nav_primary_button',
-        imageName: 'logo_simple',
-        imageSize: 'SMALL'
-    },
-    MOBILE_NAV_LOGIN_BUTTON: {
-        name: 'mobile_nav_login_button',
-        imageName: 'magisk_hatt',
-        imageSize: 'SMALL'
-    },
-    NAV_PRIMARY_BUTTON: {
-        name: 'nav_primary_button',
-        imageName: 'logo_simple',
-        imageSize: 'SMALL'
-    },
-    NAV_LOGIN_BUTTON: {
-        name: 'nav_login_button',
-        imageName: 'magisk_hatt',
-        imageSize: 'SMALL'
+    FOOTER_SPONSOR_3: {
+        name: 'footer_sponsor_3',
+        image: {
+            dynamicImageSeededForCmsName: 'ov'
+        }
     }
 }
 
@@ -185,8 +161,10 @@ export type CmsConfig = {
 
     articles: SeedArticle[],
 }
+
 /**
- * This is the configuration for the cms content that are to be seeded
+ * This is the configuration for the cms content that are to be seeded. This is the dynamic
+ * cms content to be seeded - i.e. the content may be deleted in the future.
  */
 export const seedCmsConfig: CmsConfig = {
     cmsImages: [],
