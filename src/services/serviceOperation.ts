@@ -203,7 +203,7 @@ const asyncLocalStorage = new AsyncLocalStorage<ServiceOperationContext>()
  * @param callback The callback to run with the context.
  * @returns The return value of the callback.
  */
-function withContext<T>(
+export function withContext<T>(
     contextOverride: Partial<ServiceOperationContext>,
     callback: (context: ServiceOperationContext) => T,
 ): T {

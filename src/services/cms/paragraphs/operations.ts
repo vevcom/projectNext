@@ -2,14 +2,14 @@ import '@pn-server-only'
 import { cmsParagraphSchemas } from './schemas'
 import { defineSubOperation } from '@/services/serviceOperation'
 import { ServerError } from '@/services/error'
-import { z } from 'zod'
+import { SpecialCmsParagraph } from '@/prisma-generated-pn-types'
+import logger from '@/lib/logger'
 import rehypeFormat from 'rehype-format'
 import rehypeStringify from 'rehype-stringify'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
+import { z } from 'zod'
 import { unified } from 'unified'
-import { SpecialCmsParagraph } from '@/prisma-generated-pn-types'
-import logger from '@/lib/logger'
 
 const create = defineSubOperation({
     dataSchema: () => cmsParagraphSchemas.create,

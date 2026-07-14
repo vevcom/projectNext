@@ -4,7 +4,6 @@ import seedDevPermissions from './development/seedDevPermissions'
 import seedDevImages from './development/seedDevImages'
 import seedDevNews from './development/seedDevNews'
 import seedDevLockers from './development/seedDevLockers'
-import seedCms from './seedCms'
 import seedDevOmegaquotes from './development/seedDevOmegaquotes'
 import seedOrder from './seedOrder'
 import dobbelOmega from './dobbelOmega/dobbelOmega'
@@ -26,6 +25,9 @@ import seedPermissions from './seedPermissions'
 import seedFlairs from './seedFlairs'
 import seedInterestGroups from './seedInterestGroups'
 import { prisma } from '@/prisma/client'
+import { withContext } from '@/services/serviceOperation'
+import { Session } from '@/auth/session/Session'
+import { upsertArticleCategories } from './upsertArticleCategories'
 
 export default async function seed(
     shouldMigrate: boolean,
@@ -34,22 +36,30 @@ export default async function seed(
 ) {
     const enableLogging = logging ?? true
 
-    if (enableLogging) console.log('seeding standard data....')
-    await seedOrder(prisma)
-    await seedImages(prisma)
-    await seedCms(prisma)
-    await seedMail(prisma)
-    await seedNotificationChannels(prisma)
-    await seedStudyProgramme(prisma)
-    await seedOmegaMembershipGroups(prisma)
-    await seedClasses(prisma)
-    await seedCabin(prisma)
-    await seedShop(prisma)
-    await seedEvents(prisma)
-    await seedPermissions(prisma)
-    await seedFlairs(prisma)
-    await seedInterestGroups(prisma)
-    if (enableLogging) console.log('seed standard done')
+    if (enableLogging) console.log('upserting standard data....')
+    withContext({
+        bypassAuth: true,
+        prisma,
+        session: Session.empty(),
+    },
+    async () => {
+        await seedOrder(prisma)
+        await seedImages(prisma)
+        await upsertArticleCategories()
+        await seedMail(prisma)
+        await seedNotificationChannels(prisma)
+        await seedStudyProgramme(prisma)
+        await seedOmegaMembershipGroups(prisma)
+        await seedClasses(prisma)
+        await seedCabin(prisma)
+        await seedShop(prisma)
+        await seedEvents(prisma)
+        await seedPermissions(prisma)
+        await seedFlairs(prisma)
+        await seedInterestGroups(prisma)
+    }
+    )
+    if (enableLogging) console.log('upserting of standard done')
 
     if (enableLogging) console.log(shouldMigrate ? 'migrating from veven' : 'not migrating from veven')
     if (shouldMigrate) await dobbelOmega(prisma)
