@@ -5,7 +5,7 @@ import seedDevImages from './development/seedDevImages'
 import seedDevNews from './development/seedDevNews'
 import seedDevLockers from './development/seedDevLockers'
 import seedDevOmegaquotes from './development/seedDevOmegaquotes'
-import seedOrder from './seedOrder'
+import { seedOrders } from './standardContent/seedOrders'
 import dobbelOmega from './dobbelOmega/dobbelOmega'
 import seedNotificationChannels from './seedNotificationsChannels'
 import seedDevGroups from './development/seedDevGroups'
@@ -22,7 +22,7 @@ import seedDevEvents from './development/seedDevEvents'
 import seedEvents from './seedEvent'
 import seedCabin from './seedCabin'
 import seedPermissions from './seedPermissions'
-import { upsertArticleCategories } from './upsertArticleCategories'
+import { seedArticleCategories } from './standardContent/seedArticleCategories'
 import seedFlairs from './seedFlairs'
 import seedInterestGroups from './seedInterestGroups'
 import { withServiceContext } from '@/services/serviceOperation'
@@ -40,9 +40,9 @@ export default async function seed(
         session: Session.empty(),
     }, true, async ({ prisma }) => {
         if (enableLogging) console.log('upserting standard data....')
-        await seedOrder(prisma)
-        await seedImages(prisma)
-        await upsertArticleCategories()
+        await seedOrders()
+        await seedImages()
+        await seedArticleCategories()
         await seedMail(prisma)
         await seedNotificationChannels(prisma)
         await seedStudyProgramme(prisma)
@@ -61,20 +61,25 @@ export default async function seed(
         await dobbelOmega(prisma)
     })
 
-
     if (!seedDevData || shouldMigrate) return
-    if (enableLogging) console.log('seeding dev data....')
-    await seedDevImages(prisma)
-    await seedDevGroups(prisma)
-    await seedDevUsers(prisma)
-    await seedDevPermissions(prisma)
-    await seedDevOmegaquotes(prisma)
-    await seedDevNews(prisma)
-    await seedDevLockers(prisma)
-    await seedDevSchools(prisma)
-    await seedDevCompanies(prisma)
-    await seedDevJobAds(prisma)
-    await seedDevShop(prisma)
-    await seedDevEvents(prisma)
-    if (enableLogging) console.log('seed dev done')
+
+    await withServiceContext({
+        bypassAuth: true,
+        session: Session.empty(),
+    }, true, async ({ prisma }) => {
+        if (enableLogging) console.log('seeding dev data....')
+        await seedDevImages(prisma)
+        await seedDevGroups(prisma)
+        await seedDevUsers(prisma)
+        await seedDevPermissions(prisma)
+        await seedDevOmegaquotes(prisma)
+        await seedDevNews(prisma)
+        await seedDevLockers(prisma)
+        await seedDevSchools(prisma)
+        await seedDevCompanies(prisma)
+        await seedDevJobAds(prisma)
+        await seedDevShop(prisma)
+        await seedDevEvents(prisma)
+        if (enableLogging) console.log('seed dev done')
+    })
 }

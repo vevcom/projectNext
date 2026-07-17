@@ -76,7 +76,7 @@ export const articleCategoryOperations = {
             id: z.number()
         }),
         opensTransaction: true,
-        operation: ({ prisma, params }) => {
+        operation: ({ prisma, params }) =>
             prisma.$transaction(async (tx) => {
                 const article = await articleOperations.create.internalCall({ data: { }, prisma: tx })
                 await tx.articleCategory.update({
@@ -91,8 +91,8 @@ export const articleCategoryOperations = {
                         }
                     }
                 })
+                return article
             })
-        }
     }),
 
     removeArticleFromCategory: defineOperation({

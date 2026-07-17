@@ -32,19 +32,6 @@ export type SeedArticleSection = {
     imageSize?: number,
 }
 
-export const standardArticleCategories = [
-    {
-        name: 'om omega',
-        description: 'lær om omega',
-    },
-    {
-        name: 'guider',
-        description: 'få hjelp til ting',
-    }
-] as const
-
-export type SeedCategories = typeof standardArticleCategories[number]
-
 type SpecialCmsImageSeederConfig = {
     [T in SpecialCmsImage]: SeedCmsImage;
 }

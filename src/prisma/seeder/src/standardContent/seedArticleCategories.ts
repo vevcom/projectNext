@@ -1,6 +1,46 @@
 import { articleCategoryOperations } from '@/services/articleCategories/operations'
+import { getImageForCmsImageRelation } from '@/seeder/src/seedImages'
+import { defineSeedOperation } from '@/seeder/src/defineSeedOperation'
+import { upsert } from '@/seeder/src/upsert'
+import { fileURLToPath } from 'url'
+import { join } from 'path'
+import { readFileSync } from 'fs'
+import type { ImagesAvailablieForCms } from '@/seeder/src/seedImages'
 import type { PrismaClient } from '@/prisma-generated-pn-client'
-import { upsert } from './upsert'
+import type { ImageSize } from '@/prisma-generated-pn-types'
+
+const CMS_PARAGRAPHS_DIR = fileURLToPath(new URL('../../cms_paragraphs/', import.meta.url))
+
+type SeedCmsImageConfig = {
+    image: ImagesAvailablieForCms,
+    imageSize: ImageSize,
+}
+
+type SeedCmsParagraphConfig = {
+    file: string,
+}
+
+type SeedCmsLinkConfig = {
+    url: string,
+}
+
+type SeedArticleSectionConfig = {
+    cmsParagraph?: SeedCmsParagraphConfig,
+    cmsImage?: SeedCmsImageConfig,
+    cmsLink?: SeedCmsLinkConfig,
+}
+
+type SeedArticleConfig = {
+    name: string,
+    coverImage: SeedCmsImageConfig,
+    articleSections: SeedArticleSectionConfig[],
+}
+
+type SeedArticleCategoryConfig = {
+    name: string,
+    description: string,
+    articles: SeedArticleConfig[],
+}
 
 export const seedArticleCategoriesConfig = [
     {
@@ -10,31 +50,24 @@ export const seedArticleCategoriesConfig = [
             {
                 name: 'om omega',
                 coverImage: {
-                    name: 'about_cover',
-                    imageName: 'ohma',
+                    image: { dynamicImageSeededForCmsName: 'ohma' },
                     imageSize: 'LARGE'
                 },
                 articleSections: [
                     {
-                        name: 'about_1',
                         cmsParagraph: {
-                            name: 'about_1_paragraph',
                             file: 'about/about_1.md'
                         },
                         cmsLink: {
-                            name: 'about_1_link',
                             url: 'https://omega.ntnu.no',
                         }
                     },
                     {
-                        name: 'about_2',
                         cmsParagraph: {
-                            name: 'about_2_paragraph',
                             file: 'about/about_2.md'
                         },
                         cmsImage: {
-                            name: 'about_2_image',
-                            imageName: 'kappemann',
+                            image: { dynamicImageSeededForCmsName: 'kappemann' },
                             imageSize: 'LARGE'
                         }
                     }
@@ -43,31 +76,24 @@ export const seedArticleCategoriesConfig = [
             {
                 name: 'statutter',
                 coverImage: {
-                    name: 'statutter_cover',
-                    imageName: 'ov',
+                    image: { dynamicImageSeededForCmsName: 'ov' },
                     imageSize: 'MEDIUM'
                 },
                 articleSections: [
                     {
-                        name: 'statutter_1',
                         cmsParagraph: {
-                            name: 'statutter_1_paragraph',
                             file: 'statutter/statutter_1.md'
                         },
                         cmsLink: {
-                            name: 'statutter_1_link',
                             url: 'https://omega.ntnu.no',
                         }
                     },
                     {
-                        name: 'statutter_2',
                         cmsParagraph: {
-                            name: 'statutter_2_paragraph',
                             file: 'statutter/statutter_2.md'
                         },
                         cmsImage: {
-                            name: 'statutter_2_image',
-                            imageName: 'traktat',
+                            image: { dynamicImageSeededForCmsName: 'traktat' },
                             imageSize: 'MEDIUM'
                         }
                     }
@@ -82,20 +108,16 @@ export const seedArticleCategoriesConfig = [
             {
                 name: 'prikkreglement',
                 coverImage: {
-                    name: 'prikkreglement_cover',
-                    imageName: 'ov',
+                    image: { dynamicImageSeededForCmsName: 'ov' },
                     imageSize: 'MEDIUM'
                 },
                 articleSections: [
                     {
-                        name: 'prikkreglement_1',
                         cmsParagraph: {
-                            name: 'prikkreglement_1_paragraph',
                             file: 'prikkreglement/prikkreglement_1.md'
                         },
                         cmsImage: {
-                            name: 'prikkreglement_1_image',
-                            imageName: 'traktat',
+                            image: { dynamicImageSeededForCmsName: 'traktat' },
                             imageSize: 'MEDIUM'
                         }
                     }
@@ -104,20 +126,16 @@ export const seedArticleCategoriesConfig = [
             {
                 name: 'søknadsguide',
                 coverImage: {
-                    name: 'søknadsguide_cover',
-                    imageName: 'ov',
+                    image: { dynamicImageSeededForCmsName: 'ov' },
                     imageSize: 'MEDIUM'
                 },
                 articleSections: [
                     {
-                        name: 'søknadsguide_1',
                         cmsParagraph: {
-                            name: 'søknadsguide_1_paragraph',
                             file: 'soknadsguide/soknadsguide_1.md'
                         },
                         cmsImage: {
-                            name: 'søknadsguide_1_image',
-                            imageName: 'kappemann',
+                            image: { dynamicImageSeededForCmsName: 'kappemann' },
                             imageSize: 'MEDIUM'
                         }
                     }
@@ -125,19 +143,134 @@ export const seedArticleCategoriesConfig = [
             }
         ]
     }
-] as const satisfies { name: string, description: string }[]
+] as const satisfies SeedArticleCategoryConfig[]
 
-export async function upsertArticleCategories() {
-    await seedArticleCategoriesConfig.forEach(
-        async (category) => {
-            await upsert({
-                checkExistance: () => articleCategoryOperations.read(
-                    { params: { name: category.name } }
-                ) !== null,
-                create: async () => articleCategoryOperations.create({
+export const seedArticleCategories = defineSeedOperation(async (prisma) => {
+    await Promise.all(seedArticleCategoriesConfig.map(async category => {
+        const categoryResult = await upsert({
+            checkExistance: () => articleCategoryOperations.read({ params: { name: category.name } }),
+            create: () => articleCategoryOperations.create({
+                data: { name: category.name, description: category.description }
+            }),
+            update: async () => {
+                const existingCategory = await articleCategoryOperations.read({ params: { name: category.name } })
+                return articleCategoryOperations.update({
+                    params: { id: existingCategory.id },
+                    data: { description: category.description }
+                })
+            },
+        })
 
-                }),
-                update: async () => {}
+        await Promise.all(
+            category.articles.map(article => upsertArticleInCategory(
+                prisma,
+                { id: categoryResult.id, name: category.name },
+                article
+            ))
+        )
+    }))
+})
+
+/**
+ * Article creation has no dedicated bulk service operation (the article service is built for
+ * incremental edit-mode updates), so existence is checked with a plain prisma read - there's no
+ * service operation to look an article up by (category, name) - and, once confirmed missing, the
+ * article is built entirely through service operations, the same way the admin CMS editor would.
+ * On update nothing is touched - an admin may have since edited the article's content through the
+ * CMS, so existing content is never reconciled with the seed config.
+ */
+async function upsertArticleInCategory(
+    prisma: PrismaClient,
+    articleCategory: { id: number, name: string },
+    article: SeedArticleConfig
+) {
+    return upsert({
+        checkExistance: () => prisma.article.findUnique({
+            where: {
+                articleCategoryId_name: { articleCategoryId: articleCategory.id, name: article.name }
+            },
+            select: { id: true }
+        }),
+        create: () => createArticleInCategory(prisma, articleCategory.id, article),
+        update: () => Promise.resolve(),
+    })
+}
+
+/**
+ * Sections are added one at a time rather than with Promise.all: addSection reads the article's
+ * current highest section order and writes order + 1, so adding two sections concurrently would
+ * race on that read-then-write and can violate the (articleId, order) unique constraint.
+ */
+async function createArticleInCategory(
+    prisma: PrismaClient,
+    articleCategoryId: number,
+    article: SeedArticleConfig
+) {
+    const createdArticle = await articleCategoryOperations.addArticleToCategory({
+        params: { id: articleCategoryId }
+    })
+
+    await articleCategoryOperations.updateArticle.update({
+        implementationParams: { articleCategoryId },
+        params: { articleId: createdArticle.id },
+        data: { name: article.name }
+    })
+
+    const coverImage = await getImageForCmsImageRelation(article.coverImage.image, prisma)
+    await articleCategoryOperations.updateArticle.coverImage({
+        implementationParams: { articleCategoryId },
+        params: { cmsImageId: createdArticle.coverImage.id },
+        data: { imageId: coverImage.id, imageSize: article.coverImage.imageSize }
+    })
+
+    for (const section of article.articleSections) {
+        const updatedArticle = await articleCategoryOperations.updateArticle.addSection({
+            implementationParams: { articleCategoryId },
+            params: { articleId: createdArticle.id },
+            data: {
+                includeParts: {
+                    cmsParagraph: Boolean(section.cmsParagraph),
+                    cmsImage: Boolean(section.cmsImage),
+                    cmsLink: Boolean(section.cmsLink),
+                }
+            }
+        })
+
+        // We need to know the ids of the parts of the newest section.
+        // The newest section is the one with the highest order.
+        const newSection = updatedArticle.articleSections.reduce(
+            (highestOrderSection, candidateSection) => (
+                candidateSection.order > highestOrderSection.order ? candidateSection : highestOrderSection
+            )
+        )
+
+        if (section.cmsParagraph && newSection.cmsParagraph) {
+            await articleCategoryOperations.updateArticle.articleSections.cmsParagraph({
+                implementationParams: { articleCategoryId },
+                params: { paragraphId: newSection.cmsParagraph.id },
+                data: {
+                    markdown: readFileSync(join(CMS_PARAGRAPHS_DIR, section.cmsParagraph.file), 'utf-8')
+                }
             })
-    )
+        }
+
+        if (section.cmsImage && newSection.cmsImage) {
+            const sectionImage = await getImageForCmsImageRelation(section.cmsImage.image, prisma)
+            await articleCategoryOperations.updateArticle.articleSections.cmsImage({
+                implementationParams: { articleCategoryId },
+                params: { cmsImageId: newSection.cmsImage.id },
+                data: { imageId: sectionImage.id, imageSize: section.cmsImage.imageSize }
+            })
+        }
+
+        if (section.cmsLink && newSection.cmsLink) {
+            await articleCategoryOperations.updateArticle.articleSections.cmsLink({
+                implementationParams: { articleCategoryId },
+                params: { linkId: newSection.cmsLink.id },
+                data: { url: section.cmsLink.url }
+            })
+        }
+    }
+
+    return createdArticle
 }

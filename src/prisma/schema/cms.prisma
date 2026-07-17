@@ -126,6 +126,7 @@ model Article {
   special             SpecialCmsArticle? @unique
 
   @@unique([name, id])
+  @@unique([articleCategoryId, name])
 }
 
 model NewsArticle {
