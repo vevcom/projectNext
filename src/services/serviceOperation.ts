@@ -265,6 +265,33 @@ export type ServiceOperation<
     implementationParamsSchema?: ImplementationParamsSchema,
 }
 
+/**
+ * Extracts the caller-facing `{ params: ... }` input type of a service operation (top-level, from
+ * defineOperation, or `.implement()`-produced) - i.e. what a caller passes in to call it. Works off
+ * of `paramsSchema`, which every such operation exposes as a property on itself, so it applies
+ * uniformly regardless of how the operation was built.
+ *
+ * `paramsSchema` is an optional property, so reading it always yields `Schema | undefined` even
+ * when a schema is present - the `extends undefined` check (rather than `extends z.ZodTypeAny`)
+ * accounts for that; checking the other way round would make the union fail to extend
+ * z.ZodTypeAny (since its `undefined` member never does) and collapse this to `never` always.
+ */
+export type Params<T extends { paramsSchema?: z.ZodTypeAny }> =
+    T['paramsSchema'] extends undefined ? never : z.input<NonNullable<T['paramsSchema']>>
+
+/**
+ * Extracts the caller-facing `{ data: ... }` input type of a service operation. See {@link Params}.
+ */
+export type Data<T extends { dataSchema?: z.ZodTypeAny }> =
+    T['dataSchema'] extends undefined ? never : z.input<NonNullable<T['dataSchema']>>
+
+/**
+ * Extracts the caller-facing `{ implementationParams: ... }` input type of a service operation
+ * produced via `.implement()`. See {@link Params}.
+ */
+export type ImplementationParams<T extends { implementationParamsSchema?: z.ZodTypeAny }> =
+    T['implementationParamsSchema'] extends undefined ? never : z.input<NonNullable<T['implementationParamsSchema']>>
+
 export function defineSubOperation<
     Return,
     OpensTransaction extends boolean = false,

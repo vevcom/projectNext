@@ -7,22 +7,19 @@ import { join } from 'path'
 import { readFileSync } from 'fs'
 import type { ImagesAvailablieForCms } from '@/seeder/src/seedImages'
 import type { PrismaClient } from '@/prisma-generated-pn-client'
-import type { ImageSize } from '@/prisma-generated-pn-types'
+import type { Data } from '@/services/serviceOperation'
 
 const CMS_PARAGRAPHS_DIR = fileURLToPath(new URL('../../cms_paragraphs/', import.meta.url))
 
-type SeedCmsImageConfig = {
-    image: ImagesAvailablieForCms,
-    imageSize: ImageSize,
-}
+type SeedCmsImageConfig = { image: ImagesAvailablieForCms } &
+    Required<Pick<Data<typeof articleCategoryOperations.updateArticle.coverImage>, 'imageSize'>>
 
 type SeedCmsParagraphConfig = {
     file: string,
 }
 
-type SeedCmsLinkConfig = {
-    url: string,
-}
+type SeedCmsLinkConfig =
+    Required<Data<typeof articleCategoryOperations.updateArticle.articleSections.cmsLink>>
 
 type SeedArticleSectionConfig = {
     cmsParagraph?: SeedCmsParagraphConfig,
@@ -30,15 +27,12 @@ type SeedArticleSectionConfig = {
     cmsLink?: SeedCmsLinkConfig,
 }
 
-type SeedArticleConfig = {
-    name: string,
+type SeedArticleConfig = Required<Data<typeof articleCategoryOperations.updateArticle.update>> & {
     coverImage: SeedCmsImageConfig,
     articleSections: SeedArticleSectionConfig[],
 }
 
-type SeedArticleCategoryConfig = {
-    name: string,
-    description: string,
+type SeedArticleCategoryConfig = Data<typeof articleCategoryOperations.create> & {
     articles: SeedArticleConfig[],
 }
 
@@ -60,6 +54,7 @@ export const seedArticleCategoriesConfig = [
                         },
                         cmsLink: {
                             url: 'https://omega.ntnu.no',
+                            text: 'Til forsiden'
                         }
                     },
                     {
@@ -86,6 +81,7 @@ export const seedArticleCategoriesConfig = [
                         },
                         cmsLink: {
                             url: 'https://omega.ntnu.no',
+                            text: 'Til forsiden'
                         }
                     },
                     {
