@@ -26,7 +26,9 @@ export const omegaOrderOperations = {
                 acc.push(
                     prisma.group.updateMany({
                         where: {
-                            order: oldOrder,
+                            order: {
+                                lt: newOrder
+                            },
                             groupType: type
                             //TODO: Not retired
                         },

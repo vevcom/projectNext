@@ -57,18 +57,16 @@ export const seedDynamicImagesForCms = [
  * 2. A set of dynamic images, which are seeded into a dynamic collection. These are used for dunamic cms constent which is
  * seeded later on.
  */
-export default async function seedImages(prisma: PrismaClient) {
+export default async function seedImages() {
     await Promise.all(
         Object.values(StandardImage).map(async (standardImage) => {
             standardImageCollectionOperations.generateStandardImageFromConfig.internalCall({
-                prisma,
                 params: { standardImage }
             })
         })
     )
 
     const collectionForImagesUsedForSeededCms = await dynamicImageOperations.createCollection({
-        prisma,
         data: {
             collectionName: 'seeded cms images',
             collectionDescription: 'A collection for images used for seeded cms content',
@@ -77,7 +75,6 @@ export default async function seedImages(prisma: PrismaClient) {
 
     await Promise.all(seedDynamicImagesForCms.map(async (imageConfig) => {
         await dynamicImageOperations.uploadImage({
-            prisma,
             data: await imageConfig.standardStoreFile.imageUploadData({
                 name: imageConfig.name,
                 alt: imageConfig.alt
