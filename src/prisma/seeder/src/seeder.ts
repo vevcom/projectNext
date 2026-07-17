@@ -22,11 +22,11 @@ import seedDevEvents from './development/seedDevEvents'
 import seedEvents from './seedEvent'
 import seedCabin from './seedCabin'
 import seedPermissions from './seedPermissions'
+import { upsertArticleCategories } from './upsertArticleCategories'
 import seedFlairs from './seedFlairs'
 import seedInterestGroups from './seedInterestGroups'
 import { withServiceContext } from '@/services/serviceOperation'
 import { Session } from '@/auth/session/Session'
-import { upsertArticleCategories } from './upsertArticleCategories'
 
 export default async function seed(
     shouldMigrate: boolean,
@@ -35,11 +35,11 @@ export default async function seed(
 ) {
     const enableLogging = logging ?? true
 
-    if (enableLogging) console.log('upserting standard data....')
     await withServiceContext({
         bypassAuth: true,
         session: Session.empty(),
     }, true, async ({ prisma }) => {
+        if (enableLogging) console.log('upserting standard data....')
         await seedOrder(prisma)
         await seedImages(prisma)
         await upsertArticleCategories()
@@ -54,12 +54,13 @@ export default async function seed(
         await seedPermissions(prisma)
         await seedFlairs(prisma)
         await seedInterestGroups(prisma)
-    }
-    )
-    if (enableLogging) console.log('upserting of standard done')
+        if (enableLogging) console.log('upserting of standard done')
 
-    if (enableLogging) console.log(shouldMigrate ? 'migrating from veven' : 'not migrating from veven')
-    if (shouldMigrate) await dobbelOmega(prisma)
+        if (!shouldMigrate) return
+        if (enableLogging) console.log(shouldMigrate ? 'migrating from veven' : 'not migrating from veven')
+        await dobbelOmega(prisma)
+    })
+
 
     if (!seedDevData || shouldMigrate) return
     if (enableLogging) console.log('seeding dev data....')
