@@ -14,7 +14,7 @@ const errorMessagesMap: { [key: string]: [ServerErrorCode, string] } = {
  * THIS FUNCTION HAS BEEN DEPRECATED IN FAVOR OF prismaErrorWrapper
  *
  * @deprecated
- * @param call - A async prisma function to call.
+ * @param call - An async prisma function to call.
  * @returns
  */
 export async function prismaCall<T>(call: () => T | Promise<T>): Promise<T> {

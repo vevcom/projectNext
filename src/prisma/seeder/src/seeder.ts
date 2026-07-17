@@ -24,8 +24,7 @@ import seedCabin from './seedCabin'
 import seedPermissions from './seedPermissions'
 import seedFlairs from './seedFlairs'
 import seedInterestGroups from './seedInterestGroups'
-import { prisma } from '@/prisma/client'
-import { withContext } from '@/services/serviceOperation'
+import { withServiceContext } from '@/services/serviceOperation'
 import { Session } from '@/auth/session/Session'
 import { upsertArticleCategories } from './upsertArticleCategories'
 
@@ -37,12 +36,10 @@ export default async function seed(
     const enableLogging = logging ?? true
 
     if (enableLogging) console.log('upserting standard data....')
-    withContext({
+    await withServiceContext({
         bypassAuth: true,
-        prisma,
         session: Session.empty(),
-    },
-    async () => {
+    }, true, async ({ prisma }) => {
         await seedOrder(prisma)
         await seedImages(prisma)
         await upsertArticleCategories()

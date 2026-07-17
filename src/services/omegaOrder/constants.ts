@@ -11,4 +11,4 @@ export const AutomaticallyIncreaseOrder = {
     MANUAL_GROUP: false,
     OMEGA_MEMBERSHIP_GROUP: true,
     STUDY_PROGRAMME: true,
-} as const satisfies { [K in GroupType]: boolean }
+} as const satisfies Record<GroupType, boolean>

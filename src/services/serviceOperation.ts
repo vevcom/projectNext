@@ -196,6 +196,7 @@ export type ServiceOperationContext<OpensTransaction extends boolean = boolean> 
  */
 const asyncLocalStorage = new AsyncLocalStorage<ServiceOperationContext>()
 
+
 /**
  * Runs a callback with a specific service operation context.
  *
@@ -203,14 +204,29 @@ const asyncLocalStorage = new AsyncLocalStorage<ServiceOperationContext>()
  * @param callback The callback to run with the context.
  * @returns The return value of the callback.
  */
-export function withContext<T>(
-    contextOverride: Partial<ServiceOperationContext>,
-    callback: (context: ServiceOperationContext) => T,
+export function withServiceContext<T, OpensTransaction extends boolean>(
+    contextOverride: Partial<ServiceOperationContext<OpensTransaction>>,
+    opensTransaction: OpensTransaction | undefined,
+    callback: (context: ServiceOperationContext<OpensTransaction>) => T,
 ): T {
     const localContext = asyncLocalStorage.getStore()
 
-    const context: ServiceOperationContext = {
-        prisma: contextOverride.prisma ?? localContext?.prisma ?? globalPrisma,
+    const isAppropriateClient = (
+        prisma: PrismaClient | Prisma.TransactionClient
+    ): prisma is PrismaPossibleTransaction<OpensTransaction> =>
+        !opensTransaction || '$transaction' in prisma
+
+    const prisma = contextOverride.prisma ?? localContext?.prisma ?? globalPrisma
+    if (!isAppropriateClient(prisma)) {
+        throw new Smorekopp(
+            'SERVER ERROR',
+            `Service operation is configured to open a transaction,
+            but the prisma client in the context is a transaction client.`
+        )
+    }
+
+    const context: ServiceOperationContext<OpensTransaction> = {
+        prisma,
         session: contextOverride.session ?? localContext?.session ?? Session.empty(),
         bypassAuth: contextOverride.bypassAuth ?? localContext?.bypassAuth ?? false,
     }
@@ -291,12 +307,6 @@ export function defineSubOperation<
                 Boolean(args.implementationParams) === Boolean(implementationArgs.implementationParamsSchema)
             return paramsMatch && dataMatches && implementationParamsMatch
         }
-
-        // Guard to check if the prisma client can be used for this service operation.
-        const isAppropriateClient = (
-            prisma: PrismaClient | Prisma.TransactionClient
-        ): prisma is PrismaPossibleTransaction<OpensTransaction> =>
-            !serviceOperationConfig.opensTransaction || '$transaction' in prisma
 
         const executeOperation = async ({
             implementationParams, params, data, ...context
@@ -386,58 +396,55 @@ export function defineSubOperation<
             // Then, get the context (which includes the prisma client, the session and the bypassAuth flag).
             // If a context override is provided, use it. Otherwise, use the context from the async local storage.
             // If there is no context in the async local storage, use global defaults.
-            return withContext(context, async ({ prisma, bypassAuth, session }) => {
-                if (!isAppropriateClient(prisma)) {
-                    throw new Smorekopp(
-                        'SERVER ERROR',
-                        'Service operation that opens a transaction cannot be called from within a transaction.',
-                    )
-                }
+            return withServiceContext(
+                context,
+                serviceOperationConfig.opensTransaction,
+                async ({ prisma, bypassAuth, session }) => {
+                    // Then, authorize user.
+                    // This has to be done after the validation because the
+                    // authorizer might use the data to authorize the user.
+                    const prismaWhereFilter: PrismaWhereFilter | undefined = await (async () => {
+                        if (!bypassAuth) {
+                            if (!implementationArgs.authorizer) {
+                                throw new Smorekopp(
+                                    'UNAUTHENTICATED',
+                                    'This service operation is not externally callable.'
+                                )
+                            }
 
-                // Then, authorize user.
-                // This has to be done after the validation because the authorizer might use the data to authorize the user.
-                const prismaWhereFilter: PrismaWhereFilter | undefined = await (async () => {
-                    if (!bypassAuth) {
-                        if (!implementationArgs.authorizer) {
-                            throw new Smorekopp(
-                                'UNAUTHENTICATED',
-                                'This service operation is not externally callable.'
+                            const authorizer = await prismaErrorWrapper(
+                                () => implementationArgs.authorizer({ ...args, prisma })
                             )
+                            const authResult = authorizer.auth(session)
+
+                            if (!authResult.authorized) {
+                                throw new Smorekopp(authResult.status, authResult.getErrorMessage)
+                            }
+
+                            return authResult.prismaWhereFilter
                         }
+                        return undefined
+                    })()
 
-                        const authorizer = await prismaErrorWrapper(
-                            () => implementationArgs.authorizer({ ...args, prisma })
-                        )
-                        const authResult = authorizer.auth(session)
-
-                        if (!authResult.authorized) {
-                            throw new Smorekopp(authResult.status, authResult.getErrorMessage)
-                        }
-
-                        return authResult.prismaWhereFilter
+                    const ownershipCheckResult = await prismaErrorWrapper(
+                        () => implementationArgs.ownershipCheck({
+                            ...args,
+                            prisma,
+                        })
+                    )
+                    if (!ownershipCheckResult) {
+                        throw new Smorekopp('DISSALLOWED', `
+                            This resource cannot be accessed through this implementation
+                            as the resource implementing this resource does not own it.
+                        `)
                     }
-                    return undefined
-                })()
 
-                const ownershipCheckResult = await prismaErrorWrapper(
-                    () => implementationArgs.ownershipCheck({
-                        ...args,
-                        prisma,
-                    })
-                )
-                if (!ownershipCheckResult) {
-                    throw new Smorekopp('DISSALLOWED', `
-                        This resource cannot be accessed through this implementation
-                        as the resource implementing this resource does not own it.
-                    `)
-                }
-
-                return prismaErrorWrapper(() =>
-                    serviceOperationConfig.operation(
-                        implementationArgs.operationImplementationFields!
-                    )({ ...args, prisma, bypassAuth, session }, prismaWhereFilter)
-                )
-            })
+                    return prismaErrorWrapper(() =>
+                        serviceOperationConfig.operation(
+                            implementationArgs.operationImplementationFields!
+                        )({ ...args, prisma, bypassAuth, session }, prismaWhereFilter)
+                    )
+                })
         }
 
         executeOperation.paramsSchema = serviceOperationConfig.paramsSchema
