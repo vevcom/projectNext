@@ -3,46 +3,49 @@ import { flairAuth } from './auth'
 import { flairSchema } from './schemas'
 import { defineOperation } from '@/services/serviceOperation'
 import { ServerError } from '@/services/error'
-import { cmsImageOperations } from '@/cms/images/operations'
+import { implementSpecialCollection } from '@/services/images/subservice/special/implement'
 import { z } from 'zod'
 
-const read = defineOperation({
-    authorizer: () => flairAuth.read.dynamicFields({}),
-    paramsSchema: z.object({
-        flairId: z.number(),
-    }),
-    operation: async ({ prisma, params: { flairId } }) =>
-        await prisma.flair.findUniqueOrThrow({
-            where: {
-                id: flairId,
-            },
-            include: {
-                cmsImage: {
-                    include: {
-                        image: true
-                    }
-                }
-            }
-        })
+/**
+ * Flair images live in the FLAIRIMAGES special collection, one image per flair - images are
+ * uploaded into it when a flair is created (or its image replaced) and destroyed when the flair
+ * is destroyed (or its image replaced), so the collection never holds more images than there are
+ * flairs.
+ */
+const {
+    internalOperations: flairImageOperations,
+    specialCollectionPanelOperations: flairImagePanelOperations
+} = implementSpecialCollection({
+    special: 'FLAIRIMAGES',
+    imagePanelAuther: flairAuth.imagePanel.dynamicFields({}),
+    config: {
+        name: 'Flairbilder',
+        description: 'Bilder brukt av flairs. Hvert bilde i denne samlingen tilhører nøyaktig én flair.',
+    }
 })
 
 export const flairOperations = {
+    imagePanel: flairImagePanelOperations,
     create: defineOperation({
         authorizer: () => flairAuth.create.dynamicFields({}),
         dataSchema: flairSchema.create,
-        operation: async ({ prisma, data }) =>
-            await prisma.flair.create({
-                data: {
-                    cmsImage: {
-                        create: {
-
+        opensTransaction: true,
+        operation: ({ prisma, data }) =>
+            prisma.$transaction(async tx => {
+                const image = await flairImageOperations.uploadImage.internalCall({ prisma: tx, data })
+                return await tx.flair.create({
+                    data: {
+                        name: data.name,
+                        colorR: data.color.red,
+                        colorG: data.color.green,
+                        colorB: data.color.blue,
+                        image: {
+                            connect: {
+                                id: image.id
+                            }
                         }
-                    },
-                    name: data.name,
-                    colorR: data.color.red,
-                    colorG: data.color.green,
-                    colorB: data.color.blue,
-                }
+                    }
+                })
             })
     }),
     update: defineOperation({
@@ -51,7 +54,7 @@ export const flairOperations = {
         paramsSchema: z.object({
             flairId: z.number()
         }),
-        operation: async ({ prisma, params, data }) =>
+        operation: ({ prisma, params, data }) =>
             prisma.flair.update({
                 where: {
                     id: params.flairId,
@@ -64,17 +67,57 @@ export const flairOperations = {
                 }
             })
     }),
-    read,
+    updateImage: defineOperation({
+        authorizer: () => flairAuth.updateImage.dynamicFields({}),
+        paramsSchema: z.object({
+            flairId: z.number()
+        }),
+        dataSchema: flairSchema.updateImage,
+        opensTransaction: true,
+        operation: ({ prisma, params, data }) =>
+            prisma.$transaction(async tx => {
+                const existingFlair = await tx.flair.findUniqueOrThrow({
+                    where: { id: params.flairId }
+                })
+                const newImage = await flairImageOperations.uploadImage.internalCall({ prisma: tx, data })
+                await tx.flair.update({
+                    where: { id: existingFlair.id },
+                    data: {
+                        image: {
+                            connect: {
+                                id: newImage.id
+                            }
+                        }
+                    }
+                })
+                await flairImageOperations.destroyImage.internalCall({
+                    prisma: tx,
+                    params: { imageId: existingFlair.imageId }
+                })
+                return newImage
+            })
+    }),
+    read: defineOperation({
+        authorizer: () => flairAuth.read.dynamicFields({}),
+        paramsSchema: z.object({
+            flairId: z.number(),
+        }),
+        operation: async ({ prisma, params: { flairId } }) =>
+            await prisma.flair.findUniqueOrThrow({
+                where: {
+                    id: flairId,
+                },
+                include: {
+                    image: true
+                }
+            })
+    }),
     readAll: defineOperation({
         authorizer: () => flairAuth.readAll.dynamicFields({}),
         operation: async ({ prisma }) => {
             const flairs = (await prisma.flair.findMany({
                 include: {
-                    cmsImage: {
-                        include: {
-                            image: true
-                        }
-                    }
+                    image: true
                 }
             })).sort((a, b) => a.rank - b.rank || a.id - b.id)
             // Assign new ranks: 1, 2, 3, ... so there are no gaps
@@ -89,11 +132,7 @@ export const flairOperations = {
             }
             const normalizedFlairs = await prisma.flair.findMany({
                 include: {
-                    cmsImage: {
-                        include: {
-                            image: true
-                        }
-                    }
+                    image: true
                 },
                 orderBy: { rank: 'asc' }
             })
@@ -113,11 +152,7 @@ export const flairOperations = {
                 select: {
                     flairs: {
                         include: {
-                            cmsImage: {
-                                include: {
-                                    image: true
-                                }
-                            }
+                            image: true
                         }
                     },
                 }
@@ -180,21 +215,20 @@ export const flairOperations = {
             flairId: z.number(),
         }),
         opensTransaction: true,
-        operation: async ({ prisma, params: { flairId } }) => {
+        operation: ({ prisma, params: { flairId } }) =>
             prisma.$transaction(async tx => {
                 const flair = await tx.flair.delete({
                     where: {
                         id: flairId,
                     }
                 })
-                await cmsImageOperations.destroy.internalCall({
+                await flairImageOperations.destroyImage.internalCall({
                     prisma: tx,
                     params: {
-                        cmsImageId: flair.imageId,
+                        imageId: flair.imageId,
                     }
                 })
             })
-        }
     }),
     increaseRank: defineOperation({
         authorizer: () => flairAuth.increaseRank.dynamicFields({}),
@@ -271,14 +305,4 @@ export const flairOperations = {
             })
         }
     }),
-    updateCmsImage: cmsImageOperations.update.implement({
-        authorizer: () => flairAuth.updateCmsImage.dynamicFields({}),
-        implementationParamsSchema: z.object({
-            flairId: z.number(),
-        }),
-        ownershipCheck: async ({ params, implementationParams }) => {
-            const flair = await read({ params: { flairId: implementationParams.flairId } })
-            return flair.cmsImage.id === params.cmsImageId
-        }
-    })
-}
+} as const

@@ -1,7 +1,7 @@
 import '@pn-server-only'
 import { StandardImageConfig } from './constants'
-import { standardImageAuth } from './auth'
-import { implementSpecialCollection } from '@/services/images/subservice/special/implementSpecialCollection'
+import { standardImageCollectionAuth } from './auth'
+import { implementSpecialCollection } from '@/services/images/subservice/special/implement'
 import { defineOperation, defineSubOperation } from '@/services/serviceOperation'
 import logger from '@/lib/logger'
 import { StandardImage } from '@/prisma-generated-pn-types'
@@ -10,7 +10,7 @@ import { z } from 'zod'
 
 const { specialCollectionPanelOperations: standardCollectionPanelOperations } = implementSpecialCollection({
     special: 'STANDARDIMAGES',
-    readSpecialCollectionPanelAuther: standardImageAuth.readSpecialCollectionPanel.dynamicFields({}),
+    imagePanelAuther: standardImageCollectionAuth.imagePanel.dynamicFields({}),
     config: {
         name: 'Standardbilder',
         description: `
@@ -49,7 +49,7 @@ const generateStandardImageFromConfig = defineSubOperation({
 })
 
 const readStandardImage = defineOperation({
-    authorizer: () => standardImageAuth.readStandardImage.dynamicFields({}),
+    authorizer: () => standardImageCollectionAuth.readStandardImage.dynamicFields({}),
     paramsSchema: z.object({
         standardImage: z.nativeEnum(StandardImage)
     }),
@@ -96,6 +96,6 @@ const readStandardImage = defineOperation({
  */
 export const standardImageCollectionOperations = {
     readStandardImage,
+    imagePanel: standardCollectionPanelOperations,
     generateStandardImageFromConfig,
-    panelOperations: standardCollectionPanelOperations,
 } as const

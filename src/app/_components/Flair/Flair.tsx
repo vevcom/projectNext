@@ -1,56 +1,32 @@
-import CmsImage from '@/cms/CmsImage/CmsImage'
+import styles from './Flair.module.scss'
+import Image from '@/components/Image/Image'
+import ImageUploader from '@/components/Image/ImageUploader'
 import { flairAuth } from '@/services/flairs/auth'
-import { updateFlairCmsImageAction } from '@/services/flairs/actions'
+import { updateFlairImageAction } from '@/services/flairs/actions'
 import { configureAction } from '@/services/configureAction'
-import CmsImageClient from '@/cms/CmsImage/CmsImageClient'
 import { Session, type SessionMaybeUser } from '@/auth/session/Session'
 import type { FlairWithImage } from '@/services/flairs/types'
 
 type PropTypes = {
     flair: FlairWithImage,
     width?: number,
-    asClient: boolean,
-} & (
-        {
-            session: SessionMaybeUser,
-            disableEditor?: false
-        } | {
-            session?: SessionMaybeUser,
-            disableEditor: true,
-        }
-    )
+    session: SessionMaybeUser,
+    disableEditor?: boolean
+}
 
-/**
- * WARNING: May only be used server-side as it uses <CmsImage /> which is server-only.
- */
-export default function Flair({ flair, width = 50, session, asClient, disableEditor }: PropTypes) {
-    const maybeSession = session ? session : Session.empty()
-    if (asClient) {
-        return <CmsImageClient
-            disableEditor={disableEditor}
-            cmsImage={flair.cmsImage}
-            width={width}
-            canEdit={flairAuth.updateCmsImage.dynamicFields({}).auth(maybeSession).toJsObject()}
-            updateCmsImageAction={
-                configureAction(
-                    updateFlairCmsImageAction,
-                    { implementationParams: { flairId: flair.id } }
-                )
-            }
-        />
-    }
+export default function Flair({ flair, width = 50, session, disableEditor = false }: PropTypes) {
+    const canEdit = flairAuth.updateImage.dynamicFields({}).auth(
+        session ? session : Session.empty()
+    ).toJsObject()
+
     return (
-        <CmsImage
-            disableEditor={disableEditor}
-            cmsImage={flair.cmsImage}
-            width={width}
-            canEdit={flairAuth.updateCmsImage.dynamicFields({}).auth(maybeSession).toJsObject()}
-            updateCmsImageAction={
-                configureAction(
-                    updateFlairCmsImageAction,
-                    { implementationParams: { flairId: flair.id } }
-                )
-            }
-        />
+        <div className={styles.Flair}>
+            {!disableEditor && <ImageUploader
+                popUpKey={`EditFlairImage${flair.id}`}
+                canEdit={canEdit}
+                uploadImageAction={configureAction(updateFlairImageAction, { params: { flairId: flair.id } })}
+            />}
+            <Image image={flair.image} width={width} />
+        </div>
     )
 }

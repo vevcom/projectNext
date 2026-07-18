@@ -28,11 +28,7 @@ export const userFilterSelection = {
     flairs: {
         select: {
             id: true,
-            cmsImage: {
-                include: {
-                    image: true,
-                }
-            },
+            image: true,
         },
     },
 } as const satisfies Prisma.UserSelect

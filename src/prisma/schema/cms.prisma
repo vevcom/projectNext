@@ -26,7 +26,6 @@ model CmsImage {
   school               School?
   event                Event?
   company              Company?
-  flairs               Flair?
 }
 
 enum SpecialCmsParagraph {

@@ -11,6 +11,8 @@ import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import Form from '@/components/Form/Form'
 import ColorInput from '@/components/UI/ColorInput'
 import TextInput from '@/components/UI/TextInput'
+import FileInput from '@/components/UI/FileInput'
+import LicenseChooser from '@/components/LicenseChooser/LicenseChooser'
 import Flair from '@/components/Flair/Flair'
 import { configureAction } from '@/services/configureAction'
 import { ServerSession } from '@/auth/session/ServerSession'
@@ -35,6 +37,10 @@ export default async function FlairUpdatePage() {
                 >
                     <TextInput label="Navn" name="name" />
                     <ColorInput label="Farge" name="color" />
+                    <FileInput label="Bilde" name="imageFile" color="primary" />
+                    <TextInput label="Alternativ tekst for bilde" name="imageAlt" />
+                    <TextInput label="Kreditert" name="imageCredit" />
+                    <LicenseChooser name="imageLicenseId" />
                 </Form>
             </AddHeaderItemPopUp>
         }>
@@ -58,7 +64,7 @@ export default async function FlairUpdatePage() {
                     {flairs.map((flair, i) => (
                         <tr key={flair.id}>
                             <td>
-                                <Flair asClient={false} session={session} flair={flair} width={100} />
+                                <Flair session={session} flair={flair} width={100} />
                             </td>
                             <td>{flair.name}</td>
                             <td style={{

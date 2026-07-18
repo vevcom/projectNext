@@ -23,7 +23,7 @@ import seedEvents from './seedEvent'
 import seedCabin from './seedCabin'
 import seedPermissions from './seedPermissions'
 import { seedArticleCategories } from './standardContent/seedArticleCategories'
-import seedFlairs from './seedFlairs'
+import { seedFlairs } from './standardContent/seedFlairs'
 import seedInterestGroups from './seedInterestGroups'
 import { withServiceContext } from '@/services/serviceOperation'
 import { Session } from '@/auth/session/Session'
@@ -35,6 +35,9 @@ export default async function seed(
 ) {
     const enableLogging = logging ?? true
 
+    //TODO: Remove this outer withServiceContext.
+    // When all seeders are refactored to use defineSeedOperation it will not
+    // be neccesary as defineSeedOperation will handle the service context.
     await withServiceContext({
         bypassAuth: true,
         session: Session.empty(),
@@ -52,7 +55,7 @@ export default async function seed(
         await seedShop(prisma)
         await seedEvents(prisma)
         await seedPermissions(prisma)
-        await seedFlairs(prisma)
+        await seedFlairs()
         await seedInterestGroups(prisma)
         if (enableLogging) console.log('upserting of standard done')
 

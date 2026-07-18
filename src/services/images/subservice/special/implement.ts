@@ -9,18 +9,18 @@ import type { AuthorizerDynamicFieldsBound } from '@/auth/authorizer/Authorizer'
 
 export function implementSpecialCollection({
     special,
-    readSpecialCollectionPanelAuther,
+    imagePanelAuther,
     config
 }: {
     special: SpecialCollection,
-    readSpecialCollectionPanelAuther: AuthorizerDynamicFieldsBound
+    imagePanelAuther: AuthorizerDynamicFieldsBound
     config: {
         name: string,
         description: string,
     }
 }) {
     const readCollection = defineOperation({
-        authorizer: () => readSpecialCollectionPanelAuther,
+        authorizer: () => imagePanelAuther,
         operation: async ({ prisma }) => {
             const collection = await prisma.imageCollection.findUnique({
                 where: {
@@ -58,25 +58,27 @@ export function implementSpecialCollection({
         }
     })
 
+    const uploadImage = defineSubOperation({
+        dataSchema: () => imageSchemas.uploadImage,
+        operation: () => async ({ data }) =>
+            imageOperations.uploadImage.internalCall({
+                params: {
+                    collectionId: (await readCollection({})).id,
+                },
+                data,
+                operationImplementationFields: { uploadAsStandardImage: null }
+            })
+    })
+
     return {
         internalOperations: {
-            uploadImage: defineSubOperation({
-                dataSchema: () => imageSchemas.uploadImage,
-                operation: () => async ({ data }) =>
-                    imageOperations.uploadImage.internalCall({
-                        params: {
-                            collectionId: (await readCollection({})).id,
-                        },
-                        data,
-                        operationImplementationFields: { uploadAsStandardImage: null }
-                    })
-            }),
+            uploadImage,
             destroyImage: imageOperations.destroyImage,
         },
         specialCollectionPanelOperations: {
             readCollection,
             readPageOfImagesInCollection: imageOperations.readPageOfImagesInCollection.implement({
-                authorizer: () => readSpecialCollectionPanelAuther,
+                authorizer: () => imagePanelAuther,
                 ownershipCheck: async ({ params }) => await readCollection({}).then(
                     collection => collection?.id === params.paging.details.collectionId
                 )

@@ -111,7 +111,6 @@ export default async function User({ params }: PropTypes) {
                             <h1><UserDisplayName
                                 user={profile.user}
                                 width={40}
-                                asClient={false}
                             /></h1>
                         </div>
                         {studyProgrammes.map((studyProgramme, i) =>

@@ -13,5 +13,6 @@ export const flairAuth = {
     read: RequireNothing.staticFields({}),
     readAll: RequireNothing.staticFields({}),
     readUserFlairs: RequireUserIdOrPermission.staticFields({ permission: 'USERS_READ' }),
-    updateCmsImage: RequirePermission.staticFields({ permission: 'FLAIR_ADMIN' }),
+    updateImage: RequirePermission.staticFields({ permission: 'FLAIR_ADMIN' }),
+    imagePanel: RequirePermission.staticFields({ permission: 'FLAIR_ADMIN' }),
 } as const
