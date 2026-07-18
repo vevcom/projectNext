@@ -141,6 +141,13 @@ export const seedArticleCategoriesConfig = [
     }
 ] as const satisfies SeedArticleCategoryConfig[]
 
+/**
+ * This upserts the existance of all categories.
+ * Then upserts the existance of all articles in each category.
+ * If the article exists - it is not changed at all
+ * If the article does not exist - it is created with all its sections and content
+ * given by the config.
+ */
 export const seedArticleCategories = defineSeedOperation(async (prisma) => {
     await Promise.all(seedArticleCategoriesConfig.map(async category => {
         const categoryResult = await upsert({
@@ -167,14 +174,6 @@ export const seedArticleCategories = defineSeedOperation(async (prisma) => {
     }))
 })
 
-/**
- * Article creation has no dedicated bulk service operation (the article service is built for
- * incremental edit-mode updates), so existence is checked with a plain prisma read - there's no
- * service operation to look an article up by (category, name) - and, once confirmed missing, the
- * article is built entirely through service operations, the same way the admin CMS editor would.
- * On update nothing is touched - an admin may have since edited the article's content through the
- * CMS, so existing content is never reconciled with the seed config.
- */
 async function upsertArticleInCategory(
     prisma: PrismaClient,
     articleCategory: { id: number, name: string },
@@ -193,9 +192,7 @@ async function upsertArticleInCategory(
 }
 
 /**
- * Sections are added one at a time rather than with Promise.all: addSection reads the article's
- * current highest section order and writes order + 1, so adding two sections concurrently would
- * race on that read-then-write and can violate the (articleId, order) unique constraint.
+ * This functions builds the article from config using the article operations.
  */
 async function createArticleInCategory(
     prisma: PrismaClient,
