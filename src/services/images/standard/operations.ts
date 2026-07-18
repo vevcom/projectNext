@@ -28,11 +28,18 @@ const generateStandardImageFromConfig = defineSubOperation({
     }),
     operation: () => async ({ prisma, params }) => {
         const config = StandardImageConfig[params.standardImage]
-        await prisma.image.delete({
+        const existingImage = await prisma.image.findUnique({
             where: {
                 standardImage: params.standardImage
             }
         })
+        if (existingImage) {
+            await prisma.image.delete({
+                where: {
+                    standardImage: params.standardImage
+                }
+            })
+        }
 
         return await imageOperations.uploadImage.internalCall({
             prisma,
