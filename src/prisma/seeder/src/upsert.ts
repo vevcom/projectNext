@@ -13,8 +13,8 @@ import { Smorekopp } from '@/services/error'
 export async function upsert<ReturnCreate, ReturnUpdate>(
     config: {
         checkExistance: () => Promise<unknown>,
-        create: () => Promise<ReturnCreate>,
-        update: () => Promise<ReturnUpdate>,
+        create: () => ReturnCreate,
+        update: () => ReturnUpdate,
     }
 ): Promise<ReturnCreate | ReturnUpdate> {
     const exists = await config.checkExistance().catch(error => {

@@ -1,11 +1,11 @@
+import { getImageForCmsImageRelation } from './seedImages'
 import { articleCategoryOperations } from '@/services/articleCategories/operations'
-import { getImageForCmsImageRelation } from '@/seeder/src/seedImages'
 import { defineSeedOperation } from '@/seeder/src/defineSeedOperation'
 import { upsert } from '@/seeder/src/upsert'
 import { fileURLToPath } from 'url'
 import { join } from 'path'
 import { readFileSync } from 'fs'
-import type { ImagesAvailablieForCms } from '@/seeder/src/seedImages'
+import type { ImagesAvailablieForCms } from './seedImages'
 import type { PrismaClient } from '@/prisma-generated-pn-client'
 import type { Data } from '@/services/serviceOperation'
 

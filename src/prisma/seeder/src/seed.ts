@@ -1,4 +1,3 @@
-import seedImages from './seedImages'
 import seedDevUsers from './development/seedDevUsers'
 import seedDevPermissions from './development/seedDevPermissions'
 import seedDevImages from './development/seedDevImages'
@@ -23,6 +22,7 @@ import seedEvents from './seedEvent'
 import seedCabin from './seedCabin'
 import seedPermissions from './seedPermissions'
 import { seedArticleCategories } from './standardContent/seedArticleCategories'
+import { seedImages } from './standardContent/seedImages'
 import { seedFlairs } from './standardContent/seedFlairs'
 import seedInterestGroups from './seedInterestGroups'
 import { withServiceContext } from '@/services/serviceOperation'
@@ -36,8 +36,8 @@ export default async function seed(
     const enableLogging = logging ?? true
 
     //TODO: Remove this outer withServiceContext.
-    // When all seeders are refactored to use defineSeedOperation it will not
-    // be neccesary as defineSeedOperation will handle the service context.
+    //TODO: When all seeders are refactored to use defineSeedOperation it will not
+    //TODO: be neccesary as defineSeedOperation will handle the service context.
     await withServiceContext({
         bypassAuth: true,
         session: Session.empty(),
