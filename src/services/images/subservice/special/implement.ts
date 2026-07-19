@@ -2,6 +2,7 @@ import '@pn-server-only'
 import { defineOperation, defineSubOperation } from '@/services/serviceOperation'
 import { imageOperations } from '@/services/images/subservice/operations'
 import { imageSchemas } from '@/services/images/subservice/schemas'
+import { ServerError } from '@/services/error'
 import logger from '@/lib/logger'
 import { visibilityOperations } from '@/services/visibility/operations'
 import type { SpecialCollection } from '@/prisma-generated-pn-types'
@@ -70,10 +71,36 @@ export function implementSpecialCollection({
             })
     })
 
+    // Here one could just forward imageOperation.destroyImage, as the internalOperations,
+    // are not to be exposed to the client, and we may trust that the implementer service code
+    // does not call this operation with imageIds it does not own interanally.
+    // However, for sanity, and to catch any potential bugs, the subservice will
+    // enforce ownership of imageId.
+    const destroyImage = defineSubOperation({
+        paramsSchema: () => imageSchemas.paramsSchemaImage,
+        operation: () => async ({ prisma, params }) => {
+            const collection = await readCollection({})
+            const image = await prisma.image.findFirst({
+                where: {
+                    id: params.imageId,
+                    collectionId: collection.id,
+                },
+                select: { id: true }
+            })
+            if (!image) {
+                throw new ServerError(
+                    'BAD PARAMETERS',
+                    `Image ${params.imageId} is not part of the special collection ${special}`
+                )
+            }
+            return imageOperations.destroyImage.internalCall({ params })
+        }
+    })
+
     return {
         internalOperations: {
             uploadImage,
-            destroyImage: imageOperations.destroyImage,
+            destroyImage,
         },
         specialCollectionPanelOperations: {
             readCollection,
