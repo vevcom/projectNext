@@ -1,7 +1,7 @@
 import seedDevUsers from './development/seedDevUsers'
 import seedDevPermissions from './development/seedDevPermissions'
 import { seedDevImages } from './development/seedDevImages'
-import seedDevNews from './development/seedDevNews'
+import { seedDevNews } from './development/seedDevNews'
 import seedDevLockers from './development/seedDevLockers'
 import seedDevOmegaquotes from './development/seedDevOmegaquotes'
 import { seedOrders } from './standardContent/seedOrders'
@@ -68,7 +68,7 @@ export default async function seed(
 
     if (!seedDevData || shouldMigrate) return
 
-    //TODO: Remove this outer withServiceContext.
+    //TODO: Remove this outer withServiceContext. (see above)
     await withServiceContext({
         bypassAuth: true,
         session: Session.empty(),
@@ -79,7 +79,7 @@ export default async function seed(
         await seedDevUsers(prisma)
         await seedDevPermissions(prisma)
         await seedDevOmegaquotes(prisma)
-        await seedDevNews(prisma)
+        await seedDevNews()
         await seedDevLockers(prisma)
         await seedDevSchools(prisma)
         await seedDevCompanies(prisma)

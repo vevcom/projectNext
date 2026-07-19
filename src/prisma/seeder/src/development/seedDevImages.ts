@@ -10,11 +10,11 @@ export const seedDevImages = defineSeedOperation(async (prisma: PrismaClient) =>
 async function upsertTestImageCollection(prisma: PrismaClient, index: number) {
     return prisma.imageCollection.upsert({
         where: {
-            name: `test_collection_${index}`
+            name: `dev_images_${index}`
         },
         update: {},
         create: {
-            name: `test_collection_${index}`,
+            name: `dev_images_${index}`,
             description: 'just a test',
             visibilityAdmin: {
                 create: {}
