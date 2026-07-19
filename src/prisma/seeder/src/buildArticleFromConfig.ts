@@ -8,9 +8,9 @@ import type { Data } from '@/services/serviceOperation'
 import type { implementUpdateArticleOperations } from '@/services/cms/articles/implement'
 import type { z } from 'zod'
 
-const CMS_PARAGRAPHS_DIR = fileURLToPath(new URL('../cms_paragraphs/', import.meta.url))
+export const CMS_PARAGRAPHS_DIR = fileURLToPath(new URL('../cms_paragraphs/', import.meta.url))
 
-type UpdateArticleOperationsReference = ReturnType<typeof implementUpdateArticleOperations<z.ZodTypeAny>>
+export type UpdateArticleOperationsReference = ReturnType<typeof implementUpdateArticleOperations<z.ZodTypeAny>>
 
 type SeedCmsImageConfig = { image: ImagesAvailablieForCms } &
     Required<Pick<Data<UpdateArticleOperationsReference['coverImage']>, 'imageSize'>>

@@ -23,6 +23,7 @@ import seedCabin from './seedCabin'
 import seedPermissions from './seedPermissions'
 import { seedArticleCategories } from './standardContent/seedArticleCategories'
 import { seedImages } from './standardContent/seedImages'
+import { seedSpecialCms } from './standardContent/seedSpecialCms'
 import { seedFlairs } from './standardContent/seedFlairs'
 import { seedNews } from './standardContent/seedNews'
 import seedInterestGroups from './seedInterestGroups'
@@ -46,6 +47,7 @@ export default async function seed(
         if (enableLogging) console.log('upserting standard data....')
         await seedOrders()
         await seedImages()
+        await seedSpecialCms()
         await seedArticleCategories()
         await seedNews()
         await seedMail(prisma)
