@@ -1,6 +1,6 @@
 import seedDevUsers from './development/seedDevUsers'
 import seedDevPermissions from './development/seedDevPermissions'
-import seedDevImages from './development/seedDevImages'
+import { seedDevImages } from './development/seedDevImages'
 import seedDevNews from './development/seedDevNews'
 import seedDevLockers from './development/seedDevLockers'
 import seedDevOmegaquotes from './development/seedDevOmegaquotes'
@@ -68,12 +68,13 @@ export default async function seed(
 
     if (!seedDevData || shouldMigrate) return
 
+    //TODO: Remove this outer withServiceContext.
     await withServiceContext({
         bypassAuth: true,
         session: Session.empty(),
     }, true, async ({ prisma }) => {
         if (enableLogging) console.log('seeding dev data....')
-        await seedDevImages(prisma)
+        await seedDevImages()
         await seedDevGroups(prisma)
         await seedDevUsers(prisma)
         await seedDevPermissions(prisma)
