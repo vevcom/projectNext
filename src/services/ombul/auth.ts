@@ -10,4 +10,5 @@ export const ombulAuth = {
     update: RequirePermission.staticFields({ permission: 'OMBUL_UPDATE' }),
     updateFile: RequirePermission.staticFields({ permission: 'OMBUL_UPDATE' }),
     imagePanel: RequirePermission.staticFields({ permission: 'OMBUL_UPDATE' }),
+    updateParagraphContent: RequirePermission.staticFields({ permission: 'OMBUL_UPDATE' }),
 } as const

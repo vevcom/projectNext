@@ -5,6 +5,7 @@ import { defineOperation } from '@/services/serviceOperation'
 import { ServerError } from '@/services/error'
 import { implementStore } from '@/lib/store/implementStore'
 import { implementSpecialCollection } from '@/services/images/subservice/special/implement'
+import { cmsParagraphOperations } from '@/cms/paragraphs/operations'
 import { notificationOperations } from '@/services/notifications/operations'
 import { z } from 'zod'
 
@@ -55,7 +56,8 @@ const read = defineOperation({
                 }
             },
             include: {
-                coverImage: true
+                coverImage: true,
+                paragraph: true,
             }
         })
 })
@@ -69,7 +71,8 @@ const readAll = defineOperation({
                 { issueNumber: 'desc' },
             ],
             include: {
-                coverImage: true
+                coverImage: true,
+                paragraph: true,
             }
         })
 })
@@ -150,6 +153,9 @@ const destroy = defineOperation({
         await ombulCoverImageOperations.destroyImage.internalCall({
             params: { imageId: ombul.coverImageId }
         })
+        await cmsParagraphOperations.destroy.internalCall({
+            params: { paragraphId: ombul.paragraphId }
+        })
 
         return ombul
     }
@@ -190,6 +196,13 @@ const create = defineOperation({
                 }
             })
 
+            // The paragraph is always created empty - it is filled in afterwards through
+            // ombulOperations.updateParagraphContent.
+            const paragraph = await cmsParagraphOperations.create.internalCall({
+                prisma: tx,
+                data: {}
+            })
+
             const ombul = await tx.ombul.create({
                 data: {
                     ...restOfConf,
@@ -198,6 +211,11 @@ const create = defineOperation({
                     coverImage: {
                         connect: {
                             id: coverImage.id
+                        }
+                    },
+                    paragraph: {
+                        connect: {
+                            id: paragraph.id
                         }
                     },
                     fsLocation,
@@ -231,7 +249,8 @@ const update = defineOperation({
             },
             data,
             include: {
-                coverImage: true
+                coverImage: true,
+                paragraph: true,
             }
         })
 })
@@ -262,7 +281,8 @@ const updateFile = defineOperation({
                 fsLocation
             },
             include: {
-                coverImage: true
+                coverImage: true,
+                paragraph: true,
             }
         })
 
@@ -273,12 +293,25 @@ const updateFile = defineOperation({
     }
 })
 
+const updateParagraphContent = cmsParagraphOperations.updateContent.implement({
+    implementationParamsSchema: z.object({
+        ombulId: z.number()
+    }),
+    authorizer: () => ombulAuth.updateParagraphContent.dynamicFields({}),
+    ownershipCheck: async ({ implementationParams, params }) =>
+        (await read({
+            params: { id: implementationParams.ombulId },
+            bypassAuth: true
+        })).paragraph.id === params.paragraphId
+})
+
 export const ombulOperations = {
     imagePanel: ombulCoverImagePanelOperations,
     read,
     readAll,
     readLatest,
     updateCoverImage,
+    updateParagraphContent,
     destroy,
     create,
     update,

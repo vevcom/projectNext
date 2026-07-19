@@ -2,36 +2,43 @@
 
 import styles from './OmbulAdmin.module.scss'
 import Form from '@/components/Form/Form'
-import { updateOmbulAction, updateOmbulFileAction, destroyOmbulAction } from '@/services/ombul/actions'
+import Textarea from '@/components/UI/Textarea'
+import Image from '@/components/Image/Image'
+import ImageUploader from '@/components/Image/ImageUploader'
+import {
+    updateOmbulAction,
+    updateOmbulFileAction,
+    destroyOmbulAction,
+    updateOmbulCoverImageAction
+} from '@/services/ombul/actions'
 import NumberInput from '@/components/UI/NumberInput'
 import FileInput from '@/components/UI/FileInput'
 import useEditMode from '@/hooks/useEditMode'
+import useAuthorizer from '@/hooks/useAuthorizer'
 import { ombulAuth } from '@/services/ombul/auth'
 import { configureAction } from '@/services/configureAction'
 import { useRouter } from 'next/navigation'
-import type { ReactNode } from 'react'
 import type { ExpandedOmbul } from '@/services/ombul/types'
 
 type PropTypes = {
     ombul: ExpandedOmbul
-    children: ReactNode
 }
 
 /**
- * The admin panel for the ombul to change cover image anf update year, number and file.
+ * The admin panel for the ombul to change cover image and update year, number, description and file.
  * The component is only shown if editmode is enabled.
  * @param ombul - The obul (expanded) to be edited
- * @param children - The cover image editor. Rendered on server side.
  * @returns
  */
-export default function OmbulAdmin({
-    ombul,
-    children,
-}: PropTypes) {
+export default function OmbulAdmin({ ombul }: PropTypes) {
     const { push, refresh } = useRouter()
     const canUpdate = useEditMode({
         authorizer: ombulAuth.update.dynamicFields({})
     })
+    const canUpdateCoverAuthResult = useAuthorizer({
+        authorizer: ombulAuth.updateCoverImage.dynamicFields({})
+    })
+    const canUpdateCover = useEditMode({ authResult: canUpdateCoverAuthResult })
     const canDestroy = useEditMode({
         authorizer: ombulAuth.destroy.dynamicFields({})
     })
@@ -55,7 +62,7 @@ export default function OmbulAdmin({
         push('/ombul')
         refresh()
     }
-    if (!canUpdate && !canDestroy) return null
+    if (!canUpdate && !canDestroy && !canUpdateCover) return null
 
     return (
         <div className={styles.OmbulAdmin}>
@@ -78,6 +85,11 @@ export default function OmbulAdmin({
                                     name="issueNumber"
                                     label="Nummer"
                                     defaultValue={ombul.issueNumber}
+                                />
+                                <Textarea
+                                    name="description"
+                                    label="Beskrivelse"
+                                    defaultValue={ombul.description ?? ''}
                                 />
                             </Form>
                             <Form
@@ -110,9 +122,17 @@ export default function OmbulAdmin({
             </div>
             <div className={styles.right}>
                 {
-                    canUpdate && (
+                    canUpdateCover && (
                         <div className={styles.coverImage}>
-                            {children}
+                            <ImageUploader
+                                popUpKey={`EditOmbulCover${ombul.id}`}
+                                canEdit={canUpdateCoverAuthResult}
+                                uploadImageAction={configureAction(
+                                    updateOmbulCoverImageAction,
+                                    { params: { ombulId: ombul.id } }
+                                )}
+                            />
+                            <Image image={ombul.coverImage} width={400} />
                         </div>
                     )
                 }
