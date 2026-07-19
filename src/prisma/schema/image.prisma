@@ -38,6 +38,7 @@ model Image {
   user                    User?
   flair                   Flair?
   committee               Committee?
+  ombul                   Ombul?
 }
 
 model License {

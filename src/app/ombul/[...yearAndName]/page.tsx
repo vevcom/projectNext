@@ -1,11 +1,12 @@
 import styles from './page.module.scss'
 import ChangeName from './ChangeName'
 import OmbulAdmin from './OmbulAdmin'
-import { readOmbulAction, updateOmbulAction, updateOmbulCmsCoverImageAction } from '@/services/ombul/actions'
+import { readOmbulAction, updateOmbulAction, updateOmbulCoverImageAction } from '@/services/ombul/actions'
 import PdfDocument from '@/components/PdfDocument/PdfDocument'
 import SlideInOnView from '@/components/SlideInOnView/SlideInOnView'
 import EditableTextField from '@/components/EditableTextField/EditableTextField'
-import CmsImage from '@/components/Cms/CmsImage/CmsImage'
+import Image from '@/components/Image/Image'
+import ImageUploader from '@/components/Image/ImageUploader'
 import { ServerSession } from '@/auth/session/ServerSession'
 import { configureAction } from '@/services/configureAction'
 import { ombulAuth } from '@/services/ombul/auth'
@@ -35,7 +36,7 @@ export default async function Ombul({ params }: PropTypes) {
 
     const session = await ServerSession.fromNextAuth()
     const canUpdate = ombulAuth.update.dynamicFields({}).auth(session)
-    const canUpdateCmsCover = ombulAuth.updateCmsCoverImage.dynamicFields({}).auth(session).toJsObject()
+    const canUpdateCover = ombulAuth.updateCoverImage.dynamicFields({}).auth(session).toJsObject()
 
     const changeDescription = configureAction(
         updateOmbulAction,
@@ -79,17 +80,15 @@ export default async function Ombul({ params }: PropTypes) {
             </div>
             <div className={styles.admin}>
                 <OmbulAdmin ombul={ombul}>
-                    <CmsImage
-                        canEdit={canUpdateCmsCover}
-                        cmsImage={ombul.coverImage}
-                        width={400}
-                        updateCmsImageAction={
-                            configureAction(
-                                updateOmbulCmsCoverImageAction,
-                                { implementationParams: { ombulId: ombul.id } }
-                            )
-                        }
+                    <ImageUploader
+                        popUpKey={`EditOmbulCover${ombul.id}`}
+                        canEdit={canUpdateCover}
+                        uploadImageAction={configureAction(
+                            updateOmbulCoverImageAction,
+                            { params: { ombulId: ombul.id } }
+                        )}
                     />
+                    <Image image={ombul.coverImage} width={400} />
                 </OmbulAdmin>
             </div>
         </div>

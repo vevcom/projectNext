@@ -1,9 +1,7 @@
-import type { CmsImage, Image, Ombul } from '@/prisma-generated-pn-types'
+import type { Image, Ombul } from '@/prisma-generated-pn-types'
 
 export type ExpandedOmbul = Ombul & {
-    coverImage: CmsImage & {
-        image: Image | null
-    }
+    coverImage: Image
 }
 
 type OptionalFields = 'year' | 'issueNumber'

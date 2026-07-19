@@ -19,7 +19,6 @@ model CmsImage {
   articleSection       ArticleSection?  @relation(fields: [articleSectionId], references: [id], onDelete: Cascade)
   articleSectionId     Int?             @unique
   coverImageforArticle Article?
-  Ombul                Ombul?
   special              SpecialCmsImage? @unique
   screenPage           ScreenPage?
   school               School?

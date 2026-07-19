@@ -2,17 +2,32 @@ import '@pn-server-only'
 import { ombulAuth } from './auth'
 import { ombulSchemas } from './schemas'
 import { defineOperation } from '@/services/serviceOperation'
-import { cmsImageOperations } from '@/cms/images/operations'
 import { ServerError } from '@/services/error'
 import { implementStore } from '@/lib/store/implementStore'
-import { readSpecialImageCollection } from '@/services/images/collections/read'
-import { imageOperations } from '@/services/images/operations'
+import { implementSpecialCollection } from '@/services/images/subservice/special/implement'
 import { notificationOperations } from '@/services/notifications/operations'
 import { z } from 'zod'
 
 const ombulStore = implementStore({
     staticStorePrefix: 'ombul',
     allowedExtentions: ['pdf'],
+})
+
+/**
+ * Ombul covers live in the OMBULCOVERS special collection, one image per ombul issue - unlike
+ * committee logos there is no default/fallback, since every ombul is created together with its
+ * own cover upload. The cover is destroyed alongside the ombul, or when replaced.
+ */
+const {
+    internalOperations: ombulCoverImageOperations,
+    specialCollectionPanelOperations: ombulCoverImagePanelOperations
+} = implementSpecialCollection({
+    special: 'OMBULCOVERS',
+    imagePanelAuther: ombulAuth.imagePanel.dynamicFields({}),
+    config: {
+        name: 'Ombulforsider',
+        description: 'Bilder brukt som forsider for ombul. Hvert bilde i denne samlingen tilhører nøyaktig én ombul.',
+    }
 })
 
 const read = defineOperation({
@@ -40,11 +55,7 @@ const read = defineOperation({
                 }
             },
             include: {
-                coverImage: {
-                    include: {
-                        image: true
-                    }
-                }
+                coverImage: true
             }
         })
 })
@@ -58,11 +69,7 @@ const readAll = defineOperation({
                 { issueNumber: 'desc' },
             ],
             include: {
-                coverImage: {
-                    include: {
-                        image: true
-                    }
-                }
+                coverImage: true
             }
         })
 })
@@ -81,19 +88,41 @@ const readLatest = defineOperation({
     }
 })
 
-const updateCmsCoverImage = cmsImageOperations.update.implement({
-    implementationParamsSchema: z.object({
+const updateCoverImage = defineOperation({
+    authorizer: () => ombulAuth.updateCoverImage.dynamicFields({}),
+    paramsSchema: z.object({
         ombulId: z.number()
     }),
-    authorizer: () => ombulAuth.updateCmsCoverImage.dynamicFields({}),
-    ownershipCheck: async ({ params, implementationParams }) => {
-        const ombul = await read({ params: { id: implementationParams.ombulId } })
-        return ombul.coverImage.id === params.cmsImageId
-    }
+    dataSchema: ombulSchemas.updateCoverImage,
+    opensTransaction: true,
+    operation: ({ prisma, params, data }) =>
+        prisma.$transaction(async tx => {
+            const existingOmbul = await tx.ombul.findUniqueOrThrow({
+                where: { id: params.ombulId },
+            })
+
+            const newImage = await ombulCoverImageOperations.uploadImage.internalCall({ prisma: tx, data })
+
+            await tx.ombul.update({
+                where: { id: existingOmbul.id },
+                data: {
+                    coverImage: {
+                        connect: { id: newImage.id }
+                    }
+                }
+            })
+
+            await ombulCoverImageOperations.destroyImage.internalCall({
+                prisma: tx,
+                params: { imageId: existingOmbul.coverImageId }
+            })
+
+            return newImage
+        })
 })
 
 /**
- * A function to destroy an ombul, also deletes the file from the store, and the cmsImage on cascade
+ * A function to destroy an ombul, also deletes the file from the store, and the cover image
  * @param id - The id of the ombul to destroy
  * @returns
  */
@@ -106,13 +135,6 @@ const destroy = defineOperation({
         const ombul = await prisma.ombul.findUnique({
             where: {
                 id: params.id
-            },
-            include: {
-                coverImage: {
-                    include: {
-                        image: true
-                    }
-                }
             }
         })
         if (!ombul) throw new ServerError('NOT FOUND', 'Ombul ikke funnet.')
@@ -125,6 +147,10 @@ const destroy = defineOperation({
             }
         })
 
+        await ombulCoverImageOperations.destroyImage.internalCall({
+            params: { imageId: ombul.coverImageId }
+        })
+
         return ombul
     }
 })
@@ -132,71 +158,64 @@ const destroy = defineOperation({
 const create = defineOperation({
     authorizer: () => ombulAuth.create.dynamicFields({}),
     dataSchema: ombulSchemas.create,
-    operation: async ({ data, prisma }) => {
-        // Get the latest issue number if not provided
-        const { ombulCoverImage, ombulFile, year, issueNumber: givenIssueNumber, ...restOfConf } = data
+    opensTransaction: true,
+    operation: ({ data, prisma }) =>
+        prisma.$transaction(async tx => {
+            // Get the latest issue number if not provided
+            const { ombulCoverImage, ombulFile, year, issueNumber: givenIssueNumber, ...restOfConf } = data
 
-        let latestIssueNumber = 1
-        if (!givenIssueNumber) {
-            const ombul = await prisma.ombul.findFirst({
-                where: {
-                    year
-                },
-                orderBy: {
-                    issueNumber: 'desc'
+            let latestIssueNumber = 1
+            if (!givenIssueNumber) {
+                const ombul = await tx.ombul.findFirst({
+                    where: {
+                        year
+                    },
+                    orderBy: {
+                        issueNumber: 'desc'
+                    }
+                })
+                if (ombul) {
+                    latestIssueNumber = ombul.issueNumber + 1
+                }
+            }
+            const issueNumber = givenIssueNumber || latestIssueNumber
+
+            const { fsLocation } = await ombulStore.createFile(ombulFile, ['pdf'])
+
+            const coverImage = await ombulCoverImageOperations.uploadImage.internalCall({
+                prisma: tx,
+                data: {
+                    imageFile: ombulCoverImage,
+                    imageAlt: `Forsiden til ${restOfConf.name}`,
                 }
             })
-            if (ombul) {
-                latestIssueNumber = ombul.issueNumber + 1
-            }
-        }
-        const issueNumber = givenIssueNumber || latestIssueNumber
 
-        const ret = await ombulStore.createFile(ombulFile, ['pdf'])
-        const fsLocation = ret.fsLocation
+            const ombul = await tx.ombul.create({
+                data: {
+                    ...restOfConf,
+                    year,
+                    issueNumber,
+                    coverImage: {
+                        connect: {
+                            id: coverImage.id
+                        }
+                    },
+                    fsLocation,
+                }
+            })
 
-        const ombulCoverCollection = await readSpecialImageCollection('OMBULCOVERS')
-        const coverImage = await imageOperations.create({
-            params: {
-                collectionId: ombulCoverCollection.id,
-            },
-            data: {
-                name: fsLocation,
-                alt: `cover of ${restOfConf.name}`,
-                file: ombulCoverImage,
-            },
-        })
-
-        const cmsCoverImage = await cmsImageOperations.create.internalCall({
-            data: { imageId: coverImage.id },
-        })
-
-        const ombul = await prisma.ombul.create({
-            data: {
-                ...restOfConf,
-                year,
-                issueNumber,
-                coverImage: {
-                    connect: {
-                        id: cmsCoverImage.id
-                    }
+            notificationOperations.createSpecial.internalCall({
+                params: {
+                    special: 'NEW_OMBUL',
                 },
-                fsLocation,
-            }
-        })
+                data: {
+                    title: 'Ny ombul',
+                    message: `Ny ombul er ute! ${ombul.name}`,
+                },
+            })
 
-        notificationOperations.createSpecial.internalCall({
-            params: {
-                special: 'NEW_OMBUL',
-            },
-            data: {
-                title: 'Ny ombul',
-                message: `Ny ombul er ute! ${ombul.name}`,
-            },
+            return ombul
         })
-
-        return ombul
-    }
 })
 
 const update = defineOperation({
@@ -212,11 +231,7 @@ const update = defineOperation({
             },
             data,
             include: {
-                coverImage: {
-                    include: {
-                        image: true
-                    }
-                }
+                coverImage: true
             }
         })
 })
@@ -228,8 +243,7 @@ const updateFile = defineOperation({
         id: z.number()
     }),
     operation: async ({ data, prisma, params }) => {
-        const ret = await createFile(data.ombulFile, ['pdf'])
-        const fsLocation = ret.fsLocation
+        const { fsLocation } = await ombulStore.createFile(data.ombulFile, ['pdf'])
 
         const ombul = await prisma.ombul.findUnique({
             where: {
@@ -248,26 +262,23 @@ const updateFile = defineOperation({
                 fsLocation
             },
             include: {
-                coverImage: {
-                    include: {
-                        image: true
-                    }
-                }
+                coverImage: true
             }
         })
 
         //delete the old file
-        await destroyFile(oldFsLocation)
+        await ombulStore.destroyFile(oldFsLocation)
 
         return ombulUpdated
     }
 })
 
 export const ombulOperations = {
+    imagePanel: ombulCoverImagePanelOperations,
     read,
     readAll,
     readLatest,
-    updateCmsCoverImage,
+    updateCoverImage,
     destroy,
     create,
     update,

@@ -18,10 +18,10 @@ type PropTypes = {
 }
 
 /**
- * The admin panel for the ombul to change cover image (using cms image) anf update year, number and file.
+ * The admin panel for the ombul to change cover image anf update year, number and file.
  * The component is only shown if editmode is enabled.
  * @param ombul - The obul (expanded) to be edited
- * @param children - The cmsimage cover. Rendered on server side.
+ * @param children - The cover image editor. Rendered on server side.
  * @returns
  */
 export default function OmbulAdmin({
