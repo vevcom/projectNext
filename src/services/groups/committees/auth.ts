@@ -13,4 +13,5 @@ export const committeeAuth = {
     updateParagraphContent: RequirePermissionOrGroupAdmin.staticFields({ permission: 'COMMITTEE_UPDATE' }),
     updateLogo: RequirePermissionOrGroupAdmin.staticFields({ permission: 'COMMITTEE_UPDATE' }),
     updateArticle: RequirePermissionOrGroupAdmin.staticFields({ permission: 'COMMITTEE_UPDATE' }),
-}
+    imagePanel: RequirePermission.staticFields({ permission: 'COMMITTEE_UPDATE' }),
+} as const

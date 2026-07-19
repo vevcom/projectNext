@@ -1,6 +1,7 @@
 import styles from './page.module.scss'
 import getCommittee from '@/app/committees/[shortName]/getCommittee'
-import CmsImage from '@/components/Cms/CmsImage/CmsImage'
+import Image from '@/components/Image/Image'
+import ImageUploader from '@/components/Image/ImageUploader'
 import { configureAction } from '@/services/configureAction'
 import { updateCommitteeLogoAction } from '@/services/groups/committees/actions'
 import { committeeAuth } from '@/services/groups/committees/auth'
@@ -17,17 +18,15 @@ export default async function ComitteeAdmin({ params }: PropTypes) {
     return (
         <div className={styles.wrapper}>
             <h2>Admin</h2>
-            <CmsImage
+            <ImageUploader
+                popUpKey={`EditCommitteeLogo${committee.id}`}
                 canEdit={canEditLogo}
-                cmsImage={committee.logoImage}
-                width={300}
-                updateCmsImageAction={
-                    configureAction(
-                        updateCommitteeLogoAction,
-                        { implementationParams: { shortName: committee.shortName } }
-                    )
-                }
+                uploadImageAction={configureAction(
+                    updateCommitteeLogoAction,
+                    { params: { shortName: committee.shortName } }
+                )}
             />
+            <Image image={committee.logoImage} width={300} />
         </div>
     )
 }

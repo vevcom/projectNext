@@ -37,6 +37,7 @@ model Image {
   standardImage           StandardImage?   @unique
   user                    User?
   flair                   Flair?
+  committee               Committee?
 }
 
 model License {
