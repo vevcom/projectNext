@@ -24,6 +24,7 @@ import seedPermissions from './seedPermissions'
 import { seedArticleCategories } from './standardContent/seedArticleCategories'
 import { seedImages } from './standardContent/seedImages'
 import { seedFlairs } from './standardContent/seedFlairs'
+import { seedNews } from './standardContent/seedNews'
 import seedInterestGroups from './seedInterestGroups'
 import { withServiceContext } from '@/services/serviceOperation'
 import { Session } from '@/auth/session/Session'
@@ -46,6 +47,7 @@ export default async function seed(
         await seedOrders()
         await seedImages()
         await seedArticleCategories()
+        await seedNews()
         await seedMail(prisma)
         await seedNotificationChannels(prisma)
         await seedStudyProgramme(prisma)

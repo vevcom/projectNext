@@ -1,36 +1,10 @@
-import { getImageForCmsImageRelation } from './seedImages'
 import { articleCategoryOperations } from '@/services/articleCategories/operations'
 import { defineSeedOperation } from '@/seeder/src/defineSeedOperation'
 import { upsert } from '@/seeder/src/upsert'
-import { fileURLToPath } from 'url'
-import { join } from 'path'
-import { readFileSync } from 'fs'
-import type { ImagesAvailablieForCms } from './seedImages'
+import { buildArticleFromConfig } from '@/seeder/src/buildArticleFromConfig'
 import type { PrismaClient } from '@/prisma-generated-pn-client'
 import type { Data } from '@/services/serviceOperation'
-
-const CMS_PARAGRAPHS_DIR = fileURLToPath(new URL('../../cms_paragraphs/', import.meta.url))
-
-type SeedCmsImageConfig = { image: ImagesAvailablieForCms } &
-    Required<Pick<Data<typeof articleCategoryOperations.updateArticle.coverImage>, 'imageSize'>>
-
-type SeedCmsParagraphConfig = {
-    file: string,
-}
-
-type SeedCmsLinkConfig =
-    Required<Data<typeof articleCategoryOperations.updateArticle.articleSections.cmsLink>>
-
-type SeedArticleSectionConfig = {
-    cmsParagraph?: SeedCmsParagraphConfig,
-    cmsImage?: SeedCmsImageConfig,
-    cmsLink?: SeedCmsLinkConfig,
-}
-
-type SeedArticleConfig = Required<Data<typeof articleCategoryOperations.updateArticle.update>> & {
-    coverImage: SeedCmsImageConfig,
-    articleSections: SeedArticleSectionConfig[],
-}
+import type { SeedArticleConfig } from '@/seeder/src/buildArticleFromConfig'
 
 type SeedArticleCategoryConfig = Data<typeof articleCategoryOperations.create> & {
     articles: SeedArticleConfig[],
@@ -203,67 +177,40 @@ async function createArticleInCategory(
         params: { id: articleCategoryId }
     })
 
-    await articleCategoryOperations.updateArticle.update({
-        implementationParams: { articleCategoryId },
-        params: { articleId: createdArticle.id },
-        data: { name: article.name }
-    })
-
-    const coverImage = await getImageForCmsImageRelation(article.coverImage.image, prisma)
-    await articleCategoryOperations.updateArticle.coverImage({
-        implementationParams: { articleCategoryId },
-        params: { cmsImageId: createdArticle.coverImage.id },
-        data: { imageId: coverImage.id, imageSize: article.coverImage.imageSize }
-    })
-
-    for (const section of article.articleSections) {
-        const updatedArticle = await articleCategoryOperations.updateArticle.addSection({
+    await buildArticleFromConfig({
+        updateName: data => articleCategoryOperations.updateArticle.update({
             implementationParams: { articleCategoryId },
             params: { articleId: createdArticle.id },
-            data: {
-                includeParts: {
-                    cmsParagraph: Boolean(section.cmsParagraph),
-                    cmsImage: Boolean(section.cmsImage),
-                    cmsLink: Boolean(section.cmsLink),
-                }
-            }
-        })
-
-        // We need to know the ids of the parts of the newest section.
-        // The newest section is the one with the highest order.
-        const newSection = updatedArticle.articleSections.reduce(
-            (highestOrderSection, candidateSection) => (
-                candidateSection.order > highestOrderSection.order ? candidateSection : highestOrderSection
-            )
-        )
-
-        if (section.cmsParagraph && newSection.cmsParagraph) {
-            await articleCategoryOperations.updateArticle.articleSections.cmsParagraph({
-                implementationParams: { articleCategoryId },
-                params: { paragraphId: newSection.cmsParagraph.id },
-                data: {
-                    markdown: readFileSync(join(CMS_PARAGRAPHS_DIR, section.cmsParagraph.file), 'utf-8')
-                }
-            })
-        }
-
-        if (section.cmsImage && newSection.cmsImage) {
-            const sectionImage = await getImageForCmsImageRelation(section.cmsImage.image, prisma)
-            await articleCategoryOperations.updateArticle.articleSections.cmsImage({
-                implementationParams: { articleCategoryId },
-                params: { cmsImageId: newSection.cmsImage.id },
-                data: { imageId: sectionImage.id, imageSize: section.cmsImage.imageSize }
-            })
-        }
-
-        if (section.cmsLink && newSection.cmsLink) {
-            await articleCategoryOperations.updateArticle.articleSections.cmsLink({
-                implementationParams: { articleCategoryId },
-                params: { linkId: newSection.cmsLink.id },
-                data: { url: section.cmsLink.url }
-            })
-        }
-    }
+            data
+        }),
+        updateCoverImage: data => articleCategoryOperations.updateArticle.coverImage({
+            implementationParams: { articleCategoryId },
+            params: { cmsImageId: createdArticle.coverImage.id },
+            data
+        }),
+        addSection: data => articleCategoryOperations.updateArticle.addSection({
+            implementationParams: { articleCategoryId },
+            params: { articleId: createdArticle.id },
+            data
+        }),
+        updateSectionParagraph: (paragraphId, data) => articleCategoryOperations.updateArticle.articleSections.cmsParagraph({
+            implementationParams: { articleCategoryId },
+            params: { paragraphId },
+            data
+        }),
+        updateSectionImage: (cmsImageId, data) => articleCategoryOperations.updateArticle.articleSections.cmsImage({
+            implementationParams: { articleCategoryId },
+            params: { cmsImageId },
+            data
+        }),
+        updateSectionLink: (linkId, data) => articleCategoryOperations.updateArticle.articleSections.cmsLink({
+            implementationParams: { articleCategoryId },
+            params: { linkId },
+            data
+        }),
+        article,
+        prisma,
+    })
 
     return createdArticle
 }
