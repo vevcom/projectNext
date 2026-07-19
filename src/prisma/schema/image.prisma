@@ -68,10 +68,10 @@ model ImageCollection {
   createdAt    DateTime           @default(now())
   updatedAt    DateTime           @updatedAt
 
-  visibilityAdmin   Visibility @relation(name: "ImageCollectionAdminVisibility", fields: [visibilityAdminId], references: [id], onDelete: Restrict)
-  visibilityAdminId Int        @unique
-  visibilityRegular    Visibility @relation(name: "ImageCollectionReadVisibility", fields: [visibilityRegularId], references: [id], onDelete: Restrict)
-  visibilityRegularId  Int        @unique
+  visibilityAdmin     Visibility @relation(name: "ImageCollectionAdminVisibility", fields: [visibilityAdminId], references: [id], onDelete: Restrict)
+  visibilityAdminId   Int        @unique
+  visibilityRegular   Visibility @relation(name: "ImageCollectionReadVisibility", fields: [visibilityRegularId], references: [id], onDelete: Restrict)
+  visibilityRegularId Int        @unique
 }
 
 enum ImageSize {

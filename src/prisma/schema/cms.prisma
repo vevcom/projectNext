@@ -127,25 +127,3 @@ model Article {
   @@unique([name, id])
   @@unique([articleCategoryId, name])
 }
-
-model NewsArticle {
-  id          Int      @id @default(autoincrement())
-  description String?
-  endDateTime DateTime //when the article is no longer considered current
-  article     Article  @relation(fields: [articleId, articleName], references: [id, name], onDelete: Restrict)
-  articleId   Int      @unique
-  articleName String
-
-  @@unique([articleId, articleName])
-}
-
-model ArticleCategory {
-  id          Int       @id @default(autoincrement())
-  name        String    @unique
-  description String?
-  articles    Article[]
-  createdAt   DateTime  @default(now()) @map("created_at")
-  updatedAt   DateTime  @updatedAt @map("updated_at")
-
-  @@unique([id, name])
-}
