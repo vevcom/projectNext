@@ -9,10 +9,15 @@ import { zfd } from 'zod-form-data'
 import { z } from 'zod'
 import { File } from 'node:buffer'
 
+// ts does not like doing .includes(x) if x does not neccessarily have the same type as the
+// array elements, so we need to make sure that the array is of type readonly string[] instead
+// the narrower union type array.
+const extentionsAsStringArray: readonly string[] = allowedExtensions
+
 export const imageFileSchema = z.instanceof(File).refine(
     file => file.size < maxImageFileSizeBytes, `File size must be less than ${maxImageFileSizeMb}mb`
 ).refine(
-    file => allowedExtensions.includes(file.type.split('/')[1]),
+    file => extentionsAsStringArray.includes(file.type.split('/')[1]),
     `File type must be one of ${allowedExtensions.join(', ')}`
 )
 
@@ -28,7 +33,7 @@ export const baseSchema = z.object({
         files => files.every(file => file.size < maxImageFileSizeBytes),
         `Alle filer må være mindre enn ${maxImageFileSizeMb}mb`
     )).refine(
-        files => files.every(file => allowedExtensions.includes(file.type.split('/')[1])),
+        files => files.every(file => (allowedExtensions as readonly string[]).includes(file.type.split('/')[1])),
         `Filtypen må være en av ${allowedExtensions.join(', ')}`
     ).refine(
         files => files.length <= maxImageCountInOneBatch && files.length > 0,

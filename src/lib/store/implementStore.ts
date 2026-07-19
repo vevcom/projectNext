@@ -5,14 +5,11 @@ import { mkdir, unlink, writeFile } from 'fs/promises'
 import { join } from 'path'
 import type { File } from 'buffer'
 
-type StoreConfig = {
-    staticStorePrefix: string,
-    allowedExtentions: string[]
-}
-
 /**
  * This implements the store and lets a service use the store. The staticStorePrefix is where the service will store
- * its files in the store volume. The allowedExtentions is used to validate the file type before storing it.
+ * its files in the store volume. The allowedExtentions is used to validate the file type before storing it, and is
+ * captured as a literal type so createFile's own allowedExt can be typechecked as a subset of it - createFile can be
+ * stricter than the implementation about which extensions it allows, but never wider.
  *
  * The implementation exposes two functions, createFile and destroyFile, that the service can use to create and
  * destroy files in the store.
@@ -21,10 +18,13 @@ type StoreConfig = {
  * It returns the fsLocation and ext of the stored file.
  * destroyFile takes the fsLocation of a file and deletes it from the store volume.
  */
-export function implementStore(config: StoreConfig) {
+export function implementStore<const AllowedExt extends readonly string[]>(config: {
+    staticStorePrefix: string,
+    allowedExtentions: AllowedExt
+}) {
     async function createFile(
         file: File,
-        allowedExt: string[] | undefined = config.allowedExtentions,
+        allowedExt: readonly AllowedExt[number][] = config.allowedExtentions,
         prosessor: (buffer: Buffer) => Promise<Buffer> = async (buffer) => buffer,
         dynamicStorePrefix?: string,
     ): Promise<{
@@ -34,7 +34,8 @@ export function implementStore(config: StoreConfig) {
         const arrBuffer = await file.arrayBuffer()
         const buffer = Buffer.from(arrBuffer)
         const ext = file.type.split('/')[1]
-        if (allowedExt && !allowedExt.includes(ext)) {
+
+        if (!allowedExt.includes(ext)) {
             throw new ServerError('BAD PARAMETERS', [
                 {
                     path: ['file'],

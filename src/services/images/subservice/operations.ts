@@ -11,9 +11,11 @@ import { File } from 'node:buffer'
 import type { Prisma, StandardImage } from '@/prisma-generated-pn-types'
 import type { z } from 'zod'
 
+const imageStoreAllowedExtensions = [...allowedExtensions, 'avif'] as const
+
 const imageStore = implementStore({
     staticStorePrefix: 'images',
-    allowedExtentions: [...allowedExtensions, 'avif'],
+    allowedExtentions: imageStoreAllowedExtensions,
 })
 
 export const imageOperations = {
@@ -202,7 +204,11 @@ export const imageOperations = {
  * @param size - The size to resize the image to
  * @returns
  */
-async function createOneInStore(file: File, allowedExt: string[], size: number) {
+async function createOneInStore(
+    file: File,
+    allowedExt: readonly (typeof imageStoreAllowedExtensions)[number][],
+    size: number
+) {
     const ret = await imageStore.createFile(file, allowedExt, async (buffer) => await sharp(buffer).resize(size, size, {
         fit: sharp.fit.inside,
         withoutEnlargement: true

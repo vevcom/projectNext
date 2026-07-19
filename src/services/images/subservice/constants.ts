@@ -17,4 +17,4 @@ export const avifConvertionOptions = {
     chromaSubsampling: '4:2:0',
 } as const
 
-export const allowedExtensions: readonly string[] = ['png', 'jpg', 'jpeg', 'heic', 'avif', 'webp']
+export const allowedExtensions = ['png', 'jpg', 'jpeg', 'heic', 'avif', 'webp'] as const
