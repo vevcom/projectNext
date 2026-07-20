@@ -4,7 +4,6 @@ import { logoIncluder } from './constants'
 import { companySchemas } from './schemas'
 import { defineOperation } from '@/services/serviceOperation'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
-import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { cmsImageOperations } from '@/cms/images/operations'
 import { z } from 'zod'
 
@@ -24,15 +23,7 @@ export const companyOperations = {
         }
     }),
     readPage: defineOperation({
-        paramsSchema: readPageInputSchemaObject(
-            z.number(),
-            z.object({
-                id: z.number(),
-            }),
-            z.object({
-                name: z.string().optional(),
-            }),
-        ),
+        paramsSchema: companySchemas.readPage,
         authorizer: () => companyAuth.readPage.dynamicFields({}),
         operation: async ({ prisma, params }) => await prisma.company.findMany({
             ...cursorPageingSelection(params.paging.page),

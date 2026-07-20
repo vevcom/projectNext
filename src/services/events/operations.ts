@@ -6,7 +6,6 @@ import { notificationOperations } from '@/services/notifications/operations'
 import { getOsloTime } from '@/lib/dates/getOsloTime'
 import { ServerError } from '@/services/error'
 import { defineOperation } from '@/services/serviceOperation'
-import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { displayDate } from '@/lib/dates/displayDate'
 import { cmsImageOperations } from '@/cms/images/operations'
@@ -185,16 +184,7 @@ export const eventOperations = {
         }
     }),
     readManyArchivedPage: defineOperation({
-        paramsSchema: readPageInputSchemaObject(
-            z.number(),
-            z.object({
-                id: z.number(),
-            }),
-            z.object({
-                name: z.string().optional(),
-                tags: z.array(z.string()).nullable(),
-            }),
-        ), // Converted from ReadPageInput<number, EventArchiveCursor, EventArchiveDetails>
+        paramsSchema: eventSchemas.readManyArchivedPage,
         authorizer: () => eventAuth.readManyArchivedPage.dynamicFields({}),
         operation: async ({ prisma, params }): Promise<EventExpanded[]> => {
             const events = await prisma.event.findMany({

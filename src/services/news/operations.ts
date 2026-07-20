@@ -4,7 +4,6 @@ import { defaultNewsArticleOldCutoff, newsArticleRealtionsIncluder, simpleNewsAr
 import { newsAuth } from './auth'
 import { articleOperations } from '@/cms/articles/operations'
 import { defineOperation } from '@/services/serviceOperation'
-import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { ServerError } from '@/services/error'
 import { implementUpdateArticleOperations } from '@/cms/articles/implement'
@@ -89,13 +88,7 @@ export const newsOperations = {
         }
     }),
     readOldPage: defineOperation({
-        paramsSchema: readPageInputSchemaObject(
-            z.number(),
-            z.object({
-                id: z.number(),
-            }),
-            z.undefined()
-        ), // Converted from ReadPageInput<number, EventArchiveCursor, EventArchiveDetails>
+        paramsSchema: newsSchemas.readOldPage,
         authorizer: () => newsAuth.readOldPage.dynamicFields({}),
         operation: async ({ prisma, params }) => {
             const news = await prisma.newsArticle.findMany({

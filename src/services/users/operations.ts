@@ -16,7 +16,6 @@ import { updateUserOmegaMembershipGroup } from '@/services/groups/omegaMembershi
 import { sendUserInvitationEmail } from '@/lib/email/systemMail/userInvitivation'
 import { readOmegaMembershipGroup } from '@/services/groups/omegaMembershipGroups/read'
 import { defineOperation } from '@/services/serviceOperation'
-import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { ServerError } from '@/services/error'
 import { getMembershipFilter } from '@/auth/getMembershipFilter'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
@@ -188,23 +187,7 @@ export const userOperations = {
     }),
 
     readPage: defineOperation({
-        paramsSchema: readPageInputSchemaObject(
-            z.number(),
-            z.object({
-                id: z.number()
-            }),
-            z.object({
-                partOfName: z.string(),
-                groups: z.array(z.object({
-                    groupOrder: z.union([z.number(), z.literal('ACTIVE')]),
-                    groupId: z.number()
-                })),
-                selectedGroup: z.object({
-                    groupOrder: z.union([z.number(), z.literal('ACTIVE')]),
-                    groupId: z.number()
-                }).nullable().optional()
-            })
-        ),
+        paramsSchema: userSchemas.readPage,
         authorizer: () => userAuth.readPage.dynamicFields({}),
         operation: async ({ prisma, params }): Promise<UserPagingReturn[]> => {
             const { page, details } = params.paging

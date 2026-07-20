@@ -4,13 +4,11 @@ import { jobAdSchemas } from './schemas'
 import { articleAndCompanyIncluder, simpleArticleAndCompanyIncluder } from './constants'
 import { logoIncluder } from '@/services/career/companies/constants'
 import { defineOperation } from '@/services/serviceOperation'
-import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { articleOperations } from '@/cms/articles/operations'
 import { implementUpdateArticleOperations } from '@/cms/articles/implement'
 import { z } from 'zod'
 import type { ExpandedJobAd, SimpleJobAd } from './types'
-import { JobType } from '@/prisma-generated-pn-types'
 
 const read = defineOperation({
     paramsSchema: z.object({
@@ -90,16 +88,7 @@ export const jobAdOperations = {
      * @param paging - the page to read, includes details to filter by name (articleName) and the type.
      */
     readInactivePage: defineOperation({
-        paramsSchema: readPageInputSchemaObject(
-            z.number(),
-            z.object({
-                id: z.number(),
-            }),
-            z.object({
-                name: z.string().nullable(),
-                type: z.nativeEnum(JobType).nullable(),
-            }),
-        ),
+        paramsSchema: jobAdSchemas.readInactivePage,
         authorizer: () => jobAdAuth.readInactivePage.dynamicFields({}),
         operation: async ({ prisma, params }): Promise<SimpleJobAd[]> => {
             const jobAds = await prisma.jobAd.findMany({

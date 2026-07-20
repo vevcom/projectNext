@@ -5,11 +5,10 @@ import { visibilityOperations } from '@/services/visibility/operations'
 import { implementDoubleLevelVisibilityOperations } from '@/services/visibility/implement'
 import { defineOperation, type PrismaPossibleTransaction } from '@/services/serviceOperation'
 import { imageOperations, uniqueCollectionWhere } from '@/services/images/subservice/operations'
-import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { standardImageCollectionOperations } from '@/services/images/standard/operations'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
-import { z } from 'zod'
 import type { Image, Prisma } from '@/prisma-generated-pn-types'
+import type { z } from 'zod'
 
 const visibility = implementDoubleLevelVisibilityOperations({
     implementationParamsSchema: dynamicImageSchemas.paramsSchemaCollection,
@@ -59,13 +58,7 @@ const readCollection = defineOperation({
 })
 
 const readCollectionPage = defineOperation({
-    paramsSchema: readPageInputSchemaObject(
-        z.number(),
-        z.object({
-            id: z.number()
-        }),
-        z.undefined()
-    ),
+    paramsSchema: dynamicImageSchemas.readCollectionPage,
     authorizer: async () => dynamicImageAuth.readCollectionPage.dynamicFields({}),
     operation: async ({ prisma, params }, prismaWhereFilter) => {
         const collections = await prisma.imageCollection.findMany({
