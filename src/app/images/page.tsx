@@ -4,22 +4,26 @@ import ImageCollectionList from '@/components/Image/Collection/ImageCollectionLi
 import { ImageCollectionPagingProvider } from '@/contexts/paging/ImageCollectionPaging'
 import CollectionCard from '@/components/Image/Collection/CollectionCard'
 import { ServerSession } from '@/auth/session/ServerSession'
-import { readImageCollectionsPageAction } from '@/services/images/collections/actions'
+import { dynamicImageAuth } from '@/services/images/dynamic/auth'
+import { readImageCollectionsPageAction } from '@/services/images/dynamic/actions'
 import type { PageSizeImageCollection } from '@/contexts/paging/ImageCollectionPaging'
 
 export default async function Images() {
-    const { user } = await ServerSession.fromNextAuth()
-
-    const isAdmin = user?.username === 'harambe' //TODO: temp
+    const session = await ServerSession.fromNextAuth()
+    const canCreateCollection = dynamicImageAuth.createCollection.dynamicFields({ }).auth(session)
     const pageSize: PageSizeImageCollection = 12
 
     const collectionPage = await readImageCollectionsPageAction({
-        page: {
-            pageSize,
-            page: 0,
-            cursor: null
+        params: {
+            paging: {
+                page: {
+                    pageSize,
+                    page: 0,
+                    cursor: null,
+                },
+                details: undefined,
+            },
         },
-        details: undefined,
     })
 
     if (!collectionPage.success) {
@@ -41,7 +45,7 @@ export default async function Images() {
                 >
                     <span className={styles.header}>
                         <h1>Fotogalleri</h1>
-                        {isAdmin && <MakeNewCollection />}
+                        {canCreateCollection.authorized && <MakeNewCollection />}
                     </span>
                     <ImageCollectionList
                         serverRendered={collections.map(collection => (

@@ -1,7 +1,7 @@
 'use client'
 import { generatePaging } from './PagingGenerator'
-import { readImageCollectionsPageAction } from '@/services/images/collections/actions'
-import type { ImageCollectionCursor, ImageCollectionPageReturn } from '@/services/images/collections/types'
+import { readImageCollectionsPageAction } from '@/services/images/dynamic/actions'
+import type { ImageCollectionCursor, ImageCollectionPageReturn } from '@/services/images/dynamic/types'
 
 export type PageSizeImageCollection = 12
 
@@ -10,7 +10,7 @@ export const [ImageCollectionPagingContext, ImageCollectionPagingProvider] = gen
     ImageCollectionCursor,
     PageSizeImageCollection
 >({
-    fetcher: async ({ paging }) => await readImageCollectionsPageAction(paging),
+    fetcher: async ({ paging }) => await readImageCollectionsPageAction({ params: { paging } }),
     getCursor: ({ lastElement }) => ({ id: lastElement.id }),
 })
 

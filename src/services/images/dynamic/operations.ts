@@ -64,9 +64,7 @@ const readCollectionPage = defineOperation({
         z.object({
             id: z.number()
         }),
-        z.object({
-            name: z.string()
-        })
+        z.undefined()
     ),
     authorizer: async () => dynamicImageAuth.readCollectionPage.dynamicFields({}),
     operation: async ({ prisma, params }, prismaWhereFilter) => {
@@ -93,7 +91,7 @@ const readCollectionPage = defineOperation({
             ],
         })
 
-        const lensCamera = standardImageCollectionOperations.readStandardImage({
+        const lensCamera = await standardImageCollectionOperations.readStandardImage({
             params: {
                 standardImage: 'DEFAULT_IMAGE_COLLECTION_COVER'
             }

@@ -1,7 +1,7 @@
 import '@pn-server-only'
 import { visibilitySchemas } from './schemas'
 import { defineSubOperation } from '@/services/serviceOperation'
-import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
+import { omegaOrderOperations } from '@/services/omegaOrder/operations'
 
 export const visibilityOperations = {
     create: defineSubOperation({
@@ -24,7 +24,7 @@ export const visibilityOperations = {
                 where: { visibilityId: params.visibilityId }
             })
 
-            const currentOrder = await readCurrentOmegaOrder()
+            const currentOrder = await omegaOrderOperations.readCurrent({})
 
             return prisma.visibility.update({
                 where: { id: params.visibilityId },
