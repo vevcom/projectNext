@@ -13,7 +13,7 @@ import type { ImageCollection } from '@/prisma-generated-pn-types'
 export default function MakeNewCollection() {
     const router = useRouter()
     const collectionCreatedCallback = (collection?: ImageCollection) => {
-        if (collection) router.push(`/images/collections/${collection.id}`)
+        if (collection) router.push(`/image-collections/dynamic/${encodeURIComponent(collection.name)}`)
         router.refresh()
     }
     return (

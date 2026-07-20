@@ -1,7 +1,6 @@
 'use client'
 import styles from './CollectionAdmin.module.scss'
 import CollectionAdminUpload from './CollectionAdminUpload'
-import { updateImageCollectionAction, destroyImageCollectionAction } from '@/services/images/collections/actions'
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
 import { ImagePagingContext } from '@/contexts/paging/ImagePaging'
@@ -16,6 +15,7 @@ import { useRouter } from 'next/navigation'
 import { useContext, useState } from 'react'
 import type { DoubleLevelVisibilityMatrix } from '@/services/visibility/types'
 import type { ExpandedImageCollection } from '@/services/images/collections/types'
+import { updateImageCollectionAction, destroyImageCollectionAction } from '@/services/images/collections/actions'
 
 type PropTypes = {
     collection: ExpandedImageCollection
@@ -101,7 +101,7 @@ export default function CollectionAdmin({ collection, doubleLevelVisibilityMatri
                     </Form>
                     <Form
                         submitText="slett samling"
-                        successCallback={() => router.push('/images')}
+                        successCallback={() => router.push('/image-collections')}
                         action={destroyImageCollectionAction.bind(null, collectionId)}
                         submitColor="red"
                         confirmation={{

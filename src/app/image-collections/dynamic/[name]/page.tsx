@@ -12,14 +12,14 @@ import type { VisibilityMatrix } from '@/services/visibility/types'
 
 type PropTypes = {
     params: Promise<{
-        id: string
+        name: string
     }>
 }
 
 export default async function Collection({ params }: PropTypes) {
     const pageSize: PageSizeImage = 30
 
-    const readCollection = await readImageCollectionAction(Number((await params).id))
+    const readCollection = await readImageCollectionAction((await params).name)
     if (!readCollection.success) notFound() //TODO: replace with better error page if error is UNAUTHORIZED.
     const collection = readCollection.data
 

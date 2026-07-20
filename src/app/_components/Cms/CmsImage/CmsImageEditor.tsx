@@ -111,7 +111,7 @@ export default function CmsImageEditor({ cmsImage, updateCmsImageAction, canEdit
                                     />
                                 </ImageCollectionPagingProvider>
                             </div>
-                            <Link className={styles.linkToImages} href="/images/">
+                            <Link className={styles.linkToImages} href="/image-collections/">
                                 Go to images
                             </Link>
                         </div>

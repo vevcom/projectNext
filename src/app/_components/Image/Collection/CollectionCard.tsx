@@ -14,7 +14,7 @@ type PropTypes = {
 export default function CollectionCard({ collection, className }: PropTypes) {
     return (
         <Link
-            href={`/images/collections/${collection.id}`}
+            href={`/image-collections/dynamic/${encodeURIComponent(collection.name)}`}
             className={`${styles.CollectionCard} ${className}`}
             key={collection.id}
         >

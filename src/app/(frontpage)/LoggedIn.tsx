@@ -74,7 +74,7 @@ export default async function LoggedInLandingPage() {
                             <JobAd key={key} jobAd={jobAd} />
                         ))}
                     </LoggedInSection>
-                    <LoggedInSection title="Bilder" link="/images">
+                    <LoggedInSection title="Bilder" link="/image-collections">
                         Her kan man kanskje vise noen bilder ellerno
                     </LoggedInSection>
                 </div>
