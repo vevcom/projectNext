@@ -1,6 +1,7 @@
 import { Zpn } from '@/lib/fields/zpn'
-import { z } from 'zod'
+import { imageSchemas } from '@/services/images/subservice/schemas'
 import { SEX, RelationshipStatus } from '@/prisma-generated-pn-types'
+import { z } from 'zod'
 
 export const studentCardSchema = z.string()
 
@@ -92,4 +93,6 @@ export const userSchemas = {
     verifyEmail: userSchema.pick({
         email: true,
     }),
+
+    updateProfileImage: imageSchemas.uploadImage,
 }

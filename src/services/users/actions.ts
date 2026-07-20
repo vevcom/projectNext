@@ -44,6 +44,7 @@ export const readGroupsForPageFilteringAction = makeAction(groupOperations.readG
  */
 export const updateUserAction = makeAction(userOperations.update)
 export const updateUserProfileAction = makeAction(userOperations.updateProfile)
+export const updateUserProfileImageAction = makeAction(userOperations.updateProfileImage)
 
 export const registerNewEmailAction = makeAction(userOperations.registerNewEmail)
 export const registerUser = makeAction(userOperations.register)

@@ -6,7 +6,8 @@ import {
     standardMembershipSelection,
     userFilterSelection
 } from './constants'
-import { imageOperations } from '@/services/images/operations'
+import { implementSpecialCollection } from '@/services/images/subservice/special/implement'
+import { standardImageCollectionOperations } from '@/services/images/standard/operations'
 import { notificationSubscriptionOperations } from '@/services/notifications/subscription/operations'
 import { readMembershipsOfUser } from '@/services/groups/memberships/read'
 import { NTNUEmailDomain } from '@/services/mail/constants'
@@ -20,12 +21,32 @@ import { ServerError } from '@/services/error'
 import { getMembershipFilter } from '@/auth/getMembershipFilter'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { hashAndEncryptPassword } from '@/auth/passwordHash'
-import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
+import { omegaOrderOperations } from '@/services/omegaOrder/operations'
 import { permissionOperations } from '@/services/permissions/operations'
 import { z } from 'zod'
 import type { UserPagingReturn } from './types'
 
+/**
+ * Profile images live in the PROFILEIMAGES special collection, one image per user - uploaded
+ * directly by the user (or an admin) on their own profile settings page. Unlike Flair/Ombul this
+ * is optional, same as committee logos: imageId is a nullable unique FK, and a null image is
+ * resolved to the shared DEFAULT_PROFILE_IMAGE standard image wherever a user profile is served
+ * from this service, so callers never see a null image.
+ */
+const {
+    internalOperations: userProfileImageOperations,
+    specialCollectionPanelOperations: userProfileImagePanelOperations
+} = implementSpecialCollection({
+    special: 'PROFILEIMAGES',
+    imagePanelAuther: userAuth.imagePanel.dynamicFields({}),
+    config: {
+        name: 'Profilbilder',
+        description: 'Bilder brukt som profilbilder. Hvert bilde i denne samlingen tilhører nøyaktig én bruker.',
+    }
+})
+
 export const userOperations = {
+    imagePanel: userProfileImagePanelOperations,
     /**
      * This Method creates an user by invitation, and sends the invitation email.
      * WARNING: This should not be used to create users registered by Feide.
@@ -35,7 +56,7 @@ export const userOperations = {
         authorizer: () => userAuth.create.dynamicFields({}),
         operation: async ({ prisma, data }) => {
             const omegaMembership = await readOmegaMembershipGroup('EXTERNAL')
-            const omegaOrder = await readCurrentOmegaOrder()
+            const omegaOrder = await omegaOrderOperations.readCurrent({})
 
             const user = await prisma.user.create({
                 data: {
@@ -101,8 +122,8 @@ export const userOperations = {
         }),
         authorizer: ({ params }) => userAuth.readProfile.dynamicFields({ username: params.username }),
         operation: async ({ prisma, params }) => {
-            const defaultProfileImage = await imageOperations.readSpecial({
-                params: { special: 'DEFAULT_PROFILE_IMAGE' },
+            const defaultProfileImage = await standardImageCollectionOperations.readStandardImage({
+                params: { standardImage: 'DEFAULT_PROFILE_IMAGE' },
             })
             const user = await prisma.user.findUniqueOrThrow({
                 where: { username: params.username.toLowerCase() },
@@ -547,8 +568,8 @@ export const userOperations = {
             })
 
             if (!user.image) {
-                user.image = await imageOperations.readSpecial({
-                    params: { special: 'DEFAULT_PROFILE_IMAGE' },
+                user.image = await standardImageCollectionOperations.readStandardImage({
+                    params: { standardImage: 'DEFAULT_PROFILE_IMAGE' },
                 })
             }
 
@@ -576,4 +597,41 @@ export const userOperations = {
             })
         }
     }),
-}
+
+    updateProfileImage: defineOperation({
+        authorizer: ({ params }) => userAuth.updateProfileImage.dynamicFields({ username: params.username }),
+        paramsSchema: z.object({
+            username: z.string(),
+        }),
+        dataSchema: userSchemas.updateProfileImage,
+        opensTransaction: true,
+        operation: ({ prisma, params, data }) =>
+            prisma.$transaction(async tx => {
+                const existingUser = await tx.user.findUniqueOrThrow({
+                    where: { username: params.username },
+                })
+
+                const newImage = await userProfileImageOperations.uploadImage.internalCall({ prisma: tx, data })
+
+                await tx.user.update({
+                    where: { id: existingUser.id },
+                    data: {
+                        image: {
+                            connect: { id: newImage.id }
+                        }
+                    }
+                })
+
+                // A previous imageId is always an upload owned 1:1 by this user (never the shared
+                // default, since that's only ever resolved at read time) - safe to destroy.
+                if (existingUser.imageId) {
+                    await userProfileImageOperations.destroyImage.internalCall({
+                        prisma: tx,
+                        params: { imageId: existingUser.imageId }
+                    })
+                }
+
+                return newImage
+            })
+    }),
+} as const

@@ -16,6 +16,8 @@ export const userAuth = {
     updatePassword: RequireUserIdOrPermission.staticFields({ permission: 'USERS_UPDATE' }),
     update: RequirePermission.staticFields({ permission: 'USERS_UPDATE' }),
     updateProfile: RequireUsernameOrPermission.staticFields({ permission: 'USERS_UPDATE' }),
+    updateProfileImage: RequireUsernameOrPermission.staticFields({ permission: 'USERS_UPDATE' }),
+    imagePanel: RequirePermission.staticFields({ permission: 'USERS_UPDATE' }),
 
     register: RequireUserId.staticFields({}),
     destroy: RequirePermission.staticFields({ permission: 'USERS_DESTROY' }),
