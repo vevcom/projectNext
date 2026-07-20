@@ -1,7 +1,7 @@
 import CmsImageEditor from './CmsImageEditor'
 import styles from './CmsImage.module.scss'
 import Image, { SrcImage } from '@/components/Image/Image'
-import { readSpecialImageAction } from '@/services/images/actions'
+import { readStandardImageAction } from '@/services/images/standard/actions'
 import React from 'react'
 import type { ExpandedCmsImage, UpdateCmsImageAction } from '@/cms/images/types'
 import type { PropTypes as ImagePropTypes } from '@/components/Image/Image'
@@ -42,7 +42,7 @@ export default async function CmsImage({
 }: PropTypes) {
     let image = cmsImage.image
     if (!image) {
-        const defaultRes = await readSpecialImageAction({ params: { special: 'DEFAULT_IMAGE' } })
+        const defaultRes = await readStandardImageAction({ params: { standardImage: 'DEFAULT_IMAGE' } })
         if (!defaultRes.success) return <SrcImage src={fallbackImage} {...props}/>
         image = defaultRes.data
     }
