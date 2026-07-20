@@ -1,20 +1,12 @@
 import styles from './layout.module.scss'
-import { ServerSession } from '@/auth/session/ServerSession'
-import SpecialCmsImage from '@/components/Cms/CmsImage/SpecialCmsImage'
-import { readSpecialCmsImageFrontpage, updateSpecialCmsImageFrontpage } from '@/services/frontpage/actions'
-import { frontpageAuth } from '@/services/frontpage/auth'
+import StandardImage from '@/components/Image/StandardImage'
 import React from 'react'
 
 type PropTypes = {
     children: React.ReactNode
 }
 
-export default async function AuthLayout({ children }: PropTypes) {
-    const session = await ServerSession.fromNextAuth()
-    const canEditAuthIcon = frontpageAuth.updateSpecialCmsImage.dynamicFields({}).auth(
-        session
-    ).toJsObject()
-
+export default function AuthLayout({ children }: PropTypes) {
     return (
         <div className={styles.wrapper}>
             <div className={styles.card}>
@@ -22,14 +14,10 @@ export default async function AuthLayout({ children }: PropTypes) {
                     {children}
                 </div>
                 <div className={styles.image}>
-                    <SpecialCmsImage
-                        canEdit={canEditAuthIcon}
-                        special="AUTH_ICON"
+                    <StandardImage
+                        standardImage="MAGISK_HATT"
                         alt="en kappemann sin hatt"
                         width={200}
-                        //TODO: Probably call through other service see comments in frontpage operations
-                        readSpecialCmsImageAction={readSpecialCmsImageFrontpage}
-                        updateCmsImageAction={updateSpecialCmsImageFrontpage}
                     />
                 </div>
             </div>

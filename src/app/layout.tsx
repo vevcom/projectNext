@@ -57,7 +57,7 @@ export default async function RootLayout({ children }: PropTypes) {
                             <PopUpProvider>
                                 <div className={styles.wrapper}>
                                     <div className={styles.navBar}>
-                                        <NavBar profile={profile} canEditSpecialCmsImage={canEditSpecialCmsImage} />
+                                        <NavBar profile={profile} />
                                     </div>
                                     <div className={styles.content}>
                                         {children}
@@ -66,7 +66,7 @@ export default async function RootLayout({ children }: PropTypes) {
                                         <Footer canEditSpecialCmsImage={canEditSpecialCmsImage} />
                                     </div>
                                     <div className={styles.mobileNavBar}>
-                                        <MobileNavBar profile={profile} canEditSpecialCmsImage={canEditSpecialCmsImage} />
+                                        <MobileNavBar profile={profile} />
                                     </div>
                                 </div>
                             </PopUpProvider>

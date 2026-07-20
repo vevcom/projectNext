@@ -2,14 +2,13 @@ import getNavItems from './navDef'
 import styles from './MobileNavBar.module.scss'
 import Menu from './Menu'
 import UserNavigation from './UserNavigation'
-import SpecialCmsImage from '@/components/Cms/CmsImage/SpecialCmsImage'
+import StandardImage from '@/components/Image/StandardImage'
 import EditModeSwitch from '@/components/EditModeSwitch/EditModeSwitch'
-import { readSpecialCmsImageFrontpage, updateSpecialCmsImageFrontpage } from '@/services/frontpage/actions'
 import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import type { PropTypes } from './NavBar'
 
-export default async function MobileNavBar({ profile, canEditSpecialCmsImage }: PropTypes) {
+export default async function MobileNavBar({ profile }: PropTypes) {
     const user = profile?.user ?? null
     const isLoggedIn = user !== null
     const applicationPeriod = false //TODO
@@ -30,26 +29,20 @@ export default async function MobileNavBar({ profile, canEditSpecialCmsImage }: 
                 ))
             }
             <div>
-                <SpecialCmsImage
-                    canEdit={canEditSpecialCmsImage}
-                    special="MOBILE_NAV_PRIMARY_BUTTON"
+                <StandardImage
+                    standardImage="LOGO_WHITE"
                     width={30}
-                    readSpecialCmsImageAction={readSpecialCmsImageFrontpage}
-                    updateCmsImageAction={updateSpecialCmsImageFrontpage}
                 >
                     <Link className={styles.imagelink} href="/"/>
-                </SpecialCmsImage>
+                </StandardImage>
             </div>
             <div className={styles.magicHat}>
-                <SpecialCmsImage
-                    canEdit={canEditSpecialCmsImage}
-                    special="MOBILE_NAV_LOGIN_BUTTON"
+                <StandardImage
+                    standardImage="MAGISK_HATT"
                     width={25}
                     height={25}
                     alt="log in button"
                     className={styles.image}
-                    readSpecialCmsImageAction={readSpecialCmsImageFrontpage}
-                    updateCmsImageAction={updateSpecialCmsImageFrontpage}
                 />
                 <UserNavigation profile={profile} />
             </div>
