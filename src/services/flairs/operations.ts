@@ -1,5 +1,5 @@
 import '@pn-server-only'
-import { flairAuth } from './auth'
+import { flairAuth, flairImagesImagePanelAuth } from './auth'
 import { flairSchema } from './schemas'
 import { defineOperation } from '@/services/serviceOperation'
 import { ServerError } from '@/services/error'
@@ -14,18 +14,19 @@ import { z } from 'zod'
  */
 const {
     internalOperations: flairImageOperations,
-    specialCollectionPanelOperations: flairImagePanelOperations
+    specialCollectionPanelOperations: flairImagesImagePanelOperations
 } = implementSpecialCollection({
     special: 'FLAIRIMAGES',
-    imagePanelAuther: flairAuth.imagePanel.dynamicFields({}),
+    imagePanelAuther: flairImagesImagePanelAuth.dynamicFields({}),
     config: {
         name: 'Flairbilder',
         description: 'Bilder brukt av flairs. Hvert bilde i denne samlingen tilhører nøyaktig én flair.',
     }
 })
 
+export { flairImagesImagePanelOperations }
+
 export const flairOperations = {
-    imagePanel: flairImagePanelOperations,
     create: defineOperation({
         authorizer: () => flairAuth.create.dynamicFields({}),
         dataSchema: flairSchema.create,

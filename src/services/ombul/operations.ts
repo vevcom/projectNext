@@ -1,5 +1,5 @@
 import '@pn-server-only'
-import { ombulAuth } from './auth'
+import { ombulAuth, ombulCoversImagePanelAuth } from './auth'
 import { ombulSchemas } from './schemas'
 import { defineOperation } from '@/services/serviceOperation'
 import { ServerError } from '@/services/error'
@@ -21,10 +21,10 @@ const ombulStore = implementStore({
  */
 const {
     internalOperations: ombulCoverImageOperations,
-    specialCollectionPanelOperations: ombulCoverImagePanelOperations
+    specialCollectionPanelOperations: ombulCoversImagePanelOperations
 } = implementSpecialCollection({
     special: 'OMBULCOVERS',
-    imagePanelAuther: ombulAuth.imagePanel.dynamicFields({}),
+    imagePanelAuther: ombulCoversImagePanelAuth.dynamicFields({}),
     config: {
         name: 'Ombulforsider',
         description: 'Bilder brukt som forsider for ombul. Hvert bilde i denne samlingen tilhører nøyaktig én ombul.',
@@ -305,8 +305,9 @@ const updateParagraphContent = cmsParagraphOperations.updateContent.implement({
         })).paragraph.id === params.paragraphId
 })
 
+export { ombulCoversImagePanelOperations }
+
 export const ombulOperations = {
-    imagePanel: ombulCoverImagePanelOperations,
     read,
     readAll,
     readLatest,

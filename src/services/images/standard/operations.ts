@@ -1,6 +1,6 @@
 import '@pn-server-only'
 import { StandardImageConfig } from './constants'
-import { standardImageCollectionAuth } from './auth'
+import { standardImageCollectionAuth, standardImagesImagePanelAuth } from './auth'
 import { implementSpecialCollection } from '@/services/images/subservice/special/implement'
 import { defineOperation, defineSubOperation } from '@/services/serviceOperation'
 import logger from '@/lib/logger'
@@ -8,9 +8,9 @@ import { StandardImage } from '@/prisma-generated-pn-types'
 import { imageOperations } from '@/services/images/subservice/operations'
 import { z } from 'zod'
 
-const { specialCollectionPanelOperations: standardCollectionPanelOperations } = implementSpecialCollection({
+const { specialCollectionPanelOperations: standardImagesImagePanelOperations } = implementSpecialCollection({
     special: 'STANDARDIMAGES',
-    imagePanelAuther: standardImageCollectionAuth.imagePanel.dynamicFields({}),
+    imagePanelAuther: standardImagesImagePanelAuth.dynamicFields({}),
     config: {
         name: 'Standardbilder',
         description: `
@@ -48,7 +48,7 @@ const generateStandardImageFromConfig = defineSubOperation({
                 alt: config.alt
             }),
             params: {
-                collectionId: (await standardCollectionPanelOperations.readCollection({})).id,
+                collectionId: (await standardImagesImagePanelOperations.readCollection({})).id,
             },
             operationImplementationFields: { uploadAsStandardImage: params.standardImage }
         })
@@ -68,7 +68,7 @@ const readStandardImage = defineOperation({
         })
 
         const standardCollection =
-            await standardCollectionPanelOperations.readCollection({})
+            await standardImagesImagePanelOperations.readCollection({})
         const standardImageIsPartOfStandardCollection = standardCollection.id === image?.collectionId
 
         if (image && standardImageIsPartOfStandardCollection) return image
@@ -95,14 +95,14 @@ const readStandardImage = defineOperation({
     }
 })
 
+export { standardImagesImagePanelOperations }
+
 /**
  * The standard images are housed in the standardcollection - a special image collection.
- * It exposes the panel operations for reading the images in the collection
- * but also the method for reading a standard image. If it is not found in the database,
+ * It exposes the method for reading a standard image. If it is not found in the database,
  * it will be created from the static config on runtime.
  */
 export const standardImageCollectionOperations = {
     readStandardImage,
-    imagePanel: standardCollectionPanelOperations,
     generateStandardImageFromConfig,
 } as const

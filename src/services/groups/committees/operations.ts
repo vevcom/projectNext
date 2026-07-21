@@ -1,4 +1,4 @@
-import { committeeAuth } from './auth'
+import { committeeAuth, committeeLogosImagePanelAuth } from './auth'
 import { committeeExpandedIncluder, committeeLogoIncluder, membershipIncluder } from './constants'
 import { committeeSchemas } from './schemas'
 import { cmsParagraphOperations } from '@/cms/paragraphs/operations'
@@ -23,10 +23,10 @@ import { z } from 'zod'
  */
 const {
     internalOperations: committeeLogoImageOperations,
-    specialCollectionPanelOperations: committeeLogoImagePanelOperations
+    specialCollectionPanelOperations: committeeLogosImagePanelOperations
 } = implementSpecialCollection({
     special: 'COMMITTEELOGOS',
-    imagePanelAuther: committeeAuth.imagePanel.dynamicFields({}),
+    imagePanelAuther: committeeLogosImagePanelAuth.dynamicFields({}),
     config: {
         name: 'Komitélogoer',
         description: 'Bilder brukt som komitélogoer. Hvert bilde i denne samlingen tilhører nøyaktig én komité.',
@@ -353,8 +353,9 @@ const updateArticle = implementUpdateArticleOperations({
     }
 })
 
+export { committeeLogosImagePanelOperations }
+
 export const committeeOperations = {
-    imagePanel: committeeLogoImagePanelOperations,
     create,
     update,
     updateLogo,

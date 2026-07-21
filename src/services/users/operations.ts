@@ -1,6 +1,6 @@
 import '@pn-server-only'
 import { userSchemas } from './schemas'
-import { userAuth } from './auth'
+import { userAuth, profileImagesImagePanelAuth } from './auth'
 import {
     maxNumberOfGroupsInFilter,
     standardMembershipSelection,
@@ -34,18 +34,19 @@ import type { UserPagingReturn } from './types'
  */
 const {
     internalOperations: userProfileImageOperations,
-    specialCollectionPanelOperations: userProfileImagePanelOperations
+    specialCollectionPanelOperations: profileImagesImagePanelOperations
 } = implementSpecialCollection({
     special: 'PROFILEIMAGES',
-    imagePanelAuther: userAuth.imagePanel.dynamicFields({}),
+    imagePanelAuther: profileImagesImagePanelAuth.dynamicFields({}),
     config: {
         name: 'Profilbilder',
         description: 'Bilder brukt som profilbilder. Hvert bilde i denne samlingen tilhører nøyaktig én bruker.',
     }
 })
 
+export { profileImagesImagePanelOperations }
+
 export const userOperations = {
-    imagePanel: userProfileImagePanelOperations,
     /**
      * This Method creates an user by invitation, and sends the invitation email.
      * WARNING: This should not be used to create users registered by Feide.
