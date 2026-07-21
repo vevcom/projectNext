@@ -1,19 +1,19 @@
 import styles from './page.module.scss'
 import MakeNewCollection from './MakeNewCollection'
-import ImageCollectionList from '@/components/Image/Collection/ImageCollectionList'
-import { ImageCollectionPagingProvider } from '@/contexts/paging/ImageCollectionPaging'
+import ImageCollectionList from './ImageCollectionList'
+import { DynamicImageCollectionPagingProvider } from '@/contexts/paging/DynamicImageCollectionPaging'
 import CollectionCard from '@/components/Image/Collection/CollectionCard'
 import { ServerSession } from '@/auth/session/ServerSession'
 import { dynamicImageAuth } from '@/services/images/dynamic/auth'
-import { readImageCollectionsPageAction } from '@/services/images/dynamic/actions'
-import type { PageSizeImageCollection } from '@/contexts/paging/ImageCollectionPaging'
+import { readDynamicImageCollectionsPageAction } from '@/services/images/dynamic/actions'
+import type { PageSizeDynamicImageCollection } from '@/contexts/paging/DynamicImageCollectionPaging'
 
 export default async function Images() {
     const session = await ServerSession.fromNextAuth()
     const canCreateCollection = dynamicImageAuth.createCollection.dynamicFields({ }).auth(session)
-    const pageSize: PageSizeImageCollection = 12
+    const pageSize: PageSizeDynamicImageCollection = 12
 
-    const collectionPage = await readImageCollectionsPageAction({
+    const collectionPage = await readDynamicImageCollectionsPageAction({
         params: {
             paging: {
                 page: {
@@ -35,7 +35,7 @@ export default async function Images() {
     return (
         <div className={styles.wrapper}>
             <div className={styles.container}>
-                <ImageCollectionPagingProvider
+                <DynamicImageCollectionPagingProvider
                     startPage={{
                         pageSize,
                         page: 1,
@@ -52,7 +52,7 @@ export default async function Images() {
                             <CollectionCard key={collection.id} collection={collection} />
                         ))}
                     />
-                </ImageCollectionPagingProvider>
+                </DynamicImageCollectionPagingProvider>
             </div>
         </div>
     )

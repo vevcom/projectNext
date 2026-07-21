@@ -7,7 +7,10 @@ import PopUp from '@/components/PopUp/PopUp'
 import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
 import CollectionCard from '@/components/Image/Collection/CollectionCard'
 import ImageList from '@/components/Image/ImageList/ImageList'
-import { ImageCollectionPagingProvider, ImageCollectionPagingContext } from '@/contexts/paging/ImageCollectionPaging'
+import {
+    DynamicImageCollectionPagingProvider,
+    DynamicImageCollectionPagingContext
+} from '@/contexts/paging/DynamicImageCollectionPaging'
 import useEditMode from '@/hooks/useEditMode'
 import { ImagePagingProvider } from '@/contexts/paging/ImagePaging'
 import PopUpProvider from '@/contexts/PopUp'
@@ -83,7 +86,7 @@ export default function CmsImageEditor({ cmsImage, updateCmsImageAction, canEdit
                                 <ImageList/>
                             </div>
                             <div className={styles.selectCollection}>
-                                <ImageCollectionPagingProvider
+                                <DynamicImageCollectionPagingProvider
                                     startPage={{
                                         pageSize: 12,
                                         page: 0,
@@ -92,7 +95,7 @@ export default function CmsImageEditor({ cmsImage, updateCmsImageAction, canEdit
                                     serverRenderedData={[]}
                                 >
                                     <EndlessScroll
-                                        pagingContext={ImageCollectionPagingContext}
+                                        pagingContext={DynamicImageCollectionPagingContext}
                                         renderer={collection => (
                                             <div
                                                 key={collection.id}
@@ -109,7 +112,7 @@ export default function CmsImageEditor({ cmsImage, updateCmsImageAction, canEdit
                                             </div>
                                         )}
                                     />
-                                </ImageCollectionPagingProvider>
+                                </DynamicImageCollectionPagingProvider>
                             </div>
                             <Link className={styles.linkToImages} href="/image-collections/">
                                 Go to images

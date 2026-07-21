@@ -1,8 +1,8 @@
 'use client'
 import styles from './ImageCollectionList.module.scss'
-import CollectionCard from './CollectionCard'
+import CollectionCard from '@/components/Image/Collection/CollectionCard'
 import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
-import { ImageCollectionPagingContext } from '@/contexts/paging/ImageCollectionPaging'
+import { DynamicImageCollectionPagingContext } from '@/contexts/paging/DynamicImageCollectionPaging'
 import React from 'react'
 
 type PropTypes = {
@@ -19,7 +19,7 @@ export default function ImageCollectionList({ serverRendered }: PropTypes) {
         <div className={styles.ImageCollectionList}>
             {serverRendered} {/* Rendered on server homefully in the right way*/}
             <EndlessScroll
-                pagingContext={ImageCollectionPagingContext}
+                pagingContext={DynamicImageCollectionPagingContext}
                 renderer={
                     (collection, i) => (
                         <CollectionCard

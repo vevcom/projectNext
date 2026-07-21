@@ -3,24 +3,27 @@ import styles from './MakeNewCollection.module.scss'
 import Form from '@/components/Form/Form'
 import PopUp from '@/components/PopUp/PopUp'
 import TextInput from '@/components/UI/TextInput'
-import { createImageCollectionAction } from '@/services/images/dynamic/actions'
+import { createDynamicImageCollectionAction } from '@/services/images/dynamic/actions'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
-import { useRouter } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { v4 as uuid } from 'uuid'
-import type { ImageCollection } from '@/prisma-generated-pn-types'
 
 export default function MakeNewCollection() {
-    const router = useRouter()
-    const collectionCreatedCallback = (collection?: ImageCollection) => {
-        if (collection) router.push(`/image-collections/dynamic/${encodeURIComponent(collection.name)}`)
-        router.refresh()
-    }
+    const popUpKey = 'MakeNewCollection'
+
     return (
-        <PopUp popUpKey={uuid()} showButtonContent={<FontAwesomeIcon icon={faPlus} />}>
+        <PopUp popUpKey={popUpKey} showButtonContent={<FontAwesomeIcon icon={faPlus} />}>
             <div className={styles.MakeNewCollection}>
-                <Form successCallback={collectionCreatedCallback}
-                    title="Lag et album" submitText="Lag album" action={createImageCollectionAction}>
+                <Form
+                    closePopUpOnSuccess={popUpKey}
+                    refreshOnSuccess
+                    navigateOnSuccess={
+                        collection =>
+                            (collection ? `/image-collections/${collection.id}` : '/image-collections')
+                    }
+                    title="Lag et album"
+                    submitText="Lag album"
+                    action={createDynamicImageCollectionAction}
+                >
                     <TextInput label="navn" name="collectionName" />
                     <TextInput label="beskrivelse" name="collectionDescription" />
                 </Form>
