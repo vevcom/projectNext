@@ -10,7 +10,7 @@ import {
     readOmbulCoversCollectionAction,
     readFlairImagesCollectionAction,
 } from '@/services/images/specialPanels/actions'
-import { createContext, useContext, useState, useCallback, useEffect } from 'react'
+import { createContext, useContext, useState, useCallback, useEffect, useRef } from 'react'
 import type { ErrorCode } from '@/services/error'
 import type { ExpandedGroup } from '@/services/groups/types'
 import type { ExpandedImageCollection } from '@/services/images/subservice/types'
@@ -91,7 +91,10 @@ export default function ClientDataProvider({
             : null
     )
 
+    const defaultPermissionsInFlight = useRef(false)
     const loadDefaultPermissions = useCallback(async () => {
+        if (defaultPermissionsInFlight.current) return
+        defaultPermissionsInFlight.current = true
         setDefaultPermissions({ status: 'loading' })
         const res = await readDefaultPermissionsAction()
         setDefaultPermissions(
@@ -99,9 +102,13 @@ export default function ClientDataProvider({
                 ? { status: 'success', defaultPermissions: res.data }
                 : { status: 'error', errorCode: res.errorCode }
         )
+        defaultPermissionsInFlight.current = false
     }, [])
 
+    const standardImagesInFlight = useRef(false)
     const loadStandardImages = useCallback(async () => {
+        if (standardImagesInFlight.current) return
+        standardImagesInFlight.current = true
         setStandardImages({ status: 'loading' })
         const res = await readAllStandardImagesAction()
         setStandardImages(
@@ -109,9 +116,13 @@ export default function ClientDataProvider({
                 ? { status: 'success', standardImages: res.data }
                 : { status: 'error', errorCode: res.errorCode }
         )
+        standardImagesInFlight.current = false
     }, [])
 
+    const groupsInFlight = useRef(false)
     const loadGroups = useCallback(async () => {
+        if (groupsInFlight.current) return
+        groupsInFlight.current = true
         setGroups({ status: 'loading' })
         const res = await readGroupsExpandedAction()
         setGroups(
@@ -119,9 +130,13 @@ export default function ClientDataProvider({
                 ? { status: 'success', groups: res.data }
                 : { status: 'error', errorCode: res.errorCode }
         )
+        groupsInFlight.current = false
     }, [])
 
+    const specialCollectionsInFlight = useRef(false)
     const loadSpecialCollections = useCallback(async () => {
+        if (specialCollectionsInFlight.current) return
+        specialCollectionsInFlight.current = true
         setSpecialCollections({ status: 'loading' })
         const authorizedSources = specialCollectionSources.filter(
             source => source.auth.dynamicFields({}).auth(session).authorized
@@ -131,7 +146,17 @@ export default function ClientDataProvider({
             status: 'success',
             specialCollections: results.flatMap(res => (res.success ? [res.data] : [])),
         })
+        specialCollectionsInFlight.current = false
     }, [session])
+
+    // Special collections are gated by the session's authorizers - if the session changes (e.g. a
+    // permission update reaches the client through a router.refresh()) the cache must be dropped so
+    // it gets re-authorized and re-read, rather than keep serving access decisions from the first load.
+    const [previousSession, setPreviousSession] = useState(session)
+    if (previousSession !== session) {
+        setPreviousSession(session)
+        setSpecialCollections(null)
+    }
 
     return (
         <ClientDataContext.Provider value={{

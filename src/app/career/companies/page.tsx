@@ -66,7 +66,6 @@ export default async function CompaniesPage({ searchParams }: PropTypes) {
                 <CompanyList serverRenderedData={serverRenderedData.map(
                     companyListRenderer({
                         session,
-                        asClient: false,
                     })
                 )} />
             </CompanyPagingProvider>

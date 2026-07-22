@@ -23,20 +23,23 @@ import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
 
 type PropTypes = {
     cmsImage: CmsImage & {
-        image: ImageT
+        image: ImageT | null
     },
     updateCmsImageAction: UpdateCmsImageAction
     canEdit: AuthResultTypeAny
 }
 
 /**
- * A component to edit a cms image
+ * A component to edit a cms image. If cmsImage.image is null the user is choosing an image for
+ * the slot for the first time - no collection is pre-selected until they pick one.
  * @param cmsImage - the cms image to edit
  * @returns
  */
 export default function CmsImageEditor({ cmsImage, updateCmsImageAction, canEdit }: PropTypes) {
     const editable = useEditMode({ authResult: canEdit })
-    const [currentCollectionId, setCurrentCollectionId] = useState<number>(cmsImage.image.collectionId)
+    const [currentCollectionId, setCurrentCollectionId] = useState<number | null>(
+        cmsImage.image?.collectionId ?? null
+    )
 
     const isCollectionActive = (collection: { id: number }) => (
         collection.id === currentCollectionId ? styles.selected : ''
@@ -49,7 +52,7 @@ export default function CmsImageEditor({ cmsImage, updateCmsImageAction, canEdit
             showButtonContent={<EditOverlay />}
             showButtonClass={styles.showBtn}
         >
-            <ImageSelectionProvider defaultSelectionMode={true} defaultImage={cmsImage.image}>
+            <ImageSelectionProvider defaultSelectionMode={true} defaultImage={cmsImage.image ?? undefined}>
                 <ImagePagingProvider
                     startPage={
                         {
