@@ -5,6 +5,7 @@ import Form from '@/components/Form/Form'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import School from '@/components/School/School'
 import { ServerSession } from '@/auth/session/ServerSession'
+import { configureAction } from '@/services/configureAction'
 
 type PropTypes = {
     params: Promise<{
@@ -28,7 +29,7 @@ export default async function SchoolAdmin({ params }: PropTypes) {
                 <School school={school} session={session.toJsObject()} />
             </div>
             <Form
-                action={destroySchoolAction.bind(null, school.id)}
+                action={configureAction(destroySchoolAction, { params: { id: school.id } })}
                 navigateOnSuccess="/admin/schools"
                 refreshOnSuccess
                 submitText="Slett"
