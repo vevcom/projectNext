@@ -1,5 +1,4 @@
 'use server'
-
 import { makeAction } from '@/services/serverAction'
 import { dynamicImageOperations } from '@/services/images/dynamic/operations'
 

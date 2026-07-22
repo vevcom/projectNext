@@ -6,8 +6,9 @@ import Footer from '@/components/Footer/Footer'
 import { authOptions } from '@/auth/nextAuth/authOptions'
 import EditModeProvider from '@/contexts/EditMode'
 import PopUpProvider from '@/contexts/PopUp'
-import DefaultPermissionsProvider from '@/contexts/DefaultPermissions'
+import ClientDataProvider from '@/contexts/ClientData'
 import { readDefaultPermissionsAction } from '@/services/permissions/actions'
+import { readAllStandardImagesAction } from '@/services/images/standard/actions'
 import { Inter } from 'next/font/google'
 import '@/styles/globals.scss'
 import { config } from '@fortawesome/fontawesome-svg-core'
@@ -38,21 +39,29 @@ type PropTypes = {
 }
 
 export default async function RootLayout({ children }: PropTypes) {
-    const session = await getServerSession(authOptions)
+    const nextAuthSession = await getServerSession(authOptions)
+    const serverSession = await ServerSession.fromNextAuth()
+
     const defaultPermissionsRes = await readDefaultPermissionsAction()
-    const defaultPermissions = defaultPermissionsRes.success ? defaultPermissionsRes.data : []
-    const profile = session?.user ?
-        unwrapActionReturn(await readUserProfileAction({ params: { username: session.user.username } })) : null
+    const defaultPermissions = defaultPermissionsRes.success ? defaultPermissionsRes.data : undefined
+    const standardImagesRes = await readAllStandardImagesAction()
+    const standardImages = standardImagesRes.success ? standardImagesRes.data : undefined
+    const profile = serverSession?.user ?
+        unwrapActionReturn(await readUserProfileAction({ params: { username: serverSession.user.username } })) : null
 
     const canEditSpecialCmsImage = frontpageAuth.updateSpecialCmsImage.dynamicFields({}).auth(
-        await ServerSession.fromNextAuth()
+        serverSession
     ).toJsObject()
 
     return (
         <html lang="en">
             <body className={`${inter.className} ${styles.body}`}>
-                <SessionProvider session={session}>
-                    <DefaultPermissionsProvider defaultPermissions={defaultPermissions}>
+                <SessionProvider session={nextAuthSession}>
+                    <ClientDataProvider
+                        session={serverSession.toJsObject()}
+                        defaultPermissions={defaultPermissions}
+                        standardImages={standardImages}
+                    >
                         <EditModeProvider>
                             <PopUpProvider>
                                 <div className={styles.wrapper}>
@@ -71,7 +80,7 @@ export default async function RootLayout({ children }: PropTypes) {
                                 </div>
                             </PopUpProvider>
                         </EditModeProvider>
-                    </DefaultPermissionsProvider>
+                    </ClientDataProvider>
                 </SessionProvider>
             </body>
         </html>

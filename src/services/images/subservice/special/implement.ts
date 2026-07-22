@@ -1,6 +1,7 @@
 import '@pn-server-only'
 import { defineOperation, defineSubOperation } from '@/services/serviceOperation'
-import { imageOperations } from '@/services/images/subservice/operations'
+import { imageOperations, expandImageCollection } from '@/services/images/subservice/operations'
+import { expandedImageCollectionIncluder } from '@/services/images/subservice/constants'
 import { imageSchemas } from '@/services/images/subservice/schemas'
 import { ServerError } from '@/services/error'
 import logger from '@/lib/logger'
@@ -27,8 +28,13 @@ export function implementSpecialCollection({
                 where: {
                     special,
                 },
+                include: expandedImageCollectionIncluder,
             })
-            if (collection) return collection
+            // Note: we do not pass the a standard image in here as calling
+            // on the standard images service might cause an infinite loop,
+            // as the standard collection is read to validate that the standard
+            // image is in a correct state.
+            if (collection) return expandImageCollection(collection, null)
 
             logger.error(`
                 Special collection with special ${special} not found
@@ -39,7 +45,7 @@ export function implementSpecialCollection({
             const visibilityRegular = await visibilityOperations.create.internalCall({})
             const visibilityAdmin = await visibilityOperations.create.internalCall({})
 
-            return await prisma.imageCollection.create({
+            const created = await prisma.imageCollection.create({
                 data: {
                     name: config.name,
                     description: config.description,
@@ -54,8 +60,10 @@ export function implementSpecialCollection({
                             id: visibilityRegular.id,
                         }
                     }
-                }
+                },
+                include: expandedImageCollectionIncluder,
             })
+            return expandImageCollection(created, null)
         }
     })
 

@@ -1,7 +1,5 @@
 'use server'
-
 import { makeAction } from '@/services/serverAction'
-import { groupOperations } from '@/services/groups/operations'
 import { userOperations } from '@/services/users/operations'
 
 /**
@@ -35,8 +33,6 @@ export const readUserPageAction = makeAction(userOperations.readPage)
 export const readUserProfileAction = makeAction(userOperations.readProfile)
 
 export const readUserAction = makeAction(userOperations.read)
-
-export const readGroupsForPageFilteringAction = makeAction(groupOperations.readGroupsExpanded)
 
 /**
  * updateUserAction is meant for admin updates while

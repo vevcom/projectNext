@@ -1,3 +1,5 @@
+import type { Prisma } from '@/prisma-generated-pn-types'
+
 export const maxImageFileSizeMb = 100
 
 export const maxImageFileSizeBytes = maxImageFileSizeMb * 1024 * 1024
@@ -18,3 +20,9 @@ export const avifConvertionOptions = {
 } as const
 
 export const allowedExtensions = ['png', 'jpg', 'jpeg', 'heic', 'avif', 'webp'] as const
+
+export const expandedImageCollectionIncluder = {
+    coverImage: true,
+    images: { take: 1 },
+    _count: { select: { images: true } },
+} satisfies Prisma.ImageCollectionInclude

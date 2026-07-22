@@ -1,6 +1,6 @@
 import '@pn-server-only'
 import { imageSchemas } from './schemas'
-import { allowedExtensions, avifConvertionOptions, imageSizes } from './constants'
+import { allowedExtensions, avifConvertionOptions, imageSizes, type expandedImageCollectionIncluder } from './constants'
 import { visibilityOperations } from '@/services/visibility/operations'
 import { defineSubOperation } from '@/services/serviceOperation'
 import { ServerError } from '@/services/error'
@@ -8,7 +8,8 @@ import { implementStore } from '@/lib/store/implementStore'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import sharp from 'sharp'
 import { File } from 'node:buffer'
-import type { Prisma, StandardImage } from '@/prisma-generated-pn-types'
+import type { Image, Prisma, StandardImage } from '@/prisma-generated-pn-types'
+import type { ExpandedImageCollection } from './types'
 import type { z } from 'zod'
 
 const imageStoreAllowedExtensions = [...allowedExtensions, 'avif'] as const
@@ -220,4 +221,22 @@ export function uniqueCollectionWhere(params: z.infer<typeof imageSchemas.params
     return (
         'collectionId' in params ? { id: params.collectionId } : { name: params.collectionName }
     ) satisfies Prisma.ImageCollectionWhereUniqueInput
+}
+
+/**
+ * Enriches a collection (read with {@link expandedImageCollectionIncluder}) into the
+ * ExpandedImageCollection shape. The cover image is resolved as the
+ * collection's explicit cover, else its first image, else the provided default (dynamic
+ * collections pass the DEFAULT_IMAGE_COLLECTION_COVER standard image).
+ */
+export function expandImageCollection(
+    collection: Prisma.ImageCollectionGetPayload<{ include: typeof expandedImageCollectionIncluder }>,
+    defaultCoverImage: Image | null,
+): ExpandedImageCollection {
+    const { images, _count, ...rest } = collection
+    return {
+        ...rest,
+        coverImage: rest.coverImage ?? images[0] ?? defaultCoverImage,
+        numberOfImages: _count.images,
+    }
 }

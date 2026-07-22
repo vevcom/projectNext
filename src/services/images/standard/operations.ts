@@ -4,7 +4,7 @@ import { standardImageCollectionAuth, standardImagesImagePanelAuth } from './aut
 import { implementSpecialCollection } from '@/services/images/subservice/special/implement'
 import { defineOperation, defineSubOperation } from '@/services/serviceOperation'
 import logger from '@/lib/logger'
-import { StandardImage } from '@/prisma-generated-pn-types'
+import { StandardImage, type Image } from '@/prisma-generated-pn-types'
 import { imageOperations } from '@/services/images/subservice/operations'
 import { z } from 'zod'
 
@@ -95,14 +95,29 @@ const readStandardImage = defineOperation({
     }
 })
 
+const readAllStandardImages = defineOperation({
+    authorizer: () => standardImageCollectionAuth.readStandardImage.dynamicFields({}),
+    operation: async (): Promise<Record<StandardImage, Image>> => {
+        const entries = await Promise.all(
+            Object.values(StandardImage).map(async standardImage =>
+                [standardImage, await readStandardImage({ params: { standardImage } })] as const
+            )
+        )
+        return Object.fromEntries(entries) as Record<StandardImage, Image>
+    }
+})
+
 export { standardImagesImagePanelOperations }
 
 /**
  * The standard images are housed in the standardcollection - a special image collection.
- * It exposes the method for reading a standard image. If it is not found in the database,
- * it will be created from the static config on runtime.
+ * It exposes the method for reading a single standard image, or all of them at once.
+ *
+ * If the image does not exist in the database, it will be generated from its config,
+ * using the generateStandardImageFromConfig operation.
  */
 export const standardImageCollectionOperations = {
     readStandardImage,
+    readAllStandardImages,
     generateStandardImageFromConfig,
 } as const

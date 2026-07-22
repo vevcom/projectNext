@@ -4,10 +4,9 @@ import { SelectNumberPossibleNULL } from '@/UI/Select'
 import { UserPagingContext } from '@/contexts/paging/UserPaging'
 import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
 import UserRow from '@/components/User/UserList/UserRow'
-import useActionCall from '@/hooks/useActionCall'
+import { useGroups } from '@/contexts/ClientData'
 import { UsersSelectionContext } from '@/contexts/UsersSelection'
 import { UserSelectionContext } from '@/contexts/UserSelection'
-import { readGroupsForPageFilteringAction } from '@/services/users/actions'
 import { useContext, useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck } from '@fortawesome/free-solid-svg-icons'
@@ -90,7 +89,8 @@ export default function UserList({
 
     const groupSelected = !!userPaging?.details.selectedGroup
 
-    const { data: groups } = useActionCall(readGroupsForPageFilteringAction)
+    const groupsResult = useGroups()
+    const groups = groupsResult.status === 'success' ? groupsResult.groups : null
     const [groupSelection, setGroupSelection] = useState<{
         [T in GroupSelectionType]: {
             group: ExpandedGroup | null,

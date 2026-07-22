@@ -4,11 +4,22 @@ import { dynamicImageSchemas } from './schemas'
 import { visibilityOperations } from '@/services/visibility/operations'
 import { implementDoubleLevelVisibilityOperations } from '@/services/visibility/implement'
 import { defineOperation, type PrismaPossibleTransaction } from '@/services/serviceOperation'
-import { imageOperations, uniqueCollectionWhere } from '@/services/images/subservice/operations'
+import {
+    imageOperations,
+    uniqueCollectionWhere,
+    expandImageCollection
+} from '@/services/images/subservice/operations'
+import { expandedImageCollectionIncluder } from '@/services/images/subservice/constants'
 import { standardImageCollectionOperations } from '@/services/images/standard/operations'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
-import type { Image, Prisma } from '@/prisma-generated-pn-types'
+import type { Prisma } from '@/prisma-generated-pn-types'
 import type { z } from 'zod'
+
+async function readDefaultCollectionCover() {
+    return standardImageCollectionOperations.readStandardImage({
+        params: { standardImage: 'DEFAULT_IMAGE_COLLECTION_COVER' }
+    })
+}
 
 const visibility = implementDoubleLevelVisibilityOperations({
     implementationParamsSchema: dynamicImageSchemas.paramsSchemaCollection,
@@ -51,10 +62,13 @@ const readCollection = defineOperation({
                 prisma
             })
         }),
-    operation: async ({ prisma, params }) =>
-        await prisma.imageCollection.findFirstOrThrow({
+    operation: async ({ prisma, params }) => {
+        const collection = await prisma.imageCollection.findFirstOrThrow({
             where: whereConditionWithOwnershipCheck(params),
+            include: expandedImageCollectionIncluder,
         })
+        return expandImageCollection(collection, await readDefaultCollectionCover())
+    }
 })
 
 const readCollectionPage = defineOperation({
@@ -67,44 +81,16 @@ const readCollectionPage = defineOperation({
                 ...prismaWhereFilter,
                 ...ownershipCheckWhereCondition()
             },
-            include: {
-                coverImage: true,
-                images: {
-                    take: 1
-                },
-                _count: {
-                    select: {
-                        images: true
-                    }
-                }
-            },
+            include: expandedImageCollectionIncluder,
             orderBy: [
                 { createdAt: 'desc' },
                 { name: 'asc' }
             ],
         })
 
-        const lensCamera = await standardImageCollectionOperations.readStandardImage({
-            params: {
-                standardImage: 'DEFAULT_IMAGE_COLLECTION_COVER'
-            }
-        })
+        const defaultCover = await readDefaultCollectionCover()
 
-        const chooseCoverImage = (collection: {
-            coverImage: Image | null,
-            images: Image[]
-        }) => {
-            if (collection.coverImage) return collection.coverImage
-            if (collection.images[0]) return collection.images[0]
-            if (lensCamera) return lensCamera
-            return null
-        }
-
-        return collections.map(collection => ({
-            ...collection,
-            coverImage: chooseCoverImage(collection),
-            numberOfImages: collection._count.images,
-        }))
+        return collections.map(collection => expandImageCollection(collection, defaultCover))
     }
 })
 
