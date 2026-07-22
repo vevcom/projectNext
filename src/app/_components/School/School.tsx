@@ -26,7 +26,7 @@ export default function School({ school, asClient = false, session }: PropTypes)
     )
 
     const canEditCmsImage = schoolAuth.updateCmsImage.dynamicFields({}).auth(session).toJsObject()
-    const canEditCmsParagraph = schoolAuth.updateCmsParagraph.dynamicFields({}).auth(session).toJsObject()
+    const canEditCmsParagraph = schoolAuth.updateCmsParagraphContent.dynamicFields({}).auth(session).toJsObject()
     const canEditCmsLink = schoolAuth.updateCmsLink.dynamicFields({}).auth(session).toJsObject()
 
     return (
