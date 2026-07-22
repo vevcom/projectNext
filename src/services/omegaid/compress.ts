@@ -2,9 +2,6 @@ import { JWT_ISSUER } from '@/lib/jwt/constants'
 import type { ActionReturn, ActionError } from '@/services/actionTypes'
 import type { OmegaIdJWT } from '@/services/omegaid/types'
 
-/**
- * This file handles compression and decompression of omegaID
- */
 export function compressOmegaId(token: string): string {
     const parts = token.split('.')
     const payloadCompressed = compressPayload(parts[1])
