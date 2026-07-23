@@ -75,12 +75,32 @@ $collectionSize: calc(14vmin + 70px);
         grid-row: 2 / 3;
         @include ohma.layer();
         display: flex;
+        flex-direction: column;
         max-width: 100%;
-        overflow-x: scroll;
-        min-height: calc($collectionSize + 5vmin);
-        align-items: center;
         padding: 2*ohma.$gap;
         border-radius: #{ohma.$rounding};
+
+        > .collectionNote {
+            display: flex;
+            align-items: flex-start;
+            gap: ohma.$gap;
+            margin-bottom: ohma.$gap;
+            max-width: 90ch;
+            font-size: ohma.$fonts-s;
+            color: ohma.$colors-text-muted;
+            > svg {
+                margin-top: 0.25em;
+                flex-shrink: 0;
+            }
+        }
+
+        > .collections {
+            display: flex;
+            max-width: 100%;
+            overflow-x: scroll;
+            min-height: calc($collectionSize + 5vmin);
+            align-items: center;
+        }
 
         .collection {
             position: relative;
@@ -119,7 +139,7 @@ $collectionSize: calc(14vmin + 70px);
                 }
             }
         }
-        > *:last-child:not(.collection) {
+        > .collections > *:last-child:not(.collection) {
             min-width: $collectionSize;
             height: $collectionSize;
             border: ohma.$colors-black 1px solid;

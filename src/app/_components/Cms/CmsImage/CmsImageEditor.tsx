@@ -18,6 +18,8 @@ import ImageSelectionProvider from '@/contexts/ImageSelection'
 import { useSpecialCollections } from '@/contexts/ClientData'
 import { useState } from 'react'
 import Link from 'next/link'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faInfo } from '@fortawesome/free-solid-svg-icons'
 import type { ExpandedImageCollection } from '@/services/images/subservice/types'
 import type { CmsImage, Image as ImageT } from '@/prisma-generated-pn-types'
 import type { UpdateCmsImageAction } from '@/cms/images/types'
@@ -117,20 +119,30 @@ export default function CmsImageEditor({ cmsImage, updateCmsImageAction, canEdit
                                 <ImageList/>
                             </div>
                             <div className={styles.selectCollection}>
-                                {renderSpecialCollections()}
-                                <DynamicImageCollectionPagingProvider
-                                    startPage={{
-                                        pageSize: 12,
-                                        page: 0,
-                                    }}
-                                    details={collectionPagingDetails}
-                                    serverRenderedData={[]}
-                                >
-                                    <EndlessScroll
-                                        pagingContext={DynamicImageCollectionPagingContext}
-                                        renderer={renderCollection}
-                                    />
-                                </DynamicImageCollectionPagingProvider>
+                                <p className={styles.collectionNote}>
+                                    <FontAwesomeIcon icon={faInfo} />
+                                    <span>
+                                        Du ser bare bildesamlingene du administrerer. Merk at bildet du
+                                        velger blir synlig for alle som kan se siden det brukes på - også
+                                        for de som ikke har tilgang til samlingen bildet ligger i.
+                                    </span>
+                                </p>
+                                <div className={styles.collections}>
+                                    {renderSpecialCollections()}
+                                    <DynamicImageCollectionPagingProvider
+                                        startPage={{
+                                            pageSize: 12,
+                                            page: 0,
+                                        }}
+                                        details={collectionPagingDetails}
+                                        serverRenderedData={[]}
+                                    >
+                                        <EndlessScroll
+                                            pagingContext={DynamicImageCollectionPagingContext}
+                                            renderer={renderCollection}
+                                        />
+                                    </DynamicImageCollectionPagingProvider>
+                                </div>
                             </div>
                             <Link className={styles.linkToImages} href="/image-collections/">
                                 Go to images
