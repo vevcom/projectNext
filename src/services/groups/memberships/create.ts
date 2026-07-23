@@ -1,6 +1,6 @@
 import '@pn-server-only'
 import { canEasilyManageMembershipOfGroup, canEasilyManageMembershipOfGroups } from './canEasilyManageMembership'
-import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
+import { omegaOrderOperations } from '@/services/omegaOrder/operations'
 import { prismaCall } from '@/services/prismaCall'
 import { ServerError } from '@/services/error'
 import { prisma } from '@/prisma-pn-client-instance'
@@ -115,7 +115,7 @@ export async function createMembershipsForUser(
         }
     })
 
-    const { order: fallbackOrder } = await readCurrentOmegaOrder()
+    const { order: fallbackOrder } = await omegaOrderOperations.readCurrent({ bypassAuth: true })
 
     await prismaCall(() => prisma.membership.updateMany({
         where: {

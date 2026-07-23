@@ -34,7 +34,7 @@ export default async function migrateImages(
         create: {
             name: 'Søppel fra Omegaweb-basic',
             description: 'Denne samlingen inneholder bilder som ikke tilhørete noen samling i omegaweb-basic',
-            visibilityRead: {
+            visibilityRegular: {
                 create: {},
             },
             visibilityAdmin: {

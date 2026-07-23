@@ -1,4 +1,4 @@
-import seed from '@/prisma/seeder/src/seeder'
+import seed from '@/prisma/seeder/src/seed'
 import { beforeAll } from '@jest/globals'
 
 const timeout = 30 * 1000

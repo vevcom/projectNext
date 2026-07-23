@@ -96,7 +96,7 @@ export default async function User({ params }: PropTypes) {
                 />
 
                 <div className={styles.profileContent} style={borderColour}>
-                    <ProfilePicture width={240} profileImage={profileImage} className={styles.profilePicture}/>
+                    <ProfilePicture width={240} profileImage={profile.user.image} className={styles.profilePicture}/>
                     <div className={styles.header}>
                         <div className={styles.nameAndId}>
                             <h1><UserDisplayName
