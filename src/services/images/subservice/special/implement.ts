@@ -112,10 +112,8 @@ export function implementSpecialCollection({
             const collection = await readCollection({})
             return imageOperations.readPageOfImagesInCollection.internalCall({
                 params: {
-                    paging: {
-                        ...params.paging,
-                        details: { collectionId: collection.id },
-                    },
+                    paging: params.paging,
+                    collectionId: collection.id,
                 },
             })
         }

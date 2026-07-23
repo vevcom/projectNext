@@ -182,13 +182,13 @@ export const dynamicImageOperations = {
             dynamicImageAuth.readPageOfImagesInCollection.dynamicFields({
                 doubleLevelMatrix: await visibility.readDoubleLevelMatrixInternal({
                     params: {
-                        collectionId: params.paging.details.collectionId
+                        collectionId: params.collectionId
                     },
                     prisma
                 }),
             }),
         ownershipCheck: ({ params, prisma }) => ownershipCheck({
-            params: { collectionId: params.paging.details.collectionId },
+            params: { collectionId: params.collectionId },
             prisma
         }),
     }),

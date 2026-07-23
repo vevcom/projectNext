@@ -136,13 +136,16 @@ export const imageOperations = {
 
     readPageOfImagesInCollection: defineSubOperation({
         paramsSchema: () => imageSchemas.paramsSchemaReadPageOfImagesInCollection,
-        operation: () => async ({ prisma, params }) =>
-            await prisma.image.findMany({
+        operation: () => async ({ prisma, params }) => {
+            const { cursor, ...rest } = cursorPageingSelection(params.paging.page)
+            return await prisma.image.findMany({
                 where: {
-                    collectionId: params.paging.details.collectionId,
+                    collectionId: params.collectionId,
                 },
-                ...cursorPageingSelection(params.paging.page)
-            }),
+                ...rest,
+                cursor: cursor ? { id: cursor.imageId } : undefined,
+            })
+        },
     }),
 
     updateImageMeta: defineSubOperation({
