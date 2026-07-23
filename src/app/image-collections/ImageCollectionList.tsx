@@ -3,10 +3,11 @@ import styles from './ImageCollectionList.module.scss'
 import CollectionCard from '@/components/Image/Collection/CollectionCard'
 import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
 import { DynamicImageCollectionPagingContext } from '@/contexts/paging/DynamicImageCollectionPaging'
-import React from 'react'
+import { useState, type ReactNode } from 'react'
+import { useSpecialCollections } from '@/contexts/ClientData'
 
 type PropTypes = {
-    serverRendered: React.ReactNode,
+    serverRendered: ReactNode,
 }
 
 /**
@@ -15,9 +16,13 @@ type PropTypes = {
  * @returns
  */
 export default function ImageCollectionList({ serverRendered }: PropTypes) {
+    const [mode, setMode] = useState<'special' | 'dynamic'>('dynamic')
+
+    const specialCollectionsData = useSpecialCollections()
+
     return (
         <div className={styles.ImageCollectionList}>
-            {serverRendered} {/* Rendered on server homefully in the right way*/}
+            {serverRendered} {/* Rendered on server (page.tsx) hopefully in the right way*/}
             <EndlessScroll
                 pagingContext={DynamicImageCollectionPagingContext}
                 renderer={
