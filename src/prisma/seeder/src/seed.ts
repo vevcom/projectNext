@@ -1,4 +1,4 @@
-import seedDevUsers from './development/seedDevUsers'
+import { seedDevUsers } from './development/seedDevUsers'
 import seedDevPermissions from './development/seedDevPermissions'
 import { seedDevImages } from './development/seedDevImages'
 import { seedDevNews } from './development/seedDevNews'
@@ -78,7 +78,7 @@ export default async function seed(
         if (enableLogging) console.log('seeding dev data....')
         await seedDevImages()
         await seedDevGroups(prisma)
-        await seedDevUsers(prisma)
+        await seedDevUsers()
         await seedDevPermissions(prisma)
         await seedDevOmegaquotes(prisma)
         await seedDevNews()
