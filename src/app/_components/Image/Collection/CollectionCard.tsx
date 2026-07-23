@@ -9,9 +9,13 @@ type PropTypes = {
 }
 
 export default function CollectionCard({ collection, className }: PropTypes) {
+    const href = collection.special
+        ? `/image-collections/special/${encodeURIComponent(collection.special)}`
+        : `/image-collections/dynamic/${encodeURIComponent(collection.name)}`
+
     return (
         <Link
-            href={`/image-collections/dynamic/${encodeURIComponent(collection.name)}`}
+            href={href}
             className={`${styles.CollectionCard} ${className}`}
             key={collection.id}
         >

@@ -4,11 +4,28 @@ $collection-size: 250px;
 
 .ImageCollectionList {
     width: 100%;
+}
+
+.modeSwitch {
+    width: 100%;
+    display: flex;
+    gap: ohma.$gap;
+    margin-bottom: ohma.$gap;
+    > button {
+        opacity: 0.5;
+        &.active {
+            opacity: 1;
+        }
+    }
+}
+
+.grid {
+    width: 100%;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
 
-    //selects all collection card but not the button for loading more in Endless scroll
-    > *:not(:last-child) {
+    //selects all collection cards but not the button for loading more in Endless scroll
+    > *:not(.loadingControl) {
         width: $collection-size;
         height: $collection-size;
         margin: ohma.$gap;
@@ -78,27 +95,27 @@ $collection-size: 250px;
     }
 
     //button for loading more in Endless scroll
-    > *:last-child {
+    > .loadingControl {
         grid-column: 1/-1;
     }
 }
 
 @media screen and (max-width: (4 * ($collection-size + 20px))) {
-    .ImageCollectionList {
+    .grid {
         grid-template-columns: repeat(3, 1fr);
     }
 }
 
 @media screen and (max-width: (3 * ($collection-size + 20px))) {
-    .ImageCollectionList {
+    .grid {
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
 @media screen and (max-width: (2 * ($collection-size + 20px))) {
-    .ImageCollectionList {
+    .grid {
         grid-template-columns: repeat(1, 1fr);
-        > *:not(:last-child) {
+        > *:not(.loadingControl) {
             place-self: initial;
             width: min(90vw, 350px);
             height: min(90vw, 350px);
