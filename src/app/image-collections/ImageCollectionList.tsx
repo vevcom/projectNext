@@ -1,6 +1,6 @@
 'use client'
 import styles from './ImageCollectionList.module.scss'
-import CollectionCard from '@/components/Image/Collection/CollectionCard'
+import CollectionCardLink from '@/components/Image/Collection/CollectionCardLink'
 import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
 import { DynamicImageCollectionPagingContext } from '@/contexts/paging/DynamicImageCollectionPaging'
 import { useSpecialCollections } from '@/contexts/ClientData'
@@ -24,7 +24,7 @@ export default function ImageCollectionList({ serverRendered }: PropTypes) {
         if (specialCollectionsResult.status === 'loading') return <i>Laster inn...</i>
         if (specialCollectionsResult.status === 'error') return <p>Noe gikk galt</p>
         return specialCollectionsResult.specialCollections.map(collection => (
-            <CollectionCard key={collection.id} collection={collection} />
+            <CollectionCardLink key={collection.id} collection={collection} />
         ))
     }
 
@@ -52,11 +52,7 @@ export default function ImageCollectionList({ serverRendered }: PropTypes) {
                         loadingInfoClassName={styles.loadingControl}
                         renderer={
                             (collection, i) => (
-                                <CollectionCard
-                                    className={styles.collectionCard}
-                                    key={i}
-                                    collection={collection}
-                                />
+                                <CollectionCardLink key={i} collection={collection} />
                             )
                         }
                     />

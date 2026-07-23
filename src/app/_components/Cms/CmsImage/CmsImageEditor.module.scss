@@ -105,15 +105,17 @@ $collectionSize: calc(14vmin + 70px);
         .collection {
             position: relative;
             margin: 0 .2em;
+            width: $collectionSize;
+            height: $collectionSize;
             .collectionCard {
-                width: $collectionSize;
-                height: $collectionSize;
+                width: 100%;
+                height: 100%;
                 margin: 0;
                 z-index: 1;
             }
             .selector {
-                width: $collectionSize;
-                height: $collectionSize;
+                width: 100%;
+                height: 100%;
                 z-index: 2;
                 position: absolute;
                 background-color: transparent;

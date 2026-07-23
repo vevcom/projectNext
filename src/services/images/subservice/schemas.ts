@@ -4,7 +4,7 @@ import {
     maxImageFileSizeBytes,
     maxImageFileSizeMb
 } from './constants'
-import { readPageInputSchemaObject } from '@/lib/paging/schema'
+import { readPageInputSchema } from '@/lib/paging/schema'
 import { zfd } from 'zod-form-data'
 import { z } from 'zod'
 import { File } from 'node:buffer'
@@ -52,6 +52,14 @@ export const baseSchema = z.object({
     imageCredit: z.string().optional(),
 })
 
+const pageSchema = readPageInputSchema(
+    z.number(),
+    z.object({
+        imageId: z.number(),
+    }),
+    z.undefined(),
+)
+
 export const imageSchemas = {
     paramsSchemaCollection: z.union([
         z.object({ collectionId: z.number() }),
@@ -64,23 +72,13 @@ export const imageSchemas = {
         collectionId: z.number(),
         useFileName: z.boolean(),
     }),
-    paramsSchemaReadPageOfImagesInCollection: readPageInputSchemaObject(
-        z.number(),
-        z.object({
-            id: z.number(),
-        }),
-        z.object({
-            collectionId: z.number(),
-        }),
-    ),
-    paramsSchemaReadPageOfImagesInSpecialCollection: readPageInputSchemaObject(
-        z.number(),
-        z.object({
-            id: z.number(),
-        }),
-        z.object({}),
-    ),
-
+    paramsSchemaReadPageOfImagesInCollection: z.object({
+        paging: pageSchema,
+        collectionId: z.number(),
+    }),
+    paramsSchemaReadPageOfImagesInSpecialCollection: z.object({
+        paging: pageSchema,
+    }),
     updateCollection: baseSchema.partial().pick({
         collectionName: true,
         collectionDescription: true,

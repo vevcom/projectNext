@@ -3,7 +3,7 @@ import MakeNewCollection from './MakeNewCollection'
 import ImageCollectionList from './ImageCollectionList'
 import ToggleShowAdminCollections from './ToggleShowAdminCollections'
 import { DynamicImageCollectionPagingProvider } from '@/contexts/paging/DynamicImageCollectionPaging'
-import CollectionCard from '@/components/Image/Collection/CollectionCard'
+import CollectionCardLink from '@/components/Image/Collection/CollectionCardLink'
 import { ServerSession } from '@/auth/session/ServerSession'
 import { dynamicImageAuth } from '@/services/images/dynamic/auth'
 import { readDynamicImageCollectionsPageAction } from '@/services/images/dynamic/actions'
@@ -61,7 +61,7 @@ export default async function Images({ searchParams }: PropTypes) {
                     />
                     <ImageCollectionList
                         serverRendered={collections.map(collection => (
-                            <CollectionCard key={collection.id} collection={collection} />
+                            <CollectionCardLink key={collection.id} collection={collection} />
                         ))}
                     />
                 </DynamicImageCollectionPagingProvider>

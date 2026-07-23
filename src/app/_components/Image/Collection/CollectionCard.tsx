@@ -1,6 +1,5 @@
 import styles from './CollectionCard.module.scss'
 import Image from '@/components/Image/Image'
-import Link from 'next/link'
 import type { ExpandedImageCollection } from '@/services/images/subservice/types'
 
 type PropTypes = {
@@ -9,16 +8,8 @@ type PropTypes = {
 }
 
 export default function CollectionCard({ collection, className }: PropTypes) {
-    const href = collection.special
-        ? `/image-collections/special/${encodeURIComponent(collection.special)}`
-        : `/image-collections/dynamic/${encodeURIComponent(collection.name)}`
-
     return (
-        <Link
-            href={href}
-            className={`${styles.CollectionCard} ${collection.special ? styles.special : ''} ${className}`}
-            key={collection.id}
-        >
+        <div className={`${styles.CollectionCard} ${collection.special ? styles.special : ''} ${className ?? ''}`}>
             {
                 collection.coverImage ? (
                     <Image smallSize width={100} image={collection.coverImage} />
@@ -33,6 +24,6 @@ export default function CollectionCard({ collection, className }: PropTypes) {
                 <p>{collection.createdAt.toUTCString().split(' ').slice(0, 4).join(' ')}</p>
             </div>
             <p className={styles.imageCount}>{collection.numberOfImages}</p>
-        </Link>
+        </div>
     )
 }
