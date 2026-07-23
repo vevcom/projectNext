@@ -105,6 +105,22 @@ export function implementSpecialCollection({
         }
     })
 
+    const readPageOfImagesInCollection = defineOperation({
+        authorizer: () => imagePanelAuther,
+        paramsSchema: imageSchemas.paramsSchemaReadPageOfImagesInSpecialCollection,
+        operation: async ({ params }) => {
+            const collection = await readCollection({})
+            return imageOperations.readPageOfImagesInCollection.internalCall({
+                params: {
+                    paging: {
+                        ...params.paging,
+                        details: { collectionId: collection.id },
+                    },
+                },
+            })
+        }
+    })
+
     return {
         internalOperations: {
             uploadImage,
@@ -112,12 +128,7 @@ export function implementSpecialCollection({
         },
         specialCollectionPanelOperations: {
             readCollection,
-            readPageOfImagesInCollection: imageOperations.readPageOfImagesInCollection.implement({
-                authorizer: () => imagePanelAuther,
-                ownershipCheck: async ({ params }) => await readCollection({}).then(
-                    collection => collection?.id === params.paging.details.collectionId
-                )
-            }),
+            readPageOfImagesInCollection,
         }
     } as const
 }

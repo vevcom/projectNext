@@ -73,6 +73,13 @@ export const imageSchemas = {
             collectionId: z.number(),
         }),
     ),
+    paramsSchemaReadPageOfImagesInSpecialCollection: readPageInputSchemaObject(
+        z.number(),
+        z.object({
+            id: z.number(),
+        }),
+        z.object({}),
+    ),
 
     updateCollection: baseSchema.partial().pick({
         collectionName: true,

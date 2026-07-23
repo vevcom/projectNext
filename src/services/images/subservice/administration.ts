@@ -1,5 +1,5 @@
 import '@pn-server-only'
-import { specialImageCollectionsAdminAuth } from '@/services/images/specialPanels/auth'
+import { specialImagePanels } from '@/services/images/specialPanels/constants'
 import { visibilityIncluder, toMatrix } from '@/services/visibility/implement'
 import { checkVisibility } from '@/auth/visibility/checkVisibility'
 import { ServerError } from '@/services/error'
@@ -47,7 +47,7 @@ export async function sessionAdministratesCollectionOfImage({
     const { special, visibilityAdmin } = image.collection
 
     if (special) {
-        return specialImageCollectionsAdminAuth[special].dynamicFields({}).auth(session).authorized
+        return specialImagePanels[special].auth.dynamicFields({}).auth(session).authorized
     }
 
     return checkVisibility(session.memberships, toMatrix(visibilityAdmin))

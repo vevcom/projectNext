@@ -2,14 +2,7 @@
 import { readDefaultPermissionsAction } from '@/services/permissions/actions'
 import { readAllStandardImagesAction } from '@/services/images/standard/actions'
 import { readGroupsExpandedAction } from '@/services/groups/actions'
-import { specialImagePanelAuth } from '@/services/images/specialPanels/auth'
-import {
-    readStandardImagesCollectionAction,
-    readProfileImagesCollectionAction,
-    readCommitteeLogosCollectionAction,
-    readOmbulCoversCollectionAction,
-    readFlairImagesCollectionAction,
-} from '@/services/images/specialPanels/actions'
+import { specialImagePanels } from '@/services/images/specialPanels/constants'
 import { createContext, useContext, useState, useCallback, useEffect, useRef } from 'react'
 import type { ErrorCode } from '@/services/error'
 import type { ExpandedGroup } from '@/services/groups/types'
@@ -17,14 +10,6 @@ import type { ExpandedImageCollection } from '@/services/images/subservice/types
 import type { Image, Permission, StandardImage } from '@/prisma-generated-pn-types'
 import type { ReactNode } from 'react'
 import type { SessionMaybeUser } from '@/auth/session/Session'
-
-const specialCollectionSources = [
-    { auth: specialImagePanelAuth.standardImages, read: readStandardImagesCollectionAction },
-    { auth: specialImagePanelAuth.profileImages, read: readProfileImagesCollectionAction },
-    { auth: specialImagePanelAuth.committeeLogos, read: readCommitteeLogosCollectionAction },
-    { auth: specialImagePanelAuth.ombulCovers, read: readOmbulCoversCollectionAction },
-    { auth: specialImagePanelAuth.flairImages, read: readFlairImagesCollectionAction },
-] as const
 
 type ClientDataResult<Key extends string, Data> =
     | { status: 'loading' }
@@ -138,10 +123,10 @@ export default function ClientDataProvider({
         if (specialCollectionsInFlight.current) return
         specialCollectionsInFlight.current = true
         setSpecialCollections({ status: 'loading' })
-        const authorizedSources = specialCollectionSources.filter(
-            source => source.auth.dynamicFields({}).auth(session).authorized
+        const authorizedPanels = Object.values(specialImagePanels).filter(
+            panel => panel.auth.dynamicFields({}).auth(session).authorized
         )
-        const results = await Promise.all(authorizedSources.map(source => source.read()))
+        const results = await Promise.all(authorizedPanels.map(panel => panel.readCollection()))
         setSpecialCollections({
             status: 'success',
             specialCollections: results.flatMap(res => (res.success ? [res.data] : [])),
