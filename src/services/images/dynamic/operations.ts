@@ -78,8 +78,8 @@ const readCollectionPage = defineOperation({
         const collections = await prisma.imageCollection.findMany({
             ...cursorPageingSelection(params.paging.page),
             where: {
-                ...prismaWhereFilter,
-                ...ownershipCheckWhereCondition()
+                ...ownershipCheckWhereCondition(),
+                ...(prismaWhereFilter ? { visibilityRegular: prismaWhereFilter } : {})
             },
             include: expandedImageCollectionIncluder,
             orderBy: [
