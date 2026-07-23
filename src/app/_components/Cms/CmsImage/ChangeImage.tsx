@@ -2,27 +2,29 @@
 import styles from './ChangeImage.module.scss'
 import ChangeImageForm from './ChangeImageForm'
 import Image from '@/components/Image/Image'
-import { ImageSelectionContext } from '@/contexts/ImageSelection'
 import Form from '@/components/Form/Form'
 import { configureAction } from '@/services/configureAction'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTurnUp } from '@fortawesome/free-solid-svg-icons'
-import React, { useContext, useEffect, useEffectEvent, useState } from 'react'
+import React, { useEffect, useEffectEvent, useState } from 'react'
 import type { ImageSize, Image as ImageT } from '@/prisma-generated-pn-types'
 import type { UpdateCmsImageAction } from '@/cms/images/types'
 
 type PropTypes = {
     currentImage: ImageT | null,
+    selectedImage: ImageT | null,
     cmsImageId: number,
     currentImageSize: ImageSize,
     updateCmsImageAction: UpdateCmsImageAction
 }
 
-export default function ChangeImage({ currentImage, cmsImageId, currentImageSize, updateCmsImageAction }: PropTypes) {
-    const selectedContext = useContext(ImageSelectionContext)
-    if (!selectedContext) throw new Error('ImageSelectionContext required to use ChangeImage')
-    const { selectedImage } = selectedContext
-
+export default function ChangeImage({
+    currentImage,
+    selectedImage,
+    cmsImageId,
+    currentImageSize,
+    updateCmsImageAction,
+}: PropTypes) {
     //What is the next option in quality. The image always cycles up.
     const [changeToSize, setChangeToSize] = useState<ImageSize>(currentImageSize)
 
@@ -53,8 +55,14 @@ export default function ChangeImage({ currentImage, cmsImageId, currentImageSize
     const displayImage = selectedImage ?? currentImage
 
     const renderSubmitControls = () => {
-        if (hasNewSelection) {
-            return <ChangeImageForm cmsImageId={cmsImageId} updateCmsImageAction={updateCmsImageAction} />
+        if (hasNewSelection && selectedImage) {
+            return (
+                <ChangeImageForm
+                    cmsImageId={cmsImageId}
+                    selectedImage={selectedImage}
+                    updateCmsImageAction={updateCmsImageAction}
+                />
+            )
         }
         if (!currentImage) {
             return <p>Velg et bilde for å legge det til</p>
@@ -80,7 +88,7 @@ export default function ChangeImage({ currentImage, cmsImageId, currentImageSize
     return (
         <div className={styles.ChangeImage}>
             {
-                currentImage && hasNewSelection ? (
+                currentImage && selectedImage && hasNewSelection ? (
                     <div className={styles.currentAndSelected}>
                         <div className={styles.imageClip}>
                             <Image width={200} image={currentImage} />

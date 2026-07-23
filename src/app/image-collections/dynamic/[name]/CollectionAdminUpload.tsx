@@ -6,8 +6,8 @@ import Slider from '@/components/UI/Slider'
 import ProgressBar from '@/components/ProgressBar/ProgressBar'
 import TextInput from '@/app/_components/UI/TextInput'
 import LicenseChooser from '@/app/_components/LicenseChooser/LicenseChooser'
-import { createImagesAction } from '@/services/images/actions'
-import { maxImageCountInOneBatch } from '@/services/images/constants'
+import { uploadManyImagesToDynamicCollectionAction } from '@/services/images/dynamic/actions'
+import { maxImageCountInOneBatch } from '@/services/images/subservice/constants'
 import { useCallback, useState } from 'react'
 import type { FileWithStatus } from '@/components/UI/Dropzone'
 import type { ActionReturn } from '@/services/actionTypes'
@@ -33,18 +33,18 @@ export default function CollectionAdminUpload({ collectionId, refreshImages }: P
         const doneFiles: FileWithStatus[] = []
 
         const useFileName = data.get('useFileName') === 'on'
-        const credit = typeof data.get('credit') === 'string' ? data.get('credit') : undefined
-        const licenseId = typeof data.get('licenseId') === 'string' ? data.get('licenseId') : undefined
+        const credit = typeof data.get('imageCredit') === 'string' ? data.get('imageCredit') : undefined
+        const licenseId = typeof data.get('imageLicenseId') === 'string' ? data.get('imageLicenseId') : undefined
 
         let res: ActionReturn<void> = { success: true, data: undefined }
         setProgress(0)
         const progressIncrement = 1 / batches.length
         for (const batch of batches) {
             const formData = new FormData()
-            if (credit) formData.append('credit', credit)
-            if (licenseId) formData.append('licenseId', licenseId)
+            if (credit) formData.append('imageCredit', credit)
+            if (licenseId) formData.append('imageLicenseId', licenseId)
             batch.forEach(file => {
-                formData.append('files', file.file)
+                formData.append('imageFiles', file.file)
             })
             setFiles(prev => prev.map(file => {
                 if (batch.includes(file)) {
@@ -52,7 +52,7 @@ export default function CollectionAdminUpload({ collectionId, refreshImages }: P
                 }
                 return file
             }))
-            res = await createImagesAction({ params: { useFileName, collectionId } }, formData)
+            res = await uploadManyImagesToDynamicCollectionAction({ params: { useFileName, collectionId } }, formData)
             if (res.success) {
                 doneFiles.push(...batch)
                 setFiles(files.map(file => {
@@ -76,7 +76,7 @@ export default function CollectionAdminUpload({ collectionId, refreshImages }: P
         setProgress(null)
         setFiles([])
         return res
-    }, [files, progress, collectionId])
+    }, [files, collectionId])
 
     return (
         <Form
@@ -88,8 +88,8 @@ export default function CollectionAdminUpload({ collectionId, refreshImages }: P
             action={handleBatchedUpload}
         >
             <Dropzone label="last opp" name="files" files={files} setFiles={setFiles}/>
-            <TextInput name="credit" label="Kreditering" />
-            <LicenseChooser />
+            <TextInput name="imageCredit" label="Kreditering" />
+            <LicenseChooser name="imageLicenseId" />
             <Slider label="Bruk filnavn som navn" name="useFileName" />
             {
                 progress ? <ProgressBar progress={progress} /> : <></>

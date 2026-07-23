@@ -1,14 +1,7 @@
 import styles from './page.module.scss'
-import CollectionAdmin from './CollectionAdmin'
-import ImageList from '@/components/Image/ImageList/ImageList'
-import { ImagePagingProvider } from '@/contexts/paging/ImagePaging'
-import ImageListImage from '@/components/Image/ImageList/ImageListImage'
-import ImageDisplayProvider from '@/contexts/ImageDisplayProvider'
-import { readImageCollectionAction } from '@/services/images/collections/actions'
-import { readImagesPageAction } from '@/services/images/actions'
+import DynamicCollectionPanel from './DynamicCollectionPanel'
+import { readDynamicImageCollectionAction } from '@/services/images/dynamic/actions'
 import { notFound } from 'next/navigation'
-import type { PageSizeImage } from '@/contexts/paging/ImagePaging'
-import type { VisibilityMatrix } from '@/services/visibility/types'
 
 type PropTypes = {
     params: Promise<{
@@ -17,48 +10,17 @@ type PropTypes = {
 }
 
 export default async function Collection({ params }: PropTypes) {
-    const pageSize: PageSizeImage = 30
+    const collectionName = decodeURIComponent((await params).name)
 
-    const readCollection = await readImageCollectionAction((await params).name)
+    const readCollection = await readDynamicImageCollectionAction({ params: { collectionName } })
     if (!readCollection.success) notFound() //TODO: replace with better error page if error is UNAUTHORIZED.
     const collection = readCollection.data
 
-    const readImages = await readImagesPageAction.bind(null, {
-        params: {
-            paging: {
-                page: { pageSize, page: 0, cursor: null },
-                details: { collectionId: collection.id }
-            }
-        }
-    })()
-    if (!readImages.success) notFound()
-    const images = readImages.data
-
     return (
-        <ImagePagingProvider
-            startPage={{
-                pageSize,
-                page: 1,
-            }}
-            details={{ collectionId: collection.id }}
-            serverRenderedData={images}
-        >
-            <ImageDisplayProvider>
-                <div className={styles.wrapper}>
-                    <h1>{collection.name}</h1>
-                    <i>{collection.description}</i>
-                    <main>
-                        <ImageList serverRendered={
-                            images.map(image => <ImageListImage key={image.id} image={image} />)
-                        } />
-                    </main>
-                    <CollectionAdmin
-                        visibilityAdmin={{} as VisibilityMatrix}
-                        visibilityRead={{} as VisibilityMatrix}
-                        collection={collection}
-                    />
-                </div>
-            </ImageDisplayProvider>
-        </ImagePagingProvider>
+        <div className={styles.wrapper}>
+            <h1>{collection.name}</h1>
+            <i>{collection.description}</i>
+            <DynamicCollectionPanel collection={collection} />
+        </div>
     )
 }

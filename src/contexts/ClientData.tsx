@@ -126,7 +126,7 @@ export default function ClientDataProvider({
         const authorizedPanels = Object.values(specialImagePanels).filter(
             panel => panel.auth.dynamicFields({}).auth(session).authorized
         )
-        const results = await Promise.all(authorizedPanels.map(panel => panel.readCollection()))
+        const results = await Promise.all(authorizedPanels.map(panel => panel.readCollectionAction()))
         setSpecialCollections({
             status: 'success',
             specialCollections: results.flatMap(res => (res.success ? [res.data] : [])),
