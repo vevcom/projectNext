@@ -32,7 +32,7 @@ type Authorizers<
     ) => AuthorizerDynamicFieldsBound | Promise<AuthorizerDynamicFieldsBound>
 }
 
-const prismaInclude = {
+export const visibilityIncluder = {
     requirements: {
         include: {
             conditions: true
@@ -42,13 +42,13 @@ const prismaInclude = {
 
 type ReadVisibilityDoubleLevel<ImplementationParamsSchema extends z.ZodTypeAny> = (
     args: {
-        include: typeof prismaInclude,
+        include: typeof visibilityIncluder,
         prisma: PrismaPossibleTransaction<false>,
         implementationParams: z.infer<ImplementationParamsSchema>
     }
 ) => Promise<{
-    regularLevel: Prisma.VisibilityGetPayload<{ include: typeof prismaInclude }>,
-    adminLevel: Prisma.VisibilityGetPayload<{ include: typeof prismaInclude }>
+    regularLevel: Prisma.VisibilityGetPayload<{ include: typeof visibilityIncluder }>,
+    adminLevel: Prisma.VisibilityGetPayload<{ include: typeof visibilityIncluder }>
 }>
 
 export function implementDoubleLevelVisibilityOperations<
@@ -72,7 +72,7 @@ export function implementDoubleLevelVisibilityOperations<
         const visibilties = await readDoubleLevel({
             prisma,
             implementationParams: params,
-            include: prismaInclude
+            include: visibilityIncluder
         })
 
         return {
@@ -109,7 +109,7 @@ export function implementDoubleLevelVisibilityOperations<
                     })
                 }),
             ownershipCheck: async ({ params, prisma, implementationParams }) => (await readDoubleLevel({
-                include: prismaInclude,
+                include: visibilityIncluder,
                 prisma,
                 implementationParams,
             })).regularLevel.id === params.visibilityId
@@ -125,7 +125,7 @@ export function implementDoubleLevelVisibilityOperations<
                     })
                 }),
             ownershipCheck: async ({ params, prisma, implementationParams }) => (await readDoubleLevel({
-                include: prismaInclude,
+                include: visibilityIncluder,
                 prisma,
                 implementationParams,
             })).adminLevel.id === params.visibilityId
@@ -133,7 +133,7 @@ export function implementDoubleLevelVisibilityOperations<
     } as const
 }
 
-function toMatrix(visibility: Prisma.VisibilityGetPayload<{ include: typeof prismaInclude }>): VisibilityMatrix {
+export function toMatrix(visibility: Prisma.VisibilityGetPayload<{ include: typeof visibilityIncluder }>): VisibilityMatrix {
     return {
         requirements: visibility.requirements.map(requirement => ({
             conditions: requirement.conditions.map(condition => (

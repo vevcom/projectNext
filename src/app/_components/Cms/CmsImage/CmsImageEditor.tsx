@@ -23,6 +23,8 @@ import type { CmsImage, Image as ImageT } from '@/prisma-generated-pn-types'
 import type { UpdateCmsImageAction } from '@/cms/images/types'
 import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
 
+const collectionPagingDetails = { showOnlyCollectionsSessionAdministrates: true } as const
+
 type PropTypes = {
     cmsImage: CmsImage & {
         image: ImageT | null
@@ -121,7 +123,7 @@ export default function CmsImageEditor({ cmsImage, updateCmsImageAction, canEdit
                                         pageSize: 12,
                                         page: 0,
                                     }}
-                                    details={undefined}
+                                    details={collectionPagingDetails}
                                     serverRenderedData={[]}
                                 >
                                     <EndlessScroll

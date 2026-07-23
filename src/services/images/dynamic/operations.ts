@@ -79,7 +79,14 @@ const readCollectionPage = defineOperation({
             ...cursorPageingSelection(params.paging.page),
             where: {
                 ...ownershipCheckWhereCondition(),
-                ...(prismaWhereFilter ? { visibilityRegular: prismaWhereFilter } : {})
+                // The filter is undefined only when the session bypasses visibility with IMAGE_ADMIN,
+                // which also means it administrates every collection - hence no admin filter either.
+                ...(prismaWhereFilter ? {
+                    visibilityRegular: prismaWhereFilter,
+                    ...(params.paging.details.showOnlyCollectionsSessionAdministrates ? {
+                        visibilityAdmin: prismaWhereFilter
+                    } : {})
+                } : {})
             },
             include: expandedImageCollectionIncluder,
             orderBy: [

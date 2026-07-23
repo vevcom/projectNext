@@ -1,7 +1,8 @@
 import '@pn-server-only'
 import { cmsImageSchemas } from './schemas'
 import { defineSubOperation } from '@/services/serviceOperation'
-import { ServerError } from '@/services/error'
+import { sessionAdministratesCollectionOfImage } from '@/services/images/subservice/administration'
+import { ServerError, Smorekopp } from '@/services/error'
 import { z } from 'zod'
 import { SpecialCmsImage } from '@/prisma-generated-pn-types'
 import logger from '@/lib/logger'
@@ -57,22 +58,41 @@ export const cmsImageOperations = {
             cmsImageId: z.number()
         }),
         dataSchema: () => cmsImageSchemas.update,
-        operation: () => ({ prisma, params, data: { imageId, ...data } }) => prisma.cmsImage.update({
-            where: {
-                id: params.cmsImageId,
-            },
-            data: {
-                ...data,
-                image: imageId !== undefined ? {
-                    connect: {
-                        id: imageId
-                    }
-                } : undefined
-            },
-            include: {
-                image: true
+        operation: () => async ({ prisma, params, session, bypassAuth, data: { imageId, ...data } }) => {
+            // The implementing service authorizes editing the cms image itself, but not the image
+            // being linked into it - a session may only point a cms image at an image from a
+            // collection it administrates.
+            if (imageId !== undefined && !bypassAuth) {
+                const administrates = await sessionAdministratesCollectionOfImage({
+                    prisma,
+                    session,
+                    imageId,
+                })
+                if (!administrates) {
+                    throw new Smorekopp(
+                        'UNAUTHORIZED',
+                        'Du kan bare bruke bilder fra samlinger du administrerer'
+                    )
+                }
             }
-        })
+
+            return prisma.cmsImage.update({
+                where: {
+                    id: params.cmsImageId,
+                },
+                data: {
+                    ...data,
+                    image: imageId !== undefined ? {
+                        connect: {
+                            id: imageId
+                        }
+                    } : undefined
+                },
+                include: {
+                    image: true
+                }
+            })
+        }
     }),
 
     destroy: defineSubOperation({

@@ -1,17 +1,26 @@
 import styles from './page.module.scss'
 import MakeNewCollection from './MakeNewCollection'
 import ImageCollectionList from './ImageCollectionList'
+import ToggleShowAdminCollections from './ToggleShowAdminCollections'
 import { DynamicImageCollectionPagingProvider } from '@/contexts/paging/DynamicImageCollectionPaging'
 import CollectionCard from '@/components/Image/Collection/CollectionCard'
 import { ServerSession } from '@/auth/session/ServerSession'
 import { dynamicImageAuth } from '@/services/images/dynamic/auth'
 import { readDynamicImageCollectionsPageAction } from '@/services/images/dynamic/actions'
+import { QueryParams } from '@/lib/queryParams/queryParams'
 import type { PageSizeDynamicImageCollection } from '@/contexts/paging/DynamicImageCollectionPaging'
+import type { SearchParamsServerSide } from '@/lib/queryParams/types'
 
-export default async function Images() {
+type PropTypes = SearchParamsServerSide
+
+export default async function Images({ searchParams }: PropTypes) {
     const session = await ServerSession.fromNextAuth()
     const canCreateCollection = dynamicImageAuth.createCollection.dynamicFields({ }).auth(session)
     const pageSize: PageSizeDynamicImageCollection = 12
+
+    const showOnlyCollectionsSessionAdministrates =
+        QueryParams.onlyAdministratedCollections.decode(await searchParams) ?? false
+    const details = { showOnlyCollectionsSessionAdministrates }
 
     const collectionPage = await readDynamicImageCollectionsPageAction({
         params: {
@@ -21,7 +30,7 @@ export default async function Images() {
                     page: 0,
                     cursor: null,
                 },
-                details: undefined,
+                details,
             },
         },
     })
@@ -40,13 +49,16 @@ export default async function Images() {
                         pageSize,
                         page: 1,
                     }}
-                    details={undefined}
+                    details={details}
                     serverRenderedData={collections}
                 >
                     <span className={styles.header}>
                         <h1>Fotogalleri</h1>
                         {canCreateCollection.authorized && <MakeNewCollection />}
                     </span>
+                    <ToggleShowAdminCollections
+                        showOnlyCollectionsSessionAdministrates={showOnlyCollectionsSessionAdministrates}
+                    />
                     <ImageCollectionList
                         serverRendered={collections.map(collection => (
                             <CollectionCard key={collection.id} collection={collection} />

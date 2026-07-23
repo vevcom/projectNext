@@ -13,6 +13,8 @@ export const dynamicImageSchemas = {
         z.object({
             id: z.number()
         }),
-        z.undefined()
+        z.object({
+            showOnlyCollectionsSessionAdministrates: z.boolean()
+        })
     ),
 } as const
