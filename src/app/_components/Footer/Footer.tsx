@@ -25,7 +25,7 @@ async function Footer({ canEditSpecialCmsImage }: PropTypes) {
                 </p>
                 <p>Org. Nr. 890 384 692</p>
                 <div>
-                    {/* Uncomment when PWA an SVG
+                    {/* TODO: Uncomment when PWA an SVG
                     <SpecialCmsImage
                         canEdit={canEditSpecialCmsImage}
                         special="FOOTER_1"
