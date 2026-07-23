@@ -15,8 +15,10 @@ import useEditMode from '@/hooks/useEditMode'
 import { ImagePagingProvider } from '@/contexts/paging/ImagePaging'
 import PopUpProvider from '@/contexts/PopUp'
 import ImageSelectionProvider from '@/contexts/ImageSelection'
+import { useSpecialCollections } from '@/contexts/ClientData'
 import { useState } from 'react'
 import Link from 'next/link'
+import type { ExpandedImageCollection } from '@/services/images/subservice/types'
 import type { CmsImage, Image as ImageT } from '@/prisma-generated-pn-types'
 import type { UpdateCmsImageAction } from '@/cms/images/types'
 import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
@@ -41,9 +43,33 @@ export default function CmsImageEditor({ cmsImage, updateCmsImageAction, canEdit
         cmsImage.image?.collectionId ?? null
     )
 
+    const specialCollectionsResult = useSpecialCollections()
+
     const isCollectionActive = (collection: { id: number }) => (
         collection.id === currentCollectionId ? styles.selected : ''
     )
+
+    const renderCollection = (collection: ExpandedImageCollection) => (
+        <div
+            key={collection.id}
+            className={`${styles.collection} ${isCollectionActive(collection)}`}
+        >
+            <button
+                onClick={() => setCurrentCollectionId(collection.id)}
+                className={styles.selector}
+            />
+            <CollectionCard
+                className={styles.collectionCard}
+                collection={collection}
+            />
+        </div>
+    )
+
+    const renderSpecialCollections = () => {
+        if (specialCollectionsResult.status === 'loading') return <i>Laster inn...</i>
+        if (specialCollectionsResult.status === 'error') return <p>Noe gikk galt</p>
+        return specialCollectionsResult.specialCollections.map(renderCollection)
+    }
 
     if (!editable) return null
     return (
@@ -89,6 +115,7 @@ export default function CmsImageEditor({ cmsImage, updateCmsImageAction, canEdit
                                 <ImageList/>
                             </div>
                             <div className={styles.selectCollection}>
+                                {renderSpecialCollections()}
                                 <DynamicImageCollectionPagingProvider
                                     startPage={{
                                         pageSize: 12,
@@ -99,21 +126,7 @@ export default function CmsImageEditor({ cmsImage, updateCmsImageAction, canEdit
                                 >
                                     <EndlessScroll
                                         pagingContext={DynamicImageCollectionPagingContext}
-                                        renderer={collection => (
-                                            <div
-                                                key={collection.id}
-                                                className={`${styles.collection} ${isCollectionActive(collection)}`}
-                                            >
-                                                <button
-                                                    onClick={() => setCurrentCollectionId(collection.id)}
-                                                    className={styles.selector}
-                                                />
-                                                <CollectionCard
-                                                    className={styles.collectionCard}
-                                                    collection={collection}
-                                                />
-                                            </div>
-                                        )}
+                                        renderer={renderCollection}
                                     />
                                 </DynamicImageCollectionPagingProvider>
                             </div>

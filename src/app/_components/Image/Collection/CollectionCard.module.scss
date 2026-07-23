@@ -69,4 +69,23 @@
     &:hover img {
         scale: 1.2;
     }
+    &.special {
+        > .specialTag {
+            position: absolute;
+            top: 0;
+            left: 0;
+            padding: 0.3em;
+            color: ohma.$colors-white;
+            background-color: ohma.$colors-purple;
+            border-radius: 0 0 1em 0;
+            z-index: 1;
+            text-align: center;
+            font-size: 0.8em;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        &::after {
+            background: radial-gradient(ellipse at center bottom, transparent 20%, ohma.$colors-purple 70%, ohma.$colors-purple 100%);
+        }
+    }
 }

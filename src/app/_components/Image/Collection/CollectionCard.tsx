@@ -16,7 +16,7 @@ export default function CollectionCard({ collection, className }: PropTypes) {
     return (
         <Link
             href={href}
-            className={`${styles.CollectionCard} ${className}`}
+            className={`${styles.CollectionCard} ${collection.special ? styles.special : ''} ${className}`}
             key={collection.id}
         >
             {
@@ -26,6 +26,7 @@ export default function CollectionCard({ collection, className }: PropTypes) {
                     <p>Something went wrong</p>
                 )
             }
+            {collection.special && <p className={styles.specialTag}>Spesiell</p>}
             <div className={styles.info}>
                 <h2>{collection.name}</h2>
                 <i>{collection.description}</i>
