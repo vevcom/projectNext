@@ -208,9 +208,6 @@ async function createSpecialCmsArticle(
     special: SpecialCmsArticle,
     { updateOperations, ...article }: SeedSpecialArticleConfig
 ) {
-    // readSpecial is used directly here (rather than going through whichever service ends up
-    // owning this special article's update operations) since self-healing a missing special
-    // article is not an ownership concern - only updating its content is.
     const createdArticle = await articleOperations.readSpecial.internalCall({ params: { special } })
 
     await buildArticleFromConfig({
