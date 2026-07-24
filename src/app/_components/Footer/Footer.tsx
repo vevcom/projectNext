@@ -1,7 +1,7 @@
 import styles from './Footer.module.scss'
 import SocialIcons from '@/components/SocialIcons/SocialIcons'
 import SpecialCmsImage from '@/components/Cms/CmsImage/SpecialCmsImage'
-import StandardImage from '@/components/Image/StandardImage'
+import StandardImageServer from '@/components/Image/StandardImageServer'
 import { readSpecialCmsImageFrontpage, updateSpecialCmsImageFrontpage } from '@/services/frontpage/actions'
 import Link from 'next/link'
 import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
@@ -14,7 +14,7 @@ async function Footer({ canEditSpecialCmsImage }: PropTypes) {
     return (
         <footer className={styles.Footer}>
             <div>
-                <StandardImage
+                <StandardImageServer
                     standardImage="LOGO_WHITE_TEXT"
                     width={350}
                 />

@@ -5,7 +5,7 @@ import getNavItems from './navDef'
 import UserNavigation from './UserNavigation'
 import ReportButton from './ReportButton'
 import EditModeSwitch from '@/components/EditModeSwitch/EditModeSwitch'
-import StandardImage from '@/components/Image/StandardImage'
+import StandardImageServer from '@/components/Image/StandardImageServer'
 import Link from 'next/link'
 import type { Profile } from '@/services/users/types'
 
@@ -30,13 +30,13 @@ export default async function NavBar({ profile }: PropTypes) {
         <nav className={styles.NavBar}>
             <ul>
                 <li className={styles.logo}>
-                    <StandardImage
+                    <StandardImageServer
                         standardImage="LOGO_WHITE"
                         width={30}
                         alt="omega logo"
                     >
                         <Link href="/" />
-                    </StandardImage>
+                    </StandardImageServer>
                 </li>
                 {
                     itemsForNav.map((item) => (
@@ -53,7 +53,7 @@ export default async function NavBar({ profile }: PropTypes) {
                     <EditModeSwitch />
                     <ReportButton/>
                     <div className={styles.magicHat}>
-                        <StandardImage
+                        <StandardImageServer
                             standardImage="MAGISK_HATT"
                             width={25}
                             height={25}

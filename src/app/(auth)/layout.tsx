@@ -1,5 +1,5 @@
 import styles from './layout.module.scss'
-import StandardImage from '@/components/Image/StandardImage'
+import StandardImageServer from '@/components/Image/StandardImageServer'
 import React from 'react'
 
 type PropTypes = {
@@ -14,7 +14,7 @@ export default function AuthLayout({ children }: PropTypes) {
                     {children}
                 </div>
                 <div className={styles.image}>
-                    <StandardImage
+                    <StandardImageServer
                         standardImage="MAGISK_HATT"
                         alt="en kappemann sin hatt"
                         width={200}

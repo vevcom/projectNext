@@ -5,7 +5,7 @@ import EventCard from '@/app/_components/Event/EventCard'
 import JobAd from '@/app/career/jobads/JobAd'
 import NewsCard from '@/app/news/NewsCard'
 import SocialIcons from '@/components/SocialIcons/SocialIcons'
-import StandardImage from '@/components/Image/StandardImage'
+import StandardImageServer from '@/components/Image/StandardImageServer'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { readNewsCurrentAction } from '@/services/news/actions'
 import { readActiveJobAdsAction } from '@/services/career/jobAds/actions'
@@ -36,7 +36,7 @@ export default async function LoggedInLandingPage() {
             <div className={`${styles.part} ${styles.frontImg}`}>
                 <div className={styles.frontInfo}>
                     <div>
-                        <StandardImage
+                        <StandardImageServer
                             standardImage="LOGO_WHITE_TEXT"
                             width={300}
                         />

@@ -2,7 +2,7 @@ import getNavItems from './navDef'
 import styles from './MobileNavBar.module.scss'
 import Menu from './Menu'
 import UserNavigation from './UserNavigation'
-import StandardImage from '@/components/Image/StandardImage'
+import StandardImageServer from '@/components/Image/StandardImageServer'
 import EditModeSwitch from '@/components/EditModeSwitch/EditModeSwitch'
 import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -29,15 +29,15 @@ export default async function MobileNavBar({ profile }: PropTypes) {
                 ))
             }
             <div>
-                <StandardImage
+                <StandardImageServer
                     standardImage="LOGO_WHITE"
                     width={30}
                 >
                     <Link className={styles.imagelink} href="/"/>
-                </StandardImage>
+                </StandardImageServer>
             </div>
             <div className={styles.magicHat}>
-                <StandardImage
+                <StandardImageServer
                     standardImage="MAGISK_HATT"
                     width={25}
                     height={25}

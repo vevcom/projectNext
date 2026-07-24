@@ -21,7 +21,7 @@ const fallbackImage = '/images/fallback.jpg'
  * @param standardImage - the standard image to display
  * @returns
  */
-export default async function StandardImage({ standardImage, children, className = '', ...props }: PropTypes) {
+export default async function StandardImageServer({ standardImage, children, className = '', ...props }: PropTypes) {
     const imageRes = await readStandardImageAction({ params: { standardImage } })
 
     return (

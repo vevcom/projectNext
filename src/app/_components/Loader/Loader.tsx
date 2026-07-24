@@ -1,10 +1,13 @@
 import styles from './Loader.module.scss'
-import StandardImage from '@/components/Image/StandardImage'
+import StandardImageServer from '@/components/Image/StandardImageServer'
 
+/**
+ * WARNING: this component should only be rendered on the server
+*/
 function Loader() {
     return (
         <div className={styles.Loader}>
-            <StandardImage
+            <StandardImageServer
                 standardImage="MAGISK_HATT"
                 width={100}
             />

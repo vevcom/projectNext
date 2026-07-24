@@ -2,7 +2,7 @@
 import styles from './StandardImage.module.scss'
 import Image, { SrcImage } from './Image'
 import { useStandardImages } from '@/contexts/ClientData'
-import type { PropTypes } from './StandardImage'
+import type { PropTypes } from './StandardImageServer'
 
 const fallbackImage = '/images/fallback.jpg'
 
