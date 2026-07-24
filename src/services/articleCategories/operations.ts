@@ -78,7 +78,11 @@ export const articleCategoryOperations = {
         opensTransaction: true,
         operation: ({ prisma, params }) =>
             prisma.$transaction(async (tx) => {
-                const article = await articleOperations.create.internalCall({ data: { }, prisma: tx })
+                const article = await articleOperations.create.internalCall({
+                    data: {},
+                    prisma: tx,
+                    operationImplementationFields: { special: null }
+                })
                 await tx.articleCategory.update({
                     where: {
                         id: params.id

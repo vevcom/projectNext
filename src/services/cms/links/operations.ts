@@ -3,15 +3,18 @@ import { cmsLinkSchemas } from './schemas'
 import { defineSubOperation } from '@/services/serviceOperation'
 import logger from '@/lib/logger'
 import { ServerError } from '@/services/error'
-import { z } from 'zod'
 import { SpecialCmsLink } from '@/prisma-generated-pn-types'
+import { z } from 'zod'
 
 const create = defineSubOperation({
     dataSchema: () => cmsLinkSchemas.create,
-    operation: () => ({ data, prisma }) =>
-        prisma.cmsLink.create({
-            data
-        })
+    operation: (
+        { special }: { special: SpecialCmsLink | null }
+    ) => (
+        { data, prisma }
+    ) => prisma.cmsLink.create({
+        data: { ...data, special }
+    })
 })
 
 export const cmsLinkOperations = {
@@ -63,7 +66,10 @@ export const cmsLinkOperations = {
             })
             if (!cmsLink) {
                 logger.error(`Could not find special cms link with special ${special} - creating it!`)
-                return await create.internalCall({ data: { special, url: './', text: 'Default text' } })
+                return await create.internalCall({
+                    data: { url: './', text: 'Default text' },
+                    operationImplementationFields: { special }
+                })
             }
             return cmsLink
         }

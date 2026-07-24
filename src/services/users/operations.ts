@@ -568,6 +568,9 @@ export const userOperations = {
         }),
         dataSchema: userSchemas.updateProfileImage,
         opensTransaction: true,
+        // uploadImage resizes to 3 sizes, converts to avif and writes several files to store
+        // before any db write happens - comfortably slower than the default 5000ms interactive
+        // transaction timeout under load, hence the raised timeout below.
         operation: ({ prisma, params, data }) =>
             prisma.$transaction(async tx => {
                 const existingUser = await tx.user.findUniqueOrThrow({
@@ -595,6 +598,6 @@ export const userOperations = {
                 }
 
                 return newImage
-            })
+            }, { timeout: 20000 })
     }),
 } as const

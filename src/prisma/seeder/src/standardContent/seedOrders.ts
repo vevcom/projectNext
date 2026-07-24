@@ -8,12 +8,12 @@ const CURRENT_OMEGA_ORDER = 106
  */
 export const seedOrders = defineSeedOperation(async (prisma: PrismaClient) => {
     await Promise.all(
-        Array.from({ length: CURRENT_OMEGA_ORDER }, (_, i) => i + 1).map(async (orderNumber) => {
+        Array.from({ length: CURRENT_OMEGA_ORDER }, (_, i) => i + 1).map(orderNumber =>
             prisma.omegaOrder.upsert({
                 where: { order: orderNumber },
                 create: { order: orderNumber },
                 update: {},
             })
-        })
+        )
     )
 })

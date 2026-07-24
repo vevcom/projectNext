@@ -14,7 +14,7 @@ export const seedNewsConfig = [
     {
         description: 'ny vev',
         article: {
-            name: 'velkommen til nye veven',
+            name: 'Velkommen til nye veven',
             coverImage: {
                 image: { standardImage: 'LOGO_SIMPLE' },
                 imageSize: 'LARGE'

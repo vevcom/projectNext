@@ -78,8 +78,14 @@ export const eventOperations = {
         dataSchema: eventSchemas.create,
         authorizer: () => eventAuth.create.dynamicFields({}),
         operation: async ({ prisma, data, session }) => {
-            const cmsParagraph = await cmsParagraphOperations.create.internalCall({ data: {} })
-            const cmsImage = await cmsImageOperations.create.internalCall({ data: {} })
+            const cmsParagraph = await cmsParagraphOperations.create.internalCall({
+                data: {},
+                operationImplementationFields: { special: null }
+            })
+            const cmsImage = await cmsImageOperations.create.internalCall({
+                data: {},
+                operationImplementationFields: { special: null }
+            })
 
             if (data.eventStart > data.eventEnd) {
                 throw new ServerError('BAD PARAMETERS', 'Event må jo strate før den slutter')

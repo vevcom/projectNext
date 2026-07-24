@@ -36,7 +36,10 @@ export const newsOperations = {
             const backupEndDateTime = new Date()
             backupEndDateTime.setDate(backupEndDateTime.getDate() + defaultNewsArticleOldCutoff)
 
-            const article = await articleOperations.create.internalCall({ data: { name } })
+            const article = await articleOperations.create.internalCall({
+                data: { name },
+                operationImplementationFields: { special: null }
+            })
 
             const news = await prisma.newsArticle.create({
                 data: {

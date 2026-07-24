@@ -33,7 +33,10 @@ export const jobAdOperations = {
         dataSchema: jobAdSchemas.create,
         authorizer: () => jobAdAuth.create.dynamicFields({}),
         operation: async ({ prisma, data: { articleName, companyId, ...data } }) => {
-            const article = await articleOperations.create.internalCall({ data: { name: articleName } })
+            const article = await articleOperations.create.internalCall({
+                data: { name: articleName },
+                operationImplementationFields: { special: null }
+            })
 
             return await prisma.jobAd.create({
                 data: {

@@ -183,7 +183,8 @@ const create = defineOperation({
             // ombulOperations.updateParagraphContent.
             const paragraph = await cmsParagraphOperations.create.internalCall({
                 prisma: tx,
-                data: {}
+                data: {},
+                operationImplementationFields: { special: null }
             })
 
             const ombul = await tx.ombul.create({

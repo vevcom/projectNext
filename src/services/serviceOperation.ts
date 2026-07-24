@@ -330,8 +330,13 @@ export function defineSubOperation<
         ): args is ServiceOperationExecuteArgs<'SAFE', ParamsSchema, DataSchema, ImplementationParamsSchema> => {
             const paramsMatch = Boolean(args.params) === Boolean(serviceOperationConfig.paramsSchema)
             const dataMatches = Boolean(args.data) === Boolean(serviceOperationConfig.dataSchema)
-            const implementationParamsMatch =
-                Boolean(args.implementationParams) === Boolean(implementationArgs.implementationParamsSchema)
+            // Boolean-truthiness can't be used here like it is for params/data above: an
+            // implementationParamsSchema of z.undefined() is a valid, truthy schema whose only
+            // correct value is the falsy `undefined` - so this checks against the schema's actual
+            // parse outcome instead of comparing truthiness of the schema and the value.
+            const implementationParamsMatch = implementationArgs.implementationParamsSchema
+                ? implementationArgs.implementationParamsSchema.safeParse(args.implementationParams).success
+                : args.implementationParams === undefined
             return paramsMatch && dataMatches && implementationParamsMatch
         }
 

@@ -13,7 +13,9 @@ import { unified } from 'unified'
 
 const create = defineSubOperation({
     dataSchema: () => cmsParagraphSchemas.create,
-    operation: () => async ({ data, prisma }) => await prisma.cmsParagraph.create({ data })
+    operation: (
+        { special }: { special: SpecialCmsParagraph | null }
+    ) => async ({ data, prisma }) => await prisma.cmsParagraph.create({ data: { ...data, special } })
 })
 
 export const cmsParagraphOperations = {
@@ -38,7 +40,10 @@ export const cmsParagraphOperations = {
             const paragraph = await prisma.cmsParagraph.findUnique({ where: { special: params.special } })
             if (!paragraph) {
                 logger.error(`Could not find special cms paragraph with special ${params.special} - creating it!`)
-                return await create.internalCall({ data: { special: params.special } })
+                return await create.internalCall({
+                    data: {},
+                    operationImplementationFields: { special: params.special }
+                })
             }
             return paragraph
         }

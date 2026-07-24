@@ -137,14 +137,14 @@ export const seedArticleCategories = defineSeedOperation(async (prisma) => {
                 })
             },
         })
-
-        await Promise.all(
-            category.articles.map(article => upsertArticleInCategory(
+        
+        for (const article of category.articles) {
+            await upsertArticleInCategory(
                 prisma,
                 { id: categoryResult.id, name: category.name },
                 article
-            ))
-        )
+            )
+        }
     }))
 })
 

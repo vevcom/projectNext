@@ -58,9 +58,14 @@ async function sessionAdministratesCollectionOfImage({
 
 const create = defineSubOperation({
     dataSchema: () => cmsImageSchemas.create,
-    operation: () => ({ prisma, data: { imageId, ...data } }) => prisma.cmsImage.create({
+    operation: (
+        { special }: { special: SpecialCmsImage | null }
+    ) => (
+        { prisma, data: { imageId, ...data } }
+    ) => prisma.cmsImage.create({
         data: {
             ...data,
+            special,
             image: imageId !== undefined ? {
                 connect: {
                     id: imageId
@@ -94,8 +99,8 @@ export const cmsImageOperations = {
                 return create.internalCall({
                     data: {
                         name: params.special,
-                        special: params.special
-                    }
+                    },
+                    operationImplementationFields: { special: params.special }
                 })
             }
             return image

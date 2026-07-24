@@ -240,15 +240,21 @@ const create = defineOperation({
                 })
                 : null
 
-            const article = await articleOperations.create.internalCall({ prisma: tx, data: {} })
+            const article = await articleOperations.create.internalCall({
+                prisma: tx,
+                data: {},
+                operationImplementationFields: { special: null }
+            })
 
             const paragraph = await cmsParagraphOperations.create.internalCall({
                 prisma: tx,
                 data: { name: `Paragraph for ${data.name}` },
+                operationImplementationFields: { special: null }
             })
             const applicationParagraph = await cmsParagraphOperations.create.internalCall({
                 prisma: tx,
                 data: { name: `Søknadstekst for ${data.name}` },
+                operationImplementationFields: { special: null }
             })
 
             const order = (await omegaOrderOperations.readCurrent({})).order

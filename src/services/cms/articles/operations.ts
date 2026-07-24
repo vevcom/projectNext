@@ -13,7 +13,7 @@ import { SpecialCmsArticle } from '@/prisma-generated-pn-types'
 
 const create = defineSubOperation({
     dataSchema: () => articleSchemas.create,
-    operation: () => async ({ prisma, data }) => {
+    operation: ({ special }: { special: SpecialCmsArticle | null }) => async ({ prisma, data }) => {
         let newName = 'Ny artikkel'
         let i = 1
         if (!data.name) {
@@ -32,7 +32,8 @@ const create = defineSubOperation({
                 name: data.name ?? newName,
                 coverImage: {
                     create: {},
-                }
+                },
+                special
             },
             include: articleRealtionsIncluder,
         })
@@ -66,7 +67,8 @@ export const articleOperations = {
             if (!article) {
                 logger.error(`Special article ${params.special} not found - creating it!`)
                 return create.internalCall({
-                    data: { special: params.special, name: `Regenerert spesiell ${params.special}` },
+                    data: { name: `Regenerert spesiell ${params.special}` },
+                    operationImplementationFields: { special: params.special }
                 })
             }
             return {

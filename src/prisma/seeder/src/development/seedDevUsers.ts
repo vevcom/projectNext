@@ -35,8 +35,12 @@ export const seedDevUsers = defineSeedOperation(async (prisma: PrismaClient) => 
     const allClasses = await prisma.class.findMany()
     const allFlairs = await prisma.flair.findMany()
 
-    await Promise.all(firstNames.map(async (firstName, i) => {
-        await Promise.all(devProfileImages.map(async ([lastName, devProfileImage], j) => {
+    // Promise.all not possible here because db connection pool might be
+    // overloaded from profile image uploads.
+    for (let i = 0; i < firstNames.length; i++) {
+        const firstName = firstNames[i]
+        for (let j = 0; j < devProfileImages.length; j++) {
+            const [lastName, devProfileImage] = devProfileImages[j]
             const username = `${firstName}${lastName}${i + 1}${j}`
                 .toLowerCase()
                 .replace(/å/g, 'aa') // special cases for norwegian letters
@@ -139,8 +143,8 @@ export const seedDevUsers = defineSeedOperation(async (prisma: PrismaClient) => 
                     }
                 })
             }
-        }))
-    }))
+        }
+    }
 
     const existingHarambe = await prisma.user.findUnique({
         where: { email: 'harambe@harambesen.io' },
