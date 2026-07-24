@@ -1,37 +1,17 @@
-import { committeeAuth, committeeLogosImagePanelAuth } from './auth'
+import '@pn-server-only'
+import { committeeAuth } from './auth'
 import { committeeExpandedIncluder, committeeLogoIncluder, membershipIncluder } from './constants'
 import { committeeSchemas } from './schemas'
+import { committeeLogoImageOperations } from './committeeLogoCollection'
 import { cmsParagraphOperations } from '@/cms/paragraphs/operations'
 import { defineOperation } from '@/services/serviceOperation'
 import { articleRealtionsIncluder } from '@/cms/articles/constants'
 import { implementUpdateArticleOperations } from '@/cms/articles/implement'
 import { articleOperations } from '@/cms/articles/operations'
-import { implementSpecialCollection } from '@/services/images/subservice/special/implement'
 import { standardImageCollectionOperations } from '@/services/images/standard/operations'
 import { omegaOrderOperations } from '@/services/omegaOrder/operations'
 import { GroupType } from '@/prisma-generated-pn-types'
 import { z } from 'zod'
-
-/**
- * Committee logos live in the COMMITTEELOGOS special collection, one image per committee - an
- * image is uploaded into it when a committee is created (with an upload) or its logo replaced,
- * and destroyed when replaced or the committee is destroyed. A committee created without an
- * uploaded logo instead has a null logoImageId - logoImageId is a unique FK (one owning committee
- * per image, same as Flair), which rules out connecting every logo-less committee to one shared
- * default row. Every read path below resolves a null logoImage to the shared DEFAULT_COMMITTEE_LOGO
- * standard image instead, so callers never see a null logo.
- */
-const {
-    internalOperations: committeeLogoImageOperations,
-    specialCollectionPanelOperations: committeeLogosImagePanelOperations
-} = implementSpecialCollection({
-    special: 'COMMITTEELOGOS',
-    imagePanelAuther: committeeLogosImagePanelAuth.dynamicFields({}),
-    config: {
-        name: 'Komitélogoer',
-        description: 'Bilder brukt som komitélogoer. Hvert bilde i denne samlingen tilhører nøyaktig én komité.',
-    }
-})
 
 async function readDefaultCommitteeLogo() {
     return standardImageCollectionOperations.readStandardImage({
@@ -352,8 +332,6 @@ const updateArticle = implementUpdateArticleOperations({
         return [article]
     }
 })
-
-export { committeeLogosImagePanelOperations }
 
 export const committeeOperations = {
     create,

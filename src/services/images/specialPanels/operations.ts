@@ -1,8 +1,8 @@
 import '@pn-server-only'
-import { flairImagesImagePanelOperations } from '@/services/flairs/operations'
-import { ombulCoversImagePanelOperations } from '@/services/ombul/operations'
-import { committeeLogosImagePanelOperations } from '@/services/groups/committees/operations'
-import { profileImagesImagePanelOperations } from '@/services/users/operations'
+import { flairImagesImagePanelOperations } from '@/services/flairs/flairImageCollection'
+import { ombulCoversImagePanelOperations } from '@/services/ombul/ombulCoverCollection'
+import { committeeLogosImagePanelOperations } from '@/services/groups/committees/committeeLogoCollection'
+import { profileImagesImagePanelOperations } from '@/services/users/profileImageCollection'
 import { standardImagesImagePanelOperations } from '@/services/images/standard/operations'
 
 /**

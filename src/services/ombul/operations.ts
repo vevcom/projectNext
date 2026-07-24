@@ -1,10 +1,10 @@
 import '@pn-server-only'
-import { ombulAuth, ombulCoversImagePanelAuth } from './auth'
+import { ombulAuth } from './auth'
 import { ombulSchemas } from './schemas'
+import { ombulCoverImageOperations } from './ombulCoverCollection'
 import { defineOperation } from '@/services/serviceOperation'
 import { ServerError } from '@/services/error'
 import { implementStore } from '@/lib/store/implementStore'
-import { implementSpecialCollection } from '@/services/images/subservice/special/implement'
 import { cmsParagraphOperations } from '@/cms/paragraphs/operations'
 import { notificationOperations } from '@/services/notifications/operations'
 import { z } from 'zod'
@@ -12,23 +12,6 @@ import { z } from 'zod'
 export const ombulStore = implementStore({
     staticStorePrefix: 'ombul',
     allowedExtentions: ['pdf'],
-})
-
-/**
- * Ombul covers live in the OMBULCOVERS special collection, one image per ombul issue - unlike
- * committee logos there is no default/fallback, since every ombul is created together with its
- * own cover upload. The cover is destroyed alongside the ombul, or when replaced.
- */
-const {
-    internalOperations: ombulCoverImageOperations,
-    specialCollectionPanelOperations: ombulCoversImagePanelOperations
-} = implementSpecialCollection({
-    special: 'OMBULCOVERS',
-    imagePanelAuther: ombulCoversImagePanelAuth.dynamicFields({}),
-    config: {
-        name: 'Ombulforsider',
-        description: 'Bilder brukt som forsider for ombul. Hvert bilde i denne samlingen tilhører nøyaktig én ombul.',
-    }
 })
 
 const read = defineOperation({
@@ -304,8 +287,6 @@ const updateParagraphContent = cmsParagraphOperations.updateContent.implement({
             bypassAuth: true
         })).paragraph.id === params.paragraphId
 })
-
-export { ombulCoversImagePanelOperations }
 
 export const ombulOperations = {
     read,

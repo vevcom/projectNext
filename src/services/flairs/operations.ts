@@ -1,30 +1,10 @@
 import '@pn-server-only'
-import { flairAuth, flairImagesImagePanelAuth } from './auth'
+import { flairAuth } from './auth'
 import { flairSchema } from './schemas'
+import { flairImageOperations } from './flairImageCollection'
 import { defineOperation } from '@/services/serviceOperation'
 import { ServerError } from '@/services/error'
-import { implementSpecialCollection } from '@/services/images/subservice/special/implement'
 import { z } from 'zod'
-
-/**
- * Flair images live in the FLAIRIMAGES special collection, one image per flair - images are
- * uploaded into it when a flair is created (or its image replaced) and destroyed when the flair
- * is destroyed (or its image replaced), so the collection never holds more images than there are
- * flairs.
- */
-const {
-    internalOperations: flairImageOperations,
-    specialCollectionPanelOperations: flairImagesImagePanelOperations
-} = implementSpecialCollection({
-    special: 'FLAIRIMAGES',
-    imagePanelAuther: flairImagesImagePanelAuth.dynamicFields({}),
-    config: {
-        name: 'Flairbilder',
-        description: 'Bilder brukt av flairs. Hvert bilde i denne samlingen tilhører nøyaktig én flair.',
-    }
-})
-
-export { flairImagesImagePanelOperations }
 
 export const flairOperations = {
     create: defineOperation({

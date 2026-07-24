@@ -1,12 +1,12 @@
 import '@pn-server-only'
 import { userSchemas } from './schemas'
-import { userAuth, profileImagesImagePanelAuth } from './auth'
+import { userAuth } from './auth'
 import {
     maxNumberOfGroupsInFilter,
     standardMembershipSelection,
     userFilterSelection
 } from './constants'
-import { implementSpecialCollection } from '@/services/images/subservice/special/implement'
+import { userProfileImageOperations } from './profileImageCollection'
 import { standardImageCollectionOperations } from '@/services/images/standard/operations'
 import { notificationSubscriptionOperations } from '@/services/notifications/subscription/operations'
 import { readMembershipsOfUser } from '@/services/groups/memberships/read'
@@ -24,27 +24,6 @@ import { omegaOrderOperations } from '@/services/omegaOrder/operations'
 import { permissionOperations } from '@/services/permissions/operations'
 import { z } from 'zod'
 import type { UserPagingReturn } from './types'
-
-/**
- * Profile images live in the PROFILEIMAGES special collection, one image per user - uploaded
- * directly by the user (or an admin) on their own profile settings page. Unlike Flair/Ombul this
- * is optional, same as committee logos: imageId is a nullable unique FK, and a null image is
- * resolved to the shared DEFAULT_PROFILE_IMAGE standard image wherever a user profile is served
- * from this service, so callers never see a null image.
- */
-const {
-    internalOperations: userProfileImageOperations,
-    specialCollectionPanelOperations: profileImagesImagePanelOperations
-} = implementSpecialCollection({
-    special: 'PROFILEIMAGES',
-    imagePanelAuther: profileImagesImagePanelAuth.dynamicFields({}),
-    config: {
-        name: 'Profilbilder',
-        description: 'Bilder brukt som profilbilder. Hvert bilde i denne samlingen tilhører nøyaktig én bruker.',
-    }
-})
-
-export { profileImagesImagePanelOperations }
 
 export const userOperations = {
     /**
