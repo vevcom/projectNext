@@ -9,7 +9,7 @@ import { cmsParagraphOperations } from '@/cms/paragraphs/operations'
 import { notificationOperations } from '@/services/notifications/operations'
 import { z } from 'zod'
 
-const ombulStore = implementStore({
+export const ombulStore = implementStore({
     staticStorePrefix: 'ombul',
     allowedExtentions: ['pdf'],
 })
