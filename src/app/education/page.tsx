@@ -1,17 +1,17 @@
 import styles from './page.module.scss'
-import { readSpecialImageAction } from '@/services/images/actions'
+import { readStandardImageAction } from '@/services/images/standard/actions'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import ImageCard from '@/components/ImageCard/ImageCard'
 
 export default async function education() {
-    const hovedbyggningenRes = await readSpecialImageAction.bind(null, {
+    const hovedbyggningenRes = await readStandardImageAction.bind(null, {
         params: {
-            special: 'HOVEDBYGGNINGEN'
+            standardImage: 'HOVEDBYGGNINGEN'
         }
     })()
-    const BooksRes = await readSpecialImageAction.bind(null, {
+    const BooksRes = await readStandardImageAction.bind(null, {
         params: {
-            special: 'BOOKS'
+            standardImage: 'BOOKS'
         }
     })()
 

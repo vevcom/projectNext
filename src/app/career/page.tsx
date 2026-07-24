@@ -5,7 +5,7 @@ import { ServerSession } from '@/auth/session/ServerSession'
 import Image from '@/components/Image/Image'
 import CmsLink from '@/components/Cms/CmsLink/CmsLink'
 import { QueryParams } from '@/lib/queryParams/queryParams'
-import { readSpecialImageAction } from '@/services/images/actions'
+import { readStandardImageAction } from '@/services/images/standard/actions'
 import { readSpecialEventTagAction } from '@/services/events/tags/actions'
 import {
     readSpecialCmsParagraphCareerInfo,
@@ -18,9 +18,9 @@ import Link from 'next/link'
 
 export default async function CareerLandingPage() {
     const session = await ServerSession.fromNextAuth()
-    const jobAdImageRes = await readSpecialImageAction({ params: { special: 'MACHINE' } })
-    const eventImageRes = await readSpecialImageAction({ params: { special: 'FAIR' } })
-    const comanyImageRes = await readSpecialImageAction({ params: { special: 'REALFAGSBYGGET' } })
+    const jobAdImageRes = await readStandardImageAction({ params: { standardImage: 'MACHINE' } })
+    const eventImageRes = await readStandardImageAction({ params: { standardImage: 'FAIR' } })
+    const comanyImageRes = await readStandardImageAction({ params: { standardImage: 'REALFAGSBYGGET' } })
     const conactorCmsLinkRes = await readCareerSpecialCmsLinkAction({ params: { special: 'CAREER_LINK_TO_CONTACTOR' } })
     const companyPresentationEventTagRes = await readSpecialEventTagAction({ params: { special: 'COMPANY_PRESENTATION' } })
 
