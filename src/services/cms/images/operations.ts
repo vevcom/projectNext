@@ -78,8 +78,21 @@ const create = defineSubOperation({
     })
 })
 
+const generateSpecialCmsImageFromConfig = defineSubOperation({
+    paramsSchema: () => z.object({
+        special: z.nativeEnum(SpecialCmsImage)
+    }),
+    operation: () => async ({ params }) => create.internalCall({
+        data: {
+            name: params.special,
+        },
+        operationImplementationFields: { special: params.special }
+    })
+})
+
 export const cmsImageOperations = {
     create,
+    generateSpecialCmsImageFromConfig,
 
     readSpecial: defineSubOperation({
         paramsSchema: () => z.object({
@@ -94,16 +107,9 @@ export const cmsImageOperations = {
                     image: true
                 }
             })
-            if (!image) {
-                logger.error(`Could not find special cms image with special ${params.special} - creating it!`)
-                return create.internalCall({
-                    data: {
-                        name: params.special,
-                    },
-                    operationImplementationFields: { special: params.special }
-                })
-            }
-            return image
+            if (image) return image
+            logger.error(`Could not find special cms image with special ${params.special} - creating it!`)
+            return generateSpecialCmsImageFromConfig.internalCall({ params: { special: params.special } })
         }
     }),
 

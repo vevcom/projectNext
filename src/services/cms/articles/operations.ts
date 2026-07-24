@@ -40,8 +40,20 @@ const create = defineSubOperation({
     }
 })
 
+const generateSpecialArticleFromConfig = defineSubOperation({
+    paramsSchema: () => z.object({
+        special: z.nativeEnum(SpecialCmsArticle),
+    }),
+    operation: () => async ({ params }) => create.internalCall({
+        data: { name: `Regenerert spesiell ${params.special}` },
+        dataSchemaImplementationFields: { maxNameLength: 100 },
+        operationImplementationFields: { special: params.special }
+    })
+})
+
 export const articleOperations = {
     create,
+    generateSpecialArticleFromConfig,
     destroy: defineSubOperation({
         paramsSchema: () => articleSchemas.params,
         operation: () => async ({ prisma, params }) => {
@@ -64,18 +76,14 @@ export const articleOperations = {
                 },
                 include: articleRealtionsIncluder
             })
-            if (!article) {
-                logger.error(`Special article ${params.special} not found - creating it!`)
-                return create.internalCall({
-                    data: { name: `Regenerert spesiell ${params.special}` },
-                    dataSchemaImplementationFields: { maxNameLength: 100 },
-                    operationImplementationFields: { special: params.special }
-                })
+            if (article) {
+                return {
+                    ...article,
+                    coverImage: article.coverImage
+                }
             }
-            return {
-                ...article,
-                coverImage: article.coverImage
-            }
+            logger.error(`Special article ${params.special} not found - creating it!`)
+            return generateSpecialArticleFromConfig.internalCall({ params: { special: params.special } })
         }
     }),
     /**

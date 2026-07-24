@@ -135,7 +135,9 @@ async function upsertSpecialCmsImage(
             select: { id: true }
         }),
         create: async () => {
-            const cmsImage = await cmsImageOperations.readSpecial.internalCall({ params: { special } })
+            const cmsImage = await cmsImageOperations.generateSpecialCmsImageFromConfig.internalCall({
+                params: { special }
+            })
             const image = await getImageForCmsImageRelation(imageConfig, prisma)
             return cmsImageOperations.update.internalCall({
                 params: { cmsImageId: cmsImage.id },
@@ -157,7 +159,9 @@ async function upsertSpecialCmsParagraph(
             select: { id: true }
         }),
         create: async () => {
-            const paragraph = await cmsParagraphOperations.readSpecial.internalCall({ params: { special } })
+            const paragraph = await cmsParagraphOperations.generateSpecialCmsParagraphFromConfig.internalCall({
+                params: { special }
+            })
             return cmsParagraphOperations.updateContent.internalCall({
                 params: { paragraphId: paragraph.id },
                 data: { markdown: readFileSync(join(CMS_PARAGRAPHS_DIR, file), 'utf-8') }
@@ -178,7 +182,9 @@ async function upsertSpecialCmsLink(
             select: { id: true }
         }),
         create: async () => {
-            const cmsLink = await cmsLinkOperations.readSpecial.internalCall({ params: { special } })
+            const cmsLink = await cmsLinkOperations.generateSpecialCmsLinkFromConfig.internalCall({
+                params: { special }
+            })
             return cmsLinkOperations.update.internalCall({
                 params: { linkId: cmsLink.id },
                 data: link
@@ -208,7 +214,9 @@ async function createSpecialCmsArticle(
     special: SpecialCmsArticle,
     { updateOperations, ...article }: SeedSpecialArticleConfig
 ) {
-    const createdArticle = await articleOperations.readSpecial.internalCall({ params: { special } })
+    const createdArticle = await articleOperations.generateSpecialArticleFromConfig.internalCall({
+        params: { special }
+    })
 
     await buildArticleFromConfig({
         updateName: data => updateOperations.update({

@@ -18,8 +18,19 @@ const create = defineSubOperation({
     ) => async ({ data, prisma }) => await prisma.cmsParagraph.create({ data: { ...data, special } })
 })
 
+const generateSpecialCmsParagraphFromConfig = defineSubOperation({
+    paramsSchema: () => z.object({
+        special: z.nativeEnum(SpecialCmsParagraph)
+    }),
+    operation: () => async ({ params }) => create.internalCall({
+        data: {},
+        operationImplementationFields: { special: params.special }
+    })
+})
+
 export const cmsParagraphOperations = {
     create,
+    generateSpecialCmsParagraphFromConfig,
 
     destroy: defineSubOperation({
         paramsSchema: () => z.object({ paragraphId: z.number() }),
@@ -38,14 +49,9 @@ export const cmsParagraphOperations = {
         }),
         operation: () => async ({ params, prisma }) => {
             const paragraph = await prisma.cmsParagraph.findUnique({ where: { special: params.special } })
-            if (!paragraph) {
-                logger.error(`Could not find special cms paragraph with special ${params.special} - creating it!`)
-                return await create.internalCall({
-                    data: {},
-                    operationImplementationFields: { special: params.special }
-                })
-            }
-            return paragraph
+            if (paragraph) return paragraph
+            logger.error(`Could not find special cms paragraph with special ${params.special} - creating it!`)
+            return await generateSpecialCmsParagraphFromConfig.internalCall({ params: { special: params.special } })
         }
     }),
 
