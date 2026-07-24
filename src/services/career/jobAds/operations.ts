@@ -35,6 +35,7 @@ export const jobAdOperations = {
         operation: async ({ prisma, data: { articleName, companyId, ...data } }) => {
             const article = await articleOperations.create.internalCall({
                 data: { name: articleName },
+                dataSchemaImplementationFields: { maxNameLength: 30 },
                 operationImplementationFields: { special: null }
             })
 

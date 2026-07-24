@@ -8,9 +8,12 @@ const baseSchema = z.object({
 })
 
 export const articleSchemas = {
-    create: baseSchema.pick({
-        name: true,
-    }).partial(),
+    create: ({ maxNameLength }: { maxNameLength: number }) => z.object({
+        name: z.string()
+            .min(2, 'Minimum lengde er 2 tegn.')
+            .max(maxNameLength, `Maksimum lengde er ${maxNameLength} tegn.`)
+            .optional(),
+    }),
     update: baseSchema.pick({
         name: true,
     }).partial(),

@@ -38,6 +38,7 @@ export const newsOperations = {
 
             const article = await articleOperations.create.internalCall({
                 data: { name },
+                dataSchemaImplementationFields: { maxNameLength: 30 },
                 operationImplementationFields: { special: null }
             })
 

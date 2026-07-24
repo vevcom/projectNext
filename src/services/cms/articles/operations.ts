@@ -12,7 +12,7 @@ import type { ArticleSectionPart } from '@/cms/articleSections/types'
 import { SpecialCmsArticle } from '@/prisma-generated-pn-types'
 
 const create = defineSubOperation({
-    dataSchema: () => articleSchemas.create,
+    dataSchema: ({ maxNameLength }: { maxNameLength: number }) => articleSchemas.create({ maxNameLength }),
     operation: ({ special }: { special: SpecialCmsArticle | null }) => async ({ prisma, data }) => {
         let newName = 'Ny artikkel'
         let i = 1
@@ -68,6 +68,7 @@ export const articleOperations = {
                 logger.error(`Special article ${params.special} not found - creating it!`)
                 return create.internalCall({
                     data: { name: `Regenerert spesiell ${params.special}` },
+                    dataSchemaImplementationFields: { maxNameLength: 100 },
                     operationImplementationFields: { special: params.special }
                 })
             }

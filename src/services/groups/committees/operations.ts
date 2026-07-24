@@ -243,6 +243,7 @@ const create = defineOperation({
             const article = await articleOperations.create.internalCall({
                 prisma: tx,
                 data: {},
+                dataSchemaImplementationFields: { maxNameLength: 30 },
                 operationImplementationFields: { special: null }
             })
 

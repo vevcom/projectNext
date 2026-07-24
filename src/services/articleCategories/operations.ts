@@ -81,6 +81,7 @@ export const articleCategoryOperations = {
                 const article = await articleOperations.create.internalCall({
                     data: {},
                     prisma: tx,
+                    dataSchemaImplementationFields: { maxNameLength: 30 },
                     operationImplementationFields: { special: null }
                 })
                 await tx.articleCategory.update({
