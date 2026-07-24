@@ -26,7 +26,8 @@ const standardStoreFile = (config: {
     const file = async () => {
         const filePath = join(standardStoreRoot, config.location)
         const fileContents = await readFile(filePath)
-        return new File([fileContents], config.location)
+        const extension = config.location.split('.').pop()
+        return new File([fileContents], config.location, { type: `image/${extension}` })
     }
 
     return {

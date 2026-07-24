@@ -21,6 +21,37 @@ export function implementSpecialCollection({
         description: string,
     }
 }) {
+    const generateCollectionFromConfig = defineSubOperation({
+        operation: () => async ({ prisma }) => {
+            //Note: visibilities are not actually used for special collections, but required by the schema.
+            const visibilityRegular = await visibilityOperations.create.internalCall({})
+            const visibilityAdmin = await visibilityOperations.create.internalCall({})
+
+            const data = {
+                name: config.name,
+                description: config.description,
+                visibilityAdmin: {
+                    connect: {
+                        id: visibilityAdmin.id,
+                    }
+                },
+                visibilityRegular: {
+                    connect: {
+                        id: visibilityRegular.id,
+                    }
+                }
+            }
+
+            const created = await prisma.imageCollection.upsert({
+                where: { special },
+                update: data,
+                create: { ...data, special },
+                include: expandedImageCollectionIncluder,
+            })
+            return expandImageCollection(created, null)
+        }
+    })
+
     const readCollection = defineOperation({
         authorizer: () => imagePanelAuther,
         operation: async ({ prisma }) => {
@@ -41,29 +72,7 @@ export function implementSpecialCollection({
                 It must therefore be created from the config.
             `)
 
-            //Note: visibilities are not actually used for special collections, but required by the schema.
-            const visibilityRegular = await visibilityOperations.create.internalCall({})
-            const visibilityAdmin = await visibilityOperations.create.internalCall({})
-
-            const created = await prisma.imageCollection.create({
-                data: {
-                    name: config.name,
-                    description: config.description,
-                    special,
-                    visibilityAdmin: {
-                        connect: {
-                            id: visibilityAdmin.id,
-                        }
-                    },
-                    visibilityRegular: {
-                        connect: {
-                            id: visibilityRegular.id,
-                        }
-                    }
-                },
-                include: expandedImageCollectionIncluder,
-            })
-            return expandImageCollection(created, null)
+            return generateCollectionFromConfig.internalCall({ prisma })
         }
     })
 
@@ -127,6 +136,7 @@ export function implementSpecialCollection({
         specialCollectionPanelOperations: {
             readCollection,
             readPageOfImagesInCollection,
-        }
+        },
+        generateCollectionFromConfig,
     } as const
 }

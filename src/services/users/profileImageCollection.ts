@@ -4,7 +4,8 @@ import { implementSpecialCollection } from '@/services/images/subservice/special
 
 export const {
     internalOperations: userProfileImageOperations,
-    specialCollectionPanelOperations: profileImagesImagePanelOperations
+    specialCollectionPanelOperations: profileImagesImagePanelOperations,
+    generateCollectionFromConfig: generateProfileImagesCollectionFromConfig
 } = implementSpecialCollection({
     special: 'PROFILEIMAGES',
     imagePanelAuther: profileImagesImagePanelAuth.dynamicFields({}),

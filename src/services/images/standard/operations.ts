@@ -8,7 +8,10 @@ import { StandardImage, type Image } from '@/prisma-generated-pn-types'
 import { imageOperations } from '@/services/images/subservice/operations'
 import { z } from 'zod'
 
-const { specialCollectionPanelOperations: standardImagesImagePanelOperations } = implementSpecialCollection({
+const {
+    specialCollectionPanelOperations: standardImagesImagePanelOperations,
+    generateCollectionFromConfig: generateStandardImagesCollectionFromConfig
+} = implementSpecialCollection({
     special: 'STANDARDIMAGES',
     imagePanelAuther: standardImagesImagePanelAuth.dynamicFields({}),
     config: {
@@ -107,7 +110,7 @@ const readAllStandardImages = defineOperation({
     }
 })
 
-export { standardImagesImagePanelOperations }
+export { standardImagesImagePanelOperations, generateStandardImagesCollectionFromConfig }
 
 /**
  * The standard images are housed in the standardcollection - a special image collection.

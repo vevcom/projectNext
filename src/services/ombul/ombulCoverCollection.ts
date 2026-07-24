@@ -4,7 +4,8 @@ import { implementSpecialCollection } from '@/services/images/subservice/special
 
 export const {
     internalOperations: ombulCoverImageOperations,
-    specialCollectionPanelOperations: ombulCoversImagePanelOperations
+    specialCollectionPanelOperations: ombulCoversImagePanelOperations,
+    generateCollectionFromConfig: generateOmbulCoversCollectionFromConfig
 } = implementSpecialCollection({
     special: 'OMBULCOVERS',
     imagePanelAuther: ombulCoversImagePanelAuth.dynamicFields({}),

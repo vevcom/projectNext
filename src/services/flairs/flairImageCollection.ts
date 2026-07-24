@@ -4,7 +4,8 @@ import { implementSpecialCollection } from '@/services/images/subservice/special
 
 export const {
     internalOperations: flairImageOperations,
-    specialCollectionPanelOperations: flairImagesImagePanelOperations
+    specialCollectionPanelOperations: flairImagesImagePanelOperations,
+    generateCollectionFromConfig: generateFlairImagesCollectionFromConfig
 } = implementSpecialCollection({
     special: 'FLAIRIMAGES',
     imagePanelAuther: flairImagesImagePanelAuth.dynamicFields({}),

@@ -4,7 +4,8 @@ import { implementSpecialCollection } from '@/services/images/subservice/special
 
 export const {
     internalOperations: committeeLogoImageOperations,
-    specialCollectionPanelOperations: committeeLogosImagePanelOperations
+    specialCollectionPanelOperations: committeeLogosImagePanelOperations,
+    generateCollectionFromConfig: generateCommitteeLogosCollectionFromConfig
 } = implementSpecialCollection({
     special: 'COMMITTEELOGOS',
     imagePanelAuther: committeeLogosImagePanelAuth.dynamicFields({}),

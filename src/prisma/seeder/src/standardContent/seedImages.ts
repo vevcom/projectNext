@@ -1,9 +1,16 @@
-import { standardImageCollectionOperations } from '@/services/images/standard/operations'
+import {
+    standardImageCollectionOperations,
+    generateStandardImagesCollectionFromConfig
+} from '@/services/images/standard/operations'
 import { StandardImage } from '@/prisma-generated-pn/enums'
 import { dynamicImageOperations } from '@/services/images/dynamic/operations'
 import { standardStoreFiles } from '@/lib/standardStore/files'
 import { defineSeedOperation } from '@/seeder/src/defineSeedOperation'
 import { upsert } from '@/seeder/src/upsert'
+import { generateOmbulCoversCollectionFromConfig } from '@/services/ombul/ombulCoverCollection'
+import { generateCommitteeLogosCollectionFromConfig } from '@/services/groups/committees/committeeLogoCollection'
+import { generateProfileImagesCollectionFromConfig } from '@/services/users/profileImageCollection'
+import { generateFlairImagesCollectionFromConfig } from '@/services/flairs/flairImageCollection'
 import type { PrismaClient } from '@/prisma-generated-pn-client'
 import type { StandardStoreFile } from '@/lib/standardStore/files'
 
@@ -65,11 +72,18 @@ const SEEDED_CMS_IMAGES_COLLECTION_NAME = 'seeded cms images'
  */
 export const seedImages = defineSeedOperation(async (prisma: PrismaClient) => {
     await Promise.all([
-        Promise.all(
-            Object.values(StandardImage).map(standardImage => upsertStandardImage(prisma, standardImage))
-        ),
-        upsertSeededCmsImagesCollection(prisma),
+        generateStandardImagesCollectionFromConfig.internalCall({}),
+        generateOmbulCoversCollectionFromConfig.internalCall({}),
+        generateCommitteeLogosCollectionFromConfig.internalCall({}),
+        generateProfileImagesCollectionFromConfig.internalCall({}),
+        generateFlairImagesCollectionFromConfig.internalCall({}),
     ])
+
+    await Promise.all(
+        Object.values(StandardImage).map(standardImage => upsertStandardImage(prisma, standardImage))
+    )
+
+    await upsertSeededCmsImagesCollection(prisma)
 })
 
 async function upsertStandardImage(prisma: PrismaClient, standardImage: StandardImage) {
