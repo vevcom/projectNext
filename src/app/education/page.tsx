@@ -2,14 +2,15 @@ import styles from './page.module.scss'
 import { readStandardImageAction } from '@/services/images/standard/actions'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import ImageCard from '@/components/ImageCard/ImageCard'
+import { configureAction } from '@/services/configureAction'
 
 export default async function education() {
-    const hovedbyggningenRes = await readStandardImageAction.bind(null, {
+    const hovedbyggningenRes = await configureAction(readStandardImageAction, {
         params: {
             standardImage: 'HOVEDBYGGNINGEN'
         }
     })()
-    const BooksRes = await readStandardImageAction.bind(null, {
+    const BooksRes = await configureAction(readStandardImageAction, {
         params: {
             standardImage: 'BOOKS'
         }
