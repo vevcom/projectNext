@@ -31,7 +31,7 @@ export default async function NavBar({ profile }: PropTypes) {
             <ul>
                 <li className={styles.logo}>
                     <StandardImageServer
-                        standardImage="LOGO_WHITE"
+                        standardImage="LOGO_SIMPLE"
                         width={30}
                         alt="omega logo"
                     >

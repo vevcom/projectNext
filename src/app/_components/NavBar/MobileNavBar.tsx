@@ -30,7 +30,7 @@ export default async function MobileNavBar({ profile }: PropTypes) {
             }
             <div>
                 <StandardImageServer
-                    standardImage="LOGO_WHITE"
+                    standardImage="LOGO_SIMPLE"
                     width={30}
                 >
                     <Link className={styles.imagelink} href="/"/>

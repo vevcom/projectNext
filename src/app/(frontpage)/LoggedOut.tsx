@@ -26,7 +26,7 @@ export default async function LoggedOutLandingPage() {
                 <div className={styles.frontInfo}>
                     <div>
                         <StandardImageServer
-                            standardImage="LOGO_WHITE_TEXT"
+                            standardImage="LOGO_WHITE"
                             width={300}
                         />
 
