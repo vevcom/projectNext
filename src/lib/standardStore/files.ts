@@ -1,13 +1,13 @@
 import { licenseOperations } from '@/services/licenses/operations'
 import { readFile } from 'fs/promises'
-import { join } from 'path'
+import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
 import { File } from 'node:buffer'
 import type { StandardLicenseName } from '@/services/licenses/constants'
 import type { imageSchemas } from '@/services/images/subservice/schemas'
 import type { z } from 'zod'
 
-const standardStoreRoot = fileURLToPath(new URL('../../../standard_store/', import.meta.url))
+const standardStoreRoot = join(dirname(fileURLToPath(import.meta.url)), '../../../standard_store/')
 
 export type StandardStoreFile = {
     file: () => Promise<File>,
