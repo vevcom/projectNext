@@ -75,13 +75,11 @@ export const imageOperations = {
         ) => async ({ prisma, params, data }) => {
             const { imageFile, ...meta } = data
             const buffer = Buffer.from(await imageFile.arrayBuffer())
-            const avifBuffer = await sharp(buffer).toFormat('avif').avif(avifConvertionOptions).toBuffer()
-            const avifFile = new File([new Uint8Array(avifBuffer)], 'image.avif', { type: 'image/avif' })
 
             const uploadPromises = [
-                createOneInStore(avifFile, ['avif'], imageSizes.small),
-                createOneInStore(avifFile, ['avif'], imageSizes.medium),
-                createOneInStore(avifFile, ['avif'], imageSizes.large),
+                createResizedAvifInStore(buffer, imageSizes.small),
+                createResizedAvifInStore(buffer, imageSizes.medium),
+                createResizedAvifInStore(buffer, imageSizes.large),
                 imageStore.createFile(imageFile, [...allowedExtensions]),
             ]
 
@@ -202,22 +200,20 @@ export const imageOperations = {
 } as const
 
 /**
- * Creates one image from a file.
- * @param file - The file to create the image from
- * @param allowedExt - The allowed extensions for the file
- * @param size - The size to resize the image to
- * @returns
+ * Resizes the original image buffer down to the given size before encoding to avif, so the
+ * (potentially much larger) original resolution is never itself run through avif encoding.
  */
-async function createOneInStore(
-    file: File,
-    allowedExt: readonly (typeof imageStoreAllowedExtensions)[number][],
-    size: number
-) {
-    const ret = await imageStore.createFile(file, allowedExt, async (buffer) => await sharp(buffer).resize(size, size, {
-        fit: sharp.fit.inside,
-        withoutEnlargement: true
-    }).toBuffer())
-    return ret
+async function createResizedAvifInStore(buffer: Buffer, size: number) {
+    const avifBuffer = await sharp(buffer)
+        .resize(size, size, {
+            fit: sharp.fit.inside,
+            withoutEnlargement: true
+        })
+        .toFormat('avif')
+        .avif(avifConvertionOptions)
+        .toBuffer()
+    const avifFile = new File([new Uint8Array(avifBuffer)], 'image.avif', { type: 'image/avif' })
+    return imageStore.createFile(avifFile, ['avif'])
 }
 
 export function uniqueCollectionWhere(params: z.infer<typeof imageSchemas.paramsSchemaCollection>) {
