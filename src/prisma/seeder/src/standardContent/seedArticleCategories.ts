@@ -137,7 +137,7 @@ export const seedArticleCategories = defineSeedOperation(async (prisma) => {
                 })
             },
         })
-        
+
         for (const article of category.articles) {
             await upsertArticleInCategory(
                 prisma,

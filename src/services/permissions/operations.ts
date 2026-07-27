@@ -5,8 +5,8 @@ import { invalidateAllUserSessionData, invalidateManyUserSessionData } from '@/s
 import { groupsWithRelationsIncluder } from '@/services/groups/constants'
 import { assertGroupValidity } from '@/services/groups/operations'
 import { inferGroupName } from '@/lib/groups/inferGroupName'
-import { z } from 'zod'
 import { Permission } from '@/prisma-generated-pn-types'
+import { z } from 'zod'
 
 
 export const permissionOperations = {

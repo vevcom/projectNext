@@ -72,7 +72,7 @@ export default async function CareerLandingPage() {
                         <StandardImageServer
                             disableLinkingToLicense
                             className={styles.linkImage}
-                            width={300} 
+                            width={300}
                             standardImage="REALFAGSBYGGET"
                         />
                         <h2>Bedrifter</h2>
