@@ -8,7 +8,7 @@ function Loader() {
     return (
         <div className={styles.Loader}>
             <StandardImageServer
-                standardImage="MAGISK_HATT"
+                standardImage="LOGO_SIMPLE"
                 width={100}
             />
         </div>

@@ -15,7 +15,7 @@ export default function ErrorBoundary({ error, reset }: {error: unknown, reset: 
                 <div className={styles.imageContainer}>
                     <StandardImageClient
                         width={70}
-                        standardImage="DEFAULT_IMAGE"
+                        standardImage="LOGO_SIMPLE"
                     />
                 </div>
                 {

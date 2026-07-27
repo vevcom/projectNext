@@ -7,7 +7,7 @@ export default function Error404() {
             <div className={styles.info}>
                 <div className={styles.imageContainer}>
                     <StandardImageServer
-                        standardImage="DEFAULT_IMAGE"
+                        standardImage="LOGO_SIMPLE"
                         width={60}
                     />
                 </div>
