@@ -34,124 +34,190 @@ type PropTypes = {
 export default function CollectionAdmin({ collection, doubleLevelVisibility, refreshImages }: PropTypes) {
     const { id: collectionId } = collection
     const router = useRouter()
-    const [uploadOption, setUploadOption] = useState<'MANY' | 'ONE'>('MANY')
 
-    const canEdit = useEditMode({
+    // One authorizer check per action - each button/form below is gated by the exact same
+    // authorizer its own action uses server-side, not a single blanket "can edit collection" check.
+    const canUploadOne = useEditMode({
+        authorizer: dynamicImageAuth.uploadImage.dynamicFields({ doubleLevelMatrix: doubleLevelVisibility })
+    })
+    const canUploadMany = useEditMode({
+        authorizer: dynamicImageAuth.uploadManyImages.dynamicFields({ doubleLevelMatrix: doubleLevelVisibility })
+    })
+    const canUpdateCollection = useEditMode({
         authorizer: dynamicImageAuth.updateCollection.dynamicFields({ doubleLevelMatrix: doubleLevelVisibility })
     })
+    const canDestroyCollection = useEditMode({
+        authorizer: dynamicImageAuth.destroyCollection.dynamicFields({ doubleLevelMatrix: doubleLevelVisibility })
+    })
+    const canUpdateRegularVisibility = useEditMode({
+        authorizer: dynamicImageAuth.updateRegularLevel.dynamicFields({ doubleLevelMatrix: doubleLevelVisibility })
+    })
+    const canUpdateAdminVisibility = useEditMode({
+        authorizer: dynamicImageAuth.updateAdminLevel.dynamicFields({ doubleLevelMatrix: doubleLevelVisibility })
+    })
 
-    if (!canEdit) return null
+    const [uploadOption, setUploadOption] = useState<'MANY' | 'ONE'>(canUploadMany ? 'MANY' : 'ONE')
+
+    const canUpload = canUploadOne || canUploadMany
+    const canOpenEditPopUp = canUpdateCollection || canDestroyCollection
+    const canOpenVisibilityPopUp = canUpdateRegularVisibility || canUpdateAdminVisibility
+
+    if (!canUpload && !canOpenEditPopUp && !canOpenVisibilityPopUp) return null
 
     return (
         <div className={styles.CollectionAdmin}>
-            <PopUp popUpKey="UploadImages" showButtonClass={styles.adminOption} showButtonContent={
-                <FontAwesomeIcon icon={faUpload} />
-            }>
-                <div className={styles.upload}>
-                    {
-                        uploadOption === 'MANY' ? (
-                            <>
-                                <CollectionAdminUpload collectionId={collectionId} refreshImages={refreshImages} />
-                                <Button
-                                    className={styles.toggleUploadStyle}
-                                    onClick={() => setUploadOption('ONE')}
-                                    color="secondary"
-                                >
-                                Last opp ett bilde
-                                </Button>
-                            </>
-                        ) : (
-                            <>
+            {
+                canUpload && (
+                    <PopUp popUpKey="UploadImages" showButtonClass={styles.adminOption} showButtonContent={
+                        <FontAwesomeIcon icon={faUpload} />
+                    }>
+                        <div className={styles.upload}>
+                            {
+                                uploadOption === 'MANY' ? canUploadMany && (
+                                    <>
+                                        <CollectionAdminUpload collectionId={collectionId} refreshImages={refreshImages} />
+                                        {
+                                            canUploadOne && (
+                                                <Button
+                                                    className={styles.toggleUploadStyle}
+                                                    onClick={() => setUploadOption('ONE')}
+                                                    color="secondary"
+                                                >
+                                                Last opp ett bilde
+                                                </Button>
+                                            )
+                                        }
+                                    </>
+                                ) : canUploadOne && (
+                                    <>
+                                        <Form
+                                            title="Last opp bilde"
+                                            submitText="last opp"
+                                            successCallback={refreshImages}
+                                            closePopUpOnSuccess="UploadImages"
+                                            action={configureAction(
+                                                uploadImageToDynamicCollectionAction,
+                                                { params: { collectionId } }
+                                            )}
+                                        >
+                                            <TextInput color="black" label="navn" name="imageName" />
+                                            <TextInput color="black" label="alternativ tekst" name="imageAlt" />
+                                            <TextInput color="black" label="kreditert" name="imageCredit" />
+                                            <LicenseChooser name="imageLicenseId" />
+                                            <FileInput label="fil" name="imageFile" color="primary" />
+                                        </Form>
+                                        {
+                                            canUploadMany && (
+                                                <Button
+                                                    className={styles.toggleUploadStyle}
+                                                    onClick={() => setUploadOption('MANY')}
+                                                    color="secondary"
+                                                >
+                                                Last opp mange
+                                                </Button>
+                                            )
+                                        }
+                                    </>
+                                )
+                            }
+                        </div>
+                    </PopUp>
+                )
+            }
+            {
+                canOpenEditPopUp && (
+                    <PopUp popUpKey="Edit" showButtonClass={styles.adminOption} showButtonContent={
+                        <FontAwesomeIcon icon={faCog} />
+                    }>
+                        {
+                            canUpdateCollection && (
                                 <Form
-                                    title="Last opp bilde"
-                                    submitText="last opp"
-                                    successCallback={refreshImages}
-                                    closePopUpOnSuccess="UploadImages"
+                                    refreshOnSuccess
+                                    title="Rediger samling"
+                                    submitText="oppdater"
+                                    closePopUpOnSuccess="Edit"
                                     action={configureAction(
-                                        uploadImageToDynamicCollectionAction,
+                                        updateDynamicImageCollectionAction,
                                         { params: { collectionId } }
                                     )}
                                 >
-                                    <TextInput color="black" label="navn" name="imageName" />
-                                    <TextInput color="black" label="alternativ tekst" name="imageAlt" />
-                                    <TextInput color="black" label="kreditert" name="imageCredit" />
-                                    <LicenseChooser name="imageLicenseId" />
-                                    <FileInput label="fil" name="imageFile" color="primary" />
+                                    <TextInput
+                                        defaultValue={collection.name}
+                                        color="black"
+                                        label="navn"
+                                        name="collectionName"
+                                    />
+                                    <TextInput
+                                        defaultValue={collection.description || ''}
+                                        color="black"
+                                        label="beskrivelse"
+                                        name="collectionDescription"
+                                    />
                                 </Form>
-                                <Button
-                                    className={styles.toggleUploadStyle}
-                                    onClick={() => setUploadOption('MANY')}
-                                    color="secondary"
-                                >
-                                Last opp mange
-                                </Button>
-                            </>
-                        )
-                    }
-                </div>
-            </PopUp>
-            <PopUp popUpKey="Edit" showButtonClass={styles.adminOption} showButtonContent={
-                <FontAwesomeIcon icon={faCog} />
-            }>
-                <Form
-                    refreshOnSuccess
-                    title="Rediger samling"
-                    submitText="oppdater"
-                    closePopUpOnSuccess="Edit"
-                    action={configureAction(updateDynamicImageCollectionAction, { params: { collectionId } })}
-                >
-                    <TextInput
-                        defaultValue={collection.name}
-                        color="black"
-                        label="navn"
-                        name="collectionName"
-                    />
-                    <TextInput
-                        defaultValue={collection.description || ''}
-                        color="black"
-                        label="beskrivelse"
-                        name="collectionDescription"
-                    />
-                </Form>
-                <Form
-                    submitText="slett samling"
-                    successCallback={() => router.push('/image-collections')}
-                    action={configureAction(destroyDynamicImageCollectionAction, { params: { collectionId } })}
-                    submitColor="red"
-                    confirmation={{
-                        confirm: true,
-                        text: 'Er du sikker på at du vil slette samlingen. Dette vil også slette alle bilder i salingen.'
-                    }}
-                />
-            </PopUp>
-            <PopUp popUpKey="Visibility" showButtonClass={styles.adminOption} showButtonContent={
-                <FontAwesomeIcon icon={faEye} />
-            }>
-                <div className={styles.visibility}>
-                    <div>
-                        <h3>Vanlig visning</h3>
-                        <VisibilityAdmin
-                            visibility={doubleLevelVisibility.regularLevel}
-                            visibilityId={collection.visibilityRegularId}
-                            updateVisibilityAction={configureAction(
-                                updateDynamicImageCollectionRegularLevelVisibilityAction,
-                                { implementationParams: { collectionId } }
-                            )}
-                        />
-                    </div>
-                    <div>
-                        <h3>Adminvisning</h3>
-                        <VisibilityAdmin
-                            visibility={doubleLevelVisibility.adminLevel}
-                            visibilityId={collection.visibilityAdminId}
-                            updateVisibilityAction={configureAction(
-                                updateDynamicImageCollectionAdminLevelVisibilityAction,
-                                { implementationParams: { collectionId } }
-                            )}
-                        />
-                    </div>
-                </div>
-            </PopUp>
+                            )
+                        }
+                        {
+                            canDestroyCollection && (
+                                <Form
+                                    submitText="slett samling"
+                                    successCallback={() => router.push('/image-collections')}
+                                    action={configureAction(
+                                        destroyDynamicImageCollectionAction,
+                                        { params: { collectionId } }
+                                    )}
+                                    submitColor="red"
+                                    confirmation={{
+                                        confirm: true,
+                                        text:
+                                            'Er du sikker på at du vil slette samlingen. ' +
+                                            'Dette vil også slette alle bilder i salingen.'
+                                    }}
+                                />
+                            )
+                        }
+                    </PopUp>
+                )
+            }
+            {
+                canOpenVisibilityPopUp && (
+                    <PopUp popUpKey="Visibility" showButtonClass={styles.adminOption} showButtonContent={
+                        <FontAwesomeIcon icon={faEye} />
+                    }>
+                        <div className={styles.visibility}>
+                            {
+                                canUpdateRegularVisibility && (
+                                    <div>
+                                        <h3>Vanlig visning</h3>
+                                        <VisibilityAdmin
+                                            visibility={doubleLevelVisibility.regularLevel}
+                                            visibilityId={collection.visibilityRegularId}
+                                            updateVisibilityAction={configureAction(
+                                                updateDynamicImageCollectionRegularLevelVisibilityAction,
+                                                { implementationParams: { collectionId } }
+                                            )}
+                                        />
+                                    </div>
+                                )
+                            }
+                            {
+                                canUpdateAdminVisibility && (
+                                    <div>
+                                        <h3>Adminvisning</h3>
+                                        <VisibilityAdmin
+                                            visibility={doubleLevelVisibility.adminLevel}
+                                            visibilityId={collection.visibilityAdminId}
+                                            updateVisibilityAction={configureAction(
+                                                updateDynamicImageCollectionAdminLevelVisibilityAction,
+                                                { implementationParams: { collectionId } }
+                                            )}
+                                        />
+                                    </div>
+                                )
+                            }
+                        </div>
+                    </PopUp>
+                )
+            }
         </div>
     )
 }
