@@ -4,6 +4,7 @@ import Form from '@/components/Form/Form'
 import Button from '@/components/UI/Button'
 import { SelectNumber, SelectString } from '@/components/UI/Select'
 import { useGroups } from '@/contexts/ClientData'
+import { describeMatrix } from '@/auth/visibility/describeVisibility'
 import { findGroup, orderOptions } from '@/lib/groups/groupOptions'
 import { configureAction } from '@/services/configureAction'
 import { useState } from 'react'
@@ -15,26 +16,12 @@ import type {
     VisibilityMatrix,
     VisibilityRequirement
 } from '@/services/visibility/types'
-import type { ExpandedGroup } from '@/services/groups/types'
 import type { VisibilityRequirementGroupType } from '@/prisma-generated-pn-types'
 
 type PropTypes = {
     visibility: VisibilityMatrix,
     visibilityId: number,
     updateVisibilityAction: UpdateVisibilityAction,
-}
-
-function describeCondition(condition: VisibilityCondition, groups: ExpandedGroup[] | null): string {
-    const groupName = findGroup(groups, condition.groupId)?.name ?? `gruppe #${condition.groupId}`
-    return condition.type === 'ACTIVE' ? `aktiv i ${groupName}` : `var i ${groupName} i orden ${condition.order}`
-}
-
-function describeMatrix(requirements: VisibilityRequirement[], groups: ExpandedGroup[] | null): string {
-    if (requirements.length === 0) return 'Synlig for alle.'
-    const requirementDescriptions = requirements.map(requirement =>
-        requirement.conditions.map(condition => describeCondition(condition, groups)).join(' ELLER ')
-    )
-    return `Krever: ${requirementDescriptions.map(description => `(${description})`).join(' OG ')}`
 }
 
 export default function VisibilityAdmin({ visibility, visibilityId, updateVisibilityAction }: PropTypes) {
@@ -116,7 +103,7 @@ export default function VisibilityAdmin({ visibility, visibilityId, updateVisibi
 
     return (
         <div className={styles.VisibilityAdmin}>
-            <p className={styles.summary}>{describeMatrix(requirements, groups)}</p>
+            <p className={styles.summary}>{describeMatrix({ requirements }, groups)}</p>
             {
                 groups === null ? (
                     <p>Laster grupper...</p>

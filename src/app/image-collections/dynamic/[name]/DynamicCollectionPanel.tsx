@@ -12,7 +12,7 @@ const pageSize = 30
 
 type PropTypes = {
     collection: ExpandedImageCollection,
-    doubleLevelVisibility: DoubleLevelVisibilityMatrix,
+    doubleLevelVisibility: DoubleLevelVisibilityMatrix | null,
 }
 
 /**

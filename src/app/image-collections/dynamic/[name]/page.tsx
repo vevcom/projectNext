@@ -1,5 +1,7 @@
 import styles from './page.module.scss'
 import DynamicCollectionPanel from './DynamicCollectionPanel'
+import DoubleLevelVisibilityDescription
+    from '@/components/Visibility/DoubleLevelVisibilityDescription/DoubleLevelVisibilityDescription'
 import {
     readDynamicImageCollectionAction,
     readDynamicImageCollectionDoubleLevelVisibilityAction,
@@ -22,13 +24,17 @@ export default async function Collection({ params }: PropTypes) {
     const readDoubleLevelVisibility = await readDynamicImageCollectionDoubleLevelVisibilityAction({
         params: { collectionId: collection.id }
     })
-    if (!readDoubleLevelVisibility.success) notFound()
-    const doubleLevelVisibility = readDoubleLevelVisibility.data
+    const doubleLevelVisibility = readDoubleLevelVisibility.success ? readDoubleLevelVisibility.data : null
 
     return (
         <div className={styles.wrapper}>
             <h1>{collection.name}</h1>
             <i>{collection.description}</i>
+            {
+                doubleLevelVisibility && (
+                    <DoubleLevelVisibilityDescription doubleLevelVisibility={doubleLevelVisibility} />
+                )
+            }
             <DynamicCollectionPanel collection={collection} doubleLevelVisibility={doubleLevelVisibility} />
         </div>
     )
