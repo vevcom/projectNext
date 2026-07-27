@@ -10,9 +10,9 @@ import { UserMigrator } from './migrateUsers'
 import migrateCommittees from './migrateCommittees'
 import seedProdPermissions from './seedProdPermissions'
 import manifest from '@/seeder/src/logger'
+import { PrismaClient as PrismaClientOw } from '@/prisma-generated-ow-basic/client'
 import { PrismaPg } from '@prisma/adapter-pg'
 import type { PrismaClient as PrismaClientPn } from '@/prisma-generated-pn-client'
-import { PrismaClient as PrismaClientOw } from '@/prisma-generated-ow-basic/client'
 
 /**
  * !DobbelOmega!
@@ -41,7 +41,7 @@ export default async function dobbelOmega(pnPrisma: PrismaClientPn) {
     await migrateOmegaquotes(pnPrisma, owPrisma, userMigrator, limits)
     await migrateArticles(pnPrisma, owPrisma, imageIdMap, limits)
     await migrateMailAliases(pnPrisma, owPrisma, limits)
-    await migrateCommittees(pnPrisma, owPrisma, userMigrator)
+    await migrateCommittees(pnPrisma, owPrisma, userMigrator, imageIdMap)
     await migrateEvents(pnPrisma, owPrisma, imageIdMap, userMigrator, limits)
 
     await seedProdPermissions(pnPrisma)

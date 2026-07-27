@@ -1,11 +1,11 @@
 import styles from './page.module.scss'
 import ChangeName from './ChangeName'
 import OmbulAdmin from './OmbulAdmin'
-import { readOmbulAction, updateOmbulAction, updateOmbulCmsCoverImageAction } from '@/services/ombul/actions'
+import OmbulCover from '@/app/ombul/OmbulCover'
+import { readOmbulAction, updateOmbulParagraphContentAction } from '@/services/ombul/actions'
 import PdfDocument from '@/components/PdfDocument/PdfDocument'
-import SlideInOnView from '@/components/SlideInOnView/SlideInOnView'
-import EditableTextField from '@/components/EditableTextField/EditableTextField'
-import CmsImage from '@/components/Cms/CmsImage/CmsImage'
+import CmsParagraph from '@/components/Cms/CmsParagraph/CmsParagraph'
+import PopUp from '@/components/PopUp/PopUp'
 import { ServerSession } from '@/auth/session/ServerSession'
 import { configureAction } from '@/services/configureAction'
 import { ombulAuth } from '@/services/ombul/auth'
@@ -35,12 +35,7 @@ export default async function Ombul({ params }: PropTypes) {
 
     const session = await ServerSession.fromNextAuth()
     const canUpdate = ombulAuth.update.dynamicFields({}).auth(session)
-    const canUpdateCmsCover = ombulAuth.updateCmsCoverImage.dynamicFields({}).auth(session).toJsObject()
-
-    const changeDescription = configureAction(
-        updateOmbulAction,
-        { params: { id: ombul.id } }
-    )
+    const canUpdateParagraph = ombulAuth.updateParagraphContent.dynamicFields({}).auth(session).toJsObject()
 
     return (
         <div className={styles.wrapper}>
@@ -49,26 +44,18 @@ export default async function Ombul({ params }: PropTypes) {
                     <h1>{ombul.name}</h1>
                 </ChangeName>
                 <p>{ombul.year} - {ombul.issueNumber}</p>
-                <EditableTextField
-                    editable={canUpdate.authorized}
-                    formProps={{
-                        action: changeDescription
-                    }}
-                    inputName="description"
-                    submitButton={{
-                        text: 'Endre',
-                        className: styles.changeDescriptionButton,
-                    }}
-                >
-                    <p>{ombul.description}</p>
-                </EditableTextField>
             </div>
-            <main>
-                <SlideInOnView>
-                    <PdfDocument src={path} className={styles.book} />
-                </SlideInOnView>
-                <embed className={styles.embedPdf} src={path} type="application/pdf" />
-            </main>
+            <div className={styles.coverAndParagraph}>
+                <OmbulCover ombul={ombul} />
+                <CmsParagraph
+                    canEdit={canUpdateParagraph}
+                    cmsParagraph={ombul.paragraph}
+                    updateCmsParagraphAction={configureAction(
+                        updateOmbulParagraphContentAction,
+                        { implementationParams: { ombulId: ombul.id } }
+                    )}
+                />
+            </div>
             <div className={styles.nav}>
                 <div className={styles.download}>
                     <a href={path} download>Last ned</a>
@@ -76,21 +63,17 @@ export default async function Ombul({ params }: PropTypes) {
                 <div className={styles.openInBrowser}>
                     <Link href={path} target="blank">Åpne i ny fane</Link>
                 </div>
+                <div className={styles.readPdf}>
+                    <PopUp
+                        popUpKey={`OmbulPdfViewer${ombul.id}`}
+                        showButtonContent="Les PDF"
+                    >
+                        <PdfDocument src={path} className={styles.book} />
+                    </PopUp>
+                </div>
             </div>
             <div className={styles.admin}>
-                <OmbulAdmin ombul={ombul}>
-                    <CmsImage
-                        canEdit={canUpdateCmsCover}
-                        cmsImage={ombul.coverImage}
-                        width={400}
-                        updateCmsImageAction={
-                            configureAction(
-                                updateOmbulCmsCoverImageAction,
-                                { implementationParams: { ombulId: ombul.id } }
-                            )
-                        }
-                    />
-                </OmbulAdmin>
+                <OmbulAdmin ombul={ombul} />
             </div>
         </div>
     )

@@ -16,4 +16,4 @@ export const unAssignFlairToUserAction = makeAction(flairOperations.unAssignToUs
 export const increaseFlairRankAction = makeAction(flairOperations.increaseRank)
 export const decreaseFlairRankAction = makeAction(flairOperations.decreaseRank)
 
-export const updateFlairCmsImageAction = makeAction(flairOperations.updateCmsImage)
+export const updateFlairImageAction = makeAction(flairOperations.updateImage)

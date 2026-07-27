@@ -4,7 +4,8 @@ import CreateLockerReservationForm from './CreateLockerReservationForm'
 import UpdateLockerReservationForm from './UpdateLockerReservationForm'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { readLockerAction } from '@/services/lockers/actions'
-import { checkGroupValidity, groupOperations, inferGroupName } from '@/services/groups/operations'
+import { assertGroupValidity, groupOperations } from '@/services/groups/operations'
+import { inferGroupName } from '@/lib/groups/inferGroupName'
 import { RequireUser } from '@/auth/authorizer/RequireUser'
 import { ServerSession } from '@/auth/session/ServerSession'
 
@@ -24,7 +25,7 @@ export default async function Locker({ params }: PropTypes) {
 
     const isReserved = locker.data.LockerReservation.length > 0
     const reservation = locker.data.LockerReservation[0]
-    const groupName = (isReserved && reservation.group) ? inferGroupName(checkGroupValidity(reservation.group)) : ''
+    const groupName = (isReserved && reservation.group) ? inferGroupName(assertGroupValidity(reservation.group)) : ''
 
     const user = RequireUser.staticFields({}).dynamicFields({}).auth(
         await ServerSession.fromNextAuth()

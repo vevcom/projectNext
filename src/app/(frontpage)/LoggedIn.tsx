@@ -5,13 +5,11 @@ import EventCard from '@/app/_components/Event/EventCard'
 import JobAd from '@/app/career/jobads/JobAd'
 import NewsCard from '@/app/news/NewsCard'
 import SocialIcons from '@/components/SocialIcons/SocialIcons'
-import SpecialCmsImage from '@/components/Cms/CmsImage/SpecialCmsImage'
+import StandardImageServer from '@/components/Image/StandardImageServer'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { readNewsCurrentAction } from '@/services/news/actions'
 import { readActiveJobAdsAction } from '@/services/career/jobAds/actions'
 import { readCurrentEventsAction } from '@/services/events/actions'
-import { readSpecialCmsImageFrontpage, updateSpecialCmsImageFrontpage } from '@/services/frontpage/actions'
-import { frontpageAuth } from '@/services/frontpage/auth'
 import { eventAuth } from '@/services/events/auth'
 import { ServerSession } from '@/auth/session/ServerSession'
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons'
@@ -28,9 +26,6 @@ export default async function LoggedInLandingPage() {
         .slice(0, MAX_NUMBER_OF_ELEMENTS)
 
     const session = await ServerSession.fromNextAuth()
-    const canEditFrontpageCmsImage = frontpageAuth.updateSpecialCmsImage.dynamicFields({}).auth(
-        session
-    ).toJsObject()
 
     const canEditEventCmsImage = eventAuth.updateCmsCoverImage.dynamicFields({}).auth(
         session
@@ -41,12 +36,9 @@ export default async function LoggedInLandingPage() {
             <div className={`${styles.part} ${styles.frontImg}`}>
                 <div className={styles.frontInfo}>
                     <div>
-                        <SpecialCmsImage
-                            canEdit={canEditFrontpageCmsImage}
-                            special="FRONTPAGE_LOGO"
+                        <StandardImageServer
+                            standardImage="LOGO_WHITE"
                             width={300}
-                            readSpecialCmsImageAction={readSpecialCmsImageFrontpage}
-                            updateCmsImageAction={updateSpecialCmsImageFrontpage}
                         />
                         <div className={styles.socials}>
                             <SocialIcons />
@@ -74,7 +66,7 @@ export default async function LoggedInLandingPage() {
                             <JobAd key={key} jobAd={jobAd} />
                         ))}
                     </LoggedInSection>
-                    <LoggedInSection title="Bilder" link="/images">
+                    <LoggedInSection title="Bilder" link="/image-collections">
                         Her kan man kanskje vise noen bilder ellerno
                     </LoggedInSection>
                 </div>

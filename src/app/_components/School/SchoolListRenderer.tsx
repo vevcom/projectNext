@@ -8,5 +8,5 @@ import type { SessionMaybeUser } from '@/auth/session/Session'
  * @returns
  */
 // eslint-disable-next-line react/display-name
-export const schoolListRenderer = (asClient: boolean, session: SessionMaybeUser) => (school: ExpandedSchool) =>
-    <School key={school.shortName} asClient={asClient} school={school} session={session} />
+export const schoolListRenderer = (session: SessionMaybeUser) => (school: ExpandedSchool) =>
+    <School key={school.shortName} school={school} session={session} />

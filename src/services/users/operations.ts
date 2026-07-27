@@ -6,7 +6,8 @@ import {
     standardMembershipSelection,
     userFilterSelection
 } from './constants'
-import { imageOperations } from '@/services/images/operations'
+import { userProfileImageOperations } from './profileImageCollection'
+import { standardImageCollectionOperations } from '@/services/images/standard/operations'
 import { notificationSubscriptionOperations } from '@/services/notifications/subscription/operations'
 import { readMembershipsOfUser } from '@/services/groups/memberships/read'
 import { NTNUEmailDomain } from '@/services/mail/constants'
@@ -15,12 +16,11 @@ import { updateUserOmegaMembershipGroup } from '@/services/groups/omegaMembershi
 import { sendUserInvitationEmail } from '@/lib/email/systemMail/userInvitivation'
 import { readOmegaMembershipGroup } from '@/services/groups/omegaMembershipGroups/read'
 import { defineOperation } from '@/services/serviceOperation'
-import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { ServerError } from '@/services/error'
 import { getMembershipFilter } from '@/auth/getMembershipFilter'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { hashAndEncryptPassword } from '@/auth/passwordHash'
-import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
+import { omegaOrderOperations } from '@/services/omegaOrder/operations'
 import { permissionOperations } from '@/services/permissions/operations'
 import { z } from 'zod'
 import type { UserPagingReturn } from './types'
@@ -35,7 +35,7 @@ export const userOperations = {
         authorizer: () => userAuth.create.dynamicFields({}),
         operation: async ({ prisma, data }) => {
             const omegaMembership = await readOmegaMembershipGroup('EXTERNAL')
-            const omegaOrder = await readCurrentOmegaOrder()
+            const omegaOrder = await omegaOrderOperations.readCurrent({})
 
             const user = await prisma.user.create({
                 data: {
@@ -101,8 +101,8 @@ export const userOperations = {
         }),
         authorizer: ({ params }) => userAuth.readProfile.dynamicFields({ username: params.username }),
         operation: async ({ prisma, params }) => {
-            const defaultProfileImage = await imageOperations.readSpecial({
-                params: { special: 'DEFAULT_PROFILE_IMAGE' },
+            const defaultProfileImage = await standardImageCollectionOperations.readStandardImage({
+                params: { standardImage: 'DEFAULT_PROFILE_IMAGE' },
             })
             const user = await prisma.user.findUniqueOrThrow({
                 where: { username: params.username.toLowerCase() },
@@ -167,23 +167,7 @@ export const userOperations = {
     }),
 
     readPage: defineOperation({
-        paramsSchema: readPageInputSchemaObject(
-            z.number(),
-            z.object({
-                id: z.number()
-            }),
-            z.object({
-                partOfName: z.string(),
-                groups: z.array(z.object({
-                    groupOrder: z.union([z.number(), z.literal('ACTIVE')]),
-                    groupId: z.number()
-                })),
-                selectedGroup: z.object({
-                    groupOrder: z.union([z.number(), z.literal('ACTIVE')]),
-                    groupId: z.number()
-                }).nullable().optional()
-            })
-        ),
+        paramsSchema: userSchemas.readPage,
         authorizer: () => userAuth.readPage.dynamicFields({}),
         operation: async ({ prisma, params }): Promise<UserPagingReturn[]> => {
             const { page, details } = params.paging
@@ -547,8 +531,8 @@ export const userOperations = {
             })
 
             if (!user.image) {
-                user.image = await imageOperations.readSpecial({
-                    params: { special: 'DEFAULT_PROFILE_IMAGE' },
+                user.image = await standardImageCollectionOperations.readStandardImage({
+                    params: { standardImage: 'DEFAULT_PROFILE_IMAGE' },
                 })
             }
 
@@ -576,4 +560,44 @@ export const userOperations = {
             })
         }
     }),
-}
+
+    updateProfileImage: defineOperation({
+        authorizer: ({ params }) => userAuth.updateProfileImage.dynamicFields({ username: params.username }),
+        paramsSchema: z.object({
+            username: z.string(),
+        }),
+        dataSchema: userSchemas.updateProfileImage,
+        opensTransaction: true,
+        // uploadImage resizes to 3 sizes, converts to avif and writes several files to store
+        // before any db write happens - comfortably slower than the default 5000ms interactive
+        // transaction timeout under load, hence the raised timeout below.
+        operation: ({ prisma, params, data }) =>
+            prisma.$transaction(async tx => {
+                const existingUser = await tx.user.findUniqueOrThrow({
+                    where: { username: params.username },
+                })
+
+                const newImage = await userProfileImageOperations.uploadImage.internalCall({ prisma: tx, data })
+
+                await tx.user.update({
+                    where: { id: existingUser.id },
+                    data: {
+                        image: {
+                            connect: { id: newImage.id }
+                        }
+                    }
+                })
+
+                // A previous imageId is always an upload owned 1:1 by this user (never the shared
+                // default, since that's only ever resolved at read time) - safe to destroy.
+                if (existingUser.imageId) {
+                    await userProfileImageOperations.destroyImage.internalCall({
+                        prisma: tx,
+                        params: { imageId: existingUser.imageId }
+                    })
+                }
+
+                return newImage
+            }, { timeout: 20000 })
+    }),
+} as const

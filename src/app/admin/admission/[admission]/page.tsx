@@ -2,8 +2,8 @@ import RegisterAdmissiontrial from './registration'
 import { admissionDisplayNames, allAdmissions } from '@/services/admission/constants'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { readOmegaJWTPublicKey } from '@/services/omegaid/actions'
-import { notFound } from 'next/navigation'
 import { type Admission as AdmissionType } from '@/prisma-generated-pn-types'
+import { notFound } from 'next/navigation'
 
 type PropTypes = {
     params: Promise<{

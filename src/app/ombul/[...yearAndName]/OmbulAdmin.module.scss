@@ -13,8 +13,14 @@
         color: ohma.$colors-white;
     }
     .coverImage {
-        border-radius: ohma.$rounding;
-        overflow: hidden;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        gap: 1em;
+        > *:first-child {
+            border-radius: ohma.$rounding;
+            overflow: hidden;
+        }
     }
     > .left {
         > *:not(:last-child) {

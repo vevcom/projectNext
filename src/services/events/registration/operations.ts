@@ -3,7 +3,7 @@ import { eventRegistrationIncluderDetailed, eventRegistrationSelection, REGISTRA
 import { eventRegistrationAuth } from './auth'
 import { eventRegistrationSchemas } from './schemas'
 import { Smorekopp } from '@/services/error'
-import { imageOperations } from '@/services/images/operations'
+import { standardImageCollectionOperations } from '@/services/images/standard/operations'
 import { notificationOperations } from '@/services/notifications/operations'
 import { sendSystemMail } from '@/lib/email/send'
 import { userFilterSelection } from '@/services/users/constants'
@@ -205,8 +205,8 @@ export const eventRegistrationOperations = {
             type: z.nativeEnum(REGISTRATION_READER_TYPE).optional(),
         }),
         operation: async ({ prisma, params }): Promise<EventRegistrationExpanded[]> => {
-            const defaultImage = await imageOperations.readSpecial({
-                params: { special: 'DEFAULT_PROFILE_IMAGE' },
+            const defaultImage = await standardImageCollectionOperations.readStandardImage({
+                params: { standardImage: 'DEFAULT_PROFILE_IMAGE' },
             })
 
             const skipTake = await calculateTakeSkip(prisma, params)
