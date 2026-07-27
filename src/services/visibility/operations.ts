@@ -24,7 +24,7 @@ export const visibilityOperations = {
                 where: { visibilityId: params.visibilityId }
             })
 
-            const currentOrder = await omegaOrderOperations.readCurrent({})
+            const currentOrder = await omegaOrderOperations.readCurrent({ bypassAuth: true })
 
             return prisma.visibility.update({
                 where: { id: params.visibilityId },
