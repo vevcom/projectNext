@@ -46,10 +46,21 @@ const readStandardLicense = defineSubOperation({
 
         if (license) return license
 
-        return await generateStandardLicense.internalCall({
-            prisma,
-            params: { standardLicenseName: params.standardLicenseName }
-        })
+        try {
+            return await generateStandardLicense.internalCall({
+                prisma,
+                params: { standardLicenseName: params.standardLicenseName }
+            })
+        } catch (error) {
+            // Handle race condition.
+            // Just in case two concurrent callers tried at the same time
+            if (error instanceof ServerError && error.errorCode === 'DUPLICATE') {
+                return await prisma.license.findUniqueOrThrow({
+                    where: { name: params.standardLicenseName },
+                })
+            }
+            throw error
+        }
     },
 })
 
