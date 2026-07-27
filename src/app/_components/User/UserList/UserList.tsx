@@ -5,6 +5,7 @@ import { UserPagingContext } from '@/contexts/paging/UserPaging'
 import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
 import UserRow from '@/components/User/UserList/UserRow'
 import { useGroups } from '@/contexts/ClientData'
+import { orderOptions } from '@/lib/groups/groupOptions'
 import { UsersSelectionContext } from '@/contexts/UsersSelection'
 import { UserSelectionContext } from '@/contexts/UserSelection'
 import { useContext, useEffect, useState } from 'react'
@@ -49,11 +50,7 @@ function getGroupOptions(groups: ExpandedGroup[] | null, type: GroupType) {
 
 function getOrdereOptions(group: ExpandedGroup) {
     return [
-        ...Array.from({ length: group.order - group.firstOrder + 1 }, (_, i) => group.firstOrder + i).map(order => ({
-            value: order,
-            label: order.toString(),
-            key: order.toString()
-        })),
+        ...orderOptions(group),
         {
             value: 'NULL',
             label: 'Alle aktive',
