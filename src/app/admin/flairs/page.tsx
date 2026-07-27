@@ -3,7 +3,8 @@ import {
     createFlairAction,
     decreaseFlairRankAction,
     increaseFlairRankAction,
-    readAllFlairsAction
+    readAllFlairsAction,
+    updateFlairImageAction
 } from '@/services/flairs/actions'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
@@ -14,8 +15,9 @@ import TextInput from '@/components/UI/TextInput'
 import FileInput from '@/components/UI/FileInput'
 import LicenseChooser from '@/components/LicenseChooser/LicenseChooser'
 import Flair from '@/components/Flair/Flair'
+import ImageUploader from '@/components/Image/ImageUploader'
+import PopUp from '@/components/PopUp/PopUp'
 import { configureAction } from '@/services/configureAction'
-import { ServerSession } from '@/auth/session/ServerSession'
 import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowDown, faArrowUp, faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons'
@@ -23,7 +25,6 @@ import { faArrowDown, faArrowUp, faArrowUpRightFromSquare } from '@fortawesome/f
 
 export default async function FlairUpdatePage() {
     const flairs = unwrapActionReturn(await readAllFlairsAction()).sort((a, b) => a.rank - b.rank)
-    const session = await ServerSession.fromNextAuth()
 
     return (
         <PageWrapper title="Adminitrer Flairs" headerItem={
@@ -64,7 +65,22 @@ export default async function FlairUpdatePage() {
                     {flairs.map((flair, i) => (
                         <tr key={flair.id}>
                             <td>
-                                <Flair session={session} flair={flair} width={100} />
+                                <Flair flair={flair} width={100} />
+                                <PopUp
+                                    popUpKey={`EditFlairImage${flair.id}`}
+                                    showButtonContent="Endre bilde"
+                                    showButtonClass={styles.changeImageBtn}
+                                >
+                                    <ImageUploader
+                                        title={`Endre bilde for ${flair.name}`}
+                                        refreshOnSuccess
+                                        closePopUpOnSuccess={`EditFlairImage${flair.id}`}
+                                        uploadImageAction={configureAction(
+                                            updateFlairImageAction,
+                                            { params: { flairId: flair.id } }
+                                        )}
+                                    />
+                                </PopUp>
                             </td>
                             <td>{flair.name}</td>
                             <td style={{

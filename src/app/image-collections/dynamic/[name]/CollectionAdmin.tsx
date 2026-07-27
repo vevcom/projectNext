@@ -3,8 +3,7 @@ import styles from './CollectionAdmin.module.scss'
 import CollectionAdminUpload from './CollectionAdminUpload'
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
-import FileInput from '@/components/UI/FileInput'
-import LicenseChooser from '@/components/LicenseChooser/LicenseChooser'
+import ImageUploader from '@/components/Image/ImageUploader'
 import PopUp from '@/components/PopUp/PopUp'
 import VisibilityAdmin from '@/components/VisibilityAdmin/VisibilityAdmin'
 import useEditMode from '@/hooks/useEditMode'
@@ -90,22 +89,15 @@ export default function CollectionAdmin({ collection, doubleLevelVisibility, ref
                                     </>
                                 ) : canUploadOne && (
                                     <>
-                                        <Form
+                                        <ImageUploader
                                             title="Last opp bilde"
-                                            submitText="last opp"
                                             successCallback={refreshImages}
                                             closePopUpOnSuccess="UploadImages"
-                                            action={configureAction(
+                                            uploadImageAction={configureAction(
                                                 uploadImageToDynamicCollectionAction,
                                                 { params: { collectionId } }
                                             )}
-                                        >
-                                            <TextInput color="black" label="navn" name="imageName" />
-                                            <TextInput color="black" label="alternativ tekst" name="imageAlt" />
-                                            <TextInput color="black" label="kreditert" name="imageCredit" />
-                                            <LicenseChooser name="imageLicenseId" />
-                                            <FileInput label="fil" name="imageFile" color="primary" />
-                                        </Form>
+                                        />
                                         {
                                             canUploadMany && (
                                                 <Button

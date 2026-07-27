@@ -1,6 +1,5 @@
 import styles from './UserDisplayName.module.scss'
 import Flair from '@/components/Flair/Flair'
-import { Session } from '@/auth/session/Session'
 import type { UserFiltered } from '@/services/users/types'
 
 
@@ -16,7 +15,7 @@ export default function UserDisplayName({
         <span>{user.firstname} {user.lastname}</span>
 
         {user.flairs.map((flair, index) => (
-            <Flair key={index} flair={flair} disableEditor={true} width={width} session={Session.empty()} />
+            <Flair key={index} flair={flair} width={width} />
         ))}
     </div>
 }

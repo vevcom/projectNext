@@ -1,8 +1,9 @@
+import styles from './page.module.scss'
 import UserSettingsForm from './UserProfileSettingsForm'
 import UserProfileSettingsCard from './UserProfileSettingsCard'
+import ProfileImageUploader from './ProfileImageUploader'
 import { getProfileForAdmin } from '@/app/users/[username]/(user-admin)/getProfileForAdmin'
 import Image from '@/components/Image/Image'
-import ImageUploader from '@/components/Image/ImageUploader'
 import { readUserProfileAction, updateUserProfileImageAction } from '@/services/users/actions'
 import { userAuth } from '@/services/users/auth'
 import { configureAction } from '@/services/configureAction'
@@ -27,15 +28,16 @@ export default async function UserSettings({ params }: PropTypes) {
             {/* TODO: add Email registration form and admin user settings */}
             <UserProfileSettingsCard>
                 <h2>Generelle Instillinger</h2>
-                <ImageUploader
-                    popUpKey={`EditProfileImage${profile.user.id}`}
-                    canEdit={canUpdateImage}
-                    uploadImageAction={configureAction(
-                        updateUserProfileImageAction,
-                        { params: { username: profile.user.username } }
-                    )}
-                />
-                <Image width={300} image={profile.user.image} />
+                <div className={styles.profileImage}>
+                    <Image width={300} image={profile.user.image} />
+                    <ProfileImageUploader
+                        canEdit={canUpdateImage}
+                        uploadImageAction={configureAction(
+                            updateUserProfileImageAction,
+                            { params: { username: profile.user.username } }
+                        )}
+                    />
+                </div>
             </UserProfileSettingsCard>
         </div>
     )

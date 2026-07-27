@@ -124,15 +124,15 @@ export default function OmbulAdmin({ ombul }: PropTypes) {
                 {
                     canUpdateCover && (
                         <div className={styles.coverImage}>
+                            <Image image={ombul.coverImage} width={400} />
                             <ImageUploader
-                                popUpKey={`EditOmbulCover${ombul.id}`}
-                                canEdit={canUpdateCoverAuthResult}
+                                title="Endre forsidebilde"
+                                refreshOnSuccess
                                 uploadImageAction={configureAction(
                                     updateOmbulCoverImageAction,
                                     { params: { ombulId: ombul.id } }
                                 )}
                             />
-                            <Image image={ombul.coverImage} width={400} />
                         </div>
                     )
                 }

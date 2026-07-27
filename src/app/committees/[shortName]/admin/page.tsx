@@ -13,20 +13,26 @@ export default async function ComitteeAdmin({ params }: PropTypes) {
 
     const canEditLogo = committeeAuth.updateLogo.dynamicFields({ groupId: committee.groupId }).auth(
         await ServerSession.fromNextAuth()
-    ).toJsObject()
+    )
 
     return (
         <div className={styles.wrapper}>
             <h2>Admin</h2>
-            <ImageUploader
-                popUpKey={`EditCommitteeLogo${committee.id}`}
-                canEdit={canEditLogo}
-                uploadImageAction={configureAction(
-                    updateCommitteeLogoAction,
-                    { params: { shortName: committee.shortName } }
-                )}
-            />
-            <Image image={committee.logoImage} width={300} />
+            <div className={styles.logo}>
+                <Image image={committee.logoImage} width={300} />
+                {
+                    canEditLogo.authorized && (
+                        <ImageUploader
+                            title="Endre komitelogo"
+                            refreshOnSuccess
+                            uploadImageAction={configureAction(
+                                updateCommitteeLogoAction,
+                                { params: { shortName: committee.shortName } }
+                            )}
+                        />
+                    )
+                }
+            </div>
         </div>
     )
 }

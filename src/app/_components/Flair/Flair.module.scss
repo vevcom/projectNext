@@ -1,5 +1,5 @@
 .Flair {
-    position: relative;
-    isolation: isolate;
-    display: table;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
 }

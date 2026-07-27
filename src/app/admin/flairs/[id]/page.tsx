@@ -4,7 +4,6 @@ import { destroyFlairAction, readFlairAction, updateFlairAction } from '@/servic
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { configureAction } from '@/services/configureAction'
 import Flair from '@/components/Flair/Flair'
-import { ServerSession } from '@/auth/session/ServerSession'
 import ColorInput from '@/components/UI/ColorInput'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 
@@ -18,11 +17,10 @@ export default async function FlairUpdatePage({ params }: PropTypes) {
     const flair = unwrapActionReturn(
         await readFlairAction({ params: { flairId: Number((await params).id) } })
     )
-    const session = await ServerSession.fromNextAuth()
 
     return (
         <PageWrapper title={`Rediger flair: ${flair.name}`}>
-            <Flair session={session} flair={flair} width={200} />
+            <Flair flair={flair} width={200} />
             <Form
                 title="Oppdater flair"
                 submitText="Oppdater flair"
