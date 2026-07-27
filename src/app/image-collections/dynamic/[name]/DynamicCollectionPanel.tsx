@@ -6,11 +6,13 @@ import { useCallback, useState } from 'react'
 import type { ImagePanelCursor } from '@/components/Image/ImagePanel/ImagePanel'
 import type { Page } from '@/lib/paging/types'
 import type { ExpandedImageCollection } from '@/services/images/subservice/types'
+import type { DoubleLevelVisibilityMatrix } from '@/services/visibility/types'
 
 const pageSize = 30
 
 type PropTypes = {
     collection: ExpandedImageCollection,
+    doubleLevelVisibility: DoubleLevelVisibilityMatrix,
 }
 
 /**
@@ -19,7 +21,7 @@ type PropTypes = {
  * identity per collection, and renders the collection admin beside the panel. Uploads remount the
  * panel through its key, since new images invalidate every loaded page.
  */
-export default function DynamicCollectionPanel({ collection }: PropTypes) {
+export default function DynamicCollectionPanel({ collection, doubleLevelVisibility }: PropTypes) {
     const [panelGeneration, setPanelGeneration] = useState(0)
 
     const readPageOfImagesInCollectionAction = useCallback(
@@ -45,6 +47,7 @@ export default function DynamicCollectionPanel({ collection }: PropTypes) {
             </main>
             <CollectionAdmin
                 collection={collection}
+                doubleLevelVisibility={doubleLevelVisibility}
                 refreshImages={() => setPanelGeneration(generation => generation + 1)}
             />
         </>

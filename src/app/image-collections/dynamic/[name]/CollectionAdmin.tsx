@@ -8,43 +8,37 @@ import LicenseChooser from '@/components/LicenseChooser/LicenseChooser'
 import PopUp from '@/components/PopUp/PopUp'
 import VisibilityAdmin from '@/components/VisibilityAdmin/VisibilityAdmin'
 import useEditMode from '@/hooks/useEditMode'
-import useActionCall from '@/hooks/useActionCall'
-import { RequireNothing } from '@/auth/authorizer/RequireNothing'
+import { dynamicImageAuth } from '@/services/images/dynamic/auth'
 import Button from '@/components/UI/Button'
 import { configureAction } from '@/services/configureAction'
 import {
     updateDynamicImageCollectionAction,
     destroyDynamicImageCollectionAction,
     uploadImageToDynamicCollectionAction,
-    readDynamicImageCollectionDoubleLevelVisibilityAction,
     updateDynamicImageCollectionRegularLevelVisibilityAction,
     updateDynamicImageCollectionAdminLevelVisibilityAction,
 } from '@/services/images/dynamic/actions'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCog, faEye, faUpload } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/navigation'
-import { useCallback, useState } from 'react'
+import { useState } from 'react'
 import type { ExpandedImageCollection } from '@/services/images/subservice/types'
+import type { DoubleLevelVisibilityMatrix } from '@/services/visibility/types'
 
 type PropTypes = {
     collection: ExpandedImageCollection,
+    doubleLevelVisibility: DoubleLevelVisibilityMatrix,
     refreshImages: () => void,
 }
 
-export default function CollectionAdmin({ collection, refreshImages }: PropTypes) {
+export default function CollectionAdmin({ collection, doubleLevelVisibility, refreshImages }: PropTypes) {
     const { id: collectionId } = collection
     const router = useRouter()
-    //TODO: Use correct authorizer.
-    const canEdit = useEditMode({
-        authorizer: RequireNothing.staticFields({}).dynamicFields({})
-    })
     const [uploadOption, setUploadOption] = useState<'MANY' | 'ONE'>('MANY')
 
-    const readDoubleLevelVisibility = useCallback(
-        () => readDynamicImageCollectionDoubleLevelVisibilityAction({ params: { collectionId } }),
-        [collectionId]
-    )
-    const { data: doubleLevelVisibility } = useActionCall(readDoubleLevelVisibility)
+    const canEdit = useEditMode({
+        authorizer: dynamicImageAuth.updateCollection.dynamicFields({ doubleLevelMatrix: doubleLevelVisibility })
+    })
 
     if (!canEdit) return null
 
@@ -134,34 +128,28 @@ export default function CollectionAdmin({ collection, refreshImages }: PropTypes
                 <FontAwesomeIcon icon={faEye} />
             }>
                 <div className={styles.visibility}>
-                    {
-                        doubleLevelVisibility && (
-                            <>
-                                <div>
-                                    <h3>Vanlig visning</h3>
-                                    <VisibilityAdmin
-                                        visibility={doubleLevelVisibility.regularLevel}
-                                        visibilityId={collection.visibilityRegularId}
-                                        updateVisibilityAction={configureAction(
-                                            updateDynamicImageCollectionRegularLevelVisibilityAction,
-                                            { implementationParams: { collectionId } }
-                                        )}
-                                    />
-                                </div>
-                                <div>
-                                    <h3>Adminvisning</h3>
-                                    <VisibilityAdmin
-                                        visibility={doubleLevelVisibility.adminLevel}
-                                        visibilityId={collection.visibilityAdminId}
-                                        updateVisibilityAction={configureAction(
-                                            updateDynamicImageCollectionAdminLevelVisibilityAction,
-                                            { implementationParams: { collectionId } }
-                                        )}
-                                    />
-                                </div>
-                            </>
-                        )
-                    }
+                    <div>
+                        <h3>Vanlig visning</h3>
+                        <VisibilityAdmin
+                            visibility={doubleLevelVisibility.regularLevel}
+                            visibilityId={collection.visibilityRegularId}
+                            updateVisibilityAction={configureAction(
+                                updateDynamicImageCollectionRegularLevelVisibilityAction,
+                                { implementationParams: { collectionId } }
+                            )}
+                        />
+                    </div>
+                    <div>
+                        <h3>Adminvisning</h3>
+                        <VisibilityAdmin
+                            visibility={doubleLevelVisibility.adminLevel}
+                            visibilityId={collection.visibilityAdminId}
+                            updateVisibilityAction={configureAction(
+                                updateDynamicImageCollectionAdminLevelVisibilityAction,
+                                { implementationParams: { collectionId } }
+                            )}
+                        />
+                    </div>
                 </div>
             </PopUp>
         </div>

@@ -27,6 +27,6 @@ export type DoubleLevelVisibilityMatrix = {
 /**
  * The shape any owning service's `updateRegularLevel`/`updateAdminLevel` action has once its
  * implementationParams is bound (e.g. a collectionId) - still expecting `params: { visibilityId }`
- * to be bound, which VisibilityAdmin does itself once given the visibilityId.
+ * to be bound.
  */
 export type UpdateVisibilityAction = ActionFromSubServiceOperation<typeof visibilityOperations.update>

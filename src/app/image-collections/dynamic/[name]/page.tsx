@@ -1,6 +1,9 @@
 import styles from './page.module.scss'
 import DynamicCollectionPanel from './DynamicCollectionPanel'
-import { readDynamicImageCollectionAction } from '@/services/images/dynamic/actions'
+import {
+    readDynamicImageCollectionAction,
+    readDynamicImageCollectionDoubleLevelVisibilityAction,
+} from '@/services/images/dynamic/actions'
 import { notFound } from 'next/navigation'
 
 type PropTypes = {
@@ -16,11 +19,17 @@ export default async function Collection({ params }: PropTypes) {
     if (!readCollection.success) notFound() //TODO: replace with better error page if error is UNAUTHORIZED.
     const collection = readCollection.data
 
+    const readDoubleLevelVisibility = await readDynamicImageCollectionDoubleLevelVisibilityAction({
+        params: { collectionId: collection.id }
+    })
+    if (!readDoubleLevelVisibility.success) notFound()
+    const doubleLevelVisibility = readDoubleLevelVisibility.data
+
     return (
         <div className={styles.wrapper}>
             <h1>{collection.name}</h1>
             <i>{collection.description}</i>
-            <DynamicCollectionPanel collection={collection} />
+            <DynamicCollectionPanel collection={collection} doubleLevelVisibility={doubleLevelVisibility} />
         </div>
     )
 }
