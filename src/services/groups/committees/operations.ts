@@ -195,7 +195,7 @@ const updateLogo = defineOperation({
             }
 
             return newImage
-        })
+        }, { timeout: 20000 })
 })
 
 const destroy = defineOperation({
@@ -295,7 +295,7 @@ const create = defineOperation({
                     logoImage: true,
                 },
             })
-        })
+        }, { timeout: 20000 })
 })
 
 const update = defineOperation({

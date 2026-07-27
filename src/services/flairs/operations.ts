@@ -27,7 +27,7 @@ export const flairOperations = {
                         }
                     }
                 })
-            })
+            }, { timeout: 20000 })
     }),
     update: defineOperation({
         authorizer: () => flairAuth.update.dynamicFields({}),
@@ -76,7 +76,7 @@ export const flairOperations = {
                     params: { imageId: existingFlair.imageId }
                 })
                 return newImage
-            })
+            }, { timeout: 20000 })
     }),
     read: defineOperation({
         authorizer: () => flairAuth.read.dynamicFields({}),

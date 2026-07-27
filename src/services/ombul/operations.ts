@@ -104,7 +104,7 @@ const updateCoverImage = defineOperation({
             })
 
             return newImage
-        })
+        }, { timeout: 20000 })
 })
 
 /**
@@ -217,7 +217,7 @@ const create = defineOperation({
             })
 
             return ombul
-        })
+        }, { timeout: 20000 })
 })
 
 const update = defineOperation({
