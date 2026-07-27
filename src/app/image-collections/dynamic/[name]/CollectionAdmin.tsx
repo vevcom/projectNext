@@ -6,7 +6,9 @@ import TextInput from '@/components/UI/TextInput'
 import FileInput from '@/components/UI/FileInput'
 import LicenseChooser from '@/components/LicenseChooser/LicenseChooser'
 import PopUp from '@/components/PopUp/PopUp'
+import VisibilityAdmin from '@/components/VisibilityAdmin/VisibilityAdmin'
 import useEditMode from '@/hooks/useEditMode'
+import useActionCall from '@/hooks/useActionCall'
 import { RequireNothing } from '@/auth/authorizer/RequireNothing'
 import Button from '@/components/UI/Button'
 import { configureAction } from '@/services/configureAction'
@@ -14,11 +16,14 @@ import {
     updateDynamicImageCollectionAction,
     destroyDynamicImageCollectionAction,
     uploadImageToDynamicCollectionAction,
+    readDynamicImageCollectionDoubleLevelVisibilityAction,
+    updateDynamicImageCollectionRegularLevelVisibilityAction,
+    updateDynamicImageCollectionAdminLevelVisibilityAction,
 } from '@/services/images/dynamic/actions'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCog, faEye, faUpload } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import type { ExpandedImageCollection } from '@/services/images/subservice/types'
 
 type PropTypes = {
@@ -34,6 +39,13 @@ export default function CollectionAdmin({ collection, refreshImages }: PropTypes
         authorizer: RequireNothing.staticFields({}).dynamicFields({})
     })
     const [uploadOption, setUploadOption] = useState<'MANY' | 'ONE'>('MANY')
+
+    const readDoubleLevelVisibility = useCallback(
+        () => readDynamicImageCollectionDoubleLevelVisibilityAction({ params: { collectionId } }),
+        [collectionId]
+    )
+    const { data: doubleLevelVisibility } = useActionCall(readDoubleLevelVisibility)
+
     if (!canEdit) return null
 
     return (
@@ -122,7 +134,34 @@ export default function CollectionAdmin({ collection, refreshImages }: PropTypes
                 <FontAwesomeIcon icon={faEye} />
             }>
                 <div className={styles.visibility}>
-                    {/* VisibilityAdmin... */}
+                    {
+                        doubleLevelVisibility && (
+                            <>
+                                <div>
+                                    <h3>Vanlig visning</h3>
+                                    <VisibilityAdmin
+                                        visibility={doubleLevelVisibility.regularLevel}
+                                        visibilityId={collection.visibilityRegularId}
+                                        updateVisibilityAction={configureAction(
+                                            updateDynamicImageCollectionRegularLevelVisibilityAction,
+                                            { implementationParams: { collectionId } }
+                                        )}
+                                    />
+                                </div>
+                                <div>
+                                    <h3>Adminvisning</h3>
+                                    <VisibilityAdmin
+                                        visibility={doubleLevelVisibility.adminLevel}
+                                        visibilityId={collection.visibilityAdminId}
+                                        updateVisibilityAction={configureAction(
+                                            updateDynamicImageCollectionAdminLevelVisibilityAction,
+                                            { implementationParams: { collectionId } }
+                                        )}
+                                    />
+                                </div>
+                            </>
+                        )
+                    }
                 </div>
             </PopUp>
         </div>
