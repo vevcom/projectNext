@@ -1,5 +1,7 @@
 import type { eventFilterSelection } from './constants'
+import type { eventSchemas } from './schemas'
 import type { ExpandedCmsImage } from '@/cms/images/types'
+import type { InferPagingCursor, InferPagingDetails } from '@/lib/paging/schema'
 import type { EventTag, Prisma } from '@/prisma-generated-pn-types'
 
 
@@ -16,6 +18,6 @@ export type EventExpanded = EventFiltered & {
     onWaitingList?: boolean,
 }
 
-export type EventArchiveCursor = { id: number }
+export type EventArchiveCursor = InferPagingCursor<typeof eventSchemas.readManyArchivedPage>
 
-export type EventArchiveDetails = { name?: string, tags: string[] | null }
+export type EventArchiveDetails = InferPagingDetails<typeof eventSchemas.readManyArchivedPage>

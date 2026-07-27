@@ -3,7 +3,7 @@ import { readOmegaMembershipGroup, readUserOmegaMembershipLevel } from './read'
 import { OMEGA_MEMBERSHIP_LEVEL_RANKING } from '@/services/groups/constants'
 import { prisma } from '@/prisma-pn-client-instance'
 import { prismaCall } from '@/services/prismaCall'
-import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
+import { omegaOrderOperations } from '@/services/omegaOrder/operations'
 import { ServerError } from '@/services/error'
 import type { OmegaMembershipLevel } from '@/prisma-generated-pn-types'
 
@@ -33,7 +33,7 @@ export async function updateUserOmegaMembershipGroup(
         }
     }
 
-    const currentOmegaOrder = await readCurrentOmegaOrder()
+    const currentOmegaOrder = await omegaOrderOperations.readCurrent({ bypassAuth: true })
 
     await prismaCall(() => prisma.$transaction([
         prisma.membership.deleteMany({

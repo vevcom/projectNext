@@ -14,7 +14,7 @@ import type { PropTypes } from '@/app/users/[username]/page'
 
 
 export default async function FlairAdmin({ params }: PropTypes) {
-    const { profile, session } = await getProfileForAdmin(await params, 'flairs')
+    const { profile } = await getProfileForAdmin(await params, 'flairs')
     const usersFlairs = unwrapActionReturn(await readUserFlairsAction({ params: { userId: profile.user.id } }))
     const flairs = unwrapActionReturn(await readAllFlairsAction()).map(flair => ({
         ...flair,
@@ -41,7 +41,7 @@ export default async function FlairAdmin({ params }: PropTypes) {
                     <tbody>
                         {flairs.map((flair) => (
                             <tr key={flair.id}>
-                                <td><Flair asClient={false} flair={flair} width={100} session={session} /></td>
+                                <td><Flair flair={flair} width={100} /></td>
                                 <td>{flair.name}</td>
                                 <td>{flair.rank}</td>
                                 <td style={{ backgroundColor: `rgb(${flair.colorR}, ${flair.colorG}, ${flair.colorB})` }}>

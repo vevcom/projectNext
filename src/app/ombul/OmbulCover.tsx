@@ -45,9 +45,7 @@ export default function OmbulCover(props: PropTypes) {
                 coverImage instanceof File ? (
                     placeholderCover
                 ) : (
-                    coverImage.image && (
-                        <Image width={250} image={coverImage.image} className={styles.coverImg} />
-                    )
+                    <Image width={250} image={coverImage} className={styles.coverImg} />
                 )
             }
         </div>

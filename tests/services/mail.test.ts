@@ -1,6 +1,6 @@
 import { Smorekopp } from '@/services/error'
 import { prisma } from '@/prisma-pn-client-instance'
-import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
+import { omegaOrderOperations } from '@/services/omegaOrder/operations'
 import { aliasOperations } from '@/services/mail/alias/operations'
 import { mailingListOperations } from '@/services/mail/list/operations'
 import { mailAddressExternalOperations } from '@/services/mail/mailAddressExternal/operations'
@@ -175,7 +175,7 @@ describe('mail flow traversal', () => {
     })
 
     test('traversal from mailing list via group shows connected user', async () => {
-        const { order } = await readCurrentOmegaOrder()
+        const { order } = await omegaOrderOperations.readCurrent({ bypassAuth: true })
         const group = await prisma.group.create({ data: { groupType: 'MANUAL_GROUP', order } })
         testGroupIds.push(group.id)
         const user = await prisma.user.create({ data: { username: 'test-group-user', email: 'test-group@test.test' } })
@@ -256,7 +256,7 @@ describe('mail flow traversal', () => {
 
 describe('destroy mailing list user relation', () => {
     test('throws NOT FOUND when user is connected to list only via a group', async () => {
-        const { order } = await readCurrentOmegaOrder()
+        const { order } = await omegaOrderOperations.readCurrent({ bypassAuth: true })
         const group = await prisma.group.create({ data: { groupType: 'MANUAL_GROUP', order } })
         testGroupIds.push(group.id)
         const user = await prisma.user.create({ data: { username: 'test-destroy-user', email: 'test-destroy@test.test' } })
