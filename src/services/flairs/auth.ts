@@ -2,6 +2,8 @@ import { RequireNothing } from '@/auth/authorizer/RequireNothing'
 import { RequirePermission } from '@/auth/authorizer/RequirePermission'
 import { RequireUserIdOrPermission } from '@/auth/authorizer/RequireUserIdOrPermission'
 
+export const flairImagesImagePanelAuth = RequirePermission.staticFields({ permission: 'FLAIR_ADMIN' })
+
 export const flairAuth = {
     create: RequirePermission.staticFields({ permission: 'FLAIR_ADMIN' }),
     destroy: RequirePermission.staticFields({ permission: 'FLAIR_ADMIN' }),
@@ -13,5 +15,5 @@ export const flairAuth = {
     read: RequireNothing.staticFields({}),
     readAll: RequireNothing.staticFields({}),
     readUserFlairs: RequireUserIdOrPermission.staticFields({ permission: 'USERS_READ' }),
-    updateCmsImage: RequirePermission.staticFields({ permission: 'FLAIR_ADMIN' }),
+    updateImage: RequirePermission.staticFields({ permission: 'FLAIR_ADMIN' }),
 } as const
