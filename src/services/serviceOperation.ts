@@ -122,6 +122,24 @@ export type OwnershipCheck<
     args: ArgsAuthGetterAndOwnershipCheck<OpensTransaction, ParamsSchema, DataSchema, ImplementationParamsSchema>
 ) => boolean | Promise<boolean>
 
+/**
+ * A hook an implementation may run right before the operation itself. It gets the same arguments as
+ * the authorizer and the ownership check, so it can read whatever it needs - including from the
+ * database - and throw to abort the call.
+ *
+ * Note that one should use the ownership chack check for any checks conserning if the
+ * implementer service owns the resource from the sub service in question. This hook is for
+ * additional checks that are not covered by the ownership check.
+ */
+export type BeforeRun<
+    OpensTransaction extends boolean,
+    ParamsSchema extends z.ZodTypeAny | undefined,
+    DataSchema extends z.ZodTypeAny | undefined,
+    ImplementationParamsSchema extends z.ZodTypeAny | undefined,
+> = (
+    args: ArgsAuthGetterAndOwnershipCheck<OpensTransaction, ParamsSchema, DataSchema, ImplementationParamsSchema>
+) => void | Promise<void>
+
 export type ServiceOperationImplementationConfigInternalCall<
     ImplementationParamsSchema extends z.ZodTypeAny | undefined,
     ParamsSchemaImplementationFields extends object | undefined,
@@ -165,6 +183,7 @@ export type ServiceOperationImplementationConfig<
         OpensTransaction, ParamsSchema, DataSchema, ImplementationParamsSchema, PrismaWhereFilter | undefined
     >,
     ownershipCheck: OwnershipCheck<OpensTransaction, ParamsSchema, DataSchema, ImplementationParamsSchema>,
+    beforeRun?: BeforeRun<OpensTransaction, ParamsSchema, DataSchema, ImplementationParamsSchema>,
 }
 
 /**
@@ -470,6 +489,13 @@ export function defineSubOperation<
                             as the resource implementing this resource does not own it.
                         `)
                     }
+
+                    await prismaErrorWrapper(
+                        () => implementationArgs.beforeRun?.({
+                            ...args,
+                            prisma,
+                        })
+                    )
 
                     return prismaErrorWrapper(() =>
                         serviceOperationConfig.operation(
