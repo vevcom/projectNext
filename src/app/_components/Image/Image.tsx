@@ -1,14 +1,15 @@
 import styles from './Image.module.scss'
 import { resolutionForWidth } from '@/lib/images/resolutionForWidth'
+import { imageSourceForResolution } from '@/lib/images/imageSource'
 import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCopyright } from '@fortawesome/free-solid-svg-icons'
 import type { ImageResolution } from '@/lib/images/resolutionForWidth'
-import type { Image as ImageT } from '@/prisma-generated-pn-types'
+import type { ExpandedImage } from '@/services/images/subservice/types'
 import type { ImageProps } from 'next/image'
 
 export type PropTypes = Omit<ImageProps, 'src' | 'alt'> & {
-    image: ImageT,
+    image: ExpandedImage,
     width: number,
     resolution?: ImageResolution,
     alt?: string,
@@ -46,29 +47,7 @@ export default function Image({
     disableLinkingToLicense = false,
     ...props
 }: PropTypes) {
-    let url: string
-    switch (resolution) {
-        case 'TINY':
-            url = `/store/images/${image.fsLocationTinySize}`
-            break
-        case 'SMALL':
-            url = `/store/images/${image.fsLocationSmallSize}`
-            break
-        case 'MEDIUM':
-            url = `/store/images/${image.fsLocationMediumSize}`
-            break
-        case 'LARGE':
-            url = `/store/images/${image.fsLocationLargeSize}`
-            break
-        case 'ORIGINAL':
-            url = `/store/images/${image.fsLocationOriginal}`
-            break
-        default:
-            // Unreachable - the switch above is exhaustive over ImageResolution - only present
-            // because eslint's default-case rule requires it.
-            url = `/store/images/${image.fsLocationOriginal}`
-            break
-    }
+    const url = imageSourceForResolution(image, resolution)
     return (
         <div style={{ width: `${width}px` }} className={`${styles.Image} ${imageContainerClassName}`}>
             <img {...props}

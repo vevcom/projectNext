@@ -1,5 +1,6 @@
 import { articleRealtionsIncluder } from '@/cms/articles/constants'
 import { JobType } from '@/prisma-generated-pn-types'
+import { expandedImageIncluder } from '@/services/images/subservice/constants'
 import type { Prisma } from '@/prisma-generated-pn-types'
 
 
@@ -28,7 +29,7 @@ export const simpleArticleAndCompanyIncluder = {
         include: {
             coverImage: {
                 include: {
-                    image: true
+                    image: { include: expandedImageIncluder }
                 }
             }
         }

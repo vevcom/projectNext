@@ -1,7 +1,7 @@
 import '@pn-server-only'
 import { ServerError } from '@/services/error'
 import { v4 as uuid } from 'uuid'
-import { mkdir, unlink, writeFile } from 'fs/promises'
+import { mkdir, readFile, unlink, writeFile } from 'fs/promises'
 import { join } from 'path'
 import type { File } from 'buffer'
 
@@ -57,6 +57,23 @@ export function implementStore<const AllowedExt extends readonly string[]>(confi
         }
     }
 
+    async function readStoredFile(
+        fsLocation: string,
+        dynamicStorePrefix?: string
+    ): Promise<Buffer> {
+        const filePath = dynamicStorePrefix
+            ? join('store', config.staticStorePrefix, dynamicStorePrefix, fsLocation)
+            : join('store', config.staticStorePrefix, fsLocation)
+        try {
+            return await readFile(filePath)
+        } catch (error) {
+            if (isErrorWithCode(error) && error.code === 'ENOENT') {
+                throw new ServerError('NOT FOUND', 'Filen du forsøkte å finne ble ikke funnet')
+            }
+            throw error
+        }
+    }
+
     async function destroyFile(
         fsLocation: string,
         dynamicStorePrefix?: string
@@ -76,6 +93,7 @@ export function implementStore<const AllowedExt extends readonly string[]>(confi
 
     return {
         createFile,
+        readStoredFile,
         destroyFile,
     } as const
 }

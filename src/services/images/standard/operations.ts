@@ -4,9 +4,11 @@ import { standardImageCollectionAuth, standardImagesImagePanelAuth } from './aut
 import { implementSpecialCollection } from '@/services/images/subservice/special/implement'
 import { defineOperation, defineSubOperation } from '@/services/serviceOperation'
 import logger from '@/lib/logger'
-import { StandardImage, type Image } from '@/prisma-generated-pn-types'
+import { StandardImage } from '@/prisma-generated-pn-types'
 import { imageOperations } from '@/services/images/subservice/operations'
+import { expandedImageIncluder } from '@/services/images/subservice/constants'
 import { z } from 'zod'
+import type { ExpandedImage } from '@/services/images/subservice/types'
 
 const {
     specialCollectionPanelOperations: standardImagesImagePanelOperations,
@@ -67,7 +69,8 @@ const readStandardImage = defineOperation({
         const image = await prisma.image.findUnique({
             where: {
                 standardImage: params.standardImage
-            }
+            },
+            include: expandedImageIncluder,
         })
 
         const standardCollection =
@@ -100,13 +103,13 @@ const readStandardImage = defineOperation({
 
 const readAllStandardImages = defineOperation({
     authorizer: () => standardImageCollectionAuth.readStandardImage.dynamicFields({}),
-    operation: async (): Promise<Record<StandardImage, Image>> => {
+    operation: async (): Promise<Record<StandardImage, ExpandedImage>> => {
         const entries = await Promise.all(
             Object.values(StandardImage).map(async standardImage =>
                 [standardImage, await readStandardImage({ params: { standardImage } })] as const
             )
         )
-        return Object.fromEntries(entries) as Record<StandardImage, Image>
+        return Object.fromEntries(entries) as Record<StandardImage, ExpandedImage>
     }
 })
 

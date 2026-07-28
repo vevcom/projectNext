@@ -22,7 +22,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faInfo } from '@fortawesome/free-solid-svg-icons'
 import type { ReadPageOfImagesInCollectionAction } from '@/components/Image/ImagePanel/ImagePanel'
 import type { ExpandedImageCollection } from '@/services/images/subservice/types'
-import type { CmsImage, Image as ImageT } from '@/prisma-generated-pn-types'
+import type { CmsImage } from '@/prisma-generated-pn-types'
+import type { ExpandedImage } from '@/services/images/subservice/types'
 import type { UpdateCmsImageAction } from '@/cms/images/types'
 import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
 
@@ -31,7 +32,7 @@ const imagePageSize = 30
 
 type PropTypes = {
     cmsImage: CmsImage & {
-        image: ImageT | null
+        image: ExpandedImage | null
     },
     updateCmsImageAction: UpdateCmsImageAction
     canEdit: AuthResultTypeAny
@@ -48,7 +49,7 @@ export default function CmsImageEditor({ cmsImage, updateCmsImageAction, canEdit
     const [currentCollectionId, setCurrentCollectionId] = useState<number | null>(
         cmsImage.image?.collectionId ?? null
     )
-    const [selectedImage, setSelectedImage] = useState<ImageT | null>(cmsImage.image)
+    const [selectedImage, setSelectedImage] = useState<ExpandedImage | null>(cmsImage.image)
 
     const specialCollectionsResult = useSpecialCollections()
 

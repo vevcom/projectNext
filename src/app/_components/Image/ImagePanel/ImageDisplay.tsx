@@ -3,12 +3,13 @@ import styles from './ImageDisplay.module.scss'
 import { SelectString } from '@/components/UI/Select'
 import Image from '@/components/Image/Image'
 import useKeyPress from '@/hooks/useKeyPress'
+import { imageSourceForResolution } from '@/lib/images/imageSource'
 import { faChevronRight, faChevronLeft, faX } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useState } from 'react'
 import Link from 'next/link'
 import type { ImageResolution } from '@/lib/images/resolutionForWidth'
-import type { Image as ImageT } from '@/prisma-generated-pn-types'
+import type { ExpandedImage } from '@/services/images/subservice/types'
 
 const mimeTypes: { [key: string]: string } = {
     jpg: 'image/jpeg',
@@ -21,34 +22,16 @@ const mimeTypes: { [key: string]: string } = {
     tiff: 'image/tiff',
     svg: 'image/svg+xml',
 }
-const getCurrentType = (image: ImageT, size: ImageResolution) => {
-    let src = image.fsLocationOriginal
-    switch (size) {
-        case 'TINY':
-            src = image.fsLocationTinySize
-            break
-        case 'SMALL':
-            src = image.fsLocationSmallSize
-            break
-        case 'MEDIUM':
-            src = image.fsLocationMediumSize
-            break
-        case 'LARGE':
-            src = image.fsLocationLargeSize
-            break
-        case 'ORIGINAL':
-            src = image.fsLocationOriginal
-            break
-        default:
-            return 'unknown'
-    }
-    const ext = src.split('.').pop()
+const getCurrentType = (image: ExpandedImage, size: ImageResolution) => {
+    const source = imageSourceForResolution(image, size)
+    if (source.startsWith('data:')) return source.slice('data:'.length, source.indexOf(';'))
+    const ext = source.split('.').pop()
     if (!ext) return 'unknown'
-    return mimeTypes[ext]
+    return mimeTypes[ext] ?? 'unknown'
 }
 
 type PropTypes = {
-    image: ImageT,
+    image: ExpandedImage,
     loading: boolean,
     onClose: () => void,
     onNavigateLeft: () => void,

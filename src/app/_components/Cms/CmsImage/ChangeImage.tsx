@@ -4,12 +4,12 @@ import ChangeImageForm from './ChangeImageForm'
 import Image from '@/components/Image/Image'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTurnUp } from '@fortawesome/free-solid-svg-icons'
-import type { Image as ImageT } from '@/prisma-generated-pn-types'
+import type { ExpandedImage } from '@/services/images/subservice/types'
 import type { UpdateCmsImageAction } from '@/cms/images/types'
 
 type PropTypes = {
-    currentImage: ImageT | null,
-    selectedImage: ImageT | null,
+    currentImage: ExpandedImage | null,
+    selectedImage: ExpandedImage | null,
     cmsImageId: number,
     updateCmsImageAction: UpdateCmsImageAction
 }
