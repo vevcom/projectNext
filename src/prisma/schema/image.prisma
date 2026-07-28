@@ -18,6 +18,7 @@ enum StandardImage {
 model Image {
   id                      Int              @id @default(autoincrement())
   fsLocationOriginal      String           @unique
+  fsLocationTinySize      String           @unique
   fsLocationSmallSize     String           @unique
   fsLocationMediumSize    String           @unique
   fsLocationLargeSize     String           @unique
@@ -74,10 +75,4 @@ model ImageCollection {
   visibilityAdminId   Int        @unique
   visibilityRegular   Visibility @relation(name: "ImageCollectionReadVisibility", fields: [visibilityRegularId], references: [id], onDelete: Restrict)
   visibilityRegularId Int        @unique
-}
-
-enum ImageSize {
-  SMALL
-  MEDIUM
-  LARGE
 }

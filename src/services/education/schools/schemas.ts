@@ -1,6 +1,6 @@
 import { readPageInputSchemaObject } from '@/lib/paging/schema'
-import { z } from 'zod'
 import { StandardSchool } from '@/prisma-generated-pn-types'
+import { z } from 'zod'
 
 const baseSchool = z.object({
     name: z.string().max(50).min(1).trim(),

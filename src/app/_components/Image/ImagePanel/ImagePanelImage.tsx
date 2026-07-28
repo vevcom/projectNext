@@ -21,7 +21,7 @@ export default function ImagePanelImage({ image, selected, onOpenDisplay, onTogg
 
     return (
         <div className={styles.ImagePanelImage}>
-            <ImageComponent hideCopyRight smallSize width={200} image={image} />
+            <ImageComponent hideCopyRight width={200} image={image} />
             {handleTileClick && <button className={styles.tileButton} onClick={handleTileClick} />}
             {onToggleSelect && (
                 <button

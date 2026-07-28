@@ -7,6 +7,7 @@ export const maxImageFileSizeBytes = maxImageFileSizeMb * 1024 * 1024
 export const maxImageCountInOneBatch = 10
 
 export const imageSizes = {
+    tiny: 90,
     small: 180,
     medium: 360,
     large: 720,

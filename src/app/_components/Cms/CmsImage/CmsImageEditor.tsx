@@ -126,7 +126,6 @@ export default function CmsImageEditor({ cmsImage, updateCmsImageAction, canEdit
                             </div>
                         </div>
                         <ChangeImage
-                            currentImageSize={cmsImage.imageSize}
                             currentImage={cmsImage.image}
                             selectedImage={selectedImage}
                             cmsImageId={cmsImage.id}

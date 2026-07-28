@@ -77,13 +77,15 @@ export const imageOperations = {
             const buffer = Buffer.from(await imageFile.arrayBuffer())
 
             const uploadPromises = [
+                createResizedAvifInStore(buffer, imageSizes.tiny),
                 createResizedAvifInStore(buffer, imageSizes.small),
                 createResizedAvifInStore(buffer, imageSizes.medium),
                 createResizedAvifInStore(buffer, imageSizes.large),
                 imageStore.createFile(imageFile, [...allowedExtensions]),
             ]
 
-            const [smallSize, mediumSize, largeSize, original] = await Promise.all(uploadPromises)
+            const [tinySize, smallSize, mediumSize, largeSize, original] = await Promise.all(uploadPromises)
+            const fsLocationTinySize = tinySize.fsLocation
             const fsLocationSmallSize = smallSize.fsLocation
             const fsLocationMediumSize = mediumSize.fsLocation
             const fsLocationLargeSize = largeSize.fsLocation
@@ -96,6 +98,7 @@ export const imageOperations = {
                     license: meta.imageLicenseId ? { connect: { id: meta.imageLicenseId } } : undefined,
                     credit: meta.imageCredit,
                     fsLocationOriginal,
+                    fsLocationTinySize,
                     fsLocationSmallSize,
                     fsLocationMediumSize,
                     fsLocationLargeSize,
@@ -179,6 +182,7 @@ export const imageOperations = {
                 },
             })
             await imageStore.destroyFile(image.fsLocationOriginal)
+            await imageStore.destroyFile(image.fsLocationTinySize)
             await imageStore.destroyFile(image.fsLocationSmallSize)
             await imageStore.destroyFile(image.fsLocationMediumSize)
             await imageStore.destroyFile(image.fsLocationLargeSize)

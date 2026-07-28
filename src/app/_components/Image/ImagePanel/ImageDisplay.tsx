@@ -7,7 +7,7 @@ import { faChevronRight, faChevronLeft, faX } from '@fortawesome/free-solid-svg-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useState } from 'react'
 import Link from 'next/link'
-import type { ImageSizeOptions } from '@/components/Image/Image'
+import type { ImageResolution } from '@/lib/images/resolutionForWidth'
 import type { Image as ImageT } from '@/prisma-generated-pn-types'
 
 const mimeTypes: { [key: string]: string } = {
@@ -21,9 +21,12 @@ const mimeTypes: { [key: string]: string } = {
     tiff: 'image/tiff',
     svg: 'image/svg+xml',
 }
-const getCurrentType = (image: ImageT, size: ImageSizeOptions) => {
+const getCurrentType = (image: ImageT, size: ImageResolution) => {
     let src = image.fsLocationOriginal
     switch (size) {
+        case 'TINY':
+            src = image.fsLocationTinySize
+            break
         case 'SMALL':
             src = image.fsLocationSmallSize
             break
@@ -63,14 +66,14 @@ type PropTypes = {
  * @param onNavigateRight - called on the right arrow (button or key)
  */
 export default function ImageDisplay({ image, loading, onClose, onNavigateLeft, onNavigateRight }: PropTypes) {
-    const [imageSize, setImageSize] = useState<ImageSizeOptions>('LARGE')
+    const [imageSize, setImageSize] = useState<ImageResolution>('LARGE')
 
     useKeyPress('ArrowRight', onNavigateRight)
     useKeyPress('ArrowLeft', onNavigateLeft)
     useKeyPress('Escape', onClose)
 
     const handleSizeChange = (size: string) => {
-        if (size === 'SMALL' || size === 'MEDIUM' || size === 'LARGE' || size === 'ORIGINAL') {
+        if (size === 'TINY' || size === 'SMALL' || size === 'MEDIUM' || size === 'LARGE' || size === 'ORIGINAL') {
             setImageSize(size)
         }
     }
@@ -85,6 +88,10 @@ export default function ImageDisplay({ image, loading, onClose, onNavigateLeft, 
                     name="imageSize"
                     label="Oppløsning"
                     options={[
+                        {
+                            label: 'Veldig liten',
+                            value: 'TINY'
+                        },
                         {
                             label: 'Liten',
                             value: 'SMALL'
@@ -131,7 +138,7 @@ export default function ImageDisplay({ image, loading, onClose, onNavigateLeft, 
                             hideCredit
                             hideCopyRight
                             width={200}
-                            imageSize={imageSize}
+                            resolution={imageSize}
                             image={image}
                         />
                     )
