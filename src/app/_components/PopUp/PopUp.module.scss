@@ -1,7 +1,7 @@
 @use '@/styles/ohma';
 
 .PopUp {
-    @include ohma.layer();
+    background-color: rgba(0, 0, 0, 0.55);
     z-index: 8;
     position: fixed;
     top: 0;
@@ -9,6 +9,7 @@
     > .main {
         @include ohma.boxShadow('');
         @include ohma.card;
+        border-radius: ohma.$rounding;
         background-color: ohma.$colors-secondary;
         padding: calc(3 * #{ohma.$gap});
         z-index: 9;
@@ -23,8 +24,27 @@
 }
 
 .closeBtn {
-    background-color: ohma.$colors-red;
-    @include ohma.roundBtn(ohma.$colors-red);
+    background-color: ohma.$colors-accent-red;
+    border: none;
+    border-radius: ohma.$gap;
+    width: 48px;
+    height: 48px;
+    padding: ohma.$gap;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: ohma.$colors-text-inv;
+    transition: background-color .5s;
+
+    &:hover {
+        background-color: color-mix(in srgb, ohma.$colors-accent-red, white 20%);
+    }
+
+    > svg {
+        width: 40%;
+        height: 40%;
+    }
 }
 
 .openBtn {
@@ -39,7 +59,7 @@
 
 @include ohma.screenLg {
     .PopUp {
-        backdrop-filter: blur(5px);
+        backdrop-filter: blur(2px);
         width: 100vw;
         height: 100vh;
         > .main {
@@ -50,10 +70,8 @@
         }
         .closeBtn {
             position: absolute;
-            top: -10px;
-            left: -10px;
-            width: 40px;
-            height: 40px;
+            top: calc(-48px - #{ohma.$gap});
+            left: 0;
         }
     }
 }
@@ -66,14 +84,12 @@
         > .main {
             width: 100svw;
             translate: 0 calc(100svh - 100%);
-            border-radius: ohma.$cardRounding ohma.$cardRounding 0 0;
+            border-radius: ohma.$rounding ohma.$rounding 0 0;
         }
         .closeBtn {
             position: absolute;
-            top: calc(2 * #{ohma.$gap});
-            right: calc(2 * #{ohma.$gap});
-            width: 3em;
-            height: 3em;
+            top: calc(-1 * #{ohma.$gap});
+            left: calc(2 * #{ohma.$gap});
         }
     }
 }
