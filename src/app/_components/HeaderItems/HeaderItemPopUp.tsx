@@ -6,26 +6,32 @@ import { FontAwesomeIcon, type FontAwesomeIconProps } from '@fortawesome/react-f
 import { faArchive, faCog, faPlus, faQuestionCircle, faTag, faUsers } from '@fortawesome/free-solid-svg-icons'
 import type { PropTypes as PopUpProps } from '@/components/PopUp/PopUp'
 
-type PropTypes = Omit<PopUpProps, 'showButtonContent'> & { scale?: number }
+type PropTypes = Omit<PopUpProps, 'showButtonContent'> & { scale?: number, label?: React.ReactNode }
 
-function createHeaderItemPopUp(icon: FontAwesomeIconProps['icon'], scale = 40) {
-    return function HeadItemPopUp({ showButtonClass, children, scale: overrideScale, ...props }: PropTypes) {
+function createHeaderItemPopUp(icon: FontAwesomeIconProps['icon'], scale = 40, defaultLabel?: string) {
+    return function HeadItemPopUp({ showButtonClass, children, scale: overrideScale, label = defaultLabel, ...props }:
+                                  PropTypes) {
+        const buttonScale = overrideScale ?? scale
+        const iconScale = Math.round(buttonScale * (label ? 0.4 : 0.55))
+        const iconStyle = { width: `${iconScale}px`, height: `${iconScale}px` }
+
         return <PopUp
             {...props}
             showButtonContent = {
-                <FontAwesomeIcon
-                    style={{
-                        width: `${overrideScale ?? scale}px`,
-                        height: `${overrideScale ?? scale}px`,
-                    }}
-                    icon={icon}
-                />
+                label ? (
+                    <>
+                        <span className={styles.label}>{label}</span>
+                        <FontAwesomeIcon style={iconStyle} icon={icon} />
+                    </>
+                ) : (
+                    <FontAwesomeIcon style={iconStyle} icon={icon} />
+                )
             }
             showButtonStyle={{
-                width: `${overrideScale ?? scale}px`,
-                height: `${overrideScale ?? scale}px`,
+                height: `${buttonScale}px`,
+                ...(label ? {} : { width: `${buttonScale}px` }),
             }}
-            showButtonClass={`${styles.addBtn} ${showButtonClass}`}
+            showButtonClass={`${styles.headerItemBtn} ${label ? styles.pill : ''} ${showButtonClass ?? ''}`}
         >
             { children }
         </PopUp>
@@ -37,7 +43,7 @@ function createHeaderItemPopUp(icon: FontAwesomeIconProps['icon'], scale = 40) {
  * f.ex add users or create new ombul, image, ...
  * Often a Form will be rendered as children
  */
-export const AddHeaderItemPopUp = createHeaderItemPopUp(faPlus)
+export const AddHeaderItemPopUp = createHeaderItemPopUp(faPlus, 40, 'Ny')
 
 /**
  * Component that can be used to show a help pop up for a page
@@ -59,4 +65,4 @@ export const TagHeasderItemPopUp = createHeaderItemPopUp(faTag)
 /**
  * Component that can be used to show a archive pop up for a page
  */
-export const ArchiveHeaderItemPopUp = createHeaderItemPopUp(faArchive, 35)
+export const ArchiveHeaderItemPopUp = createHeaderItemPopUp(faArchive, 40, 'Arkiv')
