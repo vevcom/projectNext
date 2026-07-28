@@ -4,7 +4,7 @@
     display: grid;
     overflow: hidden;
     > div:not(.imgContainer) {
-        padding: 15*ohma.$gap;
+        padding: calc(15 * ohma.$gap);
         height: 100%;
         display: flex;
         flex-direction: column;
@@ -43,7 +43,7 @@
         }
     }
     > .imgContainer {
-        margin: 2*ohma.$gap;
+        margin: calc(2 * ohma.$gap);
         border-radius: ohma.$rounding;
     }
 }
@@ -88,7 +88,7 @@
             }
         }
         > div:not(.imgContainer) {
-            padding: 10*ohma.$gap;
+            padding: calc(10 * ohma.$gap);
             width: 100vw;
         }
     }

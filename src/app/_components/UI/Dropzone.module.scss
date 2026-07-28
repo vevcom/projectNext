@@ -9,7 +9,7 @@
         width: 100%;
         position: relative;
         border: 2px dashed ohma.$colors-primary;
-        padding: 3*ohma.$gap;
+        padding: calc(3 * ohma.$gap);
         display: flex;
         justify-content: center;
         align-items: center;    
@@ -37,11 +37,11 @@
         > svg {
             width: 30px;
             height: 30px;
-            margin: 2*ohma.$gap;
+            margin: calc(2 * ohma.$gap);
         }
     }
     > span {
-        margin-top: 2*ohma.$gap;
+        margin-top: calc(2 * ohma.$gap);
         padding: .5em;
         background-color: color-mix(in srgb, ohma.$colors-primary, white 15%);
         > .general {

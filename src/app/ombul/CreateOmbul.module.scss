@@ -5,7 +5,7 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: auto auto;
-    gap: 5*ohma.$gap;
+    gap: calc(5 * ohma.$gap);
     @include ohma.screenMobile {
         grid-template-columns: 1fr;
     }
@@ -22,7 +22,7 @@
     }
     .imgPreview {
         grid-column: 2 / 3;
-        margin-left: 2*ohma.$gap;
+        margin-left: calc(2 * ohma.$gap);
         width: 70%;
         height: 70%;
         min-width: 20vw;

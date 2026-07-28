@@ -9,13 +9,13 @@
     justify-content: center;
 
     > .card {
-        padding: 4*ohma.$gap;
+        padding: calc(4 * ohma.$gap);
         border-radius: ohma.$cardRounding;
         display: flex;
         height: min-content;
 
         > .image {
-            margin-left: 4*ohma.$gap;
+            margin-left: calc(4 * ohma.$gap);
             display: grid;
             place-items: center;
             grid-column: 2/3;
@@ -23,7 +23,7 @@
         }
 
         @include ohma.screenLg {
-            margin-top: 6*ohma.$gap;
+            margin-top: calc(6 * ohma.$gap);
             > .input {
                 grid-column: 1/2;
                 max-width: 250px;
@@ -33,7 +33,7 @@
 
         @include ohma.screenMobile {
             flex-direction: column-reverse;
-            margin: 3*ohma.$gap;
+            margin: calc(3 * ohma.$gap);
 
             >.image {
                 margin: 0;

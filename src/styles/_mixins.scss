@@ -61,7 +61,7 @@
     text-decoration: none;
     font-size: fonts.$m;
     background: $color;
-    padding: 2*variables.$gap;
+    padding: calc(2 * variables.$gap);
     margin: variables.$gap;
     color: colors.$text-inv;
     border: none;

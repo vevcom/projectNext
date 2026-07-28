@@ -79,7 +79,7 @@ $collectionSize: calc(14vmin + 70px);
         overflow-x: scroll;
         min-height: calc($collectionSize + 5vmin);
         align-items: center;
-        padding: 2*ohma.$gap;
+        padding: calc(2 * ohma.$gap);
         border-radius: #{ohma.$rounding};
 
         .collection {
