@@ -39,20 +39,50 @@
     width: 100%;
     border-collapse: collapse;
     border: none;
-    margin: 20px 0;
-    font-size: 18px;
+    margin: calc(2 * #{variables.$gap}) 0;
+    font-size: fonts.$m;
     text-align: left;
+    box-shadow: colors.$boxShadow 0 1px 3px, colors.$boxShadow 0 1px 2px;
+
     th, td {
-        padding: variables.$gap;
+        padding: calc(1.5 * #{variables.$gap}) calc(2 * #{variables.$gap});
     }
+
     th {
-        background-color: color-mix(in srgb, colors.$secondary, white 2%); // TODO Perhaps change
+        background-color: colors.$surface-raised;
+        color: colors.$ink-strong;
+        font-weight: fonts.$weight-m;
     }
-    tr:nth-child(even) {
-        background-color: color-mix(in srgb, colors.$secondary, white 2%); // TODO Perhaps change
+
+    tbody tr {
+        background-color: colors.$surface-raised;
+        transition: background-color .3s;
+        &:nth-child(even) {
+            background-color: color-mix(in srgb, colors.$surface-raised, white 3%);
+        }
+        &:hover {
+            background-color: colors.$surface-hover;
+        }
     }
-    tr:hover {
-        @include layer;
+
+    thead tr:first-child th:first-child {
+        border-top-left-radius: variables.$rounding;
+    }
+    thead tr:first-child th:last-child {
+        border-top-right-radius: variables.$rounding;
+    }
+    tbody tr:last-child td:first-child {
+        border-bottom-left-radius: variables.$rounding;
+    }
+    tbody tr:last-child td:last-child {
+        border-bottom-right-radius: variables.$rounding;
+    }
+
+    &:has(tbody:empty) thead tr:first-child th:first-child {
+        border-bottom-left-radius: variables.$rounding;
+    }
+    &:has(tbody:empty) thead tr:first-child th:last-child {
+        border-bottom-right-radius: variables.$rounding;
     }
 }
 
@@ -65,12 +95,12 @@
     margin: variables.$gap;
     color: colors.$text-inv;
     border: none;
+    border-radius: calc(#{variables.$rounding} - #{variables.$gap});
     transition: .5s background;
     &:hover {
         background-color: color-mix(in srgb, $color, white 10%); // TODO Perhaps change
         cursor: pointer;
     }
-    @include round;
 }
 
 //NOTE: also made to work for <Link /> (<a> tag)
