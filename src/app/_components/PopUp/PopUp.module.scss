@@ -10,14 +10,14 @@
         @include ohma.boxShadow('');
         @include ohma.card;
         background-color: ohma.$colors-secondary;
-        padding: calc(3 * ohma.$gap);
+        padding: calc(3 * #{ohma.$gap});
         z-index: 9;
         max-height: 95svh;
         > .overflow {
             overflow-y: auto;
             margin: 0;
             padding: 0;
-            max-height: calc(95svh - ohma.$cardPadding * 2);
+            max-height: calc(95svh - #{ohma.$cardPadding} * 2);
         }
     }
 }
@@ -70,8 +70,8 @@
         }
         .closeBtn {
             position: absolute;
-            top: calc(2 * ohma.$gap);
-            right: calc(2 * ohma.$gap);
+            top: calc(2 * #{ohma.$gap});
+            right: calc(2 * #{ohma.$gap});
             width: 3em;
             height: 3em;
         }

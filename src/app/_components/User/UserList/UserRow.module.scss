@@ -3,7 +3,7 @@
 .UserRow {
     border-bottom: 2px solid ohma.$colors-secondary;
     margin-top: ohma.$gap;
-    padding: calc(ohma.$gap / 2) ohma.$gap;
+    padding: calc(#{ohma.$gap} / 2) ohma.$gap;
     p {
         font-weight: ohma.$fonts-weight-s;
     }

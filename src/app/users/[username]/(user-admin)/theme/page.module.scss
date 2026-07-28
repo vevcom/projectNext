@@ -10,7 +10,7 @@
     height: 168px;
     background: ohma.$colors-surface-raised;
     border-radius: ohma.$cardRounding;
-    padding: calc(ohma.$gap * 2);
+    padding: calc(#{ohma.$gap} * 2);
     margin: ohma.$gap;
 }
 
@@ -18,15 +18,15 @@
     background: ohma.$colors-surface-hover;
     height: 58%;
     border-radius: ohma.$cardRounding;
-    margin: calc(-2 * ohma.$gap);
-    padding: calc(ohma.$gap * 2);
+    margin: calc(-2 * #{ohma.$gap});
+    padding: calc(#{ohma.$gap} * 2);
     font-size: xx-large;
     line-height: 50px;
     color: ohma.$colors-ink-hover;
 }
 
 .ThemeBody {
-    margin-top: calc(ohma.$gap * 3);
+    margin-top: calc(#{ohma.$gap} * 3);
     display: flex;
     justify-content: space-between;
     > div {

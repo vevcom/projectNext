@@ -70,7 +70,7 @@
             width: 25px;
             height: 25px;
             &:first-child {
-                margin-right: calc(2 * ohma.$gap);
+                margin-right: calc(2 * #{ohma.$gap});
             }
             svg {
                 width: 100%;

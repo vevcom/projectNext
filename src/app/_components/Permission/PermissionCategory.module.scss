@@ -7,6 +7,6 @@
     > .list {
         display: flex;
         flex-direction: column;
-        gap: calc(2 * ohma.$gap);
+        gap: calc(2 * #{ohma.$gap});
     }
 }

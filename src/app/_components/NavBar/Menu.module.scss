@@ -15,7 +15,7 @@
     z-index: 9;
     @include ohma.layer;
     max-width: 50dvw;
-    width: calc(66 * ohma.$gap);
+    width: calc(66 * #{ohma.$gap});
     height: calc(100dvh - 60px);
     display: flex;
     justify-content: flex-start;
@@ -34,9 +34,9 @@
             list-style: none;
             margin: ohma.$gap;
             a {
-                width: calc(30 * ohma.$gap);
+                width: calc(30 * #{ohma.$gap});
                 text-decoration: none;
-                padding: calc(2 * ohma.$gap);
+                padding: calc(2 * #{ohma.$gap});
                 background: ohma.$colors-secondary;
                 border-radius: ohma.$rounding;
                 color: ohma.$colors-text;

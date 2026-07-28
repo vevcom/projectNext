@@ -12,7 +12,7 @@
     }
 }
 .header {
-    padding: calc(3 * ohma.$gap);
+    padding: calc(3 * #{ohma.$gap});
     display: flex;
     justify-content: space-between;
     align-items: center;

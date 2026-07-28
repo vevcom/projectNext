@@ -5,8 +5,8 @@
     color: ohma.$colors-text;
     border-radius: calc(#{ohma.$rounding} - #{ohma.$gap});
     padding: 0 ohma.$gap;
-    height: calc(ohma.$gap * 6);
-    line-height: calc(ohma.$gap * 6);
+    height: calc(#{ohma.$gap} * 6);
+    line-height: calc(#{ohma.$gap} * 6);
     z-index: 200;
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
     animation: tooltip-fade 0.15s ease-out;

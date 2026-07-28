@@ -5,7 +5,7 @@
     margin: ohma.$gap;
     min-width: 250px;
     border-radius: ohma.$rounding;
-    max-height: calc(100dvh - ohma.$nav-height - 40px);
+    max-height: calc(100dvh - #{ohma.$nav-height} - 40px);
     overflow-y: scroll;
 
     @include ohma.screenMobile {

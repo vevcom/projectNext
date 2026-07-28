@@ -5,13 +5,13 @@
     @include ohma.layer;
     color: ohma.$colors-text;
     display: grid;
-    padding: calc(10 * ohma.$gap) calc(20 * ohma.$gap);
+    padding: calc(10 * #{ohma.$gap}) calc(20 * #{ohma.$gap});
     > * {
         p {
             margin-bottom: ohma.$gap;
             line-height: ohma.$fonts-line-height-m;
         }
-        padding: 0 calc(5 * ohma.$gap) 0 calc(2 * ohma.$gap);
+        padding: 0 calc(5 * #{ohma.$gap}) 0 calc(2 * #{ohma.$gap});
         &:nth-child(1) {
             padding-left: 0;
             grid-area: logos;
@@ -96,14 +96,14 @@
         ;
     }
     .sponsors {
-        margin-top: calc(2 * ohma.$gap);
+        margin-top: calc(2 * #{ohma.$gap});
     }
 }
 
 @media (max-width: ohma.$mobileBreakpoint) {
     .Footer {
-        padding: ohma.$gap calc(2 * ohma.$gap);
-        padding-bottom: calc(4 * ohma.$gap);
+        padding: ohma.$gap calc(2 * #{ohma.$gap});
+        padding-bottom: calc(4 * #{ohma.$gap});
         grid-template-rows: repeat(auto, 4);
         grid-template-areas: 
             "logos"
@@ -117,7 +117,7 @@
         }
         > * {
             padding: 0;
-            margin-top: calc(5 * ohma.$gap);
+            margin-top: calc(5 * #{ohma.$gap});
             display: flex;
             flex-direction: column;
             align-items: center;

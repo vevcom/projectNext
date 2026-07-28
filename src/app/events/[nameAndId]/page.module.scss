@@ -17,7 +17,7 @@ $padding: ohma.$minimalPagePadding;
         position: relative;
         border-radius: ohma.$rounding;
         overflow: hidden;
-        min-height: calc(40 * ohma.$gap);
+        min-height: calc(40 * #{ohma.$gap});
 
         .settings {
             top: 1em;
@@ -31,7 +31,7 @@ $padding: ohma.$minimalPagePadding;
             position: absolute;
 
             >button {
-                margin-left: calc(2 * ohma.$gap);
+                margin-left: calc(2 * #{ohma.$gap});
             }
         }
 
@@ -104,7 +104,7 @@ $padding: ohma.$minimalPagePadding;
         grid-row: 2 / 3;
         margin-left: ohma.$gap;
         margin-top: ohma.$gap;
-        padding: calc(2 * ohma.$gap);
+        padding: calc(2 * #{ohma.$gap});
         background: ohma.$colors-surface-base;
         border-radius: ohma.$rounding;
     }

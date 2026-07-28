@@ -9,7 +9,7 @@
         border-radius: ohma.$rounding;
         min-height: 100px;
 
-        padding: calc(2 * ohma.$gap);
+        padding: calc(2 * #{ohma.$gap});
         &.paddingBottom {
             padding-bottom: 60px;
         }

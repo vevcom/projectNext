@@ -34,7 +34,7 @@
 .periodDateItem {
     background-color: ohma.$colors-surface-raised;
     border-radius: calc(#{ohma.$rounding} - #{ohma.$gap});
-    padding: calc(ohma.$gap * 1.5);
+    padding: calc(#{ohma.$gap} * 1.5);
     display: flex;
     align-items: center;
     gap: 0.5em;

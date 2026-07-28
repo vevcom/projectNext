@@ -42,10 +42,10 @@ $taktlause: url("backgroundimages/taktlause.jpeg");
         align-items: center;
         padding-bottom: 20px; //compansate a little for nav size 
         > img {
-            margin-bottom: calc(2 * ohma.$gap);
+            margin-bottom: calc(2 * #{ohma.$gap});
         }
         > .socials {
-            margin: calc(3 * ohma.$gap);
+            margin: calc(3 * #{ohma.$gap});
             > a {
                 margin: ohma.$gap;
                 color: ohma.$colors-white;

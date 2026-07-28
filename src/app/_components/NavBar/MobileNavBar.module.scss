@@ -5,7 +5,7 @@
     width: 100%;
     height: 100%;
     color: ohma.$colors-white;
-    padding: calc(2 * ohma.$gap);
+    padding: calc(2 * #{ohma.$gap});
 
     display: none;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
@@ -45,7 +45,7 @@
     .editMode {
         background-color: ohma.$colors-black;
         position: absolute;
-        bottom: calc(100% + 3*ohma.$gap);
+        bottom: calc(100% + 3*#{ohma.$gap});
         right: 0;
         border-start-start-radius: 50%;
         transform: translateY(50%);

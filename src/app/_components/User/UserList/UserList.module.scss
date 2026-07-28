@@ -34,7 +34,7 @@ $selectionBtnSize: 25px;
     > .list {
         height: 100%;
         overflow-y: scroll;
-        border-radius: calc(ohma.$rounding + ohma.$gap);
+        border-radius: calc(#{ohma.$rounding} + #{ohma.$gap});
         @include ohma.layer();
         @include ohma.boxShadow('');
         width: 100%;
@@ -64,7 +64,7 @@ $selectionBtnSize: 25px;
             position: sticky;
             top: 0;
             left: 0;
-            padding: calc(2 * ohma.$gap) calc(2 * ohma.$gap);
+            padding: calc(2 * #{ohma.$gap}) calc(2 * #{ohma.$gap});
             border-radius: ohma.$rounding;
             @include ohma.layer();
             @include ohma.boxShadow('');
