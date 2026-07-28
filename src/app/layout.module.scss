@@ -12,6 +12,8 @@
     gap: ohma.$gap;
     padding: ohma.$gap;
     height: 100dvh;
+    max-width: calc(100dvh * 16 / 9);
+    margin: 0 auto;
     grid-template-areas:
         "navBar navBar"
         "sideBar content"
