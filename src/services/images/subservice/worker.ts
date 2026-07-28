@@ -51,7 +51,10 @@ async function processNextImage(): Promise<boolean> {
     // processImageVariants records its own failures on the image (attempts/error), so it only
     // throws on something unexpected - the caller logs it and the stale-claim clause eventually
     // makes the image claimable again.
-    await imageOperations.processImageVariants.internalCall({ params: { imageId } })
+    logger.info(`Image processing worker claimed image ${imageId}`)
+    const result = await imageOperations.processImageVariants.internalCall({ params: { imageId } })
+    if (!result.success) logger.error(`Image processing worker failed to process image ${imageId}: ${result.error}`)
+    else logger.info(`Image processing worker finished processing image ${imageId}`)
     return true
 }
 

@@ -19,7 +19,8 @@ export const imageProcessing = {
     pollIntervalMs: 2000,
     /**
      * How long a worker can take to process an image before its claim is considered stale and
-     * another worker can pick it up. This is a safety valve for when a worker dies mid-processing.
+     * another worker can pick it up. This is a safety valve for when a worker dies mid-processing,
+     * and - since a failed attempt keeps its claim - it is also the delay between attempts.
      */
     staleClaimMinutes: 2,
 } as const

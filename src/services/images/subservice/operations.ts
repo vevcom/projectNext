@@ -132,15 +132,16 @@ export const imageOperations = {
                         fsLocationLargeSize: largeSize.fsLocation,
                     }
                 })
+                return { success: true }
             } catch (error) {
                 await prisma.image.update({
                     where: { id: image.id },
                     data: {
                         processingAttempts: { increment: 1 },
                         processingError: String(error),
-                        processingStartedAt: null,
                     }
                 })
+                return { success: false, error: String(error) }
             }
         }
     }),
