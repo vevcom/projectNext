@@ -1,7 +1,9 @@
 @use "@/styles/ohma";
 
 .body {
-    background: radial-gradient(circle at 10% 0%, ohma.$colors-primary 0%, #1D1D20 20%);
+    background:
+        linear-gradient(125deg, color-mix(in srgb, ohma.$colors-primary 30%, transparent) 0%, color-mix(in srgb, ohma.$colors-surface-base 20%, transparent) 70%),
+        ohma.$colors-surface-raised;
     color: ohma.$colors-text;
 }
 
