@@ -5,8 +5,8 @@ import { ImageCollectionPagingProvider } from '@/contexts/paging/ImageCollection
 import CollectionCard from '@/components/Image/Collection/CollectionCard'
 import { ServerSession } from '@/auth/session/ServerSession'
 import { readImageCollectionsPageAction } from '@/services/images/collections/actions'
+import PageTitleSetter from '@/contexts/PageTitleSetter'
 import type { PageSizeImageCollection } from '@/contexts/paging/ImageCollectionPaging'
-import PageTitleSetter from "@/contexts/PageTitleSetter";
 
 export default async function Images() {
     const { user } = await ServerSession.fromNextAuth()

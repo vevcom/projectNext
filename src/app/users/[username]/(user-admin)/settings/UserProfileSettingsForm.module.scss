@@ -5,11 +5,11 @@
     border-radius: ohma.$cardRounding;
     @include ohma.boxShadow('');
     @include ohma.layer;
-    background: ohma.$colors-base02;
-    color: ohma.$colors-base05;
+    background: ohma.$colors-surface-hover;
+    color: ohma.$colors-ink-base;
 }
 
 .selectBox > select {
-    background-color: ohma.$colors-base01;
-    color: ohma.$colors-base06;
+    background-color: ohma.$colors-surface-raised;
+    color: ohma.$colors-ink-hover;
 }

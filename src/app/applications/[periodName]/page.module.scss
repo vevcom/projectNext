@@ -2,6 +2,11 @@
 
 .countDown {
     font-size: ohma.$fonts-m;
+
+    a {
+        color: inherit;
+        text-decoration: none;
+    }
 }
 
 .textarea {
@@ -9,26 +14,74 @@
     height: 20vh;
 }
 
+.periodContent {
+    border-radius: ohma.$rounding;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: ohma.$gap;
+
+    @include ohma.screenMobile {
+        padding: ohma.$gap;
+    }
+}
+
+.periodDates {
+    display: flex;
+    flex-wrap: wrap;
+    gap: ohma.$gap;
+}
+
+.periodDateItem {
+    background-color: ohma.$colors-surface-raised;
+    border-radius: calc(#{ohma.$rounding} - #{ohma.$gap});
+    padding: ohma.$gap*1.5;
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    color: ohma.$colors-ink-base;
+
+    > b {
+        color: ohma.$colors-accent-blue;
+        font-weight: ohma.$fonts-weight-m;
+        white-space: nowrap;
+    }
+}
+
+.countDownItem {
+    flex-wrap: wrap;
+}
+
 .committees {
-    list-style: none;
-    > li {
-        background-color: ohma.$colors-gray-200;
-        padding: 0.5em;
-        margin: 1em 0;
+    margin: 0;
+    padding-top: ohma.$gap;
+    display: grid;
+    gap: ohma.$gap;
+
+    > div {
+        background-color: ohma.$colors-surface-raised;
+        padding: ohma.$gap;
         min-height: 250px;
         display: flex;
+        border-radius: calc(#{ohma.$rounding} - #{ohma.$gap});
         overflow: hidden;
+
         > * {
-            flex: 1 1 100%;
+            width: 100%;
+            height: 100%;
         }
+
         .committeeLogo {
             padding: 0.5em;
         }
+
         .navigation {
             display: flex;
             gap: 0.5em;
+            align-items: center;
+            flex-wrap: wrap;
+
             .applyButton {
-                @include ohma.btn(ohma.$colors-secondary);
+                @include ohma.btn(ohma.$colors-accent-blue);
                 margin: 0;
             }
             .committeeLink {
@@ -45,6 +98,7 @@
             }
         }
     }
+
     .priorityContainer {
         > p, button {
             border-radius: 50%;

@@ -67,7 +67,7 @@ export default async function RootLayout({ children }: PropTypes) {
                                             />
                                         </div>
                                         <aside className={styles.sideBar}>
-                                            <DesktopSideBar />
+                                            <DesktopSideBar profile={profile} />
                                         </aside>
                                         <main className={styles.content}>
                                             {children}

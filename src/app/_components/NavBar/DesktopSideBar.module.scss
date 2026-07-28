@@ -13,7 +13,7 @@
 .navIcons {
     border-radius: ohma.$rounding;
     padding: ohma.$gap;
-    background: ohma.$colors-base00;
+    background: ohma.$colors-surface-base;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -49,7 +49,7 @@
 .adminNav {
     border-radius: ohma.$rounding;
     padding: ohma.$gap;
-    background: ohma.$colors-base00;
+    background: ohma.$colors-surface-base;
     width: 100%;
     display: flex;
     flex-direction: column;

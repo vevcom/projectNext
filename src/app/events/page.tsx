@@ -10,9 +10,9 @@ import { eventTagAuth } from '@/services/events/tags/auth'
 import { eventAuth } from '@/services/events/auth'
 import { QueryParams } from '@/lib/queryParams/queryParams'
 import { ServerSession } from '@/auth/session/ServerSession'
+import PageTitleSetter from '@/contexts/PageTitleSetter'
 import { faArchive } from '@fortawesome/free-solid-svg-icons'
 import type { SearchParamsServerSide } from '@/lib/queryParams/types'
-import PageTitleSetter from "@/contexts/PageTitleSetter";
 
 type PropTypes = SearchParamsServerSide
 

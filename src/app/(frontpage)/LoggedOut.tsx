@@ -9,10 +9,10 @@ import { readSpecialCmsImageFrontpage, updateSpecialCmsImageFrontpage } from '@/
 import { ServerSession } from '@/auth/session/ServerSession'
 import { frontpageAuth } from '@/services/frontpage/auth'
 import Footer from '@/components/Footer/Footer'
+import PageTitleSetter from '@/contexts/PageTitleSetter'
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Link from 'next/link'
-import PageTitleSetter from '@/contexts/PageTitleSetter'
 
 export default async function LoggedOutLandingPage() {
     const session = await ServerSession.fromNextAuth()

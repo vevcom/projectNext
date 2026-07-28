@@ -23,10 +23,10 @@ import { configureAction } from '@/services/configureAction'
 import { decodeVevenUriHandleError } from '@/lib/urlEncoding'
 import { ServerSession } from '@/auth/session/ServerSession'
 import { eventAuth } from '@/services/events/auth'
+import PageTitleSetter from '@/contexts/PageTitleSetter'
 import Link from 'next/link'
 import { faCalendar, faExclamation, faLocationDot, faUsers } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import PageTitleSetter from "@/contexts/PageTitleSetter";
 
 type PropTypes = {
     params: Promise<{

@@ -1,5 +1,29 @@
 @use '@/styles/ohma';
 
 .periods {
-    background: ohma.$colors-base01;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: ohma.$gap;
+    margin-top: ohma.$gap;
+
+    > div {
+        @include ohma.layer;
+        background-color: ohma.$colors-surface-raised;
+        padding: ohma.$gap;
+        border-radius: 0.8em;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5em;
+
+        a {
+            font-weight: ohma.$fonts-weight-l;
+            color: ohma.$colors-primary;
+            text-decoration: none;
+        }
+
+        time {
+            color: ohma.$colors-ink-base;
+            font-size: ohma.$fonts-s;
+        }
+    }
 }

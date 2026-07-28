@@ -2,11 +2,11 @@
 import styles from './page.module.scss'
 import TextInput from '@/UI/TextInput'
 import BorderButton from '@/UI/BorderButton'
+import PageTitleSetter from '@/contexts/PageTitleSetter'
 import { signIn } from 'next-auth/react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import type { FormEvent } from 'react'
-import PageTitleSetter from "@/contexts/PageTitleSetter";
 
 export default function LogIn() {
     const searchParams = useSearchParams()

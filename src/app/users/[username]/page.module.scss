@@ -12,14 +12,14 @@
 }
 
 .standardFlairColor {
-    background-color: ohma.$colors-base01;
+    background-color: ohma.$colors-surface-raised;
 }
 
 .top {
     width: 100%;
     height: 5em;
     border-radius: 1em 1em 0 0;
-    background-color: ohma.$colors-base02;
+    background-color: ohma.$colors-surface-hover;
     border-radius: ohma.$rounding;
 }
 
@@ -80,7 +80,7 @@
 }
 
 .profileContent {
-    background-color: ohma.$colors-base00;
+    background-color: ohma.$colors-surface-base;
     padding: 2*ohma.$gap;
 
     display: grid;
@@ -115,11 +115,11 @@
             border: none;
             height: 1px;
             margin: 0.5em 4em 0.5em 0;
-            background-color: ohma.$colors-base03;
+            background-color: ohma.$colors-surface-subtle;
         }
 
         .studyProgramme {
-            color: ohma.$colors-base05;
+            color: ohma.$colors-ink-base;
         }
 
         .committeesWrapper {
@@ -131,8 +131,8 @@
                 p {
                     border-radius: 0.3em;
                     padding: 0.5em;
-                    background-color: ohma.$colors-base0D;
-                    color: ohma.$colors-base00;
+                    background-color: ohma.$colors-accent-blue;
+                    color: ohma.$colors-surface-base;
                     display: inline-block;
                 }
             }
@@ -140,7 +140,7 @@
 
 
         .orderText {
-            color: ohma.$colors-base05;
+            color: ohma.$colors-ink-base;
             font-family: ohma.$fonts-secondary;
             font-weight: ohma.$fonts-weight-s;
             font-style: italic;
@@ -167,22 +167,22 @@
         .bio {
             margin-bottom: 2em;
             padding: 1em;
-            border-left: 3px solid ohma.$colors-base0D;
-            color: ohma.$colors-base06;
-            background-color: ohma.$colors-base01;
+            border-left: 3px solid ohma.$colors-accent-blue;
+            color: ohma.$colors-ink-hover;
+            background-color: ohma.$colors-surface-raised;
         }
 
         .email, .username, .relationshipStatus {
             width: 10em;
             display: inline-block;
             font-weight: ohma.$fonts-weight-m;
-            color: ohma.$colors-base0D;
+            color: ohma.$colors-accent-blue;
         }
 
         p {
             font-weight: ohma.$fonts-weight-s;
             margin-bottom: 0.5em;
-            color: ohma.$colors-base05;
+            color: ohma.$colors-ink-base;
         }
     }
 
@@ -226,15 +226,15 @@
 .memberShipInCommittee {
     @include ohma.layer;
     @include ohma.boxShadow('');
-    color: ohma.$colors-base05;
-    background-color: ohma.$colors-base01;
-    border-left: 3px solid ohma.$colors-base0D;
+    color: ohma.$colors-ink-base;
+    background-color: ohma.$colors-surface-raised;
+    border-left: 3px solid ohma.$colors-accent-blue;
     padding: ohma.$gap;
     margin-top: ohma.$gap;
 
     &:hover {
         @include ohma.boxShadow('hover');
-        background-color: ohma.$colors-base02;
+        background-color: ohma.$colors-surface-hover;
     }
 }
 

@@ -5,15 +5,13 @@ import EditModeSwitch from '@/components/EditModeSwitch/EditModeSwitch'
 import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCog } from '@fortawesome/free-solid-svg-icons'
-import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
 import type { Profile } from '@/services/users/types'
 
 export type PropTypes = {
     profile: Profile | null
-    canEditSpecialCmsImage: AuthResultTypeAny
 }
 
-export default function DesktopSideBar({ profile, canEditSpecialCmsImage }: PropTypes) {
+export default function DesktopSideBar({ profile }: PropTypes) {
     const user = profile?.user ?? null
     const isLoggedIn = user !== null
     const applicationPeriod = false

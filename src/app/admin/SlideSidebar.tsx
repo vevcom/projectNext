@@ -1,6 +1,5 @@
 'use client'
 import styles from './SlideSidebar.module.scss'
-import BackButton from './BackButton'
 import useOnNavigation from '@/hooks/useOnNavigation'
 import { Fragment, useRef, useState } from 'react'
 import Link from 'next/link'
@@ -12,7 +11,6 @@ import {
     faNewspaper,
     faUser,
     faUserGroup,
-    faArrowLeft,
     faPaperPlane,
     faSchool,
     faDotCircle,

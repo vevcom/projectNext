@@ -1,11 +1,9 @@
 import Item from './Item'
 import styles from './NavBar.module.scss'
-import Menu from './Menu'
 import getNavItems from './navDef'
 import UserNavigation from './UserNavigation'
 import ReportButton from './ReportButton'
 import NavBarTitle from './NavBarTitle'
-import EditModeSwitch from '@/components/EditModeSwitch/EditModeSwitch'
 import SpecialCmsImage from '@/components/Cms/CmsImage/SpecialCmsImage'
 import { readSpecialCmsImageFrontpage, updateSpecialCmsImageFrontpage } from '@/services/frontpage/actions'
 import PageTitleSetter from '@/contexts/PageTitleSetter'
@@ -27,7 +25,6 @@ export default async function NavBar({ profile, canEditSpecialCmsImage }: PropTy
     const navSize = 4
     const navItems = getNavItems(isLoggedIn, isAdmin, applicationPeriod)
     const itemsForNav = navItems.slice(0, navSize - 1)
-    const itemsForMenu = navItems.slice(navSize - 1, navItems.length)
 
     return (
         <nav className={styles.NavBar}>

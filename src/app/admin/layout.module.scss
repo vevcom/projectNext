@@ -8,7 +8,7 @@
     padding: 0;
 
     .content {
-        background-color: ohma.$colors-base00;
+        background-color: ohma.$colors-surface-base;
         flex-grow: 1;
         min-width: 0;
         margin-left: ohma.$gap;
@@ -18,7 +18,7 @@
         height: calc(100dvh - #{ohma.$nav-height} - 26px);
     }
     > .slideBar {
-        background-color: ohma.$colors-base00;
+        background-color: ohma.$colors-surface-base;
         border-radius: ohma.$rounding;
         align-self: flex-start;
         position: sticky;
