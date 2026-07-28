@@ -44,8 +44,8 @@ $text-sec:   var(--text-sec);
 $error: $red;
 $body-background: $secondary;
 
-$surface-base:    hsl(210, 8%, 5%);   // Default Background
-$surface-raised:  hsl(210, 8%, 15%);  // Lighter Background
+$surface-base:    hsl(240 8% 8%);   // Default Background
+$surface-raised:  hsl(240 6% 10%);  // Lighter Background
 $surface-hover:   hsl(210, 8%, 25%);  // Selection Background
 $surface-subtle:  hsl(210, 8%, 35%);  // Invisibles and Line Highlighting
 

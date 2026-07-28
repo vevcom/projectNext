@@ -2,10 +2,9 @@
 
 .SlideSidebar {
     padding: ohma.$gap;
-    margin: ohma.$gap;
     min-width: 250px;
     border-radius: ohma.$rounding;
-    max-height: calc(100dvh - #{ohma.$nav-height} - 40px);
+    max-height: calc(100dvh - #{ohma.$nav-height} - 26px);
     overflow-y: scroll;
 
     @include ohma.screenMobile {
@@ -20,25 +19,42 @@
     .sidebar {
         display: flex;
         flex-direction: column;
+        gap: ohma.$gap;
         overflow-y: auto;
         height: 100%;
-        color: ohma.$colors-text;
+        color: ohma.$colors-ink-base;
 
-        a {
-            color: ohma.$colors-text-muted;
-            text-decoration: none;
-            padding: .5em;
-            border-radius: .5em;
-            margin: .5em 0;
-            transition: background-color ohma.$transitionTime;
-            &:hover, &.active {
-                @include ohma.layer;
+        h3 {
+            display: flex;
+            align-items: center;
+            gap: ohma.$gap;
+            margin: calc(#{ohma.$gap} * 2) 0 0;
+            padding: calc(#{ohma.$gap} * 2);
+            border-radius: calc(#{ohma.$rounding} - #{ohma.$gap});
+            background: ohma.$colors-surface-raised;
+            font-size: ohma.$fonts-l;
+            font-weight: ohma.$fonts-weight-l;
+            color: ohma.$colors-ink-strong;
+
+            &:first-child {
+                margin-top: 0;
+            }
+
+            svg {
+                font-size: 0.8em;
             }
         }
-        h3 {
-            margin-top: 1em;
-            svg {
-                margin-right: .2em; 
+
+        a {
+            color: ohma.$colors-ink-base;
+            text-decoration: none;
+            padding: calc(#{ohma.$gap} * 1.5) calc(#{ohma.$gap} * 2);
+            margin-left: calc(#{ohma.$gap} * 3);
+            border-radius: calc(#{ohma.$rounding} - #{ohma.$gap});
+            background: ohma.$colors-surface-raised;
+            transition: background-color ohma.$transitionTime;
+            &:hover, &.active {
+                background: ohma.$colors-surface-hover;
             }
         }
     }
