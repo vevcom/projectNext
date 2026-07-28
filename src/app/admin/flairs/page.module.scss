@@ -1,10 +1,98 @@
 @use '@/styles/ohma';
 
 .flairList {
-    @include ohma.table;
+    width: 100%;
+    margin: calc(2 * #{ohma.$gap}) 0;
+    border-radius: ohma.$rounding;
+    overflow: hidden;
+    box-shadow: ohma.$colors-boxShadow 0 1px 3px, ohma.$colors-boxShadow 0 1px 2px;
+    font-size: ohma.$fonts-m;
+
     a {
         svg {
             margin-right: 0.5rem;
         }
+    }
+}
+
+.headerRow {
+    display: flex;
+    align-items: center;
+    gap: ohma.$gap;
+    background-color: ohma.$colors-surface-raised;
+    color: ohma.$colors-ink-strong;
+    font-weight: ohma.$fonts-weight-m;
+    padding: calc(1.5 * #{ohma.$gap}) calc(2 * #{ohma.$gap});
+}
+
+.body {
+    display: flex;
+    flex-direction: column;
+}
+
+.row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: ohma.$gap;
+    background-color: ohma.$colors-surface-raised;
+    padding: calc(1.5 * #{ohma.$gap}) calc(2 * #{ohma.$gap});
+    transition: background-color ohma.$transitionTime;
+
+    &:nth-child(even) {
+        background-color: color-mix(in srgb, ohma.$colors-surface-raised, white 3%);
+    }
+
+    &:hover {
+        background-color: ohma.$colors-surface-hover;
+    }
+}
+
+.colHandle {
+    flex: 0 0 calc(4 * #{ohma.$gap});
+}
+
+.colImage {
+    flex: 0 0 100px;
+}
+
+.colName {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.colColor {
+    flex: 0 0 100px;
+    align-self: stretch;
+}
+
+.colRank {
+    flex: 0 0 calc(6 * #{ohma.$gap});
+}
+
+.colLink {
+    flex: 0 0 140px;
+}
+
+.dragHandle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: calc(3 * #{ohma.$gap});
+    height: calc(3 * #{ohma.$gap});
+    border-radius: ohma.$gap;
+    color: ohma.$colors-ink-faint;
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+    transition: background-color ohma.$transitionTime, color ohma.$transitionTime;
+
+    &:hover {
+        background-color: ohma.$colors-surface-hover;
+        color: ohma.$colors-ink-strong;
+    }
+
+    &:active {
+        cursor: grabbing;
     }
 }

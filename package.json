@@ -36,6 +36,7 @@
     "bcrypt": "^6.0.0",
     "canvas-confetti": "^1.9.4",
     "eslint-plugin-react-hooks": "^7.0.1",
+    "framer-motion": "^12.43.0",
     "html5-qrcode": "^2.3.8",
     "jsonwebtoken": "^9.0.3",
     "jsqr": "^1.4.0",
