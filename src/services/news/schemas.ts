@@ -9,6 +9,9 @@ const baseSchema = z.object({
 })
 
 export const newsSchemas = {
+    params: z.object({
+        id: z.number()
+    }),
     create: baseSchema.pick({
         name: true,
         description: true,

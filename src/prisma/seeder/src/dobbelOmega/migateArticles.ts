@@ -115,6 +115,12 @@ export default async function migrateArticles(
                     }
                 },
                 endDateTime: articlePn.endDateTime,
+                visibilityRegular: {
+                    create: {}
+                },
+                visibilityAdmin: {
+                    create: {}
+                }
             }
         })
     }
