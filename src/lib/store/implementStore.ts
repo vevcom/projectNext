@@ -1,4 +1,5 @@
 import '@pn-server-only'
+import { extensionForMimeType, type StorableExtension } from './fileExtensions'
 import { ServerError } from '@/services/error'
 import { v4 as uuid } from 'uuid'
 import { mkdir, readFile, unlink, writeFile } from 'fs/promises'
@@ -18,7 +19,7 @@ import type { File } from 'buffer'
  * It returns the fsLocation and ext of the stored file.
  * destroyFile takes the fsLocation of a file and deletes it from the store volume.
  */
-export function implementStore<const AllowedExt extends readonly string[]>(config: {
+export function implementStore<const AllowedExt extends readonly StorableExtension[]>(config: {
     staticStorePrefix: string,
     allowedExtentions: AllowedExt
 }) {
@@ -29,17 +30,17 @@ export function implementStore<const AllowedExt extends readonly string[]>(confi
         dynamicStorePrefix?: string,
     ): Promise<{
         fsLocation: string,
-        ext: string
+        ext: AllowedExt[number]
     }> {
         const arrBuffer = await file.arrayBuffer()
         const buffer = Buffer.from(arrBuffer)
-        const ext = file.type.split('/')[1]
+        const ext = extensionForMimeType(file.type, allowedExt)
 
-        if (!allowedExt.includes(ext)) {
+        if (ext === null) {
             throw new ServerError('BAD PARAMETERS', [
                 {
                     path: ['file'],
-                    message: 'Invalid file type'
+                    message: `Filtypen må være en av ${allowedExt.join(', ')}`
                 }
             ])
         }

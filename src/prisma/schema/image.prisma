@@ -15,10 +15,18 @@ enum StandardImage {
   PWA
 }
 
+enum ImageType {
+  RASTER
+  SVG
+}
+
 model Image {
   id                      Int                  @id @default(autoincrement())
+  type                    ImageType
   fsLocationOriginal      String               @unique
-  placeholderDataUrl      String
+  // Raster images only. An svg needs no blur placeholder - it is served in full from the moment it
+  // is uploaded, since there is no background processing to wait for.
+  placeholderDataUrl      String?
   processingStartedAt     DateTime?
   processingAttempts      Int                  @default(0)
   processingError         String?

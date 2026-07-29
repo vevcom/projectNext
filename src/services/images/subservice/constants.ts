@@ -1,4 +1,7 @@
+import type { StorableExtension } from '@/lib/store/fileExtensions'
 import type { Prisma } from '@/prisma-generated-pn-types'
+
+type StorableExtensions = readonly StorableExtension[]
 
 export const maxImageFileSizeMb = 100
 
@@ -32,7 +35,21 @@ export const avifConvertionOptions = {
     chromaSubsampling: '4:2:0',
 } as const
 
-export const allowedExtensions = ['png', 'jpg', 'jpeg', 'heic', 'avif', 'webp'] as const
+/**
+ * Formats that go through the background resize pipeline. `jpg` is absent on purpose - the store
+ * names every jpeg `jpeg`, so `jpg` can never come back out of it.
+ */
+export const rasterExtensions = ['png', 'jpeg', 'heic', 'avif', 'webp'] as const satisfies StorableExtensions
+
+export const svgExtensions = ['svg'] as const satisfies StorableExtensions
+
+/**
+ * Everything the image system can store. Individual implementations of th image system
+ * accept a subset of this.
+ */
+export const allowedExtensions = [...rasterExtensions, ...svgExtensions] as const
+
+export type ImageExtension = typeof allowedExtensions[number]
 
 export const expandedImageIncluder = {
     processedFiles: true,

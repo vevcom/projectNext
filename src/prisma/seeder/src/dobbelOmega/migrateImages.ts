@@ -2,6 +2,7 @@ import { owIdToPnId, type IdMapper } from './IdMapper'
 import manifest from '@/seeder/src/logger'
 import { imageOperations } from '@/services/images/subservice/operations'
 import { allowedExtensions } from '@/services/images/subservice/constants'
+import { mimeTypeForExtension } from '@/lib/store/fileExtensions'
 import { ombulCoversImagePanelOperations } from '@/services/ombul/ombulCoverCollection'
 import { profileImagesImagePanelOperations } from '@/services/users/profileImageCollection'
 import { committeeLogosImagePanelOperations } from '@/services/groups/committees/committeeLogoCollection'
@@ -132,7 +133,8 @@ export default async function migrateImages(
     const migrateOneImage = async (image: (typeof imagesWithCorrectedName)[number]) => {
         manifest.info(`Migrating image number ${imageCounter++} of ${imagesWithCorrectedName.length}`)
         const ext = (image.originalName.split('.').pop() || '').toLowerCase()
-        if (!(allowedExtensions as readonly string[]).includes(ext)) {
+        const mimeType = mimeTypeForExtension(ext)
+        if (!mimeType) {
             console.error(`Image ${image.originalName} has unsupported extension "${ext}", skipping`)
             return
         }
@@ -155,7 +157,7 @@ export default async function migrateImages(
         }
 
         const buffer = Buffer.from(await res.arrayBuffer())
-        const imageFile = new File([new Uint8Array(buffer)], `${image.pnImageName}.${ext}`, { type: `image/${ext}` })
+        const imageFile = new File([new Uint8Array(buffer)], `${image.pnImageName}.${ext}`, { type: mimeType })
 
         const pnImage = await imageOperations.uploadImage.internalCall({
             prisma: pnPrisma,
@@ -165,7 +167,12 @@ export default async function migrateImages(
                 imageName: image.pnImageName.slice(0, 50),
                 imageAlt: image.pnImageName.split('_').join(' ').slice(0, 100),
             },
-            operationImplementationFields: { uploadAsStandardImage: null },
+            operationImplementationFields: {
+                uploadAsStandardImage: null,
+                // Deliberately the full set rather than the per-collection subset: this migrates
+                // what omegaweb-basic already has, including committee logos, raster over there.
+                allowedExtensions,
+            },
         })
 
         migrateImageIdMap.push({ owId: image.id, pnId: pnImage.id })

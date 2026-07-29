@@ -6,7 +6,7 @@ import { defineOperation, defineSubOperation } from '@/services/serviceOperation
 import logger from '@/lib/logger'
 import { StandardImage } from '@/prisma-generated-pn-types'
 import { imageOperations } from '@/services/images/subservice/operations'
-import { expandedImageIncluder } from '@/services/images/subservice/constants'
+import { allowedExtensions, expandedImageIncluder } from '@/services/images/subservice/constants'
 import { z } from 'zod'
 import type { ExpandedImage } from '@/services/images/subservice/types'
 
@@ -16,6 +16,7 @@ const {
 } = implementSpecialCollection({
     special: 'STANDARDIMAGES',
     imagePanelAuther: standardImagesImagePanelAuth.dynamicFields({}),
+    allowedExtensions,
     config: {
         name: 'Standardbilder',
         description: `
@@ -55,7 +56,10 @@ const generateStandardImageFromConfig = defineSubOperation({
             params: {
                 collectionId: (await standardImagesImagePanelOperations.readCollection({})).id,
             },
-            operationImplementationFields: { uploadAsStandardImage: params.standardImage }
+            operationImplementationFields: {
+                uploadAsStandardImage: params.standardImage,
+                allowedExtensions,
+            }
         })
     }
 })

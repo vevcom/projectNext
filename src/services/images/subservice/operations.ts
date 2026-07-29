@@ -5,6 +5,7 @@ import {
     avifConvertionOptions,
     expandedImageIncluder,
     imageSizes,
+    type ImageExtension,
     type expandedImageCollectionIncluder
 } from './constants'
 import { visibilityOperations } from '@/services/visibility/operations'
@@ -18,11 +19,9 @@ import type { Prisma, StandardImage } from '@/prisma-generated-pn-types'
 import type { ExpandedImage, ExpandedImageCollection } from './types'
 import type { z } from 'zod'
 
-const imageStoreAllowedExtensions = [...allowedExtensions, 'avif'] as const
-
 const imageStore = implementStore({
     staticStorePrefix: 'images',
-    allowedExtentions: imageStoreAllowedExtensions,
+    allowedExtentions: allowedExtensions,
 })
 
 export const imageOperations = {
@@ -72,35 +71,59 @@ export const imageOperations = {
      * On upload time, only the original is saved to the store synchronously (plus a tiny inline
      * blur placeholder) - the real resized/avif variants are produced in the background by
      * processImageVariants, so this stays fast enough to run inside a caller's transaction.
+     *
+     * Svg uploads skip all of that: a vector is already the right file at every resolution, so
+     * there is nothing to resize and nothing to stand in while it happens.
+     *
+     * Which extensions this implementation accepts is decided by the implementer - committee logos
+     * take svg only, profile images and ombul covers take raster only, and the rest take everything.
      */
     uploadImage: defineSubOperation({
         paramsSchema: () => imageSchemas.paramsSchemaCollection,
         dataSchema: () => imageSchemas.uploadImage,
         operation: (
-            { uploadAsStandardImage }: { uploadAsStandardImage: StandardImage | null }
+            { uploadAsStandardImage, allowedExtensions }: {
+                uploadAsStandardImage: StandardImage | null,
+                allowedExtensions: readonly ImageExtension[],
+            }
         ) => async ({ prisma, params, data }) => {
             const { imageFile, ...meta } = data
-            const buffer = Buffer.from(await imageFile.arrayBuffer())
+            // createFile is the single gate on file type: it rejects anything outside this
+            // implementation's subset, and hands back the canonical extension - which is also what
+            // decides whether this is a vector or something the worker has to resize.
+            const original = await imageStore.createFile(imageFile, allowedExtensions)
+            const sharedImageData = {
+                name: meta.imageName,
+                alt: meta.imageAlt,
+                license: meta.imageLicenseId ? { connect: { id: meta.imageLicenseId } } : undefined,
+                credit: meta.imageCredit,
+                standardImage: uploadAsStandardImage,
+                fsLocationOriginal: original.fsLocation,
+                extOriginal: original.ext,
+                collection: {
+                    connect: uniqueCollectionWhere(params)
+                }
+            }
 
-            const [placeholderBuffer, original] = await Promise.all([
-                resizeToAvifBuffer(buffer, imageSizes.placeholder),
-                imageStore.createFile(imageFile, [...allowedExtensions]),
-            ])
-            const placeholderDataUrl = `data:image/avif;base64,${placeholderBuffer.toString('base64')}`
+            if (original.ext === 'svg') {
+                return await prisma.image.create({
+                    data: {
+                        ...sharedImageData,
+                        type: 'SVG',
+                        placeholderDataUrl: null,
+                    },
+                    include: expandedImageIncluder,
+                })
+            }
+
+            const buffer = Buffer.from(await imageFile.arrayBuffer())
+            const placeholderBuffer = await resizeToAvifBuffer(buffer, imageSizes.placeholder)
 
             return await prisma.image.create({
                 data: {
-                    name: meta.imageName,
-                    alt: meta.imageAlt,
-                    license: meta.imageLicenseId ? { connect: { id: meta.imageLicenseId } } : undefined,
-                    credit: meta.imageCredit,
-                    fsLocationOriginal: original.fsLocation,
-                    extOriginal: original.ext,
-                    placeholderDataUrl,
-                    standardImage: uploadAsStandardImage,
-                    collection: {
-                        connect: uniqueCollectionWhere(params)
-                    }
+                    ...sharedImageData,
+                    type: 'RASTER',
+                    placeholderDataUrl: `data:image/avif;base64,${placeholderBuffer.toString('base64')}`,
                 },
                 include: expandedImageIncluder,
             })
@@ -115,6 +138,9 @@ export const imageOperations = {
         paramsSchema: () => imageSchemas.paramsSchemaImage,
         operation: () => async ({ prisma, params }) => {
             const image = await prisma.image.findUniqueOrThrow({ where: { id: params.imageId } })
+            if (image.type !== 'RASTER') {
+                throw new ServerError('BAD PARAMETERS', `Image ${image.id} is an svg and has no variants to process`)
+            }
             try {
                 const buffer = await imageStore.readStoredFile(image.fsLocationOriginal)
                 const [tinySize, smallSize, mediumSize, largeSize] = await Promise.all([
@@ -167,7 +193,9 @@ export const imageOperations = {
     uploadManyImages: defineSubOperation({
         paramsSchema: () => imageSchemas.paramsSchemaUploadManyImages,
         dataSchema: () => imageSchemas.uploadManyImages,
-        operation: () => async ({ params, data }) => {
+        operation: (
+            { allowedExtensions }: { allowedExtensions: readonly ImageExtension[] }
+        ) => async ({ params, data }) => {
             for (const imageFile of data.imageFiles) {
                 const imageName = params.useFileName ? imageFile.name.split('.')[0] : undefined
                 await imageOperations.uploadImage.internalCall({
@@ -181,7 +209,7 @@ export const imageOperations = {
                         imageLicenseId: data.imageLicenseId,
                         imageCredit: data.imageCredit
                     },
-                    operationImplementationFields: { uploadAsStandardImage: null }
+                    operationImplementationFields: { uploadAsStandardImage: null, allowedExtensions }
                 })
             }
         }

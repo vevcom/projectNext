@@ -15,6 +15,9 @@ let stopping = false
 async function claimNextImage(): Promise<number | null> {
     const staleClaimCutoff = new Date(Date.now() - imageProcessing.staleClaimMinutes * 60 * 1000)
     const claimable = {
+        // Svgs are never claimed: they serve every resolution from the uploaded file, so there are
+        // no variants to produce and they would otherwise sit here as permanently unprocessed work.
+        type: 'RASTER',
         processedFiles: { is: null },
         processingAttempts: { lt: imageProcessing.maxAttempts },
         OR: [

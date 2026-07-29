@@ -13,6 +13,11 @@ export type UploadSpecialCollectionImageAction = ActionFromSubServiceOperation<
 /**
  * An image together with its resized variants. The variants are produced in the background after
  * upload, so `processedFiles` is null until that finishes.
+ *
+ * `type` says which of the two kinds of image this is, and decides which of the raster-only fields
+ * carry anything: an svg has no `placeholderDataUrl` and never gets `processedFiles`, because the
+ * uploaded file already serves every resolution. Nothing outside `imageSourceForResolution` needs
+ * to care - it resolves both kinds to a url.
  */
 export type ExpandedImage = Image & {
     processedFiles: ProcessedImageFiles | null,
