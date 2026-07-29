@@ -28,6 +28,10 @@ export const userFilterSelection = {
     flairs: {
         select: {
             id: true,
+            rank: true,
+            colorR: true,
+            colorG: true,
+            colorB: true,
             cmsImage: {
                 include: {
                     image: true,

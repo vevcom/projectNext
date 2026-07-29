@@ -33,7 +33,6 @@ $border:     var(--primary);
 $shadowColor:rgba(0, 0, 0, 0.1);
 
 $layer:      var(--layer);
-$layerone:   var(--layer); // TODO Emulate secondary with one layer.
 $boxShadow:  var(--boxShadow);
 
 $text:       var(--text);
@@ -45,8 +44,8 @@ $error: $red;
 $body-background: $secondary;
 
 $surface-base:    hsl(240 8% 8%);   // Default Background
-$surface-raised:  hsl(240 6% 10%);  // Lighter Background
-$surface-hover:   hsl(210, 8%, 25%);  // Selection Background
+$surface-raised:  hsl(240 6% 12%);  // Lighter Background
+$surface-hover:   hsl(210, 8%, 18%);  // Selection Background
 $surface-subtle:  hsl(210, 8%, 35%);  // Invisibles and Line Highlighting
 
 $ink-faint:  hsl(210, 8%, 45%);  // Dark Foreground (Inactive text, muted grey-blue)

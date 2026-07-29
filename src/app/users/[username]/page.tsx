@@ -89,6 +89,9 @@ export default async function User({ params }: PropTypes) {
     }
 
     const borderColour = { '--border-colour': relationshipColour[profile.user.relationshipStatus] } as React.CSSProperties
+    const flairColour = {
+        '--flairColor': flairs.length > 0 ? `rgb(${flairs[0].colorR}, ${flairs[0].colorG}, ${flairs[0].colorB})` : 'transparent'
+    } as React.CSSProperties
     const isOwnProfile = profile.user.id === session.user?.id
     const canAssignFlairs = flairAuth.assignToUser.dynamicFields({}).auth(session)
 
@@ -112,117 +115,112 @@ export default async function User({ params }: PropTypes) {
         <div className={styles.wrapper}>
             <PageTitleSetter title={'Profil'} />
             <div className={styles.profile}>
-                <div
-                    style={ flairs.length > 0 ? {
-                        backgroundColor: `rgb(${flairs[0].colorR}, ${flairs[0].colorG}, ${flairs[0].colorB})`
-                    } : {} }
-                    className={`${styles.top} ${styles.standardFlairColor}`}
-                />
-
-                <div className={styles.profileContent} style={borderColour}>
-                    <ProfilePicture width={240} profileImage={profileImage} className={styles.profilePicture}/>
-                    <div className={styles.header}>
-                        <div className={styles.nameAndId}>
-                            <h1><UserDisplayName
-                                user={profile.user}
-                                width={40}
-                                asClient={false}
-                            /></h1>
-                        </div>
-                        {studyProgrammes.map((studyProgramme, i) =>
-                            <p key={i} className={styles.studyProgramme}>
-                                {studyProgramme.name} {`(${studyProgramme.code})`}
-                            </p>
-                        )}
-                        {classes.map((classGroup, i) =>
-                            <p key={i} className={styles.studyProgramme}>{classGroup.year}. årstrinn</p>
-                        )}
-                        <div className={styles.committeesWrapper}>
-                            {
-                                committeeMemberships.filter(membership => membership.active).map(membership =>
-                                    <div className={styles.committee} key={uuid()}>
-                                        <Link href={`/committees/${membership.group.committee?.shortName}`}>
-                                            <p>{membership.title}</p>
-                                        </Link>
-                                    </div>
-                                )
-                            }
-                            {/* TODO change to your own committee title instead of committee name*/}
-                        </div>
-                        <hr />
-                        <p className={styles.orderText}>
-                            { memberhipTitle() }
-                        </p>
-                    </div>
-                    <div className={styles.leftSection}>
-                        <div className={styles.buttons}>
-                            {canAdministrate &&
-                                <ProfileButton href={`/users/${profile.user.username}/settings`}>
-                                    <FontAwesomeIcon icon={faCog} />
-                                    <p>Innstillinger</p>
-                                </ProfileButton>
-                            }
-                            {profile.user.id === session?.user?.id && (
-                                <ProfileButton href={'/logout'}>
-                                    <FontAwesomeIcon icon={faSignOut} />
-                                    <p>Logg ut</p>
-                                </ProfileButton>
-                            )
-                            }
-                        </div>
-
-                    </div>
-                    <div className={styles.profileMain}>
-
-
-                        {(profile.user.bio !== '') &&
-                            <div className={styles.bio}>
-                                <h2>Bio:</h2>
-                                <p>{profile.user.bio}</p>
+                <div className={styles.profileContent} style={{ ...borderColour, ...flairColour }}>
+                    <div className={styles.profileContentInner}>
+                        <ProfilePicture width={240} profileImage={profileImage} className={styles.profilePicture}/>
+                        <div className={styles.header}>
+                            <div className={styles.nameAndId}>
+                                <h1><UserDisplayName
+                                    user={profile.user}
+                                    width={40}
+                                    asClient={false}
+                                /></h1>
                             </div>
-                        }
+                            {studyProgrammes.map((studyProgramme, i) =>
+                                <p key={i} className={styles.studyProgramme}>
+                                    {studyProgramme.name} {`(${studyProgramme.code})`}
+                                </p>
+                            )}
+                            {classes.map((classGroup, i) =>
+                                <p key={i} className={styles.studyProgramme}>{classGroup.year}. årstrinn</p>
+                            )}
+                            <div className={styles.committeesWrapper}>
+                                {
+                                    committeeMemberships.filter(membership => membership.active).map(membership =>
+                                        <div className={styles.committee} key={uuid()}>
+                                            <Link href={`/committees/${membership.group.committee?.shortName}`}>
+                                                <p>{membership.title}</p>
+                                            </Link>
+                                        </div>
+                                    )
+                                }
+                                {/* TODO change to your own committee title instead of committee name*/}
+                            </div>
+                            <hr />
+                            <p className={styles.orderText}>
+                                { memberhipTitle() }
+                            </p>
+                        </div>
+                        <div className={styles.leftSection}>
+                            <div className={styles.buttons}>
+                                {canAdministrate &&
+                                    <ProfileButton href={`/users/${profile.user.username}/settings`}>
+                                        <FontAwesomeIcon icon={faCog} />
+                                        <p>Innstillinger</p>
+                                    </ProfileButton>
+                                }
+                                {profile.user.id === session?.user?.id && (
+                                    <ProfileButton href={'/logout'}>
+                                        <FontAwesomeIcon icon={faSignOut} />
+                                        <p>Logg ut</p>
+                                    </ProfileButton>
+                                )
+                                }
+                            </div>
 
-                        {(profile.user.relationshipStatus !== RelationshipStatus.NOT_SPECIFIED) &&
-                        <p>
-                            <span className={styles.relationshipStatus}>Sivilstatus: </span>
-                            {profile.user.relationshipStatusText ? profile.user.relationshipStatusText :
-                                profile.user.relationshipStatus === RelationshipStatus.SINGLE && 'Singel' ||
-                            profile.user.relationshipStatus === RelationshipStatus.ITS_COMPLICATED && 'Det er komplisert' ||
-                            profile.user.relationshipStatus === RelationshipStatus.TAKEN && 'I et forhold'
+                        </div>
+                        <div className={styles.profileMain}>
 
+
+                            {(profile.user.bio !== '') &&
+                                <div className={styles.bio}>
+                                    <h2>Bio:</h2>
+                                    <p>{profile.user.bio}</p>
+                                </div>
                             }
 
-                        </p>
-                        }
+                            {(profile.user.relationshipStatus !== RelationshipStatus.NOT_SPECIFIED) &&
+                            <p>
+                                <span className={styles.relationshipStatus}>Sivilstatus: </span>
+                                {profile.user.relationshipStatusText ? profile.user.relationshipStatusText :
+                                    profile.user.relationshipStatus === RelationshipStatus.SINGLE && 'Singel' ||
+                                profile.user.relationshipStatus === RelationshipStatus.ITS_COMPLICATED && 'Det er komplisert' ||
+                                profile.user.relationshipStatus === RelationshipStatus.TAKEN && 'I et forhold'
+
+                                }
+
+                            </p>
+                            }
 
 
-                        <p>
-                            <span className={styles.email}>E-post:</span>
-                            {profile.user.email}
-                        </p>
-                        <p>
-                            <span className={styles.username}>Brukernavn:</span>
-                            {profile.user.username}
-                        </p>
-                        <p>
-                            <span className={styles.username}>Mobilnummer:</span>
-                            {profile.user.mobile}
-                        </p>
+                            <p>
+                                <span className={styles.email}>E-post:</span>
+                                {profile.user.email}
+                            </p>
+                            <p>
+                                <span className={styles.username}>Brukernavn:</span>
+                                {profile.user.username}
+                            </p>
+                            <p>
+                                <span className={styles.username}>Mobilnummer:</span>
+                                {profile.user.mobile}
+                            </p>
 
-                        {(committeeMemberships.length > 0) && <div>
-                            <h2>Medlemsskap</h2>
-                            {committeeMemberships.map((membership, i) => (
-                                <Link
-                                    className={styles.memberShipInCommitteeLink}
-                                    href={`/committees/${membership.group.committee?.shortName}`}
-                                    key={i}
-                                >
-                                    <p className={styles.memberShipInCommittee}>
-                                        {membership.title} i {membership.group.committee?.name}
-                                    </p>
-                                </Link>
-                            ))}
-                        </div>}
+                            {(committeeMemberships.length > 0) && <div>
+                                <h2>Medlemsskap</h2>
+                                {committeeMemberships.map((membership, i) => (
+                                    <Link
+                                        className={styles.memberShipInCommitteeLink}
+                                        href={`/committees/${membership.group.committee?.shortName}`}
+                                        key={i}
+                                    >
+                                        <p className={styles.memberShipInCommittee}>
+                                            {membership.title} i {membership.group.committee?.name}
+                                        </p>
+                                    </Link>
+                                ))}
+                            </div>}
+                        </div>
                     </div>
                 </div>
 

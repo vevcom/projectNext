@@ -2,6 +2,7 @@ import UserDisplayName from './UserDisplayName'
 import styles from './UserCard.module.scss'
 import ProfilePicture from './ProfilePicture'
 import Link from 'next/link'
+import type { CSSProperties } from 'react'
 import type { Image } from '@/prisma-generated-pn-types'
 import type { UserFiltered } from '@/services/users/types'
 
@@ -19,9 +20,14 @@ export default function UserCard({
     subText?: string,
     asClient: boolean
 }) {
+    const [topFlair] = [...user.flairs].sort((flairA, flairB) => flairA.rank - flairB.rank)
+
     return <Link
         className={`${styles.UserCard} ${className ? className : ''}`}
         href={`/users/${user.username}`}
+        style={topFlair ? {
+            '--flairColor': `rgb(${topFlair.colorR}, ${topFlair.colorG}, ${topFlair.colorB})`,
+        } as CSSProperties : undefined}
     >
         <ProfilePicture profileImage={user.image} width={60} />
         <div>
