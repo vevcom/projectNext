@@ -1,7 +1,7 @@
 @use '@/styles/ohma';
 
 .OmbulAdmin {
-    background-color: ohma.$colors-secondary;
+    background-color: ohma.$colors-surface-base;
     @include ohma.card();
     display: flex;
     flex-flow: row wrap;
@@ -10,7 +10,7 @@
     gap: 2em;
     h2 {
         flex: 1 1 100%;
-        color: ohma.$colors-white;
+        color: ohma.$colors-text;
     }
     .coverImage {
         border-radius: ohma.$rounding;
@@ -18,7 +18,7 @@
     }
     > .left {
         > *:not(:last-child) {
-            border-bottom: 3px solid ohma.$colors-gray-700;
+            border-bottom: 3px solid ohma.$colors-surface-subtle;
             margin-bottom: 2em;
         }
     }

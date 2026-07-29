@@ -118,7 +118,7 @@
 @mixin roundAdminSvgBtn() {
     width: 45px;
     height: 45px;
-    background-color: colors.$primary;
+    background-color: colors.$accent-blue;
     border: none;
     border-radius: 50%;
     display: grid;
@@ -131,7 +131,7 @@
         height: 31px;
     }
     &:hover svg {
-        color: colors.$gray-500;
+        color: colors.$ink-hover;
         cursor: pointer;
     }
 }
@@ -153,12 +153,12 @@
 }
 
 @mixin primaryIconLink {
-    color: colors.$primary;
+    color: colors.$accent-blue;
     padding: variables.$gap;
     width: 30px;
     height: 30px;
     &:hover {
-        color: color-mix(in srgb, colors.$primary, black 10%); // TODO Perhaps change
+        color: color-mix(in srgb, colors.$accent-blue, black 10%); // TODO Perhaps change
         cursor: pointer;
     }
 }

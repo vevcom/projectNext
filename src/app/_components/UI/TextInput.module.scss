@@ -43,7 +43,7 @@
     }
 
     &:focus {
-        border-color: ohma.$colors-primary;
+        border-color: ohma.$colors-accent-blue;
         background-color: ohma.$colors-surface-hover;
     }
 }
@@ -53,14 +53,14 @@
     left: calc(2 * #{ohma.$gap});
     top: calc(2.25 * #{ohma.$gap});
     display: block;
-    color: ohma.$colors-ink-faint;
+    color: ohma.$colors-text-muted;
     transition: ohma.$transitionTime;
     pointer-events: none;
     z-index: 2;
 }
 
 .field:focus ~ .labe {
-    color: ohma.$colors-primary;
+    color: ohma.$colors-accent-blue;
 }
 
 .black > .field {
@@ -68,31 +68,31 @@
 }
 
 .primary > .field {
-    color: ohma.$colors-primary;
+    color: ohma.$colors-accent-blue;
     &:focus {
-        border-color: ohma.$colors-primary;
+        border-color: ohma.$colors-accent-blue;
         ~ .labe {
-            color: ohma.$colors-primary;
+            color: ohma.$colors-accent-blue;
         }
     }
 }
 
 .secondary > .field {
-    color: ohma.$colors-secondary;
+    color: ohma.$colors-surface-base;
     &:focus {
-        border-color: ohma.$colors-secondary;
+        border-color: ohma.$colors-surface-base;
         ~ .labe {
-            color: ohma.$colors-secondary;
+            color: ohma.$colors-surface-base;
         }
     }
 }
 
 .red > .field {
-    color: ohma.$colors-red;
+    color: ohma.$colors-accent-red;
     &:focus {
-        border-color: ohma.$colors-red;
+        border-color: ohma.$colors-accent-red;
         ~ .labe {
-            color: ohma.$colors-red;
+            color: ohma.$colors-accent-red;
         }
     }
 }

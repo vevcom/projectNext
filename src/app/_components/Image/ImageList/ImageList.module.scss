@@ -8,7 +8,7 @@
         padding-top: 4em;
     }
     .uploadImage {
-        @include ohma.btn(ohma.$colors-secondary);
+        @include ohma.btn(ohma.$colors-surface-base);
         height: 3em;
         margin: 0;
         max-width: 150px;

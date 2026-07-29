@@ -10,7 +10,7 @@
         @include ohma.boxShadow('');
         @include ohma.card;
         border-radius: ohma.$rounding;
-        background-color: ohma.$colors-secondary;
+        background-color: ohma.$colors-surface-base;
         padding: calc(3 * #{ohma.$gap});
         z-index: 9;
         max-height: 95svh;

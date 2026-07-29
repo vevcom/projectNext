@@ -6,11 +6,11 @@
     height: 30px;
     > a {
         &.primary {
-            @include ohma.borderBtn(ohma.$colors-primary);
+            @include ohma.borderBtn(ohma.$colors-accent-blue);
             margin: 0;
         }
         &.secondary {
-            @include ohma.borderBtn(ohma.$colors-secondary);
+            @include ohma.borderBtn(ohma.$colors-surface-base);
             margin: 0;
         }
         display: flex;

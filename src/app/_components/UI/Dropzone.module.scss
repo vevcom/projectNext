@@ -8,7 +8,7 @@
     > .uploader {
         width: 100%;
         position: relative;
-        border: 2px dashed ohma.$colors-primary;
+        border: 2px dashed ohma.$colors-accent-blue;
         padding: calc(3 * #{ohma.$gap});
         display: flex;
         justify-content: center;
@@ -43,7 +43,7 @@
     > span {
         margin-top: calc(2 * #{ohma.$gap});
         padding: .5em;
-        background-color: color-mix(in srgb, ohma.$colors-primary, white 15%);
+        background-color: color-mix(in srgb, ohma.$colors-accent-blue, white 15%);
         > .general {
             display: flex;
             justify-content: space-between;
@@ -69,7 +69,7 @@
             > svg {
                 width: 20px;
                 height: 20px;
-                color: ohma.$colors-red;
+                color: ohma.$colors-accent-red;
             }
         }
         ul {
@@ -90,7 +90,7 @@
                     margin: 0 ohma.$gap;
                 }
                 @include ohma.round;
-                background-color: color-mix(in srgb, ohma.$colors-primary, white 40%);
+                background-color: color-mix(in srgb, ohma.$colors-accent-blue, white 40%);
                 padding: .5em;
                 margin: .3em 0;
             }
@@ -100,12 +100,12 @@
 
 @keyframes pulse {
     0% {
-        background-color: rgba(ohma.$colors-primary, 0);
+        background-color: rgba(ohma.$colors-accent-blue, 0);
     }
     50% {
-        background-color: rgba(ohma.$colors-primary, .6);
+        background-color: rgba(ohma.$colors-accent-blue, .6);
     }
     100% {
-        background-color: rgba(ohma.$colors-primary, 0);
+        background-color: rgba(ohma.$colors-accent-blue, 0);
     }
 }

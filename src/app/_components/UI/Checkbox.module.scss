@@ -16,7 +16,7 @@
         width: calc(2.5 * #{ohma.$gap});
         height: calc(2.5 * #{ohma.$gap});
         margin-right: ohma.$gap;
-        border: 2px solid ohma.$colors-ink-faint;
+        border: 2px solid ohma.$colors-text-muted;
         border-radius: calc(#{ohma.$gap} * 0.75);
         background-color: transparent;
         cursor: pointer;
@@ -34,12 +34,12 @@
         }
 
         &:hover {
-            border-color: ohma.$colors-primary;
+            border-color: ohma.$colors-accent-blue;
         }
 
         &:checked {
-            background-color: ohma.$colors-primary;
-            border-color: ohma.$colors-primary;
+            background-color: ohma.$colors-accent-blue;
+            border-color: ohma.$colors-accent-blue;
 
             &::after {
                 opacity: 1;
@@ -47,7 +47,7 @@
         }
 
         &:focus-visible {
-            outline: 2px solid ohma.$colors-primary;
+            outline: 2px solid ohma.$colors-accent-blue;
             outline-offset: 2px;
         }
 

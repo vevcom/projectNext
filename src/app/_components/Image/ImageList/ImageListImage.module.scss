@@ -10,7 +10,7 @@ $image-size: 200px;
     overflow: hidden;
     @include ohma.round;
     position: relative;
-    border: 3px solid ohma.$colors-primary;
+    border: 3px solid ohma.$colors-accent-blue;
     padding: 0;
     
     // img container (component):
@@ -31,7 +31,7 @@ $image-size: 200px;
         }  
     }
     &:hover {
-        border: solid 10px ohma.$colors-primary;
+        border: solid 10px ohma.$colors-accent-blue;
         > *:first-child > img {
             transform: scale(1.1);
         }

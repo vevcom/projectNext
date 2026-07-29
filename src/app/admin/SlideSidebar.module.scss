@@ -22,7 +22,7 @@
         gap: ohma.$gap;
         overflow-y: auto;
         height: 100%;
-        color: ohma.$colors-ink-base;
+        color: ohma.$colors-text;
 
         h3 {
             display: flex;
@@ -46,7 +46,7 @@
         }
 
         a {
-            color: ohma.$colors-ink-base;
+            color: ohma.$colors-text;
             text-decoration: none;
             padding: calc(#{ohma.$gap} * 1.5) calc(#{ohma.$gap} * 2);
             margin-left: calc(#{ohma.$gap} * 3);

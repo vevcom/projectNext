@@ -3,50 +3,46 @@
 .ThemeWrapper {
     display: flex;
     flex-wrap: wrap;
+    gap: calc(2 * #{ohma.$gap});
 }
 
 .Theme {
-    width: 192px * 2;
-    height: 168px;
+    @include ohma.boxShadow('');
+    width: calc(48 * #{ohma.$gap});
     background: ohma.$colors-surface-raised;
     border-radius: ohma.$cardRounding;
-    padding: calc(#{ohma.$gap} * 2);
-    margin: ohma.$gap;
+    border: 2px solid transparent;
+    padding: calc(2 * #{ohma.$gap});
+    cursor: pointer;
+    transition: border-color ohma.$transitionTime, box-shadow ohma.$transitionTime;
+
+    &:hover {
+        @include ohma.boxShadow('hover');
+    }
+
+    &.active {
+        border-color: ohma.$colors-accent-blue;
+    }
 }
 
 .ThemeHeader {
     background: ohma.$colors-surface-hover;
-    height: 58%;
     border-radius: ohma.$cardRounding;
-    margin: calc(-2 * #{ohma.$gap});
-    padding: calc(#{ohma.$gap} * 2);
-    font-size: xx-large;
-    line-height: 50px;
+    margin: calc(-2 * #{ohma.$gap}) calc(-2 * #{ohma.$gap}) calc(2 * #{ohma.$gap});
+    padding: calc(2 * #{ohma.$gap});
+    font-size: ohma.$fonts-xl;
     color: ohma.$colors-ink-hover;
 }
 
 .ThemeBody {
-    margin-top: calc(#{ohma.$gap} * 3);
     display: flex;
-    justify-content: space-between;
-    > div {
-        border-radius: ohma.$rounding;
-        height: 64px;
-        width: 64px;
-    }
-    > .primary {
-        background-color: ohma.$colors-accent-blue;
-    }
-    > .secondary {
-        background-color: ohma.$colors-surface-raised;
-    }
-    > .layer {
-        background-color: ohma.$colors-surface-hover;
-    }
-    > .text {
-        background-color: ohma.$colors-ink-base;
-    }
-    > .textMuted {
-        background-color: ohma.$colors-ink-faint;
-    }
+    flex-wrap: wrap;
+    gap: calc(0.75 * #{ohma.$gap});
+}
+
+.ColorSwatch {
+    flex-shrink: 0;
+    border-radius: ohma.$rounding;
+    height: calc(4 * #{ohma.$gap});
+    width: calc(4 * #{ohma.$gap});
 }

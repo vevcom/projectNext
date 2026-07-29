@@ -10,7 +10,7 @@
     a {
         @include ohma.roundAdminSvgBtn();
         &.selected {
-            background-color: ohma.$colors-secondary;
+            background-color: ohma.$colors-surface-base;
         }
     }
 }

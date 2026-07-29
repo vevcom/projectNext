@@ -6,7 +6,7 @@
     border: none;
     border-radius: 50%;
     background-color: ohma.$colors-surface-hover;
-    color: ohma.$colors-ink-base;
+    color: ohma.$colors-text;
     cursor: pointer;
     transition: background-color ohma.$transitionTime, color ohma.$transitionTime, box-shadow 0.3s;
 
@@ -26,12 +26,12 @@
     color: ohma.$colors-ink-strong;
 
     svg {
-        color: ohma.$colors-ink-base;
+        color: ohma.$colors-text;
         transition: color ohma.$transitionTime;
     }
 
     &:hover svg {
-        color: ohma.$colors-primary;
+        color: ohma.$colors-accent-blue;
     }
 }
 

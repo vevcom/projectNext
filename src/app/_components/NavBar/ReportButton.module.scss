@@ -13,12 +13,12 @@
         height: 40px;
         padding: 5px;
         border-radius: 10px;
-        // background-color: ohma.$colors-red;
+        // background-color: ohma.$colors-accent-red;
         // filter: saturate(0);
-        color: ohma.$colors-white;
+        color: ohma.$colors-text;
         transition: 0.5s;
         &:hover{
-            background-color: ohma.$colors-red;
+            background-color: ohma.$colors-accent-red;
             // background-color: rgb(211, 0, 0);
         }
     }

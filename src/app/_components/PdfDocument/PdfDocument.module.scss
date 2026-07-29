@@ -16,17 +16,17 @@
                 }
             }
             > button {
-                background-color: ohma.$colors-gray-500;
+                background-color: ohma.$colors-surface-raised;
                 border: none;
                 padding: 1em;
                 transition: background-color 0.3s;
                 svg {
-                    color: ohma.$colors-white;
+                    color: ohma.$colors-text;
                     width: 25px;
                     height: 25px;
                 }
                 &:hover {
-                    background-color: ohma.$colors-gray-600;
+                    background-color: ohma.$colors-surface-hover;
                     cursor: pointer;
                 }
             }
@@ -43,7 +43,7 @@
 }
 
 .fallbackWarning {
-    color: ohma.$colors-red;
+    color: ohma.$colors-accent-red;
 }
 
 .fallback {

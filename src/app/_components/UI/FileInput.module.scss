@@ -29,21 +29,21 @@
 
     &.primary {
         .label {
-            background-color: ohma.$colors-primary;
+            background-color: ohma.$colors-accent-blue;
             color: ohma.$colors-text-inv;
         }
     }
 
     &.secondary {
         .label {
-            background-color: ohma.$colors-secondary;
+            background-color: ohma.$colors-surface-base;
             color: ohma.$colors-text;
         }
     }
 
     &.red {
         .label {
-            background-color: ohma.$colors-red;
+            background-color: ohma.$colors-accent-red;
             color: ohma.$colors-text-inv;
         }
     }

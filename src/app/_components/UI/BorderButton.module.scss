@@ -1,9 +1,9 @@
 @use "@/styles/ohma";
 
 .primary {
-    @include ohma.borderBtn(ohma.$colors-primary);
+    @include ohma.borderBtn(ohma.$colors-accent-blue);
 }
 
 .secondary {
-    @include ohma.borderBtn(ohma.$colors-secondary);
+    @include ohma.borderBtn(ohma.$colors-surface-base);
 }

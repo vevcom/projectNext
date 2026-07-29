@@ -15,7 +15,7 @@
     justify-content: center;
 
     &:hover {
-        background: ohma.$colors-primary;
+        background: ohma.$colors-accent-blue;
         color: ohma.$colors-text-inv;
     }
 }
@@ -33,10 +33,10 @@
     margin-bottom: 0;
 }
 .selected {
-    color: ohma.$colors-primary;
+    color: ohma.$colors-accent-blue;
 }
 .selected * {
-    color: ohma.$colors-primary;
+    color: ohma.$colors-accent-blue;
 }
 
 .selected:hover * {

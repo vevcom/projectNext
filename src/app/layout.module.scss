@@ -2,7 +2,7 @@
 
 .body {
     background:
-        linear-gradient(125deg, color-mix(in srgb, ohma.$colors-primary 30%, transparent) 0%, color-mix(in srgb, ohma.$colors-surface-base 20%, transparent) 70%),
+        linear-gradient(125deg, color-mix(in srgb, ohma.$colors-accent-blue 30%, transparent) 0%, color-mix(in srgb, ohma.$colors-surface-base 20%, transparent) 70%),
         ohma.$colors-surface-raised;
     color: ohma.$colors-text;
 }

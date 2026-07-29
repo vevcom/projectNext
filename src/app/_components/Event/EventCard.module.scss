@@ -40,7 +40,7 @@
 .EventAttendanceBar {
     height: 10px;
     > div {
-        background: color-mix(in srgb, ohma.$colors-primary, black 20%);
+        background: color-mix(in srgb, ohma.$colors-accent-blue, black 20%);
         height: 100%;
     }
 }

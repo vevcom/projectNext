@@ -1,7 +1,7 @@
 @use '@/styles/ohma';
 
 .UserRow {
-    border-bottom: 2px solid ohma.$colors-secondary;
+    border-bottom: 2px solid ohma.$colors-surface-base;
     margin-top: ohma.$gap;
     padding: calc(#{ohma.$gap} / 2) ohma.$gap;
     p {

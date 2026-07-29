@@ -25,21 +25,21 @@
         }
     }
     &.blue {
-        background-color: color-mix(in srgb, ohma.$colors-secondary, black 15%);
+        background-color: color-mix(in srgb, ohma.$colors-surface-base, black 15%);
         > div:not(.imgContainer) > .paragraph {
             h1, h2, h3, h4, h5, h6, p, i {
                 color: ohma.$colors-text;
             }
         }
         .readMore {
-            @include ohma.borderBtn(ohma.$colors-primary);
+            @include ohma.borderBtn(ohma.$colors-accent-blue);
         }
     }
     &:not(.blue) {
-        background-color: ohma.$colors-secondary;
-        color: ohma.$colors-black;
+        background-color: ohma.$colors-surface-base;
+        color: ohma.$colors-text;
         .readMore {
-            @include ohma.borderBtn(ohma.$colors-secondary);
+            @include ohma.borderBtn(ohma.$colors-surface-base);
         }
     }
     > .imgContainer {

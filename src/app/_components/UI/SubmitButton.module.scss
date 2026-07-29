@@ -1,7 +1,7 @@
 @use '@/styles/ohma';
 
 .error {
-    color: ohma.$colors-red;
+    color: ohma.$colors-accent-red;
     display: flex;
     flex-direction: column; 
     min-height: 1.15em;

@@ -51,7 +51,7 @@ $taktlause: url("backgroundimages/taktlause.jpeg");
                 color: ohma.$colors-white;
                 transition: color ohma.$transitionTime;
                 &:hover {
-                    color: ohma.$colors-gray-300;
+                    color: ohma.$colors-ink-hover;
                 }
             }
         }

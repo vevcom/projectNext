@@ -5,7 +5,7 @@
     margin-top: 0;
     .inactive {
         text-decoration: line-through;
-        color: ohma.$colors-red;
+        color: ohma.$colors-accent-red;
     }
 }
 
@@ -23,7 +23,7 @@
     }
 
     .openUserList {
-        @include ohma.btn(ohma.$colors-primary);
+        @include ohma.btn(ohma.$colors-accent-blue);
         font-weight: ohma.$fonts-weight-s;
         flex-grow: 0;
     }
@@ -42,7 +42,7 @@
     }
 
     .selectActive {
-        @include ohma.btn(ohma.$colors-primary);
+        @include ohma.btn(ohma.$colors-accent-blue);
         font-weight: ohma.$fonts-weight-s;
     }
 }

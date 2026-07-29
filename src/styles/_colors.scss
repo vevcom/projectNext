@@ -1,36 +1,6 @@
-$blue:    #007bff;
-$slate:   #556a82;
-$indigo:  #6610f2;
-$purple:  #9C27B0;
-$pink:    #e83e8c;
-$red:     #E53935;
-$orange:  #fd7e14;
-$yellow:  #ffd600;
-$green:   #28a745;
-$teal:    #009688;
-$cyan:    #00BCD4;
-
 $white:  #fff;
-$gray-100: #F7F8FA;
-$gray-150: #F3F4F6;
-$gray-200: #e9ecef;
-$gray-300: #dee2e6;
-$gray-400: #ced4da;
 $gray-500: #adb5bd;
-$gray-600: #868e96;
-$gray-650: #67696d;
-$gray-700: #495057;
-$gray-750: #323A3E;
-$gray-800: #212529;
-$gray-850: #1F2326;
-$gray-900: #1c1c1c;
 $black:  #000;
-
-$primary:    var(--primary);
-$secondary:  var(--secondary);
-$tertiary:   var(--secondary);
-$border:     var(--primary);
-$shadowColor:rgba(0, 0, 0, 0.1);
 
 $layer:      var(--layer);
 $boxShadow:  var(--boxShadow);
@@ -38,28 +8,25 @@ $boxShadow:  var(--boxShadow);
 $text:       var(--text);
 $text-muted: var(--text-muted);
 $text-inv:   var(--text-inv);
-$text-sec:   var(--text-sec);
 
-$error: $red;
-$body-background: $secondary;
+$surface-base:    var(--surface-base);
+$surface-raised:  var(--surface-raised);
+$surface-hover:   var(--surface-hover);
+$surface-subtle:  var(--surface-subtle);
 
-$surface-base:    hsl(240 8% 8%);   // Default Background
-$surface-raised:  hsl(240 6% 12%);  // Lighter Background
-$surface-hover:   hsl(210, 8%, 18%);  // Selection Background
-$surface-subtle:  hsl(210, 8%, 35%);  // Invisibles and Line Highlighting
+$body-background: $surface-base;
 
-$ink-faint:  hsl(210, 8%, 45%);  // Dark Foreground (Inactive text, muted grey-blue)
-$ink-base:   hsl(210, 8%, 55%);  // Default Foreground (Readable off-white with blue tint)
-$ink-hover:  hsl(210, 8%, 65%);  // Light Foreground (Hover states)
-$ink-strong: hsl(210, 8%, 75%);  // Brightest text (Rarely used)
+$ink-hover:  var(--ink-hover);  // Light text
+$ink-strong: var(--ink-strong);  // Brightest text
 
-$accent-red:    hsl(0, 80%, 60%);   // Error
-$accent-orange: hsl(40, 80%, 60%);  // Warning
-$accent-yellow: hsl(60, 80%, 60%);  // Unused
-$accent-green:  hsl(120, 80%, 60%); // Success
-$accent-cyan:   hsl(180, 80%, 60%); // Unused
+$accent-red:    var(--accent-red);    // Error
+$accent-orange: var(--accent-orange);
+$accent-yellow: var(--accent-yellow); // Warning
+$accent-green:  var(--accent-green);  // Success
+$accent-cyan:   var(--accent-cyan);
+$accent-blue:   var(--accent-blue);   // Primary color
 
-$accent-blue: var(--primary);       // Primary color
+$accent-magenta: var(--accent-magenta);
+$accent-violet:  var(--accent-violet);
 
-$accent-magenta: hsl(300, 80%, 60%); // Unused
-$accent-violet:  hsl(260, 80%, 60%); // Unused
+$error: $accent-red;

@@ -23,7 +23,7 @@ $slider-width: 60px;
         left: 0;
         right: 0;
         bottom: 0;
-        background-color: ohma.$colors-gray-400;
+        background-color: ohma.$colors-surface-raised;
         transition: 0.4s;
         border-radius: 34px;
 
@@ -42,16 +42,16 @@ $slider-width: 60px;
 
     
     &.secondary input:checked + .slider {
-        background-color: ohma.$colors-secondary;
+        background-color: ohma.$colors-surface-base;
     }
     &.primary input:checked + .slider {
-        background-color: ohma.$colors-primary;
+        background-color: ohma.$colors-accent-blue;
     }
     &.red input:checked + .slider {
-        background-color: ohma.$colors-red;
+        background-color: ohma.$colors-accent-red;
     }
     &.green input:checked + .slider {
-        background-color: ohma.$colors-green;
+        background-color: ohma.$colors-accent-green;
     }
     &.white input:checked + .slider {
         background-color: ohma.$colors-white;

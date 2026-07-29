@@ -17,10 +17,10 @@
     }
     background-color: transparent;
     border: none;
-    color: ohma.$colors-white;
+    color: ohma.$colors-text;
     transition: color ohma.$transitionTime ease-in-out;
     &:hover {
         cursor: pointer;
-        color: ohma.$colors-primary;
+        color: ohma.$colors-accent-blue;
     }
 }

@@ -6,7 +6,7 @@
     outline: inherit;
     margin: ohma.$gap;
     @include ohma.round();
-    background-color: ohma.$colors-secondary;
+    background-color: ohma.$colors-surface-base;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -24,9 +24,9 @@
     }
     &:hover {
         @include ohma.boxShadow('hover');
-        color: ohma.$colors-primary;
+        color: ohma.$colors-accent-blue;
         svg {
-            color: ohma.$colors-primary;
+            color: ohma.$colors-accent-blue;
         }
     }
 }

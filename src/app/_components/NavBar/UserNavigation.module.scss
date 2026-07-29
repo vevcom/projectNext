@@ -1,7 +1,6 @@
 @use '@/styles/ohma';
 
 .UserNavigation {
-    background-color: ohma.$colors-gray-200;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -53,7 +52,7 @@
         > * {
             flex: 1 1 calc(50% - 1em);
             @include ohma.round();
-            background-color: ohma.$colors-secondary;
+            background-color: ohma.$colors-surface-base;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -71,9 +70,9 @@
             }
             &:hover {
                 @include ohma.boxShadow('hover');
-                color: ohma.$colors-primary;
+                color: ohma.$colors-accent-blue;
                 svg {
-                    color: ohma.$colors-primary;
+                    color: ohma.$colors-accent-blue;
                 }
             }
         }

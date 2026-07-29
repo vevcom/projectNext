@@ -13,7 +13,7 @@ a.OmbulCover {
     flex-direction: column;
     align-items: center;
     position: relative;
-    color: ohma.$colors-gray-900;
+    color: ohma.$colors-text;
     text-decoration: none;
     .coverImg {
         width: 100%;
@@ -32,7 +32,7 @@ a.OmbulCover {
             min-height: 50px;
         }
         .noCoverImage {
-            border: 3px solid ohma.$colors-gray-500;
+            border: 3px solid ohma.$colors-surface-subtle;
             aspect-ratio: 5 / 7; //aspect-ratio of sheet of paper assuemed
             display: grid;
             place-items: center;
@@ -50,7 +50,7 @@ a.OmbulCover {
         display: block;
         width: 100%;
         height: 2px;
-        background-color: ohma.$colors-gray-500;
+        background-color: ohma.$colors-surface-subtle;
         margin-bottom: ohma.$gap;
     }
     @media screen and (max-width: ohma.$mobileBreakpoint) {

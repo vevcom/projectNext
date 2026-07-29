@@ -125,7 +125,7 @@
         }
 
         .studyProgramme {
-            color: ohma.$colors-ink-base;
+            color: ohma.$colors-text;
         }
 
         .committeesWrapper {
@@ -146,7 +146,7 @@
 
 
         .orderText {
-            color: ohma.$colors-ink-base;
+            color: ohma.$colors-text;
             font-family: ohma.$fonts-secondary;
             font-weight: ohma.$fonts-weight-s;
             font-style: italic;
@@ -188,7 +188,7 @@
         p {
             font-weight: ohma.$fonts-weight-s;
             margin-bottom: 0.5em;
-            color: ohma.$colors-ink-base;
+            color: ohma.$colors-text;
         }
     }
 
@@ -232,7 +232,7 @@
 .memberShipInCommittee {
     @include ohma.layer;
     @include ohma.boxShadow('');
-    color: ohma.$colors-ink-base;
+    color: ohma.$colors-text;
     background-color: ohma.$colors-surface-raised;
     border-left: 3px solid ohma.$colors-accent-blue;
     padding: ohma.$gap;

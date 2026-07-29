@@ -6,7 +6,7 @@
     @include ohma.boxShadow('');
     @include ohma.layer;
     background: ohma.$colors-surface-hover;
-    color: ohma.$colors-ink-base;
+    color: ohma.$colors-text;
 }
 
 .selectBox > select {

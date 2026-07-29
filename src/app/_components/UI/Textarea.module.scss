@@ -9,7 +9,7 @@
 
     > label {
         font-size: ohma.$fonts-s;
-        color: ohma.$colors-ink-faint;
+        color: ohma.$colors-text-muted;
     }
 
     > textarea {
@@ -31,7 +31,7 @@
 
         &:focus {
             outline: 0;
-            border-color: ohma.$colors-primary;
+            border-color: ohma.$colors-accent-blue;
             background-color: ohma.$colors-surface-hover;
         }
     }

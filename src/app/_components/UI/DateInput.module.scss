@@ -25,7 +25,7 @@
 
         &:focus {
             outline: 0;
-            border-color: ohma.$colors-primary;
+            border-color: ohma.$colors-accent-blue;
             background-color: ohma.$colors-surface-hover;
         }
 
@@ -43,20 +43,20 @@
 
     .label {
         font-size: ohma.$fonts-s;
-        color: ohma.$colors-ink-faint;
+        color: ohma.$colors-text-muted;
     }
 
     &.white {
         color: ohma.$colors-text-inv;
     }
     &.primary {
-        color: ohma.$colors-primary;
+        color: ohma.$colors-accent-blue;
     }
     &.secondary {
-        color: ohma.$colors-secondary;
+        color: ohma.$colors-surface-base;
     }
     &.red {
-        color: ohma.$colors-red;
+        color: ohma.$colors-accent-red;
     }
     &.black {
         color: ohma.$colors-text;

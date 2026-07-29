@@ -35,7 +35,7 @@
         height: 100%;
         transition: opacity ohma.$transitionTime, transform 0.05s ease-out;
         overflow: auto;
-        color: ohma.$colors-white;
+        color: ohma.$colors-text;
         margin: 1em 0em 1em 1em;
         padding: ohma.$cardRounding;
         h2 {
@@ -85,12 +85,12 @@
                 width: 40px;
                 height: 40px;
                 margin: 5px;
-                color: ohma.$colors-white;
+                color: ohma.$colors-text;
                 transition: transform 0.35s;
             }
             h1 {
                 margin: 0 ohma.$gap;
-                color: ohma.$colors-white;
+                color: ohma.$colors-text;
             }
 
         }    
@@ -111,7 +111,7 @@
         display: flex;
         justify-content: space-between;
         a {
-            color: ohma.$colors-white;
+            color: ohma.$colors-text;
             text-decoration: none;
             &:hover {
                 text-decoration: underline;
@@ -121,5 +121,5 @@
 }
 
 .destroyArticle {
-    @include ohma.roundBtn(ohma.$colors-red);
+    @include ohma.roundBtn(ohma.$colors-accent-red);
 }
