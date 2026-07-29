@@ -7,8 +7,8 @@
     top: 0;
     left: 0;
     > .main {
-        @include ohma.boxShadow('');
         @include ohma.card;
+        width: min-content;
         border-radius: ohma.$rounding;
         background-color: ohma.$colors-surface-base;
         padding: calc(3 * #{ohma.$gap});

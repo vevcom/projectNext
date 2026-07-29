@@ -2,26 +2,44 @@
 
 .CreateDotForm {
     display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 2em; 
-    > svg {
-        color: ohma.$colors-text;
-        width: 3em; 
-        height: 3em;
-    }
-    form, .userSelected {
-        gap: 1em;
-        align-items: center;
+    flex-direction: column;
+    gap: calc(2 * #{ohma.$gap});
+
+    .header {
         display: flex;
-    }
-    form {
-        width: auto;
-        button[type="submit"] {
-            transform: translateY(10px);
+        align-items: center;
+        gap: ohma.$gap;
+
+        > svg {
+            color: ohma.$colors-accent-blue;
+            width: 1.5em;
+            height: 1.5em;
+        }
+
+        > h2 {
+            margin: 0;
         }
     }
+
+    .userSelected {
+        display: flex;
+        align-items: center;
+        gap: ohma.$gap;
+
+        > p {
+            color: ohma.$colors-text-muted;
+        }
+    }
+
+    .form {
+        display: flex;
+        flex-flow: row wrap;
+        align-items: flex-end;
+        gap: calc(2 * #{ohma.$gap});
+    }
+
     .openUserList {
         @include ohma.btn(ohma.$colors-accent-blue);
+        margin: 0;
     }
 }

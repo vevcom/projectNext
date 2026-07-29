@@ -35,4 +35,12 @@
             background-color: ohma.$colors-surface-hover;
         }
     }
+
+    &.onRaised > textarea {
+        background-color: ohma.$colors-surface-hover;
+
+        &:hover, &:focus {
+            background-color: color-mix(in srgb, ohma.$colors-surface-hover, white 10%);
+        }
+    }
 }

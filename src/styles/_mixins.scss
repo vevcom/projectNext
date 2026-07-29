@@ -21,12 +21,7 @@
 }
 
 @mixin card {
-    border-radius: variables.$cardRounding;
-    transition: box-shadow 0.3s;
-    @include boxShadow('');
-    &:hover {
-        @include boxShadow('hover');
-    }
+    border-radius: variables.$rounding;
 }
 
 @mixin layer {

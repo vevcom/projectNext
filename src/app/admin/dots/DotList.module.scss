@@ -2,7 +2,7 @@
 
 .DotList {
     @include ohma.table();
-    margin-top: 0;
+    margin-top: calc(2 * #{ohma.$gap});
     .inactive {
         text-decoration: line-through;
         color: ohma.$colors-accent-red;
@@ -10,16 +10,17 @@
 }
 
 .selection {
-    @include ohma.layer;
-    margin-top: 1em;
-    border-radius: ohma.$rounding ohma.$rounding 0 0;
-    padding: ohma.$rounding;
+    @include ohma.card;
+    background-color: ohma.$colors-surface-raised;
+    padding: calc(3 * #{ohma.$gap});
     display: flex;
     flex-flow: row wrap;
     align-items: center;
+    gap: ohma.$gap;
 
     p {
         flex-grow: 1;
+        margin: 0;
     }
 
     .openUserList {
