@@ -1,11 +1,12 @@
 import type { committeesParticipatingincluder } from './constants'
-import type { Image, Prisma } from '@/prisma-generated-pn-types'
+import type { Prisma } from '@/prisma-generated-pn-types'
+import type { ExpandedImage } from '@/services/images/subservice/types'
 
 export type CountdownInfo = {
     endTime: Date,
     commiteesParticipating: {
         shortName: string,
-        logo: Image
+        logo: ExpandedImage
     }[]
 }
 
@@ -19,7 +20,7 @@ export type ExpandedApplicationPeriod = Omit<RawExpandedApplicationPeriod, 'comm
     committeesParticipating: (
         Omit<RawExpandedApplicationPeriod['committeesParticipating'][number], 'committee'> & {
             committee: Omit<RawExpandedApplicationPeriod['committeesParticipating'][number]['committee'], 'logoImage'> & {
-                logoImage: Image
+                logoImage: ExpandedImage
             }
         }
     )[]

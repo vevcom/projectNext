@@ -17,7 +17,6 @@ export const seedNewsConfig = [
             name: 'Velkommen til nye veven',
             coverImage: {
                 image: { standardImage: 'LOGO_SIMPLE' },
-                imageSize: 'LARGE'
             },
             articleSections: [
                 {
@@ -26,7 +25,6 @@ export const seedNewsConfig = [
                     },
                     cmsImage: {
                         image: { dynamicImageSeededForCmsName: 'kappemann' },
-                        imageSize: 'LARGE'
                     }
                 }
             ]

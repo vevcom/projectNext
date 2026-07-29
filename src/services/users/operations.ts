@@ -8,6 +8,7 @@ import {
 } from './constants'
 import { userProfileImageOperations } from './profileImageCollection'
 import { standardImageCollectionOperations } from '@/services/images/standard/operations'
+import { expandedImageIncluder } from '@/services/images/subservice/constants'
 import { notificationSubscriptionOperations } from '@/services/notifications/subscription/operations'
 import { readMembershipsOfUser } from '@/services/groups/memberships/read'
 import { NTNUEmailDomain } from '@/services/mail/constants'
@@ -109,7 +110,7 @@ export const userOperations = {
                 select: {
                     ...userFilterSelection,
                     bio: true,
-                    image: true,
+                    image: { include: expandedImageIncluder },
                     memberships: {
                         where: {
                             OR: [
@@ -526,7 +527,7 @@ export const userOperations = {
             const user = await prisma_.user.findFirstOrThrow({
                 where: params,
                 include: {
-                    image: true,
+                    image: { include: expandedImageIncluder },
                 }
             })
 
@@ -568,9 +569,6 @@ export const userOperations = {
         }),
         dataSchema: userSchemas.updateProfileImage,
         opensTransaction: true,
-        // uploadImage resizes to 3 sizes, converts to avif and writes several files to store
-        // before any db write happens - comfortably slower than the default 5000ms interactive
-        // transaction timeout under load, hence the raised timeout below.
         operation: ({ prisma, params, data }) =>
             prisma.$transaction(async tx => {
                 const existingUser = await tx.user.findUniqueOrThrow({
@@ -598,6 +596,6 @@ export const userOperations = {
                 }
 
                 return newImage
-            }, { timeout: 20000 })
+            })
     }),
 } as const

@@ -12,7 +12,7 @@ export default function CollectionCard({ collection, className }: PropTypes) {
         <div className={`${styles.CollectionCard} ${collection.special ? styles.special : ''} ${className ?? ''}`}>
             {
                 collection.coverImage ? (
-                    <Image smallSize width={100} image={collection.coverImage} />
+                    <Image width={100} image={collection.coverImage} />
                 ) : (
                     <p>Something went wrong</p>
                 )
