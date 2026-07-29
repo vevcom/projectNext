@@ -1,0 +1,15 @@
+@use '@/styles/ohma';
+
+.ImagePanel {
+    display: flex;
+    flex-flow: row wrap;
+    position: relative;
+
+    > .loadControl {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: ohma.$gap 0;
+    }
+}

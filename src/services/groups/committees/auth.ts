@@ -1,6 +1,8 @@
 import { RequirePermission } from '@/auth/authorizer/RequirePermission'
 import { RequirePermissionOrGroupAdmin } from '@/auth/authorizer/RequirePermissionOrGroupAdmin'
 
+export const committeeLogosImagePanelAuth = RequirePermission.staticFields({ permission: 'COMMITTEE_UPDATE' })
+
 export const committeeAuth = {
     create: RequirePermission.staticFields({ permission: 'COMMITTEE_CREATE' }),
     update: RequirePermission.staticFields({ permission: 'COMMITTEE_UPDATE' }),
@@ -13,4 +15,4 @@ export const committeeAuth = {
     updateParagraphContent: RequirePermissionOrGroupAdmin.staticFields({ permission: 'COMMITTEE_UPDATE' }),
     updateLogo: RequirePermissionOrGroupAdmin.staticFields({ permission: 'COMMITTEE_UPDATE' }),
     updateArticle: RequirePermissionOrGroupAdmin.staticFields({ permission: 'COMMITTEE_UPDATE' }),
-}
+} as const

@@ -3,3 +3,10 @@
 .wrapper {
     min-height: 500px;
 }
+
+.logo {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 1em;
+}

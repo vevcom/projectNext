@@ -1,0 +1,216 @@
+import { articleCategoryOperations } from '@/services/articleCategories/operations'
+import { defineSeedOperation } from '@/seeder/src/defineSeedOperation'
+import { upsert } from '@/seeder/src/upsert'
+import { buildArticleFromConfig } from '@/seeder/src/buildArticleFromConfig'
+import type { PrismaClient } from '@/prisma-generated-pn-client'
+import type { Data } from '@/services/serviceOperation'
+import type { SeedArticleConfig } from '@/seeder/src/buildArticleFromConfig'
+
+type SeedArticleCategoryConfig = Data<typeof articleCategoryOperations.create> & {
+    articles: SeedArticleConfig[],
+}
+
+export const seedArticleCategoriesConfig = [
+    {
+        name: 'om omega',
+        description: 'lær om omega',
+        articles: [
+            {
+                name: 'om omega',
+                coverImage: {
+                    image: { dynamicImageSeededForCmsName: 'ohma' },
+                    imageSize: 'LARGE'
+                },
+                articleSections: [
+                    {
+                        cmsParagraph: {
+                            file: 'about/about_1.md'
+                        },
+                        cmsLink: {
+                            url: 'https://omega.ntnu.no',
+                            text: 'Til forsiden'
+                        }
+                    },
+                    {
+                        cmsParagraph: {
+                            file: 'about/about_2.md'
+                        },
+                        cmsImage: {
+                            image: { dynamicImageSeededForCmsName: 'kappemann' },
+                            imageSize: 'LARGE'
+                        }
+                    }
+                ]
+            },
+            {
+                name: 'statutter',
+                coverImage: {
+                    image: { dynamicImageSeededForCmsName: 'ov' },
+                    imageSize: 'MEDIUM'
+                },
+                articleSections: [
+                    {
+                        cmsParagraph: {
+                            file: 'statutter/statutter_1.md'
+                        },
+                        cmsLink: {
+                            url: 'https://omega.ntnu.no',
+                            text: 'Til forsiden'
+                        }
+                    },
+                    {
+                        cmsParagraph: {
+                            file: 'statutter/statutter_2.md'
+                        },
+                        cmsImage: {
+                            image: { dynamicImageSeededForCmsName: 'traktat' },
+                            imageSize: 'MEDIUM'
+                        }
+                    }
+                ]
+            },
+        ]
+    },
+    {
+        name: 'guider',
+        description: 'få hjelp til ting',
+        articles: [
+            {
+                name: 'prikkreglement',
+                coverImage: {
+                    image: { dynamicImageSeededForCmsName: 'ov' },
+                    imageSize: 'MEDIUM'
+                },
+                articleSections: [
+                    {
+                        cmsParagraph: {
+                            file: 'prikkreglement/prikkreglement_1.md'
+                        },
+                        cmsImage: {
+                            image: { dynamicImageSeededForCmsName: 'traktat' },
+                            imageSize: 'MEDIUM'
+                        }
+                    }
+                ]
+            },
+            {
+                name: 'søknadsguide',
+                coverImage: {
+                    image: { dynamicImageSeededForCmsName: 'ov' },
+                    imageSize: 'MEDIUM'
+                },
+                articleSections: [
+                    {
+                        cmsParagraph: {
+                            file: 'soknadsguide/soknadsguide_1.md'
+                        },
+                        cmsImage: {
+                            image: { dynamicImageSeededForCmsName: 'kappemann' },
+                            imageSize: 'MEDIUM'
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+] as const satisfies SeedArticleCategoryConfig[]
+
+/**
+ * This upserts the existance of all categories.
+ * Then upserts the existance of all articles in each category.
+ * If the article exists - it is not changed at all
+ * If the article does not exist - it is created with all its sections and content
+ * given by the config.
+ */
+export const seedArticleCategories = defineSeedOperation(async (prisma) => {
+    await Promise.all(seedArticleCategoriesConfig.map(async category => {
+        const categoryResult = await upsert({
+            checkExistance: () => articleCategoryOperations.read({ params: { name: category.name } }),
+            create: () => articleCategoryOperations.create({
+                data: { name: category.name, description: category.description }
+            }),
+            update: async () => {
+                const existingCategory = await articleCategoryOperations.read({ params: { name: category.name } })
+                return articleCategoryOperations.update({
+                    params: { id: existingCategory.id },
+                    data: { description: category.description }
+                })
+            },
+        })
+
+        for (const article of category.articles) {
+            await upsertArticleInCategory(
+                prisma,
+                { id: categoryResult.id, name: category.name },
+                article
+            )
+        }
+    }))
+})
+
+async function upsertArticleInCategory(
+    prisma: PrismaClient,
+    articleCategory: { id: number, name: string },
+    article: SeedArticleConfig
+) {
+    return upsert({
+        checkExistance: () => prisma.article.findUnique({
+            where: {
+                articleCategoryId_name: { articleCategoryId: articleCategory.id, name: article.name }
+            },
+            select: { id: true }
+        }),
+        create: () => createArticleInCategory(prisma, articleCategory.id, article),
+        update: () => Promise.resolve(),
+    })
+}
+
+/**
+ * This functions builds the article from config using the article operations.
+ */
+async function createArticleInCategory(
+    prisma: PrismaClient,
+    articleCategoryId: number,
+    article: SeedArticleConfig
+) {
+    const createdArticle = await articleCategoryOperations.addArticleToCategory({
+        params: { id: articleCategoryId }
+    })
+
+    await buildArticleFromConfig({
+        updateName: data => articleCategoryOperations.updateArticle.update({
+            implementationParams: { articleCategoryId },
+            params: { articleId: createdArticle.id },
+            data
+        }),
+        updateCoverImage: data => articleCategoryOperations.updateArticle.coverImage({
+            implementationParams: { articleCategoryId },
+            params: { cmsImageId: createdArticle.coverImage.id },
+            data
+        }),
+        addSection: data => articleCategoryOperations.updateArticle.addSection({
+            implementationParams: { articleCategoryId },
+            params: { articleId: createdArticle.id },
+            data
+        }),
+        updateSectionParagraph: (paragraphId, data) => articleCategoryOperations.updateArticle.articleSections.cmsParagraph({
+            implementationParams: { articleCategoryId },
+            params: { paragraphId },
+            data
+        }),
+        updateSectionImage: (cmsImageId, data) => articleCategoryOperations.updateArticle.articleSections.cmsImage({
+            implementationParams: { articleCategoryId },
+            params: { cmsImageId },
+            data
+        }),
+        updateSectionLink: (linkId, data) => articleCategoryOperations.updateArticle.articleSections.cmsLink({
+            implementationParams: { articleCategoryId },
+            params: { linkId },
+            data
+        }),
+        article,
+        prisma,
+    })
+
+    return createdArticle
+}

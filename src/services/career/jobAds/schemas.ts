@@ -1,6 +1,7 @@
 import { Zpn } from '@/lib/fields/zpn'
-import { z } from 'zod'
+import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { JobType } from '@/prisma-generated-pn-types'
+import { z } from 'zod'
 
 const baseSchema = z.object({
     companyId: z.coerce.number({
@@ -31,4 +32,14 @@ export const jobAdSchemas = {
         active: true,
         location: true,
     }),
+    readInactivePage: readPageInputSchemaObject(
+        z.number(),
+        z.object({
+            id: z.number(),
+        }),
+        z.object({
+            name: z.string().nullable(),
+            type: z.nativeEnum(JobType).nullable(),
+        }),
+    ),
 }

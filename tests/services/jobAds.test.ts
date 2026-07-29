@@ -48,13 +48,15 @@ afterEach(async () => {
 
 describe('job ads', () => {
     test('create with unauthenticated user', async () => {
-        expect(jobAdOperations.create({
+        const countBefore = await prisma.jobAd.count()
+
+        await expect(jobAdOperations.create({
             data: CREATE_JOB_AD,
             session: Session.empty()
         })).rejects.toThrow(new Smorekopp('UNAUTHENTICATED'))
 
-        const count = await prisma.jobAd.count()
-        expect(count).toBe(0)
+        const countAfter = await prisma.jobAd.count()
+        expect(countAfter).toBe(countBefore)
     })
 
     test('create with authorized user', async () => {
@@ -147,20 +149,24 @@ describe('job ads', () => {
 
     test('destroy with unauthenticated user', async () => {
         // TODO: To avoid fragile tests, this should be refactored to use a seeded job ad.
+        const countBefore = await prisma.jobAd.count()
+
         const createRes = await jobAdOperations.create({
             data: CREATE_JOB_AD,
             bypassAuth: true
         })
 
-        expect(jobAdOperations.destroy({ params: { id: createRes.id }, session: Session.empty() }))
+        await expect(jobAdOperations.destroy({ params: { id: createRes.id }, session: Session.empty() }))
             .rejects.toThrow(new Smorekopp('UNAUTHENTICATED'))
 
-        const count = await prisma.jobAd.count()
-        expect(count).toBe(1)
+        const countAfter = await prisma.jobAd.count()
+        expect(countAfter).toBe(countBefore + 1)
     })
 
     test('destroy with authorized user', async () => {
         // TODO: To avoid fragile tests, this should be refactored to use a seeded job ad.
+        const countBefore = await prisma.jobAd.count()
+
         const createRes = await jobAdOperations.create({
             data: CREATE_JOB_AD,
             bypassAuth: true
@@ -174,7 +180,7 @@ describe('job ads', () => {
 
         await jobAdOperations.destroy({ params: { id: createRes.id }, session })
 
-        const count = await prisma.jobAd.count()
-        expect(count).toBe(0)
+        const countAfter = await prisma.jobAd.count()
+        expect(countAfter).toBe(countBefore)
     })
 })

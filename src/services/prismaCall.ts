@@ -14,7 +14,7 @@ const errorMessagesMap: { [key: string]: [ServerErrorCode, string] } = {
  * THIS FUNCTION HAS BEEN DEPRECATED IN FAVOR OF prismaErrorWrapper
  *
  * @deprecated
- * @param call - A async prisma function to call.
+ * @param call - An async prisma function to call.
  * @returns
  */
 export async function prismaCall<T>(call: () => T | Promise<T>): Promise<T> {
@@ -25,7 +25,16 @@ export async function prismaCall<T>(call: () => T | Promise<T>): Promise<T> {
             throw error
         }
 
-        if (process.env.NODE_ENV !== 'test') {
+        //TODO: Make logging of errors much better
+        // A P2025 (not found) during seeding is expected self-heal noise - upsert() treats it as
+        // "doesn't exist yet, create it" - so it's silenced here instead of printing a scary raw
+        // Prisma error for something that isn't actually a failure. Other errors still log even
+        // during seeding, since those are real problems.
+        const isSeedExpectedNotFound = process.env.SEED === 'true'
+            && error instanceof PrismaClientKnownRequestError
+            && error.code === 'P2025'
+
+        if (process.env.NODE_ENV !== 'test' && !isSeedExpectedNotFound) {
             console.error(error) // TODO: Add the details from the error to the ServerError
         }
 

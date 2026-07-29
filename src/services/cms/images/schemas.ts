@@ -1,9 +1,8 @@
+import { ImageSize } from '@/prisma-generated-pn-types'
 import { z } from 'zod'
-import { ImageSize, SpecialCmsImage } from '@/prisma-generated-pn-types'
 
 const baseSchema = z.object({
     name: z.string().max(200, 'Maks lengde er 200 tegn.').optional(),
-    special: z.nativeEnum(SpecialCmsImage).optional(),
     imageId: z.number().optional(),
     imageSize: z.nativeEnum(ImageSize).optional()
 })
@@ -11,7 +10,6 @@ const baseSchema = z.object({
 export const cmsImageSchemas = {
     create: baseSchema.pick({
         name: true,
-        special: true,
         imageId: true,
     }),
     update: baseSchema.pick({
