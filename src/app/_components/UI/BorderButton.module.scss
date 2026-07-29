@@ -5,5 +5,10 @@
 }
 
 .secondary {
-    @include ohma.borderBtn(ohma.$colors-surface-base);
+    @include ohma.borderBtn(ohma.$colors-text);
+
+    &:hover {
+        background: ohma.$colors-surface-hover;
+        color: ohma.$colors-text;
+    }
 }

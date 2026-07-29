@@ -5,7 +5,12 @@
 }
 
 .secondary {
-    @include ohma.btn(ohma.$colors-surface-base);
+    @include ohma.btn(ohma.$colors-surface-hover);
+    color: ohma.$colors-text;
+
+    &:hover {
+        background-color: color-mix(in srgb, ohma.$colors-surface-hover, white 10%);
+    }
 }
 
 .green {

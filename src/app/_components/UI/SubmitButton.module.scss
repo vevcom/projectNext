@@ -18,6 +18,22 @@
     transition: background-color ohma.$transitionTime ease-in-out;
 }
 
+.hiddenSubmit {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+.confirmActions {
+    display: flex;
+    justify-content: center;
+    gap: ohma.$gap;
+    margin-top: calc(2 * #{ohma.$gap});
+}
+
 .loader {
     display: flex;
     justify-content: space-between;

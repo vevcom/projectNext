@@ -225,6 +225,10 @@ const navigations = [
                 title: 'Flairs',
                 href: '/admin/flairs'
             },
+            {
+                title: 'Komponenter',
+                href: '/admin/component-test'
+            },
         ]
     }
 ] satisfies {
