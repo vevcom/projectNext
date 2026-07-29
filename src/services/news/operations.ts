@@ -219,27 +219,39 @@ export const newsOperations = {
                 }
             })
     }),
-    publish: defineOperation({
-        authorizer: async ({ params, prisma }) => newsAuth.publish.dynamicFields({
+    /**
+     * Publishes an article, or takes it back to being a draft. Which of the two levels the read
+     * authorizer demands follows from this flag, so retracting an article makes it visible only to
+     * those who can administrate it again.
+     */
+    setPublished: defineOperation({
+        authorizer: async ({ params, prisma }) => newsAuth.setPublished.dynamicFields({
             doubleLevelMatrix: await visibility.readDoubleLevelMatrixInternal({ params, prisma })
         }),
         paramsSchema: newsSchemas.params,
-        operation: async ({ prisma, params }) => {
+        dataSchema: newsSchemas.setPublished,
+        operation: async ({ prisma, params, data }) => {
+            const previous = await prisma.newsArticle.findUniqueOrThrow({
+                where: { id: params.id },
+                select: { published: true },
+            })
             const news = await prisma.newsArticle.update({
                 where: { id: params.id },
-                data: { published: true },
+                data: { published: data.published },
                 include: simpleNewsArticleRealtionsIncluder,
             })
 
-            await notificationOperations.createSpecial.internalCall({
-                params: {
-                    special: 'NEW_NEWS_ARTICLE',
-                },
-                data: {
-                    title: 'Ny nyhetsartikkel', // TODO: Add info about the article
-                    message: 'En ny nyhetsartikkel er publisert',
-                },
-            })
+            if (data.published && !previous.published) {
+                await notificationOperations.createSpecial.internalCall({
+                    params: {
+                        special: 'NEW_NEWS_ARTICLE',
+                    },
+                    data: {
+                        title: 'Ny nyhetsartikkel', // TODO: Add info about the article
+                        message: 'En ny nyhetsartikkel er publisert',
+                    },
+                })
+            }
 
             return {
                 ...news,
