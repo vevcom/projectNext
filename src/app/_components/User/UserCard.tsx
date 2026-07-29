@@ -2,7 +2,7 @@ import UserDisplayName from './UserDisplayName'
 import styles from './UserCard.module.scss'
 import ProfilePicture from './ProfilePicture'
 import Link from 'next/link'
-import type { Image } from '@/prisma-generated-pn-types'
+import type { ExpandedImage } from '@/services/images/subservice/types'
 import type { UserFiltered } from '@/services/users/types'
 
 // TODO: Make nice and add picture
@@ -10,14 +10,12 @@ export default function UserCard({
     user,
     className,
     subText,
-    asClient,
 }: {
     user: UserFiltered & {
-        image: Image
+        image: ExpandedImage
     },
     className?: string,
     subText?: string,
-    asClient: boolean
 }) {
     return <Link
         className={`${styles.UserCard} ${className ? className : ''}`}
@@ -26,7 +24,7 @@ export default function UserCard({
         <ProfilePicture profileImage={user.image} width={60} />
         <div>
             <h6>
-                <UserDisplayName user={user} width={18} asClient={asClient}/>
+                <UserDisplayName user={user} width={18} />
             </h6>
             {subText && <p>{subText}</p>}
         </div>

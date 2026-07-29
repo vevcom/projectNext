@@ -1,6 +1,8 @@
-import seed from './src/seeder'
+import seed from './src/seed'
 import { prisma } from '@/prisma-pn-client-instance'
 import { exit } from 'process'
+
+process.env.SEED = 'true'
 
 seed(
     process.env.MIGRATE_FROM_OW === 'true',

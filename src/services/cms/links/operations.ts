@@ -3,19 +3,33 @@ import { cmsLinkSchemas } from './schemas'
 import { defineSubOperation } from '@/services/serviceOperation'
 import logger from '@/lib/logger'
 import { ServerError } from '@/services/error'
-import { z } from 'zod'
 import { SpecialCmsLink } from '@/prisma-generated-pn-types'
+import { z } from 'zod'
 
 const create = defineSubOperation({
     dataSchema: () => cmsLinkSchemas.create,
-    operation: () => ({ data, prisma }) =>
-        prisma.cmsLink.create({
-            data
-        })
+    operation: (
+        { special }: { special: SpecialCmsLink | null }
+    ) => (
+        { data, prisma }
+    ) => prisma.cmsLink.create({
+        data: { ...data, special }
+    })
+})
+
+const generateSpecialCmsLinkFromConfig = defineSubOperation({
+    paramsSchema: () => z.object({
+        special: z.nativeEnum(SpecialCmsLink),
+    }),
+    operation: () => async ({ params: { special } }) => create.internalCall({
+        data: { url: './', text: 'Default text' },
+        operationImplementationFields: { special }
+    })
 })
 
 export const cmsLinkOperations = {
     create,
+    generateSpecialCmsLinkFromConfig,
 
     destroy: defineSubOperation({
         paramsSchema: () => z.object({
@@ -61,11 +75,9 @@ export const cmsLinkOperations = {
             const cmsLink = await prisma.cmsLink.findUnique({
                 where: { special }
             })
-            if (!cmsLink) {
-                logger.error(`Could not find special cms link with special ${special} - creating it!`)
-                return await create.internalCall({ data: { special, url: './', text: 'Default text' } })
-            }
-            return cmsLink
+            if (cmsLink) return cmsLink
+            logger.error(`Could not find special cms link with special ${special} - creating it!`)
+            return await generateSpecialCmsLinkFromConfig.internalCall({ params: { special } })
         }
     }),
 

@@ -1,9 +1,12 @@
 import { owIdToPnId, type IdMapper } from './IdMapper'
 import manifest from '@/seeder/src/logger'
-import { imageSizes, imageStoreLocation } from '@/seeder/src/seedImages'
-import { v4 as uuid } from 'uuid'
-import { writeFile, mkdir } from 'fs/promises'
-import { join } from 'path'
+import { imageOperations } from '@/services/images/subservice/operations'
+import { allowedExtensions } from '@/services/images/subservice/constants'
+import { mimeTypeForExtension } from '@/lib/store/fileExtensions'
+import { ombulCoversImagePanelOperations } from '@/services/ombul/ombulCoverCollection'
+import { profileImagesImagePanelOperations } from '@/services/users/profileImageCollection'
+import { committeeLogosImagePanelOperations } from '@/services/groups/committees/committeeLogoCollection'
+import { File } from 'node:buffer'
 import type { Limits } from './migrationLimits'
 import type { PrismaClient as PrismaClientPn } from '@/prisma-generated-pn-client'
 import type { PrismaClient as PrismaClientOw } from '@/prisma-generated-ow-basic/client'
@@ -12,7 +15,10 @@ import type { PrismaClient as PrismaClientOw } from '@/prisma-generated-ow-basic
  * This function migrates images from Omegaweb-basic to PN and adds them to the correct image collection
  * If they do not belong to a image collection (group on Omegaweb-basic)
  * they will be added to a garbage collection. The function also places special images
- * like the once related to a ombul or profile picture in the correct special collection.
+ * like the once related to a ombul, profile picture, or committee logo in the correct special collection.
+ *
+ * Only the original file is fetched from Omegaweb-basic - imageOperations.uploadImage takes care of
+ * generating the small/medium/large avif sizes and storing everything, same as a live upload would.
  * @param pnPrisma - PrismaClientPn
  * @param owPrisma - PrismaClientOw
  * @param migrateImageCollectionIdMap - IdMapper - A map of the old and new id's of the image collections also
@@ -34,7 +40,7 @@ export default async function migrateImages(
         create: {
             name: 'Søppel fra Omegaweb-basic',
             description: 'Denne samlingen inneholder bilder som ikke tilhørete noen samling i omegaweb-basic',
-            visibilityRead: {
+            visibilityRegular: {
                 create: {},
             },
             visibilityAdmin: {
@@ -43,19 +49,13 @@ export default async function migrateImages(
         },
     })
 
-    const ombulCollection = await pnPrisma.imageCollection.findUnique({
-        where: {
-            special: 'OMBULCOVERS',
-        },
+    // Reads (and, if missing, creates from config) each special collection through its real
+    // implementation, same as the live app uses - rather than assuming it already exists.
+    const ombulCollection = await ombulCoversImagePanelOperations.readCollection({ prisma: pnPrisma, bypassAuth: true })
+    const profileCollection = await profileImagesImagePanelOperations.readCollection({ prisma: pnPrisma, bypassAuth: true })
+    const committeeLogosCollection = await committeeLogosImagePanelOperations.readCollection({
+        prisma: pnPrisma, bypassAuth: true
     })
-    if (!ombulCollection) throw new Error('No ombul collection found for seeding images')
-
-    const profileCollection = await pnPrisma.imageCollection.findUnique({
-        where: {
-            special: 'PROFILEIMAGES',
-        },
-    })
-    if (!profileCollection) throw new Error('No profile collection found for seeding images')
 
     const images = await owPrisma.images.findMany({
         include: {
@@ -72,11 +72,24 @@ export default async function migrateImages(
         },
     })
 
+    // Committees.ImageId has no back-relation on Images, so committee logos can't be picked up via an
+    // include like Ombul/Articles/Events below - fetched separately so they're exempted from limits too,
+    // same as ombul covers and profile pictures. Otherwise migrateCommittees can silently end up with no
+    // logo for a committee whose image got filtered out here under a limited/dev migration.
+    const committees = await owPrisma.committees.findMany({
+        select: { ImageId: true },
+    })
+    const committeeImageIds = new Set(
+        committees.flatMap(committee => (committee.ImageId ? [committee.ImageId] : []))
+    )
+
     manifest.info(`Before filter: ${images.length} images`)
     const imagesWithCollection = images.map(image => {
         let collectionId = owIdToPnId(migrateImageCollectionIdMap, image.ImageGroupId)
         if (image.Ombul.length) {
             collectionId = ombulCollection.id
+        } else if (committeeImageIds.has(image.id)) {
+            collectionId = committeeLogosCollection.id
         } else if (!collectionId) {
             collectionId = garbageCollection.id
         } else if (image.ImageGroupId === omegawebBasicProfileCollection.id) {
@@ -89,158 +102,95 @@ export default async function migrateImages(
     }).filter(image => {
         //Apply limits
         if (limits.numberOffFullImageCollections === null) return true
-        if (image.Ombul.length) return true
         if (image.Articles.length) return true
         if (image.Events.length) return true
+        //Images belonging to a special collection are always migrated, regardless of limits
         if (image.collectionId === ombulCollection.id) return true
         if (image.collectionId === profileCollection.id) return true
+        if (image.collectionId === committeeLogosCollection.id) return true
         if (image.ImageGroupId && image.ImageGroupId < limits.numberOffFullImageCollections) return true
         return false
     })
     manifest.info(`After filter: ${imagesWithCollection.length} images`)
 
-    const imagesWithCollectionAndFs = await fetchAllImagesAndUploadToStore(imagesWithCollection.slice(0, 10))
-
-    //correct names if there are duplicates
+    //correct names if there are duplicates. Kept separate from the OW `name` field (used to fetch the
+    //file from Omegaweb-basic below) since that field is a store token, not the display name.
     const namesTaken: { name: string, times: number }[] = []
-    const imagesWithCollectionAndFsAndCorrectedName = imagesWithCollectionAndFs.map(image => {
-        if (!image) return null //Only happens if fetchImageAndUploadToStore fails for the image
-        const ext = image.originalName.split('.').pop() || ''
-        const name = image.originalName.split('.').slice(0, -1).join('.')
-        const nameTaken = namesTaken.find(nameTakenItem => nameTakenItem.name === name)
+    const imagesWithCorrectedName = imagesWithCollection.slice(0, 10).map(image => {
+        const baseName = image.originalName.split('.').slice(0, -1).join('.')
+        const nameTaken = namesTaken.find(nameTakenItem => nameTakenItem.name === baseName)
         if (nameTaken) {
             nameTaken.times++
-            return {
-                ...image,
-                name: `${name}(${nameTaken.times})`,
-                ext
-            }
+            return { ...image, pnImageName: `${baseName}(${nameTaken.times})` }
         }
-        namesTaken.push({ name, times: 0 })
-
-        return {
-            ...image,
-            name,
-            ext
-        }
+        namesTaken.push({ name: baseName, times: 0 })
+        return { ...image, pnImageName: baseName }
     })
 
-    //Finally upsurt to db
     const migrateImageIdMap: IdMapper = []
-    await Promise.all(imagesWithCollectionAndFsAndCorrectedName.map(async image => {
-        if (!image) return //Only happens if fetchImageAndUploadToStore fails for the image
-        const { id: pnId } = await pnPrisma.image.upsert({
-            where: {
-                id: image.id
-            },
-            update: {},
-            create: {
-                name: image.name,
-                alt: image.name.split('_').join(' '),
-                fsLocationOriginal: image.fsLocationOriginal,
-                fsLocationLargeSize: image.fsLocationLargeSize,
-                fsLocationSmallSize: image.fsLocationSmallSize,
-                fsLocationMediumSize: image.fsLocationMediumSize,
-                extOriginal: image.ext,
-                collection: {
-                    connect: {
-                        id: image.collectionId
-                    }
-                }
-            }
-        })
-        migrateImageIdMap.push({ owId: image.id, pnId })
-    }))
-    return migrateImageIdMap
-}
-
-type Locations = {
-    fsLocationOriginal: string,
-    fsLocationSmallSize: string,
-    fsLocationMediumSize: string,
-    fsLocationLargeSize: string
-}
-
-async function fetchAllImagesAndUploadToStore<ImageType extends {
-    originalName: string,
-    name: string,
-    id: number
-}>(images: ImageType[]): Promise<((ImageType & Locations) | null)[]> {
-    const ret: ((ImageType & Locations) | null)[] = []
     let imageCounter = 1
-    const batchSize = 1200
-    const imageBatches = images.reduce((acc, image) => {
-        if (acc[acc.length - 1].length >= batchSize) {
-            acc.push([image])
-        } else {
-            acc[acc.length - 1].push(image)
-        }
-        return acc
-    }, [[]] as ImageType[][])
 
-    const uploadOne = async (image: ImageType) => {
-        manifest.info(`Migrating image number ${imageCounter++} of ${images.length}`)
-        const ext = image.originalName.split('.').pop() || ''
-        const fsLocationDefaultOldVev = `${process.env.OW_STORE_URL}/image/default/${image.name}`
+    const migrateOneImage = async (image: (typeof imagesWithCorrectedName)[number]) => {
+        manifest.info(`Migrating image number ${imageCounter++} of ${imagesWithCorrectedName.length}`)
+        const ext = (image.originalName.split('.').pop() || '').toLowerCase()
+        const mimeType = mimeTypeForExtension(ext)
+        if (!mimeType) {
+            console.error(`Image ${image.originalName} has unsupported extension "${ext}", skipping`)
+            return
+        }
+
+        const fsLocationOldVev = `${process.env.OW_STORE_URL}/image/default/${image.name}`
             + `?url=/store/images/${image.name}.${ext}`
-        const fsLocationMediumOldVev = `${process.env.OW_STORE_URL}/image/resize/${imageSizes.medium}/`
-            + `${imageSizes.medium}/${image.name}?url=/store/images/${image.name}.${ext}`
-        const fsLocationSmallOldVev = `${process.env.OW_STORE_URL}/image/resize/${imageSizes.small}/`
-            + `${imageSizes.small}/${image.name}?url=/store/images/${image.name}.${ext}`
-        const fsLocationLargeOldVev = `${process.env.OW_STORE_URL}/image/resize/${imageSizes.large}/`
-            + `${imageSizes.large}/${image.name}?url=/store/images/${image.name}.${ext}`
-        const fsLocationOriginal = await fetchImageAndUploadToStore(fsLocationDefaultOldVev)
-        const fsLocationMediumSize = await fetchImageAndUploadToStore(fsLocationMediumOldVev)
-        const fsLocationSmallSize = await fetchImageAndUploadToStore(fsLocationSmallOldVev)
-        const fsLocationLargeSize = await fetchImageAndUploadToStore(fsLocationLargeOldVev)
-        if (!fsLocationOriginal || !fsLocationMediumSize || !fsLocationSmallSize || !fsLocationLargeSize) {
-            console.error(`Failed to fetch image from ${fsLocationDefaultOldVev}`)
-            ret.push(null)
+
+        const res = await fetch(fsLocationOldVev, {
+            method: 'GET',
+            //This is to make the fetch request look like it comes from a browser. Not sure if it helps
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
+                    + 'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3',
+            },
+        }).catch(() => console.error(`Failed to fetch image from ${fsLocationOldVev}`))
+
+        if (!res || !res.ok) {
+            console.error(`Failed to fetch image from ${fsLocationOldVev}`)
+            return
+        }
+
+        const buffer = Buffer.from(await res.arrayBuffer())
+        const imageFile = new File([new Uint8Array(buffer)], `${image.pnImageName}.${ext}`, { type: mimeType })
+
+        const pnImage = await imageOperations.uploadImage.internalCall({
+            prisma: pnPrisma,
+            params: { collectionId: image.collectionId },
+            data: {
+                imageFile,
+                imageName: image.pnImageName.slice(0, 50),
+                imageAlt: image.pnImageName.split('_').join(' ').slice(0, 100),
+            },
+            operationImplementationFields: {
+                uploadAsStandardImage: null,
+                // Deliberately the full set rather than the per-collection subset: this migrates
+                // what omegaweb-basic already has, including committee logos, raster over there.
+                allowedExtensions,
+            },
+        })
+
+        migrateImageIdMap.push({ owId: image.id, pnId: pnImage.id })
+    }
+
+    //Batched to avoid hammering omegaweb-basic with too many concurrent requests at once
+    const batchSize = 1200
+    const imageBatches: (typeof imagesWithCorrectedName)[] = [[]]
+    for (const image of imagesWithCorrectedName) {
+        if (imageBatches[imageBatches.length - 1].length >= batchSize) {
+            imageBatches.push([image])
         } else {
-            ret.push({
-                ...image,
-                fsLocationSmallSize,
-                fsLocationMediumSize,
-                fsLocationOriginal,
-                fsLocationLargeSize
-            })
+            imageBatches[imageBatches.length - 1].push(image)
         }
     }
-
-
     for (const imageBatch of imageBatches) {
-        await Promise.all(imageBatch.map(uploadOne))
+        await Promise.all(imageBatch.map(migrateOneImage))
     }
-    return ret
-}
 
-/**
- * fetches an image from the Omegaweb-basic store and uploads it to the PN store (does NOT store the image
- * in the database, only the file on the server). Note that omegaweb-basic will often fail when we make a
- * lot of requests to it. TODO: Add a retry mechanism
- * @param fsLocationOmegawebBasic - The location of the image on the Omegaweb-basic store to be fetched
- * @returns - The location of the image on the PN store
- */
-async function fetchImageAndUploadToStore(fsLocationOmegawebBasic: string): Promise<string | null> {
-    const ext = fsLocationOmegawebBasic.split('.').pop()
-    const fsLocationPn = `${uuid()}.${ext}`
-
-    if (!ext || !['webp', 'png', 'jpg', 'jpeg', 'svg'].includes(ext)) {
-        console.error(`Image ${fsLocationOmegawebBasic} is not a suported image`)
-        return null
-    }
-    const res = await fetch(fsLocationOmegawebBasic, {
-        method: 'GET',
-        //This is to make the fetch request look like it comes from a browser. Not sure if it helps
-        headers: {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
-                + 'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3',
-        },
-    }).catch(() => console.error(`Failed to fetch image from ${fsLocationOmegawebBasic}`))
-
-    if (!res) return null
-    const imageBuffer = Buffer.from(await res.arrayBuffer())
-    await mkdir(imageStoreLocation, { recursive: true })
-    await writeFile(join(imageStoreLocation, fsLocationPn), imageBuffer)
-    return fsLocationPn
+    return migrateImageIdMap
 }

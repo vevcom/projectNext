@@ -46,11 +46,6 @@ export const articleSectionOperations = {
                 data: {
                     imageSize: data.imageSize,
                     imagePosition: data.position,
-                    cmsImage: data.imageSize ? {
-                        update: {
-                            imageSize: data.imageSize > 250 ? 'MEDIUM' : 'SMALL',
-                        },
-                    } : undefined,
                 },
                 include: articleSectionsRealtionsIncluder,
             })
@@ -84,7 +79,10 @@ export const articleSectionOperations = {
             switch (data.part) {
                 case 'cmsImage':
                 {
-                    const cmsImage = await cmsImageOperations.create.internalCall({ data: {} })
+                    const cmsImage = await cmsImageOperations.create.internalCall({
+                        data: {},
+                        operationImplementationFields: { special: null }
+                    })
                     return await prisma.articleSection.update({
                         where,
                         data: { cmsImage: { connect: { id: cmsImage.id } } },
@@ -93,7 +91,10 @@ export const articleSectionOperations = {
                 }
                 case 'cmsParagraph':
                 {
-                    const cmsParagraph = await cmsParagraphOperations.create.internalCall({ data: {} })
+                    const cmsParagraph = await cmsParagraphOperations.create.internalCall({
+                        data: {},
+                        operationImplementationFields: { special: null }
+                    })
                     return await prisma.articleSection.update({
                         where,
                         data: { cmsParagraph: { connect: { id: cmsParagraph.id } } },
@@ -102,7 +103,10 @@ export const articleSectionOperations = {
                 }
                 case 'cmsLink':
                 {
-                    const cmsLink = await cmsLinkOperations.create.internalCall({ data: { text: 'lenke', url: './' } })
+                    const cmsLink = await cmsLinkOperations.create.internalCall({
+                        data: { text: 'lenke', url: './' },
+                        operationImplementationFields: { special: null }
+                    })
                     return await prisma.articleSection.update({
                         where,
                         data: { cmsLink: { connect: { id: cmsLink.id } } },

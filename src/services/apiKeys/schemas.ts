@@ -1,6 +1,6 @@
 import { Zpn } from '@/lib/fields/zpn'
-import { z } from 'zod'
 import { Permission } from '@/prisma-generated-pn-types'
+import { z } from 'zod'
 
 const baseSchema = z.object({
     name: z.string().min(10, 'minimum lengde 10').max(100, 'maksimum lengde 100'),

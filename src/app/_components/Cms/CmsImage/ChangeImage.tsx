@@ -2,91 +2,67 @@
 import styles from './ChangeImage.module.scss'
 import ChangeImageForm from './ChangeImageForm'
 import Image from '@/components/Image/Image'
-import { ImageSelectionContext } from '@/contexts/ImageSelection'
-import Form from '@/components/Form/Form'
-import { configureAction } from '@/services/configureAction'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTurnUp } from '@fortawesome/free-solid-svg-icons'
-import React, { useContext, useEffect, useEffectEvent, useState } from 'react'
-import type { ImageSize, Image as ImageT } from '@/prisma-generated-pn-types'
+import type { ExpandedImage } from '@/services/images/subservice/types'
 import type { UpdateCmsImageAction } from '@/cms/images/types'
 
 type PropTypes = {
-    currentImage: ImageT,
+    currentImage: ExpandedImage | null,
+    selectedImage: ExpandedImage | null,
     cmsImageId: number,
-    currentImageSize: ImageSize,
     updateCmsImageAction: UpdateCmsImageAction
 }
 
-export default function ChangeImage({ currentImage, cmsImageId, currentImageSize, updateCmsImageAction }: PropTypes) {
-    const selectedContext = useContext(ImageSelectionContext)
-    if (!selectedContext) throw new Error('ImageSelectionContext required to use ChangeImage')
+export default function ChangeImage({
+    currentImage,
+    selectedImage,
+    cmsImageId,
+    updateCmsImageAction,
+}: PropTypes) {
+    // A selection only counts as "new" if it differs from the current image - or there is no
+    // current image yet, in which case this is the user's first choice for this slot.
+    const hasNewSelection = selectedImage !== null && selectedImage.id !== currentImage?.id
+    const displayImage = selectedImage ?? currentImage
 
-    //What is the next option in quality. The image always cycles up.
-    const [changeToSize, setChangeToSize] = useState<ImageSize>(currentImageSize)
-
-    const handleChangeSize = useEffectEvent(() => {
-        switch (currentImageSize) {
-            case 'SMALL':
-                setChangeToSize('MEDIUM')
-                break
-            case 'MEDIUM':
-                setChangeToSize('LARGE')
-                break
-            case 'LARGE':
-                setChangeToSize('SMALL')
-                break
-            default:
-                setChangeToSize('MEDIUM')
-                break
+    const renderSubmitControls = () => {
+        if (hasNewSelection && selectedImage) {
+            return (
+                <ChangeImageForm
+                    cmsImageId={cmsImageId}
+                    selectedImage={selectedImage}
+                    updateCmsImageAction={updateCmsImageAction}
+                />
+            )
         }
-    })
-
-    useEffect(() => {
-        handleChangeSize()
-    }, [currentImageSize])
+        if (!currentImage) {
+            return <p>Velg et bilde for å legge det til</p>
+        }
+        return null
+    }
 
     return (
         <div className={styles.ChangeImage}>
             {
-                selectedContext.selectedImage && selectedContext.selectedImage.id !== currentImage.id ? (
+                currentImage && selectedImage && hasNewSelection ? (
                     <div className={styles.currentAndSelected}>
                         <div className={styles.imageClip}>
                             <Image width={200} image={currentImage} />
                         </div>
                         <div className={styles.imageClip}>
-                            <Image width={200} image={selectedContext.selectedImage} />
+                            <Image width={200} image={selectedImage} />
                         </div>
                         <FontAwesomeIcon className={styles.arrow1} icon={faTurnUp} />
                         <FontAwesomeIcon className={styles.arrow2} icon={faTurnUp} />
                     </div>
                 ) : (
                     <div className={`${styles.onlyCurrent} ${styles.imageClip}`}>
-                        <Image width={200} image={currentImage} />
+                        {displayImage ? <Image width={200} image={displayImage} /> : <p>Ingen bilde valgt enda</p>}
                     </div>
                 )
             }
-            <i>image name: {currentImage.name}</i>
-            {
-                selectedContext.selectedImage && selectedContext.selectedImage.id !== currentImage.id ? (
-                    <ChangeImageForm cmsImageId={cmsImageId} updateCmsImageAction={updateCmsImageAction} />
-                ) : (
-                    <div className={styles.resolution}>
-                        <p>Resolution: {currentImageSize.toLowerCase()}</p>
-                        <Form
-                            action={
-                                configureAction(
-                                    updateCmsImageAction,
-                                    { params: { cmsImageId } }
-                                ).bind(null, { data: { imageSize: changeToSize } })
-                            }
-                            submitText={`change to ${changeToSize.toLocaleLowerCase()}`}
-                            refreshOnSuccess
-                            submitColor="primary"
-                        />
-                    </div>
-                )
-            }
+            <i>{displayImage ? `image name: ${displayImage.name}` : 'ingen bilde valgt enda'}</i>
+            {renderSubmitControls()}
         </div>
     )
 }

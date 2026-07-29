@@ -6,11 +6,11 @@ import { notificationOperations } from '@/services/notifications/operations'
 import { getOsloTime } from '@/lib/dates/getOsloTime'
 import { ServerError } from '@/services/error'
 import { defineOperation } from '@/services/serviceOperation'
-import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { displayDate } from '@/lib/dates/displayDate'
 import { cmsImageOperations } from '@/cms/images/operations'
 import { cmsParagraphOperations } from '@/cms/paragraphs/operations'
+import { expandedImageIncluder } from '@/services/images/subservice/constants'
 import { z } from 'zod'
 import type { EventExpanded } from './types'
 
@@ -27,7 +27,7 @@ const read = defineOperation({
             include: {
                 coverImage: {
                     include: {
-                        image: true
+                        image: { include: expandedImageIncluder }
                     }
                 },
                 paragraph: true,
@@ -79,8 +79,14 @@ export const eventOperations = {
         dataSchema: eventSchemas.create,
         authorizer: () => eventAuth.create.dynamicFields({}),
         operation: async ({ prisma, data, session }) => {
-            const cmsParagraph = await cmsParagraphOperations.create.internalCall({ data: {} })
-            const cmsImage = await cmsImageOperations.create.internalCall({ data: {} })
+            const cmsParagraph = await cmsParagraphOperations.create.internalCall({
+                data: {},
+                operationImplementationFields: { special: null }
+            })
+            const cmsImage = await cmsImageOperations.create.internalCall({
+                data: {},
+                operationImplementationFields: { special: null }
+            })
 
             if (data.eventStart > data.eventEnd) {
                 throw new ServerError('BAD PARAMETERS', 'Event må jo strate før den slutter')
@@ -157,7 +163,7 @@ export const eventOperations = {
                     ...eventFilterSelection,
                     coverImage: {
                         include: {
-                            image: true
+                            image: { include: expandedImageIncluder }
                         }
                     },
                     eventTagEvents: {
@@ -185,16 +191,7 @@ export const eventOperations = {
         }
     }),
     readManyArchivedPage: defineOperation({
-        paramsSchema: readPageInputSchemaObject(
-            z.number(),
-            z.object({
-                id: z.number(),
-            }),
-            z.object({
-                name: z.string().optional(),
-                tags: z.array(z.string()).nullable(),
-            }),
-        ), // Converted from ReadPageInput<number, EventArchiveCursor, EventArchiveDetails>
+        paramsSchema: eventSchemas.readManyArchivedPage,
         authorizer: () => eventAuth.readManyArchivedPage.dynamicFields({}),
         operation: async ({ prisma, params }): Promise<EventExpanded[]> => {
             const events = await prisma.event.findMany({
@@ -213,7 +210,7 @@ export const eventOperations = {
                     ...eventFilterSelection,
                     coverImage: {
                         include: {
-                            image: true
+                            image: { include: expandedImageIncluder }
                         }
                     },
                     eventTagEvents: {

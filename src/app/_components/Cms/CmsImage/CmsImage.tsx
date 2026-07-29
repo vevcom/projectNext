@@ -1,15 +1,13 @@
 import CmsImageEditor from './CmsImageEditor'
 import styles from './CmsImage.module.scss'
-import Image, { SrcImage } from '@/components/Image/Image'
-import { readSpecialImageAction } from '@/services/images/actions'
-import React from 'react'
+import Image from '@/components/Image/Image'
+import StandardImageClient from '@/components/Image/StandardImageClient'
 import type { ExpandedCmsImage, UpdateCmsImageAction } from '@/cms/images/types'
 import type { PropTypes as ImagePropTypes } from '@/components/Image/Image'
 import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
+import type React from 'react'
 
-export type PropTypes = Omit<
-    ImagePropTypes, 'className' | 'imageSize' | 'smallSize' | 'largeSize' | 'image' | 'children'
-> & {
+export type PropTypes = Omit<ImagePropTypes, 'className' | 'image' | 'children'> & {
     cmsImage: ExpandedCmsImage,
     updateCmsImageAction: UpdateCmsImageAction,
     canEdit: AuthResultTypeAny
@@ -19,18 +17,16 @@ export type PropTypes = Omit<
     disableEditor?: boolean
 }
 
-export const fallbackImage = '/images/fallback.jpg'
-
 /**
- * WARNING: This component only works on the server
- * A function to display a cms image with image relation.
- * If the cms image does not have a image it will use the default image
- * By calling on special image DEFAULT_IMAGE
+ * A function to display a cms image with image relation. If the cms image has no image, the
+ * DEFAULT_IMAGE standard image is displayed in its place instead. The editor is shown regardless -
+ * CmsImageEditor accepts a null image, treating that as the user choosing an image for the first
+ * time.
  * @param cmsImage - the cms image to display with image relation
  * @param children - the children to display besides image
  * @returns
  */
-export default async function CmsImage({
+export default function CmsImage({
     cmsImage,
     updateCmsImageAction,
     canEdit,
@@ -40,22 +36,19 @@ export default async function CmsImage({
     disableEditor = false,
     ...props
 }: PropTypes) {
-    let image = cmsImage.image
-    if (!image) {
-        const defaultRes = await readSpecialImageAction({ params: { special: 'DEFAULT_IMAGE' } })
-        if (!defaultRes.success) return <SrcImage src={fallbackImage} {...props}/>
-        image = defaultRes.data
-    }
-
     return (
         <div className={`${styles.CmsImage} ${className}`}>
             {!disableEditor && <CmsImageEditor
-                cmsImage={{ ...cmsImage, image }}
+                cmsImage={cmsImage}
                 updateCmsImageAction={updateCmsImageAction}
                 canEdit={canEdit}
             />}
-            <Image className={classNameImage} imageSize={cmsImage.imageSize} image={image} {...props}/>
             <div className={styles.children}>{children}</div>
+            {cmsImage.image ? (
+                <Image className={classNameImage} image={cmsImage.image} {...props}/>
+            ) : (
+                <StandardImageClient standardImage="DEFAULT_IMAGE" className={classNameImage} {...props}/>
+            )}
         </div>
     )
 }

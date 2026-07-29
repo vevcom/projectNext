@@ -2,37 +2,45 @@ import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
 import FileInput from '@/components/UI/FileInput'
 import LicenseChooser from '@/components/LicenseChooser/LicenseChooser'
-import { createImageAction } from '@/services/images/actions'
-import { configureAction } from '@/services/configureAction'
-import type { PropTypes as FormPropTypes } from '@/components/Form/Form'
+import type { UploadSpecialCollectionImageAction } from '@/services/images/subservice/types'
+import type { PopUpKeyType } from '@/contexts/PopUp'
 
-type ResponseType = Awaited<ReturnType<typeof createImageAction>>;
-type T = Pick<ResponseType & { success: true }, 'data'>['data']
-
-type PropTypes = Omit<FormPropTypes<T>, 'action' | 'submitText' | 'title'> & {
-    collectionId: number,
+type PropTypes = {
+    uploadImageAction: UploadSpecialCollectionImageAction,
+    title: string,
+    className?: string,
+    successCallback?: (data?: unknown) => void,
+    refreshOnSuccess?: boolean,
+    closePopUpOnSuccess?: PopUpKeyType,
 }
 
 /**
- * A component to upload one image to a collection
- * @param collectionId - The id of the collection to upload the image to
- * @param formProps - The props to pass to the form
- * @returns
+ * uplaod form for an image. Uses the provided uploader action, eiteher an upload action
+ * to a special collection or a dynamic one.
  */
-export default function ImageUploader({ collectionId, ...formProps }: PropTypes) {
+export default function ImageUploader({
+    uploadImageAction,
+    title,
+    className,
+    successCallback,
+    refreshOnSuccess,
+    closePopUpOnSuccess,
+}: PropTypes) {
     return (
         <Form
-            title="last opp bilde"
+            className={className}
+            title={title}
             submitText="last opp"
-            action={configureAction(createImageAction, { params: { collectionId } })}
-            closePopUpOnSuccess="UploadImages"
-            {...formProps}
+            action={uploadImageAction}
+            successCallback={successCallback}
+            refreshOnSuccess={refreshOnSuccess}
+            closePopUpOnSuccess={closePopUpOnSuccess}
         >
-            <TextInput color="black" label="navn" name="name" />
-            <TextInput color="black" label="alternativ tekst" name="alt" />
-            <TextInput color="black" label="Kreditert" name="credit" />
-            <LicenseChooser />
-            <FileInput label="fil" name="file" color="primary" />
+            <TextInput color="black" label="navn" name="imageName" />
+            <TextInput color="black" label="alternativ tekst" name="imageAlt" />
+            <TextInput color="black" label="kreditert" name="imageCredit" />
+            <LicenseChooser name="imageLicenseId" />
+            <FileInput label="fil" name="imageFile" color="primary" />
         </Form>
     )
 }

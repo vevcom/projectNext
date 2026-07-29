@@ -1,5 +1,5 @@
-import { PrismaPg } from '@prisma/adapter-pg'
 import { PrismaClient } from '@/prisma-generated-pn-client'
+import { PrismaPg } from '@prisma/adapter-pg'
 
 // To prevent hot reloading from creating new instances of PrismaClient it is stored in the global object.
 // Read more about it in the section "Prevent hot reloading from creating new instances of PrismaClient" here:

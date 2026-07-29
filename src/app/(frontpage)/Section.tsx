@@ -7,7 +7,6 @@ import {
     updateSpecialCmsImageFrontpage,
     updateSpecialCmsParagraphFrontpageSection
 } from '@/services/frontpage/actions'
-import React from 'react'
 import Link from 'next/link'
 import type {
     SpecialCmsImage as SpecialCmsImageT,

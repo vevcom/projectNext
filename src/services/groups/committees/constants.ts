@@ -1,19 +1,16 @@
 import { userFilterSelection } from '@/services/users/constants'
+import { expandedImageIncluder } from '@/services/images/subservice/constants'
 import type { Prisma } from '@/prisma-generated-pn-types'
 
 export const committeeLogoIncluder = {
-    logoImage: {
-        include: {
-            image: true
-        }
-    }
+    logoImage: { include: expandedImageIncluder }
 } satisfies Prisma.CommitteeInclude
 
 export const membershipIncluder = {
     user: {
         select: {
             ...userFilterSelection,
-            image: true
+            image: { include: expandedImageIncluder }
         }
     }
 } satisfies Prisma.MembershipInclude
@@ -24,7 +21,7 @@ export const committeeExpandedIncluder = {
         include: {
             coverImage: {
                 include: {
-                    image: true,
+                    image: { include: expandedImageIncluder },
                 }
             }
         }
