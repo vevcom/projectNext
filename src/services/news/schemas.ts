@@ -22,6 +22,9 @@ export const newsSchemas = {
         description: true,
         endDateTime: true
     }).partial(),
+    setPublished: z.object({
+        published: Zpn.checkboxOrBoolean({ label: 'Publisert' })
+    }),
     readOldPage: readPageInputSchemaObject(
         z.number(),
         z.object({

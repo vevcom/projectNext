@@ -16,7 +16,8 @@ export const newsAuth = {
     destroy: RequireLevelFromDoubleLevelVisibility.staticFields({ level: 'ADMIN', bypassPermission: 'NEWS_ADMIN' }),
     update: RequireLevelFromDoubleLevelVisibility.staticFields({ level: 'ADMIN', bypassPermission: 'NEWS_ADMIN' }),
     updateArticle: RequireLevelFromDoubleLevelVisibility.staticFields({ level: 'ADMIN', bypassPermission: 'NEWS_ADMIN' }),
-    publish: RequireLevelFromDoubleLevelVisibility.staticFields({ level: 'ADMIN', bypassPermission: 'NEWS_ADMIN' }),
+    setPublished:
+        RequireLevelFromDoubleLevelVisibility.staticFields({ level: 'ADMIN', bypassPermission: 'NEWS_ADMIN' }),
 
     read: RequireLevelFromDoubleLevelVisibilityDynamic.staticFields({ bypassPermission: 'NEWS_ADMIN' }),
     readCurrent: RequireVisibilityFilter.staticFields({ bypassPermission: 'NEWS_ADMIN' }),

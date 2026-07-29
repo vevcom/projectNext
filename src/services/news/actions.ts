@@ -8,7 +8,7 @@ export const readOldNewsPageAction = makeAction(newsOperations.readOldPage)
 export const readNewsCurrentAction = makeAction(newsOperations.readCurrent)
 export const readNewsAction = makeAction(newsOperations.read)
 export const updateNewsAction = makeAction(newsOperations.update)
-export const publishNewsAction = makeAction(newsOperations.publish)
+export const setNewsPublishedAction = makeAction(newsOperations.setPublished)
 
 export const readNewsDoubleLevelVisibilityAction = makeAction(newsOperations.visibility.readDoubleLevelMatrix)
 export const updateNewsRegularLevelVisibilityAction = makeAction(newsOperations.visibility.updateRegularLevel)
