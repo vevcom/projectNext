@@ -19,7 +19,8 @@ export function implementSpecialCollection({
     imagePanelAuther: AuthorizerDynamicFieldsBound
     /**
      * Which of the image system's extensions this collection accepts on upload.
-     * Some special collection may only for example expect svg files, while others may only expect raster images. The store implementation
+     * Some special collection may only for example expect svg files, while others may only expect
+     * raster images.
      */
     allowedExtensions: readonly ImageExtension[],
     config: {
