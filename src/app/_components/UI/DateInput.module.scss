@@ -3,13 +3,49 @@
 .DateInput {
     display: flex;
     flex-direction: column;
-    width: 200px;
+    gap: calc(0.5 * #{ohma.$gap});
+    margin-top: ohma.$gap;
+    width: 100%;
+    max-width: 320px;
+
     input[type="date"], input[type="datetime-local"] {
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        font-size: 16px;
+        color-scheme: dark;
+        width: 100%;
+        background-color: ohma.$colors-surface-raised;
+        border: 2px solid transparent;
+        border-radius: calc(#{ohma.$rounding} - #{ohma.$gap});
+        padding: calc(1.5 * #{ohma.$gap}) calc(2 * #{ohma.$gap});
+        font-size: ohma.$fonts-m;
+        color: ohma.$colors-ink-strong;
+        transition: border-color ohma.$transitionTime, background-color ohma.$transitionTime;
+
+        &:hover {
+            background-color: ohma.$colors-surface-hover;
+        }
+
+        &:focus {
+            outline: 0;
+            border-color: ohma.$colors-primary;
+            background-color: ohma.$colors-surface-hover;
+        }
+
+        &::-webkit-calendar-picker-indicator {
+            cursor: pointer;
+            border-radius: calc(#{ohma.$gap} / 2);
+            padding: 4px;
+            transition: background-color ohma.$transitionTime;
+
+            &:hover {
+                background-color: ohma.$colors-surface-subtle;
+            }
+        }
     }
+
+    .label {
+        font-size: ohma.$fonts-s;
+        color: ohma.$colors-ink-faint;
+    }
+
     &.white {
         color: ohma.$colors-text-inv;
     }
@@ -26,8 +62,3 @@
         color: ohma.$colors-text;
     }
 }
-
-
-
-
-
