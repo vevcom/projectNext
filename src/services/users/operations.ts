@@ -181,13 +181,29 @@ export const userOperations = {
                 selectedGroup: z.object({
                     groupOrder: z.union([z.number(), z.literal('ACTIVE')]),
                     groupId: z.number()
-                }).nullable().optional()
+                }).nullable().optional(),
+                sort: z.object({
+                    field: z.enum(['name', 'username']),
+                    direction: z.enum(['asc', 'desc']),
+                }).optional()
             })
         ),
         authorizer: () => userAuth.readPage.dynamicFields({}),
         operation: async ({ prisma, params }): Promise<UserPagingReturn[]> => {
             const { page, details } = params.paging
             const words = details.partOfName.split(' ')
+            const sortDirection = details.sort?.direction ?? 'asc'
+            // The username is always included as the final tiebreaker so the
+            // ordering stays fully deterministic for cursor-based pagination.
+            const orderBy = details.sort?.field === 'username' ? [
+                { username: sortDirection },
+                { lastname: sortDirection },
+                { firstname: sortDirection },
+            ] : [
+                { lastname: sortDirection },
+                { firstname: sortDirection },
+                { username: sortDirection },
+            ]
 
             if (details.groups.length > maxNumberOfGroupsInFilter) {
                 throw new ServerError('BAD PARAMETERS', 'Too many groups in filter')
@@ -257,14 +273,10 @@ export const userOperations = {
                         }))
                     ],
                 },
-                orderBy: [
-                    { lastname: 'asc' },
-                    { firstname: 'asc' },
-                    // We have to sort with at least one unique field to have a
-                    // consistent order. Sorting rows by fieds that have the same
-                    // value is undefined behaviour in postgresql.
-                    { username: 'asc' },
-                ]
+                // We have to sort with at least one unique field to have a
+                // consistent order. Sorting rows by fieds that have the same
+                // value is undefined behaviour in postgresql.
+                orderBy
             })
             return users.map(user => {
                 const clas = user.memberships.find(

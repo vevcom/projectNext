@@ -36,6 +36,10 @@ export type UserDetails = {
         groupId: number
         groupOrder: number | 'ACTIVE' //ACTIVE means take current order.
     }
+    sort?: {
+        field: 'name' | 'username',
+        direction: 'asc' | 'desc',
+    }
 }
 
 export type RegisterNewEmailType = {

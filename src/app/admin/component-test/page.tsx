@@ -9,11 +9,20 @@ import Checkbox from '@/components/UI/Checkbox'
 import DateInput from '@/components/UI/DateInput'
 import Slider from '@/components/UI/Slider'
 import FileInput from '@/components/UI/FileInput'
+import Dropdown from '@/components/UI/Dropdown'
+import SearchableDropdown from '@/components/UI/SearchableDropdown'
 import ProgressBar from '@/components/ProgressBar/ProgressBar'
 
 const textInputColors = ['primary', 'secondary', 'red', 'black', 'white'] as const
 const sliderColors = ['primary', 'secondary', 'red', 'black', 'white'] as const
 const fileInputColors = ['primary', 'secondary', 'red', 'black'] as const
+
+const dropdownOptions = [
+    { value: 'ntnu', label: 'NTNU' },
+    { value: 'ntb', label: 'NTB' },
+    { value: 'komite', label: 'Komité' },
+    { value: 'styret', label: 'Styret' },
+]
 
 export default function ComponentTest() {
     return (
@@ -76,6 +85,18 @@ export default function ComponentTest() {
                     {fileInputColors.map(color => (
                         <FileInput key={color} name={`file_${color}`} label={color} color={color} />
                     ))}
+                </div>
+            </section>
+
+            <section className={styles.section}>
+                <h2>Dropdowns</h2>
+                <div className={styles.row}>
+                    <Dropdown name="dropdown_demo" label="Dropdown" options={dropdownOptions} />
+                    <SearchableDropdown
+                        name="searchable_dropdown_demo"
+                        label="Searchable dropdown"
+                        options={dropdownOptions}
+                    />
                 </div>
             </section>
 
