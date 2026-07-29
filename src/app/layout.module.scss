@@ -61,11 +61,10 @@
 @media (max-width: ohma.$mobileBreakpoint) {
     .wrapper {
         grid-template-columns: 1fr;
-        grid-template-rows: ohma.$nav-height 1fr ohma.$nav-height ohma.$nav-height;
+        grid-template-rows: ohma.$nav-height 1fr ohma.$nav-height;
         grid-template-areas:
             "navBar"
             "content"
-            "subPageNavBar"
             "mobileNavBar";
     }
 
