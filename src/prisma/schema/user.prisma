@@ -45,8 +45,8 @@ model User {
   Application               Application[]
   EventRegistration         EventRegistration[]
 
-  dots        DotWrapper[] @relation(name: "dot_user")
-  dotsAccused DotWrapper[] @relation(name: "dot_accuser")
+  dots        Dot[]   @relation(name: "dot_user")
+  dotsAccused Dot[]   @relation(name: "dot_accuser")
   Event       Event[]
 
   cabinBooking Booking[] @relation()
