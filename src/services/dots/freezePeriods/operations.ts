@@ -11,7 +11,7 @@ export const dotFreezePeriodOperations = {
         operation: async ({ prisma, data }) => prisma.dotFreezePeriod.create({ data }),
     }),
 
-    readMany: defineOperation({
+    readAll: defineOperation({
         authorizer: () => dotFreezePeriodAuth.readAll.dynamicFields({}),
         operation: async ({ prisma }) => prisma.dotFreezePeriod.findMany({
             orderBy: {

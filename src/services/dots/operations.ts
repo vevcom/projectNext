@@ -1,135 +1,86 @@
 import '@pn-server-only'
 import { dotAuth } from './auth'
 import { dotSchemas } from './schemas'
-import { dotBaseDuration, dotsIncluder } from './constants'
-import { defineOperation } from '@/services/serviceOperation'
-import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
+import { dotsIncluder } from './constants'
+import { expandDots } from './expandDots'
+import { defineOperation, defineSubOperation } from '@/services/serviceOperation'
 import { z } from 'zod'
+import type { DotExpanded } from './types'
 
-/**
- * This method reads all dots for a user
- * @param userId - The user id to read dots for
- * @returns All dots for the user in ascending order of expiration. i.e the dot that expires first will be first in the list
- */
-const readForUser = defineOperation({
-    authorizer: ({ params }) => dotAuth.readForUser.dynamicFields({ userId: params.userId }),
-    paramsSchema: z.object({
-        userId: z.number(),
-        onlyActive: z.boolean(),
+const createInternal = defineSubOperation({
+    paramsSchema: () => z.object({
+        accuserId: z.coerce.number(),
     }),
-    operation: async ({ prisma, params: { userId, onlyActive } }) => prisma.dot.findMany({
-        where: {
-            wrapper: {
-                userId,
-            },
-            expiresAt: onlyActive ? {
-                gt: new Date()
-            } : undefined,
+    dataSchema: () => dotSchemas.create,
+    operation: () => async ({ prisma, params, data }) => prisma.dot.create({
+        data: {
+            ...data,
+            accuserId: params.accuserId,
         },
-        orderBy: {
-            expiresAt: 'asc'
-        }
-    })
-})
-
-const create = defineOperation({
-    dataSchema: dotSchemas.create,
-    authorizer: ({ data }) => dotAuth.create.dynamicFields({ userId: data.userId }),
-    paramsSchema: z.object({
-        accuserId: z.number(),
     }),
-    opensTransaction: true,
-    operation: async ({ prisma, params, data: { value, ...data } }) => {
-        const activeDots = await readForUser({
-            params: { userId: data.userId, onlyActive: true }
-        })
-
-        const dotData : { expiresAt: Date }[] = []
-        let prevExpiresAt = activeDots.length > 0 ? activeDots[activeDots.length - 1].expiresAt : new Date()
-        for (let i = 0; i < value; i++) {
-            //TODO: Take freezes into account
-            const expiresAt = new Date(prevExpiresAt.getTime() + dotBaseDuration)
-            dotData.push({ expiresAt })
-            prevExpiresAt = expiresAt
-        }
-        await prisma.$transaction(async tx => {
-            const wrapper = await tx.dotWrapper.create({
-                data: {
-                    ...data,
-                    accuserId: params.accuserId
-                }
-            })
-            await tx.dot.createMany({
-                data: dotData.map(dd => ({
-                    ...dd,
-                    dotWrapperId: wrapper.id
-                }))
-            })
-        })
-    }
-})
-
-const readWrappersForUser = defineOperation({
-    authorizer: ({ params }) => dotAuth.readWrapperForUser.dynamicFields({ userId: params.userId }),
-    paramsSchema: z.object({
-        userId: z.number(),
-    }),
-    operation: async ({ prisma, params: { userId } }) => {
-        const wrappers = await prisma.dotWrapper.findMany({
-            where: {
-                userId
-            },
-            include: dotsIncluder,
-        })
-
-        return wrappers.sort((a, b) => {
-            const latestA = Math.max(...a.dots.map(dot => new Date(dot.expiresAt).getTime()))
-            const latestB = Math.max(...b.dots.map(dot => new Date(dot.expiresAt).getTime()))
-            return latestB - latestA
-        }).map(wrapper => ({
-            ...wrapper,
-            dots: extendWithActive(wrapper.dots)
-        }))
-    }
-})
-
-const readPage = defineOperation({
-    authorizer: () => dotAuth.readPage.dynamicFields({}),
-    paramsSchema: dotSchemas.readPage,
-    operation: async ({ prisma, params }) => (await prisma.dotWrapper.findMany({
-        ...cursorPageingSelection(params.paging.page),
-        where: {
-            userId: params.paging.details.userId ?? undefined,
-            dots: params.paging.details.onlyActive ? {
-                some: {
-                    expiresAt: {
-                        gt: new Date()
-                    }
-                }
-            } : undefined
-        },
-        orderBy: {
-            user: {
-                username: 'asc'
-            }
-        },
-        include: dotsIncluder,
-    })).map(wrapper => ({
-        ...wrapper,
-        dots: extendWithActive(wrapper.dots)
-    }))
 })
 
 export const dotOperations = {
-    create,
-    readForUser,
-    readWrappersForUser,
-    readPage,
-} as const
+    createInternal,
 
-function extendWithActive<T extends { expiresAt: Date }>(dots: T[]) {
-    return dots.map(dot => ({
-        ...dot,
-        active: dot.expiresAt > new Date()
-    }))
-}
+    create: createInternal.implement({
+        authorizer: ({ params }) => dotAuth.create.dynamicFields({ userId: params.accuserId }),
+        ownershipCheck: () => true,
+    }),
+
+    update: defineOperation({
+        paramsSchema: z.object({
+            id: z.coerce.number(),
+        }),
+        dataSchema: dotSchemas.update,
+        authorizer: () => dotAuth.update.dynamicFields({}),
+        operation: async ({ prisma, params, data }) => prisma.dot.update({
+            where: {
+                id: params.id,
+            },
+            data,
+        }),
+    }),
+
+    destroy: defineOperation({
+        paramsSchema: z.object({
+            id: z.coerce.number(),
+        }),
+        authorizer: () => dotAuth.destroy.dynamicFields({}),
+        operation: async ({ prisma, params }) => prisma.dot.delete({
+            where: {
+                id: params.id,
+            },
+        }),
+    }),
+
+    /**
+     * Reads the dots of a user, expanded with the expiery of each dot value. Since expiery is infered
+     * from the whole queue of dots, all dots of the user are read even when only the active ones are
+     * returned - an expired dot still decides when the dots after it start expiring.
+     *
+     * @returns The dots in ascending order of expiery, i.e the dot that expires first comes first.
+     */
+    readForUser: defineOperation({
+        paramsSchema: z.object({
+            userId: z.coerce.number(),
+            onlyActive: z.boolean().default(false),
+        }),
+        authorizer: ({ params }) => dotAuth.readForUser.dynamicFields({ userId: params.userId }),
+        operation: async ({ prisma, params }): Promise<DotExpanded[]> => {
+            const [dots, freezePeriods] = await Promise.all([
+                prisma.dot.findMany({
+                    where: {
+                        userId: params.userId,
+                    },
+                    include: dotsIncluder,
+                }),
+                prisma.dotFreezePeriod.findMany(),
+            ])
+
+            const expandedDots = expandDots(dots, freezePeriods)
+
+            return params.onlyActive ? expandedDots.filter(dot => dot.valueLeft > 0) : expandedDots
+        },
+    }),
+} as const
