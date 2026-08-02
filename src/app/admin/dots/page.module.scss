@@ -2,10 +2,16 @@
 
 .wrapper {
     padding: 1em;
-    .createNew {
-        margin-top: 1em;
-        @include ohma.layer;
-        @include ohma.round();
-        min-height: 100px;
+
+    .actions {
+        display: flex;
+        flex-flow: row wrap;
+        align-items: center;
+
+        .action {
+            @include ohma.btn(ohma.$colors-primary);
+            font-weight: ohma.$fonts-weight-s;
+            margin: ohma.$gap 0;
+        }
     }
 }
