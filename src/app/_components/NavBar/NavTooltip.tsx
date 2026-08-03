@@ -2,6 +2,7 @@
 
 import styles from './NavTooltip.module.scss'
 import * as Tooltip from '@radix-ui/react-tooltip'
+import { useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
 
 type PropTypes = {
@@ -10,6 +11,20 @@ type PropTypes = {
 }
 
 export default function NavTooltip({ content, children }: PropTypes) {
+    // Tooltip.Trigger's asChild clones Radix-managed props (aria-describedby,
+    // data-state, pointer/focus handlers, ref) onto children during render.
+    // Something in that computation doesn't land identically between the
+    // server render and the client's first render pass, causing a hydration
+    // mismatch. Rendering the bare children until after mount guarantees the
+    // server output and the client's first pass match exactly; the Tooltip
+    // wrapper is then added in a normal post-hydration re-render instead.
+    const [mounted, setMounted] = useState(false)
+    useEffect(() => {
+        setMounted(true)
+    }, [])
+
+    if (!mounted) return <>{children}</>
+
     return (
         <Tooltip.Provider delayDuration={150}>
             <Tooltip.Root>
