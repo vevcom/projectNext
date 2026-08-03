@@ -4,6 +4,7 @@ $cover-height: min(300px, 40vh);
 $padding: ohma.$minimalPagePadding;
 
 .Article {
+    height: 100%;
     display: grid;
     grid-template-columns: 1fr auto;
     grid-template-rows: auto 1fr auto;
