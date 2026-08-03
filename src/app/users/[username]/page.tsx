@@ -1,5 +1,5 @@
 import styles from './page.module.scss'
-import ProfileButton from '@/components/UI/ProfileButton'
+import Button from '@/components/UI/Button'
 import { userAuth } from '@/services/users/auth'
 import ProfilePicture from '@/components/User/ProfilePicture'
 import UserDisplayName from '@/components/User/UserDisplayName'
@@ -19,7 +19,9 @@ import {
     faCircleDot,
     faHatWizard,
     faKey,
+    faMoneyBill,
     faPaperPlane,
+    faQrcode,
     faSignOut,
     faSwatchbook,
     faUser,
@@ -154,18 +156,35 @@ export default async function User({ params }: PropTypes) {
                         <div className={styles.leftSection}>
                             <div className={styles.buttons}>
                                 {canAdministrate &&
-                                    <ProfileButton href={`/users/${profile.user.username}/settings`}>
-                                        <FontAwesomeIcon icon={faCog} />
-                                        <p>Innstillinger</p>
-                                    </ProfileButton>
+                                    <Link href={`/users/${profile.user.username}/settings`}>
+                                        <Button color="secondary" className={styles.actionButton}>
+                                            <FontAwesomeIcon icon={faCog} />
+                                            <p>Innstillinger</p>
+                                        </Button>
+                                    </Link>
                                 }
-                                {profile.user.id === session?.user?.id && (
-                                    <ProfileButton href={'/logout'}>
-                                        <FontAwesomeIcon icon={faSignOut} />
-                                        <p>Logg ut</p>
-                                    </ProfileButton>
-                                )
-                                }
+                                {isOwnProfile && (
+                                    <>
+                                        <Link href="/users/me/omegaid">
+                                            <Button color="secondary" className={styles.actionButton}>
+                                                <FontAwesomeIcon icon={faQrcode} />
+                                                <p>Omega-ID</p>
+                                            </Button>
+                                        </Link>
+                                        <Link href="/users/me/money">
+                                            <Button color="secondary" className={styles.actionButton}>
+                                                <FontAwesomeIcon icon={faMoneyBill} />
+                                                <p>Konto</p>
+                                            </Button>
+                                        </Link>
+                                        <Link href="/logout">
+                                            <Button color="secondary" className={styles.actionButton}>
+                                                <FontAwesomeIcon icon={faSignOut} />
+                                                <p>Logg ut</p>
+                                            </Button>
+                                        </Link>
+                                    </>
+                                )}
                             </div>
 
                         </div>
