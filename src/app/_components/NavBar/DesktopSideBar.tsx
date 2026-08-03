@@ -1,10 +1,9 @@
 import styles from './DesktopSideBar.module.scss'
 import getNavItems from './navDef'
 import NavTooltip from './NavTooltip'
-import EditModeNavIcon from './EditModeNavIcon'
+import AdminNav from './AdminNav'
 import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCog } from '@fortawesome/free-solid-svg-icons'
 import type { Profile } from '@/services/users/types'
 
 export type PropTypes = {
@@ -34,14 +33,7 @@ export default function DesktopSideBar({ profile }: PropTypes) {
                     </NavTooltip>
                 ))}
             </nav>
-            <nav className={styles.adminNav} aria-label="Admin navigation">
-                <EditModeNavIcon className={styles.navIcon} />
-                <NavTooltip content="Admin">
-                    <Link href="/admin" className={styles.navIcon} aria-label="Admin">
-                        <FontAwesomeIcon icon={faCog} className={styles.icon} />
-                    </Link>
-                </NavTooltip>
-            </nav>
+            <AdminNav isAdmin={isAdmin} />
         </aside>
     )
 }
