@@ -3,11 +3,16 @@ $omegamai: url("backgroundimages/Omegamai.jpeg");
 $frontImg: url("backgroundimages/frontImg.jpeg");
 $taktlause: url("backgroundimages/taktlause.jpeg");
 
+.pageRoot {
+    position: relative;
+}
+
 .link {
     position: absolute;
     top: ohma.$gap;
     right: ohma.$gap;
-    @include ohma.btn();
+    z-index: 2;
+    @include ohma.btn(ohma.$colors-accent-blue);
 }
 
 .wrapper {

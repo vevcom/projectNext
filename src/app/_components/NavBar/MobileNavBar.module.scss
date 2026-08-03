@@ -1,6 +1,7 @@
 @use "@/styles/ohma";
 
 .MobileNavBar {
+    position: relative;
     background-color: ohma.$colors-surface-base;
     width: 100%;
     height: 100%;
@@ -43,6 +44,8 @@
     }
     overflow: hidden;
     .editMode {
+        width: 48px;
+        height: 48px;
         background-color: ohma.$colors-black;
         position: absolute;
         bottom: calc(100% + 3*#{ohma.$gap});
