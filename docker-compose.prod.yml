@@ -30,10 +30,11 @@ services:
             - 443:443
         environment:
             DOMAIN: ${DOMAIN}
-            PROXY_PASS: 'projectnext:3000'
+            PROXY_PASS: "projectnext:3000"
         volumes:
             - ./containers/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
             - ./containers/nginx/default.conf:/etc/nginx/templates/default.conf.template:ro
+            - ./containers/nginx/auth:/etc/nginx/auth:ro
             - store:/usr/store:ro
             - ./certs/conf:/etc/letsencrypt:ro
             - ./certs/www/:/var/www/certbot:ro
@@ -46,13 +47,37 @@ services:
         entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 14d & wait $${!}; done;'"
         restart: always
 
+    grafana:
+        image: grafana/grafana:latest
+        volumes:
+            - grafana_data:/var/lib/grafana
+            - ./containers/grafana/provisioning:/etc/grafana/provisioning:ro
+        restart: unless-stopped
+
+    loki:
+        image: grafana/loki:latest
+        user: root
+        volumes:
+            - ./containers/loki/config.yml:/etc/loki/config.yml:ro
+            - loki_data:/data/loki
+        command: -config.file=/etc/loki/config.yml
+        restart: unless-stopped
+
+    mimir:
+        image: grafana/mimir:latest
+        volumes:
+            - ./containers/mimir/config.yml:/etc/mimir/config.yml:ro
+            - mimir_data:/data/mimir
+        command: -config.file=/etc/mimir/config.yml
+        restart: unless-stopped
+
     postfix:
         build: ${PROJECT_ROOT:-.}/containers/postfix/
         ports:
-            - '587:587'
-            - '25:25'
+            - "587:587"
+            - "25:25"
         environment:
-            POSTGRES_HOST: 'db'
+            POSTGRES_HOST: "db"
             POSTGRES_DB: ${DB_NAME}
             POSTGRES_USER: ${DB_USERNAME}
             POSTGRES_PASSWORD: ${DB_PASSWORD}
@@ -75,4 +100,10 @@ volumes:
     logs:
         driver: local
     dobbelOmegaManifest:
+        driver: local
+    grafana_data:
+        driver: local
+    loki_data:
+        driver: local
+    mimir_data:
         driver: local
