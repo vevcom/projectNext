@@ -1,19 +1,18 @@
 'use client'
 
 import styles from './page.module.scss'
-import { themes, applyTheme } from './theme'
-import type { ThemeName } from './theme'
+import { themes, applyTheme, ThemeName } from './theme'
 
 export default function ThemeForm() {
     return (
         <div className={styles.ThemeWrapper}>
-            {Object.entries(themes).map(([name, colors]) => (
-                <a key={name} className={styles.Theme} onClick={() => applyTheme(name as ThemeName)}>
+            {Object.values(ThemeName).map(themeName => (
+                <a key={themeName} className={styles.Theme} onClick={() => applyTheme(themeName)}>
                     <div className={styles.ThemeHeader}>
-                        {name}
+                        {themeName}
                     </div>
                     <div className={styles.ThemeBody}>
-                        {Object.entries(colors).map(([key, value]) => (
+                        {Object.entries(themes[themeName]).map(([key, value]) => (
                             <div
                                 key={key}
                                 className={styles.ColorSwatch}
