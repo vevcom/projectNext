@@ -48,6 +48,31 @@ body {
     background-color: ohma.$colors-surface-base;
 }
 
+* {
+    scrollbar-width: thin;
+    scrollbar-color: ohma.$colors-surface-subtle transparent;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: ohma.$colors-surface-subtle;
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+
+    &:hover {
+        background-color: ohma.$colors-ink-hover;
+    }
+}
+
 a {
     color: ohma.$colors-accent-blue;
     text-decoration: none;
