@@ -1,15 +1,33 @@
 @use "@/styles/ohma";
 
-.MazeMap { 
+.MazeMap {
     display: flex;
     justify-content: center;
     filter: invert(1) hue-rotate(180deg);
 }
 
-.MazeMapIframe {
+.MazeMapWrapper {
+    position: relative;
     width: 80%;
+    height: 100%;
+    border-radius: ohma.$rounding;
+    overflow: hidden;
+}
+
+.MazeMapIframe {
+    width: 100%;
     height: 100%;
     border: none;
     border-radius: ohma.$rounding;
     background-color: white;
+}
+
+.MazeMapOverlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    padding: 0;
+    border: none;
+    background: transparent;
+    cursor: pointer;
 }
