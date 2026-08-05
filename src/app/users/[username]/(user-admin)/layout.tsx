@@ -6,7 +6,15 @@ import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { SubPageNavBar, SubPageNavBarItem } from '@/components/NavBar/SubPageNavBar/SubPageNavBar'
 import { flairAuth } from '@/services/flairs/auth'
 import { notFound } from 'next/navigation'
-import { faCircleDot, faCog, faHatWizard, faKey, faPaperPlane, faUser } from '@fortawesome/free-solid-svg-icons'
+import {
+    faCircleDot,
+    faCog,
+    faHatWizard,
+    faKey,
+    faPaperPlane,
+    faSwatchbook,
+    faUser
+} from '@fortawesome/free-solid-svg-icons'
 import type { ReactNode } from 'react'
 import type { PropTypes } from '@/app/users/[username]/page'
 import type { Metadata } from 'next'
@@ -53,6 +61,9 @@ export default async function UserAdmin({ children, params }: PropTypes & { chil
                     {canAssignFlairs.authorized && <SubPageNavBarItem icon={faHatWizard} href={`/users/${username}/flairs`}>
                         Kapper
                     </SubPageNavBarItem>}
+                    <SubPageNavBarItem icon={faSwatchbook} href={`/users/${username}/theme`}>
+                        Tema
+                    </SubPageNavBarItem>
                     <SubPageNavBarItem icon={faCog} href={`/users/${username}/settings`}>
                         Innstillinger
                     </SubPageNavBarItem>
