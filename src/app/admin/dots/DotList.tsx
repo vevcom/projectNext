@@ -53,7 +53,7 @@ export default function DotList({ onlyActive }: PropTypes) {
                 </PopUp>
                 <Link
                     className={styles.selectActive}
-                    aria-label={onlyActive ? 'Show all dots' : 'Show only active dots'}
+                    aria-label={onlyActive ? 'Vis alle prikker' : 'Vis kun aktive prikker'}
                     href={
                         '/admin/dots/' +
                     `?${QueryParams.onlyActive.encodeUrl(!onlyActive)}` +

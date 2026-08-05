@@ -5,8 +5,8 @@ export default function Locker() {
     return (
         <div className={styles.wrapper}>
             <h3>Skapreservasjoner</h3>
-            <Link aria-label={'Create new locker location'} href={'/admin/lockers/location'}>Opprett ny skaplokasjon</Link>
-            <Link aria-label={'Create new locker'} href={'/admin/lockers/locker'}>Opprett nytt skap</Link>
+            <Link aria-label={'Opprett ny skaplokasjon'} href={'/admin/lockers/location'}>Opprett ny skaplokasjon</Link>
+            <Link aria-label={'Opprett nytt skap'} href={'/admin/lockers/locker'}>Opprett nytt skap</Link>
         </div>
     )
 }

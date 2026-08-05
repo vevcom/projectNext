@@ -41,7 +41,7 @@ export default async function NavBar({ profile, canEditSpecialCmsImage }: PropTy
                         readSpecialCmsImageAction={readSpecialCmsImageFrontpage}
                         updateCmsImageAction={updateSpecialCmsImageFrontpage}
                     >
-                        <Link aria-label={'Go to homepage'} href="/" />
+                        <Link aria-label={'Gå til hjemmesiden'} href="/" />
                     </SpecialCmsImage>
                 </li>
                 {
