@@ -86,7 +86,9 @@ export default async function User({ params }: PropTypes) {
 
     const borderColour = { '--border-colour': relationshipColour[profile.user.relationshipStatus] } as React.CSSProperties
     const flairColour = {
-        '--flairColor': flairs.length > 0 ? `rgb(${flairs[0].colorR}, ${flairs[0].colorG}, ${flairs[0].colorB})` : 'transparent'
+        '--flairColor': flairs.length > 0
+            ? `rgb(${flairs[0].colorR}, ${flairs[0].colorG}, ${flairs[0].colorB})`
+            : 'transparent'
     } as React.CSSProperties
     const isOwnProfile = profile.user.id === session.user?.id
     const canAssignFlairs = flairAuth.assignToUser.dynamicFields({}).auth(session)
@@ -197,9 +199,9 @@ export default async function User({ params }: PropTypes) {
                                 <span className={styles.relationshipStatus}>Sivilstatus: </span>
                                 {profile.user.relationshipStatusText ? profile.user.relationshipStatusText :
                                     profile.user.relationshipStatus === RelationshipStatus.SINGLE && 'Singel' ||
-                                profile.user.relationshipStatus === RelationshipStatus.ITS_COMPLICATED && 'Det er komplisert' ||
-                                profile.user.relationshipStatus === RelationshipStatus.TAKEN && 'I et forhold'
-
+                                    profile.user.relationshipStatus === RelationshipStatus.ITS_COMPLICATED
+                                        && 'Det er komplisert' ||
+                                    profile.user.relationshipStatus === RelationshipStatus.TAKEN && 'I et forhold'
                                 }
 
                             </p>

@@ -18,7 +18,10 @@ export default function NumberInput({
     return (
         <div
             id={props.name}
-            className={`${styles.NumberInput} ${styles[color]} ${background === 'raised' ? styles.onRaised : ''} ${className}`}
+            className={
+                `${styles.NumberInput} ${styles[color]} `
+                + `${background === 'raised' ? styles.onRaised : ''} ${className}`
+            }
         >
             <input {...props} type="number" className={styles.field} placeholder={label}/>
             <label className={styles.labe}>{label}</label>

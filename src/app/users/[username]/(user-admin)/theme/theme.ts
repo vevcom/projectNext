@@ -104,6 +104,8 @@ export const themes: Record<ThemeName, ThemeColors> = {
     },
 }
 
+const themeListeners = new Set<() => void>()
+
 export function applyTheme(name: ThemeName): void {
     localStorage.setItem('theme', name)
     const colors = themes[name]
@@ -111,4 +113,18 @@ export function applyTheme(name: ThemeName): void {
     Object.entries(colors).forEach(([key, value]) => {
         root.style.setProperty(`--${key}`, value)
     })
+    themeListeners.forEach(listener => listener())
+}
+
+export function subscribeToTheme(listener: () => void): () => void {
+    themeListeners.add(listener)
+    return () => themeListeners.delete(listener)
+}
+
+export function getActiveTheme(): ThemeName | null {
+    return localStorage.getItem('theme') as ThemeName | null
+}
+
+export function getServerActiveTheme(): ThemeName | null {
+    return null
 }

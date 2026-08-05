@@ -2,13 +2,15 @@
 
 import styles from './NavTooltip.module.scss'
 import * as Tooltip from '@radix-ui/react-tooltip'
-import { useEffect, useState } from 'react'
+import { useSyncExternalStore } from 'react'
 import type { ReactNode } from 'react'
 
 type PropTypes = {
     content: string
     children: ReactNode
 }
+
+const noopSubscribe = () => () => {}
 
 export default function NavTooltip({ content, children }: PropTypes) {
     // Tooltip.Trigger's asChild clones Radix-managed props (aria-describedby,
@@ -18,10 +20,7 @@ export default function NavTooltip({ content, children }: PropTypes) {
     // mismatch. Rendering the bare children until after mount guarantees the
     // server output and the client's first pass match exactly; the Tooltip
     // wrapper is then added in a normal post-hydration re-render instead.
-    const [mounted, setMounted] = useState(false)
-    useEffect(() => {
-        setMounted(true)
-    }, [])
+    const mounted = useSyncExternalStore(noopSubscribe, () => true, () => false)
 
     if (!mounted) return <>{children}</>
 
