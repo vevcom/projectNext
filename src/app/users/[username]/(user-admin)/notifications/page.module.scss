@@ -1,8 +1,7 @@
 @use '@/styles/ohma';
 
-.settingsCard {
+.wrapper {
     background-color: ohma.$colors-surface-base;
     border-radius: ohma.$rounding;
     padding: ohma.$cardPadding;
-    color: ohma.$colors-text;
 }

@@ -3,22 +3,18 @@
 .ThemeWrapper {
     display: flex;
     flex-wrap: wrap;
-    gap: calc(2 * #{ohma.$gap});
+    gap: #{ohma.$gap};
 }
 
 .Theme {
-    @include ohma.boxShadow('');
     width: calc(48 * #{ohma.$gap});
-    background: ohma.$colors-surface-raised;
-    border-radius: ohma.$cardRounding;
+    background: ohma.$colors-surface-base;
+    border-radius: ohma.$rounding;
     border: 2px solid transparent;
     padding: calc(2 * #{ohma.$gap});
     cursor: pointer;
     transition: border-color ohma.$transitionTime, box-shadow ohma.$transitionTime;
-
-    &:hover {
-        @include ohma.boxShadow('hover');
-    }
+    overflow: hidden;
 
     &.active {
         border-color: ohma.$colors-accent-blue;
@@ -26,8 +22,7 @@
 }
 
 .ThemeHeader {
-    background: ohma.$colors-surface-hover;
-    border-radius: ohma.$cardRounding;
+    background: ohma.$colors-surface-raised;
     margin: calc(-2 * #{ohma.$gap}) calc(-2 * #{ohma.$gap}) calc(2 * #{ohma.$gap});
     padding: calc(2 * #{ohma.$gap});
     font-size: ohma.$fonts-xl;

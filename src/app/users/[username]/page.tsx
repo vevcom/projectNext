@@ -12,19 +12,13 @@ import { readUserFlairsAction } from '@/services/flairs/actions'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { RelationshipStatus } from '@/prisma-generated-pn-types'
 import PageTitleSetter from '@/contexts/PageTitleSetter'
-import { SubPageNavBar, SubPageNavBarItem } from '@/components/NavBar/SubPageNavBar/SubPageNavBar'
+import UserAdminNavBar from '@/app/users/[username]/UserAdminNavBar'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
     faCog,
-    faCircleDot,
-    faHatWizard,
-    faKey,
     faMoneyBill,
-    faPaperPlane,
     faQrcode,
     faSignOut,
-    faSwatchbook,
-    faUser,
 } from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
@@ -244,34 +238,10 @@ export default async function User({ params }: PropTypes) {
                 </div>
 
                 {isOwnProfile && (
-                    <div className={styles.subPageNavBar}>
-                        <SubPageNavBar>
-                            <SubPageNavBarItem icon={faUser} href={`/users/${profile.user.username}`}>
-                                Profil
-                            </SubPageNavBarItem>
-                            <SubPageNavBarItem icon={faCircleDot} href={`/users/${profile.user.username}/dots`}>
-                                Prikker
-                            </SubPageNavBarItem>
-                            <SubPageNavBarItem icon={faPaperPlane} href={`/users/${profile.user.username}/notifications`}>
-                                Notifikasjoner
-                            </SubPageNavBarItem>
-                            <SubPageNavBarItem icon={faKey} href={`/users/${profile.user.username}/permissions`}>
-                                Tilganger
-                            </SubPageNavBarItem>
-                            {canAssignFlairs.authorized && (
-                                <SubPageNavBarItem icon={faHatWizard} href={`/users/${profile.user.username}/flairs`}>
-                                    Kapper
-                                </SubPageNavBarItem>
-                            )}
-                            <SubPageNavBarItem icon={faSwatchbook} href={`/users/${profile.user.username}/theme`}>
-                                Tema
-                            </SubPageNavBarItem>
-                            <SubPageNavBarItem icon={faCog} href={`/users/${profile.user.username}/settings`}>
-                                Innstillinger
-                            </SubPageNavBarItem>
-                        </SubPageNavBar>
-                        {/* TODO This is a duplicate code from the user admin layout, should be refactored to avoid this */}
-                    </div>
+                    <UserAdminNavBar
+                        username={profile.user.username}
+                        canAssignFlairs={canAssignFlairs.authorized}
+                    />
                 )}
             </div>
         </div>

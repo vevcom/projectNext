@@ -1,5 +1,6 @@
 import UserSettingsForm from './UserProfileSettingsForm'
 import UserProfileSettingsCard from './UserProfileSettingsCard'
+import styles from './page.module.scss'
 import { getProfileForAdmin } from '@/app/users/[username]/(user-admin)/getProfileForAdmin'
 import Image from '@/components/Image/Image'
 import { readUserProfileAction } from '@/services/users/actions'
@@ -13,7 +14,7 @@ export default async function UserSettings({ params }: PropTypes) {
     const userDataFull = profileRes.data.user
 
     return (
-        <div>
+        <div className={styles.wrapper}>
             <UserProfileSettingsCard>
                 <UserSettingsForm user={userDataFull} />
             </UserProfileSettingsCard>

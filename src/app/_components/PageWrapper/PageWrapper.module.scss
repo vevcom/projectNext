@@ -26,3 +26,30 @@
         }
     }
 }
+
+// Opt-in mode for pages that need to size a scrollable body against the
+// remaining height (e.g. a sticky bottom nav bar). The title bar is pinned via
+// flex-shrink: 0 so .body can reliably fill "the rest" instead of the whole
+// wrapper height, which would overflow because the title bar also takes space.
+// These pages own their own content-card background and padding (see .body's
+// consumer), so the wrapper goes edge-to-edge and transparent instead of
+// painting one padded surface behind both the card and the floating nav bar.
+.fillHeight {
+    display: flex;
+    flex-direction: column;
+    background-color: transparent;
+    padding: 0;
+
+    > .inlineHeader {
+        flex-shrink: 0;
+        padding: calc(2 * #{ohma.$gap}) calc(2 * #{ohma.$gap}) 0;
+    }
+}
+
+.body {
+    min-height: 0;
+}
+
+.fillHeight > .body {
+    flex: 1;
+}
