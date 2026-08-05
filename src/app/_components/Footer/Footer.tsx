@@ -42,20 +42,22 @@ async function Footer({ canEditSpecialCmsImage }: PropTypes) {
                     </div>
                 </div>
             </div>
-            <div className={styles.info}>
-                <p>Kontakt:</p>
-                <p>Bedrift: <a href="mailto:post@contactor.no">post@contactor.no</a></p>
-                <p>Teknisk: <a href="mailto:vevcom@omega.ntnu.no">vevcom@omega.ntnu.no</a></p>
-                <p>PR: <a href="mailto:blaest@omega.ntnu.no">blaest@omega.ntnu.no</a></p>
-                <p>Annet: <a href="mailto:hs@omega.ntnu.no">hs@omega.ntnu.no</a></p>
-                <p>Tlf: <a href="tel:73594211">73 59 42 11</a></p>
-            </div>
-            <div className={styles.info}>
-                <p>Adresse:</p>
-                <p>Sct.Omega Broderskab</p>
-                <p>NTNU Gløshaugen</p>
-                <p>Elektro-bygget</p>
-                <p>7491 Trondheim</p>
+            <div className={styles.infoGroup}>
+                <div className={styles.info}>
+                    <p>Kontakt:</p>
+                    <p>Bedrift: <a href="mailto:post@contactor.no">post@contactor.no</a></p>
+                    <p>Teknisk: <a href="mailto:vevcom@omega.ntnu.no">vevcom@omega.ntnu.no</a></p>
+                    <p>PR: <a href="mailto:blaest@omega.ntnu.no">blaest@omega.ntnu.no</a></p>
+                    <p>Annet: <a href="mailto:hs@omega.ntnu.no">hs@omega.ntnu.no</a></p>
+                    <p>Tlf: <a href="tel:73594211">73 59 42 11</a></p>
+                </div>
+                <div className={styles.info}>
+                    <p>Adresse:</p>
+                    <p>Sct.Omega Broderskab</p>
+                    <p>NTNU Gløshaugen</p>
+                    <p>Elektro-bygget</p>
+                    <p>7491 Trondheim</p>
+                </div>
             </div>
             <div className={styles.sponsors}>
                 <SpecialCmsImage
