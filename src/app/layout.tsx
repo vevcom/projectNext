@@ -52,7 +52,7 @@ export default async function RootLayout({ children }: PropTypes) {
     return (
         <html lang="en">
             <body className={`${inter.className} ${styles.body}`}>
-                <ThemeEnabler></ThemeEnabler>
+                <ThemeEnabler />
                 <SessionProvider session={session}>
                     <DefaultPermissionsProvider defaultPermissions={defaultPermissions}>
                         <EditModeProvider>
