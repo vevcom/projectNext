@@ -2,11 +2,7 @@ import { userFilterSelection } from '@/services/users/constants'
 import type { Prisma } from '@/prisma-generated-pn-types'
 
 export const committeeLogoIncluder = {
-    logoImage: {
-        include: {
-            image: true
-        }
-    }
+    logoImage: true
 } satisfies Prisma.CommitteeInclude
 
 export const membershipIncluder = {

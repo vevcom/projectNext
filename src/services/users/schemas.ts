@@ -1,4 +1,6 @@
 import { Zpn } from '@/lib/fields/zpn'
+import { imageSchemas } from '@/services/images/subservice/schemas'
+import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { SEX, RelationshipStatus } from '@/prisma-generated-pn-types'
 import { z } from 'zod'
 
@@ -92,4 +94,28 @@ export const userSchemas = {
     verifyEmail: userSchema.pick({
         email: true,
     }),
+
+    updateProfileImage: imageSchemas.uploadImage,
+
+    readPage: readPageInputSchemaObject(
+        z.number(),
+        z.object({
+            id: z.number()
+        }),
+        z.object({
+            partOfName: z.string(),
+            groups: z.array(z.object({
+                groupOrder: z.union([z.number(), z.literal('ACTIVE')]),
+                groupId: z.number()
+            })),
+            selectedGroup: z.object({
+                groupOrder: z.union([z.number(), z.literal('ACTIVE')]),
+                groupId: z.number()
+            }).nullable().optional(),
+            sort: z.object({
+                field: z.enum(['name', 'username']),
+                direction: z.enum(['asc', 'desc']),
+            }).optional()
+        })
+    ),
 }

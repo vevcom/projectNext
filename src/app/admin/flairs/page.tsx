@@ -1,23 +1,44 @@
 import FlairTable from './FlairTable'
-import { createFlairAction, readAllFlairsAction } from '@/services/flairs/actions'
+import styles from './page.module.scss'
+import { createFlairAction, readAllFlairsAction, updateFlairImageAction } from '@/services/flairs/actions'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import Form from '@/components/Form/Form'
 import ColorInput from '@/components/UI/ColorInput'
 import TextInput from '@/components/UI/TextInput'
+import FileInput from '@/components/UI/FileInput'
+import LicenseChooser from '@/components/LicenseChooser/LicenseChooser'
 import Flair from '@/components/Flair/Flair'
-import { ServerSession } from '@/auth/session/ServerSession'
+import ImageUploader from '@/components/Image/ImageUploader'
+import PopUp from '@/components/PopUp/PopUp'
+import { configureAction } from '@/services/configureAction'
 import type { FlairRow } from './FlairTable'
 
 
 export default async function FlairUpdatePage() {
     const flairs = unwrapActionReturn(await readAllFlairsAction()).sort((a, b) => a.rank - b.rank)
-    const session = await ServerSession.fromNextAuth()
 
     const rows: FlairRow[] = flairs.map(flair => ({
         id: flair.id,
-        image: <Flair asClient={false} session={session} flair={flair} width={100} />,
+        image: <>
+            <Flair flair={flair} width={100} />
+            <PopUp
+                popUpKey={`EditFlairImage${flair.id}`}
+                showButtonContent="Endre bilde"
+                showButtonClass={styles.changeImageBtn}
+            >
+                <ImageUploader
+                    title={`Endre bilde for ${flair.name}`}
+                    refreshOnSuccess
+                    closePopUpOnSuccess={`EditFlairImage${flair.id}`}
+                    uploadImageAction={configureAction(
+                        updateFlairImageAction,
+                        { params: { flairId: flair.id } }
+                    )}
+                />
+            </PopUp>
+        </>,
         name: flair.name,
         colorStyle: { backgroundColor: `rgb(${flair.colorR}, ${flair.colorG}, ${flair.colorB})` },
         editHref: `/admin/flairs/${flair.id}`,
@@ -35,6 +56,10 @@ export default async function FlairUpdatePage() {
                 >
                     <TextInput label="Navn" name="name" />
                     <ColorInput label="Farge" name="color" />
+                    <FileInput label="Bilde" name="imageFile" color="primary" />
+                    <TextInput label="Alternativ tekst for bilde" name="imageAlt" />
+                    <TextInput label="Kreditert" name="imageCredit" />
+                    <LicenseChooser name="imageLicenseId" />
                 </Form>
             </AddHeaderItemPopUp>
         }>

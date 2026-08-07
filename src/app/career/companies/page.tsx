@@ -15,7 +15,7 @@ import type { PageSizeCompany } from '@/contexts/paging/CompanyPaging'
 
 type PropTypes = SearchParamsServerSide
 
-export default async function page({ searchParams }: PropTypes) {
+export default async function CompaniesPage({ searchParams }: PropTypes) {
     const pageSize = 10 satisfies PageSizeCompany
     const name = QueryParams.companyName.decode(await searchParams) ?? undefined
 
@@ -66,7 +66,6 @@ export default async function page({ searchParams }: PropTypes) {
                 <CompanyList serverRenderedData={serverRenderedData.map(
                     companyListRenderer({
                         session,
-                        asClient: false,
                     })
                 )} />
             </CompanyPagingProvider>

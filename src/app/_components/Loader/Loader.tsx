@@ -1,27 +1,15 @@
 import styles from './Loader.module.scss'
-import { readSpecialCmsImageFrontpage, updateSpecialCmsImageFrontpage } from '@/services/frontpage/actions'
-import SpecialCmsImage from '@/components/Cms/CmsImage/SpecialCmsImage'
-import { frontpageAuth } from '@/services/frontpage/auth'
-import type { SessionMaybeUser } from '@/auth/session/Session'
+import StandardImageServer from '@/components/Image/StandardImageServer'
 
-type PropTypes = {
-    session: SessionMaybeUser
-}
-
-function Loader({ session }: PropTypes) {
+/**
+ * WARNING: this component should only be rendered on the server
+*/
+function Loader() {
     return (
         <div className={styles.Loader}>
-            <SpecialCmsImage
-                canEdit={
-                    frontpageAuth.updateSpecialCmsImage.dynamicFields({}).auth(
-                        session
-                    ).toJsObject()
-                }
-                special="LOADER_IMAGE"
+            <StandardImageServer
+                standardImage="LOGO_SIMPLE"
                 width={100}
-                //TODO: Probably call through other service see comments in frontpage operations
-                readSpecialCmsImageAction={readSpecialCmsImageFrontpage}
-                updateCmsImageAction={updateSpecialCmsImageFrontpage}
             />
         </div>
     )

@@ -9,7 +9,7 @@ type PropTypes = {
 export default function UserRow({ user, groupSelected = false }: PropTypes) {
     return (
         <>
-            <td><UserDisplayName asClient={true} width={16} user={user} /></td>
+            <td><UserDisplayName width={16} user={user} /></td>
             <td>{user.username}</td>
             <td>{user.studyProgramme}</td>
             <td>{user.class}</td>

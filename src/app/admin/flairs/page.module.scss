@@ -96,3 +96,12 @@
         cursor: grabbing;
     }
 }
+
+.changeImageBtn {
+    @include ohma.borderBtn(ohma.$colors-accent-blue);
+    display: block;
+    margin-top: 0.5em;
+    padding: 0.25em 0.5em;
+    font-size: ohma.$fonts-s;
+    white-space: nowrap;
+}

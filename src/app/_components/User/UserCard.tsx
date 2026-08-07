@@ -11,14 +11,12 @@ export default function UserCard({
     user,
     className,
     subText,
-    asClient,
 }: {
     user: UserFiltered & {
         image: Image
     },
     className?: string,
     subText?: string,
-    asClient: boolean
 }) {
     const [topFlair] = [...user.flairs].sort((flairA, flairB) => flairA.rank - flairB.rank)
 
@@ -32,7 +30,7 @@ export default function UserCard({
         <ProfilePicture profileImage={user.image} width={60} />
         <div>
             <h6>
-                <UserDisplayName user={user} width={18} asClient={asClient}/>
+                <UserDisplayName user={user} width={18} />
             </h6>
             {subText && <p>{subText}</p>}
         </div>

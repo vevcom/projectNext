@@ -2,10 +2,9 @@ import styles from './page.module.scss'
 import SpecialCmsParagraph from '@/components/Cms/CmsParagraph/SpecialCmsParagraph'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { ServerSession } from '@/auth/session/ServerSession'
-import Image from '@/components/Image/Image'
+import StandardImageServer from '@/components/Image/StandardImageServer'
 import CmsLink from '@/components/Cms/CmsLink/CmsLink'
 import { QueryParams } from '@/lib/queryParams/queryParams'
-import { readSpecialImageAction } from '@/services/images/actions'
 import { readSpecialEventTagAction } from '@/services/events/tags/actions'
 import {
     readSpecialCmsParagraphCareerInfo,
@@ -18,15 +17,9 @@ import Link from 'next/link'
 
 export default async function CareerLandingPage() {
     const session = await ServerSession.fromNextAuth()
-    const jobAdImageRes = await readSpecialImageAction({ params: { special: 'MACHINE' } })
-    const eventImageRes = await readSpecialImageAction({ params: { special: 'FAIR' } })
-    const comanyImageRes = await readSpecialImageAction({ params: { special: 'REALFAGSBYGGET' } })
     const conactorCmsLinkRes = await readCareerSpecialCmsLinkAction({ params: { special: 'CAREER_LINK_TO_CONTACTOR' } })
     const companyPresentationEventTagRes = await readSpecialEventTagAction({ params: { special: 'COMPANY_PRESENTATION' } })
 
-    const jobAdImage = jobAdImageRes.success ? jobAdImageRes.data : null
-    const eventImage = eventImageRes.success ? eventImageRes.data : null
-    const companyImage = comanyImageRes.success ? comanyImageRes.data : null
     const contactorCmsLink = conactorCmsLinkRes.success ? conactorCmsLinkRes.data : null
     const companyPresentationEventTag = companyPresentationEventTagRes.success ? companyPresentationEventTagRes.data : null
 
@@ -56,26 +49,32 @@ export default async function CareerLandingPage() {
                 />
                 <span className={styles.links}>
                     <Link href="/career/jobads">
-                        { jobAdImage ? <Image
+                        <StandardImageServer
                             disableLinkingToLicense
-                            imageContainerClassName={styles.linkImage}
-                            width={300} image={jobAdImage} /> : <></> }
+                            className={styles.linkImage}
+                            width={300}
+                            standardImage="MACHINE"
+                        />
                         <h2>Jobbannonser</h2>
                     </Link>
                     <Link href={`/events?${QueryParams.eventTags.encodeUrl(
                         companyPresentationEventTag ? [companyPresentationEventTag.name] : []
                     )}`}>
-                        { eventImage ? <Image
+                        <StandardImageServer
                             disableLinkingToLicense
-                            imageContainerClassName={styles.linkImage}
-                            width={300} image={eventImage} /> : <></> }
+                            className={styles.linkImage}
+                            width={300}
+                            standardImage="FAIR"
+                        />
                         <h2>Bedriftpresentasjoner</h2>
                     </Link>
                     <Link href="/career/companies">
-                        { companyImage ? <Image
+                        <StandardImageServer
                             disableLinkingToLicense
-                            imageContainerClassName={styles.linkImage}
-                            width={300} image={companyImage} /> : <></> }
+                            className={styles.linkImage}
+                            width={300}
+                            standardImage="REALFAGSBYGGET"
+                        />
                         <h2>Bedrifter</h2>
                     </Link>
                 </span>

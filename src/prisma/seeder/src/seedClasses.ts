@@ -1,7 +1,7 @@
 import type { PrismaClient } from '@/prisma-generated-pn-client'
 
 /**
- * Seeds classes and omega membership groups.
+ * Seeds classes.
  * @param prisma - The prisma client
  */
 export default async function seedClasses(prisma: PrismaClient) {

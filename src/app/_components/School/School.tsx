@@ -1,5 +1,4 @@
 import styles from './School.module.scss'
-import CmsImageClient from '@/cms/CmsImage/CmsImageClient'
 import CmsLink from '@/cms/CmsLink/CmsLink'
 import CmsImage from '@/cms/CmsImage/CmsImage'
 import CmsParagraph from '@/cms/CmsParagraph/CmsParagraph'
@@ -15,41 +14,29 @@ import type{ SessionMaybeUser } from '@/auth/session/Session'
 
 type PropTypes = {
     school: ExpandedSchool
-    asClient?: boolean
     session: SessionMaybeUser
 }
 
-export default function School({ school, asClient = false, session }: PropTypes) {
+export default function School({ school, session }: PropTypes) {
     const updateCmsImageAction = configureAction(
         updateSchoolCmsImageAction,
         { implementationParams: { shortName: school.shortName } }
     )
 
     const canEditCmsImage = schoolAuth.updateCmsImage.dynamicFields({}).auth(session).toJsObject()
-    const canEditCmsParagraph = schoolAuth.updateCmsParagraph.dynamicFields({}).auth(session).toJsObject()
+    const canEditCmsParagraph = schoolAuth.updateCmsParagraphContent.dynamicFields({}).auth(session).toJsObject()
     const canEditCmsLink = schoolAuth.updateCmsLink.dynamicFields({}).auth(session).toJsObject()
 
     return (
         <div className={styles.School}>
-            {
-                asClient ? (
-                    <CmsImageClient
-                        canEdit={canEditCmsImage}
-                        className={styles.cmsImage}
-                        classNameImage={styles.image}
-                        cmsImage={school.cmsImage}
-                        width={200}
-                        updateCmsImageAction={updateCmsImageAction}
-                    />
-                ) : <CmsImage
-                    canEdit={canEditCmsImage}
-                    className={styles.cmsImage}
-                    classNameImage={styles.image}
-                    cmsImage={school.cmsImage}
-                    width={200}
-                    updateCmsImageAction={updateCmsImageAction}
-                />
-            }
+            <CmsImage
+                canEdit={canEditCmsImage}
+                className={styles.cmsImage}
+                classNameImage={styles.image}
+                cmsImage={school.cmsImage}
+                width={200}
+                updateCmsImageAction={updateCmsImageAction}
+            />
 
             <div className={styles.text}>
                 <div className={styles.name}>

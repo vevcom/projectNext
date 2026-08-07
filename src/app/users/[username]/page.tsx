@@ -4,7 +4,6 @@ import { userAuth } from '@/services/users/auth'
 import ProfilePicture from '@/components/User/ProfilePicture'
 import UserDisplayName from '@/components/User/UserDisplayName'
 import { readUserProfileAction } from '@/services/users/actions'
-import { readSpecialImageAction } from '@/services/images/actions'
 import { ServerSession } from '@/auth/session/ServerSession'
 import { flairAuth } from '@/services/flairs/auth'
 import { sexConfig } from '@/services/users/constants'
@@ -65,14 +64,6 @@ export default async function User({ params }: PropTypes) {
         (a, b) => a.rank - b.rank
     )
 
-    const profileImage = profile.user.image ? profile.user.image : await readSpecialImageAction.bind(
-        null, { params: { special: 'DEFAULT_PROFILE_IMAGE' } }
-    )().then(res => {
-        if (!res.success) throw new Error('Kunne ikke finne standard profilbilde')
-        return res.data
-    })
-
-
     const { authorized: canAdministrate } = userAuth.updateProfile.dynamicFields(
         { username: profile.user.username }
     ).auth(session)
@@ -115,13 +106,12 @@ export default async function User({ params }: PropTypes) {
             <div className={styles.profile}>
                 <div className={styles.profileContent} style={{ ...borderColour, ...flairColour }}>
                     <div className={styles.profileContentInner}>
-                        <ProfilePicture width={240} profileImage={profileImage} className={styles.profilePicture}/>
+                        <ProfilePicture width={240} profileImage={profile.user.image} className={styles.profilePicture}/>
                         <div className={styles.header}>
                             <div className={styles.nameAndId}>
                                 <h1><UserDisplayName
                                     user={profile.user}
                                     width={40}
-                                    asClient={false}
                                 /></h1>
                             </div>
                             {studyProgrammes.map((studyProgramme, i) =>

@@ -1,19 +1,19 @@
 import { baseSchema as baseSchemaArticleSections } from '@/cms/articleSections/schemas'
-import { SpecialCmsArticle } from '@/prisma-generated-pn-types'
 import { z } from 'zod'
 
 const baseSchema = z.object({
-    name: z.string().min(2, 'Minimum lengde er 2 tegn.').max(20, 'Maksimum lengde er 20 tegn.'),
-    special: z.nativeEnum(SpecialCmsArticle).optional(),
+    name: z.string().min(2, 'Minimum lengde er 2 tegn.').max(30, 'Maksimum lengde er 30 tegn.'),
     includeParts: z.record(baseSchemaArticleSections.shape.part, z.boolean()),
     direction: z.union([z.literal('UP'), z.literal('DOWN')])
 })
 
 export const articleSchemas = {
-    create: baseSchema.pick({
-        name: true,
-        special: true
-    }).partial(),
+    create: ({ maxNameLength }: { maxNameLength: number }) => z.object({
+        name: z.string()
+            .min(2, 'Minimum lengde er 2 tegn.')
+            .max(maxNameLength, `Maksimum lengde er ${maxNameLength} tegn.`)
+            .optional(),
+    }),
     update: baseSchema.pick({
         name: true,
     }).partial(),

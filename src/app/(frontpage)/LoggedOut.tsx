@@ -3,9 +3,8 @@ import styles from './page.module.scss'
 import InfoBubbles from './InfoBubbles'
 import { MazeMapLophtet } from '@/components/MazeMap/MazeMap'
 import SocialIcons from '@/components/SocialIcons/SocialIcons'
-import SpecialCmsImage from '@/components/Cms/CmsImage/SpecialCmsImage'
+import StandardImageServer from '@/components/Image/StandardImageServer'
 import YouTube from '@/components/YouTube/YouTube'
-import { readSpecialCmsImageFrontpage, updateSpecialCmsImageFrontpage } from '@/services/frontpage/actions'
 import { ServerSession } from '@/auth/session/ServerSession'
 import { frontpageAuth } from '@/services/frontpage/auth'
 import Footer from '@/components/Footer/Footer'
@@ -29,12 +28,9 @@ export default async function LoggedOutLandingPage() {
             <div className={`${styles.part} ${styles.frontImg}`}>
                 <div className={styles.frontInfo}>
                     <div>
-                        <SpecialCmsImage
-                            canEdit={canEditSpecialCmsImage}
-                            special="FRONTPAGE_LOGO"
+                        <StandardImageServer
+                            standardImage="LOGO_WHITE"
                             width={300}
-                            readSpecialCmsImageAction={readSpecialCmsImageFrontpage}
-                            updateCmsImageAction={updateSpecialCmsImageFrontpage}
                         />
 
                         <Link href="login">Logg inn</Link>

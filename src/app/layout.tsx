@@ -5,11 +5,11 @@ import MobileNavBar from '@/components/NavBar/MobileNavBar'
 import { authOptions } from '@/auth/nextAuth/authOptions'
 import EditModeProvider from '@/contexts/EditMode'
 import PopUpProvider from '@/contexts/PopUp'
-import DefaultPermissionsProvider from '@/contexts/DefaultPermissions'
+import ClientDataProvider from '@/contexts/ClientData'
 import { PageTitleProvider } from '@/contexts/PageTitle'
 import { readDefaultPermissionsAction } from '@/services/permissions/actions'
+import { readAllStandardImagesAction } from '@/services/images/standard/actions'
 import { readUserProfileAction } from '@/services/users/actions'
-import { frontpageAuth } from '@/services/frontpage/auth'
 import { ServerSession } from '@/auth/session/ServerSession'
 import ThemeEnabler from '@/UI/ThemeEnabler'
 import DesktopSideBar from '@/components/NavBar/DesktopSideBar'
@@ -40,22 +40,26 @@ type PropTypes = {
 }
 
 export default async function RootLayout({ children }: PropTypes) {
-    const session = await getServerSession(authOptions)
-    const defaultPermissionsRes = await readDefaultPermissionsAction()
-    const defaultPermissions = defaultPermissionsRes.success ? defaultPermissionsRes.data : []
-    const profile = session?.user ?
-        unwrapActionReturn(await readUserProfileAction({ params: { username: session.user.username } })) : null
+    const nextAuthSession = await getServerSession(authOptions)
+    const serverSession = await ServerSession.fromNextAuth()
 
-    const canEditSpecialCmsImage = frontpageAuth.updateSpecialCmsImage.dynamicFields({}).auth(
-        await ServerSession.fromNextAuth()
-    ).toJsObject()
+    const defaultPermissionsRes = await readDefaultPermissionsAction()
+    const defaultPermissions = defaultPermissionsRes.success ? defaultPermissionsRes.data : undefined
+    const standardImagesRes = await readAllStandardImagesAction()
+    const standardImages = standardImagesRes.success ? standardImagesRes.data : undefined
+    const profile = serverSession?.user ?
+        unwrapActionReturn(await readUserProfileAction({ params: { username: serverSession.user.username } })) : null
 
     return (
         <html lang="en">
             <body className={`${inter.className} ${styles.body}`}>
                 <ThemeEnabler></ThemeEnabler>
-                <SessionProvider session={session}>
-                    <DefaultPermissionsProvider defaultPermissions={defaultPermissions}>
+                <SessionProvider session={nextAuthSession}>
+                    <ClientDataProvider
+                        session={serverSession.toJsObject()}
+                        defaultPermissions={defaultPermissions}
+                        standardImages={standardImages}
+                    >
                         <EditModeProvider>
                             <PopUpProvider>
                                 <PageTitleProvider>
@@ -63,7 +67,6 @@ export default async function RootLayout({ children }: PropTypes) {
                                         <div className={styles.navBar}>
                                             <NavBar
                                                 profile={profile}
-                                                canEditSpecialCmsImage={canEditSpecialCmsImage}
                                             />
                                         </div>
                                         <aside className={styles.sideBar}>
@@ -75,14 +78,13 @@ export default async function RootLayout({ children }: PropTypes) {
                                         <div className={styles.mobileNavBar}>
                                             <MobileNavBar
                                                 profile={profile}
-                                                canEditSpecialCmsImage={canEditSpecialCmsImage}
                                             />
                                         </div>
                                     </div>
                                 </PageTitleProvider>
                             </PopUpProvider>
                         </EditModeProvider>
-                    </DefaultPermissionsProvider>
+                    </ClientDataProvider>
                 </SessionProvider>
             </body>
         </html>

@@ -4,19 +4,16 @@ import getNavItems from './navDef'
 import UserNavigation from './UserNavigation'
 import ReportButton from './ReportButton'
 import NavBarTitle from './NavBarTitle'
-import SpecialCmsImage from '@/components/Cms/CmsImage/SpecialCmsImage'
-import { readSpecialCmsImageFrontpage, updateSpecialCmsImageFrontpage } from '@/services/frontpage/actions'
 import PageTitleSetter from '@/contexts/PageTitleSetter'
+import StandardImageServer from '@/components/Image/StandardImageServer'
 import Link from 'next/link'
-import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
 import type { Profile } from '@/services/users/types'
 
 export type PropTypes = {
     profile: Profile | null
-    canEditSpecialCmsImage: AuthResultTypeAny
 }
 
-export default async function NavBar({ profile, canEditSpecialCmsImage }: PropTypes) {
+export default async function NavBar({ profile }: PropTypes) {
     const user = profile?.user ?? null
     const isLoggedIn = user !== null
     const applicationPeriod = false
@@ -32,16 +29,13 @@ export default async function NavBar({ profile, canEditSpecialCmsImage }: PropTy
                 <li className={styles.logoContainer}>
                     <div className={styles.logo}>
                         <div className={styles.logoWrapper}>
-                            <SpecialCmsImage
-                                canEdit={canEditSpecialCmsImage}
-                                special="NAV_PRIMARY_BUTTON"
+                            <StandardImageServer
+                                standardImage="LOGO_SIMPLE"
                                 width={30}
                                 alt="omega logo"
-                                readSpecialCmsImageAction={readSpecialCmsImageFrontpage}
-                                updateCmsImageAction={updateSpecialCmsImageFrontpage}
                             >
                                 <Link aria-label={'Go to homepage'} href="/" />
-                            </SpecialCmsImage>
+                            </StandardImageServer>
                         </div>
                     </div>
                 </li>
@@ -61,14 +55,11 @@ export default async function NavBar({ profile, canEditSpecialCmsImage }: PropTy
                 <li className={styles.rightSide}>
                     <ReportButton/>
                     <div className={styles.magicHat}>
-                        <SpecialCmsImage
-                            canEdit={canEditSpecialCmsImage}
-                            special="NAV_LOGIN_BUTTON"
+                        <StandardImageServer
+                            standardImage="MAGISK_HATT"
                             width={25}
                             height={25}
                             alt="log in button"
-                            readSpecialCmsImageAction={readSpecialCmsImageFrontpage}
-                            updateCmsImageAction={updateSpecialCmsImageFrontpage}
                         />
                         <UserNavigation profile={profile} />
                     </div>

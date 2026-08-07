@@ -1,4 +1,3 @@
-import { SpecialCmsLink } from '@/prisma-generated-pn-types'
 import { z } from 'zod'
 
 const cmsLinkRefiner = {
@@ -20,7 +19,6 @@ const baseSchema = z.object({
     url: z.string().refine(cmsLinkRefiner.fcn, {
         message: cmsLinkRefiner.message
     }),
-    special: z.nativeEnum(SpecialCmsLink).optional(),
 })
 
 export const cmsLinkSchemas = {
@@ -28,7 +26,6 @@ export const cmsLinkSchemas = {
         name: true,
         text: true,
         url: true,
-        special: true,
     }),
     update: baseSchema.pick({
         text: true,

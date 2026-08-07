@@ -152,7 +152,6 @@ export default async function JobAd({ params }: PropTypes) {
                                     disableEdit
                                     squareLogo={false}
                                     company={jobAd.company}
-                                    asClient={false}
                                     session={session}
                                 />
                             </div>

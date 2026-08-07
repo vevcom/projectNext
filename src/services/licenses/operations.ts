@@ -1,9 +1,68 @@
 import '@pn-server-only'
 import { licenseSchemas } from './schemas'
+import { standardLicenseNames, standardLicensesConfig, type StandardLicenseName } from './constants'
 import { licenseAuth } from './auth'
 import { ServerError } from '@/services/error'
-import { defineOperation } from '@/services/serviceOperation'
+import { defineOperation, defineSubOperation } from '@/services/serviceOperation'
 import { z } from 'zod'
+
+const getStandardLicenseConfig = (standardLicenseName: StandardLicenseName) => {
+    const licenseConfig = standardLicensesConfig.find((license) => license.name === standardLicenseName)
+    if (!licenseConfig) {
+        throw new ServerError('SERVER ERROR', `Unknown standard license: ${standardLicenseName}`)
+    }
+
+    return licenseConfig
+}
+
+const generateStandardLicense = defineSubOperation({
+    paramsSchema: () => z.object({
+        standardLicenseName: z.enum(standardLicenseNames),
+    }),
+    operation: () => async ({ prisma, params }) => {
+        const licenseConfig = getStandardLicenseConfig(params.standardLicenseName)
+
+        return await prisma.license.upsert({
+            where: { name: params.standardLicenseName },
+            create: {
+                name: licenseConfig.name,
+                link: licenseConfig.link,
+            },
+            update: {
+                link: licenseConfig.link,
+            },
+        })
+    }
+})
+
+const readStandardLicense = defineSubOperation({
+    paramsSchema: () => z.object({
+        standardLicenseName: z.enum(standardLicenseNames),
+    }),
+    operation: () => async ({ prisma, params }) => {
+        const license = await prisma.license.findUnique({
+            where: { name: params.standardLicenseName },
+        })
+
+        if (license) return license
+
+        try {
+            return await generateStandardLicense.internalCall({
+                prisma,
+                params: { standardLicenseName: params.standardLicenseName }
+            })
+        } catch (error) {
+            // Handle race condition.
+            // Just in case two concurrent callers tried at the same time
+            if (error instanceof ServerError && error.errorCode === 'DUPLICATE') {
+                return await prisma.license.findUniqueOrThrow({
+                    where: { name: params.standardLicenseName },
+                })
+            }
+            throw error
+        }
+    },
+})
 
 export const licenseOperations = {
     create: defineOperation({
@@ -59,4 +118,6 @@ export const licenseOperations = {
             })
         }
     }),
+    generateStandardLicense,
+    readStandardLicense,
 }

@@ -1,56 +1,20 @@
 import { hashAndEncryptPassword } from '@/auth/passwordHash'
-import { type SeederImage, seedImage } from '@/seeder/src/seedImages'
+import { userOperations } from '@/services/users/operations'
+import { standardStoreFiles } from '@/lib/standardStore/files'
+import { defineSeedOperation } from '@/seeder/src/defineSeedOperation'
 import { OmegaMembershipLevel, type Prisma } from '@/prisma-generated-pn-types'
 import { v4 as uuid } from 'uuid'
 import { randomInt } from 'crypto'
-import { readdir } from 'fs/promises'
-import { join, dirname } from 'path'
-import { fileURLToPath } from 'url'
 import type { PrismaClient } from '@/prisma-generated-pn-client'
 
-const fileName = fileURLToPath(import.meta.url)
-const directoryName = dirname(fileName)
-const profileImageFSLocation = join(directoryName, '..', '..', 'standard_store', 'images', 'dev_profile_images')
-
-async function seedDevProfileImages(prisma: PrismaClient) {
-    let files = await readdir(profileImageFSLocation)
-
-    files = files.filter(file => {
-        const filenameS = file.split('.')
-        const ext = filenameS[filenameS.length - 1]
-        return ext === 'jpg'
-    })
-
-    return await Promise.all(files.map(async file => {
-        const fileS = file.split('.')
-
-        const name = fileS[0]
-
-        const imageConfig: SeederImage = {
-            special: null,
-            name,
-            alt: `Bilde av ${name}`,
-            credit: null,
-            license: null,
-            collection: 'PROFILEIMAGES',
-            fsLocation: file,
-        }
-
-        return await seedImage(prisma, profileImageFSLocation, files, imageConfig)
-    }))
-}
-
-export default async function seedDevUsers(prisma: PrismaClient) {
+export const seedDevUsers = defineSeedOperation(async (prisma: PrismaClient) => {
     const firstNames = [
         'Anne', 'Johan', 'Pål', 'Lars', 'Lasse', 'Leo', 'Noa',
         'Trude', 'Andreas', 'Nora', 'Knut', 'Anne', 'Sara',
         'Frikk', 'Merete', 'Klara', 'Britt Helen', 'Fiola',
         'Mika', 'Helle', 'Jesper',
     ]
-
-    const profileImages = await seedDevProfileImages(prisma)
-
-    const lastNames = profileImages.map(image => (image ? image.name.replaceAll('-', ' ') : 'Navnløs'))
+    const devProfileImages = Object.entries(standardStoreFiles.devProfileImage)
 
     const passwordHash = await hashAndEncryptPassword('password')
 
@@ -71,11 +35,12 @@ export default async function seedDevUsers(prisma: PrismaClient) {
     const allClasses = await prisma.class.findMany()
     const allFlairs = await prisma.flair.findMany()
 
-    Promise.all(firstNames.map(async (firstName, i) => {
-        await Promise.all(lastNames.map(async (lastName, j) => {
-            // Randomly remove profile images for 5% of users.
-            const image = (Math.random() < 0.95) ? profileImages.find(img => (img?.name === lastName)) : undefined
-
+    // Promise.all not possible here because db connection pool might be
+    // overloaded from profile image uploads.
+    for (let i = 0; i < firstNames.length; i++) {
+        const firstName = firstNames[i]
+        for (let j = 0; j < devProfileImages.length; j++) {
+            const [lastName, devProfileImage] = devProfileImages[j]
             const username = `${firstName}${lastName}${i + 1}${j}`
                 .toLowerCase()
                 .replace(/å/g, 'aa') // special cases for norwegian letters
@@ -84,14 +49,13 @@ export default async function seedDevUsers(prisma: PrismaClient) {
                 .normalize('NFD') // decompose into letter + diacritics, i.e. 'é' -> 'e´'
                 .replace(/[^a-zA-Z0-9]/g, '') // only keep ASCII alphanumeric characters
 
-            const user = await prisma.user.upsert({
-                where: {
-                    username,
-                },
-                update: {
+            const existingUser = await prisma.user.findUnique({
+                where: { username },
+                select: { id: true },
+            })
 
-                },
-                create: {
+            const user = existingUser ?? await prisma.user.create({
+                data: {
                     firstname: firstName,
                     lastname: lastName,
                     email: uuid(),
@@ -103,15 +67,20 @@ export default async function seedDevUsers(prisma: PrismaClient) {
                         },
                     },
                     acceptedTerms: new Date(),
-                    ...(image ? {
-                        image: {
-                            connect: {
-                                id: image.id,
-                            },
-                        },
-                    } : {}),
                 },
             })
+
+            // Only uploaded the first time this dev user is created - re-seeding must not upload
+            // (and immediately destroy) a fresh profile image on every run.
+            if (!existingUser && Math.random() < 0.95) {
+                await userOperations.updateProfileImage({
+                    params: { username },
+                    data: await devProfileImage.imageUploadData({
+                        name: lastName,
+                        alt: `Bilde av ${lastName}`,
+                    }),
+                })
+            }
 
             const memberships: Prisma.MembershipCreateManyInput[] = [
                 {
@@ -174,26 +143,16 @@ export default async function seedDevUsers(prisma: PrismaClient) {
                     }
                 })
             }
-        }))
-    }))
-
-    const harambeImage = await prisma.image.findFirst({
-        where: {
-            name: 'harambe'
         }
-    })
-    if (!harambeImage) {
-        throw new Error('Harambe image not found')
     }
 
-    const harambe = await prisma.user.upsert({
-        where: {
-            email: 'harambe@harambesen.io'
-        },
-        update: {
+    const existingHarambe = await prisma.user.findUnique({
+        where: { email: 'harambe@harambesen.io' },
+        select: { id: true },
+    })
 
-        },
-        create: {
+    const harambe = existingHarambe ?? await prisma.user.create({
+        data: {
             firstname: 'Harambe',
             lastname: 'Harambesen',
             email: 'harambe@harambesen.io',
@@ -206,15 +165,17 @@ export default async function seedDevUsers(prisma: PrismaClient) {
                     passwordHash,
                 },
             },
-            image: {
-                connect: {
-                    id: harambeImage.id
-                }
-            },
             emailVerified: new Date(),
             acceptedTerms: new Date(),
         },
     })
+
+    if (!existingHarambe) {
+        await userOperations.updateProfileImage({
+            params: { username: 'harambe' },
+            data: await standardStoreFiles.harambe.imageUploadData({ name: 'Harambe', alt: 'Bilde av Harambe' }),
+        })
+    }
 
     const studyProgrammeMTTK = await prisma.studyProgramme.findUniqueOrThrow({
         where: {
@@ -254,14 +215,13 @@ export default async function seedDevUsers(prisma: PrismaClient) {
         ]
     })
 
-    const vever = await prisma.user.upsert({
-        where: {
-            email: 'vever@vevcom.com'
-        },
-        update: {
+    const existingVever = await prisma.user.findUnique({
+        where: { email: 'vever@vevcom.com' },
+        select: { id: true },
+    })
 
-        },
-        create: {
+    const vever = existingVever ?? await prisma.user.create({
+        data: {
             firstname: 'Vever',
             lastname: 'Vevsen',
             email: 'vever@vevcom.com',
@@ -299,5 +259,4 @@ export default async function seedDevUsers(prisma: PrismaClient) {
 
     console.log(harambe)
     console.log(vever)
-}
-
+})

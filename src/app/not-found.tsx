@@ -1,29 +1,16 @@
 import styles from './not-found.module.scss'
-import { readSpecialCmsImageFrontpage, updateSpecialCmsImageFrontpage } from '@/services/frontpage/actions'
-import SpecialCmsImage from '@/components/Cms/CmsImage/SpecialCmsImage'
-import { ServerSession } from '@/auth/session/ServerSession'
-import { frontpageAuth } from '@/services/frontpage/auth'
 import PageTitleSetter from '@/contexts/PageTitleSetter'
+import StandardImageServer from '@/components/Image/StandardImageServer'
 
-export default async function Error404() {
-    const session = await ServerSession.fromNextAuth()
-
+export default function Error404() {
     return (
         <div className={styles.wrapper}>
             <PageTitleSetter title={'Page not found'} />
             <div className={styles.info}>
                 <div className={styles.imageContainer}>
-                    <SpecialCmsImage
-                        canEdit={
-                            frontpageAuth.updateSpecialCmsImage.dynamicFields({}).auth(
-                                session
-                            ).toJsObject()
-                        }
-                        special="NOT_FOUND"
+                    <StandardImageServer
+                        standardImage="LOGO_SIMPLE"
                         width={60}
-                        //TODO: Probably call through other service see comments in frontpage operations
-                        readSpecialCmsImageAction={readSpecialCmsImageFrontpage}
-                        updateCmsImageAction={updateSpecialCmsImageFrontpage}
                     />
                 </div>
                 <h3>404 - Page not found</h3>
