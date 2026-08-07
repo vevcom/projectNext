@@ -14,6 +14,10 @@ import { expandedImageIncluder } from '@/services/images/subservice/constants'
 import { z } from 'zod'
 import type { EventExpanded } from './types'
 
+// TODO: Give dots to registrations from here, f.ex. to everyone that has not paid for an event / not met.
+// The dots service exposes dotOperations.internal.createInternal for other services to give dots
+// with, so this is a matter of an operation over the registrations of an event that implements it.
+
 const read = defineOperation({
     paramsSchema: z.object({
         id: z.number(),

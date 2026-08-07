@@ -7,6 +7,25 @@ import { defineOperation, defineSubOperation } from '@/services/serviceOperation
 import { z } from 'zod'
 import type { DotExpanded } from './types'
 
+const numberOfActiveDotsForUser = defineSubOperation({
+    paramsSchema: () => z.object({
+        userId: z.coerce.number(),
+    }),
+    operation: () => async ({ prisma, params }) => {
+        const dots = await prisma.dot.findMany({
+            where: {
+                userId: params.userId,
+            },
+            include: dotsIncluder,
+        })
+        const freezePeriods = await prisma.dotFreezePeriod.findMany()
+
+        const expandedDots = expandDots(dots, freezePeriods)
+
+        return expandedDots.reduce((total, dot) => total + dot.valueLeft, 0)
+    },
+})
+
 const createInternal = defineSubOperation({
     paramsSchema: () => z.object({
         accuserId: z.coerce.number(),
@@ -21,8 +40,10 @@ const createInternal = defineSubOperation({
 })
 
 export const dotOperations = {
-    createInternal,
-
+    internal: {
+        createInternal,
+        numberOfActiveDotsForUser,
+    },
     create: createInternal.implement({
         authorizer: ({ params }) => dotAuth.create.dynamicFields({ userId: params.accuserId }),
         ownershipCheck: () => true,
