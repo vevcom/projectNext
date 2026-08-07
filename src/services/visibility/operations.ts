@@ -1,9 +1,7 @@
 import '@pn-server-only'
 import { visibilitySchemas } from './schemas'
 import { defineSubOperation } from '@/services/serviceOperation'
-import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
-import { ServerError } from '@/services/error'
-import type { VisibilityMatrix } from './types'
+import { omegaOrderOperations } from '@/services/omegaOrder/operations'
 
 export const visibilityOperations = {
     create: defineSubOperation({
@@ -26,7 +24,7 @@ export const visibilityOperations = {
                 where: { visibilityId: params.visibilityId }
             })
 
-            const currentOrder = await readCurrentOmegaOrder()
+            const currentOrder = await omegaOrderOperations.readCurrent({ bypassAuth: true })
 
             return prisma.visibility.update({
                 where: { id: params.visibilityId },
@@ -44,35 +42,6 @@ export const visibilityOperations = {
                     }
                 }
             })
-        }
-    }),
-
-    read: defineSubOperation({
-        paramsSchema: () => visibilitySchemas.params,
-        operation: () => async ({ prisma, params }): Promise<VisibilityMatrix> => {
-            const visibility = await prisma.visibility.findUnique({
-                where: { id: params.visibilityId },
-                include: {
-                    requirements: {
-                        include: {
-                            conditions: true
-                        }
-                    }
-                }
-            })
-            if (!visibility) throw new ServerError('NOT FOUND', 'Fant ikke synlighet')
-            return {
-                requirements: visibility.requirements.map(requirement => ({
-                    conditions: requirement.conditions.map(condition => (condition.type === 'ORDER' ? {
-                        groupId: condition.groupId,
-                        type: condition.type,
-                        order: condition.order
-                    } : {
-                        groupId: condition.groupId,
-                        type: condition.type,
-                    }))
-                }))
-            }
         }
     })
 } as const

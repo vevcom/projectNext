@@ -21,12 +21,7 @@
 }
 
 @mixin card {
-    border-radius: variables.$cardRounding;
-    transition: box-shadow 0.3s;
-    @include boxShadow('');
-    &:hover {
-        @include boxShadow('hover');
-    }
+    border-radius: variables.$rounding;
 }
 
 @mixin layer {
@@ -39,20 +34,50 @@
     width: 100%;
     border-collapse: collapse;
     border: none;
-    margin: 20px 0;
-    font-size: 18px;
+    margin: calc(2 * #{variables.$gap}) 0;
+    font-size: fonts.$m;
     text-align: left;
+    box-shadow: colors.$boxShadow 0 1px 3px, colors.$boxShadow 0 1px 2px;
+
     th, td {
-        padding: variables.$gap;
+        padding: calc(1.5 * #{variables.$gap}) calc(2 * #{variables.$gap});
     }
+
     th {
-        background-color: color-mix(in srgb, colors.$secondary, white 2%); // TODO Perhaps change
+        background-color: colors.$surface-raised;
+        color: colors.$ink-strong;
+        font-weight: fonts.$weight-m;
     }
-    tr:nth-child(even) {
-        background-color: color-mix(in srgb, colors.$secondary, white 2%); // TODO Perhaps change
+
+    tbody tr {
+        background-color: colors.$surface-raised;
+        transition: background-color .3s;
+        &:nth-child(even) {
+            background-color: color-mix(in srgb, colors.$surface-raised, white 3%);
+        }
+        &:hover {
+            background-color: colors.$surface-hover;
+        }
     }
-    tr:hover {
-        @include layer;
+
+    thead tr:first-child th:first-child {
+        border-top-left-radius: variables.$rounding;
+    }
+    thead tr:first-child th:last-child {
+        border-top-right-radius: variables.$rounding;
+    }
+    tbody tr:last-child td:first-child {
+        border-bottom-left-radius: variables.$rounding;
+    }
+    tbody tr:last-child td:last-child {
+        border-bottom-right-radius: variables.$rounding;
+    }
+
+    &:has(tbody:empty) thead tr:first-child th:first-child {
+        border-bottom-left-radius: variables.$rounding;
+    }
+    &:has(tbody:empty) thead tr:first-child th:last-child {
+        border-bottom-right-radius: variables.$rounding;
     }
 }
 
@@ -61,16 +86,16 @@
     text-decoration: none;
     font-size: fonts.$m;
     background: $color;
-    padding: 2*variables.$gap;
+    padding: calc(2 * #{variables.$gap});
     margin: variables.$gap;
-    color: colors.$black;
+    color: colors.$text-inv;
     border: none;
+    border-radius: calc(#{variables.$rounding} - #{variables.$gap});
     transition: .5s background;
     &:hover {
         background-color: color-mix(in srgb, $color, white 10%); // TODO Perhaps change
         cursor: pointer;
     }
-    @include round;
 }
 
 //NOTE: also made to work for <Link /> (<a> tag)
@@ -88,20 +113,20 @@
 @mixin roundAdminSvgBtn() {
     width: 45px;
     height: 45px;
-    background-color: colors.$primary;
+    background-color: colors.$accent-blue;
     border: none;
     border-radius: 50%;
     display: grid;
     place-items: center;
     text-decoration: none;
     svg {
-        color: colors.$black;
+        color: colors.$text-inv;
         transition: color 0.6s;
         width: 31px;
         height: 31px;
     }
     &:hover svg {
-        color: colors.$gray-500;
+        color: colors.$ink-hover;
         cursor: pointer;
     }
 }
@@ -123,12 +148,12 @@
 }
 
 @mixin primaryIconLink {
-    color: colors.$primary;
+    color: colors.$accent-blue;
     padding: variables.$gap;
     width: 30px;
     height: 30px;
     &:hover {
-        color: color-mix(in srgb, colors.$primary, black 10%); // TODO Perhaps change
+        color: color-mix(in srgb, colors.$accent-blue, black 10%); // TODO Perhaps change
         cursor: pointer;
     }
 }
@@ -209,33 +234,5 @@
     }
     100% {
         transform: translate(250%) rotate(5deg);
-    }
-}
-
-@mixin neumorphism(
-    $l:var(--secondary-l),
-    $c:var(--secondary-c),
-    $h:var(--secondary-h),
-    $size: 20px,
-    $blur: 40px,
-    $intensity: .05,
-    $inset: "",
-    $button: false,
-) {
-    box-shadow:
-        #{$inset} #{$size} #{$size} #{$blur}
-          oklch(calc(#{$l} - #{$intensity}) #{$c} #{$h}),
-        #{$inset} -#{$size} -#{$size} #{$blur}
-          oklch(calc(#{$l} + #{$intensity}) #{$c} #{$h});
-
-
-    @if $button {
-        &:active {
-            box-shadow:
-                inset #{$size} #{$size} #{$blur}
-                    oklch(calc(#{$l} - #{$intensity}) #{$c} #{$h}),
-                  inset -#{$size} -#{$size} #{$blur}
-                    oklch(calc(#{$l} + #{$intensity}) #{$c} #{$h});
-        }
     }
 }

@@ -14,6 +14,7 @@ type PropTypes = Omit<PropTypesInput, 'type' | 'defaultValue'> & {
 export default function DateInput({
     label = 'default',
     color = 'black',
+    background = 'base',
     className,
     defaultValue,
     includeTime = false,
@@ -32,7 +33,11 @@ export default function DateInput({
     }
 
     return (
-        <div className={`${styles.DateInput} ${styles[color]} ${className}`}>
+        <div
+            className={
+                `${styles.DateInput} ${styles[color]} ${background === 'raised' ? styles.onRaised : ''} ${className}`
+            }
+        >
             <label className={styles.label}>{label}</label>
             <input
                 onChange={setUtc}

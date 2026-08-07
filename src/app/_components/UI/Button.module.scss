@@ -1,22 +1,27 @@
 @use "@/styles/ohma";
 
 .primary {
-    @include ohma.btn(ohma.$colors-primary);
+    @include ohma.btn(ohma.$colors-accent-blue);
 }
 
 .secondary {
-    @include ohma.btn(ohma.$colors-secondary);
+    @include ohma.btn(ohma.$colors-surface-hover);
+    color: ohma.$colors-text;
+
+    &:hover {
+        background-color: color-mix(in srgb, ohma.$colors-surface-hover, white 10%);
+    }
 }
 
 .green {
-    @include ohma.btn(ohma.$colors-green);
+    @include ohma.btn(ohma.$colors-accent-green);
 }
 
 .red {
-    @include ohma.btn(ohma.$colors-red);
+    @include ohma.btn(ohma.$colors-accent-red);
 }
 
 .button:disabled {
-    background-color: ohma.$colors-gray-200;
-    color: ohma.$colors-gray-600;
+    background-color: ohma.$colors-surface-hover;
+    color: ohma.$colors-text-muted;
 }

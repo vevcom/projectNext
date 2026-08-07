@@ -1,7 +1,7 @@
 @use '@/styles/ohma';
 
 .wrapper {
-    margin-top: 2*ohma.$gap;
+    margin-top: calc(2 * #{ohma.$gap});
     display: flex;
     flex-direction: column;
     .ombulList {

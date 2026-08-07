@@ -37,7 +37,7 @@ export default function UserNavigation({ profile }: PropTypes) {
     return (
         <div ref={ref} className={styles.UserNavigation}>
             <ProfilePicture profileImage={profile.user.image} width={180} />
-            <h2><UserDisplayName user={profile.user} asClient={true} width={26} /></h2>
+            <h2><UserDisplayName user={profile.user} width={26} /></h2>
 
             <Link href="/logout" className={styles.logout}>
                 <BorderButton color="secondary">

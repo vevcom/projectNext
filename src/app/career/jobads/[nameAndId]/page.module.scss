@@ -1,11 +1,37 @@
 @use '@/styles/ohma';
 
+.wrapper {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.main {
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+.coverImage {
+    border-radius: ohma.$rounding;
+    overflow: hidden;
+    margin-bottom: ohma.$gap;
+}
+
+.articleZone {
+    background-color: ohma.$colors-surface-base;
+    border-radius: ohma.$rounding;
+}
+
+.addSectionZone {
+    margin: ohma.$gap calc(2 * #{ohma.$gap}) 0;
+}
+
 .sideBar {
     @include ohma.round;
-    padding: 1em;
-    border-radius: 1em;
-    margin: 1em 1.5em;
-    @include ohma.layer;
+    padding: ohma.$gap;
+    border-radius: ohma.$rounding;
+    margin-left: ohma.$gap;
+    background-color: ohma.$colors-surface-base;
     .metInfo {
         display: flex;
         flex-direction: column;

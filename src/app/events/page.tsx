@@ -10,6 +10,7 @@ import { eventTagAuth } from '@/services/events/tags/auth'
 import { eventAuth } from '@/services/events/auth'
 import { QueryParams } from '@/lib/queryParams/queryParams'
 import { ServerSession } from '@/auth/session/ServerSession'
+import PageTitleSetter from '@/contexts/PageTitleSetter'
 import { faArchive } from '@fortawesome/free-solid-svg-icons'
 import type { SearchParamsServerSide } from '@/lib/queryParams/types'
 
@@ -42,36 +43,42 @@ export default async function Events({
     const canEditEventCmsImage = eventAuth.updateCmsCoverImage.dynamicFields({}).auth(session).toJsObject()
 
     return (
-        <EventsLandingLayout page="EVENT" title="Hvad Der Hender" headerLinks={[
-            {
-                href: tagNames?.length ? `/events/archive?${QueryParams.eventTags.encodeUrl(tagNames)}` : '/events/archive',
-                icon: faArchive
-            },
-        ]}
-        selectedTags={currentTags}
-        headerItem={
-            <>
-                <TagHeaderItem
-                    eventTags={eventTags}
-                    currentTags={currentTags}
-                    canUpdate={canUpdate.authorized}
-                    canCreate={canCreate.authorized}
-                    canDestroy={canDestroy.authorized}
-                    page="EVENT"
-                />
-                <AddHeaderItemPopUp popUpKey="CreateEventPopUp">
-                    <div className={styles.createEvent}>
-                        <CreateOrUpdateEventForm eventTags={eventTags} />
-                    </div>
-                </AddHeaderItemPopUp>
-            </>
-        }
-        >
-            {
-                currentEvents.map(event =>
-                    <EventCard event={event} key={event.id} canEdit={canEditEventCmsImage} />
-                )
+        <div className={styles.wrapper}>
+            <PageTitleSetter title={'Hvad Der Hender'} />
+            <EventsLandingLayout page="EVENT" title="Hvad Der Hender" headerLinks={[
+                {
+                    href: tagNames?.length ?
+                        `/events/archive?${QueryParams.eventTags.encodeUrl(tagNames)}`
+                        :
+                        '/events/archive',
+                    icon: faArchive
+                },
+            ]}
+            selectedTags={currentTags}
+            headerItem={
+                <>
+                    <TagHeaderItem
+                        eventTags={eventTags}
+                        currentTags={currentTags}
+                        canUpdate={canUpdate.authorized}
+                        canCreate={canCreate.authorized}
+                        canDestroy={canDestroy.authorized}
+                        page="EVENT"
+                    />
+                    <AddHeaderItemPopUp popUpKey="CreateEventPopUp">
+                        <div className={styles.createEvent}>
+                            <CreateOrUpdateEventForm eventTags={eventTags} />
+                        </div>
+                    </AddHeaderItemPopUp>
+                </>
             }
-        </EventsLandingLayout>
+            >
+                {
+                    currentEvents.map(event =>
+                        <EventCard event={event} key={event.id} canEdit={canEditEventCmsImage} />
+                    )
+                }
+            </EventsLandingLayout>
+        </div>
     )
 }

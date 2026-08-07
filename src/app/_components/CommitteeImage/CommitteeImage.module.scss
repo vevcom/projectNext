@@ -2,14 +2,14 @@
 
 @use "sass:color";
 
-$background: color-mix(in srgb, ohma.$colors-secondary, white 15%);
+$background: color-mix(in srgb, ohma.$colors-surface-base, white 15%);
 
 .CommitteeImage {
   position: relative;
   width: 100vw;
   height: 300px;
   overflow: hidden;
-  box-shadow: ohma.$colors-secondary 0 0 75px;
+  box-shadow: ohma.$colors-surface-base 0 0 75px;
   margin-bottom: 3rem;
   @include ohma.screenMobile {
       height: 150px;

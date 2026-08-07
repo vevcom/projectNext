@@ -1,0 +1,142 @@
+@use '@/styles/ohma';
+
+.Dropdown {
+    position: relative;
+    margin-top: ohma.$gap;
+    width: 100%;
+    max-width: 320px;
+}
+
+.trigger {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    border: 2px solid transparent;
+    border-radius: calc(#{ohma.$rounding} - #{ohma.$gap});
+    outline: 0;
+    font-size: ohma.$fonts-m;
+    text-align: left;
+    color: ohma.$colors-ink-strong;
+    background-color: ohma.$colors-surface-raised;
+    padding: calc(2.25 * #{ohma.$gap}) calc(4.5 * #{ohma.$gap}) calc(0.75 * #{ohma.$gap}) calc(2 * #{ohma.$gap});
+    transition: border-color ohma.$transitionTime, background-color ohma.$transitionTime;
+    cursor: pointer;
+
+    &:hover {
+        background-color: ohma.$colors-surface-hover;
+    }
+
+    &:disabled {
+        cursor: not-allowed;
+        opacity: 0.6;
+    }
+}
+
+.value {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-height: calc(#{ohma.$fonts-m} * 1.4);
+}
+
+.chevron {
+    position: absolute;
+    right: calc(2 * #{ohma.$gap});
+    top: 50%;
+    transform: translateY(-50%);
+    color: ohma.$colors-text-muted;
+    transition: transform ohma.$transitionTime, color ohma.$transitionTime;
+}
+
+.labe {
+    position: absolute;
+    left: calc(2 * #{ohma.$gap});
+    top: calc(2.25 * #{ohma.$gap});
+    display: block;
+    font-size: ohma.$fonts-m;
+    color: ohma.$colors-text-muted;
+    transition: ohma.$transitionTime;
+    pointer-events: none;
+    z-index: 1;
+
+    &.floated {
+        top: calc(0.6 * #{ohma.$gap});
+        font-size: calc(#{ohma.$fonts-s} * 0.85);
+    }
+}
+
+.panel {
+    position: absolute;
+    top: calc(100% + #{ohma.$gap});
+    left: 0;
+    right: 0;
+    z-index: 5;
+    list-style: none;
+    margin: 0;
+    padding: calc(0.5 * #{ohma.$gap});
+    max-height: 260px;
+    overflow-y: auto;
+    border-radius: calc(#{ohma.$rounding} - #{ohma.$gap});
+    background-color: ohma.$colors-surface-hover;
+    box-shadow: ohma.$colors-boxShadow 0 3px 6px, ohma.$colors-boxShadow 0 3px 6px;
+
+    button {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: ohma.$gap;
+        border: none;
+        background: transparent;
+        text-align: left;
+        font-size: ohma.$fonts-m;
+        color: ohma.$colors-text;
+        padding: calc(#{ohma.$gap}) calc(1.5 * #{ohma.$gap});
+        border-radius: calc(#{ohma.$rounding} - 1.5 * #{ohma.$gap});
+        cursor: pointer;
+        transition: background-color ohma.$transitionTime;
+
+        &:hover, &.active {
+            background-color: color-mix(in srgb, ohma.$colors-surface-hover, white 10%);
+        }
+
+        &.selected {
+            color: ohma.$colors-accent-blue;
+        }
+    }
+}
+
+.onRaised > .trigger {
+    background-color: ohma.$colors-surface-hover;
+
+    &:hover {
+        background-color: color-mix(in srgb, ohma.$colors-surface-hover, white 10%);
+    }
+}
+
+.open > .trigger {
+    border-color: ohma.$colors-accent-blue;
+    background-color: ohma.$colors-surface-hover;
+
+    .chevron {
+        transform: translateY(-50%) rotate(180deg);
+        color: ohma.$colors-accent-blue;
+    }
+}
+
+.primary > .trigger {
+    color: ohma.$colors-accent-blue;
+}
+
+.secondary > .trigger {
+    color: ohma.$colors-text;
+}
+
+.red > .trigger {
+    color: ohma.$colors-accent-red;
+}
+
+.white > .trigger {
+    color: ohma.$colors-white;
+}

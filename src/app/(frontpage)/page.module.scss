@@ -3,11 +3,16 @@ $omegamai: url("backgroundimages/Omegamai.jpeg");
 $frontImg: url("backgroundimages/frontImg.jpeg");
 $taktlause: url("backgroundimages/taktlause.jpeg");
 
+.pageRoot {
+    position: relative;
+}
+
 .link {
     position: absolute;
     top: ohma.$gap;
     right: ohma.$gap;
-    @include ohma.btn();
+    z-index: 2;
+    @include ohma.btn(ohma.$colors-accent-blue);
 }
 
 .wrapper {
@@ -42,16 +47,16 @@ $taktlause: url("backgroundimages/taktlause.jpeg");
         align-items: center;
         padding-bottom: 20px; //compansate a little for nav size 
         > img {
-            margin-bottom: 2*ohma.$gap;
+            margin-bottom: calc(2 * #{ohma.$gap});
         }
         > .socials {
-            margin: 3*ohma.$gap;
+            margin: calc(3 * #{ohma.$gap});
             > a {
                 margin: ohma.$gap;
                 color: ohma.$colors-white;
-                transition: color .3s;
+                transition: color ohma.$transitionTime;
                 &:hover {
-                    color: ohma.$colors-gray-300;
+                    color: ohma.$colors-ink-hover;
                 }
             }
         }

@@ -11,7 +11,6 @@ export default function OmegaquoteQuote({ quote }: OmegaquoteQuotePropTypes) {
         <div className={styles.QuoteBubble}>
             <p>&quot;{ quote.quote }&quot;</p>
         </div>
-        <span className={styles.triangle}>▼</span>
         <h3>
             { quote.author }
         </h3>

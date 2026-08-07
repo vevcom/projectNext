@@ -1,6 +1,7 @@
 import styles from './Footer.module.scss'
 import SocialIcons from '@/components/SocialIcons/SocialIcons'
 import SpecialCmsImage from '@/components/Cms/CmsImage/SpecialCmsImage'
+import StandardImageServer from '@/components/Image/StandardImageServer'
 import { readSpecialCmsImageFrontpage, updateSpecialCmsImageFrontpage } from '@/services/frontpage/actions'
 import Link from 'next/link'
 import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
@@ -13,12 +14,9 @@ async function Footer({ canEditSpecialCmsImage }: PropTypes) {
     return (
         <footer className={styles.Footer}>
             <div>
-                <SpecialCmsImage
-                    canEdit={canEditSpecialCmsImage}
-                    special="FOOTER_LOGO"
+                <StandardImageServer
+                    standardImage="LOGO_WHITE_TEXT"
                     width={350}
-                    readSpecialCmsImageAction={readSpecialCmsImageFrontpage}
-                    updateCmsImageAction={updateSpecialCmsImageFrontpage}
                 />
                 <p>
                 Linjeforeningen for Elektronisk Systemdesign
@@ -27,7 +25,7 @@ async function Footer({ canEditSpecialCmsImage }: PropTypes) {
                 </p>
                 <p>Org. Nr. 890 384 692</p>
                 <div>
-                    {/* Uncomment when PWA an SVG
+                    {/* TODO: Uncomment when PWA an SVG
                     <SpecialCmsImage
                         canEdit={canEditSpecialCmsImage}
                         special="FOOTER_1"
@@ -42,25 +40,27 @@ async function Footer({ canEditSpecialCmsImage }: PropTypes) {
                     </div>
                 </div>
             </div>
-            <div className={styles.info}>
-                <p>Kontakt:</p>
-                <p>Bedrift: <a href="mailto:post@contactor.no">post@contactor.no</a></p>
-                <p>Teknisk: <a href="mailto:vevcom@omega.ntnu.no">vevcom@omega.ntnu.no</a></p>
-                <p>PR: <a href="mailto:blaest@omega.ntnu.no">blaest@omega.ntnu.no</a></p>
-                <p>Annet: <a href="mailto:hs@omega.ntnu.no">hs@omega.ntnu.no</a></p>
-                <p>Tlf: <a href="tel:73594211">73 59 42 11</a></p>
-            </div>
-            <div className={styles.info}>
-                <p>Adresse:</p>
-                <p>Sct.Omega Broderskab</p>
-                <p>NTNU Gløshaugen</p>
-                <p>Elektro-bygget</p>
-                <p>7491 Trondheim</p>
+            <div className={styles.infoGroup}>
+                <div className={styles.info}>
+                    <p>Kontakt:</p>
+                    <p>Bedrift: <a href="mailto:post@contactor.no">post@contactor.no</a></p>
+                    <p>Teknisk: <a href="mailto:vevcom@omega.ntnu.no">vevcom@omega.ntnu.no</a></p>
+                    <p>PR: <a href="mailto:blaest@omega.ntnu.no">blaest@omega.ntnu.no</a></p>
+                    <p>Annet: <a href="mailto:hs@omega.ntnu.no">hs@omega.ntnu.no</a></p>
+                    <p>Tlf: <a href="tel:73594211">73 59 42 11</a></p>
+                </div>
+                <div className={styles.info}>
+                    <p>Adresse:</p>
+                    <p>Sct.Omega Broderskab</p>
+                    <p>NTNU Gløshaugen</p>
+                    <p>Elektro-bygget</p>
+                    <p>7491 Trondheim</p>
+                </div>
             </div>
             <div className={styles.sponsors}>
                 <SpecialCmsImage
                     canEdit={canEditSpecialCmsImage}
-                    special="FOOTER_2"
+                    special="FOOTER_SPONSOR_1"
                     width={170}
                     readSpecialCmsImageAction={readSpecialCmsImageFrontpage}
                     updateCmsImageAction={updateSpecialCmsImageFrontpage}
@@ -69,7 +69,7 @@ async function Footer({ canEditSpecialCmsImage }: PropTypes) {
                 </SpecialCmsImage>
                 <SpecialCmsImage
                     canEdit={canEditSpecialCmsImage}
-                    special="FOOTER_3"
+                    special="FOOTER_SPONSOR_2"
                     width={100}
                     readSpecialCmsImageAction={readSpecialCmsImageFrontpage}
                     updateCmsImageAction={updateSpecialCmsImageFrontpage}

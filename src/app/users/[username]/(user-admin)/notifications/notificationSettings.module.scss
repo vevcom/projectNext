@@ -30,7 +30,7 @@
 }
 
 .submitButton {
-    transition: opacity 200ms ease;
+    transition: opacity ohma.$transitionTime ease;
 
     max-width: 15rem;
     margin: auto;

@@ -1,4 +1,5 @@
 'use server'
+import styles from './page.module.scss'
 import NotificationSettings from './notificationSettings'
 import { getProfileForAdmin } from '@/app/users/[username]/(user-admin)/getProfileForAdmin'
 import { readNotificationChannelsAction, readNotificationSubscriptionsAction } from '@/services/notifications/actions'
@@ -25,7 +26,7 @@ export default async function Notififcations({ params }: PropTypes) {
     }
 
     return (
-        <div>
+        <div className={styles.wrapper}>
             <h2>Notifikasjoner</h2>
             <NotificationSettings user={profile.user} channels={channels.data} subscriptions={subscriptions.data} />
         </div>

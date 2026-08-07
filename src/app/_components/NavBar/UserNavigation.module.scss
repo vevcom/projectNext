@@ -1,7 +1,6 @@
 @use '@/styles/ohma';
 
 .UserNavigation {
-    background-color: ohma.$colors-gray-200;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -31,7 +30,7 @@
     }
     @include ohma.layer;
     h2 {
-        color: ohma.$colors-black;
+        color: ohma.$colors-text;
         font-size: ohma.$fonts-xl;
     }
 
@@ -53,12 +52,12 @@
         > * {
             flex: 1 1 calc(50% - 1em);
             @include ohma.round();
-            background-color: ohma.$colors-secondary;
+            background-color: ohma.$colors-surface-base;
             display: flex;
             align-items: center;
             justify-content: center;
             text-decoration: none;
-            color: ohma.$colors-white;
+            color: ohma.$colors-text;
             * {
                 transition: 300ms; // TODO Add transition variable
             }
@@ -66,14 +65,14 @@
             svg {
                 width: 20px;
                 height: 20px;
-                color: ohma.$colors-white;
+                color: ohma.$colors-text;
                 margin: .3em;
             }
             &:hover {
                 @include ohma.boxShadow('hover');
-                color: ohma.$colors-primary;
+                color: ohma.$colors-accent-blue;
                 svg {
-                    color: ohma.$colors-primary;
+                    color: ohma.$colors-accent-blue;
                 }
             }
         }

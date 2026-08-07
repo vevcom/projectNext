@@ -51,11 +51,14 @@ export default function DotList({ onlyActive }: PropTypes) {
                 }>
                     <UserList />
                 </PopUp>
-                <Link className={styles.selectActive} href={
-                    '/admin/dots/' +
-                `?${QueryParams.onlyActive.encodeUrl(!onlyActive)}` +
-                `&${userSelection.user ? QueryParams.userId.encodeUrl(userSelection.user?.id) : ''}`
-                }>
+                <Link
+                    className={styles.selectActive}
+                    aria-label={onlyActive ? 'Show all dots' : 'Show only active dots'}
+                    href={
+                        '/admin/dots/' +
+                    `?${QueryParams.onlyActive.encodeUrl(!onlyActive)}` +
+                    `&${userSelection.user ? QueryParams.userId.encodeUrl(userSelection.user?.id) : ''}`
+                    }>
                     {onlyActive ? 'Vis alle prikker' : 'Vis aktive prikker'}
                 </Link>
             </span>

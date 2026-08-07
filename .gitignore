@@ -54,3 +54,6 @@ src/prisma/migrations
 .rest
 
 .vscode
+.idea
+
+.claude

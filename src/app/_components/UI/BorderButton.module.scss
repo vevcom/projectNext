@@ -1,9 +1,14 @@
 @use "@/styles/ohma";
 
 .primary {
-    @include ohma.borderBtn(ohma.$colors-primary);
+    @include ohma.borderBtn(ohma.$colors-accent-blue);
 }
 
 .secondary {
-    @include ohma.borderBtn(ohma.$colors-secondary);
+    @include ohma.borderBtn(ohma.$colors-text);
+
+    &:hover {
+        background: ohma.$colors-surface-hover;
+        color: ohma.$colors-text;
+    }
 }

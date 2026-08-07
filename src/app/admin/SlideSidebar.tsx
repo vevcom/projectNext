@@ -1,6 +1,5 @@
 'use client'
 import styles from './SlideSidebar.module.scss'
-import BackButton from './BackButton'
 import useOnNavigation from '@/hooks/useOnNavigation'
 import { Fragment, useRef, useState } from 'react'
 import Link from 'next/link'
@@ -12,7 +11,6 @@ import {
     faNewspaper,
     faUser,
     faUserGroup,
-    faArrowLeft,
     faPaperPlane,
     faSchool,
     faDotCircle,
@@ -227,6 +225,10 @@ const navigations = [
                 title: 'Flairs',
                 href: '/admin/flairs'
             },
+            {
+                title: 'Komponenter',
+                href: '/admin/component-test'
+            },
         ]
     }
 ] satisfies {
@@ -263,10 +265,6 @@ export default function SlideSidebar({ currentPath }: PropTypes) {
         previousPath.current = currentPath
     })
 
-    const handleToggle = () => {
-        setOpen(!open)
-    }
-
     return <div className={open ? `${styles.SlideSidebar} ${styles.open}` : `${styles.SlideSidebar} ${styles.closed}`}>
         <aside className={styles.sidebar}>
             {
@@ -291,15 +289,5 @@ export default function SlideSidebar({ currentPath }: PropTypes) {
                 ))
             }
         </aside>
-        {
-            !(currentPath === 'admin' && open) && (
-                <button onClick={handleToggle} className={styles.toggle}>
-                    <FontAwesomeIcon icon={faArrowLeft} />
-                </button>
-            )
-        }
-
-        <BackButton className={styles.backButton} />
-
     </div>
 }

@@ -58,11 +58,14 @@ export default async function JobAd({ params }: PropTypes) {
 
     return (
         <div className={styles.wrapper}>
-            <main>
+            <main className={styles.main}>
                 <Article
                     canEdit={canEdit}
                     article={jobAd.article}
+                    coverImageClass={styles.coverImage}
                     sideBarClassName={styles.sideBar}
+                    articleClassName={styles.articleZone}
+                    addSectionClassName={styles.addSectionZone}
                     actions={{
                         updateArticleAction: configureAction(
                             updateJobAdArticleAction,
@@ -149,7 +152,6 @@ export default async function JobAd({ params }: PropTypes) {
                                     disableEdit
                                     squareLogo={false}
                                     company={jobAd.company}
-                                    asClient={false}
                                     session={session}
                                 />
                             </div>

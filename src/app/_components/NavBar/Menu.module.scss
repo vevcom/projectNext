@@ -8,6 +8,46 @@
     }
 }
 
+.menuBtn {
+    position: relative;
+    width: 25px;
+    height: 18px;
+
+    span {
+        position: absolute;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        border-radius: 2px;
+        background-color: ohma.$colors-text;
+        transition: transform ohma.$transitionTime ease, opacity ohma.$transitionTime ease, top ohma.$transitionTime ease;
+
+        &:nth-child(1) {
+            top: 0;
+        }
+        &:nth-child(2) {
+            top: 8px;
+        }
+        &:nth-child(3) {
+            top: 16px;
+        }
+    }
+
+    &.open {
+        span:nth-child(1) {
+            top: 8px;
+            transform: rotate(45deg);
+        }
+        span:nth-child(2) {
+            opacity: 0;
+        }
+        span:nth-child(3) {
+            top: 8px;
+            transform: rotate(-45deg);
+        }
+    }
+}
+
 .Menu {
     position: fixed;
     top: 60px;
@@ -15,7 +55,7 @@
     z-index: 9;
     @include ohma.layer;
     max-width: 50dvw;
-    width: 66 * ohma.$gap;
+    width: calc(66 * #{ohma.$gap});
     height: calc(100dvh - 60px);
     display: flex;
     justify-content: flex-start;
@@ -34,10 +74,10 @@
             list-style: none;
             margin: ohma.$gap;
             a {
-                width: 30 * ohma.$gap;
+                width: calc(30 * #{ohma.$gap});
                 text-decoration: none;
-                padding: 2 * ohma.$gap;
-                @include ohma.layer();
+                padding: calc(2 * #{ohma.$gap});
+                background: ohma.$colors-surface-base;
                 border-radius: ohma.$rounding;
                 color: ohma.$colors-text;
                 display: flex;
@@ -45,9 +85,9 @@
                 font-size: ohma.$fonts-l;
                 font-weight: ohma.$fonts-weight-l;
                 &:hover {
-                    color: ohma.$colors-primary;
+                    color: ohma.$colors-accent-blue;
                     svg {
-                        color: ohma.$colors-primary;
+                        color: ohma.$colors-accent-blue;
                     }
                 }
                 svg {
@@ -84,18 +124,19 @@
 
 @media screen and (max-width: ohma.$mobileBreakpoint) {
     .Menu {
-        width: 100dvw;
+        width: auto;
         max-width: unset;
-        height: calc(100dvh - 59px);
-        top: 0;
-        bottom: 0;
-        right: 0;
+        top: calc(#{ohma.$nav-height} + #{ohma.$gap}*2);
+        height: calc(100dvh - #{ohma.$nav-height}*2 - #{ohma.$gap}*4);
+        left: ohma.$gap;
+        right: ohma.$gap;
+        border-radius: ohma.$rounding;
         > div {
             top: 0;
             justify-content: center;
             > div > a {
                 font-size: x-large;
-                width: calc(100dvw - (#{ohma.$gap} * 4));
+                width: calc(100dvw - #{ohma.$gap} * 6);
             }
         }
         &.closeMenu {

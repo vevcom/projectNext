@@ -3,7 +3,7 @@
 .subscriptionItem {
 
     &:nth-child(odd) {
-        background-color: ohma.$colors-gray-200;
+        background-color: ohma.$colors-surface-raised;
     }
 
     .channelName {

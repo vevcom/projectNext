@@ -1,21 +1,17 @@
 'use client'
 import Form from '@/components/Form/Form'
-import { ImageSelectionContext } from '@/contexts/ImageSelection'
 import { configureAction } from '@/services/configureAction'
-import { useContext } from 'react'
+import type { Image as ImageT } from '@/prisma-generated-pn-types'
 import type { UpdateCmsImageAction } from '@/cms/images/types'
 
 type PropTypes = {
     cmsImageId: number
+    selectedImage: ImageT
     className?: string
     updateCmsImageAction: UpdateCmsImageAction
 }
 
-export default function ChangeImageForm({ cmsImageId, className, updateCmsImageAction }: PropTypes) {
-    const selection = useContext(ImageSelectionContext)
-
-    if (!selection?.selectedImage) throw new Error('ImageSelectionContext required to use ChangeImage')
-
+export default function ChangeImageForm({ cmsImageId, selectedImage, className, updateCmsImageAction }: PropTypes) {
     return (
         <Form
             className={className}
@@ -24,7 +20,7 @@ export default function ChangeImageForm({ cmsImageId, className, updateCmsImageA
                 configureAction(
                     updateCmsImageAction,
                     { params: { cmsImageId } }
-                ).bind(null, { data: { imageId: selection?.selectedImage?.id } })
+                ).bind(null, { data: { imageId: selectedImage.id } })
             }
             submitText="change"
             refreshOnSuccess

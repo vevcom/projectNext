@@ -2,24 +2,21 @@
 
 .resetPasswordLink {
     > p {
-        margin-top: 2*ohma.$gap;
+        margin: calc(2 * #{ohma.$gap}) 0;
     }
-    color: ohma.$colors-text;
-    transition: color 100ms;
     &:hover {
         color: ohma.$colors-text-muted;
     }
 }
 
 .firstLoginText {
-    margin-top: ohma.$gap;
     color: ohma.$colors-text;
 }
 
 .loginForm {
     .textInput {
         max-width: unset;
-        margin-bottom: 2*ohma.$gap;
+        margin-bottom: calc(2 * #{ohma.$gap});
     }
 }
 
@@ -30,7 +27,7 @@
 .divider {
     display: flex;
     justify-content: center;
-    margin: 2*ohma.$gap 0;
+    margin: calc(2 * #{ohma.$gap}) 0;
     &::before,
     &::after {
         margin: ohma.$gap;

@@ -24,7 +24,7 @@ $collectionSize: calc(14vmin + 70px);
     .linkToImages {
         position: absolute;
         width: 10em;
-        @include ohma.btn(ohma.$colors-primary);
+        @include ohma.btn(ohma.$colors-accent-blue);
         @include ohma.screenLg {
             top: -2%;
             right: -2%;
@@ -57,7 +57,7 @@ $collectionSize: calc(14vmin + 70px);
     > .selectImage {
         grid-column: 2 / 3;
         grid-row: 1 / 2;
-        background-color: ohma.$colors-secondary;
+        background-color: ohma.$colors-surface-base;
         overflow: scroll;
         max-width: 100%;
         width: 100%;
@@ -75,25 +75,48 @@ $collectionSize: calc(14vmin + 70px);
         grid-row: 2 / 3;
         @include ohma.layer();
         display: flex;
+        flex-direction: column;
         max-width: 100%;
-        overflow-x: scroll;
-        min-height: calc($collectionSize + 5vmin);
-        align-items: center;
-        padding: 2*ohma.$gap;
+        padding: calc(2 * #{ohma.$gap});
         border-radius: #{ohma.$rounding};
+
+        > .collectionNote {
+            display: flex;
+            align-items: flex-start;
+            gap: ohma.$gap;
+            margin-bottom: ohma.$gap;
+            max-width: 90ch;
+            font-size: ohma.$fonts-s;
+            color: ohma.$colors-text-muted;
+            > svg {
+                margin-top: 0.25em;
+                flex-shrink: 0;
+            }
+        }
+
+        > .collections {
+            display: flex;
+            max-width: 100%;
+            overflow-x: scroll;
+            min-height: calc($collectionSize + 5vmin);
+            align-items: center;
+        }
 
         .collection {
             position: relative;
+            flex-shrink: 0;
             margin: 0 .2em;
+            width: $collectionSize;
+            height: $collectionSize;
             .collectionCard {
-                width: $collectionSize;
-                height: $collectionSize;
+                width: 100%;
+                height: 100%;
                 margin: 0;
                 z-index: 1;
             }
             .selector {
-                width: $collectionSize;
-                height: $collectionSize;
+                width: 100%;
+                height: 100%;
                 z-index: 2;
                 position: absolute;
                 background-color: transparent;
@@ -112,17 +135,17 @@ $collectionSize: calc(14vmin + 70px);
             &.selected {
                 transform: scale(1.1);
                 z-index: 3;
-                border: 5px solid ohma.$colors-primary;
+                border: 5px solid ohma.$colors-accent-blue;
                 border-radius: 1.25em;
                 .collectionCard img {
                     scale: 1.2;
                 }
             }
         }
-        > *:last-child:not(.collection) {
+        > .collections > *:last-child:not(.collection) {
             min-width: $collectionSize;
             height: $collectionSize;
-            border: ohma.$colors-black 1px solid;
+            border: ohma.$colors-surface-subtle 1px solid;
             display: flex;
             position: relative;
             @include ohma.round;

@@ -2,6 +2,7 @@
 import styles from './page.module.scss'
 import TextInput from '@/UI/TextInput'
 import BorderButton from '@/UI/BorderButton'
+import PageTitleSetter from '@/contexts/PageTitleSetter'
 import { signIn } from 'next-auth/react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
@@ -26,6 +27,7 @@ export default function LogIn() {
     }
 
     return <>
+        <PageTitleSetter title={'Logg inn'}/>
         <form className={styles.loginForm} onSubmit={handleSignIn}>
             <TextInput className={styles.textInput} label="Brukernavn" name="username" type="text"/>
             <TextInput className={styles.textInput} label="Passord" name="password" type="password"/>

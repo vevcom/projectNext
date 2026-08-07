@@ -72,8 +72,8 @@ model Committee {
   committeeArticle       Article      @relation(fields: [committeeArticleId], references: [id], onDelete: Restrict, onUpdate: Cascade)
   committeeArticleId     Int          @unique
   videoLink              String?
-  logoImage              CmsImage     @relation(fields: [logoImageId], references: [id], onDelete: Restrict, onUpdate: Cascade)
-  logoImageId            Int          @unique
+  logoImage              Image?       @relation(fields: [logoImageId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  logoImageId            Int?         @unique
   paragraph              CmsParagraph @relation(fields: [paragraphId], references: [id], name: "committeeParagraph")
   paragraphId            Int          @unique
   applicationParagraph   CmsParagraph @relation(fields: [applicationParagraphId], references: [id], name: "applicationParagraph")

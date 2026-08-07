@@ -8,7 +8,7 @@
     font-family: 'Arial', sans-serif;
     font-size: 16rem;
     font-weight: 800;
-    color: ohma.$colors-red;
+    color: ohma.$colors-accent-red;
 }
 
 .Countdown div {
@@ -20,6 +20,6 @@
 
 .Countdown span {
     font-size: 13rem;
-    color: ohma.$colors-gray-200;
+    color: ohma.$colors-ink-strong;
     transform: translateY(-5%);
 }

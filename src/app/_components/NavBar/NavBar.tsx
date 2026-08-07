@@ -1,72 +1,65 @@
 import Item from './Item'
 import styles from './NavBar.module.scss'
-import Menu from './Menu'
 import getNavItems from './navDef'
 import UserNavigation from './UserNavigation'
 import ReportButton from './ReportButton'
-import EditModeSwitch from '@/components/EditModeSwitch/EditModeSwitch'
-import SpecialCmsImage from '@/components/Cms/CmsImage/SpecialCmsImage'
-import { readSpecialCmsImageFrontpage, updateSpecialCmsImageFrontpage } from '@/services/frontpage/actions'
+import NavBarTitle from './NavBarTitle'
+import PageTitleSetter from '@/contexts/PageTitleSetter'
+import StandardImageServer from '@/components/Image/StandardImageServer'
 import Link from 'next/link'
-import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
 import type { Profile } from '@/services/users/types'
 
 export type PropTypes = {
     profile: Profile | null
-    canEditSpecialCmsImage: AuthResultTypeAny
 }
 
-export default async function NavBar({ profile, canEditSpecialCmsImage }: PropTypes) {
+export default async function NavBar({ profile }: PropTypes) {
     const user = profile?.user ?? null
     const isLoggedIn = user !== null
-    // TODO: Actual application period check
     const applicationPeriod = false
-    // TODO: Actual admin/auth check
     const isAdmin = user?.username === 'harambe'
 
     const navSize = 4
     const navItems = getNavItems(isLoggedIn, isAdmin, applicationPeriod)
     const itemsForNav = navItems.slice(0, navSize - 1)
-    const itemsForMenu = navItems.slice(navSize - 1, navItems.length)
 
     return (
         <nav className={styles.NavBar}>
-            <ul>
-                <li className={styles.logo}>
-                    <SpecialCmsImage
-                        canEdit={canEditSpecialCmsImage}
-                        special="NAV_PRIMARY_BUTTON"
-                        width={30}
-                        alt="omega logo"
-                        readSpecialCmsImageAction={readSpecialCmsImageFrontpage}
-                        updateCmsImageAction={updateSpecialCmsImageFrontpage}
-                    >
-                        <Link href="/" />
-                    </SpecialCmsImage>
+            <ul className={styles.list}>
+                <li className={styles.logoContainer}>
+                    <div className={styles.logo}>
+                        <div className={styles.logoWrapper}>
+                            <StandardImageServer
+                                standardImage="LOGO_SIMPLE"
+                                width={30}
+                                alt="omega logo"
+                            >
+                                <Link aria-label={'Go to homepage'} href="/" />
+                            </StandardImageServer>
+                        </div>
+                    </div>
                 </li>
+
+                <PageTitleSetter title="" />
+                <li className={styles.pageTitleLi}>
+                    <NavBarTitle />
+                </li>
+                <li className={styles.grower}></li>
                 {
                     itemsForNav.map((item) => (
-                        <Item key={item.name} {...item} />
+                        <li className={styles.navItem} key={item.name}>
+                            <Item key={item.name} {...item} />
+                        </li>
                     ))
                 }
-                <li>
-                    <Menu
-                        openBtnVariant={'desktop'}
-                        items={itemsForMenu}
-                    />
-                </li>
                 <li className={styles.rightSide}>
-                    <EditModeSwitch />
                     <ReportButton/>
                     <div className={styles.magicHat}>
-                        <SpecialCmsImage
-                            canEdit={canEditSpecialCmsImage}
-                            special="NAV_LOGIN_BUTTON"
+                        <StandardImageServer
+                            standardImage="MAGISK_HATT"
                             width={25}
                             height={25}
                             alt="log in button"
-                            readSpecialCmsImageAction={readSpecialCmsImageFrontpage}
-                            updateCmsImageAction={updateSpecialCmsImageFrontpage}
                         />
                         <UserNavigation profile={profile} />
                     </div>
