@@ -33,19 +33,6 @@ COPY next-env.d.t[s] next.config.ts tsconfig.json ./
 COPY standard_store standard_store
 
 ############################################################
-FROM base AS prod
-
-ENV NODE_ENV=production
-
-COPY src src
-
-RUN npm run build
-
-HEALTHCHECK --interval=10s --timeout=3s --start-period=30s --retries=5 \
-    CMD wget --spider -q http://localhost:3000/api/health || exit 1
-
-CMD ["npm", "run", "start"]
-############################################################
 FROM base AS test
 
 ENV NODE_ENV=test
@@ -61,3 +48,21 @@ ENV NODE_ENV=development
 # src is expected to be binded in dev
 
 CMD ["npm", "run", "dev-seed"]
+############################################################
+# prod is deliberately the last stage: a plain `docker build` with no
+# --target/build-stage specified (e.g. some PaaS "Dockerfile" build modes)
+# defaults to the last stage in the file - that should be the one that
+# actually builds and serves the app, not dev (which expects src/ to be
+# bind-mounted, not copied in) or test.
+FROM base AS prod
+
+ENV NODE_ENV=production
+
+COPY src src
+
+RUN npm run build
+
+HEALTHCHECK --interval=10s --timeout=3s --start-period=30s --retries=5 \
+    CMD wget --spider -q http://localhost:3000/api/health || exit 1
+
+CMD ["npm", "run", "start"]
