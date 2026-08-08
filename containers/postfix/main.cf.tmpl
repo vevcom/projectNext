@@ -26,11 +26,10 @@ readme_directory = no
 compatibility_level = 2
 
 # TLS parameters
-smtpd_tls_cert_file=/etc/letsencrypt/live/{{ .Env.MY_HOSTNAME }}/fullchain.pem
-smtpd_tls_key_file=/etc/letsencrypt/live/{{ .Env.MY_HOSTNAME }}/privkey.pem
-smtpd_use_tls=yes
-smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
-smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
+# No certificate is provisioned for the mail domain (dropped along with the
+# nginx-owned certbot flow) - TLS is disabled rather than pointing at cert
+# files that don't exist, which would otherwise stop postfix from starting.
+smtpd_use_tls=no
 
 # See /usr/share/doc/postfix/TLS_README.gz in the postfix-doc package for
 # information on enabling SSL in the smtp client.

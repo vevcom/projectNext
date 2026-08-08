@@ -69,6 +69,18 @@ To load data from Omegaweb-basic run dobbelOmega from within a projectnext conta
 docker compose -f docker-compose.prod.yml exec projectnext npm run dobbelOmega:run
 ```
 
+### Deploying with Dokploy / Coolify
+
+`docker-compose.prod.yml` is written to run behind a platform-managed reverse proxy (Dokploy's or Coolify's built-in Traefik), which terminates TLS and handles Let's Encrypt automatically. The `nginx` service does not bind host ports 80/443 itself - it only serves internally (static `/store/` files, and proxying everything else to `projectnext`), and the platform's proxy routes to it.
+
+To deploy:
+1. Point the platform at this repository, and set the Docker Compose file path to `docker-compose.prod.yml`.
+2. Configure the required environment variables (see `.env.default` for the full list and dev-appropriate example values - set real secrets for production).
+3. In the platform's UI, set the app's domain to route to the `nginx` service on port `80`.
+4. A liveness endpoint is available at `/api/health` (also used by the `projectnext` service's own Docker healthcheck) if the platform asks for one.
+
+Note: `postfix` (mail relay) is unaffected by the proxy and still publishes ports `25`/`587` directly - it currently has no TLS certificate configured (dropped along with the old nginx-owned certbot flow), so mail is sent in plaintext until a cert is provisioned for it separately.
+
 ## Lint
 
 To lint the project (TS/JS) run

@@ -32,6 +32,12 @@ services:
             JWT_PUBLIC_KEY: ${JWT_PUBLIC_KEY}
             JWT_SECRET: ${JWT_SECRET}
             SERVER_LINK_PREFIX: ${SERVER_LINK_PREFIX}
+        healthcheck:
+            test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000/api/health"]
+            interval: 10s
+            timeout: 3s
+            retries: 5
+            start_period: 30s
         depends_on:
             db:
                 condition: service_healthy

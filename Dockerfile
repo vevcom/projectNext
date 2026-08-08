@@ -40,6 +40,10 @@ ENV NODE_ENV=production
 COPY src src
 
 RUN npm run build
+
+HEALTHCHECK --interval=10s --timeout=3s --start-period=30s --retries=5 \
+    CMD wget --spider -q http://localhost:3000/api/health || exit 1
+
 CMD ["npm", "run", "start"]
 ############################################################
 FROM base AS test
