@@ -1,5 +1,6 @@
 import '@pn-server-only'
 import { readJWTPart } from './jwtReadUnsecure'
+import { readPemEnv } from './readPemEnv'
 import { JWT_ISSUER } from '@/lib/jwt/constants'
 import { ServerError } from '@/services/error'
 import { JsonWebTokenError, TokenExpiredError, sign, verify } from 'jsonwebtoken'
@@ -31,7 +32,7 @@ export function generateJWT<T extends object>(
         throw new ServerError('INVALID CONFIGURATION', 'Missing secret for JWT generation')
     }
 
-    return sign(payload, asymetric ? process.env.JWT_PRIVATE_KEY : process.env.JWT_SECRET, {
+    return sign(payload, asymetric ? readPemEnv(process.env.JWT_PRIVATE_KEY) : process.env.JWT_SECRET, {
         audience: aud,
         algorithm: asymetric ? 'ES256' : 'HS256',
         issuer: JWT_ISSUER,
@@ -57,7 +58,7 @@ export function verifyJWT(token: string, aud?: OmegaJWTAudience): (jwt.JwtPayloa
         const JWTHeader = readJWTPart(token, 0)
         let jwtKey = process.env.JWT_SECRET
         if (JWTHeader.alg === 'ES256') {
-            jwtKey = process.env.JWT_PUBLIC_KEY
+            jwtKey = readPemEnv(process.env.JWT_PUBLIC_KEY)
         }
 
         const payload = verify(token, jwtKey, {
