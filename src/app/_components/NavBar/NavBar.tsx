@@ -27,17 +27,15 @@ export default async function NavBar({ profile }: PropTypes) {
         <nav className={styles.NavBar}>
             <ul className={styles.list}>
                 <li className={styles.logoContainer}>
-                    <div className={styles.logo}>
+                    <Link aria-label={'Go to homepage'} href="/" className={styles.logo}>
                         <div className={styles.logoWrapper}>
                             <StandardImageServer
                                 standardImage="LOGO_SIMPLE"
                                 width={30}
                                 alt="omega logo"
-                            >
-                                <Link aria-label={'Go to homepage'} href="/" />
-                            </StandardImageServer>
+                            />
                         </div>
-                    </div>
+                    </Link>
                 </li>
 
                 <PageTitleSetter title="" />
