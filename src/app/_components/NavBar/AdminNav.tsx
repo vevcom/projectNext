@@ -10,6 +10,7 @@ import { useContext } from 'react'
 
 type PropTypes = {
     isAdmin: boolean
+    expanded?: boolean
 }
 
 /**
@@ -19,19 +20,22 @@ type PropTypes = {
  * there's something to edit is only known client-side via
  * EditModeContext, so that decision has to live in a client component.
  */
-export default function AdminNav({ isAdmin }: PropTypes) {
+export default function AdminNav({ isAdmin, expanded = false }: PropTypes) {
     const editModeCtx = useContext(EditModeContext)
     if (!isAdmin && !editModeCtx?.somethingToEdit) return null
 
+    const adminLink = (
+        <Link href="/admin" className={styles.navIcon} aria-label="Admin">
+            <FontAwesomeIcon icon={faCog} className={styles.icon} />
+            <span className={styles.label}>Admin</span>
+        </Link>
+    )
+
     return (
         <nav className={styles.adminNav} aria-label="Admin navigation">
-            <EditModeNavIcon className={styles.navIcon} />
+            <EditModeNavIcon className={styles.navIcon} expanded={expanded} />
             {isAdmin && (
-                <NavTooltip content="Admin">
-                    <Link href="/admin" className={styles.navIcon} aria-label="Admin">
-                        <FontAwesomeIcon icon={faCog} className={styles.icon} />
-                    </Link>
-                </NavTooltip>
+                expanded ? adminLink : <NavTooltip content="Admin">{adminLink}</NavTooltip>
             )}
         </nav>
     )

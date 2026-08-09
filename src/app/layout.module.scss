@@ -20,6 +20,13 @@
         "navBar navBar"
         "sideBar content"
         "sideBar content";
+    transition: grid-template-columns ohma.$transitionTime ease;
+
+    @media (min-width: calc(#{ohma.$mobileBreakpoint} + 1px)) {
+        &:has(.sideBar [data-expanded='true']) {
+            grid-template-columns: 220px 1fr;
+        }
+    }
 }
 
 .navBar {
