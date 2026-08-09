@@ -81,6 +81,12 @@
     position: relative;
     @include ohma.btn(ohma.$colors-accent-blue);
     margin: 0;
+    height: 64px;
+    width: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: calc(#{ohma.$gap} * 2);
 }
 
 .grower {
