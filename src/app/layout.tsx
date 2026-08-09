@@ -12,6 +12,7 @@ import { readAllStandardImagesAction } from '@/services/images/standard/actions'
 import { readUserProfileAction } from '@/services/users/actions'
 import { ServerSession } from '@/auth/session/ServerSession'
 import ThemeEnabler from '@/UI/ThemeEnabler'
+import ServiceWorkerRegister from '@/UI/ServiceWorkerRegister'
 import DesktopSideBar from '@/components/NavBar/DesktopSideBar'
 import { Inter } from 'next/font/google'
 import '@/styles/globals.scss'
@@ -19,7 +20,7 @@ import { config } from '@fortawesome/fontawesome-svg-core'
 import '@fortawesome/fontawesome-svg-core/styles.css'
 import { getServerSession } from 'next-auth'
 import type { ReactNode } from 'react'
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import NavBar from '@/components/NavBar/NavBar'
 
 config.autoAddCss = false
@@ -33,6 +34,10 @@ export const metadata: Metadata = {
     },
     description: 'Hjemmesiden for linjeforeningen Sanctus Omega Broderskab ved NTNU.',
     keywords: ['Sanctus Omega Broderskab', 'Sct. Omega Broderskab', 'Sanctus Omega', 'Sct. Omega', 'Omega'],
+}
+
+export const viewport: Viewport = {
+    themeColor: '#037FFC',
 }
 
 type PropTypes = {
@@ -54,6 +59,7 @@ export default async function RootLayout({ children }: PropTypes) {
         <html lang="en">
             <body className={`${inter.className} ${styles.body}`}>
                 <ThemeEnabler></ThemeEnabler>
+                <ServiceWorkerRegister></ServiceWorkerRegister>
                 <SessionProvider session={nextAuthSession}>
                     <ClientDataProvider
                         session={serverSession.toJsObject()}
