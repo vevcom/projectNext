@@ -541,6 +541,27 @@ const eslintConfig = defineConfig([
             ]
         }
     },
+    {
+        // Visible <input> elements should go through a component in @/components/UI
+        // (TextInput, Checkbox, NumberInput, ...) rather than being written raw, so they get
+        // consistent styling/behavior (e.g. Checkbox's hidden "field present" input keeps
+        // unchecked boxes submitting correctly). type="hidden" inputs are exempt since they're
+        // just plain form data carriers with no component equivalent. The UI folder itself is
+        // exempt since that's where these primitives are implemented.
+        files: ['src/app/**/*.tsx'],
+        ignores: ['src/app/_components/UI/**'],
+        rules: {
+            'no-restricted-syntax': [
+                'warn',
+                {
+                    selector: "JSXOpeningElement[name.name='input']"
+                        + ":not(:has(JSXAttribute[name.name='type'] Literal[value='hidden']))",
+                    message: 'Use an input component from @/components/UI (TextInput, Checkbox, NumberInput, '
+                        + 'etc.) instead of a raw <input>. type="hidden" inputs are exempt.'
+                }
+            ]
+        }
+    },
     globalIgnores([
         '.next/**',
         'out/**',
