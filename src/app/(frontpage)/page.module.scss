@@ -39,7 +39,7 @@ $taktlause: url("backgroundimages/taktlause.jpeg");
 
 .frontInfo {
     width: 100%;
-    height: calc(100dvh - 60px);
+    min-height: calc(100dvh - #{ohma.$nav-height} - 3 * #{ohma.$gap});
     display: grid;
     place-items: center;
     background: radial-gradient(ohma.$colors-black, transparent);
@@ -47,7 +47,7 @@ $taktlause: url("backgroundimages/taktlause.jpeg");
         display: flex;
         flex-direction: column;
         align-items: center;
-        padding-bottom: 20px; //compansate a little for nav size 
+        padding-bottom: 20px;
         > img {
             margin-bottom: calc(2 * #{ohma.$gap});
         }
@@ -58,5 +58,9 @@ $taktlause: url("backgroundimages/taktlause.jpeg");
         > .scrollDown {
             color: ohma.$colors-white;
         }
+    }
+
+    @media (max-width: ohma.$mobileBreakpoint) {
+        min-height: calc(100dvh - 2 * #{ohma.$nav-height} - 4 * #{ohma.$gap});
     }
 }
