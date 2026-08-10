@@ -23,9 +23,11 @@ $taktlause: url("backgroundimages/taktlause.jpeg");
         }
         &.omegamai {
             background-image: $omegamai;
+            padding: calc(2 * #{ohma.$gap}) 0;
         }
         &.taktlause {
             background-image: $taktlause;
+            padding: calc(2 * #{ohma.$gap}) 0;
         }
         background-size: cover;
         background-repeat: no-repeat;
@@ -49,17 +51,6 @@ $taktlause: url("backgroundimages/taktlause.jpeg");
         > img {
             margin-bottom: calc(2 * #{ohma.$gap});
         }
-        > .socials {
-            margin: calc(3 * #{ohma.$gap});
-            > a {
-                margin: ohma.$gap;
-                color: ohma.$colors-white;
-                transition: color ohma.$transitionTime;
-                &:hover {
-                    color: ohma.$colors-ink-hover;
-                }
-            }
-        }
         > a:not(.scrollDown) {
             width: 100%;
             @include ohma.borderBtn();
@@ -68,8 +59,4 @@ $taktlause: url("backgroundimages/taktlause.jpeg");
             color: ohma.$colors-white;
         }
     }
-}
-
-.emptyPart {
-    height: 30vh;
 }

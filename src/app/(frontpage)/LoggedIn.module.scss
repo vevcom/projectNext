@@ -10,3 +10,17 @@
         @include ohma.pagePadding();
     }
 }
+
+.socials {
+    display: flex;
+    justify-content: flex-end;
+    margin: calc(2 * #{ohma.$gap}) 0;
+    > a {
+        margin-left: ohma.$gap;
+        color: ohma.$colors-text;
+        transition: color ohma.$transitionTime;
+        &:hover {
+            color: ohma.$colors-accent-blue;
+        }
+    }
+}

@@ -21,21 +21,15 @@ $iconSize: 150px;
         > .icon {
             width: $iconSize;
             height: $iconSize;
-            position: relative;
+            border-radius: 50%;
+            background-color: ohma.$colors-accent-blue;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             > svg {
-                width: calc($iconSize /2);
-                height: calc($iconSize /2);
-                position: absolute;
-                top: 0;
-                left: 50%;
-                transform: translate(-50%, 50%);
+                width: calc($iconSize / 2);
+                height: calc($iconSize / 2);
                 color: ohma.$colors-text;
-                &:first-child {
-                    color: ohma.$colors-surface-base;
-                    width: $iconSize;
-                    height: $iconSize;
-                    transform: translate(-50%, 0);
-                }
             }
             margin-bottom: calc(2 * #{ohma.$gap});
         }

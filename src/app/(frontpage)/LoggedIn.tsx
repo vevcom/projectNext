@@ -48,9 +48,6 @@ export default async function LoggedInLandingPage() {
                             standardImage="LOGO_WHITE"
                             width={300}
                         />
-                        <div className={styles.socials}>
-                            <SocialIcons />
-                        </div>
                         <Link className={styles.scrollDown} href="#firstSection">
                             <FontAwesomeIcon icon={faAngleDown} />
                         </Link>
@@ -59,6 +56,9 @@ export default async function LoggedInLandingPage() {
             </div>
             <div id="firstSection" className={`${styles.part} ${loggedInStyles.loggedInPart}`}>
                 <div>
+                    <div className={loggedInStyles.socials}>
+                        <SocialIcons />
+                    </div>
                     <LoggedInSection title="Nyheter" link="/news">
                         {news.map((newsArticle, key) => (
                             <NewsCard key={key} news={newsArticle} />

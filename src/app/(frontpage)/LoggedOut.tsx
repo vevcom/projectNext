@@ -1,5 +1,6 @@
 import Section from './Section'
 import styles from './page.module.scss'
+import sectionStyles from './Section.module.scss'
 import InfoBubbles from './InfoBubbles'
 import { MazeMapLophtet } from '@/components/MazeMap/MazeMap'
 import SocialIcons from '@/components/SocialIcons/SocialIcons'
@@ -37,9 +38,6 @@ export default async function LoggedOutLandingPage() {
                         <Link href="infopages/nystudent">Ny student</Link>
                         <Link href="/career">For bedrifter</Link>
 
-                        <div className={styles.socials}>
-                            <SocialIcons />
-                        </div>
                         <Link className={styles.scrollDown} href="#firstSection">
                             <FontAwesomeIcon icon={faAngleDown} />
                         </Link>
@@ -54,7 +52,11 @@ export default async function LoggedOutLandingPage() {
                     readMore="/articles"
                     imgWidth={450}
                     id="firstSection"
-                />
+                >
+                    <div className={sectionStyles.socials}>
+                        <SocialIcons />
+                    </div>
+                </Section>
 
                 <InfoBubbles />
                 <Section
@@ -69,9 +71,7 @@ export default async function LoggedOutLandingPage() {
 
             </div>
             <div className={`${styles.part} ${styles.omegamai}`}>
-                <div className={styles.emptyPart} />
                 <YouTube src="https://www.youtube.com/watch?v=I-zNLW4ILu4" />
-                <div className={styles.emptyPart} />
                 <Section
                     canEditSpecialCmsImage={canEditSpecialCmsImage}
                     canEditSpecialCmsParagraph={canEditSpecialCmsParagraph}
@@ -93,9 +93,7 @@ export default async function LoggedOutLandingPage() {
 
             </div>
             <div className={`${styles.part} ${styles.taktlause}`}>
-                <div className={styles.emptyPart} />
                 <MazeMapLophtet height={'80vh'}/>
-                <div className={styles.emptyPart} />
             </div>
             <div className={styles.footer}>
                 <Footer canEditSpecialCmsImage={canEditSpecialCmsImage} />
