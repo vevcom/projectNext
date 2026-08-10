@@ -48,6 +48,26 @@
 .EventImage {
     height: 200px;
     overflow: hidden;
+    position: relative;
+
+    // CmsImage's own wrapper divs (CmsImage/StandardImage/Image) size themselves off the
+    // image's intrinsic width rather than off this container, which let images overextend
+    // past the card. Force every wrapper div to fill this box instead, at whatever nesting
+    // depth - Image sits one level deeper when there's no image chosen yet and StandardImage's
+    // fallback renders instead.
+    div {
+        width: 100%;
+        height: 100%;
+    }
+
+    img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
 }
 
 .EventMain {

@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCopyright } from '@fortawesome/free-solid-svg-icons'
 import type { Image, ImageSize, Image as ImageT } from '@/prisma-generated-pn-types'
 import type { ImageProps } from 'next/image'
+import type { CSSProperties } from 'react'
 
 export type ImageSizeOptions = ImageSize | 'ORIGINAL'
 
@@ -75,8 +76,10 @@ export default function Image({
         if (smallSize) url = `/store/images/${image.fsLocationSmallSize}`
         if (largeSize) url = `/store/images/${image.fsLocationLargeSize}`
     }
+    const imageWidthStyle = { '--image-width': `${width}px` } as CSSProperties
+
     return (
-        <div style={{ width: `${width}px` }} className={`${styles.Image} ${imageContainerClassName}`}>
+        <div style={imageWidthStyle} className={`${styles.Image} ${imageContainerClassName}`}>
             <img {...props}
                 width={width}
                 alt={alt || image.alt}
@@ -109,8 +112,10 @@ type SrcImageProps = Omit<PropTypes, 'image' | 'imageSize' | 'smallSize' | 'larg
  * @returns
  */
 export function SrcImage({ src, width, ...props }: SrcImageProps) {
+    const imageWidthStyle = { '--image-width': `${width}px` } as CSSProperties
+
     return (
-        <div style={{ width: `${width}px` }} className={styles.Image}>
+        <div style={imageWidthStyle} className={styles.Image}>
             <img {...props} width={width} src={src} />
         </div>
     )
