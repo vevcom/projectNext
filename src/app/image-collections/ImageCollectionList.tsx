@@ -8,6 +8,7 @@ import { useState, type ReactNode } from 'react'
 
 type PropTypes = {
     serverRendered: ReactNode,
+    toggle?: ReactNode,
 }
 
 /**
@@ -15,7 +16,7 @@ type PropTypes = {
  * @param serverRendered - Make sure to pass the server rendered collections here in the correct format
  * @returns
  */
-export default function ImageCollectionList({ serverRendered }: PropTypes) {
+export default function ImageCollectionList({ serverRendered, toggle }: PropTypes) {
     const [mode, setMode] = useState<'special' | 'dynamic'>('dynamic')
 
     const specialCollectionsResult = useSpecialCollections()
@@ -43,6 +44,7 @@ export default function ImageCollectionList({ serverRendered }: PropTypes) {
                 >
                     Spesialsamlinger
                 </button>
+                {toggle && <div className={styles.toggle}>{toggle}</div>}
             </div>
             {mode === 'dynamic' ? (
                 <div className={styles.grid}>

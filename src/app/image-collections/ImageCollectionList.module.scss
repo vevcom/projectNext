@@ -9,20 +9,31 @@ $collection-size: 250px;
 .modeSwitch {
     width: 100%;
     display: flex;
+    align-items: center;
     gap: ohma.$gap;
     margin-bottom: ohma.$gap;
+
     > button {
-        opacity: 0.5;
+        @include ohma.btn(ohma.$colors-surface-hover);
+        margin: 0;
+        color: ohma.$colors-text;
+
         &.active {
-            opacity: 1;
+            @include ohma.btn(ohma.$colors-accent-blue);
+            margin: 0;
         }
     }
 }
 
+.toggle {
+    margin-left: auto;
+}
+
 .grid {
     width: 100%;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 
     > *:not(.loadingControl) {
         width: $collection-size;
@@ -31,33 +42,16 @@ $collection-size: 250px;
         overflow: hidden;
         @include ohma.round;
         position: relative;
-        place-self: center;
     }
 
     > .loadingControl {
-        grid-column: 1/-1;
-    }
-}
-
-@media screen and (max-width: (4 * ($collection-size + 20px))) {
-    .grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
-
-@media screen and (max-width: (3 * ($collection-size + 20px))) {
-    .grid {
-        grid-template-columns: repeat(2, 1fr);
+        width: 100%;
     }
 }
 
 @media screen and (max-width: (2 * ($collection-size + 20px))) {
-    .grid {
-        grid-template-columns: repeat(1, 1fr);
-        > *:not(.loadingControl) {
-            place-self: initial;
-            width: min(90vw, 350px);
-            height: min(90vw, 350px);
-        }
+    .grid > *:not(.loadingControl) {
+        width: min(90vw, 350px);
+        height: min(90vw, 350px);
     }
 }
