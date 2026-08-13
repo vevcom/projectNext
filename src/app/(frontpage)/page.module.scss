@@ -47,20 +47,48 @@ $taktlause: url("backgroundimages/taktlause.jpeg");
         display: flex;
         flex-direction: column;
         align-items: center;
+        gap: calc(3 * #{ohma.$gap});
         padding-bottom: 20px;
-        > img {
-            margin-bottom: calc(2 * #{ohma.$gap});
-        }
+
         > a:not(.scrollDown) {
             width: 100%;
+            margin: 0;
+            padding: calc(2.5 * #{ohma.$gap}) calc(3 * #{ohma.$gap});
+            font-weight: ohma.$fonts-weight-m;
             @include ohma.borderBtn();
         }
+
+        > a.primaryCta {
+            font-weight: ohma.$fonts-weight-l;
+            @include ohma.btn(ohma.$colors-accent-blue);
+            margin: 0;
+            padding: calc(2.5 * #{ohma.$gap}) calc(3 * #{ohma.$gap});
+        }
+
         > .scrollDown {
             color: ohma.$colors-white;
+            animation: scrollBounce 2s ease-in-out infinite;
         }
     }
 
     @media (max-width: ohma.$mobileBreakpoint) {
         min-height: calc(100dvh - 2 * #{ohma.$nav-height} - 4 * #{ohma.$gap});
+    }
+}
+
+.crest {
+    display: grid;
+    place-items: center;
+    padding: calc(4 * #{ohma.$gap});
+    border-radius: 50%;
+    background: radial-gradient(circle, color-mix(in srgb, ohma.$colors-black, transparent 20%) 0%, transparent 70%);
+}
+
+@keyframes scrollBounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(8px);
     }
 }

@@ -29,13 +29,15 @@ export default async function LoggedOutLandingPage() {
             <div className={`${styles.part} ${styles.frontImg}`}>
                 <div className={styles.frontInfo}>
                     <div>
-                        <StandardImageServer
-                            standardImage="LOGO_WHITE"
-                            width={300}
-                        />
+                        <div className={styles.crest}>
+                            <StandardImageServer
+                                standardImage="LOGO_WHITE"
+                                width={300}
+                            />
+                        </div>
 
                         <Link href="login">Logg inn</Link>
-                        <Link href="infopages/nystudent">Ny student</Link>
+                        <Link className={styles.primaryCta} href="infopages/nystudent">Ny student</Link>
                         <Link href="/career">For bedrifter</Link>
 
                         <Link className={styles.scrollDown} href="#firstSection">
