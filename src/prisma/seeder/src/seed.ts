@@ -21,6 +21,7 @@ import seedDevEvents from './development/seedDevEvents'
 import seedEvents from './seedEvent'
 import seedCabin from './seedCabin'
 import seedPermissions from './seedPermissions'
+import seedAdmin from './seedAdmin'
 import { seedArticleCategories } from './standardContent/seedArticleCategories'
 import { seedImages } from './standardContent/seedImages'
 import { seedSpecialCms } from './standardContent/seedSpecialCms'
@@ -59,6 +60,7 @@ export default async function seed(
         await seedShop(prisma)
         await seedEvents(prisma)
         await seedPermissions(prisma)
+        await seedAdmin(prisma)
         await seedFlairs()
         await seedInterestGroups(prisma)
         if (enableLogging) console.log('upserting of standard done')

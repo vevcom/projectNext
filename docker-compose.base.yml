@@ -32,6 +32,9 @@ services:
             JWT_PUBLIC_KEY: ${JWT_PUBLIC_KEY}
             JWT_SECRET: ${JWT_SECRET}
             SERVER_LINK_PREFIX: ${SERVER_LINK_PREFIX}
+            SEED_ADMIN_USERNAME: ${SEED_ADMIN_USERNAME}
+            SEED_ADMIN_EMAIL: ${SEED_ADMIN_EMAIL}
+            SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD}
         healthcheck:
             test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000/api/health"]
             interval: 10s
