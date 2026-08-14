@@ -38,7 +38,7 @@ services:
             - '587:587'
             - '25:25'
         environment:
-            POSTGRES_HOST: 'db'
+            POSTGRES_HOST: ${POSTGRES_HOST}
             POSTGRES_DB: ${DB_NAME}
             POSTGRES_USER: ${DB_USERNAME}
             POSTGRES_PASSWORD: ${DB_PASSWORD}
