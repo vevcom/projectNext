@@ -1,4 +1,4 @@
-import upsertOrderBasedOnDate from './upsertOrderBasedOnDate'
+import upsertOrderBasedOnDate, { upsertOmegaOrder } from './upsertOrderBasedOnDate'
 import { type IdMapper, owIdToPnId } from './IdMapper'
 import manifest from '@/seeder/src/logger'
 import { createProgressBar } from './progressBar'
@@ -349,11 +349,7 @@ export class UserMigrator {
             const pnUser = await this.createUser(user)
 
             // Connect to correct membership group
-            const membershipOrder = await this.pnPrisma.omegaOrder.upsert({
-                where: { order: user.order },
-                create: { order: user.order },
-                update: { order: user.order },
-            })
+            await upsertOmegaOrder(this.pnPrisma, user.order)
 
             const soelleOrder = await upsertOrderBasedOnDate(this.pnPrisma, user.createdAt)
 
@@ -378,7 +374,7 @@ export class UserMigrator {
                         userId: pnUser.id,
                         active: true,
                         admin: false,
-                        order: membershipOrder.order,
+                        order: user.order,
                     }
                 })
             }
