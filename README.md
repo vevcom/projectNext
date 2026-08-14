@@ -73,6 +73,7 @@ Static `/store/` files are served by Next.js directly, so there's no separate ng
 
 To load data from Omegaweb-basic, exec into the running web application's container (via Dokploy's terminal, or `docker exec` on the host) and run the command below. Keep in mind that the command will delete all the data in the database.
 ```bash
+cd usr/src/app
 npm run dobbelOmega:run
 ```
 
