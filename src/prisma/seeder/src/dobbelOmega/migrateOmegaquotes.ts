@@ -1,4 +1,5 @@
 import manifest from '@/seeder/src/logger'
+import { createProgressBar } from './progressBar'
 import type { UserMigrator } from './migrateUsers'
 import type { PrismaClient as PrismaClientPn } from '@/prisma-generated-pn-client'
 import type { PrismaClient as PrismaClientOw } from '@/prisma-generated-ow-basic/client'
@@ -30,12 +31,17 @@ export default async function migrateOmegaquotes(
         userPosterId: number
     }[] = []
 
+    const bar = createProgressBar('Migrating omegaquotes', omegaquotesWithPosterId.length)
     for (const quote of omegaquotesWithPosterId) {
-        if (!quote.PosterId) continue
+        if (!quote.PosterId) {
+            bar.increment()
+            continue
+        }
 
         const pnPosterId = await userMigrator.getPnUserId(quote.PosterId)
         if (!pnPosterId) {
             manifest.error(`Failed to migrate omegaquote ${quote.id} because no user with id ${quote.PosterId} exists`)
+            bar.increment()
             continue
         }
 
@@ -45,7 +51,9 @@ export default async function migrateOmegaquotes(
             timestamp: quote.timestamp || new Date(),
             userPosterId: pnPosterId,
         })
+        bar.increment()
     }
+    bar.stop()
 
     await pnPrisma.omegaQuote.createMany({
         data

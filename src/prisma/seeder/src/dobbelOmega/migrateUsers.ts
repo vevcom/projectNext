@@ -1,6 +1,7 @@
 import upsertOrderBasedOnDate from './upsertOrderBasedOnDate'
 import { type IdMapper, owIdToPnId } from './IdMapper'
 import manifest from '@/seeder/src/logger'
+import { createProgressBar } from './progressBar'
 import { Prisma, type PrismaClient as PrismaClientPn, type SEX } from '@/prisma-generated-pn-client'
 import { v4 as uuid } from 'uuid'
 import type { User } from '@/prisma-generated-pn-client'
@@ -67,6 +68,7 @@ const flairMap: Record<number, number> = {
 export class UserMigrator {
     private userIdMap: Record<number, number> = {}
     private currentlyMigratingIds: Record<number, Promise<unknown>> = {}
+    private progressBar?: ReturnType<typeof createProgressBar>
 
     private pnPrisma: PrismaClientPn
     private owPrisma: PrismaClientOw
@@ -159,7 +161,14 @@ export class UserMigrator {
         }
 
         const userIds = users.map(user => user.id)
-        return await this.migrateBulk(userIds)
+
+        this.progressBar = createProgressBar('Migrating users', userIds.length)
+        try {
+            return await this.migrateBulk(userIds)
+        } finally {
+            this.progressBar.stop()
+            this.progressBar = undefined
+        }
     }
 
     async getPnUserId(owId: number) {
@@ -222,7 +231,7 @@ export class UserMigrator {
             emailVerified: undefined,
             createdAt: user.createdAt,
             updatedAt: user.updatedAt,
-            imageId: owIdToPnId(this.imageIdMap, user.ImageId),
+            imageId: owIdToPnId(this.imageIdMap, user.ImageId, 'images'),
             archived: user.archived,
         } satisfies Prisma.UserUncheckedCreateInput
 
@@ -390,19 +399,17 @@ export class UserMigrator {
                         )
                         yearOfStudy2 = 4
                     }
-                    if (yearOfStudy2 > 6) {
-                        manifest.error(
-                            `User ${user.id} is in 2 year programme but has year of study greater than 6 - setting to 6`
-                        )
-                        yearOfStudy2 = 6
-                    }
+                    // Anything past year 6 (siving) just means the user graduated a while ago and OW
+                    // kept incrementing yearOfStudy - not a data error, so no active membership either.
+                    const graduated2 = yearOfStudy2 > 6
+                    if (graduated2) yearOfStudy2 = 6
                     if (yearOfStudy2 === 6) {
                         const orderBecameSiving = user.order + 2
                         await this.pnPrisma.membership.create({
                             data: {
                                 groupId: this.yearIdMap(6),
                                 userId: pnUser.id,
-                                active: true,
+                                active: !graduated2,
                                 admin: false,
                                 order: orderBecameSiving,
                             }
@@ -544,19 +551,17 @@ export class UserMigrator {
                         )
                         yearOfStudy5 = 1
                     }
-                    if (yearOfStudy5 > 6) {
-                        manifest.error(
-                            `User ${user.id} is in 5 year programme but has year of study greater than 6 - setting to 6`
-                        )
-                        yearOfStudy5 = 6
-                    }
+                    // Anything past year 6 (siving) just means the user graduated a while ago and OW
+                    // kept incrementing yearOfStudy - not a data error, so no active membership either.
+                    const graduated5 = yearOfStudy5 > 6
+                    if (graduated5) yearOfStudy5 = 6
                     if (yearOfStudy5 === 6) {
                         const orderBecameSiving = user.order + 5 // Assume the user used 5 years to get to sivin
                         await this.pnPrisma.membership.create({
                             data: {
                                 groupId: this.yearIdMap(6),
                                 userId: pnUser.id,
-                                active: true,
+                                active: !graduated5,
                                 admin: false,
                                 order: orderBecameSiving,
                             }
@@ -590,6 +595,8 @@ export class UserMigrator {
                 default:
                     manifest.error(`User ${user.id} has ${yearsInProgramme} years in programme - dobbelOmega failed :(`)
             }
+
+            this.progressBar?.increment()
         }))
 
         resolveWhenFinished.forEach(resolve => resolve(undefined))

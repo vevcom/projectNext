@@ -1,3 +1,4 @@
+import { createProgressBar } from './progressBar'
 import type { PrismaClient as PrismaClientPn } from '@/prisma-generated-pn-client'
 import type { PrismaClient as PrismaClientOw } from '@/prisma-generated-ow-basic/client'
 import type { Limits } from './migrationLimits'
@@ -30,6 +31,7 @@ export default async function migrateMailAliases(
     })
 
 
+    const mailingListBar = createProgressBar('Migrating mailing lists', aliases.length)
     await Promise.all(aliases.map(a => pnPrisma.mailingList.create({
         data: {
             name: a.name,
@@ -46,7 +48,8 @@ export default async function migrateMailAliases(
                 }
             }
         }
-    })))
+    }).finally(() => mailingListBar.increment())))
+    mailingListBar.stop()
 
     const omegaFilter = (a: typeof externalAdrs[number]) => a.address.trim().endsWith('@omega.ntnu.no')
     const studNtnuFilter = (a: typeof externalAdrs[number]) => a.address.trim().endsWith('@stud.ntnu.no')
@@ -58,9 +61,11 @@ export default async function migrateMailAliases(
 
     const alredyAdded = new Set<string>()
 
+    const externalAdrsBar = createProgressBar('Migrating external addresses', externalAdrs.length)
     for (let i = 0; i < externalAdrs.length; i++) {
         const a = externalAdrs[i]
         if (omegaFilter(a) || studNtnuFilter(a)) {
+            externalAdrsBar.increment()
             continue
         }
 
@@ -96,7 +101,9 @@ export default async function migrateMailAliases(
                 }
             })
         }
+        externalAdrsBar.increment()
     }
+    externalAdrsBar.stop()
 
     const omegaForward: {address: string, id: number}[] = []
 
@@ -121,9 +128,9 @@ export default async function migrateMailAliases(
         }
     })
 
-    console.log(omegaForward)
     let errors = 0
 
+    const omegaForwardBar = createProgressBar('Migrating omega forwards', omegaForward.length)
     for (let i = 0; i < omegaForward.length; i++) {
         const a = omegaForward[i]
 
@@ -146,6 +153,8 @@ export default async function migrateMailAliases(
             console.error(e)
             errors++
         }
+        omegaForwardBar.increment()
     }
+    omegaForwardBar.stop()
     console.log('Errors:', errors)
 }

@@ -1,3 +1,4 @@
+import { createProgressBar } from './progressBar'
 import type { IdMapper } from './IdMapper'
 import type { PrismaClient as PrismaClientPn } from '@/prisma-generated-pn-client'
 import type { PrismaClient as PrismaClientOw } from '@/prisma-generated-ow-basic/client'
@@ -12,6 +13,7 @@ export default async function migrateImageCollections(pnPrisma: PrismaClientPn, 
     const imageCollections = await owPrisma.imageGroups.findMany()
 
     const IdMap: IdMapper = []
+    const bar = createProgressBar('Migrating image collections', imageCollections.length)
     for (const imageCollection of imageCollections) {
         const collectionsWithSameName = await pnPrisma.imageCollection.findMany({
             where: {
@@ -43,6 +45,8 @@ export default async function migrateImageCollections(pnPrisma: PrismaClientPn, 
             }
         })
         IdMap.push({ owId: imageCollection.id, pnId: collection.id })
+        bar.increment()
     }
+    bar.stop()
     return IdMap
 }

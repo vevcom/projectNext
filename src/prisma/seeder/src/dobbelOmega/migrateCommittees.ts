@@ -1,4 +1,5 @@
 import { owIdToPnId } from './IdMapper'
+import { createProgressBar } from './progressBar'
 import { cmsParagraphOperations } from '@/services/cms/paragraphs/operations'
 import { readFile } from 'fs/promises'
 import { dirname, join } from 'path'
@@ -65,13 +66,14 @@ export default async function migrateCommittees(
         }
     })
 
+    const bar = createProgressBar('Migrating committees', committees.length)
     await Promise.all(committees.map(async committee => {
         const committeeParagraph = await createCmsParagraph(
             pnPrisma, await readCommitteMarkdown(`${committee.shortname}_p.md`)
         )
         const applicationParagraph = await createCmsParagraph(pnPrisma, committee.applicationText || '')
         const committeArticle = await createCommitteArticleSection(pnPrisma, `${committee.shortname}_a.md`)
-        const logoImageId = owIdToPnId(imageIdMap, committee.ImageId)
+        const logoImageId = owIdToPnId(imageIdMap, committee.ImageId, 'images')
 
         const newCommittee = await pnPrisma.committee.create({
             data: {
@@ -141,5 +143,8 @@ export default async function migrateCommittees(
                 }
             })
         }))
+
+        bar.increment()
     }))
+    bar.stop()
 }

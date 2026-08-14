@@ -6,7 +6,7 @@ export function getLimits() {
     const limits = {
         ombul: 5,
         numberOffFullImageCollections: 0,
-        omegaquotes: null,
+        omegaquotes: 10,
         articles: 10,
         mailaliases: 0,
         events: 10,

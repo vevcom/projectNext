@@ -1,4 +1,5 @@
 import { owIdToPnId, type IdMapper } from './IdMapper'
+import { createProgressBar } from './progressBar'
 import type { PrismaClient as PrismaClientPn } from '@/prisma-generated-pn-client'
 import type { PrismaClient as PrismaClientOw } from '@/prisma-generated-ow-basic/client'
 import type { Limits } from './migrationLimits'
@@ -23,8 +24,9 @@ export default async function migrateEvents(
         }
     })
 
+    const eventsBar = createProgressBar('Migrating events', events.length)
     await Promise.all(events.map(async event => {
-        const coverId = owIdToPnId(imageIdMap, event.ImageId)
+        const coverId = owIdToPnId(imageIdMap, event.ImageId, 'images')
         const coverIage = await pnPrisma.cmsImage.create({
             data: {
                 image: coverId ? {
@@ -90,7 +92,9 @@ export default async function migrateEvents(
                 })
             }
         }))
+        eventsBar.increment()
     }))
+    eventsBar.stop()
 
     const simpleEvents = await owPrisma.simpleEvents.findMany({
         take: limits.events ? limits.events : undefined,
@@ -99,6 +103,7 @@ export default async function migrateEvents(
         }
     })
 
+    const simpleEventsBar = createProgressBar('Migrating simple events', simpleEvents.length)
     await Promise.all(simpleEvents.map(async simpleEvent => {
         const coverIage = await pnPrisma.cmsImage.create({
             data: {
@@ -130,5 +135,7 @@ export default async function migrateEvents(
                 waitingList: false,
             }
         })
+        simpleEventsBar.increment()
     }))
+    simpleEventsBar.stop()
 }
