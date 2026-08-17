@@ -13,6 +13,7 @@ import { configureAction } from '@/services/configureAction'
 import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import type { EventExpanded } from '@/services/events/types'
+import type { DotPunishment } from '@/services/events/registration/types'
 import type { EventRegistration } from '@/prisma-generated-pn-types'
 
 enum RegistrationButtonState {
@@ -23,6 +24,7 @@ enum RegistrationButtonState {
     WAITING_LIST_OPEN = 'WAITING_LIST_OPEN',
     REGISTRATION_NOT_OPEN = 'REGISTRATION_NOT_OPEN',
     REGISTRATION_CLOSED = 'REGISTRATION_CLOSED',
+    BANNED_BY_DOTS = 'BANNED_BY_DOTS',
     ERROR = 'ERROR',
 }
 
@@ -30,14 +32,22 @@ export default function RegistrationUI({
     event,
     onWaitingList,
     registration,
+    dotPunishment,
 }: {
     event: EventExpanded,
     onWaitingList: boolean,
     registration?: EventRegistration,
+    dotPunishment: DotPunishment | null,
 }) {
     if (!event.takesRegistration) {
         throw new Error('Can only show registration button for event that take registration')
     }
+
+    // Dots hold the user back past the registration start of the event, so it is the delayed start
+    // that decides when the button opens - the event opens at event.registrationStart for the rest.
+    const registrationStart = dotPunishment?.type === 'timeout' ?
+        new Date(event.registrationStart.getTime() + dotPunishment.punishmentMinutes * 60 * 1000) :
+        event.registrationStart
 
     const getInitialBtnState = (_onWaitingList: boolean, _registration?: EventRegistration) => {
         if (_onWaitingList) {
@@ -46,7 +56,10 @@ export default function RegistrationUI({
         if (_registration) {
             return RegistrationButtonState.REGISTERED
         }
-        if (event.registrationStart > new Date()) {
+        if (dotPunishment?.type === 'ban') {
+            return RegistrationButtonState.BANNED_BY_DOTS
+        }
+        if (registrationStart > new Date()) {
             return RegistrationButtonState.REGISTRATION_NOT_OPEN
         }
         if (event._count.eventRegistrations >= event.places) {
@@ -71,7 +84,7 @@ export default function RegistrationUI({
     const session = useSession()
 
     useEffect(() => {
-        const timeUntilRegistration = event.registrationStart.getTime() - (new Date()).getTime()
+        const timeUntilRegistration = registrationStart.getTime() - (new Date()).getTime()
         let timeoutId: ReturnType<typeof setTimeout>
         if (timeUntilRegistration > 0) {
             timeoutId = setTimeout(() => {
@@ -176,10 +189,22 @@ export default function RegistrationUI({
             {btnState === RegistrationButtonState.WAITING_LIST_OPEN && 'Meld meg på venteliste'}
             {btnState === RegistrationButtonState.ERROR && errorText}
             {btnState === RegistrationButtonState.REGISTRATION_CLOSED && 'Påmeldingen er over'}
+            {btnState === RegistrationButtonState.BANNED_BY_DOTS && 'Utestengt av prikker'}
         </SubmitButton>
 
         {btnState === RegistrationButtonState.REGISTRATION_NOT_OPEN && (
-            <p>Påmeldingen åpner om <CountDown referenceDate={event.registrationStart} /></p>
+            <p>Påmeldingen åpner om <CountDown referenceDate={registrationStart} /></p>
+        )}
+
+        {dotPunishment?.type === 'ban' && (
+            <p>Du har for mange prikker, og kan derfor ikke melde deg på arrangementer.</p>
+        )}
+
+        {dotPunishment?.type === 'timeout' && (
+            <p>
+                Du har prikker, og må derfor vente {dotPunishment.punishmentMinutes} minutter
+                etter ordinær påmeldingsstart med å melde deg på.
+            </p>
         )}
 
         {registrationState && event.registrationEnd > new Date() && <Form

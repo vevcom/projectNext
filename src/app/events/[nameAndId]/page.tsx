@@ -19,6 +19,7 @@ import {
     updateEventCmsCoverImageAction,
     updateEventParagraphContentAction
 } from '@/services/events/actions'
+import { dotPunishmentOfUserAction } from '@/services/events/registration/actions'
 import { configureAction } from '@/services/configureAction'
 import { decodeVevenUriHandleError } from '@/lib/urlEncoding'
 import { ServerSession } from '@/auth/session/ServerSession'
@@ -54,6 +55,12 @@ export default async function Event({ params }: PropTypes) {
     const canDestroy = eventAuth.destroy.dynamicFields({}).auth(
         session
     ).toJsObject()
+
+    // What the dots of the one visiting hold them back from - nothing to tell a visitor without a
+    // user, and nothing to hide either, as it is their own dots it is read from.
+    const dotPunishment = event.takesRegistration && session.user ? unwrapActionReturn(
+        await dotPunishmentOfUserAction({ params: { userId: session.user.id } })
+    ) : null
 
     return (
         <div className={styles.wrapper}>
@@ -126,7 +133,12 @@ export default async function Event({ params }: PropTypes) {
                     {event.waitingList && <p>
                         På venteliste: {event.numOnWaitingList}
                     </p>}
-                    <RegistrationUI event={event} registration={ownRegistration} onWaitingList={event.onWaitingList} />
+                    <RegistrationUI
+                        event={event}
+                        registration={ownRegistration}
+                        onWaitingList={event.onWaitingList}
+                        dotPunishment={dotPunishment}
+                    />
                 </> : <p>
                     <FontAwesomeIcon icon={faExclamation} />
                     Dette arrangementet tar ikke påmeldinger
