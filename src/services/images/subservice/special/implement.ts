@@ -1,5 +1,5 @@
 import '@pn-server-only'
-import { defineOperation, defineSubOperation } from '@/services/serviceOperation'
+import { defineOperation, defineSubOperation, type PrismaPossibleTransaction } from '@/services/serviceOperation'
 import { imageOperations, expandImageCollection } from '@/services/images/subservice/operations'
 import { expandedImageCollectionIncluder } from '@/services/images/subservice/constants'
 import { imageSchemas } from '@/services/images/subservice/schemas'
@@ -7,6 +7,7 @@ import { ServerError } from '@/services/error'
 import logger from '@/lib/logger'
 import { visibilityOperations } from '@/services/visibility/operations'
 import type { SpecialCollection } from '@/prisma-generated-pn-types'
+import type { ExpandedImageCollection } from '@/services/images/subservice/types'
 import type { AuthorizerDynamicFieldsBound } from '@/auth/authorizer/Authorizer'
 
 export function implementSpecialCollection({
@@ -52,36 +53,46 @@ export function implementSpecialCollection({
         }
     })
 
+    /**
+     * The unauthorized read of the collection. Service-internal callers must use this rather than
+     * `readCollection`: the panel authorizer guards the externally exposed operation only, and
+     * running it on a nested call would demand panel-admin permission of every caller — blocking,
+     * for instance, a member uploading their own profile picture.
+     */
+    const readCollectionInternal = async (
+        { prisma }: { prisma: PrismaPossibleTransaction<false> }
+    ): Promise<ExpandedImageCollection> => {
+        const collection = await prisma.imageCollection.findUnique({
+            where: {
+                special,
+            },
+            include: expandedImageCollectionIncluder,
+        })
+        // Note: we do not pass the a standard image in here as calling
+        // on the standard images service might cause an infinite loop,
+        // as the standard collection is read to validate that the standard
+        // image is in a correct state.
+        if (collection) return expandImageCollection(collection, null)
+
+        logger.error(`
+            Special collection with special ${special} not found
+            It must therefore be created from the config.
+        `)
+
+        return generateCollectionFromConfig.internalCall({ prisma })
+    }
+
     const readCollection = defineOperation({
         authorizer: () => imagePanelAuther,
-        operation: async ({ prisma }) => {
-            const collection = await prisma.imageCollection.findUnique({
-                where: {
-                    special,
-                },
-                include: expandedImageCollectionIncluder,
-            })
-            // Note: we do not pass the a standard image in here as calling
-            // on the standard images service might cause an infinite loop,
-            // as the standard collection is read to validate that the standard
-            // image is in a correct state.
-            if (collection) return expandImageCollection(collection, null)
-
-            logger.error(`
-                Special collection with special ${special} not found
-                It must therefore be created from the config.
-            `)
-
-            return generateCollectionFromConfig.internalCall({ prisma })
-        }
+        operation: async ({ prisma }) => readCollectionInternal({ prisma })
     })
 
     const uploadImage = defineSubOperation({
         dataSchema: () => imageSchemas.uploadImage,
-        operation: () => async ({ data }) =>
+        operation: () => async ({ prisma, data }) =>
             imageOperations.uploadImage.internalCall({
                 params: {
-                    collectionId: (await readCollection({})).id,
+                    collectionId: (await readCollectionInternal({ prisma })).id,
                 },
                 data,
                 operationImplementationFields: { uploadAsStandardImage: null }
@@ -96,7 +107,7 @@ export function implementSpecialCollection({
     const destroyImage = defineSubOperation({
         paramsSchema: () => imageSchemas.paramsSchemaImage,
         operation: () => async ({ prisma, params }) => {
-            const collection = await readCollection({})
+            const collection = await readCollectionInternal({ prisma })
             const image = await prisma.image.findFirst({
                 where: {
                     id: params.imageId,
@@ -117,8 +128,8 @@ export function implementSpecialCollection({
     const readPageOfImagesInCollection = defineOperation({
         authorizer: () => imagePanelAuther,
         paramsSchema: imageSchemas.paramsSchemaReadPageOfImagesInSpecialCollection,
-        operation: async ({ params }) => {
-            const collection = await readCollection({})
+        operation: async ({ prisma, params }) => {
+            const collection = await readCollectionInternal({ prisma })
             return imageOperations.readPageOfImagesInCollection.internalCall({
                 params: {
                     paging: params.paging,
