@@ -258,7 +258,7 @@ const create = defineOperation({
                 operationImplementationFields: { special: null }
             })
 
-            const order = (await omegaOrderOperations.readCurrent({})).order
+            const order = (await omegaOrderOperations.readCurrent({ bypassAuth: true })).order
 
             return await tx.committee.create({
                 data: {

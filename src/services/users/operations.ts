@@ -35,7 +35,7 @@ export const userOperations = {
         authorizer: () => userAuth.create.dynamicFields({}),
         operation: async ({ prisma, data }) => {
             const omegaMembership = await readOmegaMembershipGroup('EXTERNAL')
-            const omegaOrder = await omegaOrderOperations.readCurrent({})
+            const omegaOrder = await omegaOrderOperations.readCurrent({ bypassAuth: true })
 
             const user = await prisma.user.create({
                 data: {
