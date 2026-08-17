@@ -3,7 +3,6 @@ import SelectCompany from './SelectCompany'
 import { SettingsHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import TextInput from '@/UI/TextInput'
 import CmsImage from '@/cms/CmsImage/CmsImage'
-import CmsImageClient from '@/cms/CmsImage/CmsImageClient'
 import Form from '@/components/Form/Form'
 import { companyAuth } from '@/services/career/companies/auth'
 import {
@@ -17,7 +16,6 @@ import type { SessionMaybeUser } from '@/auth/session/Session'
 
 type PropTypes = {
     company: CompanyExpanded,
-    asClient: boolean,
     session: SessionMaybeUser,
     disableEdit?: boolean,
     logoWidth?: number,
@@ -27,7 +25,6 @@ type PropTypes = {
 /**
  *
  * @param company - The company to display
- * @param asClient - If the component is rendered clinet side (uses CmsImageClient)
  * @param session - The session of the user
  * @param disableEdit - If the edit buttons should be disabled even if the user has the rights
  * @param logoWidth - The width of the logo
@@ -36,7 +33,6 @@ type PropTypes = {
  */
 export default function Company({
     company,
-    asClient,
     session,
     disableEdit = false,
     logoWidth = 300,
@@ -51,25 +47,14 @@ export default function Company({
     )
     return (
         <div className={styles.Company}>
-            {asClient ?
-                <CmsImageClient
-                    canEdit={canEditCmsImageLogo}
-                    disableEditor={disableEdit}
-                    className={squareLogo ? styles.logoSq : styles.logo}
-                    cmsImage={company.logo}
-                    width={logoWidth}
-                    updateCmsImageAction={updateCmsImageAction}
-
-                /> :
-                <CmsImage
-                    canEdit={canEditCmsImageLogo}
-                    disableEditor={disableEdit}
-                    className={squareLogo ? styles.logoSq : styles.logo}
-                    cmsImage={company.logo}
-                    width={logoWidth}
-                    updateCmsImageAction={updateCmsImageAction}
-                />
-            }
+            <CmsImage
+                canEdit={canEditCmsImageLogo}
+                disableEditor={disableEdit}
+                className={squareLogo ? styles.logoSq : styles.logo}
+                cmsImage={company.logo}
+                width={logoWidth}
+                updateCmsImageAction={updateCmsImageAction}
+            />
             <div className={styles.info}>
                 <h2>{company.name}</h2>
                 <p>{company.description}</p>

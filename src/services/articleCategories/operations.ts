@@ -5,9 +5,10 @@ import { defineOperation } from '@/services/serviceOperation'
 import { ServerError } from '@/services/error'
 import { implementUpdateArticleOperations } from '@/cms/articles/implement'
 import { articleOperations } from '@/cms/articles/operations'
+import { expandedImageIncluder } from '@/services/images/subservice/constants'
 import { z } from 'zod'
 import type { ExpandedArticleCategory } from './types'
-import type { Image } from '@/prisma-generated-pn-types'
+import type { ExpandedImage } from '@/services/images/subservice/types'
 import type { PrismaPossibleTransaction } from '@/services/serviceOperation'
 
 export const articleCategoryOperations = {
@@ -76,9 +77,14 @@ export const articleCategoryOperations = {
             id: z.number()
         }),
         opensTransaction: true,
-        operation: ({ prisma, params }) => {
+        operation: ({ prisma, params }) =>
             prisma.$transaction(async (tx) => {
-                const article = await articleOperations.create.internalCall({ data: { }, prisma: tx })
+                const article = await articleOperations.create.internalCall({
+                    data: {},
+                    prisma: tx,
+                    dataSchemaImplementationFields: { maxNameLength: 30 },
+                    operationImplementationFields: { special: null }
+                })
                 await tx.articleCategory.update({
                     where: {
                         id: params.id
@@ -91,8 +97,8 @@ export const articleCategoryOperations = {
                         }
                     }
                 })
+                return article
             })
-        }
     }),
 
     removeArticleFromCategory: defineOperation({
@@ -230,14 +236,14 @@ export const articleCategoryOperations = {
 async function getCoverImage(
     prisma: PrismaPossibleTransaction<false>,
     category: ExpandedArticleCategory
-): Promise<Image | null> {
+): Promise<ExpandedImage | null> {
     if (category.articles.length === 0) return null
     const coverImage = await prisma.cmsImage.findUnique({
         where: {
             id: category.articles[0].coverImageId
         },
         include: {
-            image: true
+            image: { include: expandedImageIncluder }
         }
     })
     if (!coverImage) return null

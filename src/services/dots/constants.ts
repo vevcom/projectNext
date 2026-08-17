@@ -5,11 +5,6 @@ const dotBaseDurationDays = 14
 export const dotBaseDuration = 1000 * 60 * 60 * 24 * dotBaseDurationDays
 
 export const dotsIncluder = {
-    dots: {
-        orderBy: {
-            expiresAt: 'desc'
-        }
-    },
     user: {
         select: {
             firstname: true,
@@ -24,4 +19,4 @@ export const dotsIncluder = {
             username: true
         }
     }
-} as const satisfies Prisma.DotWrapperInclude
+} as const satisfies Prisma.DotInclude

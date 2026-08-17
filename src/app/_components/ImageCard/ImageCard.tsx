@@ -1,11 +1,11 @@
 import styles from './ImageCard.module.scss'
 import Image from '@/components/Image/Image'
 import Link from 'next/link'
-import type { Image as ImageT } from '@/prisma-generated-pn-types'
+import type { ExpandedImage } from '@/services/images/subservice/types'
 import type { ReactNode } from 'react'
 
 type PropTypes = {
-    image: ImageT | null,
+    image: ExpandedImage | null,
     title: string,
     children?: ReactNode,
     href: string,

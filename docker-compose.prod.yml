@@ -8,9 +8,29 @@ services:
         volumes:
             - store:/usr/src/app/store
             - logs:/usr/src/app/logs
+            - dobbelOmegaManifest:/usr/src/app/dobbelOmegaManifest
         deploy:
             replicas: 2
         restart: always
+
+    imageworker:
+        extends:
+            file: docker-compose.base.yml
+            service: projectnext
+        build:
+            target: prod
+        command: ["./node_modules/.bin/tsx", "src/worker.ts"]
+        environment:
+            IGNORE_SERVER_ONLY: 'true'
+        volumes:
+            - store:/usr/src/app/store
+            - logs:/usr/src/app/logs
+        deploy:
+            replicas: 1
+        restart: always
+        depends_on:
+            db:
+                condition: service_healthy
 
     db:
         extends:

@@ -1,5 +1,4 @@
 'use server'
-
 import { makeAction } from '@/services/serverAction'
 import { eventRegistrationOperations } from '@/services/events/registration/operations'
 
@@ -9,3 +8,4 @@ export const readManyEventRegistrationAction = makeAction(eventRegistrationOpera
 export const eventRegistrationReadManyDetailedAction = makeAction(eventRegistrationOperations.readManyDetailed)
 export const eventRegistrationUpdateNotesAction = makeAction(eventRegistrationOperations.updateNotes)
 export const eventRegistrationDestroyAction = makeAction(eventRegistrationOperations.destroy)
+export const dotPunishmentOfUserAction = makeAction(eventRegistrationOperations.dotPunishmentOfUser)

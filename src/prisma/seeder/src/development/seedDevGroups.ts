@@ -37,11 +37,6 @@ export default async function seedDevGroups(prisma: PrismaClient) {
                     order: order.order,
                 },
             },
-            logoImage: {
-                create: {
-                    name: 'Logoen til Harambe\'s komité'
-                }
-            },
         },
     })
 
@@ -83,11 +78,6 @@ export default async function seedDevGroups(prisma: PrismaClient) {
                     groupType: 'COMMITTEE',
                     order: order.order,
                 },
-            },
-            logoImage: {
-                create: {
-                    name: `Logoen til testkomité ${i}`
-                }
             },
         }
     })))

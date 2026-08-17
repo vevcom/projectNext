@@ -30,7 +30,7 @@ model User {
   createdAt              DateTime            @default(now())
   updatedAt              DateTime            @updatedAt // is also updated manually
   image                  Image?              @relation(fields: [imageId], references: [id])
-  imageId                Int?
+  imageId                Int?                @unique
   studentCard            String?             @unique
   LockerReservation      LockerReservation[]
   omegaQuote             OmegaQuote[]
@@ -45,8 +45,8 @@ model User {
   Application               Application[]
   EventRegistration         EventRegistration[]
 
-  dots        DotWrapper[] @relation(name: "dot_user")
-  dotsAccused DotWrapper[] @relation(name: "dot_accuser")
+  dots        Dot[]   @relation(name: "dot_user")
+  dotsAccused Dot[]   @relation(name: "dot_accuser")
   Event       Event[]
 
   cabinBooking Booking[] @relation()

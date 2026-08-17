@@ -107,7 +107,7 @@ export const itemsForMenu: NavItem[] = [
     },
     {
         name: 'Bilder',
-        href: '/images',
+        href: '/image-collections',
         show: 'all',
         icon: faCamera,
     },

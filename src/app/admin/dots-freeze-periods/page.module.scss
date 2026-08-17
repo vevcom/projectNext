@@ -1,3 +1,30 @@
+@use '@/styles/ohma';
+
 .wrapper {
     padding: 1em;
+
+    .freezePeriods {
+        @include ohma.table;
+    }
+
+    .upcoming, .active, .finished {
+        padding: 0.2em 0.6em;
+        border-radius: 0.4em;
+        white-space: nowrap;
+    }
+
+    .upcoming {
+        background-color: color-mix(in srgb, ohma.$colors-blue, white 50%);
+        color: ohma.$colors-blue;
+    }
+
+    .active {
+        background-color: color-mix(in srgb, ohma.$colors-green, white 50%);
+        color: ohma.$colors-green;
+    }
+
+    .finished {
+        background-color: color-mix(in srgb, ohma.$colors-gray-300, white 50%);
+        color: ohma.$colors-gray-700;
+    }
 }
