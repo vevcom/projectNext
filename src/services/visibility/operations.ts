@@ -2,7 +2,9 @@ import '@pn-server-only'
 import { visibilitySchemas } from './schemas'
 import { defineSubOperation } from '@/services/serviceOperation'
 import { omegaOrderOperations } from '@/services/omegaOrder/operations'
+import type { visibilityRequirementsSchema } from './schemas'
 import type { VisibilityRequirementGroupType } from '@/prisma-generated-pn-types'
+import type { z } from 'zod'
 
 type VisibilityCondition = {
     groupId: number,
@@ -27,10 +29,44 @@ function dedupeConditions(conditions: VisibilityCondition[]): VisibilityConditio
     return Array.from(seen.values())
 }
 
+/**
+ * Resolves a visibility matrix into prisma nested-create input. ACTIVE conditions carry no order of
+ * their own, so they are pinned to the current omega order. Shared by update and
+ * createWithRequirements so the two cannot drift apart on that resolution.
+ */
+async function buildRequirementsCreateInput(requirements: z.infer<typeof visibilityRequirementsSchema>) {
+    const currentOrder = await omegaOrderOperations.readCurrent({ bypassAuth: true })
+
+    return requirements.map(requirement => ({
+        conditions: {
+            create: dedupeConditions(requirement.conditions.map(condition => ({
+                groupId: condition.groupId,
+                type: condition.type,
+                order: condition.type === 'ORDER' ? condition.order : currentOrder.order
+            })))
+        }
+    }))
+}
+
 export const visibilityOperations = {
     create: defineSubOperation({
         operation: () => ({ prisma }) =>
             prisma.visibility.create({ data: {} })
+    }),
+
+    /**
+     * Creates a visibility that is restricted from the start. Prefer this over create when the
+     * caller already knows the requirements: a visibility with no requirements is vacuously true in
+     * checkVisibility, so anything created empty is open to everyone until it is updated.
+     */
+    createWithRequirements: defineSubOperation({
+        dataSchema: () => visibilitySchemas.createWithRequirements,
+        operation: () => async ({ prisma, data }) =>
+            prisma.visibility.create({
+                data: {
+                    requirements: { create: await buildRequirementsCreateInput(data.requirements) }
+                }
+            })
     }),
 
     destroy: defineSubOperation({
@@ -44,17 +80,7 @@ export const visibilityOperations = {
         dataSchema: () => visibilitySchemas.update,
         opensTransaction: true,
         operation: () => async ({ prisma, params, data }) => {
-            const currentOrder = await omegaOrderOperations.readCurrent({ bypassAuth: true })
-
-            const requirements = data.requirements.map(requirement => ({
-                conditions: {
-                    create: dedupeConditions(requirement.conditions.map(condition => ({
-                        groupId: condition.groupId,
-                        type: condition.type,
-                        order: condition.type === 'ORDER' ? condition.order : currentOrder.order
-                    })))
-                }
-            }))
+            const requirements = await buildRequirementsCreateInput(data.requirements)
 
             return await prisma.$transaction(async (tx) => {
                 //Remove all current visibilityRequirements (and by cascade all visibilityRequirementGroups)
