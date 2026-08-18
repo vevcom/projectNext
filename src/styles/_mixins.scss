@@ -98,15 +98,13 @@
     }
 }
 
-//NOTE: also made to work for <Link /> (<a> tag)
-@mixin borderBtn($color: colors.$white) {
-    @include btn($color);
-    background: transparent;
-    border: solid $color 2px;
-    color: $color;
+// The secondary action tier: a filled button that recedes next to btn().
+// NOTE: also made to work for <Link /> (<a> tag)
+@mixin secondaryBtn {
+    @include btn(colors.$surface-hover);
+    color: colors.$text;
     &:hover {
-        background: $color;
-        color: color-mix(in srgb, $color, white 40%);
+        background-color: color-mix(in srgb, colors.$surface-hover, white 10%);
     }
 }
 

@@ -2,7 +2,6 @@
   "_comment": "Scoped component set for the claude.ai/design import. group = DS pane grouping; src = repo-relative implementation; export = which binding to re-export.",
   "components": {
     "Button":                { "group": "actions", "src": "src/app/_components/UI/Button.tsx", "export": "default" },
-    "BorderButton":          { "group": "actions", "src": "src/app/_components/UI/BorderButton.tsx", "export": "default" },
 
     "TextInput":             { "group": "inputs", "src": "src/app/_components/UI/TextInput.tsx", "export": "default" },
     "Textarea":              { "group": "inputs", "src": "src/app/_components/UI/Textarea.tsx", "export": "default" },

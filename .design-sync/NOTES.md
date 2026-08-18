@@ -110,7 +110,10 @@ They are **app bugs, not sync bugs** — fix them in the repo, then re-sync.
   against the app surface. Same for `TextInput`'s `secondary` text colour.
 - `UI/Checkbox.module.scss`: the `children` branch (`.inputAndChildren`) drops the
   custom box styling and falls back to the native checkbox.
-- `UI/BorderButton.module.scss` has no `:disabled` rule.
+- ~~`UI/BorderButton.module.scss` has no `:disabled` rule.~~ Retired — the
+  outline button tier was removed entirely (component, `borderBtn` mixin and all
+  ten stylesheet call sites) in favour of the filled `secondaryBtn` tier. If a
+  future sync sees `BorderButton` reappear in `scope.json`, that is a mistake.
 - `Table/SimpleTable.tsx` wraps each `<tr>` in a `<Link>` when `links` is passed —
   an `<a>` containing a `<tr>` is invalid HTML and browsers hoist it out, visibly
   breaking the rows. The `WithLinks` story was dropped for this reason.

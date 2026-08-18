@@ -1,7 +1,6 @@
 'use client'
 import styles from './page.module.scss'
 import Button from '@/components/UI/Button'
-import BorderButton from '@/components/UI/BorderButton'
 import SubmitButton from '@/components/UI/SubmitButton'
 import TextInput from '@/components/UI/TextInput'
 import Textarea from '@/components/UI/Textarea'
@@ -45,10 +44,6 @@ export default function ComponentTest() {
                     <Button color="green">Green</Button>
                     <Button color="red">Red</Button>
                     <Button color="secondary" disabled>Disabled</Button>
-                </div>
-                <div className={styles.row}>
-                    <BorderButton color="primary">Border primary</BorderButton>
-                    <BorderButton color="secondary">Border secondary</BorderButton>
                 </div>
                 <form className={styles.row}>
                     <SubmitButton color="primary" success={false}>Submit</SubmitButton>

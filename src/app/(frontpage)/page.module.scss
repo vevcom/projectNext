@@ -55,7 +55,7 @@ $taktlause: url("backgroundimages/taktlause.jpeg");
             margin: 0;
             padding: calc(2.5 * #{ohma.$gap}) calc(3 * #{ohma.$gap});
             font-weight: ohma.$fonts-weight-m;
-            @include ohma.borderBtn();
+            @include ohma.secondaryBtn;
         }
 
         > a.primaryCta {

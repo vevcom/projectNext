@@ -11,7 +11,7 @@
 }
 
 .archiveBtn {
-    @include ohma.borderBtn(ohma.$colors-accent-blue);
+    @include ohma.secondaryBtn;
     display: block;
     margin: 0 ohma.$gap;
 }

@@ -96,7 +96,7 @@ values baked into the components; don't hardcode px type.
 
 ## Component groups
 
-`actions` (Button, BorderButton) · `inputs` (TextInput, Textarea, NumberInput,
+`actions` (Button) · `inputs` (TextInput, Textarea, NumberInput,
 DateInput, ColorInput, FileInput, Checkbox, RadioLarge, Slider, Dropzone,
 SelectString, SelectNumber, SearchableDropdown) · `overlays` (PopUp, Dropdown,
 EditOverlay, AddHeaderItemPopUp, HelpHeaderItemPopUp, SettingsHeaderItemPopUp,
@@ -116,6 +116,10 @@ imports (`fonts/fonts.css`, `_ds_bundle.css`).
   separate label element.
 - `background="raised"` on `TextInput` / `Textarea` / `NumberInput` / `DateInput`
   when the field sits on `--surface-raised`, so it stays distinguishable.
+- **There is no outline/ghost button.** Every action is a filled `Button`:
+  `primary` for the main action on a view, `secondary` for everything beside it.
+  Don't invent a bordered variant — the design system deliberately has two
+  action tiers, both filled.
 - `Button`'s `color` is `primary | secondary | green | red`; `green` is confirm,
   `red` is destructive.
 - Composition beats new markup: `SubPageNavBarItem` only lays out inside
@@ -129,6 +133,5 @@ imports (`fonts/fonts.css`, `_ds_bundle.css`).
 - `FileInput`'s default `color="black"` is dark-on-black; pass `color="primary"`.
 - `Slider`'s `secondary` variant is invisible on the app surface; use `primary`,
   `red` or `white`.
-- `BorderButton` has no disabled styling.
 - `SimpleTable`'s `links` prop wraps `<tr>` in an `<a>`, which browsers hoist out
   of the table — avoid it.
