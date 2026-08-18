@@ -1,43 +1,64 @@
 @use "@/styles/ohma";
 
 .wrapper {
-    background-color: ohma.$colors-surface-base;
-    height: 100%;
-
-    vertical-align: middle;
+    min-height: calc(100dvh - #{ohma.$nav-height} - 3 * #{ohma.$gap});
     display: flex;
+    align-items: stretch;
     justify-content: center;
 
-    > .card {
-        padding: calc(4 * #{ohma.$gap});
-        border-radius: ohma.$cardRounding;
-        display: flex;
-        height: min-content;
+    @include ohma.screenMobile {
+        min-height: calc(100dvh - 2 * #{ohma.$nav-height} - 4 * #{ohma.$gap});
+    }
 
-        > .image {
-            margin-left: calc(4 * #{ohma.$gap});
-            display: grid;
-            place-items: center;
-            grid-column: 2/3;
-            filter: invert(1);
+    > .card {
+        display: flex;
+        align-items: stretch;
+        gap: ohma.$gap;
+        width: 100%;
+
+        @include ohma.screenMobile {
+            flex-direction: column;
         }
 
-        @include ohma.screenLg {
-            margin-top: calc(6 * #{ohma.$gap});
-            > .input {
-                grid-column: 1/2;
-                max-width: 250px;
-                margin: auto;
+        > .input {
+            flex: 0 0 min(380px, 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: #{ohma.$gap};
+            padding: calc(4 * #{ohma.$gap}) calc(3 * #{ohma.$gap});
+            border-radius: ohma.$rounding;
+            background: ohma.$colors-surface-base;
+
+            > * {
+                width: 100%;
+            }
+
+            @include ohma.screenMobile {
+                flex-basis: auto;
+                flex: 1;
             }
         }
 
-        @include ohma.screenMobile {
-            flex-direction: column-reverse;
-            margin: calc(3 * #{ohma.$gap});
+        > .image {
+            flex: 1;
+            min-width: 0;
+            border-radius: ohma.$rounding;
+            background-image: url("../(frontpage)/backgroundimages/frontImg.jpeg");
+            background-size: cover;
+            background-position: center;
 
-            >.image {
-                margin: 0;
+            @include ohma.screenMobile {
+                display: none;
             }
         }
     }
+}
+
+.crest {
+    display: grid;
+    place-items: center;
+    padding: calc(2 * #{ohma.$gap}) 0;
+    filter: invert(1);
 }
