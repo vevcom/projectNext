@@ -36,7 +36,6 @@
             }
 
             @include ohma.screenMobile {
-                flex-basis: auto;
                 flex: 1;
             }
         }
