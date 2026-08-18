@@ -27,7 +27,7 @@ export default function EventCard({ event, canEdit }: PropTypes) {
     const to = event.takesRegistration ? event.registrationEnd : event.eventEnd
 
     return <Link href={link} className={styles.EventWrapper}>
-        <div className={styles.EventImage}>
+        <div className={styles.thumb}>
             <CmsImage
                 width={200}
                 cmsImage={event.coverImage as ExpandedCmsImage}
@@ -39,12 +39,12 @@ export default function EventCard({ event, canEdit }: PropTypes) {
             />
         </div>
 
-        <div className={styles.EventDate}>
+        <div className={styles.lead}>
             <b>{event.eventStart.getDate()}</b>
             <span>{months[event.eventStart.getMonth()]}</span>
         </div>
 
-        <div className={styles.EventMain}>
+        <div className={styles.main}>
             <h2>{event.name}</h2>
             <div className={styles.tags}>
                 {event.tags.map(tag => (
@@ -53,8 +53,8 @@ export default function EventCard({ event, canEdit }: PropTypes) {
             </div>
         </div>
 
-        <div className={styles.EventMeta}>
-            {event.location && <span className={styles.location}>{event.location}</span>}
+        <div className={styles.meta}>
+            {event.location && <span>{event.location}</span>}
             <span>{twoDigitHour(from)}–{twoDigitHour(to)}</span>
             {event.takesRegistration && (
                 <span className={styles.registrations}>{event.numOfRegistrations} / {event.places}</span>
@@ -62,7 +62,7 @@ export default function EventCard({ event, canEdit }: PropTypes) {
         </div>
 
         {event.takesRegistration && (
-            <div className={styles.EventAttendanceBar}>
+            <div className={styles.bar}>
                 <div style={{ width: attendance }}></div>
             </div>
         )}

@@ -1,9 +1,11 @@
 @use '@/styles/ohma';
 
 .JobAdInactiveList {
-    margin: 1em 0;
-    @include ohma.ImageCardListLayout;
+    @include ohma.RowListLayout;
+
+    // EndlessScroll's status line, a sibling of the rows in the stacked column.
+    // It spanned every grid column before; stretching is the flex default.
     .loadingInfo {
-        grid-column: 1 / -1;
+        color: ohma.$colors-text-muted;
     }
 }

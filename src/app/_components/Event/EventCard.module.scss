@@ -1,96 +1,7 @@
 @use '@/styles/ohma';
 
-// A 96px row on the 8px grid: thumbnail | date | title+tags | meta,
-// with the attendance bar hugging the bottom edge.
-$row-height: calc(12 * #{ohma.$gap});
-
 .EventWrapper {
-    position: relative;
-    display: flex;
-    align-items: stretch;
-    height: $row-height;
-    overflow: hidden;
-    text-decoration: none;
-    color: unset;
-    border-radius: ohma.$rounding;
-    background-color: ohma.$colors-surface-raised;
-    transition: background-color ohma.$transitionTime;
-
-    // The whole row is one anchor, so globals' `a:hover { text-decoration:
-    // underline }` would underline every text run in it — date, title and all
-    // the meta. The background shift is the hover affordance here.
-    &:hover {
-        background-color: ohma.$colors-surface-hover;
-        text-decoration: none;
-    }
-}
-
-.EventImage {
-    position: relative;
-    flex-shrink: 0;
-    width: $row-height;
-    height: 100%;
-    overflow: hidden;
-
-    // CmsImage's own wrapper divs (CmsImage/StandardImage/Image) size themselves off the
-    // image's intrinsic width rather than off this container, which let images overextend
-    // past the row. Force every wrapper div to fill this box instead, at whatever nesting
-    // depth - Image sits one level deeper when there's no image chosen yet and StandardImage's
-    // fallback renders instead.
-    div {
-        width: 100%;
-        height: 100%;
-    }
-
-    img {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-}
-
-.EventDate {
-    flex-shrink: 0;
-    width: calc(8 * #{ohma.$gap});
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    line-height: 1.1;
-
-    b {
-        font-size: ohma.$fonts-xl;
-        color: ohma.$colors-text;
-    }
-
-    span {
-        font-size: ohma.$fonts-s;
-        text-transform: uppercase;
-        color: ohma.$colors-text-muted;
-    }
-}
-
-.EventMain {
-    flex: 1;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: calc(0.5 * #{ohma.$gap});
-    padding: 0 calc(2 * #{ohma.$gap});
-
-    h2 {
-        margin: 0;
-        font-size: ohma.$fonts-l;
-        font-weight: ohma.$fonts-weight-m;
-        color: ohma.$colors-text;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
+    @include ohma.listRow;
 }
 
 .tags {
@@ -100,57 +11,7 @@ $row-height: calc(12 * #{ohma.$gap});
     list-style-type: none;
 }
 
-.EventMeta {
-    flex-shrink: 0;
-    width: calc(15 * #{ohma.$gap});
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    justify-content: center;
-    gap: calc(0.5 * #{ohma.$gap});
-    padding: 0 calc(2 * #{ohma.$gap});
-    font-size: ohma.$fonts-s;
-    color: ohma.$colors-text-muted;
-    text-align: right;
-
-    .location {
-        max-width: 100%;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-
-    .registrations {
-        color: ohma.$colors-text;
-        font-weight: ohma.$fonts-weight-m;
-    }
-}
-
-.EventAttendanceBar {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: calc(0.5 * #{ohma.$gap});
-    background-color: ohma.$colors-surface-subtle;
-
-    > div {
-        height: 100%;
-        background: ohma.$colors-accent-blue;
-    }
-}
-
-// Rows stay rows on mobile; the meta column is what gives way.
-@include ohma.screenMobile {
-    .EventMeta {
-        display: none;
-    }
-
-    .EventDate {
-        width: calc(7 * #{ohma.$gap});
-    }
-
-    .EventMain {
-        padding-right: ohma.$gap;
-    }
+.registrations {
+    color: ohma.$colors-text;
+    font-weight: ohma.$fonts-weight-m;
 }

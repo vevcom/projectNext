@@ -69,7 +69,7 @@ export default async function LoggedInLandingPage() {
                             <EventCard key={key} event={event} canEdit={canEditEventCmsImage} />
                         ))}
                     </LoggedInSection>
-                    <LoggedInSection title="Jobbannonser" link="/career/jobads">
+                    <LoggedInSection title="Jobbannonser" link="/career/jobads" layout="rows">
                         {jobAds.map((jobAd, key) => (
                             <JobAd key={key} jobAd={jobAd} />
                         ))}

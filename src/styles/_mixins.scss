@@ -197,13 +197,163 @@
     }
 }
 
-// Events render as full-width rows, so the list is a single stacked column at
-// every breakpoint rather than a grid of cards.
-@mixin EventRowListLayout {
+// Listings that render as full-width rows are a single stacked column at every
+// breakpoint rather than a grid of cards.
+@mixin RowListLayout {
     margin: calc(2 * #{variables.$gap}) 0;
     display: flex;
     flex-direction: column;
     gap: variables.$gap;
+}
+
+// A 96px list row on the 8px grid, shared by the event and job-ad listings so
+// the two lists stay consistent: thumbnail | lead | title block | meta, with an
+// optional full-width bar hugging the bottom edge. Consumers supply the child
+// elements using these class names.
+@mixin listRow {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    height: calc(12 * #{variables.$gap});
+    overflow: hidden;
+    text-decoration: none;
+    color: unset;
+    border-radius: variables.$rounding;
+    background-color: colors.$surface-raised;
+    transition: background-color variables.$transitionTime;
+
+    // The whole row is one anchor, so globals' `a:hover { text-decoration:
+    // underline }` would otherwise underline every text run inside it.
+    &:hover {
+        background-color: colors.$surface-hover;
+        text-decoration: none;
+    }
+
+    > .thumb {
+        position: relative;
+        flex-shrink: 0;
+        width: calc(12 * #{variables.$gap});
+        height: 100%;
+        overflow: hidden;
+
+        // The image components size their own wrapper divs off the image's
+        // intrinsic width rather than off this container, which lets images
+        // overextend past the row. Force every wrapper to fill this box at
+        // whatever nesting depth the fallback ends up rendering at.
+        div {
+            width: 100%;
+            height: 100%;
+        }
+
+        img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+
+    > .lead {
+        flex-shrink: 0;
+        width: calc(8 * #{variables.$gap});
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        line-height: 1.1;
+
+        b {
+            font-size: fonts.$xl;
+            color: colors.$text;
+        }
+
+        span {
+            font-size: fonts.$s;
+            text-transform: uppercase;
+            color: colors.$text-muted;
+        }
+    }
+
+    > .main {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: calc(0.5 * #{variables.$gap});
+        padding: 0 calc(2 * #{variables.$gap});
+
+        h2 {
+            margin: 0;
+            font-size: fonts.$l;
+            font-weight: fonts.$weight-m;
+            color: colors.$text;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        p {
+            margin: 0;
+            font-size: fonts.$s;
+            color: colors.$text-muted;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    }
+
+    > .meta {
+        flex-shrink: 0;
+        width: calc(15 * #{variables.$gap});
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        justify-content: center;
+        gap: calc(0.5 * #{variables.$gap});
+        padding: 0 calc(2 * #{variables.$gap});
+        font-size: fonts.$s;
+        color: colors.$text-muted;
+        text-align: right;
+
+        > * {
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    }
+
+    > .bar {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: calc(0.5 * #{variables.$gap});
+        background-color: colors.$surface-subtle;
+
+        > div {
+            height: 100%;
+            background: colors.$accent-blue;
+        }
+    }
+
+    // Rows stay rows on mobile; the meta column is what gives way.
+    @include screenMobile {
+        > .meta {
+            display: none;
+        }
+
+        > .lead {
+            width: calc(7 * #{variables.$gap});
+        }
+
+        > .main {
+            padding-right: variables.$gap;
+        }
+    }
 }
 
 @mixin screenMobile {

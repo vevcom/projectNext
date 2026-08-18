@@ -34,7 +34,7 @@
 
         // Full-width stacked children (event rows) rather than a card grid.
         &.rows {
-            @include ohma.EventRowListLayout;
+            @include ohma.RowListLayout;
             margin: 0;
         }
     }
