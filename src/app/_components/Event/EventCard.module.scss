@@ -1,58 +1,40 @@
 @use '@/styles/ohma';
 
-.tags {
-    display: flex;
-    align-items: center;
-    list-style-type: none;
-    margin-left: ohma.$gap;
-}
+// A 96px row on the 8px grid: thumbnail | date | title+tags | meta,
+// with the attendance bar hugging the bottom edge.
+$row-height: calc(12 * #{ohma.$gap});
 
 .EventWrapper {
-    @include ohma.layer();
-    @include ohma.boxShadow('');
-    border-radius: ohma.$cardRounding;
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    height: $row-height;
     overflow: hidden;
     text-decoration: none;
     color: unset;
-    margin: ohma.$gap;
-}
+    border-radius: ohma.$rounding;
+    background-color: ohma.$colors-surface-raised;
+    transition: background-color ohma.$transitionTime;
 
-.EventWrapper:hover {
-    @include ohma.boxShadow('hover');
-}
-
-.EventHeader {
-    display: flex;
-    height: 50px;
-    @include ohma.layer();
-}
-
-.EventMainTime {
-    @include ohma.layer();
-    border-radius: ohma.$cardRounding 0 0 0;
-    height: 100%;
-    min-width: 180px;
-    font-size: x-large;
-    line-height: calc(50px - 2 * #{ohma.$gap});
-    padding: ohma.$gap ohma.$gap ohma.$gap calc(#{ohma.$gap} * 3);
-}
-
-.EventAttendanceBar {
-    height: 10px;
-    > div {
-        background: color-mix(in srgb, ohma.$colors-accent-blue, black 20%);
-        height: 100%;
+    // The whole row is one anchor, so globals' `a:hover { text-decoration:
+    // underline }` would underline every text run in it — date, title and all
+    // the meta. The background shift is the hover affordance here.
+    &:hover {
+        background-color: ohma.$colors-surface-hover;
+        text-decoration: none;
     }
 }
 
 .EventImage {
-    height: 200px;
-    overflow: hidden;
     position: relative;
+    flex-shrink: 0;
+    width: $row-height;
+    height: 100%;
+    overflow: hidden;
 
     // CmsImage's own wrapper divs (CmsImage/StandardImage/Image) size themselves off the
     // image's intrinsic width rather than off this container, which let images overextend
-    // past the card. Force every wrapper div to fill this box instead, at whatever nesting
+    // past the row. Force every wrapper div to fill this box instead, at whatever nesting
     // depth - Image sits one level deeper when there's no image chosen yet and StandardImage's
     // fallback renders instead.
     div {
@@ -70,20 +52,105 @@
     }
 }
 
-.EventMain {
-    height: 150px;
-    padding: ohma.$gap;
+.EventDate {
+    flex-shrink: 0;
+    width: calc(8 * #{ohma.$gap});
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    line-height: 1.1;
+
+    b {
+        font-size: ohma.$fonts-xl;
+        color: ohma.$colors-text;
+    }
+
+    span {
+        font-size: ohma.$fonts-s;
+        text-transform: uppercase;
+        color: ohma.$colors-text-muted;
+    }
 }
 
-.EventFooter {
-    @include ohma.layer();
-    height: 50px;
+.EventMain {
+    flex: 1;
+    min-width: 0;
     display: flex;
-    justify-content: space-evenly;
-    text-align: center;
-    font-weight: bold;
+    flex-direction: column;
+    justify-content: center;
+    gap: calc(0.5 * #{ohma.$gap});
+    padding: 0 calc(2 * #{ohma.$gap});
+
+    h2 {
+        margin: 0;
+        font-size: ohma.$fonts-l;
+        font-weight: ohma.$fonts-weight-m;
+        color: ohma.$colors-text;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+
+.tags {
+    display: flex;
+    align-items: center;
+    gap: ohma.$gap;
+    list-style-type: none;
+}
+
+.EventMeta {
+    flex-shrink: 0;
+    width: calc(15 * #{ohma.$gap});
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    gap: calc(0.5 * #{ohma.$gap});
+    padding: 0 calc(2 * #{ohma.$gap});
+    font-size: ohma.$fonts-s;
+    color: ohma.$colors-text-muted;
+    text-align: right;
+
+    .location {
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .registrations {
+        color: ohma.$colors-text;
+        font-weight: ohma.$fonts-weight-m;
+    }
+}
+
+.EventAttendanceBar {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: calc(0.5 * #{ohma.$gap});
+    background-color: ohma.$colors-surface-subtle;
+
     > div {
-        line-height: 50px;
-        width: 100px;
+        height: 100%;
+        background: ohma.$colors-accent-blue;
+    }
+}
+
+// Rows stay rows on mobile; the meta column is what gives way.
+@include ohma.screenMobile {
+    .EventMeta {
+        display: none;
+    }
+
+    .EventDate {
+        width: calc(7 * #{ohma.$gap});
+    }
+
+    .EventMain {
+        padding-right: ohma.$gap;
     }
 }

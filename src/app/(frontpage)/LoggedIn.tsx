@@ -64,7 +64,7 @@ export default async function LoggedInLandingPage() {
                             <NewsCard key={key} news={newsArticle} />
                         ))}
                     </LoggedInSection>
-                    <LoggedInSection title="Hvad der hender" link="/events">
+                    <LoggedInSection title="Hvad der hender" link="/events" layout="rows">
                         {events.map((event, key) => (
                             <EventCard key={key} event={event} canEdit={canEditEventCmsImage} />
                         ))}

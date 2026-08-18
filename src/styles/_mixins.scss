@@ -197,21 +197,13 @@
     }
 }
 
-@mixin EventCardListLayout {
-    margin: 1em 0;
-    display: grid;
-    grid-template-columns: repeat(2, calc((100% - 2em) / 2));
-    grid-gap: 1em;
-    @media screen and (max-width: variables.$mobileBreakpoint) {
-        grid-template-columns: repeat(2, calc((100% - 2em) / 2));
-    }
-    @media screen and (max-width: 500px) {
-        grid-template-columns: 1fr;
-        place-items: center;
-        > * {
-            width: 100%;
-        }
-    }
+// Events render as full-width rows, so the list is a single stacked column at
+// every breakpoint rather than a grid of cards.
+@mixin EventRowListLayout {
+    margin: calc(2 * #{variables.$gap}) 0;
+    display: flex;
+    flex-direction: column;
+    gap: variables.$gap;
 }
 
 @mixin screenMobile {

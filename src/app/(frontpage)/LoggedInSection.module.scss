@@ -27,12 +27,15 @@
 
     > .content {
         font-size: ohma.$fonts-m;
-        /* display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        padding: calc(3 * #{ohma.$gap});
-        justify-content: space-between; */
 
-        @include ohma.ImageCardListLayout;
+        &:not(.rows) {
+            @include ohma.ImageCardListLayout;
+        }
+
+        // Full-width stacked children (event rows) rather than a card grid.
+        &.rows {
+            @include ohma.EventRowListLayout;
+            margin: 0;
+        }
     }
 }
