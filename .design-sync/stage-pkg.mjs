@@ -515,7 +515,24 @@ function walkDir(root) {
     return out
 }
 
-// ── 6. Report ───────────────────────────────────────────────────────────────
+// ── 6. Declarations ─────────────────────────────────────────────────────────
+// The converter derives its component list from the .d.ts tree, and step 2
+// wipes OUT (types/ included). Emitting them here rather than as a separate
+// command means a forgotten `tsc` can't silently produce a partial bundle.
+
+const tsc = join(REPO, 'node_modules/.bin/tsc')
+if (!existsSync(tsc)) throw new Error(`typescript not installed: ${tsc}`)
+try {
+    execFileSync(tsc, ['-p', join(OUT, 'tsconfig.json')], { stdio: ['ignore', 'pipe', 'pipe'] })
+} catch (error) {
+    const detail = `${error.stdout ?? ''}${error.stderr ?? ''}`.trim()
+    console.error(`  ! tsc reported errors while emitting declarations:\n${detail}`)
+    process.exitCode = 1
+}
+const dtsCount = walkDir(join(OUT, 'types')).filter(path => path.endsWith('.d.ts')).length
+console.error(`  declarations: ${dtsCount} .d.ts emitted`)
+
+// ── 7. Report ───────────────────────────────────────────────────────────────
 
 const componentCount = Object.keys(SCOPE).length
 const internalCount = [...staged.values()].filter(p => p.startsWith('src/_internal/') && !STYLE_RX.test(p)).length

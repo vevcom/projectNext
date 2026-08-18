@@ -11,11 +11,14 @@ import Slider from '@/components/UI/Slider'
 import FileInput from '@/components/UI/FileInput'
 import Dropdown from '@/components/UI/Dropdown'
 import SearchableDropdown from '@/components/UI/SearchableDropdown'
+import ColorInput from '@/components/UI/ColorInput'
+import { SelectString, SelectNumber } from '@/components/UI/Select'
 import ProgressBar from '@/components/ProgressBar/ProgressBar'
 
 const textInputColors = ['primary', 'secondary', 'red', 'black', 'white'] as const
 const sliderColors = ['primary', 'secondary', 'red', 'black', 'white'] as const
-const fileInputColors = ['primary', 'secondary', 'red', 'black'] as const
+const fileInputColors = ['primary', 'secondary', 'red', 'black', 'white'] as const
+const selectColors = ['primary', 'secondary', 'red', 'black', 'white'] as const
 
 const dropdownOptions = [
     { value: 'ntnu', label: 'NTNU' },
@@ -23,6 +26,10 @@ const dropdownOptions = [
     { value: 'komite', label: 'Komité' },
     { value: 'styret', label: 'Styret' },
 ]
+
+const selectOptions = dropdownOptions.map(option => ({ ...option, key: option.value }))
+
+const yearOptions = [2020, 2021, 2022, 2023].map(year => ({ value: year, key: String(year) }))
 
 export default function ComponentTest() {
     return (
@@ -89,6 +96,19 @@ export default function ComponentTest() {
             </section>
 
             <section className={styles.section}>
+                <h2>Color input</h2>
+                <div className={styles.row}>
+                    <ColorInput name="color_demo" label="Farge" defaultValue="#037FFC" />
+                    <ColorInput
+                        name="color_rgb_demo"
+                        label="Fra RGB"
+                        defaultValueRGB={{ red: 92, green: 209, blue: 122 }}
+                    />
+                    <ColorInput name="color_disabled_demo" label="Disabled" defaultValue="#EB5757" disabled />
+                </div>
+            </section>
+
+            <section className={styles.section}>
                 <h2>Dropdowns</h2>
                 <div className={styles.row}>
                     <Dropdown name="dropdown_demo" label="Dropdown" options={dropdownOptions} />
@@ -96,6 +116,30 @@ export default function ComponentTest() {
                         name="searchable_dropdown_demo"
                         label="Searchable dropdown"
                         options={dropdownOptions}
+                    />
+                </div>
+            </section>
+
+            <section className={styles.section}>
+                <h2>Selects</h2>
+                <div className={styles.row}>
+                    {selectColors.map(color => (
+                        <SelectString
+                            key={color}
+                            name={`select_${color}`}
+                            label={color}
+                            color={color}
+                            options={selectOptions}
+                        />
+                    ))}
+                </div>
+                <div className={styles.row}>
+                    <SelectNumber name="select_number_demo" label="Opptaksår" options={yearOptions} />
+                    <SelectString
+                        name="select_disabled_demo"
+                        label="Disabled"
+                        options={selectOptions}
+                        disabled
                     />
                 </div>
             </section>

@@ -1,18 +1,29 @@
 import { SelectString } from '@ohma/ui'
 
+const committees = [
+    { value: 'vevkom', label: 'Vevkom', key: 'vevkom' },
+    { value: 'arrkom', label: 'Arrkom', key: 'arrkom' },
+    { value: 'kjellerkom', label: 'Kjellerkom', key: 'kjellerkom' },
+    { value: 'redaksjonen', label: 'Redaksjonen', key: 'redaksjonen' },
+]
+
+/**
+ * A native `<select>` styled as a form field. Because a select always has a
+ * selection, the label sits permanently in the floated position rather than
+ * toggling the way TextInput's does.
+ */
 export const Default = () => (
     <div style={{ maxWidth: '22rem' }}>
-        <SelectString
-            name="committee"
-            label="Komité"
-            defaultValue="vevkom"
-            options={[
-                { value: 'vevkom', label: 'Vevkom', key: 'vevkom' },
-                { value: 'arrkom', label: 'Arrkom', key: 'arrkom' },
-                { value: 'kjellerkom', label: 'Kjellerkom', key: 'kjellerkom' },
-                { value: 'redaksjonen', label: 'Redaksjonen', key: 'redaksjonen' },
-            ]}
-        />
+        <SelectString name="committee" label="Komité" defaultValue="arrkom" options={committees} />
+    </div>
+)
+
+export const Colors = () => (
+    <div style={{ display: 'grid', gap: '1rem', maxWidth: '22rem' }}>
+        <SelectString name="black" label="Black (default)" color="black" options={committees} />
+        <SelectString name="primary" label="Primary" color="primary" options={committees} />
+        <SelectString name="white" label="White" color="white" options={committees} />
+        <SelectString name="red" label="Red" color="red" options={committees} />
     </div>
 )
 
@@ -27,6 +38,17 @@ export const LabelFromValue = () => (
                 { value: 'Utflyttet', key: 'utflyttet' },
             ]}
         />
+    </div>
+)
+
+export const OnRaisedSurface = () => (
+    <div style={{
+        background: 'var(--surface-raised)',
+        padding: '1.5rem',
+        borderRadius: 'var(--rounding)',
+        maxWidth: '22rem',
+    }}>
+        <SelectString name="committeeRaised" label="Komité" background="raised" options={committees} />
     </div>
 )
 

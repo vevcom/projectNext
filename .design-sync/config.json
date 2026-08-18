@@ -4,7 +4,7 @@
   "pkg": "@ohma/ui",
   "globalName": "OhmaUI",
   "srcDir": "src",
-  "buildCmd": "node .design-sync/stage-pkg.mjs && (cd .design-sync/.cache/pkg && ../../../node_modules/.bin/tsc -p tsconfig.json)",
+  "buildCmd": "node .design-sync/stage-pkg.mjs",
   "readmeHeader": ".design-sync/conventions.md",
   "cssEntry": "styles/globals.css",
   "extraFonts": ["styles/globals.css"],

@@ -22,11 +22,29 @@ export const WithLabels = () => (
             name="guests"
             label="Antall følge"
             defaultValue={1}
+            color="primary"
             options={[
                 { value: 0, label: 'Ingen', key: 'none' },
                 { value: 1, label: 'Én', key: 'one' },
                 { value: 2, label: 'To', key: 'two' },
             ]}
+        />
+    </div>
+)
+
+export const OnRaisedSurface = () => (
+    <div style={{
+        background: 'var(--surface-raised)',
+        padding: '1.5rem',
+        borderRadius: 'var(--rounding)',
+        maxWidth: '22rem',
+    }}>
+        <SelectNumber
+            name="issueNumber"
+            label="Utgavenummer"
+            background="raised"
+            defaultValue={3}
+            options={[{ value: 1, key: '1' }, { value: 2, key: '2' }, { value: 3, key: '3' }]}
         />
     </div>
 )
