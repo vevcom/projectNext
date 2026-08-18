@@ -17,9 +17,19 @@ $taktlause: url("backgroundimages/taktlause.jpeg");
 
 .wrapper {
     font-size: 40px;
+    // Separates the hero, the content and the footer by one grid step, so each
+    // reads as its own surface against the page background.
+    display: flex;
+    flex-direction: column;
+    gap: ohma.$gap;
+
     > .part {
         &.frontImg {
             background-image: $frontImg;
+            border-radius: ohma.$rounding;
+            // .frontInfo paints its own radial gradient, so the corners have to
+            // be clipped rather than just rounding the background.
+            overflow: hidden;
         }
         &.omegamai {
             background-image: $omegamai;
@@ -35,6 +45,13 @@ $taktlause: url("backgroundimages/taktlause.jpeg");
         background-attachment: fixed;
         width: 100%;
     }
+}
+
+// Was referenced from LoggedIn/LoggedOut but never defined, so the wrapper
+// rendered with class="undefined".
+.footer {
+    border-radius: ohma.$rounding;
+    overflow: hidden;
 }
 
 .frontInfo {

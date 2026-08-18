@@ -4,7 +4,6 @@ import LoggedInSection from './LoggedInSection'
 import EventCard from '@/app/_components/Event/EventCard'
 import JobAd from '@/app/career/jobads/JobAd'
 import NewsCard from '@/app/news/NewsCard'
-import SocialIcons from '@/components/SocialIcons/SocialIcons'
 import StandardImageServer from '@/components/Image/StandardImageServer'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { readNewsCurrentAction } from '@/services/news/actions'
@@ -56,27 +55,26 @@ export default async function LoggedInLandingPage() {
             </div>
             <div id="firstSection" className={`${styles.part} ${loggedInStyles.loggedInPart}`}>
                 <div>
-                    <div className={loggedInStyles.socials}>
-                        <SocialIcons />
+                    <div className={loggedInStyles.islands}>
+                        <LoggedInSection title="Nyheter" link="/news">
+                            {news.map((newsArticle, key) => (
+                                <NewsCard key={key} news={newsArticle} />
+                            ))}
+                        </LoggedInSection>
+                        <LoggedInSection title="Hvad der hender" link="/events" layout="rows" span="half">
+                            {events.map((event, key) => (
+                                <EventCard key={key} event={event} canEdit={canEditEventCmsImage} />
+                            ))}
+                        </LoggedInSection>
+                        <LoggedInSection title="Jobbannonser" link="/career/jobads" layout="rows" span="half">
+                            {jobAds.map((jobAd, key) => (
+                                <JobAd key={key} jobAd={jobAd} />
+                            ))}
+                        </LoggedInSection>
+                        <LoggedInSection title="Bilder" link="/image-collections">
+                            Her kan man kanskje vise noen bilder ellerno
+                        </LoggedInSection>
                     </div>
-                    <LoggedInSection title="Nyheter" link="/news">
-                        {news.map((newsArticle, key) => (
-                            <NewsCard key={key} news={newsArticle} />
-                        ))}
-                    </LoggedInSection>
-                    <LoggedInSection title="Hvad der hender" link="/events" layout="rows">
-                        {events.map((event, key) => (
-                            <EventCard key={key} event={event} canEdit={canEditEventCmsImage} />
-                        ))}
-                    </LoggedInSection>
-                    <LoggedInSection title="Jobbannonser" link="/career/jobads" layout="rows">
-                        {jobAds.map((jobAd, key) => (
-                            <JobAd key={key} jobAd={jobAd} />
-                        ))}
-                    </LoggedInSection>
-                    <LoggedInSection title="Bilder" link="/image-collections">
-                        Her kan man kanskje vise noen bilder ellerno
-                    </LoggedInSection>
                 </div>
             </div>
             <div className={styles.footer}>

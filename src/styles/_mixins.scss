@@ -170,7 +170,7 @@
     }
 }
 
-@mixin pagePadding($max-width: 900px) {
+@mixin pagePadding($max-width: 1200px) {
     $width: 100%;
 
     width: $width;
@@ -215,6 +215,11 @@
     display: flex;
     align-items: stretch;
     height: calc(12 * #{variables.$gap});
+    // Rows appear both full-width and inside half-width islands, so the columns
+    // give way based on the space the row actually has rather than on viewport
+    // width — a viewport query would leave the title with ~50px in a narrow
+    // island on a wide screen.
+    container-type: inline-size;
     overflow: hidden;
     text-decoration: none;
     color: unset;
@@ -340,12 +345,18 @@
         }
     }
 
-    // Rows stay rows on mobile; the meta column is what gives way.
-    @include screenMobile {
+    // Rows stay rows when space is tight; the meta column is what gives way.
+    @container (max-width: 560px) {
         > .meta {
             display: none;
         }
 
+        > .main {
+            padding-right: calc(2 * #{variables.$gap});
+        }
+    }
+
+    @container (max-width: 380px) {
         > .lead {
             width: calc(7 * #{variables.$gap});
         }
