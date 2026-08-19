@@ -114,8 +114,11 @@ imports (`fonts/fonts.css`, `_ds_bundle.css`).
 
 - **Form controls take `name`** and render their own `<label>` from `label` — no
   separate label element.
-- `background="raised"` on `TextInput` / `Textarea` / `NumberInput` / `DateInput`
-  when the field sits on `--surface-raised`, so it stays distinguishable.
+- **Every field is the same 56px shell** — `TextInput`, `Textarea`,
+  `NumberInput`, `DateInput`, `SelectString`, `SelectNumber`, `ColorInput`,
+  `FileInput`, `Dropdown`, `SearchableDropdown` — with a label that floats above
+  the value. Pass `background="raised"` on any of them when the field sits on
+  `--surface-raised`, so it stays distinguishable.
 - **There is no outline/ghost button.** Every action is a filled `Button`:
   `primary` for the main action on a view, `secondary` for everything beside it.
   Don't invent a bordered variant — the design system deliberately has two
@@ -127,10 +130,6 @@ imports (`fonts/fonts.css`, `_ds_bundle.css`).
 
 ## Known rough edges (don't imitate, don't "fix" in a design)
 
-- `SelectString` / `SelectNumber` leave the native `<select>` unstyled, so it
-  renders as a white control with near-white text. Prefer **`Dropdown`** or
-  **`SearchableDropdown`** for new work.
-- `FileInput`'s default `color="black"` is dark-on-black; pass `color="primary"`.
 - `Slider`'s `secondary` variant is invisible on the app surface; use `primary`,
   `red` or `white`.
 - `SimpleTable`'s `links` prop wraps `<tr>` in an `<a>`, which browsers hoist out

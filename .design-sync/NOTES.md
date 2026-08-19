@@ -24,8 +24,10 @@ into a bundlable package under `.design-sync/.cache/pkg/`:
 `.design-sync/scope.json` is the **source of truth for which components sync**
 (`{Name: {group, src, export}}`). Add or remove entries there, not in config.
 
-Rebuild command (also in `config.buildCmd`):
-`node .design-sync/stage-pkg.mjs && (cd .design-sync/.cache/pkg && ../../../node_modules/.bin/tsc -p tsconfig.json)`
+Rebuild command (also in `config.buildCmd`): `node .design-sync/stage-pkg.mjs`.
+It emits the `.d.ts` tree itself — it wipes its output dir (`types/` included)
+and the converter derives the component list from that tree, so a separate
+forgotten `tsc` silently produced a 12-component bundle instead of the full set.
 
 ## Environment
 
@@ -100,12 +102,11 @@ different colours than a fresh page load, which never applied a theme.
 These are faithfully reproduced in the cards and documented in `conventions.md`.
 They are **app bugs, not sync bugs** — fix them in the repo, then re-sync.
 
-- `UI/Select.module.scss` styles almost nothing: the native `<select>` keeps the
-  UA white background while inheriting near-white `--text`, so `SelectString` /
-  `SelectNumber` are barely legible. `Dropdown` / `SearchableDropdown` are the
-  styled alternatives.
-- `UI/FileInput.module.scss` `.black` (the component's **default** `color`) pairs
-  `--colors-black` with `--text-inv` → dark text on black.
+- ~~`UI/Select.module.scss` styles almost nothing…~~ **Fixed.** Select now uses
+  `appearance: none` plus the shared field treatment; verified in the built CSS
+  (`.Select_field` carries `surface-raised` / `ink-strong` / border / radius).
+- ~~`UI/FileInput.module.scss` `.black` … dark text on black.~~ **Fixed.**
+  `.FileInput_black > .trigger .value` now resolves to `--ink-strong`.
 - `UI/Slider.module.scss` `secondary` maps the track to `--surface-base`, invisible
   against the app surface. Same for `TextInput`'s `secondary` text colour.
 - `UI/Checkbox.module.scss`: the `children` branch (`.inputAndChildren`) drops the
@@ -124,8 +125,8 @@ They are **app bugs, not sync bugs** — fix them in the repo, then re-sync.
 ## Known render warns
 
 None. The final `package-validate.mjs` run exits 0 with **zero** warnings and
-40/40 previews rendering cleanly. Any warn on a future run is new — investigate
-before recording it here.
+39/39 previews rendering cleanly (40 before `BorderButton` was retired). Any warn
+on a future run is new — investigate before recording it here.
 
 ## Preview techniques used
 
