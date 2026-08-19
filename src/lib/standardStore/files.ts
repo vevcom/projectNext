@@ -1,13 +1,16 @@
 import { licenseOperations } from '@/services/licenses/operations'
 import { readFile } from 'fs/promises'
-import { dirname, join } from 'path'
-import { fileURLToPath } from 'url'
+import { join } from 'path'
 import { File } from 'node:buffer'
 import type { StandardLicenseName } from '@/services/licenses/constants'
 import type { imageSchemas } from '@/services/images/subservice/schemas'
 import type { z } from 'zod'
 
-const standardStoreRoot = join(dirname(fileURLToPath(import.meta.url)), '../../../standard_store/')
+// Resolved against the working directory rather than import.meta.url: the bundled
+// server chunks sit at a different depth under .next/standalone than the source does,
+// so a module-relative path breaks there. lib/store reaches its on-disk data the same
+// way, so the app consistently expects to be started from the project root.
+const standardStoreRoot = join(process.cwd(), 'standard_store')
 
 export type StandardStoreFile = {
     file: () => Promise<File>,

@@ -36,7 +36,9 @@ services:
             SEED_ADMIN_EMAIL: ${SEED_ADMIN_EMAIL}
             SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD}
         healthcheck:
-            test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000/api/health"]
+            # 127.0.0.1 rather than localhost: alpine tries ::1 first, and the
+            # production server binds IPv4 only.
+            test: ["CMD", "wget", "--spider", "-q", "http://127.0.0.1:3000/api/health"]
             interval: 10s
             timeout: 3s
             retries: 5

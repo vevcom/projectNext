@@ -49,12 +49,9 @@ ENV NODE_ENV=development
 
 CMD ["npm", "run", "dev-seed"]
 ############################################################
-# prod is deliberately the last stage: a plain `docker build` with no
-# --target/build-stage specified (e.g. some PaaS "Dockerfile" build modes)
-# defaults to the last stage in the file - that should be the one that
-# actually builds and serves the app, not dev (which expects src/ to be
-# bind-mounted, not copied in) or test.
-FROM base AS prod
+# Builds the app. Nothing from this stage ships as-is: prod copies only the
+# traced output out of it, which is what keeps the runtime image small.
+FROM base AS builder
 
 ENV NODE_ENV=production
 
@@ -62,7 +59,59 @@ COPY src src
 
 RUN npm run build
 
-HEALTHCHECK --interval=10s --timeout=3s --start-period=30s --retries=5 \
-    CMD wget --spider -q http://localhost:3000/api/health || exit 1
+# Next's tracer pulls standard_store into the standalone output too, so prod would
+# get the 78 MB of dev_profile_images back through that path. Drop the traced copy
+# entirely and let prod COPY the pruned tree explicitly - deterministic either way,
+# and deleting in prod instead would only bury the bytes in the layer below.
+RUN rm -rf .next/standalone/standard_store standard_store/dev_profile_images
 
-CMD ["npm", "run", "start"]
+############################################################
+# The migration/seed toolchain: DobbelOmega and the seeder pull in the whole
+# service layer, so they need the full dependency tree and cannot run against
+# prod's traced subset. This is a separate image rather than extra weight in
+# prod - see "Running DobbelOmega" in README.md for the command.
+FROM base AS tools
+
+ENV NODE_ENV=production
+
+COPY src src
+
+CMD ["npm", "run", "dobbelOmega:run"]
+
+############################################################
+# prod is deliberately the last stage: a plain `docker build` with no
+# --target/build-stage specified (e.g. some PaaS "Dockerfile" build modes)
+# defaults to the last stage in the file - that should be the one that
+# actually builds and serves the app, not dev (which expects src/ to be
+# bind-mounted, not copied in) or test.
+FROM node:${NODE_VERSION}-alpine${ALPINE_VERSION} AS prod
+WORKDIR /usr/src/app
+
+EXPOSE 3000
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV NODE_ENV=production
+# standalone's server.js binds to $HOSTNAME, which Docker sets to the container id -
+# that listens on the container IP only, so the localhost healthcheck below (and
+# Dokploy's) would never connect. Bind all interfaces instead.
+ENV HOSTNAME=0.0.0.0
+ENV PORT=3000
+
+# The Next.js server: standalone/ already carries the subset of node_modules the
+# server actually imports, plus its own minimal package.json and server.js.
+COPY --from=builder /usr/src/app/.next/standalone ./
+COPY --from=builder /usr/src/app/.next/static ./.next/static
+COPY --from=builder /usr/src/app/public ./public
+
+# Assets read from disk at runtime by lib/standardStore. dev_profile_images is
+# only ever touched by the development seeder, and is 78 MB, so it stays out.
+COPY --from=builder /usr/src/app/standard_store ./standard_store
+
+# Bind mount targets in compose; created here so the image works without them too.
+RUN mkdir -p store/images logs dobbelOmegaManifest
+
+# 127.0.0.1, not localhost: alpine resolves localhost to ::1 first and the server
+# listens on IPv4 only, so the v6 attempt is refused before v4 is ever tried.
+HEALTHCHECK --interval=10s --timeout=3s --start-period=30s --retries=5 \
+    CMD wget --spider -q http://127.0.0.1:3000/api/health || exit 1
+
+CMD ["node", "server.js"]

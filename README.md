@@ -71,11 +71,20 @@ Production runs on [Dokploy](https://dokploy.com/) as two independent resources 
 
 Static `/store/` files are served by Next.js directly, so there's no separate nginx service in this setup. `postfix` (mail relay) is not part of the current Dokploy deployment.
 
-To load data from Omegaweb-basic, exec into the running web application's container (via Dokploy's terminal, or `docker exec` on the host) and run the command below. Keep in mind that the command will delete all the data in the database.
+Set `BUILDX_NO_DEFAULT_ATTESTATIONS=1` in the build environment. BuildKit otherwise attaches a provenance attestation and packs the result as a multi-platform manifest list, which nothing here consumes and which shows up as extra `exporting attestation manifest` work on every deploy.
+
+### Running DobbelOmega
+
+To load data from Omegaweb-basic, run the `tools` image on the host. Keep in mind that this will delete all the data in the database.
+
 ```bash
-cd usr/src/app
-npm run dobbelOmega:run
+docker build --target tools -t pn-tools .
+docker run --rm --env-file .env pn-tools
 ```
+
+This is a separate image because the deployed web application no longer contains the toolchain. The `prod` stage ships only the modules the Next.js server actually imports (via `output: 'standalone'`), which takes it from 2.8 GB to under 500 MB - the difference between a ~6 minute rollout and about one. The seeder and DobbelOmega import the whole service layer, so they need the full dependency tree; keeping that in the deployed image would have put the 2.3 GB straight back.
+
+`tools` builds on the same cached layers as a normal deploy, so it is quick to produce on a host that has built the app before. It reads the same environment variables as the web application - point `DB_URI` at the database you actually mean to overwrite.
 
 ## Lint
 
