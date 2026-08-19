@@ -65,6 +65,13 @@
 }
 
 // Two islands share a row once there is room for both.
+// Two islands share a row once there is room for both; below the mobile
+// breakpoint they wrap underneath each other instead of splitting a narrow
+// screen in half.
 .half {
     flex: 1 1 calc(50% - #{ohma.$gap});
+
+    @include ohma.screenMobile {
+        flex-basis: 100%;
+    }
 }

@@ -20,7 +20,7 @@ export default function LoggedInSection({
     return <section className={`${styles.LoggedInSection} ${span === 'half' ? styles.half : ''}`}>
         <div className={styles.title}>
             <h4>{title}</h4>
-            <Link href={link} className={styles.readMore}>Les mer</Link>
+            <Link href={link} className={styles.readMore}>Se flere</Link>
         </div>
         <div className={`${styles.content} ${layout === 'rows' ? styles.rows : ''}`}>
             {children}

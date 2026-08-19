@@ -29,7 +29,7 @@ $textUnderlineColor: ohma.$colors-surface-base;
         height: $imageHeight;
         z-index: 1;
         overflow: hidden;
-        border-radius: ohma.$cardRounding;
+        border-radius: ohma.$rounding;
 
         > * {
             width: 100%;

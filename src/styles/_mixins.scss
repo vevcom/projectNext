@@ -204,6 +204,10 @@
     display: flex;
     flex-direction: column;
     gap: variables.$gap;
+    // The list is the query container for its rows. It has to sit here rather
+    // than on the row itself: a container query can only style descendants of
+    // the container, so a row cannot restyle itself off its own width.
+    container-type: inline-size;
 }
 
 // A 96px list row on the 8px grid, shared by the event and job-ad listings so
@@ -218,8 +222,7 @@
     // Rows appear both full-width and inside half-width islands, so the columns
     // give way based on the space the row actually has rather than on viewport
     // width — a viewport query would leave the title with ~50px in a narrow
-    // island on a wide screen.
-    container-type: inline-size;
+    // island on a wide screen. The container is RowListLayout, not this row.
     overflow: hidden;
     text-decoration: none;
     color: unset;
@@ -356,13 +359,40 @@
         }
     }
 
-    @container (max-width: 380px) {
+    // Narrower still (phone-width rows) there is no room for a date column
+    // beside the title, so the row becomes a grid: the thumbnail keeps the left
+    // edge and the date sits horizontally above the title in the space left.
+    @container (max-width: 480px) {
+        display: grid;
+        grid-template-columns: calc(12 * #{variables.$gap}) 1fr;
+        align-content: center;
+        row-gap: calc(0.5 * #{variables.$gap});
+
+        // Taken out of the grid so it can span the full row height regardless of
+        // how tall the centred text block ends up.
+        > .thumb {
+            position: absolute;
+            inset: 0 auto 0 0;
+            width: calc(12 * #{variables.$gap});
+        }
+
         > .lead {
-            width: calc(7 * #{variables.$gap});
+            grid-column: 2;
+            flex-direction: row;
+            align-items: baseline;
+            justify-content: flex-start;
+            gap: calc(0.5 * #{variables.$gap});
+            width: auto;
+            padding: 0 calc(2 * #{variables.$gap});
+
+            b {
+                font-size: fonts.$m;
+            }
         }
 
         > .main {
-            padding-right: variables.$gap;
+            grid-column: 2;
+            padding-right: calc(2 * #{variables.$gap});
         }
     }
 }
