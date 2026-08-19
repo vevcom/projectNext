@@ -22,7 +22,9 @@ export default function PageWrapper({
             <PageTitleSetter title={title} />
             {!hideTitle && (
                 <div className={styles.inlineHeader}>
+                    {/* TODO If anyone wants this we can keep it
                     <h1 className={titleClassName}>{ title }</h1>
+                    */}
 
                     <div>
                         { headerItem }

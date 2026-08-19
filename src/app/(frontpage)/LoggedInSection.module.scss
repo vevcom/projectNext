@@ -60,7 +60,30 @@
         &.rows {
             @include ohma.RowListLayout;
             margin: calc(2 * #{ohma.$gap}) 0 0;
+            // Fixed to fit LoggedIn.tsx's MAX_NUMBER_OF_ELEMENTS (3 rows, listRow's
+            // 12-gap height, 2 gaps between them) so paired islands (events/jobads)
+            // stay the same height instead of collapsing when one has fewer rows
+            // than the other.
+            height: calc(38 * #{ohma.$gap});
         }
+    }
+}
+
+// Placeholder shown instead of the list when a section has nothing to display.
+// Matches the .rows fixed height so an empty island doesn't collapse either.
+.empty {
+    height: calc(38 * #{ohma.$gap});
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: ohma.$gap;
+    color: ohma.$colors-ink-hover;
+    text-align: center;
+
+    > svg {
+        font-size: calc(6 * #{ohma.$gap});
+        opacity: 0.5;
     }
 }
 

@@ -1,25 +1,20 @@
 import SmallEventTag from './SmallEventTag'
 import styles from './EventCard.module.scss'
-import CmsImage from '@/components/Cms/CmsImage/CmsImage'
-import { updateEventCmsCoverImageAction } from '@/services/events/actions'
-import { configureAction } from '@/services/configureAction'
+import Image from '@/components/Image/Image'
 import { formatVevenUri } from '@/lib/urlEncoding'
 import React from 'react'
 import Link from 'next/link'
 import type { EventExpanded } from '@/services/events/types'
-import type { ExpandedCmsImage } from '@/cms/images/types'
-import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
 
 type PropTypes = {
     event: EventExpanded
-    canEdit: AuthResultTypeAny
 }
 
 const months = ['jan', 'feb', 'mar', 'apr', 'mai', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'des']
 
 const twoDigitHour = (date: Date) => String(date.getHours()).padStart(2, '0')
 
-export default function EventCard({ event, canEdit }: PropTypes) {
+export default function EventCard({ event }: PropTypes) {
     const attendanceRatio = event.places > 0 ? event.numOfRegistrations / event.places : 0
     const attendance = `${Math.max(0, Math.min(attendanceRatio, 1)) * 100}%`
     const link = `/events/${formatVevenUri(`${event.name}`, event.id)}`
@@ -28,15 +23,9 @@ export default function EventCard({ event, canEdit }: PropTypes) {
 
     return <Link href={link} className={styles.EventWrapper}>
         <div className={styles.thumb}>
-            <CmsImage
-                width={200}
-                cmsImage={event.coverImage as ExpandedCmsImage}
-                updateCmsImageAction={configureAction(
-                    updateEventCmsCoverImageAction,
-                    { implementationParams: { eventId: event.id } }
-                )}
-                canEdit={canEdit}
-            />
+            {event.coverImage.image && (
+                <Image width={200} image={event.coverImage.image} />
+            )}
         </div>
 
         <div className={styles.lead}>

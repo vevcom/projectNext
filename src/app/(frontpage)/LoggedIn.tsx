@@ -9,7 +9,6 @@ import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { readNewsCurrentAction } from '@/services/news/actions'
 import { readActiveJobAdsAction } from '@/services/career/jobAds/actions'
 import { readCurrentEventsAction } from '@/services/events/actions'
-import { eventAuth } from '@/services/events/auth'
 import { frontpageAuth } from '@/services/frontpage/auth'
 import { ServerSession } from '@/auth/session/ServerSession'
 import Footer from '@/components/Footer/Footer'
@@ -29,12 +28,8 @@ export default async function LoggedInLandingPage() {
 
     const session = await ServerSession.fromNextAuth()
 
-    const canEditEventCmsImage = eventAuth.updateCmsCoverImage.dynamicFields({}).auth(
-        session
-    ).toJsObject()
-
     const canEditSpecialCmsImage = frontpageAuth.updateSpecialCmsImage.dynamicFields({}).auth(
-        await ServerSession.fromNextAuth()
+        session
     ).toJsObject()
 
     return (
@@ -56,24 +51,38 @@ export default async function LoggedInLandingPage() {
             <div id="firstSection" className={`${styles.part} ${loggedInStyles.loggedInPart}`}>
                 <div>
                     <div className={loggedInStyles.islands}>
-                        <LoggedInSection title="Nyheter" link="/news">
+                        <LoggedInSection title="Nyheter" link="/news" emptyMessage="Det er for tiden ingen nyheter">
                             {news.map((newsArticle, key) => (
                                 <NewsCard key={key} news={newsArticle} />
                             ))}
                         </LoggedInSection>
-                        <LoggedInSection title="Hvad der hender" link="/events" layout="rows" span="half">
+                        <LoggedInSection
+                            title="Hvad der hender"
+                            link="/events"
+                            layout="rows"
+                            span="half"
+                            emptyMessage="Det er for tiden ingen kommende hendelser"
+                        >
                             {events.map((event, key) => (
-                                <EventCard key={key} event={event} canEdit={canEditEventCmsImage} />
+                                <EventCard key={key} event={event} />
                             ))}
                         </LoggedInSection>
-                        <LoggedInSection title="Jobbannonser" link="/career/jobads" layout="rows" span="half">
+                        <LoggedInSection
+                            title="Jobbannonser"
+                            link="/career/jobads"
+                            layout="rows"
+                            span="half"
+                            emptyMessage="Det er for tiden ingen jobbannonser"
+                        >
                             {jobAds.map((jobAd, key) => (
                                 <JobAd key={key} jobAd={jobAd} />
                             ))}
                         </LoggedInSection>
+                        {/* Images section doesnt really fit for the logged in landing page.
                         <LoggedInSection title="Bilder" link="/image-collections">
                             Her kan man kanskje vise noen bilder ellerno
                         </LoggedInSection>
+                        */}
                     </div>
                 </div>
             </div>

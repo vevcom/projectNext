@@ -7,5 +7,41 @@
 }
 
 .wrapper {
-    background: ohma.$colors-surface-base;
+    @include ohma.RowListLayout;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 1em;
+}
+
+.tags {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+
+    a {
+        text-decoration: none;
+        position: relative;
+        &:hover {
+            &::after {
+                content: '✖';
+                font-size: 4em;
+                color: ohma.$colors-text;
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+            }
+        }
+    }
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 1em;
 }

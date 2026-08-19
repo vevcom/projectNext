@@ -6,7 +6,6 @@ import { EventArchivePagingProvider } from '@/contexts/paging/EventArchivePaging
 import { ServerSession } from '@/auth/session/ServerSession'
 import { QueryParams } from '@/lib/queryParams/queryParams'
 import { eventTagAuth } from '@/services/events/tags/auth'
-import { eventAuth } from '@/services/events/auth'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 import type { SearchParamsServerSide } from '@/lib/queryParams/types'
 
@@ -28,7 +27,6 @@ export default async function EventArchive({
     const canUpdate = eventTagAuth.update.dynamicFields({}).auth(session)
     const canCreate = eventTagAuth.create.dynamicFields({}).auth(session)
     const canDestroy = eventTagAuth.destroy.dynamicFields({}).auth(session)
-    const canEditEventCmsImage = eventAuth.updateCmsCoverImage.dynamicFields({}).auth(session).toJsObject()
 
     return (
         <EventsLandingLayout page="EVENT_ARCHIVE" title="Hvad Der Har Hendt" headerLinks={[
@@ -50,7 +48,7 @@ export default async function EventArchive({
                 page: 0,
                 pageSize: 12
             }} details={{ tags: QueryParams.eventTags.decode(await searchParams) }}>
-                <EventArchiveList canEdit={canEditEventCmsImage} />
+                <EventArchiveList />
             </EventArchivePagingProvider>
         </EventsLandingLayout>
     )
