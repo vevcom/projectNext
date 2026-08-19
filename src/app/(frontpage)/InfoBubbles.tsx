@@ -1,7 +1,6 @@
 import styles from './InfoBubbles.module.scss'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
-    faCircle,
     faHeart,
     faFutbol,
     faSuitcase
@@ -12,7 +11,6 @@ function InfoBubbles() {
         <div className={styles.InfoBubbles}>
             <div className={styles.bubble}>
                 <div className={styles.icon}>
-                    <FontAwesomeIcon icon={faCircle} />
                     <FontAwesomeIcon icon={faHeart} />
                 </div>
                 <div className={styles.heading}>Sosialt</div>
@@ -23,7 +21,6 @@ function InfoBubbles() {
             </div>
             <div className={styles.bubble}>
                 <div className={styles.icon}>
-                    <FontAwesomeIcon icon={faCircle} />
                     <FontAwesomeIcon icon={faFutbol} />
                 </div>
                 <div className={styles.heading}>Komitéer</div>
@@ -35,7 +32,6 @@ function InfoBubbles() {
             </div>
             <div className={styles.bubble}>
                 <div className={styles.icon}>
-                    <FontAwesomeIcon icon={faCircle} />
                     <FontAwesomeIcon icon={faSuitcase} />
                 </div>
                 <div className={styles.heading}>Næringsliv</div>

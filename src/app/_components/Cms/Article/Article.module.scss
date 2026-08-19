@@ -45,21 +45,24 @@ $padding: ohma.$minimalPagePadding;
                 background: linear-gradient(to bottom, rgba(0,0,0, 0), ohma.$colors-surface-base);
                 z-index: 1;
             }
-            > * {
+
+            // CmsImage's own wrapper divs (CmsImage/StandardImage/Image) size themselves off
+            // the image's intrinsic width rather than off this container. Force every wrapper
+            // div to fill this box instead, at whatever nesting depth - Image sits one level
+            // deeper when there's no image chosen yet and StandardImage's fallback renders
+            // instead.
+            div {
+                width: 100%;
+                height: 100%;
+            }
+
+            img {
                 position: absolute;
                 top: 0;
                 left: 0;
-                width: 100% !important;
-                height: 100%;
+                width: 100%;
+                height: $cover-height;
                 object-fit: cover;
-                img {
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    width: 100% !important;
-                    height: $cover-height !important;
-                    object-fit: cover;
-                }
             }
         }
         >*:nth-child(2) {

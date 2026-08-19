@@ -85,11 +85,11 @@
                 margin: 0;
             }
             .committeeLink {
-                @include ohma.borderBtn(ohma.$colors-surface-base);
+                @include ohma.secondaryBtn;
                 margin: 0;
             }
             .videoButton {
-                @include ohma.borderBtn(ohma.$colors-surface-base);
+                @include ohma.secondaryBtn;
                 margin: 0;
                 svg {
                     width: 1em;

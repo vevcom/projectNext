@@ -6,11 +6,11 @@
     height: 30px;
     > a {
         &.primary {
-            @include ohma.borderBtn(ohma.$colors-accent-blue);
+            @include ohma.btn(ohma.$colors-accent-blue);
             margin: 0;
         }
         &.secondary {
-            @include ohma.borderBtn(ohma.$colors-text);
+            @include ohma.secondaryBtn;
             margin: 0;
 
             &:hover {

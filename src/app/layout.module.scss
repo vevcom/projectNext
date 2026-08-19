@@ -14,12 +14,19 @@
     gap: ohma.$gap;
     padding: ohma.$gap;
     height: 100dvh;
-    max-width: calc(100dvh * 16 / 9);
+    max-width: 2560px;
     margin: 0 auto;
     grid-template-areas:
         "navBar navBar"
         "sideBar content"
         "sideBar content";
+    transition: grid-template-columns ohma.$transitionTime ease;
+
+    @media (min-width: calc(#{ohma.$mobileBreakpoint} + 1px)) {
+        &:has(.sideBar [data-expanded='true']) {
+            grid-template-columns: 220px 1fr;
+        }
+    }
 }
 
 .navBar {

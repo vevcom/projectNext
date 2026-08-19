@@ -1,9 +1,12 @@
+'use client'
+
 import styles from './DesktopSideBar.module.scss'
 import getNavItems from './navDef'
-import NavTooltip from './NavTooltip'
+import SideBarNavItem from './SideBarNavItem'
 import AdminNav from './AdminNav'
-import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons'
+import { useState } from 'react'
 import type { Profile } from '@/services/users/types'
 
 export type PropTypes = {
@@ -11,6 +14,7 @@ export type PropTypes = {
 }
 
 export default function DesktopSideBar({ profile }: PropTypes) {
+    const [expanded, setExpanded] = useState(false)
     const user = profile?.user ?? null
     const isLoggedIn = user !== null
     const applicationPeriod = false
@@ -19,21 +23,21 @@ export default function DesktopSideBar({ profile }: PropTypes) {
     const navItems = getNavItems(isLoggedIn, isAdmin, applicationPeriod)
 
     return (
-        <aside className={styles.DesktopSideBar}>
+        <aside className={styles.DesktopSideBar} data-expanded={expanded}>
             <nav className={styles.navIcons} aria-label="Desktop navigation">
                 {navItems.map((item) => (
-                    <NavTooltip key={item.name} content={item.name}>
-                        <Link
-                            href={item.href}
-                            className={styles.navIcon}
-                            aria-label={item.name}
-                        >
-                            <FontAwesomeIcon icon={item.icon} className={styles.icon} />
-                        </Link>
-                    </NavTooltip>
+                    <SideBarNavItem key={item.name} item={item} expanded={expanded} />
                 ))}
             </nav>
-            <AdminNav isAdmin={isAdmin} />
+            <AdminNav isAdmin={isAdmin} expanded={expanded} />
+            <button
+                type="button"
+                className={styles.expandToggle}
+                onClick={() => setExpanded(prev => !prev)}
+                aria-label={expanded ? 'Collapse navigation' : 'Expand navigation'}
+            >
+                <FontAwesomeIcon icon={expanded ? faChevronLeft : faChevronRight} />
+            </button>
         </aside>
     )
 }

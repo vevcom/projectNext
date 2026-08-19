@@ -3,7 +3,7 @@
 .CompanyChooser {
     position: relative;
     a {
-        @include ohma.borderBtn(ohma.$colors-surface-base);
+        @include ohma.secondaryBtn;
     }
     @include ohma.screenLg {
         padding-top: 3em;

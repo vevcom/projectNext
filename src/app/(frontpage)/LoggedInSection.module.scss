@@ -1,38 +1,77 @@
 @use '@/styles/ohma';
 
+// Each section is its own island: the surface-base panel that used to sit
+// behind the whole page now belongs to the sections themselves, so the page
+// background shows between them.
 .LoggedInSection {
-    width: 100%;
-    margin-top: calc(10 * #{ohma.$gap});
-    margin-bottom: calc(10 * #{ohma.$gap});
+    flex: 1 1 100%;
+    min-width: 0;
+    background-color: ohma.$colors-surface-base;
+    border-radius: ohma.$rounding;
+    padding: calc(3 * #{ohma.$gap});
 
     > .title {
         width: 100%;
         display: flex;
         justify-content: space-between;
+        align-items: center;
+        gap: calc(2 * #{ohma.$gap});
 
         > h4 {
             font-size: ohma.$fonts-xl;
             font-weight: ohma.$fonts-weight-l;
             font-family: ohma.$fonts-secondary;
         }
+    }
 
-        > a {
-            font-size: ohma.$fonts-m;
-            color: ohma.$colors-text;
-            &:hover {
-                color: ohma.$colors-text-muted;
-            }
+    // Matches the header-item pill (the "Ny +" button) so the two read as the
+    // same kind of control.
+    .readMore {
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        height: calc(5 * #{ohma.$gap});
+        padding: 0 calc(2 * #{ohma.$gap});
+        border-radius: calc(#{ohma.$rounding} - #{ohma.$gap});
+        background-color: ohma.$colors-surface-hover;
+        color: ohma.$colors-ink-strong;
+        font-size: ohma.$fonts-m;
+        font-weight: ohma.$fonts-weight-m;
+        white-space: nowrap;
+        text-decoration: none;
+        transition: background-color ohma.$transitionTime, color ohma.$transitionTime;
+
+        // globals underlines every a:hover, which would undo the button look.
+        &:hover {
+            background-color: ohma.$colors-surface-subtle;
+            color: ohma.$colors-ink-strong;
+            text-decoration: none;
         }
     }
 
     > .content {
         font-size: ohma.$fonts-m;
-        /* display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        padding: calc(3 * #{ohma.$gap});
-        justify-content: space-between; */
 
-        @include ohma.ImageCardListLayout;
+        &:not(.rows) {
+            @include ohma.ImageCardListLayout;
+        }
+
+        // Full-width stacked children (event and job-ad rows) rather than a card grid.
+        &.rows {
+            @include ohma.RowListLayout;
+            margin: calc(2 * #{ohma.$gap}) 0 0;
+        }
+    }
+}
+
+// Two islands share a row once there is room for both.
+// Two islands share a row once there is room for both; below the mobile
+// breakpoint they wrap underneath each other instead of splitting a narrow
+// screen in half.
+.half {
+    flex: 1 1 calc(50% - #{ohma.$gap});
+
+    @include ohma.screenMobile {
+        flex-basis: 100%;
     }
 }

@@ -1,24 +1,53 @@
 import styles from './JobAd.module.scss'
-import ImageCard from '@/components/ImageCard/ImageCard'
+import Image from '@/components/Image/Image'
 import { formatVevenUri } from '@/lib/urlEncoding'
 import { jobAdType } from '@/services/career/jobAds/constants'
+import Link from 'next/link'
 import type { SimpleJobAd } from '@/services/career/jobAds/types'
 
 type PropTypes = {
     jobAd: SimpleJobAd
 }
 
+const months = ['jan', 'feb', 'mar', 'apr', 'mai', 'jun', 'jul', 'aug', 'sep', 'okt', 'nov', 'des']
+
 export default function JobAd({ jobAd }: PropTypes) {
+    const deadline = jobAd.applicationDeadline
+
     return (
-        <ImageCard
+        <Link
             href={`/career/jobads/${formatVevenUri(jobAd.articleName, jobAd.id)}`}
-            title={jobAd.articleName}
-            image={jobAd.coverImage}
-            key={jobAd.id}
+            className={styles.JobAd}
         >
-            {!jobAd.active ? <p className={styles.inactive}>Inaktiv</p> : <></>}
-            <p>{jobAd.companyName} - {jobAdType[jobAd.type].label}</p>
-            <i>{jobAd.description}</i>
-        </ImageCard>
+            <div className={styles.thumb}>
+                {jobAd.coverImage && (
+                    <Image
+                        disableLinkingToLicense
+                        creditPlacement="top"
+                        width={200}
+                        image={jobAd.coverImage}
+                    />
+                )}
+            </div>
+
+            <div className={styles.lead}>
+                {deadline ? <>
+                    <b>{deadline.getDate()}</b>
+                    <span>{months[deadline.getMonth()]}</span>
+                </> : (
+                    <span className={styles.noDeadline}>Løpende</span>
+                )}
+            </div>
+
+            <div className={styles.main}>
+                <h2>{jobAd.articleName}</h2>
+                <p>{jobAd.companyName} — {jobAdType[jobAd.type].label}</p>
+            </div>
+
+            <div className={styles.meta}>
+                {jobAd.location && <span>{jobAd.location}</span>}
+                {!jobAd.active && <span className={styles.inactive}>Inaktiv</span>}
+            </div>
+        </Link>
     )
 }

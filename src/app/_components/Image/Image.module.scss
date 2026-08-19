@@ -6,6 +6,10 @@
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
+    // Set from the `--image-width` custom property (see Image.tsx) rather than an inline
+    // `width` style, so consumers can override the rendered size with an ordinary CSS rule
+    // instead of needing `!important` to beat an inline style.
+    width: var(--image-width);
 
     > img {
         margin: 0;

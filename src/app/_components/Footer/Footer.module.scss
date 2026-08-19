@@ -6,6 +6,7 @@
     color: ohma.$colors-text;
     display: flex;
     flex-wrap: wrap;
+    border-radius: ohma.$rounding;
     padding: calc(10 * #{ohma.$gap}) clamp(calc(2 * #{ohma.$gap}), 5vw, calc(20 * #{ohma.$gap}));
     > * {
         flex: 1 1 calc(30 * #{ohma.$gap});

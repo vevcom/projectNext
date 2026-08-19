@@ -19,7 +19,7 @@
     text-align: left;
     color: ohma.$colors-ink-strong;
     background-color: ohma.$colors-surface-raised;
-    padding: calc(2.25 * #{ohma.$gap}) calc(4.5 * #{ohma.$gap}) calc(0.75 * #{ohma.$gap}) calc(2 * #{ohma.$gap});
+    padding: calc(3 * #{ohma.$gap}) calc(5 * #{ohma.$gap}) calc(1 * #{ohma.$gap}) calc(2 * #{ohma.$gap});
     transition: border-color ohma.$transitionTime, background-color ohma.$transitionTime;
     cursor: pointer;
 
@@ -33,11 +33,16 @@
     }
 }
 
+// globals.scss sets `color` on the universal selector, which matches this span
+// directly — and a direct match beats the colour inherited from .trigger, so the
+// value has to be coloured here (and in the variants below) rather than only on
+// the trigger.
 .value {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    min-height: calc(#{ohma.$fonts-m} * 1.4);
+    min-height: calc(#{ohma.$fonts-m} * 1.25);
+    color: ohma.$colors-ink-strong;
 }
 
 .chevron {
@@ -52,7 +57,7 @@
 .labe {
     position: absolute;
     left: calc(2 * #{ohma.$gap});
-    top: calc(2.25 * #{ohma.$gap});
+    top: calc(3 * #{ohma.$gap});
     display: block;
     font-size: ohma.$fonts-m;
     color: ohma.$colors-text-muted;
@@ -61,7 +66,7 @@
     z-index: 1;
 
     &.floated {
-        top: calc(0.6 * #{ohma.$gap});
+        top: calc(1 * #{ohma.$gap});
         font-size: calc(#{ohma.$fonts-s} * 0.85);
     }
 }
@@ -74,7 +79,7 @@
     z-index: 5;
     list-style: none;
     margin: 0;
-    padding: calc(0.5 * #{ohma.$gap});
+    padding: ohma.$gap;
     max-height: 260px;
     overflow-y: auto;
     border-radius: calc(#{ohma.$rounding} - #{ohma.$gap});
@@ -92,7 +97,7 @@
         text-align: left;
         font-size: ohma.$fonts-m;
         color: ohma.$colors-text;
-        padding: calc(#{ohma.$gap}) calc(1.5 * #{ohma.$gap});
+        padding: calc(#{ohma.$gap}) calc(2 * #{ohma.$gap});
         border-radius: calc(#{ohma.$rounding} - 1.5 * #{ohma.$gap});
         cursor: pointer;
         transition: background-color ohma.$transitionTime;
@@ -125,18 +130,18 @@
     }
 }
 
-.primary > .trigger {
+.primary > .trigger, .primary > .trigger .value {
     color: ohma.$colors-accent-blue;
 }
 
-.secondary > .trigger {
+.secondary > .trigger, .secondary > .trigger .value {
     color: ohma.$colors-text;
 }
 
-.red > .trigger {
+.red > .trigger, .red > .trigger .value {
     color: ohma.$colors-accent-red;
 }
 
-.white > .trigger {
+.white > .trigger, .white > .trigger .value {
     color: ohma.$colors-white;
 }

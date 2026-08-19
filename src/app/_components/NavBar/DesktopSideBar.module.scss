@@ -5,7 +5,7 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: stretch;
     gap: ohma.$gap;
     min-height: 0;
 }
@@ -17,22 +17,27 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: stretch;
     gap: calc(#{ohma.$gap} / 2);
     flex: 1 1 auto;
     min-height: 0;
     overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .navIcon {
     position: relative;
     width: 100%;
-    aspect-ratio: 1;
-    display: grid;
-    place-items: center;
+    height: calc(#{ohma.$gap} * 6);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 calc(#{ohma.$gap} * 1.5);
     border-radius: calc(#{ohma.$rounding} - #{ohma.$gap});
     color: ohma.$colors-text;
     background: transparent;
+    text-decoration: none;
     transition: background ohma.$transitionTime ease, color ohma.$transitionTime ease;
 
     &:hover {
@@ -44,6 +49,15 @@
 .icon {
     width: 24px;
     height: 24px;
+    flex-shrink: 0;
+}
+
+.label {
+    white-space: nowrap;
+    overflow: hidden;
+    opacity: 0;
+    max-width: 0;
+    transition: opacity ohma.$transitionTime ease, max-width ohma.$transitionTime ease;
 }
 
 .adminNav {
@@ -53,11 +67,39 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: stretch;
     flex-shrink: 0;
+}
 
-    >.icon {
+.expandToggle {
+    width: 100%;
+    height: calc(#{ohma.$gap} * 5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border: none;
+    border-radius: ohma.$rounding;
+    background: ohma.$colors-surface-base;
+    color: ohma.$colors-text;
+    cursor: pointer;
+    transition: background ohma.$transitionTime ease, color ohma.$transitionTime ease;
 
+    &:hover {
+        background: ohma.$colors-accent-blue;
+        color: ohma.$colors-text-inv;
+    }
+}
+
+.DesktopSideBar[data-expanded='true'] {
+    .navIcon {
+        justify-content: flex-start;
+    }
+
+    .label {
+        opacity: 1;
+        max-width: 160px;
+        margin-left: calc(#{ohma.$gap} / 2);
     }
 }
 

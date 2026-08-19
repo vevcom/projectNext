@@ -3,7 +3,7 @@
 .DateInput {
     display: flex;
     flex-direction: column;
-    gap: calc(0.5 * #{ohma.$gap});
+    gap: ohma.$gap;
     margin-top: ohma.$gap;
     width: 100%;
     max-width: 320px;
@@ -14,7 +14,11 @@
         background-color: ohma.$colors-surface-raised;
         border: 2px solid transparent;
         border-radius: calc(#{ohma.$rounding} - #{ohma.$gap});
-        padding: calc(1.5 * #{ohma.$gap}) calc(2 * #{ohma.$gap});
+        // The native picker indicator inflates the content box, so pin the
+        // height to the grid rather than letting it be derived.
+        height: calc(7 * #{ohma.$gap});
+        padding: calc(2 * #{ohma.$gap}) calc(2 * #{ohma.$gap});
+        line-height: calc(#{ohma.$fonts-m} * 1.25);
         font-size: ohma.$fonts-m;
         color: ohma.$colors-ink-strong;
         transition: border-color ohma.$transitionTime, background-color ohma.$transitionTime;
@@ -32,7 +36,6 @@
         &::-webkit-calendar-picker-indicator {
             cursor: pointer;
             border-radius: calc(#{ohma.$gap} / 2);
-            padding: 4px;
             transition: background-color ohma.$transitionTime;
 
             &:hover {

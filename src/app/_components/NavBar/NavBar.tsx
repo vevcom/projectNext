@@ -6,6 +6,7 @@ import ReportButton from './ReportButton'
 import NavBarTitle from './NavBarTitle'
 import PageTitleSetter from '@/contexts/PageTitleSetter'
 import StandardImageServer from '@/components/Image/StandardImageServer'
+import ProfilePicture from '@/components/User/ProfilePicture'
 import Link from 'next/link'
 import type { Profile } from '@/services/users/types'
 
@@ -27,17 +28,15 @@ export default async function NavBar({ profile }: PropTypes) {
         <nav className={styles.NavBar}>
             <ul className={styles.list}>
                 <li className={styles.logoContainer}>
-                    <div className={styles.logo}>
+                    <Link aria-label={'Go to homepage'} href="/" className={styles.logo}>
                         <div className={styles.logoWrapper}>
                             <StandardImageServer
                                 standardImage="LOGO_SIMPLE"
                                 width={30}
                                 alt="omega logo"
-                            >
-                                <Link aria-label={'Go to homepage'} href="/" />
-                            </StandardImageServer>
+                            />
                         </div>
-                    </div>
+                    </Link>
                 </li>
 
                 <PageTitleSetter title="" />
@@ -54,13 +53,17 @@ export default async function NavBar({ profile }: PropTypes) {
                 }
                 <li className={styles.rightSide}>
                     <ReportButton/>
-                    <div className={styles.magicHat}>
-                        <StandardImageServer
-                            standardImage="MAGISK_HATT"
-                            width={25}
-                            height={25}
-                            alt="log in button"
-                        />
+                    <div className={`${styles.magicHat} ${isLoggedIn ? styles.loggedIn : styles.loggedOut}`}>
+                        {
+                            user ? (
+                                <ProfilePicture
+                                    profileImage={user.image}
+                                    width={48}
+                                />
+                            ) : (
+                                <span>Logg inn</span>
+                            )
+                        }
                         <UserNavigation profile={profile} />
                     </div>
                 </li>

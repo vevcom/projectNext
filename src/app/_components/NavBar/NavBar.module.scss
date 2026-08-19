@@ -43,12 +43,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-
-    a {
-        width: 100%;
-        height: 100%;
-        display: block;
-    }
 }
 
 .pageTitleLi {
@@ -81,6 +75,23 @@
     position: relative;
     @include ohma.btn(ohma.$colors-accent-blue);
     margin: 0;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: calc(#{ohma.$gap} * 2);
+    white-space: nowrap;
+
+    &.loggedOut {
+        width: auto;
+        padding: 0 calc(2 * #{ohma.$gap});
+        font-weight: ohma.$fonts-weight-m;
+    }
+
+    &.loggedIn {
+        width: 64px;
+        padding: 0;
+    }
 }
 
 .grower {
