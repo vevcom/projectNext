@@ -1,12 +1,13 @@
 import { PopUp, Button, TextInput } from '@ohma/ui'
 import { useEffect, useRef } from 'react'
+import type { ReactNode } from 'react'
 
 /**
  * PopUp keeps `isOpen` in its own state and teleports the panel up to
  * PopUpProvider, so the open state can only be reached by pressing the trigger.
  * Clicking it on mount drives the real component rather than faking the panel.
  */
-function OpenOnMount({ children }: { children: React.ReactNode }) {
+function OpenOnMount({ children }: { children: ReactNode }) {
     const ref = useRef<HTMLDivElement>(null)
     useEffect(() => {
         ref.current?.querySelector('button')?.click()

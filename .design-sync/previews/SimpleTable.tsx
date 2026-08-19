@@ -17,13 +17,19 @@ export const Default = () => (
 // browser hoists the anchor out of the table and the rows visibly break apart.
 // That is a bug in the component, not in this preview; see NOTES.md.
 
+const Name = ({ children }: { children: string }) => <strong>{children}</strong>
+
+const Status = ({ children, color }: { children: string, color: string }) => (
+    <span style={{ color: `var(--accent-${color})` }}>{children}</span>
+)
+
 export const RichCells = () => (
     <SimpleTable
         header={['Verv', 'Person', 'Status']}
         body={[
-            ['Leder', <strong key="a">Ingrid Solberg</strong>, <span key="b" style={{ color: 'var(--accent-green)' }}>Aktiv</span>],
-            ['Nestleder', <strong key="c">Jonas Halvorsen</strong>, <span key="d" style={{ color: 'var(--accent-green)' }}>Aktiv</span>],
-            ['Økonomiansvarlig', <strong key="e">Maren Lie</strong>, <span key="f" style={{ color: 'var(--accent-yellow)' }}>Permisjon</span>],
+            ['Leder', <Name key="a">Ingrid Solberg</Name>, <Status key="b" color="green">Aktiv</Status>],
+            ['Nestleder', <Name key="c">Jonas Halvorsen</Name>, <Status key="d" color="green">Aktiv</Status>],
+            ['Økonomiansvarlig', <Name key="e">Maren Lie</Name>, <Status key="f" color="yellow">Permisjon</Status>],
         ]}
     />
 )

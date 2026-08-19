@@ -1,5 +1,6 @@
 import { SideBarNavItem } from '@ohma/ui'
 import { faCalendar, faCamera, faComment, faNewspaper } from '@fortawesome/free-solid-svg-icons'
+import type { ReactNode } from 'react'
 
 const items = [
     { name: 'Hvad der hender', href: '/events', show: 'all' as const, icon: faCalendar },
@@ -8,7 +9,7 @@ const items = [
     { name: 'Omegaquotes', href: '/omegaquotes', show: 'loggedIn' as const, icon: faComment },
 ]
 
-const Rail = ({ children }: { children: React.ReactNode }) => (
+const Rail = ({ children }: { children: ReactNode }) => (
     <nav style={{
         width: '4.5rem',
         display: 'grid',

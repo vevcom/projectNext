@@ -3,6 +3,7 @@ import { useEffect, useRef } from 'react'
 import {
     faBeer, faBook, faCalendar, faCamera, faComment, faNewspaper, faSuitcase,
 } from '@fortawesome/free-solid-svg-icons'
+import type { ReactNode } from 'react'
 
 const items = [
     { name: 'Komitéer', href: '/committees', show: 'all' as const, icon: faBeer },
@@ -15,7 +16,7 @@ const items = [
 ]
 
 /** Menu owns `isOpen`; the panel is only reachable by pressing the real trigger. */
-function OpenOnMount({ children }: { children: React.ReactNode }) {
+function OpenOnMount({ children }: { children: ReactNode }) {
     const ref = useRef<HTMLDivElement>(null)
     useEffect(() => {
         ref.current?.querySelector<HTMLButtonElement>('button')?.click()

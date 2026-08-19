@@ -1,4 +1,5 @@
 import { NavBarTitle, PageWrapper } from '@ohma/ui'
+import type { ReactNode } from 'react'
 
 /**
  * NavBarTitle reads the title out of PageTitleContext, which is written by
@@ -6,7 +7,7 @@ import { NavBarTitle, PageWrapper } from '@ohma/ui'
  * renders a fixed-height placeholder instead, to avoid hydration layout shift —
  * so both states have to be shown through a real page.
  */
-const Bar = ({ children }: { children: React.ReactNode }) => (
+const Bar = ({ children }: { children: ReactNode }) => (
     <div style={{
         display: 'flex',
         alignItems: 'center',

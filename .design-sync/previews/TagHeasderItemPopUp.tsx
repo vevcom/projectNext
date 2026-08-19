@@ -1,8 +1,9 @@
 import { TagHeasderItemPopUp, Button, TextInput } from '@ohma/ui'
 import { useEffect, useRef } from 'react'
+import type { ReactNode } from 'react'
 
 /** The panel only opens from a real press on the trigger, so drive that on mount. */
-function OpenOnMount({ children }: { children: React.ReactNode }) {
+function OpenOnMount({ children }: { children: ReactNode }) {
     const ref = useRef<HTMLDivElement>(null)
     useEffect(() => {
         ref.current?.querySelector<HTMLButtonElement>('button')?.click()

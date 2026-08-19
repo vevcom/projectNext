@@ -1,6 +1,7 @@
 import { AdminNav } from '@ohma/ui'
+import type { ReactNode } from 'react'
 
-const Rail = ({ children }: { children: React.ReactNode }) => (
+const Rail = ({ children }: { children: ReactNode }) => (
     <div style={{
         width: '4.5rem',
         padding: '0.75rem',

@@ -1,6 +1,7 @@
 import { SlideInOnView } from '@ohma/ui'
+import type { ReactNode } from 'react'
 
-const Panel = ({ children }: { children: React.ReactNode }) => (
+const Panel = ({ children }: { children: ReactNode }) => (
     <div style={{
         background: 'var(--surface-raised)',
         padding: '1.25rem',

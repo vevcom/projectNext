@@ -570,6 +570,8 @@ const eslintConfig = defineConfig([
         'pncli/**',
         'docs/**',
         'generated/**',
+        '.design-sync/.cache/**',
+        'ds-bundle/**',
     ]),
 ])
 

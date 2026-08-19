@@ -14,7 +14,9 @@ const SAMPLES: { name: string, fill: string, status: FileWithStatus['uploadStatu
 // Dropzone renders each file as an <img src={URL.createObjectURL(file)}>, so the
 // previews need genuinely decodable image bytes — canvas gives us that, at a
 // realistic size, without checking a binary fixture into the repo.
-function usePngFiles(): FileWithStatus[] {
+// Returns the state pair so the caller can hand both straight to Dropzone — copying
+// the generated files into a second useState would only cascade renders.
+function usePngFiles() {
     const [files, setFiles] = useState<FileWithStatus[]>([])
     useEffect(() => {
         let cancelled = false
@@ -33,7 +35,7 @@ function usePngFiles(): FileWithStatus[] {
         }))).then(result => { if (!cancelled) setFiles(result) })
         return () => { cancelled = true }
     }, [])
-    return files
+    return [files, setFiles] as const
 }
 
 export const Empty = () => {
@@ -49,9 +51,7 @@ export const Empty = () => {
 }
 
 export const WithFiles = () => {
-    const initial = usePngFiles()
-    const [files, setFiles] = useState<FileWithStatus[]>([])
-    useEffect(() => setFiles(initial), [initial])
+    const [files, setFiles] = usePngFiles()
     return (
         <Dropzone
             name="images"
