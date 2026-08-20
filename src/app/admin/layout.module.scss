@@ -30,5 +30,8 @@
             margin: 0;
             height: calc(100dvh - 128px);
         }
+        > .slideBar {
+            position: static;
+        }
     }
 }

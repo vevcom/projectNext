@@ -1,5 +1,8 @@
 @use '@/styles/ohma';
 
+$mobileToggleBarHeight: 56px;
+$mobileToggleButtonSize: 44px;
+
 .SlideSidebar {
     padding: ohma.$gap;
     min-width: 250px;
@@ -7,13 +10,73 @@
     max-height: calc(100dvh - #{ohma.$nav-height} - 26px);
     overflow-y: scroll;
 
+    .toggleButton {
+        display: none;
+    }
+
+    .backdrop {
+        display: none;
+    }
+
     @include ohma.screenMobile {
-            margin: 8px;
-            z-index: 3;
-            height: 40dvh;
-            width: calc(100% - 16px);
+        padding: 0;
+        margin: 0;
+        min-width: 0;
+        max-height: none;
+        overflow: visible;
+
+        .toggleButton {
+            display: flex;
+            align-items: center;
+            justify-content: center;
             position: fixed;
-            top: 0;
+            top: calc(2 * #{ohma.$gap});
+            right: calc(3 * #{ohma.$gap});
+            z-index: 6;
+            width: $mobileToggleButtonSize;
+            height: $mobileToggleButtonSize;
+            border: none;
+            border-radius: 50%;
+            background: ohma.$colors-surface-raised;
+            color: ohma.$colors-text;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+            cursor: pointer;
+        }
+
+        .backdrop {
+            position: fixed;
+            inset: 0;
+            z-index: 4;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity ohma.$transitionTime ease, visibility ohma.$transitionTime ease;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: calc(#{ohma.$nav-height} + 2*#{ohma.$gap});
+            left: 0;
+            width: min(85vw, 320px);
+            height: calc(100dvh - 2*#{ohma.$nav-height} - 4*#{ohma.$gap})!important;
+            margin: 0;
+            padding: ohma.$gap;
+            background: ohma.$colors-surface-base;
+            border-radius: 0 ohma.$rounding ohma.$rounding 0;
+            z-index: 5;
+            transform: translateX(-100%);
+            transition: transform ohma.$transitionTime ease;
+        }
+
+        &.open {
+            .backdrop {
+                opacity: 1;
+                visibility: visible;
+            }
+            .sidebar {
+                transform: translateX(0);
+            }
+        }
     }
 
     .sidebar {
