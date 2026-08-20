@@ -84,7 +84,7 @@ $padding: ohma.$minimalPagePadding;
         min-height: fit-content;
         display: flex;
         flex-direction: column;
-        gap: 2em;
+        gap: calc(2*#{ohma.$gap});
 
         >p {
             display: flex;
@@ -132,6 +132,7 @@ $padding: ohma.$minimalPagePadding;
         >aside {
             grid-column: 1 / 2;
             grid-row: 2 / 3;
+            padding: calc(2 * #{ohma.$gap});
         }
 
         >main {
