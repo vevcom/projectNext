@@ -3,3 +3,9 @@
 .wrapper {
     @include ohma.RowListLayout;
 }
+
+.head {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+}

@@ -1,12 +1,16 @@
+import styles from './page.module.scss'
 import EventArchiveList from './EventArchiveList'
 import TagHeaderItem from '@/app/events/TagHeaderItem'
+import PageWrapper from '@/components/PageWrapper/PageWrapper'
+import EventTag from '@/components/Event/EventTag'
 import { readEventTagsAction } from '@/services/events/tags/actions'
-import EventsLandingLayout from '@/app/events/EventsLandingLayout'
 import { EventArchivePagingProvider } from '@/contexts/paging/EventArchivePaging'
 import { ServerSession } from '@/auth/session/ServerSession'
 import { QueryParams } from '@/lib/queryParams/queryParams'
 import { eventTagAuth } from '@/services/events/tags/auth'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import Link from 'next/link'
 import type { SearchParamsServerSide } from '@/lib/queryParams/types'
 
 type PropTypes = SearchParamsServerSide
@@ -14,13 +18,15 @@ type PropTypes = SearchParamsServerSide
 export default async function EventArchive({
     searchParams
 }: PropTypes) {
-    const selectedTagNames = QueryParams.eventTags.decode(await searchParams)
+    const tagNames = QueryParams.eventTags.decode(await searchParams)
+
     const eventTagsResponse = await readEventTagsAction()
     if (!eventTagsResponse.success) {
-        throw new Error('Failed to read current events')
+        throw new Error('Failed to read event tags')
     }
     const { data: eventTags } = eventTagsResponse
-    const selectedTags = selectedTagNames ? eventTags.filter(tag => selectedTagNames.includes(tag.name)) : []
+
+    const currentTags = tagNames ? eventTags.filter(tag => tagNames.includes(tag.name)) : []
 
     const session = await ServerSession.fromNextAuth()
 
@@ -29,27 +35,48 @@ export default async function EventArchive({
     const canDestroy = eventTagAuth.destroy.dynamicFields({}).auth(session)
 
     return (
-        <EventsLandingLayout page="EVENT_ARCHIVE" title="Hvad Der Har Hendt" headerLinks={[
-            {
-                href: selectedTagNames?.length ? `/events?${QueryParams.eventTags.encodeUrl(selectedTagNames)}` : '/events',
-                icon: faArrowLeft
-            }
-        ]} headerItem={
-            <TagHeaderItem
-                canCreate={canCreate.authorized}
-                canUpdate={canUpdate.authorized}
-                canDestroy={canDestroy.authorized}
-                currentTags={selectedTags}
-                eventTags={eventTags}
-                page="EVENT_ARCHIVE"
-            />
-        } selectedTags={selectedTags}>
+        <PageWrapper title="Hvad Der Har Hendt" headerItem={
+            <div className={styles.header}>
+                <div className={styles.tags}>
+                    {currentTags.map(tag => {
+                        const remainingTags = currentTags
+                            .filter(currentTag => currentTag.name !== tag.name)
+                            .map(currentTag => currentTag.name)
+                        const href = currentTags.length === 1 ?
+                            '/events/archive' :
+                            `/events/archive?${QueryParams.eventTags.encodeUrl(remainingTags)}`
+
+                        return (
+                            <Link key={tag.name} href={href}>
+                                <EventTag eventTag={tag} />
+                            </Link>
+                        )
+                    })}
+                </div>
+                <div className={styles.actions}>
+                    <TagHeaderItem
+                        eventTags={eventTags}
+                        currentTags={currentTags}
+                        canUpdate={canUpdate.authorized}
+                        canCreate={canCreate.authorized}
+                        canDestroy={canDestroy.authorized}
+                        page="EVENT_ARCHIVE"
+                    />
+                    <Link
+                        href={tagNames?.length ? `/events?${QueryParams.eventTags.encodeUrl(tagNames)}` : '/events'}
+                        className={styles.backLink}
+                    >
+                        <FontAwesomeIcon icon={faArrowLeft} />
+                    </Link>
+                </div>
+            </div>
+        }>
             <EventArchivePagingProvider serverRenderedData={[]} startPage={{
                 page: 0,
                 pageSize: 12
-            }} details={{ tags: QueryParams.eventTags.decode(await searchParams) }}>
+            }} details={{ tags: tagNames }}>
                 <EventArchiveList />
             </EventArchivePagingProvider>
-        </EventsLandingLayout>
+        </PageWrapper>
     )
 }

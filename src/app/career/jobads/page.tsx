@@ -9,9 +9,9 @@ import CompanySelectionProvider from '@/contexts/CompanySelection'
 
 export default async function JobAds() {
     return (
-        <PageWrapper title="jobbannonser"
+        <PageWrapper title="Jobbannonser"
             headerItem={
-                <>
+                <div className={styles.head}>
                     <AddHeaderItemPopUp popUpKey={'jobAdForm'}>
                         <CompanyPagingProvider
                             serverRenderedData={[]}
@@ -27,7 +27,7 @@ export default async function JobAds() {
                         </CompanyPagingProvider>
                     </AddHeaderItemPopUp>
                     <ArchiveLink href="/career/jobads/archive" />
-                </>
+                </div>
             }>
             <div className={styles.wrapper}>
                 <CurrentJobAds/>
