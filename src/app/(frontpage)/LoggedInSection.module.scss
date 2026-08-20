@@ -10,6 +10,10 @@
     border-radius: ohma.$rounding;
     padding: calc(3 * #{ohma.$gap});
 
+    @include ohma.screenMobile {
+        padding: calc(2 * #{ohma.$gap});
+    }
+
     > .title {
         width: 100%;
         display: flex;
@@ -56,14 +60,9 @@
             @include ohma.ImageCardListLayout;
         }
 
-        // Full-width stacked children (event and job-ad rows) rather than a card grid.
         &.rows {
             @include ohma.RowListLayout;
             margin: calc(2 * #{ohma.$gap}) 0 0;
-            // Fixed to fit LoggedIn.tsx's MAX_NUMBER_OF_ELEMENTS (3 rows, listRow's
-            // 12-gap height, 2 gaps between them) so paired islands (events/jobads)
-            // stay the same height instead of collapsing when one has fewer rows
-            // than the other.
             height: calc(38 * #{ohma.$gap});
         }
     }
