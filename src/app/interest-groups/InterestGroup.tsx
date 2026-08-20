@@ -1,11 +1,7 @@
 import styles from './InterestGroup.module.scss'
-import Form from '@/components/Form/Form'
-import TextInput from '@/components/UI/TextInput'
+import InterestGroupSettings from './InterestGroupSettings'
 import ArticleSection from '@/components/Cms/ArticleSection/ArticleSection'
-import { SettingsHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import {
-    updateInterestGroupAction,
-    destroyInterestGroupAction,
     updateInterestGroupArticleSectionAction,
     addPartToInterestGroupArticleSectionAction,
     removePartFromInterestGroupArticleSectionAction,
@@ -30,58 +26,18 @@ export default function InterestGroup({ interestGroup, session }: PropTypes) {
         groupId: interestGroup.groupId
     }).auth(session).toJsObject()
 
-    const popUpKey = `Update interest group ${interestGroup.name}`
-
     const cmsArticleActionConfig = { implementationParams: { interestGroupId: interestGroup.id } }
 
     return (
         <div className={styles.interestGroup}>
-            <h2>{interestGroup.name}</h2>
-            <div className={styles.admin}>
-                {
-                    canUpdate.authorized || canDestroy.authorized ? (
-                        <SettingsHeaderItemPopUp popUpKey={popUpKey}>
-                            {
-                                canUpdate.authorized && (
-                                    <>
-                                        <h2>Oppdater interessegruppe</h2>
-                                        <Form
-                                            refreshOnSuccess
-                                            closePopUpOnSuccess={popUpKey}
-                                            action={
-                                                updateInterestGroupAction.bind(null, ({ params: { id: interestGroup.id } }))
-                                            }
-                                            submitText="Endre"
-                                        >
-                                            <TextInput
-                                                defaultValue={interestGroup.name}
-                                                name="name"
-                                                label="Navn"
-                                            />
-                                        </Form>
-                                    </>
-                                )
-                            }
-                            {
-                                canDestroy.authorized && (
-                                    <Form
-                                        refreshOnSuccess
-                                        closePopUpOnSuccess={popUpKey}
-                                        action={
-                                            destroyInterestGroupAction.bind(null, ({ params: { id: interestGroup.id } }))
-                                        }
-                                        submitText="Slett"
-                                        submitColor="red"
-                                        confirmation={{
-                                            confirm: true,
-                                            text: `Er du sikker på at du vil slette ${interestGroup.name}?`
-                                        }}
-                                    />
-                                )
-                            }
-                        </SettingsHeaderItemPopUp>
-                    ) : <></>
-                }
+            <div className={styles.title}>
+                <h2>{interestGroup.name}</h2>
+                <InterestGroupSettings
+                    interestGroupId={interestGroup.id}
+                    interestGroupName={interestGroup.name}
+                    canUpdate={canUpdate.toJsObject()}
+                    canDestroy={canDestroy.toJsObject()}
+                />
             </div>
             <ArticleSection
                 canEdit={canEditArticleSection}

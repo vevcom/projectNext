@@ -27,6 +27,21 @@
     }
 }
 
+// For pages laid out as islands (see InterestGroups): each section paints its
+// own surface-base panel, so the wrapper drops its own and lets the page
+// background show through the gaps between them. The wrapper's padding was
+// only ever there to frame that single panel, so it goes too — the page owns
+// its own spacing (see interest-groups/page.module.scss) rather than sitting
+// inside a border the wrapper no longer draws.
+.transparent {
+    background-color: transparent;
+    padding: 0;
+
+    > .inlineHeader {
+        padding: calc(2 * #{ohma.$gap}) calc(2 * #{ohma.$gap}) 0;
+    }
+}
+
 // Opt-in mode for pages that need to size a scrollable body against the
 // remaining height (e.g. a sticky bottom nav bar). The title bar is pinned via
 // flex-shrink: 0 so .body can reliably fill "the rest" instead of the whole

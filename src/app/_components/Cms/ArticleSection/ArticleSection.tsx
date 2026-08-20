@@ -40,7 +40,10 @@ export default function ArticleSection({
     const { cmsParagraph, cmsImage, cmsLink } = articleSection
 
     const cmsImageContent = (
-        <span className={styles.image}>
+        // cmsImageWithControls fills this box via absolute positioning (see the module scss),
+        // so it no longer contributes in-flow content .image could size its own width from -
+        // give it the configured image width explicitly instead.
+        <span className={styles.image} style={{ width: articleSection.imageSize }}>
             {cmsImage && <>
                 <span className={styles.cmsImageWithControls}>
                     <CmsImage

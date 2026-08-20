@@ -1,3 +1,4 @@
+import styles from './page.module.scss'
 import CreateInterestGroupForm from './CreateInterestGroupForm'
 import InterestGroup from './InterestGroup'
 import SpecialCmsParagraph from '@/cms/CmsParagraph/SpecialCmsParagraph'
@@ -25,26 +26,29 @@ export default async function InterestGroups() {
     ).toJsObject()
 
     return (
-        <PageWrapper title="Interessegrupper" headerItem={
-            canCreate.authorized && (
-                <AddHeaderItemPopUp popUpKey="Create interest group">
-                    <CreateInterestGroupForm />
-                </AddHeaderItemPopUp>
-            )
-        }>
-            <SpecialCmsParagraph
-                canEdit={canEditGeneralInfo}
-                special="INTEREST_GROUP_GENERAL_INFO"
-                readSpecialCmsParagraphAction={readSpecialCmsParagraphGeneralInfoAction}
-                updateCmsParagraphAction={updateSpecialCmsParagraphContentGeneralInfoAction}
-            />
-            <main>
-                {
-                    interestGroups.map(interestGroup => (
-                        <InterestGroup session={session} key={interestGroup.id} interestGroup={interestGroup} />
-                    ))
-                }
-            </main>
+        <PageWrapper transparent title="Interessegrupper">
+            <div className={styles.content}>
+                <div className={styles.generalInfo}>
+                    {canCreate.authorized && (
+                        <AddHeaderItemPopUp popUpKey="Create interest group">
+                            <CreateInterestGroupForm/>
+                        </AddHeaderItemPopUp>
+                    )}
+                    <SpecialCmsParagraph
+                        canEdit={canEditGeneralInfo}
+                        special="INTEREST_GROUP_GENERAL_INFO"
+                        readSpecialCmsParagraphAction={readSpecialCmsParagraphGeneralInfoAction}
+                        updateCmsParagraphAction={updateSpecialCmsParagraphContentGeneralInfoAction}
+                    />
+                </div>
+                <main className={styles.islands}>
+                    {
+                        interestGroups.map(interestGroup => (
+                            <InterestGroup session={session} key={interestGroup.id} interestGroup={interestGroup} />
+                        ))
+                    }
+                </main>
+            </div>
         </PageWrapper>
     )
 }
