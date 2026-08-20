@@ -7,6 +7,10 @@ services:
         build:
             context: ${PROJECT_ROOT:-.}/
             dockerfile: ${PROJECT_ROOT:-.}/Dockerfile
+            args:
+                # Must reach `next build` as a build arg, not just a runtime env var -
+                # see the Dockerfile builder stage for why.
+                NEXT_SERVER_ACTIONS_ENCRYPTION_KEY: ${NEXT_SERVER_ACTIONS_ENCRYPTION_KEY}
         environment:
             DB_URI: ${DB_URI}
             MIGRATE_FROM_OW: ${MIGRATE_FROM_OW}
