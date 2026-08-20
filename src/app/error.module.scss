@@ -24,7 +24,7 @@
     }
     > button {
         position: absolute;
-        top: 20px;
+        top: calc(#{ohma.$nav-height} + 20px + #{ohma.$gap});
         right: 20px;
         width: auto;
     }
