@@ -181,7 +181,6 @@
 }
 
 @mixin ImageCardListLayout {
-    margin: 1em 0;
     display: grid;
     grid-template-columns: repeat(3, calc((100% - 2em) / 3));
     grid-gap: 1em;
