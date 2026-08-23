@@ -6,7 +6,7 @@ export default function PageWrapper({
     title,
     children,
     headerItem,
-    titleClassName,
+    //titleClassName,
     fillHeight = false,
     hideTitle = false,
     transparent = false,
@@ -14,7 +14,7 @@ export default function PageWrapper({
     children: React.ReactNode,
     title: string,
     headerItem?: React.ReactNode,
-    titleClassName?: string,
+    //titleClassName?: string,
     fillHeight?: boolean,
     hideTitle?: boolean,
     /** For pages laid out as islands: drops the wrapper's surface-base panel so the page background shows through. */
