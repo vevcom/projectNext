@@ -1,16 +1,20 @@
 @use '@/styles/ohma';
 
+// Its own island: a surface-base panel, matching LoggedInSection on the
+// frontpage, so the page background shows between groups.
 .interestGroup {
-    margin-top: 2rem;
-    border-top: 8px solid ohma.$colors-surface-base;
-    padding-top: 1rem;
-    position: relative;
-    h2 {
-        font-size: ohma.$fonts-xl;
-    }
-    .admin {
-        position: absolute;
-        top: 1em;
-        right: 1em;
+    background-color: ohma.$colors-surface-base;
+    border-radius: ohma.$rounding;
+    padding: calc(2 * #{ohma.$gap});
+
+    .title {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: calc(2 * #{ohma.$gap});
+
+        h2 {
+            font-size: ohma.$fonts-xl;
+        }
     }
 }

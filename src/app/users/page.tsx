@@ -8,7 +8,7 @@ import PageTitleSetter from '@/contexts/PageTitleSetter'
 
 export default async function Users() {
     return (
-        <PageWrapper title="Broedre item Systre" headerItem={
+        <PageWrapper title="Broedre item Systre" fillHeight headerItem={
             <AddHeaderItemPopUp popUpKey="createUser">
                 <CreateUserForm className={styles.makeUser} />
             </AddHeaderItemPopUp>

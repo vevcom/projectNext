@@ -88,7 +88,7 @@
         }
         .closeBtn {
             position: absolute;
-            top: calc(-1 * #{ohma.$gap});
+            top: calc(-7 * #{ohma.$gap});
             left: calc(2 * #{ohma.$gap});
         }
     }

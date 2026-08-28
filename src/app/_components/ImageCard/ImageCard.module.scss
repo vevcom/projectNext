@@ -1,15 +1,15 @@
 @use "@/styles/ohma";
 
 $padding: ohma.$gap;
-$imageHeight: 250px;
-$contentHeight: 200px;
+$imageHeight: calc(20 * 8px);
+$contentHeight: calc(15 * 8px);
 $height: $imageHeight + $contentHeight;
 
 $textUnderlineColor: ohma.$colors-surface-base;
 
 .ImageCard {
     min-width: 200px; 
-    max-width: 300px;
+    max-width: 400px;
     border-radius: ohma.$cardRounding;
     position: relative;
     color: inherit;
@@ -18,8 +18,12 @@ $textUnderlineColor: ohma.$colors-surface-base;
     height: $height;
     isolation: isolate;
     overflow: hidden;
-    @include ohma.layer;
+    background-color: ohma.$colors-surface-raised;
     margin: ohma.$gap;
+
+    @include ohma.screenMobile {
+        margin: 0;
+    }
 
     > .image {
         position: absolute;
@@ -29,7 +33,6 @@ $textUnderlineColor: ohma.$colors-surface-base;
         height: $imageHeight;
         z-index: 1;
         overflow: hidden;
-        border-radius: ohma.$rounding;
 
         > * {
             width: 100%;

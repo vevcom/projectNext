@@ -27,7 +27,7 @@ export default async function UserAdmin({ children, params }: PropTypes & { chil
     const isOwnProfile = user.id === session.user?.id
 
     return (
-        <PageWrapper title={'Innstillinger'} fillHeight hideTitle>
+        <PageWrapper title={'Innstillinger'} fillHeight transparent hideTitle>
             <div className={styles.userAdminLayout}>
                 <main className={styles.main}>
                     <div className={styles.mainInner}>

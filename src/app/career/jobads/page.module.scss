@@ -4,10 +4,8 @@
     @include ohma.RowListLayout;
 }
 
-.archiveLink {
-    color: ohma.$colors-text;
-    svg {
-        width: 30px;
-        height: 30px;
-    }
+.head {
+    display: flex;
+    align-items: center;
+    gap: 1em;
 }

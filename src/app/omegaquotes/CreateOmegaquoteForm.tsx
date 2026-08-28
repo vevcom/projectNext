@@ -1,7 +1,7 @@
 'use client'
 
 import styles from './CreateOmegaquoteFrom.module.scss'
-import PopUp from '@/components/PopUp/PopUp'
+import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import Form from '@/components/Form/Form'
 import { createQuoteAction } from '@/services/omegaquotes/actions'
 import TextInput from '@/components/UI/TextInput'
@@ -16,11 +16,7 @@ export default function CreateOmegaquoteForm() {
     if (session.loading || !session.session.user) return null
 
     return (
-        <PopUp
-            popUpKey="new_omega_quote"
-            showButtonContent="Ny Omegaquote"
-            showButtonClass={styles.button}
-        >
+        <AddHeaderItemPopUp popUpKey="new_omega_quote">
             <Form
                 title="Ny Omegaquote"
                 submitText="Legg til"
@@ -39,6 +35,6 @@ export default function CreateOmegaquoteForm() {
                 />
                 <TextInput label="Sagt av" name="author" className={styles.author}/>
             </Form>
-        </PopUp>
+        </AddHeaderItemPopUp>
     )
 }

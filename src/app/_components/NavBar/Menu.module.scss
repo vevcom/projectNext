@@ -61,6 +61,7 @@
     justify-content: flex-start;
     align-items: flex-start;
     overflow-y: auto;
+    overflow-x: hidden;
 
     div {
         margin: ohma.$gap;
@@ -134,9 +135,12 @@
         > div {
             top: 0;
             justify-content: center;
-            > div > a {
-                font-size: x-large;
-                width: calc(100dvw - #{ohma.$gap} * 6);
+            > div {
+                width: 100%;
+                > a {
+                    font-size: x-large;
+                    width: 100%;
+                }
             }
         }
         &.closeMenu {
