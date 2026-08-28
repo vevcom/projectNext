@@ -4,9 +4,11 @@ import getNavItems from './navDef'
 import UserNavigation from './UserNavigation'
 import ReportButton from './ReportButton'
 import NavBarTitle from './NavBarTitle'
+import { hasAnyAdminAccess } from './adminNavDef'
 import PageTitleSetter from '@/contexts/PageTitleSetter'
 import StandardImageServer from '@/components/Image/StandardImageServer'
 import ProfilePicture from '@/components/User/ProfilePicture'
+import { ServerSession } from '@/auth/session/ServerSession'
 import Link from 'next/link'
 import type { ExpandedImage } from '@/services/images/subservice/types'
 
@@ -18,7 +20,8 @@ export type PropTypes = {
 export default async function NavBar({ username, profileImage }: PropTypes) {
     const isLoggedIn = username !== null
     const applicationPeriod = false
-    const isAdmin = username === 'harambe'
+    const session = await ServerSession.fromNextAuth()
+    const isAdmin = hasAnyAdminAccess(session)
 
     const navSize = 4
     const navItems = getNavItems(isLoggedIn, isAdmin, applicationPeriod)

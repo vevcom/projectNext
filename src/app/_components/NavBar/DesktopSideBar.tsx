@@ -4,6 +4,8 @@ import styles from './DesktopSideBar.module.scss'
 import getNavItems from './navDef'
 import SideBarNavItem from './SideBarNavItem'
 import AdminNav from './AdminNav'
+import { hasAnyAdminAccess } from './adminNavDef'
+import { useSession } from '@/auth/session/useSession'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons'
 import { useState } from 'react'
@@ -16,9 +18,10 @@ export type PropTypes = {
 
 export default function DesktopSideBar({ username }: PropTypes) {
     const [expanded, setExpanded] = useState(false)
+    const session = useSession()
     const isLoggedIn = username !== null
     const applicationPeriod = false
-    const isAdmin = username === 'harambe'
+    const isAdmin = !session.loading && hasAnyAdminAccess(session.session)
 
     const navItems = getNavItems(isLoggedIn, isAdmin, applicationPeriod)
         .filter(item => item.show !== 'admin')
