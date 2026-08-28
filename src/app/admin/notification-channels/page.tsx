@@ -5,7 +5,9 @@ import AddNotificationChannel from './addNotificationChannel'
 import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { readNotificationChannelsAction } from '@/services/notifications/actions'
+import { notificationChannelAuth } from '@/services/notifications/channel/auth'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
+import { ServerSession } from '@/auth/session/ServerSession'
 import Link from 'next/link'
 import type { ExpandedNotificationChannel } from '@/services/notifications/types'
 
@@ -45,6 +47,10 @@ function orderByHierarchy(channels: ExpandedNotificationChannel[]): ChannelRow[]
 }
 
 export default async function NotificationChannels() {
+    notificationChannelAuth.create.dynamicFields({}).auth(
+        await ServerSession.fromNextAuth()
+    ).redirectOnUnauthorized({ returnUrl: '/admin/notification-channels' })
+
     const channels = unwrapActionReturn(await readNotificationChannelsAction())
     const rows = orderByHierarchy(channels)
 

@@ -203,11 +203,12 @@ export const adminNavigations = [
             {
                 title: 'Skoler',
                 href: '/admin/schools',
-                requiredAuthorizer: schoolAuth.read.dynamicFields({}),
+                requiredAuthorizer: schoolAuth.create.dynamicFields({}),
             },
             {
                 title: 'Emnekatalog',
                 href: '/admin/courses',
+                requiredAuthorizer: schoolAuth.create.dynamicFields({}),
             }
         ],
     },
@@ -225,6 +226,7 @@ export const adminNavigations = [
             {
                 title: 'Frysperioder',
                 href: '/admin/dots-freeze-periods',
+                requiredAuthorizer: dotAuth.readPage.dynamicFields({}),
             },
         ]
     },
@@ -237,12 +239,12 @@ export const adminNavigations = [
             {
                 title: 'Perioder',
                 href: '/admin/cabin-periods',
-                requiredAuthorizer: cabinPricePeriodAuth.read.dynamicFields({}),
+                requiredAuthorizer: cabinPricePeriodAuth.create.dynamicFields({}),
             },
             {
                 title: 'Produkter',
                 href: '/admin/cabin-product',
-                requiredAuthorizer: cabinProductAuth.read.dynamicFields({}),
+                requiredAuthorizer: cabinProductAuth.create.dynamicFields({}),
             },
             {
                 title: 'Bookinger',

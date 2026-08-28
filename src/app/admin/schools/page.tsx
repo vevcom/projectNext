@@ -4,9 +4,15 @@ import Form from '@/components/Form/Form'
 import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { createSchoolAction, readSchoolsAction, readStandardSchoolsAction } from '@/education/schools/actions'
+import { schoolAuth } from '@/services/education/schools/auth'
+import { ServerSession } from '@/auth/session/ServerSession'
 import TextInput from '@/components/UI/TextInput'
 
 export default async function SchoolsAdmin() {
+    schoolAuth.create.dynamicFields({}).auth(
+        await ServerSession.fromNextAuth()
+    ).redirectOnUnauthorized({ returnUrl: '/admin/schools' })
+
     const standardSchoolsRes = await readStandardSchoolsAction()
     if (!standardSchoolsRes.success) {
         throw new Error(standardSchoolsRes.error?.length ? standardSchoolsRes.error[0].message : 'Ukjent feil')

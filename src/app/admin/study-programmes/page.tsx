@@ -12,11 +12,12 @@ import { ServerSession } from '@/auth/session/ServerSession'
 
 
 export default async function StudyProgrammes() {
-    const studyprogrammes = unwrapActionReturn(await readStudyProgrammesAction())
-
     const session = await ServerSession.fromNextAuth()
     const showCreateButton = studyProgrammeAuth.create.dynamicFields({}).auth(session)
+    showCreateButton.redirectOnUnauthorized({ returnUrl: '/admin/study-programmes' })
     const canEdit = studyProgrammeAuth.update.dynamicFields({}).auth(session)
+
+    const studyprogrammes = unwrapActionReturn(await readStudyProgrammesAction())
 
 
     return <PageWrapper

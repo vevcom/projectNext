@@ -6,11 +6,17 @@ import PageWrapper from '@/app/_components/PageWrapper/PageWrapper'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { sortObjectsByName } from '@/lib/sortObjects'
 import { readShopsAction } from '@/services/shop/actions'
+import { shopAuth } from '@/services/shop/shop/auth'
+import { ServerSession } from '@/auth/session/ServerSession'
 import Link from 'next/link'
 import { v4 as uuid } from 'uuid'
 
 
 export default async function Shops() {
+    shopAuth.read.dynamicFields({}).auth(
+        await ServerSession.fromNextAuth()
+    ).redirectOnUnauthorized({ returnUrl: '/admin/shop' })
+
     const shops = unwrapActionReturn(await readShopsAction())
 
     return <PageWrapper

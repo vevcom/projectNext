@@ -8,11 +8,17 @@ import {
     updateLicenseAction,
     readAllLicensesAction
 } from '@/services/licenses/actions'
+import { licenseAuth } from '@/services/licenses/auth'
+import { ServerSession } from '@/auth/session/ServerSession'
 import TextInput from '@/UI/TextInput'
 import { configureAction } from '@/services/configureAction'
 import Link from 'next/link'
 
 export default async function Licenses() {
+    licenseAuth.read.dynamicFields({}).auth(
+        await ServerSession.fromNextAuth()
+    ).redirectOnUnauthorized({ returnUrl: '/admin/licenses' })
+
     const licenses = unwrapActionReturn(await readAllLicensesAction())
 
     return (
