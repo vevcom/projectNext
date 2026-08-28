@@ -3,7 +3,9 @@ import AddCategory from './AddCategory'
 import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import ImageCard from '@/components/ImageCard/ImageCard'
 import { readArticleCategoriesAction } from '@/services/articleCategories/actions'
+import { articleCategoryAuth } from '@/services/articleCategories/auth'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
+import { ServerSession } from '@/auth/session/ServerSession'
 
 export default async function ArticleCategoryList() {
     const res = await readArticleCategoriesAction()
@@ -11,8 +13,8 @@ export default async function ArticleCategoryList() {
 
     const categories = res.data
 
-    //TODO: add can create categoies permission
-    const canCreateArticleCategories = true //temp
+    const session = await ServerSession.fromNextAuth()
+    const canCreateArticleCategories = articleCategoryAuth.create.dynamicFields({}).auth(session).authorized
 
     return (
         <PageWrapper title="Artikler" headerItem={

@@ -4,6 +4,8 @@ import EditCategory from './EditCategory'
 import useScroll from '@/hooks/useScroll'
 import useOnNavigation from '@/hooks/useOnNavigation'
 import useViewPort from '@/hooks/useViewPort'
+import useAuthorizer from '@/hooks/useAuthorizer'
+import { articleCategoryAuth } from '@/services/articleCategories/auth'
 import { removeArticleFromCategoryAction } from '@/services/articleCategories/actions'
 import { formatVevenUri } from '@/lib/urlEncoding'
 import React, { useRef, useState } from 'react'
@@ -74,8 +76,7 @@ export default function SideBar({ category, children }: PropTypes) {
 }
 
 function MainListContent({ category }: { category: ExpandedArticleCategory }) {
-    // Make a visibility check for edit - no just call the apropriate authorizer.
-    const canEditCategory = true
+    const canEditCategory = useAuthorizer({ authorizer: articleCategoryAuth.update.dynamicFields({}) }).authorized
     const { push, refresh } = useRouter()
 
     const handleDestroy = async (id: number) => {

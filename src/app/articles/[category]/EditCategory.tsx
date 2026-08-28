@@ -9,6 +9,8 @@ import {
     addArticleToCategoryAction
 } from '@/services/articleCategories/actions'
 import { configureAction } from '@/services/configureAction'
+import useAuthorizer from '@/hooks/useAuthorizer'
+import { articleCategoryAuth } from '@/services/articleCategories/auth'
 import { useRouter } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCog } from '@fortawesome/free-solid-svg-icons'
@@ -20,8 +22,7 @@ type PropTypes = {
 
 export default function EditCategory({ category }: PropTypes) {
     const { refresh, push } = useRouter()
-    // Make a visibility check for edit - no just call the apropriate authorizer.
-    const canEditCategory = true
+    const canEditCategory = useAuthorizer({ authorizer: articleCategoryAuth.update.dynamicFields({}) }).authorized
 
     const handleSuccessDestroy = () => {
         push('/articles')
