@@ -1,6 +1,8 @@
 'use client'
 import styles from './CreateUserForm.module.scss'
 import { createUserAction } from '@/services/users/actions'
+import { userAuth } from '@/services/users/auth'
+import useAuthorizer from '@/hooks/useAuthorizer'
 import TextInput from '@/components/UI/TextInput'
 import Form from '@/components/Form/Form'
 import React from 'react'
@@ -13,6 +15,9 @@ type PropTypes = {
 
 export default function CreateUserForm({ className }: PropTypes) {
     const { refresh } = useRouter()
+    const canCreateUser = useAuthorizer({ authorizer: userAuth.create.dynamicFields({}) }).authorized
+
+    if (!canCreateUser) return null
 
     return (
         <div className={`${styles.CreateUserForm} ${className}`}>

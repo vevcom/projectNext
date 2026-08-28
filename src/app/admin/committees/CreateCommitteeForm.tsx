@@ -4,13 +4,20 @@ import TextInput from '@/components/UI/TextInput'
 import FileInput from '@/components/UI/FileInput'
 import LicenseChooser from '@/components/LicenseChooser/LicenseChooser'
 import { createCommitteeAction } from '@/services/groups/committees/actions'
+import { committeeAuth } from '@/services/groups/committees/auth'
+import { ServerSession } from '@/auth/session/ServerSession'
 
 /**
  * A form to create a committee. The logo fields are optional - if left empty the committee falls
  * back to the shared default committee logo, which can be replaced later from the committee's own
  * admin page.
  */
-export default function CreateCommitteeForm() {
+export default async function CreateCommitteeForm() {
+    const session = await ServerSession.fromNextAuth()
+    const canCreateCommittee = committeeAuth.create.dynamicFields({}).auth(session).authorized
+
+    if (!canCreateCommittee) return null
+
     return (
         <div className={styles.CreateCommitteeForm}>
             <Form action={createCommitteeAction}>
