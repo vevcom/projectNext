@@ -2,8 +2,10 @@
 import styles from './ShowAndEditName.module.scss'
 import EditableTextField from '@/components/EditableTextField/EditableTextField'
 import { updateEventAction } from '@/services/events/actions'
+import { eventAuth } from '@/services/events/auth'
 import { configureAction } from '@/services/configureAction'
 import { formatVevenUri } from '@/lib/urlEncoding'
+import useEditMode from '@/hooks/useEditMode'
 import type { Event } from '@/prisma-generated-pn-types'
 
 type PropTypes = {
@@ -12,6 +14,7 @@ type PropTypes = {
 
 export default function ShowAndEditName({ event }: PropTypes) {
     const updateAction = configureAction(updateEventAction, { params: { id: event.id } })
+    const editable = useEditMode({ authorizer: eventAuth.update.dynamicFields({}) })
 
     return (
         <EditableTextField
@@ -21,7 +24,7 @@ export default function ShowAndEditName({ event }: PropTypes) {
                     ? `/events/${formatVevenUri(data.name, data.id)}`
                     : '/events'),
             }}
-            editable={true} //TODO: authorizer
+            editable={editable}
             inputName="name"
             submitButton={{
                 text: 'Lagre',

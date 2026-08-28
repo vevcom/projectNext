@@ -12,8 +12,10 @@ import Slider from '@/components/UI/Slider'
 import Form from '@/components/Form/Form'
 import ContactCard from '@/components/User/ContactCard'
 import { eventRegistrationDestroyAction } from '@/services/events/registration/actions'
+import { eventRegistrationAuth } from '@/services/events/registration/auth'
 import { REGISTRATION_READER_TYPE } from '@/services/events/registration/constants'
 import { configureAction } from '@/services/configureAction'
+import useAuthorizer from '@/hooks/useAuthorizer'
 import Link from 'next/link'
 import { useState } from 'react'
 import type { EventFiltered } from '@/services/events/types'
@@ -123,7 +125,8 @@ export default function RegistrationsList({
 }: {
     event: EventFiltered,
 }) {
-    const isAdmin = true // TODO: Fix the authing
+    const isAdmin = useAuthorizer({ authorizer: eventRegistrationAuth.readManyDetailed.dynamicFields({}) })
+        .authorized
     const [detailedView, setDetailedView] = useState(false)
 
     return <>
