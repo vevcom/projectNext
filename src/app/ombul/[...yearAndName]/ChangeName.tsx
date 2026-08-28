@@ -6,10 +6,11 @@ import { updateOmbulAction } from '@/services/ombul/actions'
 import { configureAction } from '@/services/configureAction'
 import type { ReactNode } from 'react'
 import type { ExpandedOmbul } from '@/services/ombul/types'
+import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
 
 type PropTypes = {
     children: ReactNode
-    editable: boolean
+    canEdit: AuthResultTypeAny
     ombulId: number
 }
 
@@ -17,11 +18,11 @@ type PropTypes = {
  * Component that wraps the name of ombul in a EditableTextFieldthat can be submitted to update the name
  * On success the name in the url is changed to the new name
  * @param children - The text to display and edit
- * @param editable - Whether the text should be editable
+ * @param canEdit - The auth result determining whether the text should be editable
  * @param ombulId - The id of the ombul to update
  * @returns The component jsx
  */
-export default function ChangeName({ children, editable, ombulId }: PropTypes) {
+export default function ChangeName({ children, canEdit, ombulId }: PropTypes) {
     const handleChange = async (data: ExpandedOmbul | undefined) => {
         const name = data?.name
         if (!name) return
@@ -34,7 +35,7 @@ export default function ChangeName({ children, editable, ombulId }: PropTypes) {
 
     return (
         <EditableTextField
-            editable={editable}
+            authResult={canEdit}
             formProps={{
                 action: configureAction(
                     updateOmbulAction,
