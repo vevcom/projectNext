@@ -4,17 +4,15 @@ import { safeServerCall } from '@/services/actionError'
 import { createMembershipsForGroup } from '@/services/groups/memberships/create'
 import { destoryMembershipOfUser } from '@/services/groups/memberships/destroy'
 import { updateMembership } from '@/services/groups/memberships/update'
-import { RequirePermissionOrGroupAdmin } from '@/auth/authorizer/RequirePermissionOrGroupAdmin'
+import { groupAuth } from '@/services/groups/auth'
 import { ServerSession } from '@/auth/session/ServerSession'
 import { Smorekopp } from '@/services/error'
 import type { ExpandedMembership } from '@/services/groups/memberships/types'
 import type { ActionReturn } from '@/services/actionTypes'
 
-const membershipAuthorizer = RequirePermissionOrGroupAdmin.staticFields({ permission: 'GROUP_ADMIN' })
-
 async function assertCanManageMembership(groupId: number): Promise<void> {
     const session = await ServerSession.fromNextAuth()
-    const authResult = membershipAuthorizer.dynamicFields({ groupId }).auth(session)
+    const authResult = groupAuth.manageMembership.dynamicFields({ groupId }).auth(session)
     if (!authResult.authorized) {
         throw new Smorekopp(authResult.status, authResult.getErrorMessage)
     }

@@ -127,7 +127,7 @@ export const adminNavigations = [
             {
                 title: 'Grupper',
                 href: '/admin/groups',
-                requiredAuthorizer: groupAuth.read.dynamicFields({}),
+                requiredAuthorizer: groupAuth.admin.dynamicFields({}),
             },
             {
                 title: 'Klasser',
