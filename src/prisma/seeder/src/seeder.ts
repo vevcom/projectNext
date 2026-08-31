@@ -26,6 +26,7 @@ import seedCabin from './seedCabin'
 import seedPermissions from './seedPermissions'
 import seedFlairs from './seedFlairs'
 import seedInterestGroups from './seedInterestGroups'
+import seedDevApplicationsAndPeriods from './development/seedDevApplicationsAndPeriods'
 import { prisma } from '@/prisma/client'
 
 
@@ -69,6 +70,7 @@ export default async function seed(
     await seedDevCompanies(prisma)
     await seedDevJobAds(prisma)
     await seedDevShop(prisma)
+    await seedDevApplicationsAndPeriods(prisma)
     await seedDevEvents(prisma)
     console.log('seed dev done')
 }
