@@ -3,7 +3,7 @@ import { imageSchemas } from './schemas'
 import { allowedExtensions, avifConvertionOptions, imageSizes, type expandedImageCollectionIncluder } from './constants'
 import { visibilityOperations } from '@/services/visibility/operations'
 import { defineSubOperation } from '@/services/serviceOperation'
-import { ServerError } from '@/services/error'
+import { ServerError, Smorekopp } from '@/services/error'
 import { implementStore } from '@/lib/store/implementStore'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import logger from '@/lib/logger'
@@ -81,8 +81,33 @@ export const imageOperations = {
     updateCollection: defineSubOperation({
         paramsSchema: () => imageSchemas.paramsSchemaCollection,
         dataSchema: () => imageSchemas.updateCollection,
-        operation: () => async ({ prisma, params, data }) =>
-            prisma.imageCollection.update({
+        operation: () => async ({ prisma, params, data }) => {
+            if (data.coverImageId !== undefined) {
+                const image = await prisma.image.findUnique({
+                    where: { id: data.coverImageId },
+                    select: { collectionId: true }
+                })
+
+                if (!image) {
+                    throw new ServerError('NOT FOUND', 'Bilde ikke funnet')
+                }
+
+                const collectionId = 'collectionId' in params
+                    ? params.collectionId
+                    : (await prisma.imageCollection.findFirstOrThrow({
+                        where: { name: params.collectionName },
+                        select: { id: true }
+                    })).id
+
+                if (image.collectionId !== collectionId) {
+                    throw new Smorekopp(
+                        'BAD DATA',
+                        'Bildet må tilhøre samlingen du redigerer'
+                    )
+                }
+            }
+
+            return prisma.imageCollection.update({
                 where: uniqueCollectionWhere(params),
                 data: {
                     name: data.collectionName,
@@ -94,6 +119,7 @@ export const imageOperations = {
                     }
                 }
             })
+        }
     }),
 
     /**
