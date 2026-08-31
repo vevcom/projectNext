@@ -1,6 +1,7 @@
 import { Zpn } from '@/lib/fields/zpn'
-import { z } from 'zod'
+import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { EventCanView } from '@/prisma-generated-pn-types'
+import { z } from 'zod'
 
 const baseSchema = z.object({
     name: z.string().min(5, 'Navnet må være minst 5 tegn').max(70, 'Navnet må være maks 70 tegn'),
@@ -57,4 +58,15 @@ export const eventSchemas = {
         tagIds: true,
         waitingList: true,
     }).refine(waitingListRefiner, waitingListMessage),
+
+    readManyArchivedPage: readPageInputSchemaObject(
+        z.number(),
+        z.object({
+            id: z.number(),
+        }),
+        z.object({
+            name: z.string().optional(),
+            tags: z.array(z.string()).nullable(),
+        }),
+    ),
 }

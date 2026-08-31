@@ -9,6 +9,7 @@ services:
         environment:
             DOMAIN: omega.ntnu.no
             MAIL_DOMAIN: sanctus.omega.ntnu.no
+            CI: ${CI:-}
         volumes:
             - ${PROJECT_ROOT:-.}/src:/usr/src/app/src
             - ${PROJECT_ROOT:-.}/tests:/usr/src/app/tests

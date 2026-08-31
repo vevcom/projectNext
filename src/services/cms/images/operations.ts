@@ -1,15 +1,71 @@
 import '@pn-server-only'
 import { cmsImageSchemas } from './schemas'
 import { defineSubOperation } from '@/services/serviceOperation'
-import { ServerError } from '@/services/error'
-import { z } from 'zod'
+import { visibilityIncluder, toMatrix } from '@/services/visibility/implement'
+import { checkVisibility } from '@/auth/visibility/checkVisibility'
+import { specialImagePanels } from '@/services/images/specialPanels/constants'
+import { ServerError, Smorekopp } from '@/services/error'
 import { SpecialCmsImage } from '@/prisma-generated-pn-types'
+import logger from '@/lib/logger'
+import { z } from 'zod'
+import type { PrismaPossibleTransaction } from '@/services/serviceOperation'
+import type { SessionMaybeUser } from '@/auth/session/Session'
+
+/**
+ * Checks whether the session administrates the collection an image belongs to.
+ *
+ * The two kinds of collection answer this question differently:
+ * - a dynamic collection is administrated by the sessions fulfilling its admin visibility level
+ *   (or by anyone holding IMAGE_ADMIN, the same bypass the dynamic image auth uses)
+ * - a special collection has no meaningful visibility levels - it is administrated by the sessions
+ *   passing the panel auth of the service owning it
+ */
+async function sessionAdministratesCollectionOfImage({
+    prisma,
+    session,
+    imageId,
+}: {
+    prisma: PrismaPossibleTransaction<false>,
+    session: SessionMaybeUser,
+    imageId: number,
+}): Promise<boolean> {
+    const image = await prisma.image.findUnique({
+        where: {
+            id: imageId,
+        },
+        select: {
+            collection: {
+                select: {
+                    special: true,
+                    visibilityAdmin: {
+                        include: visibilityIncluder,
+                    },
+                },
+            },
+        },
+    })
+    if (!image) throw new ServerError('NOT FOUND', `Image with id ${imageId} does not exist`)
+
+    const { special, visibilityAdmin } = image.collection
+
+    if (special) {
+        return specialImagePanels[special].auth.dynamicFields({}).auth(session).authorized
+    }
+
+    return checkVisibility(session.memberships, toMatrix(visibilityAdmin))
+        || session.permissions.includes('IMAGE_ADMIN')
+}
 
 const create = defineSubOperation({
     dataSchema: () => cmsImageSchemas.create,
-    operation: () => ({ prisma, data: { imageId, ...data } }) => prisma.cmsImage.create({
+    operation: (
+        { special }: { special: SpecialCmsImage | null }
+    ) => (
+        { prisma, data: { imageId, ...data } }
+    ) => prisma.cmsImage.create({
         data: {
             ...data,
+            special,
             image: imageId !== undefined ? {
                 connect: {
                     id: imageId
@@ -22,8 +78,21 @@ const create = defineSubOperation({
     })
 })
 
+const generateSpecialCmsImageFromConfig = defineSubOperation({
+    paramsSchema: () => z.object({
+        special: z.nativeEnum(SpecialCmsImage)
+    }),
+    operation: () => async ({ params }) => create.internalCall({
+        data: {
+            name: params.special,
+        },
+        operationImplementationFields: { special: params.special }
+    })
+})
+
 export const cmsImageOperations = {
     create,
+    generateSpecialCmsImageFromConfig,
 
     readSpecial: defineSubOperation({
         paramsSchema: () => z.object({
@@ -38,15 +107,9 @@ export const cmsImageOperations = {
                     image: true
                 }
             })
-            if (!image) {
-                return create.internalCall({
-                    data: {
-                        name: params.special,
-                        special: params.special
-                    }
-                })
-            }
-            return image
+            if (image) return image
+            logger.error(`Could not find special cms image with special ${params.special} - creating it!`)
+            return generateSpecialCmsImageFromConfig.internalCall({ params: { special: params.special } })
         }
     }),
 
@@ -55,22 +118,41 @@ export const cmsImageOperations = {
             cmsImageId: z.number()
         }),
         dataSchema: () => cmsImageSchemas.update,
-        operation: () => ({ prisma, params, data: { imageId, ...data } }) => prisma.cmsImage.update({
-            where: {
-                id: params.cmsImageId,
-            },
-            data: {
-                ...data,
-                image: imageId !== undefined ? {
-                    connect: {
-                        id: imageId
-                    }
-                } : undefined
-            },
-            include: {
-                image: true
+        operation: () => async ({ prisma, params, session, bypassAuth, data: { imageId, ...data } }) => {
+            // The implementing service authorizes editing the cms image itself, but not the image
+            // being linked into it - a session may only point a cms image at an image from a
+            // collection it administrates.
+            if (imageId !== undefined && !bypassAuth) {
+                const administrates = await sessionAdministratesCollectionOfImage({
+                    prisma,
+                    session,
+                    imageId,
+                })
+                if (!administrates) {
+                    throw new Smorekopp(
+                        'UNAUTHORIZED',
+                        'Du kan bare bruke bilder fra samlinger du administrerer'
+                    )
+                }
             }
-        })
+
+            return prisma.cmsImage.update({
+                where: {
+                    id: params.cmsImageId,
+                },
+                data: {
+                    ...data,
+                    image: imageId !== undefined ? {
+                        connect: {
+                            id: imageId
+                        }
+                    } : undefined
+                },
+                include: {
+                    image: true
+                }
+            })
+        }
     }),
 
     destroy: defineSubOperation({

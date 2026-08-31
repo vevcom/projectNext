@@ -1,6 +1,7 @@
 import styles from './Footer.module.scss'
 import SocialIcons from '@/components/SocialIcons/SocialIcons'
 import SpecialCmsImage from '@/components/Cms/CmsImage/SpecialCmsImage'
+import StandardImageServer from '@/components/Image/StandardImageServer'
 import { readSpecialCmsImageFrontpage, updateSpecialCmsImageFrontpage } from '@/services/frontpage/actions'
 import Link from 'next/link'
 import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
@@ -13,12 +14,9 @@ async function Footer({ canEditSpecialCmsImage }: PropTypes) {
     return (
         <footer className={styles.Footer}>
             <div>
-                <SpecialCmsImage
-                    canEdit={canEditSpecialCmsImage}
-                    special="FOOTER_LOGO"
+                <StandardImageServer
+                    standardImage="LOGO_WHITE_TEXT"
                     width={350}
-                    readSpecialCmsImageAction={readSpecialCmsImageFrontpage}
-                    updateCmsImageAction={updateSpecialCmsImageFrontpage}
                 />
                 <p>
                 Linjeforeningen for Elektronisk Systemdesign
@@ -27,7 +25,7 @@ async function Footer({ canEditSpecialCmsImage }: PropTypes) {
                 </p>
                 <p>Org. Nr. 890 384 692</p>
                 <div>
-                    {/* Uncomment when PWA an SVG
+                    {/* TODO: Uncomment when PWA an SVG
                     <SpecialCmsImage
                         canEdit={canEditSpecialCmsImage}
                         special="FOOTER_1"
@@ -60,7 +58,7 @@ async function Footer({ canEditSpecialCmsImage }: PropTypes) {
             <div className={styles.sponsors}>
                 <SpecialCmsImage
                     canEdit={canEditSpecialCmsImage}
-                    special="FOOTER_2"
+                    special="FOOTER_SPONSOR_1"
                     width={170}
                     readSpecialCmsImageAction={readSpecialCmsImageFrontpage}
                     updateCmsImageAction={updateSpecialCmsImageFrontpage}
@@ -69,7 +67,7 @@ async function Footer({ canEditSpecialCmsImage }: PropTypes) {
                 </SpecialCmsImage>
                 <SpecialCmsImage
                     canEdit={canEditSpecialCmsImage}
-                    special="FOOTER_3"
+                    special="FOOTER_SPONSOR_2"
                     width={100}
                     readSpecialCmsImageAction={readSpecialCmsImageFrontpage}
                     updateCmsImageAction={updateSpecialCmsImageFrontpage}

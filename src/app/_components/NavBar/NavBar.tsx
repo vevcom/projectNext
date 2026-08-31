@@ -5,18 +5,15 @@ import getNavItems from './navDef'
 import UserNavigation from './UserNavigation'
 import ReportButton from './ReportButton'
 import EditModeSwitch from '@/components/EditModeSwitch/EditModeSwitch'
-import SpecialCmsImage from '@/components/Cms/CmsImage/SpecialCmsImage'
-import { readSpecialCmsImageFrontpage, updateSpecialCmsImageFrontpage } from '@/services/frontpage/actions'
+import StandardImageServer from '@/components/Image/StandardImageServer'
 import Link from 'next/link'
-import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
 import type { Profile } from '@/services/users/types'
 
 export type PropTypes = {
     profile: Profile | null
-    canEditSpecialCmsImage: AuthResultTypeAny
 }
 
-export default async function NavBar({ profile, canEditSpecialCmsImage }: PropTypes) {
+export default async function NavBar({ profile }: PropTypes) {
     const user = profile?.user ?? null
     const isLoggedIn = user !== null
     // TODO: Actual application period check
@@ -33,16 +30,13 @@ export default async function NavBar({ profile, canEditSpecialCmsImage }: PropTy
         <nav className={styles.NavBar}>
             <ul>
                 <li className={styles.logo}>
-                    <SpecialCmsImage
-                        canEdit={canEditSpecialCmsImage}
-                        special="NAV_PRIMARY_BUTTON"
+                    <StandardImageServer
+                        standardImage="LOGO_SIMPLE"
                         width={30}
                         alt="omega logo"
-                        readSpecialCmsImageAction={readSpecialCmsImageFrontpage}
-                        updateCmsImageAction={updateSpecialCmsImageFrontpage}
                     >
                         <Link aria-label={'Gå til hjemmesiden'} href="/" />
-                    </SpecialCmsImage>
+                    </StandardImageServer>
                 </li>
                 {
                     itemsForNav.map((item) => (
@@ -59,14 +53,11 @@ export default async function NavBar({ profile, canEditSpecialCmsImage }: PropTy
                     <EditModeSwitch />
                     <ReportButton/>
                     <div className={styles.magicHat}>
-                        <SpecialCmsImage
-                            canEdit={canEditSpecialCmsImage}
-                            special="NAV_LOGIN_BUTTON"
+                        <StandardImageServer
+                            standardImage="MAGISK_HATT"
                             width={25}
                             height={25}
                             alt="log in button"
-                            readSpecialCmsImageAction={readSpecialCmsImageFrontpage}
-                            updateCmsImageAction={updateSpecialCmsImageFrontpage}
                         />
                         <UserNavigation profile={profile} />
                     </div>

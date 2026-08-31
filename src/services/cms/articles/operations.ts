@@ -6,14 +6,14 @@ import { articleSectionOperations } from '@/cms/articleSections/operations'
 import { cmsImageOperations } from '@/cms/images/operations'
 import logger from '@/lib/logger'
 import { ServerError } from '@/services/error'
+import { SpecialCmsArticle } from '@/prisma-generated-pn-types'
 import { z } from 'zod'
 import { v4 } from 'uuid'
 import type { ArticleSectionPart } from '@/cms/articleSections/types'
-import { SpecialCmsArticle } from '@/prisma-generated-pn-types'
 
 const create = defineSubOperation({
-    dataSchema: () => articleSchemas.create,
-    operation: () => async ({ prisma, data }) => {
+    dataSchema: ({ maxNameLength }: { maxNameLength: number }) => articleSchemas.create({ maxNameLength }),
+    operation: ({ special }: { special: SpecialCmsArticle | null }) => async ({ prisma, data }) => {
         let newName = 'Ny artikkel'
         let i = 1
         if (!data.name) {
@@ -32,15 +32,28 @@ const create = defineSubOperation({
                 name: data.name ?? newName,
                 coverImage: {
                     create: {},
-                }
+                },
+                special
             },
             include: articleRealtionsIncluder,
         })
     }
 })
 
+const generateSpecialArticleFromConfig = defineSubOperation({
+    paramsSchema: () => z.object({
+        special: z.nativeEnum(SpecialCmsArticle),
+    }),
+    operation: () => async ({ params }) => create.internalCall({
+        data: { name: `Regenerert spesiell ${params.special}` },
+        dataSchemaImplementationFields: { maxNameLength: 100 },
+        operationImplementationFields: { special: params.special }
+    })
+})
+
 export const articleOperations = {
     create,
+    generateSpecialArticleFromConfig,
     destroy: defineSubOperation({
         paramsSchema: () => articleSchemas.params,
         operation: () => async ({ prisma, params }) => {
@@ -63,16 +76,14 @@ export const articleOperations = {
                 },
                 include: articleRealtionsIncluder
             })
-            if (!article) {
-                logger.error(`Special article ${params.special} not found - creating it`)
-                return create.internalCall({
-                    data: { special: params.special, name: `Regenerert spesiell ${params.special}` },
-                })
+            if (article) {
+                return {
+                    ...article,
+                    coverImage: article.coverImage
+                }
             }
-            return {
-                ...article,
-                coverImage: article.coverImage
-            }
+            logger.error(`Special article ${params.special} not found - creating it!`)
+            return generateSpecialArticleFromConfig.internalCall({ params: { special: params.special } })
         }
     }),
     /**

@@ -1,7 +1,7 @@
 import '@pn-server-only'
 import { interestGroupAuth } from './auth'
 import { interestGroupSchemas } from './schemas'
-import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
+import { omegaOrderOperations } from '@/services/omegaOrder/operations'
 import { articleSectionsRealtionsIncluder } from '@/services/cms/articleSections/constants'
 import { defineOperation } from '@/services/serviceOperation'
 import { cmsParagraphOperations } from '@/cms/paragraphs/operations'
@@ -13,7 +13,7 @@ export const interestGroupOperations = {
         dataSchema: interestGroupSchemas.create,
         authorizer: () => interestGroupAuth.create.dynamicFields({}),
         operation: async ({ prisma, data }) => {
-            const { order } = await readCurrentOmegaOrder()
+            const { order } = await omegaOrderOperations.readCurrent({ bypassAuth: true })
 
             await prisma.interestGroup.create({
                 data: {
