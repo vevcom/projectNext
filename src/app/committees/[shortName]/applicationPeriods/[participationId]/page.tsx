@@ -2,9 +2,10 @@ import styles from './page.module.scss'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { readCommitteeApplicationsInPeriodAction } from '@/services/applications/committeeParticipation/actions'
 import ProfilePicture from '@/components/User/ProfilePicture'
-import { readSpecialImageAction } from '@/services/images/actions'
+import { readStandardImageAction } from '@/services/images/standard/actions'
 import Link from 'next/link'
 import type { Image as ImageT } from '@/prisma-generated-pn-types'
+import { StandardImage } from '@/prisma-generated-pn-types'
 export type PropTypes = {
     params: Promise<{
         shortName: string,
@@ -14,9 +15,10 @@ export type PropTypes = {
 
 
 async function getFallbackImageIfNoImage(image: ImageT | null) {
-    return image ? image : await readSpecialImageAction.bind(
-        null, { params: { special: 'DEFAULT_PROFILE_IMAGE' } }
-    )().then(res => {
+    return image ? image : await readStandardImageAction({
+        params: {
+            standardImage: StandardImage.DEFAULT_PROFILE_IMAGE
+        } }).then(res => {
         if (!res.success) throw new Error('Kunne ikke finne standard profilbilde')
         return res.data
     })
