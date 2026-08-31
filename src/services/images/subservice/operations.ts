@@ -27,8 +27,26 @@ export const imageOperations = {
         operation: () => async ({ prisma, params }) => {
             const collection = await prisma.imageCollection.findUnique({
                 where: uniqueCollectionWhere(params),
+                include: {
+                    images: {
+                        select: {
+                            fsLocationOriginal: true,
+                            fsLocationSmallSize: true,
+                            fsLocationMediumSize: true,
+                            fsLocationLargeSize: true,
+                        }
+                    }
+                }
             })
             if (!collection) throw new ServerError('NOT FOUND', 'Collection ikke funnet')
+
+            // Extract all file locations before deleting from DB
+            const fileLocationsToDelete = collection.images.flatMap(image => [
+                image.fsLocationOriginal,
+                image.fsLocationSmallSize,
+                image.fsLocationMediumSize,
+                image.fsLocationLargeSize,
+            ])
 
             await prisma.$transaction(async (tx) => {
                 await tx.imageCollection.delete({
@@ -43,6 +61,21 @@ export const imageOperations = {
                     params: { visibilityId: collection.visibilityRegularId },
                 })
             })
+
+            // Clean up files after transaction succeeds
+            if (fileLocationsToDelete.length > 0) {
+                const results = await Promise.allSettled(
+                    fileLocationsToDelete.map(fsLocation =>
+                        imageStore.destroyFile(fsLocation, undefined, false)
+                    )
+                )
+                const errors = results.filter((result): result is PromiseRejectedResult => result.status === 'rejected')
+                if (errors.length > 0) {
+                    logger.error(`Failed to clean up ${errors.length} image file(s) after collection deletion`, {
+                        errors: errors.map(error => error.reason)
+                    })
+                }
+            }
         }
     }),
     updateCollection: defineSubOperation({
