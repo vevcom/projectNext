@@ -6,6 +6,7 @@ import { defineSubOperation } from '@/services/serviceOperation'
 import { ServerError } from '@/services/error'
 import { implementStore } from '@/lib/store/implementStore'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
+import logger from '@/lib/logger'
 import sharp from 'sharp'
 import { File } from 'node:buffer'
 import type { Image, Prisma, StandardImage } from '@/prisma-generated-pn-types'
@@ -165,9 +166,14 @@ export const imageOperations = {
             })
     }),
 
-    destroyImage: defineSubOperation({
+    /**
+     * Deletes image from database and returns a cleanup function for file deletion.
+     * Used inside transactions: delete DB row in the transaction, call cleanup function after it commits.
+     * Prevents files from being deleted if the transaction rolls back.
+     */
+    destroyImageDbAndReturnCleanup: defineSubOperation({
         paramsSchema: () => imageSchemas.paramsSchemaImage,
-        operation: () => async ({ prisma, params }) => {
+        operation: () => async ({ prisma, params }): Promise<() => Promise<void>> => {
             const image = await prisma.image.findUniqueOrThrow({
                 where: {
                     id: params.imageId,
@@ -178,10 +184,39 @@ export const imageOperations = {
                     id: params.imageId,
                 },
             })
-            await imageStore.destroyFile(image.fsLocationOriginal)
-            await imageStore.destroyFile(image.fsLocationSmallSize)
-            await imageStore.destroyFile(image.fsLocationMediumSize)
-            await imageStore.destroyFile(image.fsLocationLargeSize)
+            // Return a cleanup function that the caller invokes after the transaction succeeds
+            const cleanupFn = async () => {
+                const results = await Promise.allSettled([
+                    imageStore.destroyFile(image.fsLocationOriginal, undefined, false),
+                    imageStore.destroyFile(image.fsLocationSmallSize, undefined, false),
+                    imageStore.destroyFile(image.fsLocationMediumSize, undefined, false),
+                    imageStore.destroyFile(image.fsLocationLargeSize, undefined, false),
+                ])
+                const errors = results.filter((result): result is PromiseRejectedResult => result.status === 'rejected')
+                if (errors.length > 0) {
+                    logger.error(`Failed to clean up ${errors.length} image file(s) after deletion`, {
+                        errors: errors.map(error => error.reason)
+                    })
+                }
+            }
+            return cleanupFn
+        }
+    }),
+
+    /**
+     * Full destroy operation: deletes image from database and then cleans up files.
+     * Use this for standalone operations outside transactions.
+     * For use inside transactions, use destroyImageDbAndReturnCleanup and call the returned cleanup function.
+     */
+    destroyImage: defineSubOperation({
+        paramsSchema: () => imageSchemas.paramsSchemaImage,
+        operation: () => async ({ prisma, params }) => {
+            const cleanup =
+                await imageOperations.destroyImageDbAndReturnCleanup.internalCall({
+                    prisma,
+                    params
+                })
+            await cleanup()
         }
     }),
 

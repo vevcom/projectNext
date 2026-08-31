@@ -81,30 +81,35 @@ const updateCoverImage = defineOperation({
     }),
     dataSchema: ombulSchemas.updateCoverImage,
     opensTransaction: true,
-    operation: ({ prisma, params, data }) =>
-        prisma.$transaction(async tx => {
+    operation: async ({ prisma, params, data }) => {
+        const { image: newImage, cleanup } = await prisma.$transaction(async tx => {
             const existingOmbul = await tx.ombul.findUniqueOrThrow({
                 where: { id: params.ombulId },
             })
 
-            const newImage = await ombulCoverImageOperations.uploadImage.internalCall({ prisma: tx, data })
+            const uploadedImage =
+                await ombulCoverImageOperations.uploadImage.internalCall({ prisma: tx, data })
 
             await tx.ombul.update({
                 where: { id: existingOmbul.id },
                 data: {
                     coverImage: {
-                        connect: { id: newImage.id }
+                        connect: { id: uploadedImage.id }
                     }
                 }
             })
 
-            await ombulCoverImageOperations.destroyImage.internalCall({
-                prisma: tx,
-                params: { imageId: existingOmbul.coverImageId }
-            })
+            const fileCleanup =
+                await ombulCoverImageOperations.destroyImageDbAndReturnCleanup.internalCall({
+                    prisma: tx,
+                    params: { imageId: existingOmbul.coverImageId }
+                })
 
-            return newImage
+            return { image: uploadedImage, cleanup: fileCleanup }
         }, { timeout: 20000 })
+        await cleanup()
+        return newImage
+    }
 })
 
 /**

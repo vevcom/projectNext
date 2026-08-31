@@ -99,11 +99,32 @@ export function implementSpecialCollection({
             })
     })
 
-    // Here one could just forward imageOperation.destroyImage, as the internalOperations,
+    // Here one could just forward imageOperation.destroyImageDbAndReturnCleanup, as the internalOperations,
     // are not to be exposed to the client, and we may trust that the implementer service code
     // does not call this operation with imageIds it does not own interanally.
     // However, for sanity, and to catch any potential bugs, the subservice will
     // enforce ownership of imageId.
+    const destroyImageDbAndReturnCleanup = defineSubOperation({
+        paramsSchema: () => imageSchemas.paramsSchemaImage,
+        operation: () => async ({ prisma, params }): Promise<() => Promise<void>> => {
+            const collection = await readCollectionInternal({ prisma })
+            const image = await prisma.image.findFirst({
+                where: {
+                    id: params.imageId,
+                    collectionId: collection.id,
+                },
+                select: { id: true }
+            })
+            if (!image) {
+                throw new ServerError(
+                    'BAD PARAMETERS',
+                    `Image ${params.imageId} is not part of the special collection ${special}`
+                )
+            }
+            return imageOperations.destroyImageDbAndReturnCleanup.internalCall({ params })
+        }
+    })
+
     const destroyImage = defineSubOperation({
         paramsSchema: () => imageSchemas.paramsSchemaImage,
         operation: () => async ({ prisma, params }) => {
@@ -142,6 +163,7 @@ export function implementSpecialCollection({
     return {
         internalOperations: {
             uploadImage,
+            destroyImageDbAndReturnCleanup,
             destroyImage,
         },
         specialCollectionPanelOperations: {
