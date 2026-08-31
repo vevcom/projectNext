@@ -20,6 +20,7 @@ import { unwrapActionReturn } from './redirectToErrorPage'
 import { frontpageAuth } from '@/services/frontpage/auth'
 import { ServerSession } from '@/auth/session/ServerSession'
 import type { Metadata } from 'next'
+import ThemeEnabler from '@/UI/ThemeEnabler'
 
 config.autoAddCss = false
 
@@ -62,15 +63,16 @@ export default async function RootLayout({ children }: PropTypes) {
                         defaultPermissions={defaultPermissions}
                         standardImages={standardImages}
                     >
+                        <ThemeEnabler />
                         <EditModeProvider>
                             <PopUpProvider>
                                 <div className={styles.wrapper}>
                                     <div className={styles.navBar}>
                                         <NavBar profile={profile} />
                                     </div>
-                                    <div className={styles.content}>
+                                    <main className={styles.content}>
                                         {children}
-                                    </div>
+                                    </main>
                                     <div className={styles.footer}>
                                         <Footer canEditSpecialCmsImage={canEditSpecialCmsImage} />
                                     </div>

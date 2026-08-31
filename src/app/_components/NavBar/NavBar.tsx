@@ -35,7 +35,7 @@ export default async function NavBar({ profile }: PropTypes) {
                         width={30}
                         alt="omega logo"
                     >
-                        <Link href="/" />
+                        <Link aria-label={'Gå til hjemmesiden'} href="/" />
                     </StandardImageServer>
                 </li>
                 {
