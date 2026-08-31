@@ -1,7 +1,7 @@
 import Section from './Section'
 import styles from './page.module.scss'
 import InfoBubbles from './InfoBubbles'
-import MazeMap from '@/components/MazeMap/MazeMap'
+import { MazeMapLophtet } from '@/components/MazeMap/MazeMap'
 import SocialIcons from '@/components/SocialIcons/SocialIcons'
 import StandardImageServer from '@/components/Image/StandardImageServer'
 import YouTube from '@/components/YouTube/YouTube'
@@ -91,7 +91,7 @@ export default async function LoggedOutLandingPage() {
             </div>
             <div className={`${styles.part} ${styles.taktlause}`}>
                 <div className={styles.emptyPart} />
-                <MazeMap height={'80vh'}/>
+                <MazeMapLophtet height={'80vh'}/>
                 <div className={styles.emptyPart} />
             </div>
         </div>

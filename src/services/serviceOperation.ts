@@ -254,6 +254,11 @@ export function withServiceContext<T, OpensTransaction extends boolean>(
 }
 
 
+export function getContext() {
+    const localContext = asyncLocalStorage.getStore()
+    return localContext
+}
+
 /**
  * This is the return type of the ServiceOperation function. It contains a client function that can be used
  * to pass a specific prisma client to the service operation, and a newClient function that can be used to
