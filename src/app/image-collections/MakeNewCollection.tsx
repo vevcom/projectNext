@@ -34,7 +34,11 @@ export default function MakeNewCollection() {
                     refreshOnSuccess
                     navigateOnSuccess={
                         collection =>
-                            (collection ? `/image-collections/${collection.id}` : '/image-collections')
+                            (
+                                collection ?
+                                    `/image-collections/dynamic/${encodeURIComponent(collection.name)}`
+                                    : '/image-collections'
+                            )
                     }
                     title="Lag et album"
                     submitText="Lag album"
