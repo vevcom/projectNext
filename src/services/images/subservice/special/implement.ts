@@ -24,7 +24,11 @@ export function implementSpecialCollection({
 }) {
     const generateCollectionFromConfig = defineSubOperation({
         operation: () => async ({ prisma }) => {
-            //Note: visibilities are not actually used for special collections, but required by the schema.
+            // Special collections don't use visibility for authorization. Instead, authorization is handled
+            // by the owning service's panel authorizer (imagePanelAuther passed at construction). This is
+            // because each special collection's access model is specific to its owning service.
+            // Empty visibilities are required by the schema but unused; ownershipCheck in the dynamic system
+            // prevents special collections from being accessed through the dynamic image operations.
             const visibilityRegular = await visibilityOperations.create.internalCall({})
             const visibilityAdmin = await visibilityOperations.create.internalCall({})
 
