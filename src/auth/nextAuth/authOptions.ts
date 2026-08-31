@@ -133,7 +133,7 @@ export const authOptions: AuthOptions = {
 
                         await updateUserStudyProgrammes(userId, account.access_token)
                     }
-                    logger.info('Log in', { user: user.username })
+                    logger.info('Log in', { userName: user.username, userId: user.id })
                     break
                 }
                 // Trigger is undefined for subsequent calls

@@ -40,7 +40,8 @@ function newPrisma() {
                 params: e.params,
                 query: e.query,
                 duration: e.duration,
-                user: context?.session.user?.username,
+                userName: context?.session.user?.username,
+                userId: context?.session.user?.id,
                 apiKey: context?.session.apiKeyId,
                 bypassAuth: context?.bypassAuth
             })
@@ -50,7 +51,8 @@ function newPrisma() {
                 params: e.params,
                 query: e.query,
                 duration: e.duration,
-                user: context?.session.user?.username,
+                userName: context?.session.user?.username,
+                userId: context?.session.user?.id,
                 apiKey: context?.session.apiKeyId,
                 bypassAuth: context?.bypassAuth
             })
@@ -62,7 +64,8 @@ function newPrisma() {
         logger.error('Prisma', {
             type: 'Error',
             message: e.message,
-            user: context?.session.user?.username,
+            userName: context?.session.user?.username,
+            userId: context?.session.user?.id,
             apiKey: context?.session.apiKeyId,
             bypassAuth: context?.bypassAuth
         })
@@ -73,7 +76,8 @@ function newPrisma() {
         logger.info('Prisma', {
             type: 'Info',
             message: e.message,
-            user: context?.session.user?.username,
+            userName: context?.session.user?.username,
+            userId: context?.session.user?.id,
             apiKey: context?.session.apiKeyId,
             bypassAuth: context?.bypassAuth
         })
@@ -84,7 +88,8 @@ function newPrisma() {
         logger.info('Prisma', {
             type: 'Warn',
             message: e.message,
-            user: context?.session.user?.username,
+            userName: context?.session.user?.username,
+            userId: context?.session.user?.id,
             apiKey: context?.session.apiKeyId,
             bypassAuth: context?.bypassAuth
         })
