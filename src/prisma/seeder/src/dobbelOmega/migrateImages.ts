@@ -115,7 +115,8 @@ export default async function migrateImages(
     //correct names if there are duplicates. Kept separate from the OW `name` field (used to fetch the
     //file from Omegaweb-basic below) since that field is a store token, not the display name.
     const namesTaken: { name: string, times: number }[] = []
-    const imagesWithCorrectedName = imagesWithCollection.slice(0, 10).map(image => {
+    const imagesToMigrate = limits.images ? imagesWithCollection.slice(0, limits.images) : imagesWithCollection
+    const imagesWithCorrectedName = imagesToMigrate.map(image => {
         const baseName = image.originalName.split('.').slice(0, -1).join('.')
         const nameTaken = namesTaken.find(nameTakenItem => nameTakenItem.name === baseName)
         if (nameTaken) {
