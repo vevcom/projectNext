@@ -23,6 +23,9 @@ export const allowedExtensions = ['png', 'jpg', 'jpeg', 'heic', 'avif', 'webp'] 
 
 export const expandedImageCollectionIncluder = {
     coverImage: true,
-    images: { take: 1 },
+    images: {
+        take: 1,
+        orderBy: { createdAt: 'asc' }
+    },
     _count: { select: { images: true } },
 } satisfies Prisma.ImageCollectionInclude
