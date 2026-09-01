@@ -48,6 +48,7 @@ export default async function NewsArticle({ params }: PropTypes) {
         <div className={styles.wrapper}>
             <Article
                 canEdit={canEdit}
+                articleClassName={styles.article}
                 article={news.article}
                 actions={{
                     updateArticleAction: configureAction(
