@@ -48,9 +48,10 @@
 }
 
 .icon {
-    width: 24px;
-    height: 24px;
+    width: calc(#{ohma.$gap} * 2)!important;
+    height: calc(#{ohma.$gap} * 2)!important;
     flex-shrink: 0;
+    margin-left: calc(#{ohma.$gap} * 0.5);
 }
 
 .label {
