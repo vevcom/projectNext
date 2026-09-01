@@ -41,6 +41,7 @@ export default async function LoggedInLandingPage() {
                         <StandardImageServer
                             standardImage="LOGO_WHITE"
                             width={300}
+                            tint="white"
                         />
                         <Link className={styles.scrollDown} href="#firstSection">
                             <FontAwesomeIcon icon={faAngleDown} />

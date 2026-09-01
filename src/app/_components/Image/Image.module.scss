@@ -17,6 +17,18 @@
         height: 100%;
     }
 
+    // A mask has no intrinsic size to take a height from, unlike the img it replaces - aspect-ratio
+    // is set inline per instance (see the `tintAspectRatio` prop). `contain` keeps the svg's own
+    // proportions inside that box, so a mismatched ratio letterboxes rather than stretching.
+    .tinted {
+        width: 100%;
+        mask-image: var(--image-tint-mask);
+        mask-size: contain;
+        mask-repeat: no-repeat;
+        mask-position: center;
+        background-color: var(--image-tint-color);
+    }
+
     .credit {
         position: absolute;
         background-color: ohma.$colors-surface-base;

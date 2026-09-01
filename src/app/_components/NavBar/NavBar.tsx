@@ -34,6 +34,7 @@ export default async function NavBar({ profile }: PropTypes) {
                                 standardImage="LOGO_SIMPLE"
                                 width={30}
                                 alt="omega logo"
+                                tint="var(--surface-base)"
                             />
                         </div>
                     </Link>

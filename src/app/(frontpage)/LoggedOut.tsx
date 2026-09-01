@@ -33,6 +33,7 @@ export default async function LoggedOutLandingPage() {
                             <StandardImageServer
                                 standardImage="LOGO_WHITE"
                                 width={300}
+                                tint="white"
                             />
                         </div>
 

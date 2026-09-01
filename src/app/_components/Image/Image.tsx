@@ -19,6 +19,8 @@ export type PropTypes = Omit<ImageProps, 'src' | 'alt'> & {
     hideCredit?: boolean,
     hideCopyRight?: boolean,
     disableLinkingToLicense?: boolean,
+    tint?: string,
+    tintAspectRatio?: number,
 }
 
 /**
@@ -46,6 +48,8 @@ export default function Image({
     hideCredit = false,
     hideCopyRight = false,
     disableLinkingToLicense = false,
+    tint,
+    tintAspectRatio = 1,
     ...props
 }: PropTypes) {
     const url = imageSourceForResolution(image, resolution)
@@ -53,11 +57,24 @@ export default function Image({
 
     return (
         <div style={imageWidthStyle} className={`${styles.Image} ${imageContainerClassName}`}>
-            <img {...props}
-                width={width}
-                alt={alt || image.alt}
-                src={url}
-            />
+            {tint && image.type === 'SVG' ? (
+                <div
+                    className={styles.tinted}
+                    style={{
+                        '--image-tint-mask': `url('${url}')`,
+                        '--image-tint-color': tint,
+                        aspectRatio: tintAspectRatio,
+                    } as CSSProperties}
+                    role="img"
+                    aria-label={alt || image.alt}
+                />
+            ) : (
+                <img {...props}
+                    width={width}
+                    alt={alt || image.alt}
+                    src={url}
+                />
+            )}
             {image.credit && !hideCredit && <p className={`${styles.credit} ${styles[creditPlacement]}`}>{image.credit}</p>}
             {!hideCopyRight && image.licenseLink && (
                 <div className={styles.license}>

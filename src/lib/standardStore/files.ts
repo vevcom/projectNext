@@ -105,13 +105,13 @@ export const standardStoreFiles = {
         originOfFile: 'Kongsberg Gruppen',
     }),
     logoSimple: standardStoreFile({
-        location: 'logo_simple.png',
+        location: 'logo_simple.svg',
         credit: null,
         license: null,
         originOfFile: 'ow - basic',
     }),
     logoWhite: standardStoreFile({
-        location: 'logo_white.png',
+        location: 'logo_white.svg',
         credit: null,
         license: null,
         originOfFile: 'ow - basic',
@@ -129,13 +129,13 @@ export const standardStoreFiles = {
         originOfFile: 'ow-basic',
     }),
     magiskHatt: standardStoreFile({
-        location: 'magisk_hatt.png',
+        location: 'magisk_hatt.svg',
         credit: null,
         license: null,
         originOfFile: 'ow-basic',
     }),
     omegaLogoWhite: standardStoreFile({
-        location: 'omega_logo_white.png',
+        location: 'omega_logo_white.svg',
         credit: null,
         license: null,
         originOfFile: 'ow - basic',
@@ -153,7 +153,7 @@ export const standardStoreFiles = {
         originOfFile: 'ow - basic',
     }),
     pwa: standardStoreFile({
-        location: 'pwa.png',
+        location: 'pwa.svg',
         credit: null,
         license: null,
         originOfFile: 'pwa logo',
@@ -171,7 +171,7 @@ export const standardStoreFiles = {
         originOfFile: new URL('https://pixabay.com/photos/paper-document-old-writing-vintage-3212015/'),
     }),
     vevcomLogo: standardStoreFile({
-        location: 'vevcom_logo.png',
+        location: 'vevcom_logo.svg',
         credit: null,
         license: null,
         originOfFile: 'ow - basic',
