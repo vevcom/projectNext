@@ -35,7 +35,7 @@ export default async function ProductPage() {
                     <td>
                         <Link
                             style={{ display: 'contents' }}
-                            aria-label={`Go to ${product.name} product page`}
+                            aria-label={`Gå til produktsiden for ${product.name}`}
                             href={`./product/${product.id}`}
                             passHref
                         >

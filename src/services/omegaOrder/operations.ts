@@ -17,7 +17,7 @@ export const omegaOrderOperations = {
         opensTransaction: true,
         authorizer: () => omegaOrderAuth.create.dynamicFields({}),
         operation: async ({ prisma }) => {
-            const { order: oldOrder } = await omegaOrderOperations.readCurrent({})
+            const { order: oldOrder } = await omegaOrderOperations.readCurrent({ bypassAuth: true })
 
             //TODO: Check that all groups are on current (old) order or retired before incrementing
             const newOrder = oldOrder + 1

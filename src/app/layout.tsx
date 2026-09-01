@@ -53,13 +53,13 @@ export default async function RootLayout({ children }: PropTypes) {
     return (
         <html lang="en">
             <body className={`${inter.className} ${styles.body}`}>
-                <ThemeEnabler></ThemeEnabler>
                 <SessionProvider session={nextAuthSession}>
                     <ClientDataProvider
                         session={serverSession.toJsObject()}
                         defaultPermissions={defaultPermissions}
                         standardImages={standardImages}
                     >
+                        <ThemeEnabler />
                         <EditModeProvider>
                             <PopUpProvider>
                                 <PageTitleProvider>

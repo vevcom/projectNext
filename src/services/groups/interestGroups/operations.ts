@@ -13,7 +13,7 @@ export const interestGroupOperations = {
         dataSchema: interestGroupSchemas.create,
         authorizer: () => interestGroupAuth.create.dynamicFields({}),
         operation: async ({ prisma, data }) => {
-            const { order } = await omegaOrderOperations.readCurrent({})
+            const { order } = await omegaOrderOperations.readCurrent({ bypassAuth: true })
 
             await prisma.interestGroup.create({
                 data: {

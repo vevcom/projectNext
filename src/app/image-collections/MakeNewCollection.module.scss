@@ -4,3 +4,11 @@
     padding: 2em 7em;
     display: grid;
 }
+
+.visibility {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    min-width: 350px;
+    margin-top: 1em;
+}

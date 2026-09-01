@@ -12,6 +12,7 @@ import { permissionOperations } from '@/services/permissions/operations'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { encode, decode } from 'next-auth/jwt'
 import type { AuthOptions } from 'next-auth'
+import logger from '@/lib/logger'
 
 export const authOptions: AuthOptions = {
     providers: [
@@ -132,7 +133,7 @@ export const authOptions: AuthOptions = {
 
                         await updateUserStudyProgrammes(userId, account.access_token)
                     }
-
+                    logger.info('Log in', { userName: user.username, userId: user.id })
                     break
                 }
                 // Trigger is undefined for subsequent calls
