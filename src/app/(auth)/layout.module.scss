@@ -30,6 +30,7 @@
             padding: calc(4 * #{ohma.$gap}) calc(3 * #{ohma.$gap});
             border-radius: ohma.$rounding;
             background: ohma.$colors-surface-base;
+            overflow-y: auto;
 
             > * {
                 width: 100%;
@@ -37,6 +38,15 @@
 
             @include ohma.screenMobile {
                 flex: 1;
+            }
+
+            // On a short viewport, centering the content makes it overflow both
+            // above and below the box; the part above the fold ends up hidden
+            // behind the navbar with no way to scroll to it. Anchoring to the
+            // top keeps any overflow below the fold, where this element's own
+            // scroll can reach it.
+            @media (max-height: 700px) {
+                justify-content: flex-start;
             }
         }
 
@@ -60,4 +70,9 @@
     place-items: center;
     padding: calc(2 * #{ohma.$gap}) 0;
     filter: invert(1);
+
+    // Too little vertical space to afford the crest above the form.
+    @media (max-height: 700px) {
+        display: none;
+    }
 }
