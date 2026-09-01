@@ -12,8 +12,7 @@ export const CMS_PARAGRAPHS_DIR = fileURLToPath(new URL('../cms_paragraphs/', im
 
 export type UpdateArticleOperationsReference = ReturnType<typeof implementUpdateArticleOperations<z.ZodTypeAny>>
 
-type SeedCmsImageConfig = { image: ImagesAvailablieForCms } &
-    Required<Pick<Data<UpdateArticleOperationsReference['coverImage']>, 'imageSize'>>
+type SeedCmsImageConfig = { image: ImagesAvailablieForCms }
 
 type SeedCmsParagraphConfig = {
     file: string,
@@ -81,7 +80,7 @@ export async function buildArticleFromConfig(
     await updateName({ name: article.name })
 
     const coverImage = await getImageForCmsImageRelation(article.coverImage.image, prisma)
-    await updateCoverImage({ imageId: coverImage.id, imageSize: article.coverImage.imageSize })
+    await updateCoverImage({ imageId: coverImage.id })
 
     // Sections are added one at a time rather than with Promise.all: addSection reads the
     // article's current highest section order and writes order + 1, so adding two sections
@@ -114,7 +113,6 @@ export async function buildArticleFromConfig(
             const sectionImage = await getImageForCmsImageRelation(section.cmsImage.image, prisma)
             await updateSectionImage(newSection.cmsImage.id, {
                 imageId: sectionImage.id,
-                imageSize: section.cmsImage.imageSize
             })
         }
 

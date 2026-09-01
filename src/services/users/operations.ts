@@ -8,6 +8,7 @@ import {
 } from './constants'
 import { userProfileImageOperations } from './profileImageCollection'
 import { standardImageCollectionOperations } from '@/services/images/standard/operations'
+import { expandedImageIncluder } from '@/services/images/subservice/constants'
 import { notificationSubscriptionOperations } from '@/services/notifications/subscription/operations'
 import { readMembershipsOfUser } from '@/services/groups/memberships/read'
 import { NTNUEmailDomain } from '@/services/mail/constants'
@@ -109,7 +110,7 @@ export const userOperations = {
                 select: {
                     ...userFilterSelection,
                     bio: true,
-                    image: true,
+                    image: { include: expandedImageIncluder },
                     memberships: {
                         where: {
                             OR: [
@@ -534,7 +535,7 @@ export const userOperations = {
             const user = await prisma_.user.findFirstOrThrow({
                 where: params,
                 include: {
-                    image: true,
+                    image: { include: expandedImageIncluder },
                 }
             })
 

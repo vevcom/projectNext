@@ -4,6 +4,7 @@ import { flairSchema } from './schemas'
 import { flairImageOperations } from './flairImageCollection'
 import { defineOperation } from '@/services/serviceOperation'
 import { ServerError } from '@/services/error'
+import { expandedImageIncluder } from '@/services/images/subservice/constants'
 import { z } from 'zod'
 
 export const flairOperations = {
@@ -27,7 +28,7 @@ export const flairOperations = {
                         }
                     }
                 })
-            }, { timeout: 20000 })
+            })
     }),
     update: defineOperation({
         authorizer: () => flairAuth.update.dynamicFields({}),
@@ -95,7 +96,7 @@ export const flairOperations = {
                     id: flairId,
                 },
                 include: {
-                    image: true
+                    image: { include: expandedImageIncluder }
                 }
             })
     }),
@@ -104,7 +105,7 @@ export const flairOperations = {
         operation: async ({ prisma }) => {
             const flairs = (await prisma.flair.findMany({
                 include: {
-                    image: true
+                    image: { include: expandedImageIncluder }
                 }
             })).sort((a, b) => a.rank - b.rank || a.id - b.id)
             // Assign new ranks: 1, 2, 3, ... so there are no gaps
@@ -119,7 +120,7 @@ export const flairOperations = {
             }
             const normalizedFlairs = await prisma.flair.findMany({
                 include: {
-                    image: true
+                    image: { include: expandedImageIncluder }
                 },
                 orderBy: { rank: 'asc' }
             })
@@ -139,7 +140,7 @@ export const flairOperations = {
                 select: {
                     flairs: {
                         include: {
-                            image: true
+                            image: { include: expandedImageIncluder }
                         }
                     },
                 }

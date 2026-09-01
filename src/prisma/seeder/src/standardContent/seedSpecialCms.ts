@@ -73,7 +73,6 @@ const seedSpecialCmsArticleConfig: Record<SpecialCmsArticle, SeedSpecialArticleC
         name: 'Varslingside',
         coverImage: {
             image: { dynamicImageSeededForCmsName: 'ov' },
-            imageSize: 'MEDIUM'
         },
         articleSections: [
             {
@@ -88,7 +87,6 @@ const seedSpecialCmsArticleConfig: Record<SpecialCmsArticle, SeedSpecialArticleC
         name: 'New Student',
         coverImage: {
             image: { dynamicImageSeededForCmsName: 'ov' },
-            imageSize: 'MEDIUM'
         },
         articleSections: [
             {
