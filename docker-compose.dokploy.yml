@@ -1,0 +1,30 @@
+# Prod variant for Dokploy: no nginx/certbot (Dokploy's own Traefik handles
+# routing + TLS) and no postfix (mail relay dropped). Point Dokploy's domain
+# config at the projectnext service, container port 3000.
+services:
+    projectnext:
+        extends:
+            file: docker-compose.base.yml
+            service: projectnext
+        build:
+            target: prod
+        volumes:
+            - store:/usr/src/app/store
+            - logs:/usr/src/app/logs
+        restart: always
+
+    db:
+        extends:
+            file: docker-compose.base.yml
+            service: db
+        restart: always
+        volumes:
+            - proddb:/var/lib/postgresql/data
+
+volumes:
+    proddb:
+        driver: local
+    store:
+        driver: local
+    logs:
+        driver: local
