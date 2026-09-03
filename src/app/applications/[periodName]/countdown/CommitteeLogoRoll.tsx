@@ -11,11 +11,12 @@ type PropTypes = {
         shortName: string,
         logo: ImageT
     }[],
-    periodName: string
+    periodName: string,
+    endTime: Date
 }
 
 
-export default function CommitteeLogoRoll({ committees, periodName }: PropTypes) {
+export default function CommitteeLogoRoll({ committees, periodName, endTime }: PropTypes) {
     // Dynamically set initial indexes based on committee count
     const initialIndexes = () => {
         const result: Record<string, number | 'applicantionCount' | null> = {}
@@ -34,7 +35,9 @@ export default function CommitteeLogoRoll({ committees, periodName }: PropTypes)
 
     useInterval(async () => {
         // if there is less that 10 sec until period end - do not change
-        if (new Date().getTime() + 10_000 > new Date().getTime()) return
+        const timeUntilEnd = endTime.getTime() - Date.now()
+        if (timeUntilEnd < 10000) return
+
         const res = await readNumberOfApplicationsAction({ params: { name: periodName } })
         if (!res.success) return
         setApplicationCount(res.data)
@@ -52,6 +55,10 @@ export default function CommitteeLogoRoll({ committees, periodName }: PropTypes)
 
     useInterval(() => {
         if (!committees.length) return
+
+        // if there is less that 10 sec until period end - do not change
+        const timeUntilEnd = endTime.getTime() - Date.now()
+        if (timeUntilEnd < 10000) return
 
         // Find how many displays are actually used
         const displayKeys = dispays.filter((_, i) => i < Math.max(1, committees.length))

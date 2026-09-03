@@ -177,7 +177,9 @@ export const applicationPeriodOperations = {
             //         applicationPeriodId: period.id
             //     },
             // })
+            console.log('hei hå')
             const count = await fetch('https://omega.ntnu.no/api/applications/applicants')
+            console.log(count)
             return count.json()
         }
     }),

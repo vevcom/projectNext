@@ -40,7 +40,7 @@ export default function Countdown({ period, defaultCommitteeLogo }: PropTypes) {
                     <CommitteeLogoRoll periodName={period.name} committees={period.committeesParticipating.map(part => ({
                         shortName: part.committee.shortName,
                         logo: part.committee.logoImage.image || defaultCommitteeLogo
-                    }))} />
+                    }))} endTime={period.endDate}/>
                 )}
                 {finalCountdown && (
                     <FinalCountdown periodName={period.name} />
