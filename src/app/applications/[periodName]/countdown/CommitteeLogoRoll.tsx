@@ -33,6 +33,8 @@ export default function CommitteeLogoRoll({ committees, periodName }: PropTypes)
     const [applicationCount, setApplicationCount] = useState(0)
 
     useInterval(async () => {
+        // if there is less that 10 sec until period end - do not change
+        if (new Date().getTime() + 10_000 > new Date().getTime()) return
         const res = await readNumberOfApplicationsAction({ params: { name: periodName } })
         if (!res.success) return
         setApplicationCount(res.data)

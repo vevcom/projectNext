@@ -165,18 +165,20 @@ export const applicationPeriodOperations = {
         paramsSchema: z.object({
             name: z.string()
         }),
-        operation: async ({ prisma, params }) => {
-            const period = await prisma.applicationPeriod.findUniqueOrThrow({
-                where: { name: params.name },
-                select: {
-                    id: true
-                },
-            })
-            return await prisma.application.count({
-                where: {
-                    applicationPeriodId: period.id
-                },
-            })
+        operation: async ({ /*prisma, params*/ }) => {
+            // const period = await prisma.applicationPeriod.findUniqueOrThrow({
+            //     where: { name: params.name },
+            //     select: {
+            //         id: true
+            //     },
+            // })
+            // return await prisma.application.count({
+            //     where: {
+            //         applicationPeriodId: period.id
+            //     },
+            // })
+            const count = await fetch('https://omega.ntnu.no/api/applications/applicants')
+            return count.json()
         }
     }),
 }

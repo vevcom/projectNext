@@ -3,6 +3,7 @@
 pncli-config.json
 
 .rest
+.claude
 
 # logs
 /logs
