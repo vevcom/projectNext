@@ -38,7 +38,7 @@ export default function Countdown({ period, defaultCommitteeLogo }: PropTypes) {
                 <Speedlines />
                 {showCommitteeRoll && (
                     <CommitteeLogoRoll periodName={period.name} committees={period.committeesParticipating.map(part => ({
-                        shortName: part.committee.shortName,
+                        longName: part.committee.name,
                         logo: part.committee.logoImage.image || defaultCommitteeLogo
                     }))} endTime={period.endDate}/>
                 )}

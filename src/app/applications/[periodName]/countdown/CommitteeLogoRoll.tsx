@@ -8,7 +8,7 @@ import type { Image as ImageT } from '@/prisma-generated-pn-types'
 
 type PropTypes = {
     committees: {
-        shortName: string,
+        longName: string,
         logo: ImageT
     }[],
     periodName: string,
@@ -119,7 +119,7 @@ export default function CommitteeLogoRoll({ committees, periodName, endTime }: P
                         <h1>{applicationCount}</h1>
                     </>
                 } else if (typeof idx === 'number' && committees[idx]) {
-                    content = <Display image={committees[idx].logo} shortName={committees[idx].shortName} />
+                    content = <Display image={committees[idx].logo} longName={committees[idx].longName} />
                 }
 
                 let refProp = null
@@ -142,11 +142,11 @@ export default function CommitteeLogoRoll({ committees, periodName, endTime }: P
 }
 
 
-function Display({ image, shortName }: { image: ImageT, shortName: string }) {
+function Display({ image, longName }: { image: ImageT, longName: string }) {
     return (
         <>
             <Image width={600} image={image} />
-            <span>{shortName}</span>
+            <span>{longName}</span>
         </>
     )
 }
