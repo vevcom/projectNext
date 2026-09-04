@@ -7,7 +7,6 @@ import type { PropTypes } from '@/app/users/[username]/page'
 
 export default async function Notififcations({ params }: PropTypes) {
     const { profile } = await getProfileForAdmin(await params, 'notifications')
-    // TODO: Make mobile friendly
 
     const [channels, subscriptions] = await Promise.all([
         readNotificationChannelsAction(),
@@ -17,9 +16,6 @@ export default async function Notififcations({ params }: PropTypes) {
             },
         }),
     ])
-
-    console.log(channels)
-    console.log(subscriptions)
 
     if (!channels.success || !subscriptions.success) {
         throw new Error('Failed to load channels or subscriptions')
