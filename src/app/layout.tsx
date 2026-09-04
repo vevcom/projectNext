@@ -86,7 +86,7 @@ export default async function RootLayout({ children }: PropTypes) {
                         defaultPermissions={defaultPermissions}
                         standardImages={standardImages}
                     >
-                        <GlobalSearch />
+                        <GlobalSearch profile={profile} />
                         <EditModeProvider>
                             <PopUpProvider>
                                 <PageTitleProvider>
