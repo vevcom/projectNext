@@ -1,96 +1,75 @@
 @use "@/styles/ohma";
 
-@use "sass:color";
-
-$background: color-mix(in srgb, ohma.$colors-surface-base, white 15%);
-
 .CommitteeImage {
-  position: relative;
+  display: flex;
+  align-items: stretch;
+  gap: ohma.$gap;
   width: 100%;
-  height: calc(#{ohma.$gap} * 40);
-  overflow: hidden;
-  box-shadow: ohma.$colors-surface-base 0 0 75px;
+  margin-bottom: ohma.$gap;
+
   @include ohma.screenMobile {
-      height: 150px;
-      animation: none;
-    }
-
-  .image {
-    height: 100%;
-    flex-shrink: 0;
-    object-fit: cover;
-    z-index: 1;
-    transform: scale(0.9);
-    transform-origin: top left;
-    animation: loading 1s ease-in-out forwards;
-    animation-delay: 1s;
-    pointer-events: none;
-
-    @include ohma.screenMobile {
-      transform: scale(0.4);
-      animation: none;
-      animation: loadingMobile 1s ease-in-out forwards;
-      animation-delay: 1s;
-    }
+    flex-direction: column;
   }
+}
 
-  .images {
-    position: relative;
-    display: flex;
-    align-items: center;
-    width: 100%;
-    height: 100%;
+// The logo's own island: a surface-base panel sized to the mark, matching
+// the interest-group / frontpage island pattern rather than sitting on the
+// cover photo like before.
+.logoIsland {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: ohma.$colors-surface-base;
+  border-radius: ohma.$rounding;
+  padding: calc(2 * #{ohma.$gap});
+
+  .gray {
+    filter: grayscale(100%) brightness(0.5) contrast(1.5);
   }
+}
 
-  .committeeImage {
-    position: relative;
-    z-index: 0;
-    flex: 1;
-    min-width: 0;
-    height: 100%;
-    > * {
+// The cover photo's own island, separated from the logo by a gap so the page
+// background shows between them instead of the two sharing one panel.
+.coverIsland {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  height: calc(#{ohma.$gap} * 40);
+  background-color: ohma.$colors-surface-base;
+  border-radius: ohma.$rounding;
+  overflow: hidden;
+
+  @include ohma.screenMobile {
+    height: 150px;
+  }
+}
+
+// CmsImage's own wrapper (and Image's, one level deeper) size to their
+// content rather than their parent, so the img never gets a real height to
+// fill - pinning every layer to the island's bounds is what lets object-fit:
+// cover actually cover instead of leaving surface-base showing around it.
+.committeeImage {
+  position: absolute !important;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+
+  > * {
+    position: absolute;
+    inset: 0;
+    width: 100% !important;
+    height: 100% !important;
+
+    img {
       width: 100% !important;
-      img {
-        width: 100% !important;
-        height: 300px;
-        object-fit: cover;
-        object-position: center;
-        background-size: cover;
-      }
-    }
-
-    @include ohma.screenMobile {
-      height: 150px;
-      animation: none;
+      height: 100% !important;
+      object-fit: cover;
+      object-position: center;
     }
   }
-
-  .content {
-    position: relative;
-    z-index: 2;
-  }
 }
 
-.image-container {
-  width: 100vw;
-  max-width: 100%;
-  height: 100%;
-}
-
-@keyframes loading {
-  0% {
-    transform: scale(0.9);
-  }
-  100% {
-    transform: scale(1.0);
-  }
-}
-
-@keyframes loadingMobile {
-  0% {
-    transform: scale(0.4);
-  }
-  100% {
-    transform: scale(0.5);
-  }
+.content {
+  position: relative;
 }
