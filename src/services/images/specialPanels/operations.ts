@@ -4,6 +4,7 @@ import { ombulCoversImagePanelOperations } from '@/services/ombul/ombulCoverColl
 import { committeeLogosImagePanelOperations } from '@/services/groups/committees/committeeLogoCollection'
 import { profileImagesImagePanelOperations } from '@/services/users/profileImageCollection'
 import { standardImagesImagePanelOperations } from '@/services/images/standard/operations'
+import { promoImagesImagePanelOperations } from '@/services/promo/promoImageCollection'
 
 /**
  * This is an assembly of all the `panel operations` - operations needed to display an
@@ -18,4 +19,5 @@ export const specialImagePanelOperations = {
     committeeLogos: committeeLogosImagePanelOperations,
     profileImages: profileImagesImagePanelOperations,
     standardImages: standardImagesImagePanelOperations,
+    promoImages: promoImagesImagePanelOperations,
 } as const

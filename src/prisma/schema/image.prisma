@@ -49,6 +49,7 @@ model Image {
   flair                   Flair?
   committee               Committee?
   ombul                   Ombul?
+  promo                   Promo?
 }
 
 model ProcessedImageFiles {
@@ -78,6 +79,7 @@ enum SpecialCollection {
   PROFILEIMAGES
   COMMITTEELOGOS
   FLAIRIMAGES
+  PROMOIMAGES
 }
 
 model ImageCollection {

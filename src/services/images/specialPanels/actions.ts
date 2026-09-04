@@ -27,3 +27,8 @@ export const readStandardImagesCollectionAction =
     makeAction(specialImagePanelOperations.standardImages.readCollection)
 export const readImagesPageInStandardImagesCollectionAction =
     makeAction(specialImagePanelOperations.standardImages.readPageOfImagesInCollection)
+
+export const readPromoImagesCollectionAction =
+    makeAction(specialImagePanelOperations.promoImages.readCollection)
+export const readImagesPageInPromoImagesCollectionAction =
+    makeAction(specialImagePanelOperations.promoImages.readPageOfImagesInCollection)

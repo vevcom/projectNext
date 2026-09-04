@@ -1,6 +1,7 @@
 import styles from './page.module.scss'
 import loggedInStyles from './LoggedIn.module.scss'
 import LoggedInSection from './LoggedInSection'
+import PromoBar from './PromoBar'
 import EventCard from '@/app/_components/Event/EventCard'
 import JobAd from '@/app/career/jobads/JobAd'
 import NewsCard from '@/app/news/NewsCard'
@@ -13,6 +14,7 @@ import { readActiveJobAdsAction } from '@/services/career/jobAds/actions'
 import { readCurrentEventsAction } from '@/services/events/actions'
 import { readOmbulsAction } from '@/services/ombul/actions'
 import { readQuotesPageAction } from '@/services/omegaquotes/actions'
+import { readActivePromoAction } from '@/services/promo/actions'
 import { ombulAuth } from '@/services/ombul/auth'
 import { omegaQuotesAuth } from '@/services/omegaquotes/auth'
 import { frontpageAuth } from '@/services/frontpage/auth'
@@ -31,6 +33,7 @@ export default async function LoggedInLandingPage() {
         .slice(0, MAX_NUMBER_OF_ELEMENTS)
     const events = unwrapActionReturn(await readCurrentEventsAction({ params: { tags: null } }))
         .slice(0, MAX_NUMBER_OF_ELEMENTS)
+    const promo = unwrapActionReturn(await readActivePromoAction())
 
     const session = await ServerSession.fromNextAuth()
 
@@ -65,7 +68,9 @@ export default async function LoggedInLandingPage() {
         <div className={styles.wrapper}>
             <PageTitleSetter title={'Sct. Omega'} />
             <div className={`${styles.part} ${styles.frontImg}`}>
-                <div className={styles.frontInfo}>
+                <div
+                    className={`${styles.frontInfo} ${promo ? styles.withPromoBar : ''}`}
+                >
                     <div>
                         <StandardImageServer
                             standardImage="LOGO_WHITE"
@@ -78,6 +83,11 @@ export default async function LoggedInLandingPage() {
                     </div>
                 </div>
             </div>
+            {promo && (
+                <div className={loggedInStyles.promoBarPart}>
+                    <PromoBar promo={promo} />
+                </div>
+            )}
             <div id="firstSection" className={`${styles.part} ${loggedInStyles.loggedInPart}`}>
                 <div>
                     <div className={loggedInStyles.islands}>

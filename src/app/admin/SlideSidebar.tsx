@@ -50,6 +50,10 @@ const navigations = [
             {
                 title: 'Rediger cms',
                 href: '/admin/cms'
+            },
+            {
+                title: 'Promo',
+                href: '/admin/promo'
             }
         ],
     },

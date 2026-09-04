@@ -11,6 +11,7 @@ import { generateOmbulCoversCollectionFromConfig } from '@/services/ombul/ombulC
 import { generateCommitteeLogosCollectionFromConfig } from '@/services/groups/committees/committeeLogoCollection'
 import { generateProfileImagesCollectionFromConfig } from '@/services/users/profileImageCollection'
 import { generateFlairImagesCollectionFromConfig } from '@/services/flairs/flairImageCollection'
+import { generatePromoImagesCollectionFromConfig } from '@/services/promo/promoImageCollection'
 import type { PrismaClient } from '@/prisma-generated-pn-client'
 import type { StandardStoreFile } from '@/lib/standardStore/files'
 
@@ -77,6 +78,7 @@ export const seedImages = defineSeedOperation(async (prisma: PrismaClient) => {
         generateCommitteeLogosCollectionFromConfig.internalCall({}),
         generateProfileImagesCollectionFromConfig.internalCall({}),
         generateFlairImagesCollectionFromConfig.internalCall({}),
+        generatePromoImagesCollectionFromConfig.internalCall({}),
     ])
 
     await Promise.all(
