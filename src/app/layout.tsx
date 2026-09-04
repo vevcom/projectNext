@@ -13,6 +13,7 @@ import { readUserProfileAction } from '@/services/users/actions'
 import { ServerSession } from '@/auth/session/ServerSession'
 import ThemeEnabler from '@/UI/ThemeEnabler'
 import ServiceWorkerRegister from '@/UI/ServiceWorkerRegister'
+import GlobalSearch from '@/UI/GlobalSearch'
 import DesktopSideBar from '@/components/NavBar/DesktopSideBar'
 import { Inter } from 'next/font/google'
 import '@/styles/globals.scss'
@@ -85,6 +86,7 @@ export default async function RootLayout({ children }: PropTypes) {
                         defaultPermissions={defaultPermissions}
                         standardImages={standardImages}
                     >
+                        <GlobalSearch />
                         <EditModeProvider>
                             <PopUpProvider>
                                 <PageTitleProvider>

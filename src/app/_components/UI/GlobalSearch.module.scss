@@ -1,0 +1,63 @@
+@use '@/styles/ohma';
+
+.GlobalSearch {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(2px);
+    z-index: 20;
+    display: flex;
+    justify-content: center;
+    padding-top: 12vh;
+
+    > .main {
+        @include ohma.card;
+        width: min(600px, 90vw);
+        height: fit-content;
+        background-color: ohma.$colors-surface-base;
+        border-radius: ohma.$rounding;
+        display: flex;
+        align-items: center;
+        gap: ohma.$gap;
+        padding: calc(2 * #{ohma.$gap});
+    }
+}
+
+.icon {
+    flex-shrink: 0;
+    color: ohma.$colors-text-muted;
+}
+
+.field {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    background: none;
+    outline: none;
+    font-size: ohma.$fonts-l;
+    color: ohma.$colors-text;
+
+    &::placeholder {
+        color: ohma.$colors-text-muted;
+    }
+}
+
+.escHint {
+    flex-shrink: 0;
+    font-size: ohma.$fonts-s;
+    color: ohma.$colors-text-muted;
+    background-color: ohma.$colors-surface-hover;
+    border-radius: calc(0.5 * #{ohma.$gap});
+    padding: calc(0.25 * #{ohma.$gap}) calc(0.75 * #{ohma.$gap});
+}
+
+@include ohma.screenMobile {
+    .GlobalSearch {
+        padding-top: 0;
+
+        > .main {
+            width: 100vw;
+            border-radius: 0;
+        }
+    }
+}
