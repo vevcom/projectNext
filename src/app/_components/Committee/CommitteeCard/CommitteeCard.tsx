@@ -1,5 +1,5 @@
 import styles from './CommitteeCard.module.scss'
-import Image from '@/components/Image/Image'
+import CommitteeLogo from '@/components/Committee/CommitteeLogo/CommitteeLogo'
 import Link from 'next/link'
 import type { ExpandedImage } from '@/services/images/subservice/types'
 import type { ReactNode } from 'react'
@@ -18,7 +18,7 @@ export default function CommitteeCard({ image, title, children, href }: PropType
                 <div className={styles.image}>
                     {
                         image && (
-                            <Image width={128} image={image} hideCopyRight />
+                            <CommitteeLogo width={128} logoImage={image} />
                         )
                     }
                 </div>
