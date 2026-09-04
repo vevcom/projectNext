@@ -2,6 +2,7 @@
 import styles from './ImageCollectionList.module.scss'
 import CollectionCardLink from '@/components/Image/Collection/CollectionCardLink'
 import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
+import ModeSwitch from '@/UI/ModeSwitch'
 import { DynamicImageCollectionPagingContext } from '@/contexts/paging/DynamicImageCollectionPaging'
 import { useSpecialCollections } from '@/contexts/ClientData'
 import { useState, type ReactNode } from 'react'
@@ -32,18 +33,14 @@ export default function ImageCollectionList({ serverRendered, toggle }: PropType
     return (
         <div className={styles.ImageCollectionList}>
             <div className={styles.modeSwitch}>
-                <button
-                    className={mode === 'dynamic' ? styles.active : ''}
-                    onClick={() => setMode('dynamic')}
-                >
-                    Bildealbum
-                </button>
-                <button
-                    className={mode === 'special' ? styles.active : ''}
-                    onClick={() => setMode('special')}
-                >
-                    Spesialsamlinger
-                </button>
+                <ModeSwitch
+                    value={mode}
+                    onChange={setMode}
+                    options={[
+                        { value: 'dynamic', label: 'Bildealbum' },
+                        { value: 'special', label: 'Spesialsamlinger' },
+                    ]}
+                />
                 {toggle && <div className={styles.toggle}>{toggle}</div>}
             </div>
             {mode === 'dynamic' ? (
