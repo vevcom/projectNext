@@ -1,6 +1,5 @@
 import styles from './page.module.scss'
 import Button from '@/components/UI/Button'
-import { userAuth } from '@/services/users/auth'
 import ProfilePicture from '@/components/User/ProfilePicture'
 import UserDisplayName from '@/components/User/UserDisplayName'
 import { readUserProfileAction } from '@/services/users/actions'
@@ -14,7 +13,6 @@ import PageTitleSetter from '@/contexts/PageTitleSetter'
 import UserAdminNavBar from '@/app/users/[username]/UserAdminNavBar'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
-    faCog,
     faMoneyBill,
     faQrcode,
     faSignOut,
@@ -63,10 +61,6 @@ export default async function User({ params }: PropTypes) {
     const flairs = unwrapActionReturn(await readUserFlairsAction({ params: { userId: profile.user.id } })).sort(
         (a, b) => a.rank - b.rank
     )
-
-    const { authorized: canAdministrate } = userAuth.updateProfile.dynamicFields(
-        { username: profile.user.username }
-    ).auth(session)
 
     const relationshipColour = {
         [RelationshipStatus.SINGLE]: 'green',
@@ -141,14 +135,6 @@ export default async function User({ params }: PropTypes) {
                         </div>
                         <div className={styles.leftSection}>
                             <div className={styles.buttons}>
-                                {canAdministrate &&
-                                    <Link href={`/users/${profile.user.username}/settings`}>
-                                        <Button color="secondary" className={styles.actionButton}>
-                                            <FontAwesomeIcon icon={faCog} />
-                                            <p>Innstillinger</p>
-                                        </Button>
-                                    </Link>
-                                }
                                 {isOwnProfile && (
                                     <>
                                         <Link href="/users/me/omegaid">

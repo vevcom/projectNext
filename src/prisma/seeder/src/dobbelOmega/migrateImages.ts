@@ -3,6 +3,7 @@ import manifest from '@/seeder/src/logger'
 import { createProgressBar } from './progressBar'
 import { imageOperations } from '@/services/images/subservice/operations'
 import { allowedExtensions } from '@/services/images/subservice/constants'
+import { mimeTypeForExtension } from '@/lib/store/fileExtensions'
 import { ombulCoversImagePanelOperations } from '@/services/ombul/ombulCoverCollection'
 import { profileImagesImagePanelOperations } from '@/services/users/profileImageCollection'
 import { committeeLogosImagePanelOperations } from '@/services/groups/committees/committeeLogoCollection'
@@ -116,7 +117,8 @@ export default async function migrateImages(
     //correct names if there are duplicates. Kept separate from the OW `name` field (used to fetch the
     //file from Omegaweb-basic below) since that field is a store token, not the display name.
     const namesTaken: { name: string, times: number }[] = []
-    const imagesWithCorrectedName = imagesWithCollection.slice(0, 10).map(image => {
+    const imagesToMigrate = limits.images ? imagesWithCollection.slice(0, limits.images) : imagesWithCollection
+    const imagesWithCorrectedName = imagesToMigrate.map(image => {
         const baseName = image.originalName.split('.').slice(0, -1).join('.')
         const nameTaken = namesTaken.find(nameTakenItem => nameTakenItem.name === baseName)
         if (nameTaken) {
@@ -133,7 +135,8 @@ export default async function migrateImages(
     const migrateOneImage = async (image: (typeof imagesWithCorrectedName)[number]) => {
         try {
             const ext = (image.originalName.split('.').pop() || '').toLowerCase()
-            if (!(allowedExtensions as readonly string[]).includes(ext)) {
+            const mimeType = mimeTypeForExtension(ext)
+            if (!mimeType) {
                 manifest.error(`Image ${image.originalName} has unsupported extension "${ext}", skipping`)
                 return
             }
@@ -159,7 +162,7 @@ export default async function migrateImages(
             }
 
             const buffer = Buffer.from(await res.arrayBuffer())
-            const imageFile = new File([new Uint8Array(buffer)], `${image.pnImageName}.${ext}`, { type: `image/${ext}` })
+            const imageFile = new File([new Uint8Array(buffer)], `${image.pnImageName}.${ext}`, { type: mimeType })
 
             const pnImage = await imageOperations.uploadImage.internalCall({
                 prisma: pnPrisma,
@@ -169,7 +172,12 @@ export default async function migrateImages(
                     imageName: image.pnImageName.slice(0, 50),
                     imageAlt: image.pnImageName.split('_').join(' ').slice(0, 100),
                 },
-                operationImplementationFields: { uploadAsStandardImage: null },
+                operationImplementationFields: {
+                    uploadAsStandardImage: null,
+                    // Deliberately the full set rather than the per-collection subset: this migrates
+                    // what omegaweb-basic already has, including committee logos, raster over there.
+                    allowedExtensions,
+                },
             })
 
             migrateImageIdMap.push({ owId: image.id, pnId: pnImage.id })

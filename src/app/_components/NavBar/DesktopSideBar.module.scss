@@ -32,7 +32,7 @@
     flex-shrink: 0;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     padding: 0 calc(#{ohma.$gap} * 1.5);
     border-radius: calc(#{ohma.$rounding} - #{ohma.$gap});
     color: ohma.$colors-text;
@@ -43,13 +43,15 @@
     &:hover {
         background: ohma.$colors-accent-blue;
         color: ohma.$colors-text-inv;
+        text-decoration: none;
     }
 }
 
 .icon {
-    width: 24px;
-    height: 24px;
+    width: calc(#{ohma.$gap} * 2)!important;
+    height: calc(#{ohma.$gap} * 2)!important;
     flex-shrink: 0;
+    margin-left: calc(#{ohma.$gap} * 0.5);
 }
 
 .label {
@@ -57,7 +59,8 @@
     overflow: hidden;
     opacity: 0;
     max-width: 0;
-    transition: opacity ohma.$transitionTime ease, max-width ohma.$transitionTime ease;
+    margin-left: 0;
+    transition: opacity ohma.$transitionTime ease, max-width ohma.$transitionTime ease, margin-left ohma.$transitionTime ease;
 }
 
 .adminNav {
@@ -92,14 +95,10 @@
 }
 
 .DesktopSideBar[data-expanded='true'] {
-    .navIcon {
-        justify-content: flex-start;
-    }
-
     .label {
         opacity: 1;
         max-width: 160px;
-        margin-left: calc(#{ohma.$gap} / 2);
+        margin-left: calc(#{ohma.$gap});
     }
 }
 

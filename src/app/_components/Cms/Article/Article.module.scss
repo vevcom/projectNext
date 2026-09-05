@@ -24,6 +24,7 @@ $padding: ohma.$minimalPagePadding;
         ;
     }
     .coverImage {
+        border-radius: ohma.$rounding;
         grid-area: coverImage;
         overflow: hidden;
         isolation: isolate;

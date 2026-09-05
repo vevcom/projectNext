@@ -9,5 +9,11 @@
 
 .main {
     min-height: 0;
-    overflow-y: auto;
+    border-radius: ohma.$rounding;
+    margin-bottom: ohma.$gap;
+    overflow-y: scroll;
+}
+
+.pageWrapper {
+    border-radius: ohma.$rounding;
 }

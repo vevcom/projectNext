@@ -8,6 +8,7 @@ import {
 } from './constants'
 import { userProfileImageOperations } from './profileImageCollection'
 import { standardImageCollectionOperations } from '@/services/images/standard/operations'
+import { expandedImageIncluder } from '@/services/images/subservice/constants'
 import { notificationSubscriptionOperations } from '@/services/notifications/subscription/operations'
 import { readMembershipsOfUser } from '@/services/groups/memberships/read'
 import { NTNUEmailDomain } from '@/services/mail/constants'
@@ -35,7 +36,7 @@ export const userOperations = {
         authorizer: () => userAuth.create.dynamicFields({}),
         operation: async ({ prisma, data }) => {
             const omegaMembership = await readOmegaMembershipGroup('EXTERNAL')
-            const omegaOrder = await omegaOrderOperations.readCurrent({})
+            const omegaOrder = await omegaOrderOperations.readCurrent({ bypassAuth: true })
 
             const user = await prisma.user.create({
                 data: {
@@ -109,7 +110,7 @@ export const userOperations = {
                 select: {
                     ...userFilterSelection,
                     bio: true,
-                    image: true,
+                    image: { include: expandedImageIncluder },
                     memberships: {
                         where: {
                             OR: [
@@ -534,7 +535,7 @@ export const userOperations = {
             const user = await prisma_.user.findFirstOrThrow({
                 where: params,
                 include: {
-                    image: true,
+                    image: { include: expandedImageIncluder },
                 }
             })
 
@@ -579,33 +580,37 @@ export const userOperations = {
         // uploadImage resizes to 3 sizes, converts to avif and writes several files to store
         // before any db write happens - comfortably slower than the default 5000ms interactive
         // transaction timeout under load, hence the raised timeout below.
-        operation: ({ prisma, params, data }) =>
-            prisma.$transaction(async tx => {
+        operation: async ({ prisma, params, data }) => {
+            const { image: newImage, cleanup } = await prisma.$transaction(async tx => {
                 const existingUser = await tx.user.findUniqueOrThrow({
                     where: { username: params.username },
                 })
 
-                const newImage = await userProfileImageOperations.uploadImage.internalCall({ prisma: tx, data })
+                const uploadedImage =
+                    await userProfileImageOperations.uploadImage.internalCall({ prisma: tx, data })
 
                 await tx.user.update({
                     where: { id: existingUser.id },
                     data: {
                         image: {
-                            connect: { id: newImage.id }
+                            connect: { id: uploadedImage.id }
                         }
                     }
                 })
 
                 // A previous imageId is always an upload owned 1:1 by this user (never the shared
                 // default, since that's only ever resolved at read time) - safe to destroy.
-                if (existingUser.imageId) {
-                    await userProfileImageOperations.destroyImage.internalCall({
+                const fileCleanup = existingUser.imageId
+                    ? await userProfileImageOperations.destroyImageDbAndReturnCleanup.internalCall({
                         prisma: tx,
                         params: { imageId: existingUser.imageId }
                     })
-                }
+                    : async () => {}
 
-                return newImage
+                return { image: uploadedImage, cleanup: fileCleanup }
             }, { timeout: 20000 })
+            await cleanup()
+            return newImage
+        }
     }),
 } as const

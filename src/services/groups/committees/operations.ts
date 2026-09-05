@@ -11,6 +11,7 @@ import { articleOperations } from '@/cms/articles/operations'
 import { standardImageCollectionOperations } from '@/services/images/standard/operations'
 import { omegaOrderOperations } from '@/services/omegaOrder/operations'
 import { GroupType } from '@/prisma-generated-pn-types'
+import { expandedImageIncluder } from '@/services/images/subservice/constants'
 import { z } from 'zod'
 
 async function readDefaultCommitteeLogo() {
@@ -168,34 +169,38 @@ const updateLogo = defineOperation({
     }),
     dataSchema: committeeSchemas.updateLogo,
     opensTransaction: true,
-    operation: ({ prisma, params, data }) =>
-        prisma.$transaction(async tx => {
+    operation: async ({ prisma, params, data }) => {
+        const { image: newImage, cleanup } = await prisma.$transaction(async tx => {
             const existingCommittee = await tx.committee.findUniqueOrThrow({
                 where: { shortName: params.shortName },
             })
 
-            const newImage = await committeeLogoImageOperations.uploadImage.internalCall({ prisma: tx, data })
+            const uploadedImage =
+                await committeeLogoImageOperations.uploadImage.internalCall({ prisma: tx, data })
 
             await tx.committee.update({
                 where: { id: existingCommittee.id },
                 data: {
                     logoImage: {
-                        connect: { id: newImage.id }
+                        connect: { id: uploadedImage.id }
                     }
                 }
             })
 
             // A previous logoImageId is always an upload owned 1:1 by this committee (never the
             // shared default, since that's only ever resolved at read time) - safe to destroy.
-            if (existingCommittee.logoImageId) {
-                await committeeLogoImageOperations.destroyImage.internalCall({
+            const fileCleanup = existingCommittee.logoImageId
+                ? await committeeLogoImageOperations.destroyImageDbAndReturnCleanup.internalCall({
                     prisma: tx,
                     params: { imageId: existingCommittee.logoImageId }
                 })
-            }
+                : async () => {}
 
-            return newImage
+            return { image: uploadedImage, cleanup: fileCleanup }
         }, { timeout: 20000 })
+        await cleanup()
+        return newImage
+    }
 })
 
 const destroy = defineOperation({
@@ -258,7 +263,7 @@ const create = defineOperation({
                 operationImplementationFields: { special: null }
             })
 
-            const order = (await omegaOrderOperations.readCurrent({})).order
+            const order = (await omegaOrderOperations.readCurrent({ bypassAuth: true })).order
 
             return await tx.committee.create({
                 data: {
@@ -292,10 +297,10 @@ const create = defineOperation({
                     }
                 },
                 include: {
-                    logoImage: true,
+                    logoImage: { include: expandedImageIncluder },
                 },
             })
-        }, { timeout: 20000 })
+        })
 })
 
 const update = defineOperation({
@@ -313,7 +318,7 @@ const update = defineOperation({
             },
             data,
             include: {
-                logoImage: true,
+                logoImage: { include: expandedImageIncluder },
             },
         })
 

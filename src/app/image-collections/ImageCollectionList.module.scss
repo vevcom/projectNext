@@ -9,24 +9,18 @@ $collection-size: 250px;
 .modeSwitch {
     width: 100%;
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: ohma.$gap;
     margin-bottom: ohma.$gap;
-
-    > button {
-        @include ohma.btn(ohma.$colors-surface-hover);
-        margin: 0;
-        color: ohma.$colors-text;
-
-        &.active {
-            @include ohma.btn(ohma.$colors-accent-blue);
-            margin: 0;
-        }
-    }
 }
 
 .toggle {
     margin-left: auto;
+
+    @include ohma.screenMobile {
+        margin-left: 0;
+    }
 }
 
 .grid {

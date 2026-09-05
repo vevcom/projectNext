@@ -1,4 +1,5 @@
 import { createSelection } from '@/services/createSelection'
+import { expandedImageIncluder } from '@/services/images/subservice/constants'
 import type { Prisma, User, SEX } from '@/prisma-generated-pn-types'
 
 export const maxNumberOfGroupsInFilter = 7
@@ -32,7 +33,7 @@ export const userFilterSelection = {
             colorR: true,
             colorG: true,
             colorB: true,
-            image: true,
+            image: { include: expandedImageIncluder },
         },
     },
 } as const satisfies Prisma.UserSelect

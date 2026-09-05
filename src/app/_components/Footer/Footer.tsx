@@ -17,6 +17,8 @@ async function Footer({ canEditSpecialCmsImage }: PropTypes) {
                 <StandardImageServer
                     standardImage="LOGO_WHITE_TEXT"
                     width={350}
+                    tint="var(--text)"
+                    tintAspectRatio={1657.3333 / 210.66667}
                 />
                 <p>
                 Linjeforeningen for Elektronisk Systemdesign

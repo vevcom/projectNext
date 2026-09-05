@@ -73,7 +73,7 @@ export default async function GroupAdmin({ params }: PropTypes) {
                             group.groupType === 'CLASS' &&
                             <Link
                                 href="/admin/classes"
-                                aria-label={'Go to class administration'}
+                                aria-label={'Gå til klasseadministrasjon'}
                                 className={styles.link}
                             >
                                 Gå til Klasseadministrasjon
@@ -83,7 +83,7 @@ export default async function GroupAdmin({ params }: PropTypes) {
                             group.groupType === 'OMEGA_MEMBERSHIP_GROUP' &&
                             <Link
                                 href="/admin/admission"
-                                aria-label={'Go to admission page'}
+                                aria-label={'Gå til opptakssiden'}
                                 className={styles.link}
                             >
                                 Gå til opptakssiden

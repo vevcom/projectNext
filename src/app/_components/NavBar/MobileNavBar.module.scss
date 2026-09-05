@@ -24,9 +24,6 @@
         }
         &.magicHat {
             position: relative;
-            > .image {
-                filter: invert(1);
-            }
         }
         > button {
             background: none;

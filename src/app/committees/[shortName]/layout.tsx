@@ -1,11 +1,11 @@
 import getCommitee from './getCommittee'
 import Nav from './Nav'
 import styles from './layout.module.scss'
-import BackdropImage from '@/components/BackdropImage/BackdropImage'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
-import CommitteeImage from '@/components/CommitteeImage/CommitteeImage'
+import CommitteeImage from '@/components/Committee/CommitteeImage/CommitteeImage'
 import { committeeAuth } from '@/services/groups/committees/auth'
 import { ServerSession } from '@/auth/session/ServerSession'
+import { committeeParticipationAuth } from '@/services/applications/committeeParticipation/auth'
 import type { ReactNode } from 'react'
 
 export type PropTypes = {
@@ -24,26 +24,35 @@ export default async function Committee({ params, children }: PropTypes) {
         await ServerSession.fromNextAuth()
     ).toJsObject()
 
+    const canReadCommitteeApplication = committeeParticipationAuth.readAll.dynamicFields(
+        {
+            groupId: committee.groupId,
+        }).auth(
+        await ServerSession.fromNextAuth()
+    ).toJsObject()
+
+
     return (
         <div className={styles.pageLayout}>
             <div className={styles.main}>
-                <BackdropImage image={committeeLogo}>
-                    <CommitteeImage
-                        canEditCoverImage={canEditCoverImage}
-                        shortName={committee.shortName}
-                        logoImage={committeeLogo}
-                        coverImage={committee.coverImage}
-                    />
-                    <PageWrapper title={committee.name}>
-                        <div className={styles.layout}>
-                            <div className={styles.content}>
-                                { children }
-                            </div>
+                <CommitteeImage
+                    canEditCoverImage={canEditCoverImage}
+                    shortName={committee.shortName}
+                    logoImage={committeeLogo}
+                    coverImage={committee.coverImage}
+                />
+                <PageWrapper className={styles.pageWrapper} title={committee.name}>
+                    <div className={styles.layout}>
+                        <div className={styles.content}>
+                            { children }
                         </div>
-                    </PageWrapper>
-                </BackdropImage>
+                    </div>
+                </PageWrapper>
             </div>
-            <Nav shortName={(await params).shortName} />
+            <Nav
+                shortName={(await params).shortName}
+                canReadCommitteeApplication={canReadCommitteeApplication}
+            />
         </div>
     )
 }

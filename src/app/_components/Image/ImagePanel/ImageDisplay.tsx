@@ -3,12 +3,13 @@ import styles from './ImageDisplay.module.scss'
 import { SelectString } from '@/components/UI/Select'
 import Image from '@/components/Image/Image'
 import useKeyPress from '@/hooks/useKeyPress'
+import { imageSourceForResolution } from '@/lib/images/imageSource'
 import { faChevronRight, faChevronLeft, faX } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useState } from 'react'
 import Link from 'next/link'
-import type { ImageSizeOptions } from '@/components/Image/Image'
-import type { Image as ImageT } from '@/prisma-generated-pn-types'
+import type { ImageResolution } from '@/lib/images/resolutionForWidth'
+import type { ExpandedImage } from '@/services/images/subservice/types'
 
 const mimeTypes: { [key: string]: string } = {
     jpg: 'image/jpeg',
@@ -21,31 +22,16 @@ const mimeTypes: { [key: string]: string } = {
     tiff: 'image/tiff',
     svg: 'image/svg+xml',
 }
-const getCurrentType = (image: ImageT, size: ImageSizeOptions) => {
-    let src = image.fsLocationOriginal
-    switch (size) {
-        case 'SMALL':
-            src = image.fsLocationSmallSize
-            break
-        case 'MEDIUM':
-            src = image.fsLocationMediumSize
-            break
-        case 'LARGE':
-            src = image.fsLocationLargeSize
-            break
-        case 'ORIGINAL':
-            src = image.fsLocationOriginal
-            break
-        default:
-            return 'unknown'
-    }
-    const ext = src.split('.').pop()
+const getCurrentType = (image: ExpandedImage, size: ImageResolution) => {
+    const source = imageSourceForResolution(image, size)
+    if (source.startsWith('data:')) return source.slice('data:'.length, source.indexOf(';'))
+    const ext = source.split('.').pop()
     if (!ext) return 'unknown'
-    return mimeTypes[ext]
+    return mimeTypes[ext] ?? 'unknown'
 }
 
 type PropTypes = {
-    image: ImageT,
+    image: ExpandedImage,
     loading: boolean,
     onClose: () => void,
     onNavigateLeft: () => void,
@@ -63,14 +49,14 @@ type PropTypes = {
  * @param onNavigateRight - called on the right arrow (button or key)
  */
 export default function ImageDisplay({ image, loading, onClose, onNavigateLeft, onNavigateRight }: PropTypes) {
-    const [imageSize, setImageSize] = useState<ImageSizeOptions>('LARGE')
+    const [imageSize, setImageSize] = useState<ImageResolution>('LARGE')
 
     useKeyPress('ArrowRight', onNavigateRight)
     useKeyPress('ArrowLeft', onNavigateLeft)
     useKeyPress('Escape', onClose)
 
     const handleSizeChange = (size: string) => {
-        if (size === 'SMALL' || size === 'MEDIUM' || size === 'LARGE' || size === 'ORIGINAL') {
+        if (size === 'TINY' || size === 'SMALL' || size === 'MEDIUM' || size === 'LARGE' || size === 'ORIGINAL') {
             setImageSize(size)
         }
     }
@@ -85,6 +71,10 @@ export default function ImageDisplay({ image, loading, onClose, onNavigateLeft, 
                     name="imageSize"
                     label="Oppløsning"
                     options={[
+                        {
+                            label: 'Veldig liten',
+                            value: 'TINY'
+                        },
                         {
                             label: 'Liten',
                             value: 'SMALL'
@@ -131,7 +121,7 @@ export default function ImageDisplay({ image, loading, onClose, onNavigateLeft, 
                             hideCredit
                             hideCopyRight
                             width={200}
-                            imageSize={imageSize}
+                            resolution={imageSize}
                             image={image}
                         />
                     )

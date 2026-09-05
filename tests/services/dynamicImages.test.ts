@@ -54,12 +54,13 @@ async function createManualGroup(shortName: string) {
 }
 
 /**
- * Creates a collection through the service and then sets its two levels. A fresh collection has
- * two empty visibilities, and an empty admin level authorizes everyone, so no privileged session is
- * needed to arrange one. The admin level is always written first: an empty admin level means
- * "everyone administrates", which is not a sub-visibility of a narrowed regular level, so the
- * service would (correctly) reject narrowing the regular level first. When a test only asks for a
- * regular level the admin level is set to the same matrix, which keeps that invariant satisfied.
+ * Creates a collection through the service. The admin level is mandatory at creation - an empty one
+ * would be vacuously true in checkVisibility and leave the collection open to everyone - so it goes
+ * straight into createCollection rather than being written afterwards. That also removes the old
+ * "admin level first" ordering dance: there is no window in which the level is empty.
+ *
+ * A test that does not care about administration gets adminDefault, and the regular level is left
+ * empty (readable by anyone) unless one is asked for.
  */
 async function createCollection({
     regularLevel,
@@ -69,35 +70,32 @@ async function createCollection({
     adminLevel?: VisibilityMatrix,
 } = {}) {
     collectionCounter++
+    const admin = adminLevel ?? regularLevel ?? adminDefault()
+
     const collection = await dynamicImageOperations.createCollection({
         data: {
             collectionName: `Test collection ${collectionCounter}`,
             collectionDescription: 'Laget av testene',
+            visibilityAdminRequirements: admin.requirements,
         },
         session: sessionWithPermissions('IMAGE_COLLECTION_CREATE'),
     })
 
-    const implementationParams = { collectionId: collection.id }
-    const admin = adminLevel ?? regularLevel
-
-    if (admin) {
-        await dynamicImageOperations.visibility.updateAdminLevel({
-            implementationParams,
-            params: { visibilityId: collection.visibilityAdminId },
-            data: admin,
-            session: Session.empty(),
-        })
-    }
     if (regularLevel) {
         await dynamicImageOperations.visibility.updateRegularLevel({
-            implementationParams,
+            implementationParams: { collectionId: collection.id },
             params: { visibilityId: collection.visibilityRegularId },
             data: regularLevel,
-            session: admin ? sessionInGroups(...groupIdsOf(admin)) : Session.empty(),
+            session: sessionInGroups(...groupIdsOf(admin)),
         })
     }
 
     return collection
+}
+
+/** The admin level a test gets when it does not ask for one - satisfied by sessionInGroups(groupOne). */
+function adminDefault(): VisibilityMatrix {
+    return activeIn(groupOne)
 }
 
 /** The group ids named by every ACTIVE/ORDER condition of a matrix - enough to satisfy it in tests. */
@@ -123,15 +121,32 @@ beforeEach(async () => {
 describe('creating a dynamic collection', () => {
     test('requires the IMAGE_COLLECTION_CREATE permission', async () => {
         await expect(dynamicImageOperations.createCollection({
-            data: { collectionName: 'Ulovlig samling', collectionDescription: 'Skal ikke lages' },
+            data: {
+                collectionName: 'Ulovlig samling',
+                collectionDescription: 'Skal ikke lages',
+                visibilityAdminRequirements: adminDefault().requirements,
+            },
             session: Session.empty(),
         })).rejects.toThrow(new Smorekopp('UNAUTHENTICATED'))
 
         expect(await prisma.imageCollection.count({ where: { name: 'Ulovlig samling' } })).toBe(0)
     })
 
-    test('starts out with two empty visibilities', async () => {
-        const collection = await createCollection()
+    test('refuses an empty admin level, which would authorize everyone', async () => {
+        await expect(dynamicImageOperations.createCollection({
+            data: {
+                collectionName: 'Åpen samling',
+                collectionDescription: 'Skal ikke lages',
+                visibilityAdminRequirements: [],
+            },
+            session: sessionWithPermissions('IMAGE_COLLECTION_CREATE'),
+        })).rejects.toThrow(Smorekopp)
+
+        expect(await prisma.imageCollection.count({ where: { name: 'Åpen samling' } })).toBe(0)
+    })
+
+    test('starts out administrated by the given level, and readable by anyone', async () => {
+        const collection = await createCollection({ adminLevel: activeIn(groupOne) })
 
         const matrix = await dynamicImageOperations.visibility.readDoubleLevelMatrix({
             params: { collectionId: collection.id },
@@ -139,7 +154,18 @@ describe('creating a dynamic collection', () => {
         })
 
         expect(matrix.regularLevel).toEqual({ requirements: [] })
-        expect(matrix.adminLevel).toEqual({ requirements: [] })
+        expect(matrix.adminLevel).toEqual(activeIn(groupOne))
+    })
+
+    test('a session outside the admin level cannot administrate a fresh collection', async () => {
+        const collection = await createCollection({ adminLevel: activeIn(groupOne) })
+
+        await expect(dynamicImageOperations.destroyCollection({
+            params: { collectionId: collection.id },
+            session: Session.empty(),
+        })).rejects.toThrow(new Smorekopp('UNAUTHENTICATED'))
+
+        expect(await prisma.imageCollection.count({ where: { id: collection.id } })).toBe(1)
     })
 })
 
@@ -253,7 +279,7 @@ describe('changing a collection', () => {
 
         await dynamicImageOperations.destroyCollection({
             params: { collectionId: collection.id },
-            session: Session.empty(),
+            session: sessionInGroups(...groupIdsOf(adminDefault())),
         })
 
         expect(await prisma.visibility.count({
@@ -313,7 +339,9 @@ describe('the collections visibility', () => {
             implementationParams: { collectionId: collection.id },
             params: { visibilityId: otherCollection.visibilityRegularId },
             data: activeIn(groupOne),
-            session: Session.empty(),
+            // Passes the admin level of `collection`, so the request fails on ownership rather
+            // than on authorization.
+            session: sessionInGroups(...groupIdsOf(adminDefault())),
         })).rejects.toThrow(new Smorekopp('DISSALLOWED'))
     })
 })

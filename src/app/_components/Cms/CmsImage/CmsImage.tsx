@@ -7,9 +7,7 @@ import type { PropTypes as ImagePropTypes } from '@/components/Image/Image'
 import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
 import type React from 'react'
 
-export type PropTypes = Omit<
-    ImagePropTypes, 'className' | 'imageSize' | 'smallSize' | 'largeSize' | 'image' | 'children'
-> & {
+export type PropTypes = Omit<ImagePropTypes, 'className' | 'image' | 'children'> & {
     cmsImage: ExpandedCmsImage,
     updateCmsImageAction: UpdateCmsImageAction,
     canEdit: AuthResultTypeAny
@@ -47,7 +45,7 @@ export default function CmsImage({
             />}
             <div className={styles.children}>{children}</div>
             {cmsImage.image ? (
-                <Image className={classNameImage} imageSize={cmsImage.imageSize} image={cmsImage.image} {...props}/>
+                <Image className={classNameImage} image={cmsImage.image} {...props}/>
             ) : (
                 <StandardImageClient standardImage="DEFAULT_IMAGE" className={classNameImage} {...props}/>
             )}

@@ -20,7 +20,7 @@ import { config } from '@fortawesome/fontawesome-svg-core'
 import '@fortawesome/fontawesome-svg-core/styles.css'
 import { getServerSession } from 'next-auth'
 import type { ReactNode } from 'react'
-import type { Metadata, Viewport } from 'next'
+import type { Metadata } from 'next'
 import NavBar from '@/components/NavBar/NavBar'
 
 config.autoAddCss = false
@@ -34,10 +34,6 @@ export const metadata: Metadata = {
     },
     description: 'Hjemmesiden for linjeforeningen Sanctus Omega Broderskab ved NTNU.',
     keywords: ['Sanctus Omega Broderskab', 'Sct. Omega Broderskab', 'Sanctus Omega', 'Sct. Omega', 'Omega'],
-}
-
-export const viewport: Viewport = {
-    themeColor: '#037FFC',
 }
 
 type PropTypes = {

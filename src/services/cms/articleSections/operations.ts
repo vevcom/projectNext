@@ -46,11 +46,6 @@ export const articleSectionOperations = {
                 data: {
                     imageSize: data.imageSize,
                     imagePosition: data.position,
-                    cmsImage: data.imageSize ? {
-                        update: {
-                            imageSize: data.imageSize > 250 ? 'MEDIUM' : 'SMALL',
-                        },
-                    } : undefined,
                 },
                 include: articleSectionsRealtionsIncluder,
             })

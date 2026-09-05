@@ -4,7 +4,6 @@
     width: 100%;
     border-radius: ohma.$rounding;
     background-color: ohma.$colors-surface-base;
-    @include ohma.boxShadow('');
     display: flex;
     flex-direction: column;
     gap: ohma.$gap;
@@ -12,7 +11,6 @@
     transition: background-color 0.3s;
 
     &:hover {
-        @include ohma.boxShadow('hover');
         background-color: ohma.$colors-surface-raised;
     }
 }
@@ -38,8 +36,8 @@
     place-items: center;
 
     > * {
-        width: 100%;
-        height: 100%;
+        width: 100% !important;
+        height: 100% !important;
         object-fit: contain;
 
         img {

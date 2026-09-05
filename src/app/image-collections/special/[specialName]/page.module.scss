@@ -2,6 +2,8 @@
 
 .wrapper {
     padding: 2em ohma.$minimalPagePadding;
+    min-height: 100%;
+    background-color: ohma.$colors-surface-base;
     > h1 {
         font-size: ohma.$fonts-xxl;
     }
