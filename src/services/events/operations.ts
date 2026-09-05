@@ -10,6 +10,7 @@ import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { displayDate } from '@/lib/dates/displayDate'
 import { cmsImageOperations } from '@/cms/images/operations'
 import { cmsParagraphOperations } from '@/cms/paragraphs/operations'
+import { expandedImageIncluder } from '@/services/images/subservice/constants'
 import { z } from 'zod'
 import type { EventExpanded } from './types'
 
@@ -26,7 +27,7 @@ const read = defineOperation({
             include: {
                 coverImage: {
                     include: {
-                        image: true
+                        image: { include: expandedImageIncluder }
                     }
                 },
                 paragraph: true,
@@ -162,7 +163,7 @@ export const eventOperations = {
                     ...eventFilterSelection,
                     coverImage: {
                         include: {
-                            image: true
+                            image: { include: expandedImageIncluder }
                         }
                     },
                     eventTagEvents: {
@@ -209,7 +210,7 @@ export const eventOperations = {
                     ...eventFilterSelection,
                     coverImage: {
                         include: {
-                            image: true
+                            image: { include: expandedImageIncluder }
                         }
                     },
                     eventTagEvents: {

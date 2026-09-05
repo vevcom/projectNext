@@ -1,35 +1,55 @@
 @use "@/styles/ohma";
 
 .body {
-    background-color: ohma.$colors-body-background;
+    background:
+        linear-gradient(125deg, color-mix(in srgb, ohma.$colors-accent-blue 30%, transparent) 0%, color-mix(in srgb, ohma.$colors-surface-base 20%, transparent) 70%),
+        ohma.$colors-surface-raised;
     color: ohma.$colors-text;
 }
 
 .wrapper {
-    display: flex;
-    flex-direction: column;
-    min-height: calc(100vh - ohma.$nav-height);
-    margin-top: ohma.$nav-height;
+    display: grid;
+    grid-template-columns: ohma.$nav-height 1fr;
+    grid-template-rows: ohma.$nav-height 1fr ohma.$nav-height;
+    gap: ohma.$gap;
+    padding: ohma.$gap;
+    height: 100dvh;
+    max-width: 2560px;
+    margin: 0 auto;
+    grid-template-areas:
+        "navBar navBar"
+        "sideBar content"
+        "sideBar content";
+    transition: grid-template-columns ohma.$transitionTime ease;
+
+    @media (min-width: calc(#{ohma.$mobileBreakpoint} + 1px)) {
+        &:has(.sideBar [data-expanded='true']) {
+            grid-template-columns: 220px 1fr;
+        }
+    }
 }
 
 .navBar {
+    grid-area: navBar;
+    grid-column: 1 / -1;
     height: ohma.$nav-height;
     z-index: 3;
-    position: fixed;
-    top: 0;
+    border-radius: ohma.$rounding;
+}
+
+.sideBar {
+    grid-area: sideBar;
+    height: 100%;
     width: 100%;
-    background-color: ohma.$colors-secondary;
-} 
+    z-index: 3;
+}
 
 .content {
-    flex: 1 0 auto;
-    max-width: 100vw;
-    position: relative;
-    width: 100%;
+    grid-area: content;
     display: flex;
     flex-direction: column;
-    overflow: visible;
-    min-height: calc(100dvh - ohma.$nav-height);
+    overflow: auto;
+    border-radius: ohma.$rounding;
 }
 
 .footer {
@@ -39,24 +59,32 @@
 }
 
 .mobileNavBar {
-    width: 100%;
-    position: sticky;
-    bottom: 0;
     display: none;
     z-index: 3;
-    height: ohma.$nav-height;
+    border-radius: ohma.$rounding;
+    overflow: hidden;
 }
 
 @media (max-width: ohma.$mobileBreakpoint) {
-    .mobileNavBar {
-        display: block;
-    }
     .wrapper {
-        margin-top: 0;
-        min-height: 100vh;
+        grid-template-columns: 1fr;
+        grid-template-rows: ohma.$nav-height 1fr ohma.$nav-height;
+        grid-template-areas:
+            "navBar"
+            "content"
+            "mobileNavBar";
     }
-    .navBar {
+
+    .sideBar {
         display: none;
     }
+
+    .mobileNavBar {
+        display: block;
+        grid-area: mobileNavBar;
+        height: ohma.$nav-height;
+        width: 100%;
+    }
 }
+
 

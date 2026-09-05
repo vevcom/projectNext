@@ -1,9 +1,15 @@
 @use '@/styles/ohma';
 
+.wrapper {
+    background-color: ohma.$colors-surface-base;
+    border-radius: ohma.$rounding;
+    padding: ohma.$cardPadding;
+}
+
 .dotList {
     @include ohma.table();
     .inactive {
         text-decoration: line-through;
-        color: ohma.$colors-red;
+        color: ohma.$colors-accent-red;
     }
 }

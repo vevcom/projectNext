@@ -1,7 +1,7 @@
 @use '@/styles/ohma';
 
 .adminContainer {
-    background-color: ohma.$colors-secondary;
+    background-color: ohma.$colors-surface-base;
     @include ohma.card();
     display: flex;
     flex-flow: row wrap;

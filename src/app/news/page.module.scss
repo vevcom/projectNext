@@ -5,13 +5,7 @@
 }
 
 .head {
-    display: grid;
-    grid-template-columns: 1fr auto;
+    display: flex;
+    align-items: center;
     gap: 1em;
-}
-
-.archiveBtn {
-    @include ohma.borderBtn(ohma.$colors-primary);
-    display: block;
-    margin: 0 ohma.$gap;
 }

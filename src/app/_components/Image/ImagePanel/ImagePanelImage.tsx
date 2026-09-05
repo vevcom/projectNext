@@ -2,10 +2,10 @@ import styles from './ImagePanelImage.module.scss'
 import { default as ImageComponent } from '@/components/Image/Image'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheck } from '@fortawesome/free-solid-svg-icons'
-import type { Image } from '@/prisma-generated-pn-types'
+import type { ExpandedImage } from '@/services/images/subservice/types'
 
 type PropTypes = {
-    image: Image,
+    image: ExpandedImage,
     selected: boolean,
     onOpenDisplay?: () => void,
     onToggleSelect?: () => void,
@@ -21,7 +21,7 @@ export default function ImagePanelImage({ image, selected, onOpenDisplay, onTogg
 
     return (
         <div className={styles.ImagePanelImage}>
-            <ImageComponent hideCopyRight smallSize width={200} image={image} />
+            <ImageComponent hideCopyRight width={200} image={image} />
             {handleTileClick && <button className={styles.tileButton} onClick={handleTileClick} />}
             {onToggleSelect && (
                 <button

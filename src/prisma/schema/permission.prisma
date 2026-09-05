@@ -166,6 +166,10 @@ enum Permission {
 
   //Flair/badge/cape
   FLAIR_ADMIN
+
+  // News
+  NEWS_CREATE
+  NEWS_ADMIN
 }
 
 model GroupPermission {

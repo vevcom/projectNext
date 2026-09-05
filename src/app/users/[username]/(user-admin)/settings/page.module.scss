@@ -1,3 +1,11 @@
+@use '@/styles/ohma';
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: ohma.$gap;
+}
+
 .profileImage {
     display: flex;
     flex-wrap: wrap;

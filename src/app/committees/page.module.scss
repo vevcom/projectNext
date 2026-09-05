@@ -1,21 +1,11 @@
 @use '@/styles/ohma';
 
-$max-width: 1200px;
-
 .wrapper {
+    width: 100%;
+    height: 100%;
     color: ohma.$colors-text;
-    $width: 100%;
-
-    width: $width;
-    max-width: $max-width;
-    margin-left: max(calc(($width - min($width, $max-width)) / 2), 0px);
-    position: relative;
-    overflow-y: hidden;
 
     align-self: flex-start;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-    padding: 0 2em;
     h1 {
         font-family: ohma.$fonts-secondary;
         font-size: ohma.$fonts-xxl;
@@ -31,14 +21,12 @@ $max-width: 1200px;
 }
 
 .committeeList {
-    margin: 1em 0;
     display: grid;
-    grid-template-columns: repeat(auto-fill, 225px);
-    gap: 2em;
-    justify-content: center;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: ohma.$gap;
     overflow: visible;
 
     @include ohma.screenMobile {
-        grid-template-columns: repeat(auto-fill, 200px);
+        grid-template-columns: 1fr;
     }
 }

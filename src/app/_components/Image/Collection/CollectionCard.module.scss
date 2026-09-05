@@ -14,8 +14,8 @@
         top: 0;
         right: 0;
         padding: 0.3em;
-        color: ohma.$colors-white;
-        background-color: ohma.$colors-black;
+        color: ohma.$colors-text;
+        background-color: ohma.$colors-surface-raised;
         border-radius: 0 0 0 1em;
         min-width: 30px;
         z-index: 1;
@@ -28,7 +28,7 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: radial-gradient(ellipse at center bottom, transparent 20%, ohma.$colors-secondary 70%, ohma.$colors-secondary 100%);
+        background: radial-gradient(ellipse at center bottom, transparent 20%, ohma.$colors-surface-base 70%, ohma.$colors-surface-base 100%);
         rotate: 180deg;
         scale: 1.5;
         z-index: 0;
@@ -37,7 +37,7 @@
         position: absolute;
         top: 0;
         left: 0;
-        width: 100% !important;
+        width: 100%;
         height: 100%;
         > img {
             position: absolute;
@@ -55,12 +55,11 @@
         left: 0;
         width: 100%;
         padding: 0.3em;
-        color: ohma.$colors-black;
         text-decoration: none;
         transition: min-height 0.5s;
         padding: ohma.$gap;
         z-index: 1;
-        color: ohma.$colors-white;
+        color: ohma.$colors-text;
         i {
             margin-top: ohma.$gap;
             transition: opacity 0.5s;
@@ -78,7 +77,7 @@
             left: 0;
             padding: 0.3em;
             color: ohma.$colors-white;
-            background-color: ohma.$colors-purple;
+            background-color: ohma.$colors-accent-magenta;
             border-radius: 0 0 1em 0;
             z-index: 1;
             text-align: center;
@@ -87,7 +86,7 @@
             text-transform: uppercase;
         }
         &::after {
-            background: radial-gradient(ellipse at center bottom, transparent 20%, ohma.$colors-purple 70%, ohma.$colors-purple 100%);
+            background: radial-gradient(ellipse at center bottom, transparent 20%, ohma.$colors-accent-magenta 70%, ohma.$colors-accent-magenta 100%);
         }
     }
 }

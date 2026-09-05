@@ -1,9 +1,9 @@
-import styles from './page.module.scss'
 import MakeNewCollection from './MakeNewCollection'
 import ImageCollectionList from './ImageCollectionList'
 import ToggleShowAdminCollections from './ToggleShowAdminCollections'
 import { DynamicImageCollectionPagingProvider } from '@/contexts/paging/DynamicImageCollectionPaging'
 import CollectionCardLink from '@/components/Image/Collection/CollectionCardLink'
+import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { ServerSession } from '@/auth/session/ServerSession'
 import { dynamicImageAuth } from '@/services/images/dynamic/auth'
 import { readDynamicImageCollectionsPageAction } from '@/services/images/dynamic/actions'
@@ -42,30 +42,26 @@ export default async function Images({ searchParams }: PropTypes) {
     const collections = collectionPage.data
 
     return (
-        <div className={styles.wrapper}>
-            <div className={styles.container}>
-                <DynamicImageCollectionPagingProvider
-                    startPage={{
-                        pageSize,
-                        page: 1,
-                    }}
-                    details={details}
-                    serverRenderedData={collections}
-                >
-                    <span className={styles.header}>
-                        <h1>Fotogalleri</h1>
-                        {canCreateCollection.authorized && <MakeNewCollection />}
-                    </span>
-                    <ToggleShowAdminCollections
-                        showOnlyCollectionsSessionAdministrates={showOnlyCollectionsSessionAdministrates}
-                    />
-                    <ImageCollectionList
-                        serverRendered={collections.map(collection => (
-                            <CollectionCardLink key={collection.id} collection={collection} />
-                        ))}
-                    />
-                </DynamicImageCollectionPagingProvider>
-            </div>
-        </div>
+        <PageWrapper title="Fotogalleri" headerItem={canCreateCollection.authorized && <MakeNewCollection />}>
+            <DynamicImageCollectionPagingProvider
+                startPage={{
+                    pageSize,
+                    page: 1,
+                }}
+                details={details}
+                serverRenderedData={collections}
+            >
+                <ImageCollectionList
+                    toggle={
+                        <ToggleShowAdminCollections
+                            showOnlyCollectionsSessionAdministrates={showOnlyCollectionsSessionAdministrates}
+                        />
+                    }
+                    serverRendered={collections.map(collection => (
+                        <CollectionCardLink key={collection.id} collection={collection} />
+                    ))}
+                />
+            </DynamicImageCollectionPagingProvider>
+        </PageWrapper>
     )
 }

@@ -1,9 +1,8 @@
 import getCommitee from './getCommittee'
 import Nav from './Nav'
 import styles from './layout.module.scss'
-import BackdropImage from '@/components/BackdropImage/BackdropImage'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
-import CommitteeImage from '@/components/CommitteeImage/CommitteeImage'
+import CommitteeImage from '@/components/Committee/CommitteeImage/CommitteeImage'
 import { committeeAuth } from '@/services/groups/committees/auth'
 import { ServerSession } from '@/auth/session/ServerSession'
 import { committeeParticipationAuth } from '@/services/applications/committeeParticipation/auth'
@@ -34,26 +33,26 @@ export default async function Committee({ params, children }: PropTypes) {
 
 
     return (
-        <>
-            <BackdropImage image={committeeLogo}>
+        <div className={styles.pageLayout}>
+            <div className={styles.main}>
                 <CommitteeImage
                     canEditCoverImage={canEditCoverImage}
                     shortName={committee.shortName}
                     logoImage={committeeLogo}
                     coverImage={committee.coverImage}
                 />
-                <PageWrapper title={committee.name}>
+                <PageWrapper className={styles.pageWrapper} title={committee.name}>
                     <div className={styles.layout}>
                         <div className={styles.content}>
                             { children }
                         </div>
                     </div>
                 </PageWrapper>
-            </BackdropImage>
+            </div>
             <Nav
                 shortName={(await params).shortName}
                 canReadCommitteeApplication={canReadCommitteeApplication}
             />
-        </>
+        </div>
     )
 }

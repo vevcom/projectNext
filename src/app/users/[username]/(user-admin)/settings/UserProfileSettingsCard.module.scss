@@ -1,8 +1,8 @@
 @use '@/styles/ohma';
 
 .settingsCard {
-    background: ohma.$colors-layer;
+    background-color: ohma.$colors-surface-base;
+    border-radius: ohma.$rounding;
     padding: ohma.$cardPadding;
-    border-radius: ohma.$cardRounding;
-    margin: ohma.$gap 0;
+    color: ohma.$colors-text;
 }

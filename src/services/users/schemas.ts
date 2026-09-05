@@ -111,7 +111,11 @@ export const userSchemas = {
             selectedGroup: z.object({
                 groupOrder: z.union([z.number(), z.literal('ACTIVE')]),
                 groupId: z.number()
-            }).nullable().optional()
+            }).nullable().optional(),
+            sort: z.object({
+                field: z.enum(['name', 'username']),
+                direction: z.enum(['asc', 'desc']),
+            }).optional()
         })
     ),
 }

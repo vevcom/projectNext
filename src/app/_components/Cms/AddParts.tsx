@@ -1,5 +1,5 @@
 import styles from './AddParts.module.scss'
-import BorderButton from '@/components/UI/BorderButton'
+import Button from '@/components/UI/Button'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
 import type { ArticleSectionPart } from '@/cms/articleSections/types'
@@ -48,14 +48,14 @@ export default function AddParts({
         <div className={styles.AddParts}>
             {
                 parts.map((part, i) => part.shouldShow && (
-                    <BorderButton
+                    <Button
                         key={i}
                         onClick={() => onClick(part.part)}
-                        color="primary"
+                        color="secondary"
                     >
                         <FontAwesomeIcon icon={faPlus} />
                         {part.text}
-                    </BorderButton>
+                    </Button>
                 ))
             }
         </div>

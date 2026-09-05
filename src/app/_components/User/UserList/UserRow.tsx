@@ -1,41 +1,24 @@
-import styles from './UserRow.module.scss'
 import UserDisplayName from '@/components/User/UserDisplayName'
-import { useRouter } from 'next/navigation'
 import type { UserPagingReturn } from '@/services/users/types'
 
 type PropTypes = {
     user: UserPagingReturn
-    className?: string
     groupSelected?: boolean,
-    linksToUser?: boolean
 }
 
-export default function UserRow({
-    user,
-    className,
-    groupSelected = false,
-    linksToUser
-}: PropTypes) {
-    const router = useRouter()
+export default function UserRow({ user, groupSelected = false }: PropTypes) {
     return (
-        <span
-            className={`${styles.UserRow} ${className} ${linksToUser ? styles.clickable : ''}`}
-            onClick={() => {
-                if (!linksToUser) return
-                router.push(`/users/${user.username}`)
-            }}
-        >
-            <p><UserDisplayName width={16} user={user} /></p>
-            <p>{user.username}</p>
-            <p>{user.studyProgramme}</p>
-            <p>{user.class}</p>
+        <>
+            <td><UserDisplayName width={16} user={user} /></td>
+            <td>{user.username}</td>
+            <td>{user.studyProgramme}</td>
+            <td>{user.class}</td>
             {
                 groupSelected && (<>
-                    <p>{user.selectedGroupInfo?.title}</p>
-                    <p>{user.selectedGroupInfo?.admin ? 'Ja' : 'Nei'}</p>
+                    <td>{user.selectedGroupInfo?.title}</td>
+                    <td>{user.selectedGroupInfo?.admin ? 'Ja' : 'Nei'}</td>
                 </>)
             }
-
-        </span>
+        </>
     )
 }

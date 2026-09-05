@@ -1,23 +1,14 @@
 'use client'
-import styles from './UserProfileSettingsForm.module.scss'
 import Form from '@/components/Form/Form'
 import Checkbox from '@/components/UI/Checkbox'
 import TextInput from '@/components/UI/TextInput'
-import { SelectConstructor } from '@/components/UI/Select'
+import Dropdown from '@/components/UI/Dropdown'
 import { configureAction } from '@/services/configureAction'
 import { updateUserProfileAction } from '@/services/users/actions'
 import { sexConfig, relationshipStatusConfig } from '@/services/users/constants'
 import Textarea from '@/components/UI/Textarea'
 import { RelationshipStatus, SEX } from '@/prisma-generated-pn-types'
 import type { UserFiltered } from '@/services/users/types'
-
-const SeclectRelationshipStatus = SelectConstructor<RelationshipStatus>(
-    value => Object.values(RelationshipStatus).find(status => status === value) ?? RelationshipStatus.NOT_SPECIFIED
-)
-
-const SelectSex = SelectConstructor<SEX>(
-    value => Object.values(SEX).find(sex => sex === value) ?? SEX.OTHER
-)
 
 type PropTypes = {
     user: UserFiltered
@@ -42,11 +33,10 @@ export default function UserProfileSettingsForm({ user } : PropTypes) {
         >
             <p>Har du andre brukerinstillinger du ønsker å endre? Kontakt HS på hs@omega.ntnu.no</p>
             <TextInput label="Allergier / diett" name="allergies" defaultValue={user.allergies || ''} />
-            <SelectSex
+            <Dropdown
                 label="Kjønn"
                 name="sex"
                 options={sexOptions}
-                className={styles.selectBox}
                 defaultValue={user.sex ?? SEX.OTHER}
             />
             <Textarea label="bio" name="bio" defaultValue={user.bio} />
@@ -55,11 +45,10 @@ export default function UserProfileSettingsForm({ user } : PropTypes) {
                 name="relationshipStatusText"
                 defaultValue={user.relationshipStatusText || ''}
             />
-            <SeclectRelationshipStatus
+            <Dropdown
                 label="Sivilstatus"
                 name="relationshipStatus"
                 options={relationshipOptions}
-                className={styles.selectBox}
                 defaultValue={user.relationshipStatus}
             />
             <Checkbox

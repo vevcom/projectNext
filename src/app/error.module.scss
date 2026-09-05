@@ -1,6 +1,8 @@
 @use '@/styles/ohma';
 
 .wrapper {
+    background: ohma.$colors-surface-base;
+    padding: 0 calc(2 * #{ohma.$gap});
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -15,14 +17,14 @@
             color: ohma.$colors-text;
         }
         .imageContainer {
-            border-right: solid 2px ohma.$colors-secondary;
+            border-right: solid 2px ohma.$colors-surface-base;
             padding-right: 20px;
             margin-right: 20px;
         }
     }
     > button {
         position: absolute;
-        top: 20px;
+        top: calc(#{ohma.$nav-height} + 20px + #{ohma.$gap});
         right: 20px;
         width: auto;
     }

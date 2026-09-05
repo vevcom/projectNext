@@ -2,6 +2,11 @@
 
 .countDown {
     font-size: ohma.$fonts-m;
+
+    a {
+        color: inherit;
+        text-decoration: none;
+    }
 }
 
 .textarea {
@@ -9,34 +14,82 @@
     height: 20vh;
 }
 
+.periodContent {
+    border-radius: ohma.$rounding;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: ohma.$gap;
+
+    @include ohma.screenMobile {
+        padding: ohma.$gap;
+    }
+}
+
+.periodDates {
+    display: flex;
+    flex-wrap: wrap;
+    gap: ohma.$gap;
+}
+
+.periodDateItem {
+    background-color: ohma.$colors-surface-raised;
+    border-radius: calc(#{ohma.$rounding} - #{ohma.$gap});
+    padding: calc(#{ohma.$gap} * 1.5);
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    color: ohma.$colors-text;
+
+    > b {
+        color: ohma.$colors-accent-blue;
+        font-weight: ohma.$fonts-weight-m;
+        white-space: nowrap;
+    }
+}
+
+.countDownItem {
+    flex-wrap: wrap;
+}
+
 .committees {
-    list-style: none;
-    > li {
-        background-color: ohma.$colors-gray-200;
-        padding: 0.5em;
-        margin: 1em 0;
+    margin: 0;
+    padding-top: ohma.$gap;
+    display: grid;
+    gap: ohma.$gap;
+
+    > div {
+        background-color: ohma.$colors-surface-raised;
+        padding: ohma.$gap;
         min-height: 250px;
         display: flex;
+        border-radius: calc(#{ohma.$rounding} - #{ohma.$gap});
         overflow: hidden;
+
         > * {
-            flex: 1 1 100%;
+            width: 100%;
+            height: 100%;
         }
+
         .committeeLogo {
             padding: 0.5em;
         }
+
         .navigation {
             display: flex;
             gap: 0.5em;
+            align-items: center;
+            flex-wrap: wrap;
+
             .applyButton {
-                @include ohma.btn(ohma.$colors-secondary);
+                @include ohma.btn(ohma.$colors-accent-blue);
                 margin: 0;
             }
             .committeeLink {
-                @include ohma.borderBtn(ohma.$colors-secondary);
+                @include ohma.secondaryBtn;
                 margin: 0;
             }
             .videoButton {
-                @include ohma.borderBtn(ohma.$colors-secondary);
+                @include ohma.secondaryBtn;
                 margin: 0;
                 svg {
                     width: 1em;
@@ -45,11 +98,12 @@
             }
         }
     }
+
     .priorityContainer {
         > p, button {
             border-radius: 50%;
-            background-color: ohma.$colors-primary;
-            color: ohma.$colors-black;
+            background-color: ohma.$colors-accent-blue;
+            color: ohma.$colors-text-inv;
             width: 3em;
             height: 3em;
             display: grid;
@@ -59,7 +113,7 @@
         }
         > button:hover {
             cursor: pointer;
-            background-color: color-mix(in srgb, ohma.$colors-primary, black 10%);
+            background-color: color-mix(in srgb, ohma.$colors-accent-blue, black 10%);
         }
         display: flex;
         flex-flow: row wrap;

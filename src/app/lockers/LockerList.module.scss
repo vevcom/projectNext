@@ -2,16 +2,16 @@
 
 
 .lockerList {
-    background-color: ohma.$colors-gray-100;
+    background-color: ohma.$colors-surface-raised;
     filter: drop-shadow(5px 15px 5px rgba(0, 0, 0, 0.3));
-    border: 1px solid ohma.$colors-gray-300;
+    border: 1px solid ohma.$colors-surface-subtle;
     border-radius: 10px;
     padding: 1em;
 }
 
 .lockerListHeader {
     display: grid;
-    border-bottom: 2px solid ohma.$colors-gray-300;
+    border-bottom: 2px solid ohma.$colors-surface-subtle;
     grid-template-columns: repeat(6, 1fr);
     
     @media (max-width: 600px) {

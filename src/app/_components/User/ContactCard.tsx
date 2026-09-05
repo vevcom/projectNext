@@ -1,7 +1,7 @@
 import styles from './UserCard.module.scss'
 import ProfilePicture from './ProfilePicture'
 import Link from 'next/link'
-import type { Image } from '@/prisma-generated-pn-types'
+import type { ExpandedImage } from '@/services/images/subservice/types'
 
 export default function ContactCard({
     name,
@@ -9,7 +9,7 @@ export default function ContactCard({
     className,
 }: {
     name: string,
-    image: Image
+    image: ExpandedImage
     className?: string,
 }) {
     return <Link

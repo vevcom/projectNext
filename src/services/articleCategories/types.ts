@@ -1,7 +1,8 @@
-import type { Article, ArticleCategory, Image } from '@/prisma-generated-pn-types'
+import type { Article, ArticleCategory } from '@/prisma-generated-pn-types'
+import type { ExpandedImage } from '@/services/images/subservice/types'
 
 export type ExpandedArticleCategory = ArticleCategory & { articles: Article[] }
 
-export type ExpandedArticleCategoryWithCover = ExpandedArticleCategory & { coverImage: Image | null }
+export type ExpandedArticleCategoryWithCover = ExpandedArticleCategory & { coverImage: ExpandedImage | null }
 
-export type ArticleCategoryWithCover = ArticleCategory & { coverImage: Image | null }
+export type ArticleCategoryWithCover = ArticleCategory & { coverImage: ExpandedImage | null }

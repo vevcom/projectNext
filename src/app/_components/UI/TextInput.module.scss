@@ -2,79 +2,110 @@
 
 .TextInput {
     position: relative;
-    padding: 2*ohma.$gap 0 0;
     margin-top: ohma.$gap;
     width: 100%;
-    max-width: 200px;
+    max-width: 320px;
     display: flex;
     flex-direction: column;
 }
 
 .field {
     width: 100%;
-    border: 0;
-    border-bottom: 2px solid;
+    border: 2px solid transparent;
+    border-radius: calc(#{ohma.$rounding} - #{ohma.$gap});
     outline: 0;
-    font-size: ohma.$fonts-s;
-    padding: 7px 0;
-    background: transparent;
-    transition: border-color 0.2s;
+    font-size: ohma.$fonts-m;
+    line-height: calc(#{ohma.$fonts-m} * 1.25);
+    color: ohma.$colors-ink-strong;
+    background-color: ohma.$colors-surface-raised;
+    padding: calc(3 * #{ohma.$gap}) calc(2 * #{ohma.$gap}) calc(1 * #{ohma.$gap});
+    transition: border-color ohma.$transitionTime, background-color ohma.$transitionTime;
     z-index: 1;
 
     &::placeholder {
         opacity: 0;
     }
 
+    &:hover {
+        background-color: ohma.$colors-surface-hover;
+    }
+
     &:placeholder-shown ~ .labe {
-        font-size: ohma.$fonts-s;
+        font-size: ohma.$fonts-m;
         cursor: text;
-        top: 20px;
+        top: calc(3 * #{ohma.$gap});
     }
 
     &:focus, &:not(:placeholder-shown) {
         ~ .labe {
-            position: absolute;
-            top: 0;
-            display: block;
-            transition: 0.2s;
-            font-size: calc(ohma.$fonts-s * 0.8);
+            top: calc(1 * #{ohma.$gap});
+            font-size: calc(#{ohma.$fonts-s} * 0.85);
         }
-        padding-bottom: 6px;  
-        border-width: 3px;
-        border-image-slice: 1;
+    }
+
+    &:focus {
+        border-color: ohma.$colors-accent-blue;
+        background-color: ohma.$colors-surface-hover;
     }
 }
 
 .labe {
     position: absolute;
-    top: 0;
+    left: calc(2 * #{ohma.$gap});
+    top: calc(3 * #{ohma.$gap});
     display: block;
-    transition: 0.2s;
-    font-size: 1rem;
-    z-index: 0;
+    color: ohma.$colors-text-muted;
+    transition: ohma.$transitionTime;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.field:focus ~ .labe {
+    color: ohma.$colors-accent-blue;
+}
+
+.black > .field {
+    color: ohma.$colors-ink-strong;
 }
 
 .primary > .field {
-    color: ohma.$colors-primary;
-    border-color: ohma.$colors-primary;
+    color: ohma.$colors-accent-blue;
+    &:focus {
+        border-color: ohma.$colors-accent-blue;
+        ~ .labe {
+            color: ohma.$colors-accent-blue;
+        }
+    }
 }
 
-.secondary > .field, .secondary > .labe{
-    color: ohma.$colors-secondary;
-    border-color: ohma.$colors-secondary;
+.secondary > .field {
+    color: ohma.$colors-surface-base;
+    &:focus {
+        border-color: ohma.$colors-surface-base;
+        ~ .labe {
+            color: ohma.$colors-surface-base;
+        }
+    }
 }
 
-.black > .field, .black > .labe{
-    color: ohma.$colors-text;
-    border-color: ohma.$colors-text;
+.red > .field {
+    color: ohma.$colors-accent-red;
+    &:focus {
+        border-color: ohma.$colors-accent-red;
+        ~ .labe {
+            color: ohma.$colors-accent-red;
+        }
+    }
 }
 
-.red > .field, .red > .labe {
-    color: ohma.$colors-red;
-    border-color: ohma.$colors-red;
-}
-
-.white > .field, .white > .labe{
+.white > .field {
     color: ohma.$colors-white;
-    border-color: ohma.$colors-white;
+}
+
+.onRaised > .field {
+    background-color: ohma.$colors-surface-hover;
+
+    &:hover, &:focus {
+        background-color: color-mix(in srgb, ohma.$colors-surface-hover, white 10%);
+    }
 }

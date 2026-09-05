@@ -23,10 +23,10 @@
         gap: 1em;
         :is(.download, .openInBrowser) a {
             display: block;
-            @include ohma.btn(ohma.$colors-primary);
+            @include ohma.btn(ohma.$colors-accent-blue);
         }
         .readPdf button {
-            @include ohma.btn(ohma.$colors-primary);
+            @include ohma.btn(ohma.$colors-accent-blue);
         }
     }
 

@@ -14,7 +14,7 @@
         position: absolute;
         top: 0;
         left: 0;
-        background-color: ohma.$colors-red;
+        background-color: ohma.$colors-accent-red;
         width: 40px;
         height: 40px;
         transform: translate(-25%, -25%);
@@ -27,7 +27,7 @@
         position: absolute;
         top: 1em;
         right: 1em;
-        @include ohma.btn(ohma.$colors-primary);
+        @include ohma.btn(ohma.$colors-accent-blue);
         width: 200px;
     }
 
@@ -37,7 +37,7 @@
     }
 
     .groupInfo {
-        border-bottom: 3px solid ohma.$colors-gray-600;
+        border-bottom: 3px solid ohma.$colors-surface-subtle;
         margin-bottom: ohma.$gap;
     }
 }

@@ -3,6 +3,7 @@
 .BackdropImage {
     position: relative;
     isolation: isolate;
+    height: 100%;
 
     .image {
         position: absolute;
@@ -29,6 +30,7 @@
 
     .content {
         z-index: 1;
+        height: calc(100vh - 2 * #{ohma.$nav-height} - 44 * #{ohma.$gap});
     }
 }
 

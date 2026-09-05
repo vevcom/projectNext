@@ -4,14 +4,15 @@ import LoggedInSection from './LoggedInSection'
 import EventCard from '@/app/_components/Event/EventCard'
 import JobAd from '@/app/career/jobads/JobAd'
 import NewsCard from '@/app/news/NewsCard'
-import SocialIcons from '@/components/SocialIcons/SocialIcons'
 import StandardImageServer from '@/components/Image/StandardImageServer'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { readNewsCurrentAction } from '@/services/news/actions'
 import { readActiveJobAdsAction } from '@/services/career/jobAds/actions'
 import { readCurrentEventsAction } from '@/services/events/actions'
-import { eventAuth } from '@/services/events/auth'
+import { frontpageAuth } from '@/services/frontpage/auth'
 import { ServerSession } from '@/auth/session/ServerSession'
+import Footer from '@/components/Footer/Footer'
+import PageTitleSetter from '@/contexts/PageTitleSetter'
 import { faAngleDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Link from 'next/link'
@@ -27,22 +28,21 @@ export default async function LoggedInLandingPage() {
 
     const session = await ServerSession.fromNextAuth()
 
-    const canEditEventCmsImage = eventAuth.updateCmsCoverImage.dynamicFields({}).auth(
+    const canEditSpecialCmsImage = frontpageAuth.updateSpecialCmsImage.dynamicFields({}).auth(
         session
     ).toJsObject()
 
     return (
         <div className={styles.wrapper}>
+            <PageTitleSetter title={'Sct. Omega'} />
             <div className={`${styles.part} ${styles.frontImg}`}>
                 <div className={styles.frontInfo}>
                     <div>
                         <StandardImageServer
                             standardImage="LOGO_WHITE"
                             width={300}
+                            tint="white"
                         />
-                        <div className={styles.socials}>
-                            <SocialIcons />
-                        </div>
                         <Link className={styles.scrollDown} href="#firstSection">
                             <FontAwesomeIcon icon={faAngleDown} />
                         </Link>
@@ -51,25 +51,44 @@ export default async function LoggedInLandingPage() {
             </div>
             <div id="firstSection" className={`${styles.part} ${loggedInStyles.loggedInPart}`}>
                 <div>
-                    <LoggedInSection title="Nyheter" link="/news">
-                        {news.map((newsArticle, key) => (
-                            <NewsCard key={key} news={newsArticle} />
-                        ))}
-                    </LoggedInSection>
-                    <LoggedInSection title="Hvad der hender" link="/events">
-                        {events.map((event, key) => (
-                            <EventCard key={key} event={event} canEdit={canEditEventCmsImage} />
-                        ))}
-                    </LoggedInSection>
-                    <LoggedInSection title="Jobbannonser" link="/career/jobads">
-                        {jobAds.map((jobAd, key) => (
-                            <JobAd key={key} jobAd={jobAd} />
-                        ))}
-                    </LoggedInSection>
-                    <LoggedInSection title="Bilder" link="/image-collections">
-                        Her kan man kanskje vise noen bilder ellerno
-                    </LoggedInSection>
+                    <div className={loggedInStyles.islands}>
+                        <LoggedInSection title="Nyheter" link="/news" emptyMessage="Det er for tiden ingen nyheter">
+                            {news.map((newsArticle, key) => (
+                                <NewsCard key={key} news={newsArticle} />
+                            ))}
+                        </LoggedInSection>
+                        <LoggedInSection
+                            title="Hvad der hender"
+                            link="/events"
+                            layout="rows"
+                            span="half"
+                            emptyMessage="Det er for tiden ingen kommende hendelser"
+                        >
+                            {events.map((event, key) => (
+                                <EventCard key={key} event={event} />
+                            ))}
+                        </LoggedInSection>
+                        <LoggedInSection
+                            title="Jobbannonser"
+                            link="/career/jobads"
+                            layout="rows"
+                            span="half"
+                            emptyMessage="Det er for tiden ingen jobbannonser"
+                        >
+                            {jobAds.map((jobAd, key) => (
+                                <JobAd key={key} jobAd={jobAd} />
+                            ))}
+                        </LoggedInSection>
+                        {/* Images section doesnt really fit for the logged in landing page.
+                        <LoggedInSection title="Bilder" link="/image-collections">
+                            Her kan man kanskje vise noen bilder ellerno
+                        </LoggedInSection>
+                        */}
+                    </div>
                 </div>
+            </div>
+            <div className={styles.footer}>
+                <Footer canEditSpecialCmsImage={canEditSpecialCmsImage} />
             </div>
         </div>
     )

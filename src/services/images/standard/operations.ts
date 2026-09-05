@@ -5,9 +5,11 @@ import { implementSpecialCollection } from '@/services/images/subservice/special
 import { defineOperation, defineSubOperation } from '@/services/serviceOperation'
 import { ServerError } from '@/services/error'
 import logger from '@/lib/logger'
-import { StandardImage, type Image } from '@/prisma-generated-pn-types'
+import { StandardImage } from '@/prisma-generated-pn-types'
 import { imageOperations } from '@/services/images/subservice/operations'
+import { allowedExtensions, expandedImageIncluder } from '@/services/images/subservice/constants'
 import { z } from 'zod'
+import type { ExpandedImage } from '@/services/images/subservice/types'
 
 const {
     specialCollectionPanelOperations: standardImagesImagePanelOperations,
@@ -15,6 +17,7 @@ const {
 } = implementSpecialCollection({
     special: 'STANDARDIMAGES',
     imagePanelAuther: standardImagesImagePanelAuth.dynamicFields({}),
+    allowedExtensions,
     config: {
         name: 'Standardbilder',
         description: `
@@ -54,7 +57,10 @@ const generateStandardImageFromConfig = defineSubOperation({
             params: {
                 collectionId: (await standardImagesImagePanelOperations.readCollection({})).id,
             },
-            operationImplementationFields: { uploadAsStandardImage: params.standardImage }
+            operationImplementationFields: {
+                uploadAsStandardImage: params.standardImage,
+                allowedExtensions,
+            }
         })
     }
 })
@@ -68,7 +74,8 @@ const readStandardImage = defineOperation({
         const image = await prisma.image.findUnique({
             where: {
                 standardImage: params.standardImage
-            }
+            },
+            include: expandedImageIncluder,
         })
 
         const standardCollection =
@@ -114,13 +121,14 @@ const readStandardImage = defineOperation({
  */
 const readAllStandardImages = defineOperation({
     authorizer: () => standardImageCollectionAuth.readStandardImage.dynamicFields({}),
-    operation: async ({ prisma }): Promise<Record<StandardImage, Image>> => {
+    operation: async ({ prisma }): Promise<Record<StandardImage, ExpandedImage>> => {
         const standardCollection = await standardImagesImagePanelOperations.readCollection({})
         const imagesInCollection = await prisma.image.findMany({
             where: {
                 standardImage: { not: null },
                 collectionId: standardCollection.id,
-            }
+            },
+            include: expandedImageIncluder,
         })
 
         const missing = Object.values(StandardImage).filter(
@@ -131,7 +139,7 @@ const readAllStandardImages = defineOperation({
         )
         const allStandardImages = imagesInCollection.concat(regenerated)
 
-        const imageFor = (standardImage: StandardImage): Image => {
+        const imageFor = (standardImage: StandardImage): ExpandedImage => {
             const image = allStandardImages.find(candidate => candidate.standardImage === standardImage)
             // Unreachable: each member was either returned by the findMany or just regenerated.
             if (!image) {

@@ -21,12 +21,7 @@
 }
 
 @mixin card {
-    border-radius: variables.$cardRounding;
-    transition: box-shadow 0.3s;
-    @include boxShadow('');
-    &:hover {
-        @include boxShadow('hover');
-    }
+    border-radius: variables.$rounding;
 }
 
 @mixin layer {
@@ -39,20 +34,50 @@
     width: 100%;
     border-collapse: collapse;
     border: none;
-    margin: 20px 0;
-    font-size: 18px;
+    margin: calc(2 * #{variables.$gap}) 0;
+    font-size: fonts.$m;
     text-align: left;
+    box-shadow: colors.$boxShadow 0 1px 3px, colors.$boxShadow 0 1px 2px;
+
     th, td {
-        padding: variables.$gap;
+        padding: calc(1.5 * #{variables.$gap}) calc(2 * #{variables.$gap});
     }
+
     th {
-        background-color: color-mix(in srgb, colors.$secondary, white 2%); // TODO Perhaps change
+        background-color: colors.$surface-raised;
+        color: colors.$ink-strong;
+        font-weight: fonts.$weight-m;
     }
-    tr:nth-child(even) {
-        background-color: color-mix(in srgb, colors.$secondary, white 2%); // TODO Perhaps change
+
+    tbody tr {
+        background-color: colors.$surface-raised;
+        transition: background-color .3s;
+        &:nth-child(even) {
+            background-color: color-mix(in srgb, colors.$surface-raised, white 3%);
+        }
+        &:hover {
+            background-color: colors.$surface-hover;
+        }
     }
-    tr:hover {
-        @include layer;
+
+    thead tr:first-child th:first-child {
+        border-top-left-radius: variables.$gap;
+    }
+    thead tr:first-child th:last-child {
+        border-top-right-radius: variables.$gap;
+    }
+    tbody tr:last-child td:first-child {
+        border-bottom-left-radius: variables.$gap;
+    }
+    tbody tr:last-child td:last-child {
+        border-bottom-right-radius: variables.$gap;
+    }
+
+    &:has(tbody:empty) thead tr:first-child th:first-child {
+        border-bottom-left-radius: variables.$gap;
+    }
+    &:has(tbody:empty) thead tr:first-child th:last-child {
+        border-bottom-right-radius: variables.$gap;
     }
 }
 
@@ -61,47 +86,45 @@
     text-decoration: none;
     font-size: fonts.$m;
     background: $color;
-    padding: 2*variables.$gap;
+    padding: calc(2 * #{variables.$gap});
     margin: variables.$gap;
-    color: colors.$black;
+    color: colors.$text-inv;
     border: none;
+    border-radius: calc(#{variables.$rounding} - #{variables.$gap});
     transition: .5s background;
     &:hover {
         background-color: color-mix(in srgb, $color, white 10%); // TODO Perhaps change
         cursor: pointer;
     }
-    @include round;
 }
 
-//NOTE: also made to work for <Link /> (<a> tag)
-@mixin borderBtn($color: colors.$white) {
-    @include btn($color);
-    background: transparent;
-    border: solid $color 2px;
-    color: $color;
+// The secondary action tier: a filled button that recedes next to btn().
+// NOTE: also made to work for <Link /> (<a> tag)
+@mixin secondaryBtn {
+    @include btn(colors.$surface-hover);
+    color: colors.$text;
     &:hover {
-        background: $color;
-        color: color-mix(in srgb, $color, white 40%);
+        background-color: color-mix(in srgb, colors.$surface-hover, white 10%);
     }
 }
 
 @mixin roundAdminSvgBtn() {
     width: 45px;
     height: 45px;
-    background-color: colors.$primary;
+    background-color: colors.$accent-blue;
     border: none;
     border-radius: 50%;
     display: grid;
     place-items: center;
     text-decoration: none;
     svg {
-        color: colors.$black;
+        color: colors.$text-inv;
         transition: color 0.6s;
         width: 31px;
         height: 31px;
     }
     &:hover svg {
-        color: colors.$gray-500;
+        color: colors.$ink-hover;
         cursor: pointer;
     }
 }
@@ -123,12 +146,12 @@
 }
 
 @mixin primaryIconLink {
-    color: colors.$primary;
+    color: colors.$accent-blue;
     padding: variables.$gap;
     width: 30px;
     height: 30px;
     &:hover {
-        color: color-mix(in srgb, colors.$primary, black 10%); // TODO Perhaps change
+        color: color-mix(in srgb, colors.$accent-blue, black 10%); // TODO Perhaps change
         cursor: pointer;
     }
 }
@@ -147,7 +170,7 @@
     }
 }
 
-@mixin pagePadding($max-width: 900px) {
+@mixin pagePadding($max-width: 1200px) {
     $width: 100%;
 
     width: $width;
@@ -158,7 +181,6 @@
 }
 
 @mixin ImageCardListLayout {
-    margin: 1em 0;
     display: grid;
     grid-template-columns: repeat(3, calc((100% - 2em) / 3));
     grid-gap: 1em;
@@ -174,19 +196,202 @@
     }
 }
 
-@mixin EventCardListLayout {
-    margin: 1em 0;
-    display: grid;
-    grid-template-columns: repeat(2, calc((100% - 2em) / 2));
-    grid-gap: 1em;
-    @media screen and (max-width: variables.$mobileBreakpoint) {
-        grid-template-columns: repeat(2, calc((100% - 2em) / 2));
+// Listings that render as full-width rows are a single stacked column at every
+// breakpoint rather than a grid of cards.
+@mixin RowListLayout {
+    margin: calc(2 * #{variables.$gap}) 0;
+    display: flex;
+    flex-direction: column;
+    gap: variables.$gap;
+    // The list is the query container for its rows. It has to sit here rather
+    // than on the row itself: a container query can only style descendants of
+    // the container, so a row cannot restyle itself off its own width.
+    container-type: inline-size;
+}
+
+// A 96px list row on the 8px grid, shared by the event and job-ad listings so
+// the two lists stay consistent: thumbnail | lead | title block | meta, with an
+// optional full-width bar hugging the bottom edge. Consumers supply the child
+// elements using these class names.
+@mixin listRow {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    height: calc(12 * #{variables.$gap});
+    // Rows appear both full-width and inside half-width islands, so the columns
+    // give way based on the space the row actually has rather than on viewport
+    // width — a viewport query would leave the title with ~50px in a narrow
+    // island on a wide screen. The container is RowListLayout, not this row.
+    overflow: hidden;
+    text-decoration: none;
+    color: unset;
+    border-radius: variables.$rounding;
+    background-color: colors.$surface-raised;
+    transition: background-color variables.$transitionTime;
+
+    // The whole row is one anchor, so globals' `a:hover { text-decoration:
+    // underline }` would otherwise underline every text run inside it.
+    &:hover {
+        background-color: colors.$surface-hover;
+        text-decoration: none;
     }
-    @media screen and (max-width: 500px) {
-        grid-template-columns: 1fr;
-        place-items: center;
-        > * {
+
+    > .thumb {
+        position: relative;
+        flex-shrink: 0;
+        width: calc(12 * #{variables.$gap});
+        height: 100%;
+        overflow: hidden;
+
+        // The image components size their own wrapper divs off the image's
+        // intrinsic width rather than off this container, which lets images
+        // overextend past the row. Force every wrapper to fill this box at
+        // whatever nesting depth the fallback ends up rendering at.
+        div {
             width: 100%;
+            height: 100%;
+        }
+
+        img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+
+    > .lead {
+        flex-shrink: 0;
+        width: calc(8 * #{variables.$gap});
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        line-height: 1.1;
+
+        b {
+            font-size: fonts.$xl;
+            color: colors.$text;
+        }
+
+        span {
+            font-size: fonts.$s;
+            text-transform: uppercase;
+            color: colors.$text-muted;
+        }
+    }
+
+    > .main {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: calc(0.5 * #{variables.$gap});
+        padding: 0 calc(2 * #{variables.$gap});
+
+        h2 {
+            margin: 0;
+            font-size: fonts.$l;
+            font-weight: fonts.$weight-m;
+            color: colors.$text;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        p {
+            margin: 0;
+            font-size: fonts.$s;
+            color: colors.$text-muted;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    }
+
+    > .meta {
+        flex-shrink: 0;
+        width: calc(15 * #{variables.$gap});
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        justify-content: center;
+        gap: calc(0.5 * #{variables.$gap});
+        padding: 0 calc(2 * #{variables.$gap});
+        font-size: fonts.$s;
+        color: colors.$text-muted;
+        text-align: right;
+
+        > * {
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    }
+
+    > .bar {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: calc(0.5 * #{variables.$gap});
+        background-color: colors.$surface-subtle;
+
+        > div {
+            height: 100%;
+            background: colors.$accent-blue;
+        }
+    }
+
+    // Rows stay rows when space is tight; the meta column is what gives way.
+    @container (max-width: 560px) {
+        > .meta {
+            display: none;
+        }
+
+        > .main {
+            padding-right: calc(2 * #{variables.$gap});
+        }
+    }
+
+    // Narrower still (phone-width rows) there is no room for a date column
+    // beside the title, so the row becomes a grid: the thumbnail keeps the left
+    // edge and the date sits horizontally above the title in the space left.
+    @container (max-width: 480px) {
+        display: grid;
+        grid-template-columns: calc(12 * #{variables.$gap}) 1fr;
+        align-content: center;
+        row-gap: calc(0.5 * #{variables.$gap});
+
+        // Taken out of the grid so it can span the full row height regardless of
+        // how tall the centred text block ends up.
+        > .thumb {
+            position: absolute;
+            inset: 0 auto 0 0;
+            width: calc(12 * #{variables.$gap});
+        }
+
+        > .lead {
+            grid-column: 2;
+            flex-direction: row;
+            align-items: baseline;
+            justify-content: flex-start;
+            gap: calc(0.5 * #{variables.$gap});
+            width: auto;
+            padding: 0 calc(2 * #{variables.$gap});
+
+            b {
+                font-size: fonts.$m;
+            }
+        }
+
+        > .main {
+            grid-column: 2;
+            padding-right: calc(2 * #{variables.$gap});
         }
     }
 }
@@ -209,33 +414,5 @@
     }
     100% {
         transform: translate(250%) rotate(5deg);
-    }
-}
-
-@mixin neumorphism(
-    $l:var(--secondary-l),
-    $c:var(--secondary-c),
-    $h:var(--secondary-h),
-    $size: 20px,
-    $blur: 40px,
-    $intensity: .05,
-    $inset: "",
-    $button: false,
-) {
-    box-shadow:
-        #{$inset} #{$size} #{$size} #{$blur}
-          oklch(calc(#{$l} - #{$intensity}) #{$c} #{$h}),
-        #{$inset} -#{$size} -#{$size} #{$blur}
-          oklch(calc(#{$l} + #{$intensity}) #{$c} #{$h});
-
-
-    @if $button {
-        &:active {
-            box-shadow:
-                inset #{$size} #{$size} #{$blur}
-                    oklch(calc(#{$l} - #{$intensity}) #{$c} #{$h}),
-                  inset -#{$size} -#{$size} #{$blur}
-                    oklch(calc(#{$l} + #{$intensity}) #{$c} #{$h});
-        }
     }
 }

@@ -1,0 +1,71 @@
+'use client'
+import Form from '@/components/Form/Form'
+import TextInput from '@/components/UI/TextInput'
+import { SettingsHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
+import useEditMode from '@/hooks/useEditMode'
+import { updateInterestGroupAction, destroyInterestGroupAction } from '@/services/groups/interestGroups/actions'
+import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
+
+type PropTypes = {
+    interestGroupId: number
+    interestGroupName: string
+    canUpdate: AuthResultTypeAny
+    canDestroy: AuthResultTypeAny
+}
+
+/**
+ * Same gate as the CMS editors: only surfaces once edit mode is on, instead
+ * of an always-visible settings icon.
+ */
+export default function InterestGroupSettings({
+    interestGroupId,
+    interestGroupName,
+    canUpdate,
+    canDestroy,
+}: PropTypes) {
+    const editableUpdate = useEditMode({ authResult: canUpdate })
+    const editableDestroy = useEditMode({ authResult: canDestroy })
+
+    if (!editableUpdate && !editableDestroy) return null
+
+    const popUpKey = `Update interest group ${interestGroupName}`
+
+    return (
+        <SettingsHeaderItemPopUp scale={40} popUpKey={popUpKey}>
+            {
+                editableUpdate && (
+                    <>
+                        <h2>Oppdater interessegruppe</h2>
+                        <Form
+                            refreshOnSuccess
+                            closePopUpOnSuccess={popUpKey}
+                            action={updateInterestGroupAction.bind(null, { params: { id: interestGroupId } })}
+                            submitText="Endre"
+                        >
+                            <TextInput
+                                defaultValue={interestGroupName}
+                                name="name"
+                                label="Navn"
+                            />
+                        </Form>
+                    </>
+                )
+            }
+            {
+                editableDestroy && (
+                    <Form
+                        refreshOnSuccess
+                        closePopUpOnSuccess={popUpKey}
+                        action={destroyInterestGroupAction.bind(null, { params: { id: interestGroupId } })}
+                        submitText="Slett"
+                        submitColor="red"
+                        confirmation={{
+                            confirm: true,
+                            text: `Er du sikker på at du vil slette ${interestGroupName}?`
+                        }}
+                    />
+                )
+            }
+        </SettingsHeaderItemPopUp>
+    )
+}

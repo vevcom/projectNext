@@ -1,7 +1,7 @@
 import '@pn-server-only'
 import { defineOperation, defineSubOperation, type PrismaPossibleTransaction } from '@/services/serviceOperation'
 import { imageOperations, expandImageCollection } from '@/services/images/subservice/operations'
-import { expandedImageCollectionIncluder } from '@/services/images/subservice/constants'
+import { expandedImageCollectionIncluder, type ImageExtension } from '@/services/images/subservice/constants'
 import { imageSchemas } from '@/services/images/subservice/schemas'
 import { ServerError } from '@/services/error'
 import logger from '@/lib/logger'
@@ -13,10 +13,17 @@ import type { AuthorizerDynamicFieldsBound } from '@/auth/authorizer/Authorizer'
 export function implementSpecialCollection({
     special,
     imagePanelAuther,
+    allowedExtensions,
     config
 }: {
     special: SpecialCollection,
     imagePanelAuther: AuthorizerDynamicFieldsBound
+    /**
+     * Which of the image system's extensions this collection accepts on upload.
+     * Some special collection may only for example expect svg files, while others may only expect
+     * raster images.
+     */
+    allowedExtensions: readonly ImageExtension[],
     config: {
         name: string,
         description: string,
@@ -99,7 +106,7 @@ export function implementSpecialCollection({
                     collectionId: (await readCollectionInternal({ prisma })).id,
                 },
                 data,
-                operationImplementationFields: { uploadAsStandardImage: null }
+                operationImplementationFields: { uploadAsStandardImage: null, allowedExtensions }
             })
     })
 

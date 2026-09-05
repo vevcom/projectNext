@@ -2,12 +2,14 @@
 import styles from './ImageCollectionList.module.scss'
 import CollectionCardLink from '@/components/Image/Collection/CollectionCardLink'
 import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
+import ModeSwitch from '@/UI/ModeSwitch'
 import { DynamicImageCollectionPagingContext } from '@/contexts/paging/DynamicImageCollectionPaging'
 import { useSpecialCollections } from '@/contexts/ClientData'
 import { useState, type ReactNode } from 'react'
 
 type PropTypes = {
     serverRendered: ReactNode,
+    toggle?: ReactNode,
 }
 
 /**
@@ -15,7 +17,7 @@ type PropTypes = {
  * @param serverRendered - Make sure to pass the server rendered collections here in the correct format
  * @returns
  */
-export default function ImageCollectionList({ serverRendered }: PropTypes) {
+export default function ImageCollectionList({ serverRendered, toggle }: PropTypes) {
     const [mode, setMode] = useState<'special' | 'dynamic'>('dynamic')
 
     const specialCollectionsResult = useSpecialCollections()
@@ -31,18 +33,15 @@ export default function ImageCollectionList({ serverRendered }: PropTypes) {
     return (
         <div className={styles.ImageCollectionList}>
             <div className={styles.modeSwitch}>
-                <button
-                    className={mode === 'dynamic' ? styles.active : ''}
-                    onClick={() => setMode('dynamic')}
-                >
-                    Bildealbum
-                </button>
-                <button
-                    className={mode === 'special' ? styles.active : ''}
-                    onClick={() => setMode('special')}
-                >
-                    Spesialsamlinger
-                </button>
+                <ModeSwitch
+                    value={mode}
+                    onChange={setMode}
+                    options={[
+                        { value: 'dynamic', label: 'Bildealbum' },
+                        { value: 'special', label: 'Spesialsamlinger' },
+                    ]}
+                />
+                {toggle && <div className={styles.toggle}>{toggle}</div>}
             </div>
             {mode === 'dynamic' ? (
                 <div className={styles.grid}>

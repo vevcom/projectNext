@@ -4,6 +4,7 @@ import CurrentNews from '@/app/news/CurrentNews'
 import Article from '@/cms/Article/Article'
 import {
     readNewsAction,
+    readNewsDoubleLevelVisibilityAction,
     updateNewsArticleAction,
     updateNewsArticleAddSectionAction,
     updateNewsArticleCmsImageAction,
@@ -19,6 +20,7 @@ import SlideInOnView from '@/components/SlideInOnView/SlideInOnView'
 import { decodeVevenUriHandleError } from '@/lib/urlEncoding'
 import { configureAction } from '@/services/configureAction'
 import { newsAuth } from '@/services/news/auth'
+import { EMPTY_VISIBILITY } from '@/auth/visibility/emptyVisibility'
 import { ServerSession } from '@/auth/session/ServerSession'
 import { notFound } from 'next/navigation'
 
@@ -34,13 +36,19 @@ export default async function NewsArticle({ params }: PropTypes) {
     if (!res.success) notFound()
     const news = res.data
 
-    const canEdit = newsAuth.updateArticle.dynamicFields({}).auth(
+    const readDoubleLevelVisibility = await readNewsDoubleLevelVisibilityAction({ params: { id: news.id } })
+    const doubleLevelVisibility = readDoubleLevelVisibility.success ? readDoubleLevelVisibility.data : null
+
+    const canEdit = newsAuth.updateArticle.dynamicFields({
+        doubleLevelMatrix: doubleLevelVisibility ?? EMPTY_VISIBILITY
+    }).auth(
         await ServerSession.fromNextAuth()
     ).toJsObject()
     return (
         <div className={styles.wrapper}>
             <Article
                 canEdit={canEdit}
+                articleClassName={styles.article}
                 article={news.article}
                 actions={{
                     updateArticleAction: configureAction(
@@ -88,7 +96,7 @@ export default async function NewsArticle({ params }: PropTypes) {
                 }}
             />
             <SlideInOnView>
-                <EditNews news={news}>
+                <EditNews news={news} doubleLevelVisibility={doubleLevelVisibility}>
                     <div className={styles.moreNews}>
                         <h1>Flere nyheter</h1>
                         <div>
