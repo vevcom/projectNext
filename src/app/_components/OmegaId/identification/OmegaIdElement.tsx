@@ -25,7 +25,8 @@ export default function OmegaIdElement({ token }: {
     useEffect(() => {
         const interval = setInterval(async () => {
             if (expiryTime < new Date()) {
-                const results = await generateOmegaIdAction()
+                if (session.loading || !session.session.user) return
+                const results = await generateOmegaIdAction({ params: { userId: session.session.user.id } })
                 if (!results.success) {
                     console.error(results)
                     throw new Error('Failed to reload the qr code')
