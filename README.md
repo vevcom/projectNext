@@ -73,9 +73,30 @@ Static `/store/` files are served by Next.js directly, so there's no separate ng
 
 Set `BUILDX_NO_DEFAULT_ATTESTATIONS=1` in the build environment. BuildKit otherwise attaches a provenance attestation and packs the result as a multi-platform manifest list, which nothing here consumes and which shows up as extra `exporting attestation manifest` work on every deploy.
 
+### Applying database schema migrations
+
+Production schema changes go through [Prisma Migrate](https://www.prisma.io/docs/orm/prisma-migrate), not `db push` - `db push --force-reset` (what `npm run seed` and DobbelOmega use, see below) drops and recreates every table, which is fine for a throwaway dev database but would destroy production data.
+
+Whenever you change a schema file under `src/prisma/schema/`, generate a migration for it locally and commit the result:
+
+```bash
+npm run migrate:dev
+```
+
+This runs against your dev database (via a Prisma shadow database) and writes a new folder under `src/prisma/migrations/` containing the SQL. Commit that folder. If the change requires backfilling existing rows (e.g. a new required column with no single default value), edit the generated `migration.sql` by hand before committing - see `src/prisma/migrations/20260905120000_image_processing_pipeline/migration.sql` for an example that backfills a computed value before adding a `NOT NULL` constraint.
+
+To apply committed migrations to production, build the `tools` image (same as DobbelOmega below) and run `migrate:deploy` instead of the default command. This only runs migrations that haven't been applied yet and never touches existing data outside of what a migration's SQL explicitly does:
+
+```bash
+docker build --target tools -t pn-tools .
+docker run --rm --env-file .env pn-tools npm run migrate:deploy
+```
+
+`migrate:deploy` is safe to run repeatedly (it's a no-op once everything is applied) and safe against a database it has never seen before that already has tables from a pre-Prisma-Migrate `db push` workflow, *as long as* the first migration in `src/prisma/migrations/` accurately describes what's already there - see `20260828215443_baseline/migration.sql`, which reflects the database's structure as of the last deploy before Migrate was introduced. That baseline was recorded as already-applied with `prisma migrate resolve --applied 20260828215443_baseline` run against the production database, without ever executing its SQL there (the tables already existed). You should not need to repeat this baselining step again - it's a one-time bridge from the old `db push`-only world into tracked migrations.
+
 ### Running DobbelOmega
 
-To load data from Omegaweb-basic, run the `tools` image on the host. Keep in mind that this will delete all the data in the database.
+To load data from Omegaweb-basic, run the `tools` image on the host. **This is a one-time bulk import, not a routine deploy step: it force-resets the database, deleting everything currently in it.** For ordinary schema changes once the site has real data, use `migrate:deploy` above instead.
 
 ```bash
 docker build --target tools -t pn-tools .

@@ -22,6 +22,8 @@
     "docker:seed": "docker compose -f docker-compose.dev.yml exec projectnext /bin/sh -c 'npm run seed'",
     "seed": "npx prisma db push --force-reset && IGNORE_SERVER_ONLY=true npx prisma db seed",
     "dev-seed": "(if [ ! -d './node_modules/.prisma-dobbel-omega' ]; then npm run dobbelOmega:generate; fi) && npm run seed && npm run dev",
+    "migrate:dev": "npx prisma migrate dev",
+    "migrate:deploy": "npx prisma migrate deploy",
     "prisma-studio": "DB_URI=\"postgresql://user:password@localhost/devdb\" npx prisma studio"
   },
   "dependencies": {
