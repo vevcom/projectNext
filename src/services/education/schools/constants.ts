@@ -1,5 +1,6 @@
 import { createSelection } from '@/services/createSelection'
-import type { CreateSchoolTypes } from './validation'
+import type { schoolSchemas } from './schemas'
+import type { z } from 'zod'
 import type { Prisma, School, StandardSchool } from '@/prisma-generated-pn-types'
 
 export const StandardSchoolsConfig = {
@@ -7,7 +8,7 @@ export const StandardSchoolsConfig = {
         name: 'Norges tekniske og naturvitenskapelige universitet',
         shortName: 'NTNU',
     }
-} as const satisfies Record<StandardSchool, CreateSchoolTypes['Detailed']>
+} as const satisfies Record<StandardSchool, Pick<z.infer<typeof schoolSchemas.create>, 'name' | 'shortName'>>
 
 export const SchoolFieldsToExpose = [
     'name',
