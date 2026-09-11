@@ -4,11 +4,17 @@ import LoggedInSection from './LoggedInSection'
 import EventCard from '@/app/_components/Event/EventCard'
 import JobAd from '@/app/career/jobads/JobAd'
 import NewsCard from '@/app/news/NewsCard'
+import OmbulRow from '@/app/ombul/OmbulRow'
+import OmegaquoteRow from '@/app/omegaquotes/OmegaquoteRow'
 import StandardImageServer from '@/components/Image/StandardImageServer'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { readNewsCurrentAction } from '@/services/news/actions'
 import { readActiveJobAdsAction } from '@/services/career/jobAds/actions'
 import { readCurrentEventsAction } from '@/services/events/actions'
+import { readOmbulsAction } from '@/services/ombul/actions'
+import { readQuotesPageAction } from '@/services/omegaquotes/actions'
+import { ombulAuth } from '@/services/ombul/auth'
+import { omegaQuotesAuth } from '@/services/omegaquotes/auth'
 import { frontpageAuth } from '@/services/frontpage/auth'
 import { ServerSession } from '@/auth/session/ServerSession'
 import Footer from '@/components/Footer/Footer'
@@ -27,6 +33,29 @@ export default async function LoggedInLandingPage() {
         .slice(0, MAX_NUMBER_OF_ELEMENTS)
 
     const session = await ServerSession.fromNextAuth()
+
+    // Ombul and omegaquotes are membership permissions rather than default ones, so a logged in
+    // user without them gets the islands left out entirely instead of an error page.
+    const canReadOmbul = ombulAuth.readAll.dynamicFields({}).auth(session).authorized
+    const ombuls = canReadOmbul
+        ? unwrapActionReturn(await readOmbulsAction()).slice(0, MAX_NUMBER_OF_ELEMENTS)
+        : []
+
+    const canReadOmegaquotes = omegaQuotesAuth.readPage.dynamicFields({}).auth(session).authorized
+    const omegaquotes = canReadOmegaquotes
+        ? unwrapActionReturn(await readQuotesPageAction({
+            params: {
+                paging: {
+                    page: {
+                        pageSize: MAX_NUMBER_OF_ELEMENTS,
+                        page: 0,
+                        cursor: null,
+                    },
+                    details: undefined,
+                }
+            }
+        }))
+        : []
 
     const canEditSpecialCmsImage = frontpageAuth.updateSpecialCmsImage.dynamicFields({}).auth(
         session
@@ -79,6 +108,32 @@ export default async function LoggedInLandingPage() {
                                 <JobAd key={key} jobAd={jobAd} />
                             ))}
                         </LoggedInSection>
+                        {canReadOmbul && (
+                            <LoggedInSection
+                                title="Ombul"
+                                link="/ombul"
+                                layout="rows"
+                                span="half"
+                                emptyMessage="Det er ingen ombuler å vise enda"
+                            >
+                                {ombuls.map(ombul => (
+                                    <OmbulRow key={ombul.id} ombul={ombul} />
+                                ))}
+                            </LoggedInSection>
+                        )}
+                        {canReadOmegaquotes && (
+                            <LoggedInSection
+                                title="Omegaquotes"
+                                link="/omegaquotes"
+                                layout="rows"
+                                span="half"
+                                emptyMessage="Det er ingen quotes å vise enda"
+                            >
+                                {omegaquotes.map(quote => (
+                                    <OmegaquoteRow key={quote.id} quote={quote} />
+                                ))}
+                            </LoggedInSection>
+                        )}
                         {/* Images section doesnt really fit for the logged in landing page.
                         <LoggedInSection title="Bilder" link="/image-collections">
                             Her kan man kanskje vise noen bilder ellerno
