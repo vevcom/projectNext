@@ -106,8 +106,10 @@ export default function CollectionAdmin({ collection, doubleLevelVisibility, ref
                 )
             }
             {
+                // The settings variant defaults to a smaller button than the other two, so it is
+                // matched to them explicitly.
                 canOpenEditPopUp && (
-                    <SettingsHeaderItemPopUp popUpKey="Edit">
+                    <SettingsHeaderItemPopUp scale={40} popUpKey="Edit">
                         {
                             canUpdateCollection && (
                                 <Form
