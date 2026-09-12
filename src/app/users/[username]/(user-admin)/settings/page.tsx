@@ -21,7 +21,7 @@ export default async function UserSettings({ params }: PropTypes) {
     }).auth(session).toJsObject()
 
     return (
-        <div>
+        <div className={styles.wrapper}>
             <UserProfileSettingsCard>
                 <UserSettingsForm user={userDataFull} />
             </UserProfileSettingsCard>

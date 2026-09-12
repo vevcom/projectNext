@@ -17,7 +17,7 @@ export default async function UserDotAdmin({ params }: PropTypes) {
     )
 
     return (
-        <div>
+        <div className={styles.wrapper}>
             <h2>Prikker</h2>
             <table className={styles.dotList}>
                 <thead>

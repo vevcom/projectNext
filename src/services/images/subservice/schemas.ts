@@ -4,20 +4,25 @@ import {
     maxImageFileSizeBytes,
     maxImageFileSizeMb
 } from './constants'
+import { extensionForMimeType } from '@/lib/store/fileExtensions'
 import { readPageInputSchema } from '@/lib/paging/schema'
 import { zfd } from 'zod-form-data'
 import { z } from 'zod'
 import { File } from 'node:buffer'
 
-// ts does not like doing .includes(x) if x does not neccessarily have the same type as the
-// array elements, so we need to make sure that the array is of type readonly string[] instead
-// the narrower union type array.
-const extentionsAsStringArray: readonly string[] = allowedExtensions
+/**
+ * Checks the file against everything the image system can store, not against what the individual
+ * implementation accepts - that subset is an operation field, enforced by the store when the file
+ * is written. This is only here to keep obvious rubbish out before the operation runs.
+ */
+function fileHasAllowedExtension(file: File): boolean {
+    return extensionForMimeType(file.type, allowedExtensions) !== null
+}
 
 export const imageFileSchema = z.instanceof(File).refine(
     file => file.size < maxImageFileSizeBytes, `File size must be less than ${maxImageFileSizeMb}mb`
 ).refine(
-    file => extentionsAsStringArray.includes(file.type.split('/')[1]),
+    fileHasAllowedExtension,
     `File type must be one of ${allowedExtensions.join(', ')}`
 )
 
@@ -27,18 +32,18 @@ export const baseSchema = z.object({
     coverImageId: z.number().optional(),
 
     imageFile: imageFileSchema,
-    imageName: z.string().max(50, 'max length in 50').min(2, 'min length is 2').optional(),
-    imageAlt: z.string().max(100, 'max length in 50').min(2, 'min length is 2'),
     imageFiles: zfd.repeatable(z.array(z.instanceof(File)).refine(
         files => files.every(file => file.size < maxImageFileSizeBytes),
         `Alle filer må være mindre enn ${maxImageFileSizeMb}mb`
     )).refine(
-        files => files.every(file => (allowedExtensions as readonly string[]).includes(file.type.split('/')[1])),
+        files => files.every(fileHasAllowedExtension),
         `Filtypen må være en av ${allowedExtensions.join(', ')}`
     ).refine(
         files => files.length <= maxImageCountInOneBatch && files.length > 0,
         `Du kan bare laste opp mellom 1 og ${maxImageCountInOneBatch} bilder av gangen`
     ),
+    imageName: z.string().max(50, 'max length in 50').min(2, 'min length is 2').optional(),
+    imageAlt: z.string().max(100, 'max length in 50').min(2, 'min length is 2'),
     imageLicenseId: z.union([
         z.string().optional().nullable(),
         z.coerce.number().optional().or(z.literal('NULL')),

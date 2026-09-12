@@ -11,6 +11,7 @@ import { articleOperations } from '@/cms/articles/operations'
 import { standardImageCollectionOperations } from '@/services/images/standard/operations'
 import { omegaOrderOperations } from '@/services/omegaOrder/operations'
 import { GroupType } from '@/prisma-generated-pn-types'
+import { expandedImageIncluder } from '@/services/images/subservice/constants'
 import { z } from 'zod'
 
 async function readDefaultCommitteeLogo() {
@@ -296,10 +297,10 @@ const create = defineOperation({
                     }
                 },
                 include: {
-                    logoImage: true,
+                    logoImage: { include: expandedImageIncluder },
                 },
             })
-        }, { timeout: 20000 })
+        })
 })
 
 const update = defineOperation({
@@ -317,7 +318,7 @@ const update = defineOperation({
             },
             data,
             include: {
-                logoImage: true,
+                logoImage: { include: expandedImageIncluder },
             },
         })
 

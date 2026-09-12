@@ -1,9 +1,10 @@
 import type { ActionFromSubServiceOperation } from '@/services/actionTypes'
 import type { cmsImageOperations } from './operations'
-import type { Image, CmsImage } from '@/prisma-generated-pn-types'
+import type { ExpandedImage } from '@/services/images/subservice/types'
+import type { CmsImage } from '@/prisma-generated-pn-types'
 
 export type ExpandedCmsImage = CmsImage & {
-    image: Image | null
+    image: ExpandedImage | null
 }
 
 export type UpdateCmsImageAction = ActionFromSubServiceOperation<typeof cmsImageOperations.update>

@@ -2,6 +2,7 @@
 import Form from '@/components/Form/Form'
 import { updateSchoolAction } from '@/education/schools/actions'
 import TextInput from '@/components/UI/TextInput'
+import { configureAction } from '@/services/configureAction'
 import type { SchoolFiltered } from '@/services/education/schools/types'
 
 type PropTypes = {
@@ -9,7 +10,10 @@ type PropTypes = {
 }
 
 export default function UpdateSchool({ school }: PropTypes) {
-    const updateAction = updateSchoolAction.bind(null, school.id)
+    const updateAction = configureAction(
+        updateSchoolAction,
+        { params: { id: school.id } }
+    )
 
     return (
         <Form

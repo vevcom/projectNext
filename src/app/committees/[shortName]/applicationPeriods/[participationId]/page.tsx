@@ -4,8 +4,8 @@ import { readCommitteeApplicationsInPeriodAction } from '@/services/applications
 import ProfilePicture from '@/components/User/ProfilePicture'
 import { readStandardImageAction } from '@/services/images/standard/actions'
 import Link from 'next/link'
-import type { Image as ImageT } from '@/prisma-generated-pn-types'
 import { StandardImage } from '@/prisma-generated-pn-types'
+import type { ExpandedImage } from '@/services/images/subservice/types'
 export type PropTypes = {
     params: Promise<{
         shortName: string,
@@ -14,7 +14,7 @@ export type PropTypes = {
 }
 
 
-async function getFallbackImageIfNoImage(image: ImageT | null) {
+async function getFallbackImageIfNoImage(image: ExpandedImage | null) {
     return image ? image : await readStandardImageAction({
         params: {
             standardImage: StandardImage.DEFAULT_PROFILE_IMAGE

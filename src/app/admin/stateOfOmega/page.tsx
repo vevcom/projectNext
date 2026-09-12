@@ -14,7 +14,10 @@ export default async function stateOfOmega() {
 
     return (
         <div className={styles.wrapper}>
-            <h1>Omega er i orden: { currentOrder.order }</h1>
+            <div className={styles.plaque}>
+                <p className={styles.label}>Omega er i orden</p>
+                <h1 className={styles.order}>{ currentOrder.order }</h1>
+            </div>
             <CreateOrder />
         </div>
     )

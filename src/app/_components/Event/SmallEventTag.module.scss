@@ -8,7 +8,7 @@
     }
     p {
         position: absolute; 
-        left: 3*ohma.$gap;
+        left: calc(3 * #{ohma.$gap});
         top: 0;
         display: none;
     }

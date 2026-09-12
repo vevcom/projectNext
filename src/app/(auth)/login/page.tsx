@@ -1,7 +1,8 @@
 'use client'
 import styles from './page.module.scss'
 import TextInput from '@/UI/TextInput'
-import BorderButton from '@/UI/BorderButton'
+import Button from '@/UI/Button'
+import PageTitleSetter from '@/contexts/PageTitleSetter'
 import { signIn } from 'next-auth/react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
@@ -26,12 +27,13 @@ export default function LogIn() {
     }
 
     return <>
+        <PageTitleSetter title={'Logg inn'}/>
         <form className={styles.loginForm} onSubmit={handleSignIn}>
             <TextInput className={styles.textInput} label="Brukernavn" name="username" type="text"/>
             <TextInput className={styles.textInput} label="Passord" name="password" type="password"/>
-            <BorderButton style={{ width: '100%', margin: '0' }}>
+            <Button color="primary" style={{ width: '100%', margin: '0' }}>
                 Logg inn
-            </BorderButton>
+            </Button>
             <p style={{ color: 'red' }}>
                 {error === 'CredentialsSignin' ? 'Feil brukernavn eller passord :(' : ''}
             </p>
@@ -41,12 +43,12 @@ export default function LogIn() {
             <span>eller</span>
         </div>
 
-        <BorderButton style={{ width: '100%', margin: '0' }} onClick={() => signIn('feide', {
+        <Button color="secondary" style={{ width: '100%', margin: '0' }} onClick={() => signIn('feide', {
             redirect: true,
             callbackUrl: searchParams.get('callbackUrl') || '/users/me'
         })}>
             Logg inn med Feide
-        </BorderButton>
+        </Button>
 
         <Link href="/send-reset-password-email" className={styles.resetPasswordLink}>
             <p>

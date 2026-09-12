@@ -1,6 +1,7 @@
 import '@pn-server-only'
 import { committeeLogosImagePanelAuth } from './auth'
 import { implementSpecialCollection } from '@/services/images/subservice/special/implement'
+import { svgExtensions } from '@/services/images/subservice/constants'
 
 export const {
     internalOperations: committeeLogoImageOperations,
@@ -8,6 +9,7 @@ export const {
     generateCollectionFromConfig: generateCommitteeLogosCollectionFromConfig
 } = implementSpecialCollection({
     special: 'COMMITTEELOGOS',
+    allowedExtensions: svgExtensions,
     imagePanelAuther: committeeLogosImagePanelAuth.dynamicFields({}),
     config: {
         name: 'Komitélogoer',

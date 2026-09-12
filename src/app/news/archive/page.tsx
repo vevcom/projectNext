@@ -1,8 +1,12 @@
+import styles from './page.module.scss'
 import OldNewsList from './OldNewsList'
 import NewsCard from '@/app/news/NewsCard'
 import { OldNewsPagingProvider } from '@/contexts/paging/OldNewsPaging'
 import { readOldNewsPageAction } from '@/services/news/actions'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import Link from 'next/link'
 import type { PageSizeOldNews } from '@/contexts/paging/OldNewsPaging'
 
 export default async function NewsArchive() {
@@ -23,7 +27,11 @@ export default async function NewsArchive() {
     const serverRendered = res.data
 
     return (
-        <PageWrapper title="Nyhetsarkiv">
+        <PageWrapper title="Nyhetsarkiv" headerItem={
+            <Link href="/news" className={styles.backLink}>
+                <FontAwesomeIcon icon={faArrowLeft} />
+            </Link>
+        }>
             <OldNewsPagingProvider
                 startPage={{
                     page: 1,

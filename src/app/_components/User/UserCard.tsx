@@ -2,7 +2,8 @@ import UserDisplayName from './UserDisplayName'
 import styles from './UserCard.module.scss'
 import ProfilePicture from './ProfilePicture'
 import Link from 'next/link'
-import type { Image } from '@/prisma-generated-pn-types'
+import type { CSSProperties } from 'react'
+import type { ExpandedImage } from '@/services/images/subservice/types'
 import type { UserFiltered } from '@/services/users/types'
 
 // TODO: Make nice and add picture
@@ -12,14 +13,19 @@ export default function UserCard({
     subText,
 }: {
     user: UserFiltered & {
-        image: Image
+        image: ExpandedImage
     },
     className?: string,
     subText?: string,
 }) {
+    const [topFlair] = [...user.flairs].sort((flairA, flairB) => flairA.rank - flairB.rank)
+
     return <Link
         className={`${styles.UserCard} ${className ? className : ''}`}
         href={`/users/${user.username}`}
+        style={topFlair ? {
+            '--flairColor': `rgb(${topFlair.colorR}, ${topFlair.colorG}, ${topFlair.colorB})`,
+        } as CSSProperties : undefined}
     >
         <ProfilePicture profileImage={user.image} width={60} />
         <div>

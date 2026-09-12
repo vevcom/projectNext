@@ -7,6 +7,7 @@ import { ServerError } from '@/services/error'
 import { implementStore } from '@/lib/store/implementStore'
 import { cmsParagraphOperations } from '@/cms/paragraphs/operations'
 import { notificationOperations } from '@/services/notifications/operations'
+import { expandedImageIncluder } from '@/services/images/subservice/constants'
 import { z } from 'zod'
 
 export const ombulStore = implementStore({
@@ -39,7 +40,7 @@ const read = defineOperation({
                 }
             },
             include: {
-                coverImage: true,
+                coverImage: { include: expandedImageIncluder },
                 paragraph: true,
             }
         })
@@ -54,7 +55,7 @@ const readAll = defineOperation({
                 { issueNumber: 'desc' },
             ],
             include: {
-                coverImage: true,
+                coverImage: { include: expandedImageIncluder },
                 paragraph: true,
             }
         })
@@ -222,7 +223,7 @@ const create = defineOperation({
             })
 
             return ombul
-        }, { timeout: 20000 })
+        })
 })
 
 const update = defineOperation({
@@ -238,7 +239,7 @@ const update = defineOperation({
             },
             data,
             include: {
-                coverImage: true,
+                coverImage: { include: expandedImageIncluder },
                 paragraph: true,
             }
         })
@@ -270,7 +271,7 @@ const updateFile = defineOperation({
                 fsLocation
             },
             include: {
-                coverImage: true,
+                coverImage: { include: expandedImageIncluder },
                 paragraph: true,
             }
         })

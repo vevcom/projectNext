@@ -3,12 +3,14 @@ import styles from './ImagePanel.module.scss'
 import ImagePanelImage from './ImagePanelImage'
 import ImageDisplay from './ImageDisplay'
 import Button from '@/components/UI/Button'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faImages } from '@fortawesome/free-solid-svg-icons'
 import { useEffect, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 import type { Page } from '@/lib/paging/types'
 import type { ActionReturn } from '@/services/actionTypes'
 import type { ErrorCode } from '@/services/error'
-import type { Image } from '@/prisma-generated-pn-types'
+import type { ExpandedImage } from '@/services/images/subservice/types'
 
 export type ImagePanelCursor = {
     imageId: number,
@@ -26,12 +28,12 @@ export type ImagePanelCursor = {
  */
 export type ReadPageOfImagesInCollectionAction<PageSize extends number> = (
     page: Page<PageSize, ImagePanelCursor>
-) => Promise<ActionReturn<Image[]>>
+) => Promise<ActionReturn<ExpandedImage[]>>
 
 type SelectionPropTypes = {
     selectionActive: true,
-    onSelectedImageChange: (image: Image | null) => void,
-    defaultSelectedImage?: Image,
+    onSelectedImageChange: (image: ExpandedImage | null) => void,
+    defaultSelectedImage?: ExpandedImage,
 } | {
     selectionActive?: false,
     onSelectedImageChange?: never,
@@ -52,7 +54,7 @@ type PropTypes<PageSize extends number> = {
  */
 type PagingState<PageSize extends number> = {
     forAction: ReadPageOfImagesInCollectionAction<PageSize>,
-    images: Image[],
+    images: ExpandedImage[],
     nextPageNumber: number,
     allLoaded: boolean,
 }
@@ -92,8 +94,8 @@ export default function ImagePanel<const PageSize extends number>({
 }: PropTypes<PageSize>) {
     const [pagingState, setPagingState] = useState<PagingState<PageSize> | null>(null)
     const [errorCode, setErrorCode] = useState<ErrorCode | null>(null)
-    const [selectedImage, setSelectedImage] = useState<Image | null>(defaultSelectedImage ?? null)
-    const [displayedImage, setDisplayedImage] = useState<Image | null>(null)
+    const [selectedImage, setSelectedImage] = useState<ExpandedImage | null>(defaultSelectedImage ?? null)
+    const [displayedImage, setDisplayedImage] = useState<ExpandedImage | null>(null)
     const [loadRequest, setLoadRequest] = useState<LoadRequest | null>(null)
 
     // State loaded through a previous action is stale, never rendered and never built upon.
@@ -169,7 +171,7 @@ export default function ImagePanel<const PageSize extends number>({
         }
     }, [fetchPending, currentPagingState, loadRequest, pageSize, readPageOfImagesInCollectionAction])
 
-    const toggleSelected = (image: Image) => {
+    const toggleSelected = (image: ExpandedImage) => {
         const newSelected = selectedImage?.id === image.id ? null : image
         setSelectedImage(newSelected)
         onSelectedImageChange?.(newSelected)
@@ -201,7 +203,13 @@ export default function ImagePanel<const PageSize extends number>({
     const renderLoadControlContent = () => {
         if (errorCode !== null) return <p>Noe gikk galt</p>
         if (fetchPending) return <i>{images.length > 0 ? 'Laster inn flere...' : 'Laster inn...'}</i>
-        if (allLoaded) return <i>Ingen flere å laste inn</i>
+        if (allLoaded) {
+            if (images.length > 0) return <i>Ingen flere å laste inn</i>
+            return <span className={styles.empty}>
+                <FontAwesomeIcon icon={faImages} />
+                <i>Ingen bilder i denne samlingen enda</i>
+            </span>
+        }
         return <Button onClick={() => setLoadRequest({ advanceDisplay: false })}>Last inn flere</Button>
     }
 

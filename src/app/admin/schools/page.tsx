@@ -13,7 +13,7 @@ export default async function SchoolsAdmin() {
     }
     const standardSchools = standardSchoolsRes.data
 
-    const schoolsRes = await readSchoolsAction({ onlyNonStandard: true })
+    const schoolsRes = await readSchoolsAction({ params: { onlyNonStandard: true } })
     if (!schoolsRes.success) throw new Error(schoolsRes.error?.length ? schoolsRes.error[0].message : 'Ukjent feil')
     const schools = schoolsRes.data
 

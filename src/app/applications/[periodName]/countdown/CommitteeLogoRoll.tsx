@@ -4,12 +4,12 @@ import Image from '@/components/Image/Image'
 import useInterval from '@/hooks/useInterval'
 import { readNumberOfApplicationsAction } from '@/services/applications/periods/actions'
 import { useRef, useState } from 'react'
-import type { Image as ImageT } from '@/prisma-generated-pn-types'
+import type { ExpandedImage } from '@/services/images/subservice/types'
 
 type PropTypes = {
     committees: {
         shortName: string,
-        logo: ImageT
+        logo: ExpandedImage
     }[],
     periodName: string
 }
@@ -133,7 +133,7 @@ export default function CommitteeLogoRoll({ committees, periodName }: PropTypes)
 }
 
 
-function Display({ image, shortName }: { image: ImageT, shortName: string }) {
+function Display({ image, shortName }: { image: ExpandedImage, shortName: string }) {
     return (
         <>
             <Image width={600} image={image} />

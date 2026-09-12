@@ -25,7 +25,7 @@ export default async function Home({ searchParams }: PropTypes) {
     switch (frontpageVersion) {
         case 'logged-out':
             return (
-                <>
+                <div className={styles.pageRoot}>
                     <Link
                         className={styles.link}
                         href={`/?${QueryParams.frontpageVersion.encodeUrl('logged-in')}`}
@@ -33,23 +33,24 @@ export default async function Home({ searchParams }: PropTypes) {
                         <span>Gå til innlogget forside</span>
                     </Link>
                     <LoggedOutLandingPage />
-                </>
+                </div>
             )
         case 'logged-in':
         default:
             return (
-                <> {
-                    canEditFrontpage && (
-                        <Link
-                            className={styles.link}
-                            href={`/?${QueryParams.frontpageVersion.encodeUrl('logged-out')}`}
-                        >
-                            <span>Gå til utlogget forside</span>
-                        </Link>
-                    )
-                }
-                <LoggedInLandingPage />
-                </>
+                <div className={styles.pageRoot}>
+                    {
+                        canEditFrontpage && (
+                            <Link
+                                className={styles.link}
+                                href={`/?${QueryParams.frontpageVersion.encodeUrl('logged-out')}`}
+                            >
+                                <span>Gå til utlogget forside</span>
+                            </Link>
+                        )
+                    }
+                    <LoggedInLandingPage />
+                </div>
             )
     }
 }

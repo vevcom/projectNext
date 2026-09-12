@@ -1,15 +1,17 @@
 @use "@/styles/ohma";
 
-
-.wrapper{
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    flex: 0 0 100%;
-    h1{
+// The page sits in PageWrapper now, so the surface, padding and nav title come from there. What is
+// left here is the article's own hero treatment.
+//
+// The class is doubled to raise specificity: PageWrapper puts this class on the same element as its
+// own .wrapper, and its `.wrapper h1` rule would otherwise tie with `.reportPage h1` and be settled
+// by stylesheet order rather than by intent.
+.reportPage.reportPage {
+    h1 {
         text-align: center;
         font-size: 6em;
         font-family: ohma.$fonts-secondary;
-        margin: 0.2em 0 0.2em 0;
+        text-transform: none;
+        margin: 0.2em 0;
     }
 }

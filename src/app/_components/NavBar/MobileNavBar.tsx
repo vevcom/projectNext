@@ -32,6 +32,7 @@ export default async function MobileNavBar({ profile }: PropTypes) {
                 <StandardImageServer
                     standardImage="LOGO_SIMPLE"
                     width={30}
+                    tint="var(--text)"
                 >
                     <Link className={styles.imagelink} href="/"/>
                 </StandardImageServer>
@@ -43,6 +44,7 @@ export default async function MobileNavBar({ profile }: PropTypes) {
                     height={25}
                     alt="log in button"
                     className={styles.image}
+                    tint="var(--text)"
                 />
                 <UserNavigation profile={profile} />
             </div>

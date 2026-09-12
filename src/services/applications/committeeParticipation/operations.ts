@@ -1,6 +1,7 @@
 import '@pn-server-only'
 import { committeeParticipationAuth } from './auth'
 import { defineOperation } from '@/services/serviceOperation'
+import { expandedImageIncluder } from '@/services/images/subservice/constants'
 import { z } from 'zod'
 
 export const committeeParticipationOperations = {
@@ -40,7 +41,7 @@ export const committeeParticipationOperations = {
                                 select: {
                                     firstname: true,
                                     lastname: true,
-                                    image: true,
+                                    image: { include: expandedImageIncluder },
                                     email: true,
                                     username: true,
                                 }

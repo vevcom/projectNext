@@ -1,3 +1,4 @@
+import { expandedImageIncluder } from '@/services/images/subservice/constants'
 import type { Prisma } from '@/prisma-generated-pn-types'
 
 export const maxImageSize = 540
@@ -7,7 +8,7 @@ export const imageSizeIncrement = 20
 export const articleSectionsRealtionsIncluder = {
     cmsImage: {
         include: {
-            image: true
+            image: { include: expandedImageIncluder }
         }
     },
     cmsParagraph: true,
