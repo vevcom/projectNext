@@ -5,12 +5,14 @@ $image-size: 200px;
 .ImagePanelImage {
     width: $image-size;
     height: $image-size;
-    margin: ohma.$gap;
-    margin-left: 0;
     overflow: hidden;
-    @include ohma.round;
+    border-radius: ohma.$rounding;
     position: relative;
-    border: 3px solid ohma.$colors-accent-blue;
+    // Neutral at rest so the grid reads as photographs rather than as a wall of blue frames; the
+    // accent is what hovering adds. Only the colour changes, so the frame no longer jumps from 3px
+    // to 10px the instant the pointer arrives while the image glides through its 0.5s scale.
+    border: 3px solid ohma.$colors-surface-subtle;
+    transition: border-color ohma.$transitionTime;
     padding: 0;
 
     // img container (component):
@@ -31,7 +33,7 @@ $image-size: 200px;
         }
     }
     &:hover {
-        border: solid 10px ohma.$colors-accent-blue;
+        border-color: ohma.$colors-accent-blue;
         > *:first-child > img {
             transform: scale(1.1);
         }

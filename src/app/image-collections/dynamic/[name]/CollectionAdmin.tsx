@@ -73,43 +73,32 @@ export default function CollectionAdmin({ collection, doubleLevelVisibility, ref
                         <div className={styles.upload}>
                             {
                                 uploadOption === 'MANY' ? canUploadMany && (
-                                    <>
-                                        <CollectionAdminUpload collectionId={collectionId} refreshImages={refreshImages} />
-                                        {
-                                            canUploadOne && (
-                                                <Button
-                                                    className={styles.toggleUploadStyle}
-                                                    onClick={() => setUploadOption('ONE')}
-                                                    color="secondary"
-                                                >
-                                                Last opp ett bilde
-                                                </Button>
-                                            )
-                                        }
-                                    </>
+                                    <CollectionAdminUpload
+                                        collectionId={collectionId}
+                                        refreshImages={refreshImages}
+                                    />
                                 ) : canUploadOne && (
-                                    <>
-                                        <ImageUploader
-                                            title="Last opp bilde"
-                                            successCallback={refreshImages}
-                                            closePopUpOnSuccess="UploadImages"
-                                            uploadImageAction={configureAction(
-                                                uploadImageToDynamicCollectionAction,
-                                                { params: { collectionId } }
-                                            )}
-                                        />
-                                        {
-                                            canUploadMany && (
-                                                <Button
-                                                    className={styles.toggleUploadStyle}
-                                                    onClick={() => setUploadOption('MANY')}
-                                                    color="secondary"
-                                                >
-                                                Last opp mange
-                                                </Button>
-                                            )
-                                        }
-                                    </>
+                                    <ImageUploader
+                                        title="Last opp bilde"
+                                        successCallback={refreshImages}
+                                        closePopUpOnSuccess="UploadImages"
+                                        uploadImageAction={configureAction(
+                                            uploadImageToDynamicCollectionAction,
+                                            { params: { collectionId } }
+                                        )}
+                                    />
+                                )
+                            }
+                            {
+                                canUploadOne && canUploadMany && (
+                                    <Button
+                                        className={styles.toggleUpload}
+                                        onClick={() =>
+                                            setUploadOption(uploadOption === 'MANY' ? 'ONE' : 'MANY')}
+                                        color="secondary"
+                                    >
+                                        {uploadOption === 'MANY' ? 'Last opp ett bilde' : 'Last opp mange'}
+                                    </Button>
                                 )
                             }
                         </div>

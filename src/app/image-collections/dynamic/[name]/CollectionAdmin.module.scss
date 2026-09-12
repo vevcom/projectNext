@@ -10,12 +10,24 @@
     gap: ohma.$gap;
 }
 
+// One width for both upload modes. They used to set their own (50vw for the batch form, 300px for
+// the single one) against a popup sized to its content, so switching mode resized the dialog.
 .upload {
-    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: calc(2 * #{ohma.$gap});
+    width: min(50vw, 560px);
+    max-width: 100%;
+
+    @include ohma.screenMobile {
+        width: 100%;
+    }
 }
 
-.toggleUploadStyle {
-    position: absolute;
-    top: 2em;
-    right: 2em;
+// In flow under the form. As `position: absolute` it anchored to PopUp's own fixed overlay below
+// the mobile breakpoint - where .main is not positioned - and landed in the viewport's corner
+// rather than the sheet's.
+.toggleUpload {
+    align-self: flex-start;
+    margin: 0;
 }
