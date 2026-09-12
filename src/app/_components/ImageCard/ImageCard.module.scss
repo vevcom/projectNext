@@ -1,21 +1,21 @@
 @use "@/styles/ohma";
 
-$padding: ohma.$gap;
+$padding: calc(2 * #{ohma.$gap});
 $imageHeight: calc(20 * 8px);
-$contentHeight: calc(15 * 8px);
-$height: $imageHeight + $contentHeight;
-
-$textUnderlineColor: ohma.$colors-surface-base;
 
 .ImageCard {
-    min-width: 200px; 
+    min-width: 200px;
     max-width: 400px;
     border-radius: ohma.$cardRounding;
     position: relative;
     color: inherit;
     text-decoration: none;
-    display: block;
-    height: $height;
+    // The card used to be a fixed 280px tall with the text absolutely positioned into a fixed
+    // 120px block, which left roughly 75px of empty card under a one-line description. It is a
+    // column now, so the card ends where its text ends - and in a grid the row still levels the
+    // cards next to it.
+    display: flex;
+    flex-direction: column;
     isolation: isolate;
     overflow: hidden;
     background-color: ohma.$colors-surface-raised;
@@ -26,12 +26,10 @@ $textUnderlineColor: ohma.$colors-surface-base;
     }
 
     > .image {
-        position: absolute;
-        top: 0;
-        left: 0;
+        position: relative;
+        flex-shrink: 0;
         width: 100%;
         height: $imageHeight;
-        z-index: 1;
         overflow: hidden;
 
         > * {
@@ -45,33 +43,25 @@ $textUnderlineColor: ohma.$colors-surface-base;
                 object-fit: cover;
             }
         }
-
-        /* &::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to bottom, transparent 30%, $background 80%, $background 100%);
-            scale: 1.5 1;
-            z-index: 0;
-        } */
     }
 
     > .content {
-        z-index: 2;
-        position: absolute;
-        width: 100%;
-        padding-left: $padding;
-        padding-right: $padding;
-        top: calc($imageHeight + $padding);
-        height: $contentHeight;
-        transition: 0.3s;
-        overflow: hidden;
+        flex: 1 1 auto;
+        padding: $padding;
+
         > h2 {
-            opacity: 100%;
             font-size: ohma.$fonts-xl;
+            margin-bottom: calc(0.5 * #{ohma.$gap});
+        }
+
+        // Descriptions are free text, so a long one is clamped rather than allowed to set the
+        // height of every card in the row.
+        > p {
+            color: ohma.$colors-text-muted;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 3;
+            overflow: hidden;
         }
     }
 

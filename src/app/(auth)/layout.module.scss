@@ -21,7 +21,9 @@
         }
 
         > .input {
-            flex: 0 0 min(380px, 100%);
+            // Wide enough that the form does not read as a narrow strip against the photo beside
+            // it, which took roughly three quarters of the width at 380px.
+            flex: 0 0 min(460px, 100%);
             display: flex;
             flex-direction: column;
             align-items: center;

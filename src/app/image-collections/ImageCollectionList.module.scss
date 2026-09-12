@@ -27,14 +27,22 @@ $collection-size: 250px;
     width: 100%;
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    // Was centre-justified, which inset the whole grid from the mode switch above it and the load
+    // control below it - both left-aligned - and left the last, partly filled row offset from the
+    // rows above.
+    justify-content: flex-start;
+    // Spacing on the container rather than per-item margins, so the first column lines up with the
+    // page's left edge instead of being pushed in by a margin.
+    gap: ohma.$gap;
 
+    // border-radius only, not ohma.round - the mixin's padding inset each cover inside its own
+    // grid cell, so the covers sat 16px right of everything else on the page and were separated by
+    // 40px of dead space rather than by the container's gap.
     > *:not(.loadingControl) {
         width: $collection-size;
         height: $collection-size;
-        margin: ohma.$gap;
         overflow: hidden;
-        @include ohma.round;
+        border-radius: ohma.$rounding;
         position: relative;
     }
 

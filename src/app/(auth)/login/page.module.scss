@@ -1,11 +1,18 @@
 @use "@/styles/ohma";
 
+// Read as a link rather than as another line of body copy. The hover used to dim it to
+// $text-muted, which made hovering look like the link had been disabled.
 .resetPasswordLink {
+    align-self: flex-start;
+
     > p {
         margin: calc(2 * #{ohma.$gap}) 0;
+        color: ohma.$colors-accent-blue;
+        font-size: ohma.$fonts-s;
     }
-    &:hover {
-        color: ohma.$colors-text-muted;
+
+    &:hover > p {
+        text-decoration: underline;
     }
 }
 
