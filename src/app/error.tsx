@@ -18,6 +18,7 @@ export default function ErrorBoundary({ error, reset }: {error: unknown, reset: 
                     <StandardImageClient
                         width={70}
                         standardImage="LOGO_SIMPLE"
+                        tint="var(--text)"
                     />
                 </div>
                 {
