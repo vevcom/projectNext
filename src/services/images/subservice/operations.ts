@@ -173,7 +173,7 @@ export const imageOperations = {
 
     /**
      * Produces the real tiny/small/medium/large avif variants for an already-uploaded image.
-     * Called by the background worker container (src/worker.ts), never directly from a request.
+     * Called by the background worker container (src/lib/images/worker.ts), never directly from a request.
      */
     processImageVariants: defineSubOperation({
         paramsSchema: () => imageSchemas.paramsSchemaImage,
