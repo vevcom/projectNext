@@ -59,7 +59,8 @@ export function implementStore<const AllowedExt extends readonly string[]>(confi
 
     async function destroyFile(
         fsLocation: string,
-        dynamicStorePrefix?: string
+        dynamicStorePrefix?: string,
+        throwOnNotFound: boolean = true
     ): Promise<void> {
         const filePath = dynamicStorePrefix
             ? join('store', config.staticStorePrefix, dynamicStorePrefix, fsLocation)
@@ -68,7 +69,10 @@ export function implementStore<const AllowedExt extends readonly string[]>(confi
             await unlink(filePath)
         } catch (error) {
             if (isErrorWithCode(error) && error.code === 'ENOENT') {
-                throw new ServerError('NOT FOUND', 'Filen du forsøkte å finne ble ikke funnet')
+                if (throwOnNotFound) {
+                    throw new ServerError('NOT FOUND', 'Filen du forsøkte å finne ble ikke funnet')
+                }
+                return
             }
             throw error
         }

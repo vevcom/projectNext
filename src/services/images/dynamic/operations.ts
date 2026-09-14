@@ -109,11 +109,15 @@ export const dynamicImageOperations = {
     createCollection: defineOperation({
         dataSchema: dynamicImageSchemas.createCollection,
         authorizer: () => dynamicImageAuth.createCollection.dynamicFields({}),
-        operation: async ({ prisma, data }) => {
-            const visibilityRegular = await visibilityOperations.create.internalCall({})
-            const visibilityAdmin = await visibilityOperations.create.internalCall({})
+        opensTransaction: true,
+        operation: async ({ prisma, data }) => prisma.$transaction(async tx => {
+            const visibilityRegular = await visibilityOperations.create.internalCall({ prisma: tx })
+            const visibilityAdmin = await visibilityOperations.createWithRequirements.internalCall({
+                prisma: tx,
+                data: { requirements: data.visibilityAdminRequirements },
+            })
 
-            return await prisma.imageCollection.create({
+            return await tx.imageCollection.create({
                 data: {
                     name: data.collectionName,
                     description: data.collectionDescription,
@@ -129,7 +133,7 @@ export const dynamicImageOperations = {
                     }
                 }
             })
-        }
+        })
     }),
 
     destroyCollection: imageOperations.destroyCollection.implement({
@@ -247,6 +251,12 @@ function ownershipCheckWhereCondition() {
     } satisfies Prisma.ImageCollectionWhereInput
 }
 
+/**
+ * Checks whether a collection belongs to the dynamic image system (i.e., is not special).
+ * This is a lightweight database check without going through the full readCollection operation,
+ * which would apply visibility authorization. Ownership checks should verify ownership only,
+ * not authorization.
+ */
 async function ownershipCheck({
     params,
     prisma
@@ -254,5 +264,9 @@ async function ownershipCheck({
     params: z.infer<typeof dynamicImageSchemas.paramsSchemaCollection>
     prisma: PrismaPossibleTransaction<false>
 }): Promise<boolean> {
-    return (await readCollection({ params, prisma })).special === null
+    const collection = await prisma.imageCollection.findUnique({
+        where: uniqueCollectionWhere(params),
+        select: { special: true }
+    })
+    return collection !== null && collection.special === null
 }
