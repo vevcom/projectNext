@@ -10,6 +10,7 @@ import useEditMode from '@/hooks/useEditMode'
 import { dynamicImageAuth } from '@/services/images/dynamic/auth'
 import Button from '@/components/UI/Button'
 import { configureAction } from '@/services/configureAction'
+import { EMPTY_VISIBILITY } from '@/auth/visibility/emptyVisibility'
 import {
     updateDynamicImageCollectionAction,
     destroyDynamicImageCollectionAction,
@@ -29,22 +30,12 @@ type PropTypes = {
     doubleLevelVisibility: DoubleLevelVisibilityMatrix | null,
     refreshImages: () => void,
 }
-/**
- * Fallback in case one was not able to read visibility. In this case,
- * the auths might be wrong, but this allows the admin to at least still render.
- */
-const UNREADABLE_VISIBILITY: DoubleLevelVisibilityMatrix = {
-    regularLevel: { requirements: [{ conditions: [] }] },
-    adminLevel: { requirements: [{ conditions: [] }] },
-}
 
 export default function CollectionAdmin({ collection, doubleLevelVisibility, refreshImages }: PropTypes) {
     const { id: collectionId } = collection
     const router = useRouter()
-    const doubleLevelMatrix = doubleLevelVisibility ?? UNREADABLE_VISIBILITY
+    const doubleLevelMatrix = doubleLevelVisibility ?? EMPTY_VISIBILITY
 
-    // One authorizer check per action - each button/form below is gated by the exact same
-    // authorizer its own action uses server-side, not a single blanket "can edit collection" check.
     const canUploadOne = useEditMode({
         authorizer: dynamicImageAuth.uploadImage.dynamicFields({ doubleLevelMatrix })
     })
