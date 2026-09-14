@@ -108,6 +108,9 @@ async function upsertSeededCmsImagesCollection(prisma: PrismaClient) {
             data: {
                 collectionName: SEEDED_CMS_IMAGES_COLLECTION_NAME,
                 collectionDescription: 'A collection for images used for seeded cms content',
+                // One requirement with no conditions = no-one can admininstrate it.
+                // That is: only administerable by users with image bypass.
+                visibilityAdminRequirements: [{ conditions: [] }],
             }
         }),
         update: () => dynamicImageOperations.readCollection({
