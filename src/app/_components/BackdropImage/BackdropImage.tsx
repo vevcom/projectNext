@@ -1,11 +1,11 @@
 import styles from './BackdropImage.module.scss'
 import Image from '@/components/Image/Image'
 import type { ReactNode } from 'react'
-import type { Image as ImageT } from '@/prisma-generated-pn-types'
+import type { ExpandedImage } from '@/services/images/subservice/types'
 
 type PropTypes = {
     children: ReactNode
-    image: ImageT
+    image: ExpandedImage
     grayScale?: boolean
     imageSize?: number
 }

@@ -1,6 +1,13 @@
 import '@pn-server-only'
 import { imageSchemas } from './schemas'
-import { allowedExtensions, avifConvertionOptions, imageSizes, type expandedImageCollectionIncluder } from './constants'
+import {
+    allowedExtensions,
+    avifConvertionOptions,
+    expandedImageIncluder,
+    imageSizes,
+    type ImageExtension,
+    type expandedImageCollectionIncluder
+} from './constants'
 import { visibilityOperations } from '@/services/visibility/operations'
 import { defineSubOperation } from '@/services/serviceOperation'
 import { ServerError, Smorekopp } from '@/services/error'
@@ -9,15 +16,13 @@ import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import logger from '@/lib/logger'
 import sharp from 'sharp'
 import { File } from 'node:buffer'
-import type { Image, Prisma, StandardImage } from '@/prisma-generated-pn-types'
-import type { ExpandedImageCollection } from './types'
+import type { Prisma, StandardImage } from '@/prisma-generated-pn-types'
+import type { ExpandedImage, ExpandedImageCollection } from './types'
 import type { z } from 'zod'
-
-const imageStoreAllowedExtensions = [...allowedExtensions, 'avif'] as const
 
 const imageStore = implementStore({
     staticStorePrefix: 'images',
-    allowedExtentions: imageStoreAllowedExtensions,
+    allowedExtentions: allowedExtensions,
 })
 
 export const imageOperations = {
@@ -31,9 +36,7 @@ export const imageOperations = {
                     images: {
                         select: {
                             fsLocationOriginal: true,
-                            fsLocationSmallSize: true,
-                            fsLocationMediumSize: true,
-                            fsLocationLargeSize: true,
+                            processedFiles: true,
                         }
                     }
                 }
@@ -41,12 +44,7 @@ export const imageOperations = {
             if (!collection) throw new ServerError('NOT FOUND', 'Collection ikke funnet')
 
             // Extract all file locations before deleting from DB
-            const fileLocationsToDelete = collection.images.flatMap(image => [
-                image.fsLocationOriginal,
-                image.fsLocationSmallSize,
-                image.fsLocationMediumSize,
-                image.fsLocationLargeSize,
-            ])
+            const fileLocationsToDelete = collection.images.flatMap(storedFileLocationsOfImage)
 
             await prisma.$transaction(async (tx) => {
                 await tx.imageCollection.delete({
@@ -63,19 +61,7 @@ export const imageOperations = {
             })
 
             // Clean up files after transaction succeeds
-            if (fileLocationsToDelete.length > 0) {
-                const results = await Promise.allSettled(
-                    fileLocationsToDelete.map(fsLocation =>
-                        imageStore.destroyFile(fsLocation, undefined, false)
-                    )
-                )
-                const errors = results.filter((result): result is PromiseRejectedResult => result.status === 'rejected')
-                if (errors.length > 0) {
-                    logger.error(`Failed to clean up ${errors.length} image file(s) after collection deletion`, {
-                        errors: errors.map(error => error.reason)
-                    })
-                }
-            }
+            await destroyStoredFiles(fileLocationsToDelete, 'collection deletion')
         }
     }),
     updateCollection: defineSubOperation({
@@ -123,47 +109,123 @@ export const imageOperations = {
     }),
 
     /**
-     * On uplad time the image is processed to the correct sizes and save it to the store.
-     * It will also save the original image to the store.
-     * All images are saved as avif (except the original).
+     * On upload time, only the original is saved to the store synchronously (plus a tiny inline
+     * blur placeholder) - the real resized/avif variants are produced in the background by
+     * processImageVariants, so this stays fast enough to run inside a caller's transaction.
+     *
+     * Svg uploads skip all of that: a vector is already the right file at every resolution, so
+     * there is nothing to resize and nothing to stand in while it happens.
+     *
+     * Which extensions this implementation accepts is decided by the implementer - committee logos
+     * take svg only, profile images and ombul covers take raster only, and the rest take everything.
      */
     uploadImage: defineSubOperation({
         paramsSchema: () => imageSchemas.paramsSchemaCollection,
         dataSchema: () => imageSchemas.uploadImage,
         operation: (
-            { uploadAsStandardImage }: { uploadAsStandardImage: StandardImage | null }
+            { uploadAsStandardImage, allowedExtensions }: {
+                uploadAsStandardImage: StandardImage | null,
+                allowedExtensions: readonly ImageExtension[],
+            }
         ) => async ({ prisma, params, data }) => {
             const { imageFile, ...meta } = data
+            // createFile is the single gate on file type: it rejects anything outside this
+            // implementation's subset, and hands back the canonical extension - which is also what
+            // decides whether this is a vector or something the worker has to resize.
+            const original = await imageStore.createFile(imageFile, allowedExtensions)
+            const sharedImageData = {
+                name: meta.imageName,
+                alt: meta.imageAlt,
+                license: meta.imageLicenseId ? { connect: { id: meta.imageLicenseId } } : undefined,
+                credit: meta.imageCredit,
+                standardImage: uploadAsStandardImage,
+                fsLocationOriginal: original.fsLocation,
+                extOriginal: original.ext,
+                collection: {
+                    connect: uniqueCollectionWhere(params)
+                }
+            }
+
+            if (original.ext === 'svg') {
+                return await prisma.image.create({
+                    data: {
+                        ...sharedImageData,
+                        type: 'SVG',
+                        placeholderDataUrl: null,
+                    },
+                    include: expandedImageIncluder,
+                })
+            }
+
             const buffer = Buffer.from(await imageFile.arrayBuffer())
+            const placeholderBuffer = await resizeToAvifBuffer(buffer, imageSizes.placeholder)
 
-            const uploadPromises = [
-                createResizedAvifInStore(buffer, imageSizes.small),
-                createResizedAvifInStore(buffer, imageSizes.medium),
-                createResizedAvifInStore(buffer, imageSizes.large),
-                imageStore.createFile(imageFile, [...allowedExtensions]),
-            ]
-
-            const [smallSize, mediumSize, largeSize, original] = await Promise.all(uploadPromises)
-            const fsLocationSmallSize = smallSize.fsLocation
-            const fsLocationMediumSize = mediumSize.fsLocation
-            const fsLocationLargeSize = largeSize.fsLocation
-            const fsLocationOriginal = original.fsLocation
-            const extOriginal = original.ext
             return await prisma.image.create({
                 data: {
-                    name: meta.imageName,
-                    alt: meta.imageAlt,
-                    license: meta.imageLicenseId ? { connect: { id: meta.imageLicenseId } } : undefined,
-                    credit: meta.imageCredit,
-                    fsLocationOriginal,
-                    fsLocationSmallSize,
-                    fsLocationMediumSize,
-                    fsLocationLargeSize,
-                    extOriginal,
-                    standardImage: uploadAsStandardImage,
-                    collection: {
-                        connect: uniqueCollectionWhere(params)
+                    ...sharedImageData,
+                    type: 'RASTER',
+                    placeholderDataUrl: `data:image/avif;base64,${placeholderBuffer.toString('base64')}`,
+                },
+                include: expandedImageIncluder,
+            })
+        }
+    }),
+
+    /**
+     * Produces the real tiny/small/medium/large avif variants for an already-uploaded image.
+     * Called by the background worker container (src/lib/images/worker.ts), never directly from a request.
+     */
+    processImageVariants: defineSubOperation({
+        paramsSchema: () => imageSchemas.paramsSchemaImage,
+        operation: () => async ({ prisma, params }) => {
+            const image = await prisma.image.findUniqueOrThrow({ where: { id: params.imageId } })
+            if (image.type !== 'RASTER') {
+                throw new ServerError('BAD PARAMETERS', `Image ${image.id} is an svg and has no variants to process`)
+            }
+            try {
+                const buffer = await imageStore.readStoredFile(image.fsLocationOriginal)
+                const [tinySize, smallSize, mediumSize, largeSize] = await Promise.all([
+                    createResizedAvifInStore(buffer, imageSizes.tiny),
+                    createResizedAvifInStore(buffer, imageSizes.small),
+                    createResizedAvifInStore(buffer, imageSizes.medium),
+                    createResizedAvifInStore(buffer, imageSizes.large),
+                ])
+                await prisma.processedImageFiles.create({
+                    data: {
+                        imageId: image.id,
+                        fsLocationTinySize: tinySize.fsLocation,
+                        fsLocationSmallSize: smallSize.fsLocation,
+                        fsLocationMediumSize: mediumSize.fsLocation,
+                        fsLocationLargeSize: largeSize.fsLocation,
                     }
+                })
+                return { success: true }
+            } catch (error) {
+                await prisma.image.update({
+                    where: { id: image.id },
+                    data: {
+                        processingAttempts: { increment: 1 },
+                        processingError: String(error),
+                    }
+                })
+                return { success: false, error: String(error) }
+            }
+        }
+    }),
+
+    /**
+     * Manual escape hatch for images stuck in processingStatus 'FAILED' - resets the bookkeeping
+     * so the next worker tick picks it up again.
+     */
+    retryImageProcessing: defineSubOperation({
+        paramsSchema: () => imageSchemas.paramsSchemaImage,
+        operation: () => async ({ prisma, params }) => {
+            await prisma.image.update({
+                where: { id: params.imageId },
+                data: {
+                    processingAttempts: 0,
+                    processingStartedAt: null,
+                    processingError: null,
                 }
             })
         }
@@ -172,7 +234,9 @@ export const imageOperations = {
     uploadManyImages: defineSubOperation({
         paramsSchema: () => imageSchemas.paramsSchemaUploadManyImages,
         dataSchema: () => imageSchemas.uploadManyImages,
-        operation: () => async ({ params, data }) => {
+        operation: (
+            { allowedExtensions }: { allowedExtensions: readonly ImageExtension[] }
+        ) => async ({ params, data }) => {
             for (const imageFile of data.imageFiles) {
                 const imageName = params.useFileName ? imageFile.name.split('.')[0] : undefined
                 await imageOperations.uploadImage.internalCall({
@@ -186,7 +250,7 @@ export const imageOperations = {
                         imageLicenseId: data.imageLicenseId,
                         imageCredit: data.imageCredit
                     },
-                    operationImplementationFields: { uploadAsStandardImage: null }
+                    operationImplementationFields: { uploadAsStandardImage: null, allowedExtensions }
                 })
             }
         }
@@ -200,6 +264,7 @@ export const imageOperations = {
                 where: {
                     collectionId: params.collectionId,
                 },
+                include: expandedImageIncluder,
                 ...rest,
                 cursor: cursor ? { id: cursor.imageId } : undefined,
             })
@@ -214,6 +279,7 @@ export const imageOperations = {
                 where: {
                     id: params.imageId,
                 },
+                include: expandedImageIncluder,
                 data: {
                     license: data.imageLicenseId !== undefined ? {
                         ...(data.imageLicenseId ? { connect: { id: data.imageLicenseId } } : { disconnect: true })
@@ -237,6 +303,7 @@ export const imageOperations = {
                 where: {
                     id: params.imageId,
                 },
+                include: expandedImageIncluder,
             })
             await prisma.image.delete({
                 where: {
@@ -244,21 +311,7 @@ export const imageOperations = {
                 },
             })
             // Return a cleanup function that the caller invokes after the transaction succeeds
-            const cleanupFn = async () => {
-                const results = await Promise.allSettled([
-                    imageStore.destroyFile(image.fsLocationOriginal, undefined, false),
-                    imageStore.destroyFile(image.fsLocationSmallSize, undefined, false),
-                    imageStore.destroyFile(image.fsLocationMediumSize, undefined, false),
-                    imageStore.destroyFile(image.fsLocationLargeSize, undefined, false),
-                ])
-                const errors = results.filter((result): result is PromiseRejectedResult => result.status === 'rejected')
-                if (errors.length > 0) {
-                    logger.error(`Failed to clean up ${errors.length} image file(s) after deletion`, {
-                        errors: errors.map(error => error.reason)
-                    })
-                }
-            }
-            return cleanupFn
+            return async () => destroyStoredFiles(storedFileLocationsOfImage(image), 'image deletion')
         }
     }),
 
@@ -297,8 +350,8 @@ export const imageOperations = {
  * Resizes the original image buffer down to the given size before encoding to avif, so the
  * (potentially much larger) original resolution is never itself run through avif encoding.
  */
-async function createResizedAvifInStore(buffer: Buffer, size: number) {
-    const avifBuffer = await sharp(buffer)
+async function resizeToAvifBuffer(buffer: Buffer, size: number) {
+    return await sharp(buffer)
         .resize(size, size, {
             fit: sharp.fit.inside,
             withoutEnlargement: true
@@ -306,8 +359,44 @@ async function createResizedAvifInStore(buffer: Buffer, size: number) {
         .toFormat('avif')
         .avif(avifConvertionOptions)
         .toBuffer()
+}
+
+async function createResizedAvifInStore(buffer: Buffer, size: number) {
+    const avifBuffer = await resizeToAvifBuffer(buffer, size)
     const avifFile = new File([new Uint8Array(avifBuffer)], 'image.avif', { type: 'image/avif' })
     return imageStore.createFile(avifFile, ['avif'])
+}
+
+/**
+ * Every file in the store belonging to an image: the original, plus the resized variants if the
+ * background worker has produced them yet (svgs never have any).
+ */
+function storedFileLocationsOfImage(image: Pick<ExpandedImage, 'fsLocationOriginal' | 'processedFiles'>): string[] {
+    if (!image.processedFiles) return [image.fsLocationOriginal]
+    return [
+        image.fsLocationOriginal,
+        image.processedFiles.fsLocationTinySize,
+        image.processedFiles.fsLocationSmallSize,
+        image.processedFiles.fsLocationMediumSize,
+        image.processedFiles.fsLocationLargeSize,
+    ]
+}
+
+/**
+ * Best-effort removal of files whose database rows are already gone. A missing file is not an
+ * error (it is the state we want), and one failure must not stop the rest from being attempted -
+ * so failures are logged rather than thrown.
+ */
+async function destroyStoredFiles(fsLocations: string[], context: string): Promise<void> {
+    const results = await Promise.allSettled(
+        fsLocations.map(fsLocation => imageStore.destroyFile(fsLocation, undefined, false))
+    )
+    const errors = results.filter((result): result is PromiseRejectedResult => result.status === 'rejected')
+    if (errors.length > 0) {
+        logger.error(`Failed to clean up ${errors.length} image file(s) after ${context}`, {
+            errors: errors.map(error => error.reason)
+        })
+    }
 }
 
 export function uniqueCollectionWhere(params: z.infer<typeof imageSchemas.paramsSchemaCollection>) {
@@ -324,7 +413,7 @@ export function uniqueCollectionWhere(params: z.infer<typeof imageSchemas.params
  */
 export function expandImageCollection(
     collection: Prisma.ImageCollectionGetPayload<{ include: typeof expandedImageCollectionIncluder }>,
-    defaultCoverImage: Image | null,
+    defaultCoverImage: ExpandedImage | null,
 ): ExpandedImageCollection {
     const { images, _count, ...rest } = collection
     return {

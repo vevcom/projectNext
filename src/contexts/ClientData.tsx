@@ -6,8 +6,8 @@ import { specialImagePanels } from '@/services/images/specialPanels/constants'
 import { createContext, useContext, useState, useCallback, useEffect, useRef } from 'react'
 import type { ErrorCode } from '@/services/error'
 import type { ExpandedGroup } from '@/services/groups/types'
-import type { ExpandedImageCollection } from '@/services/images/subservice/types'
-import type { Image, Permission, StandardImage } from '@/prisma-generated-pn-types'
+import type { ExpandedImage, ExpandedImageCollection } from '@/services/images/subservice/types'
+import type { Permission, StandardImage } from '@/prisma-generated-pn-types'
 import type { ReactNode } from 'react'
 import type { SessionMaybeUser } from '@/auth/session/Session'
 
@@ -18,7 +18,7 @@ type ClientDataResult<Key extends string, Data> =
 
 type ClientDataContext = {
     defaultPermissions: ClientDataResult<'defaultPermissions', Permission[]> | null,
-    standardImages: ClientDataResult<'standardImages', Record<StandardImage, Image>> | null,
+    standardImages: ClientDataResult<'standardImages', Record<StandardImage, ExpandedImage>> | null,
     groups: ClientDataResult<'groups', ExpandedGroup[]> | null,
     specialCollections: ClientDataResult<'specialCollections', ExpandedImageCollection[]> | null,
     loadDefaultPermissions: () => void,
@@ -33,7 +33,7 @@ type PropTypes = {
     children: ReactNode,
     session: SessionMaybeUser,
     defaultPermissions?: Permission[],
-    standardImages?: Record<StandardImage, Image>,
+    standardImages?: Record<StandardImage, ExpandedImage>,
     groups?: ExpandedGroup[],
     specialCollections?: ExpandedImageCollection[],
 }
@@ -55,7 +55,7 @@ export default function ClientDataProvider({
             : null
     )
     const [standardImages, setStandardImages] = useState<
-        ClientDataResult<'standardImages', Record<StandardImage, Image>> | null
+        ClientDataResult<'standardImages', Record<StandardImage, ExpandedImage>> | null
     >(
         initialData.standardImages
             ? { status: 'success', standardImages: initialData.standardImages }
@@ -173,7 +173,7 @@ export function useDefaultPermissions(): ClientDataResult<'defaultPermissions', 
     return defaultPermissions ?? { status: 'loading' }
 }
 
-export function useStandardImages(): ClientDataResult<'standardImages', Record<StandardImage, Image>> {
+export function useStandardImages(): ClientDataResult<'standardImages', Record<StandardImage, ExpandedImage>> {
     const { standardImages, loadStandardImages } = useClientData()
     useEffect(() => {
         if (standardImages === null) loadStandardImages()

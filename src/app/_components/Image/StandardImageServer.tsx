@@ -5,7 +5,7 @@ import type { PropTypes as ImagePropTypes } from './Image'
 import type { StandardImage as StandardImageT } from '@/prisma-generated-pn-types'
 import type React from 'react'
 
-export type PropTypes = Omit<ImagePropTypes, 'image' | 'imageSize' | 'smallSize' | 'largeSize'> & {
+export type PropTypes = Omit<ImagePropTypes, 'image'> & {
     standardImage: StandardImageT,
     children?: React.ReactNode,
 }

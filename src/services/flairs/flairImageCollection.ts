@@ -1,6 +1,7 @@
 import '@pn-server-only'
 import { flairImagesImagePanelAuth } from './auth'
 import { implementSpecialCollection } from '@/services/images/subservice/special/implement'
+import { allowedExtensions } from '@/services/images/subservice/constants'
 
 export const {
     internalOperations: flairImageOperations,
@@ -8,6 +9,7 @@ export const {
     generateCollectionFromConfig: generateFlairImagesCollectionFromConfig
 } = implementSpecialCollection({
     special: 'FLAIRIMAGES',
+    allowedExtensions,
     imagePanelAuther: flairImagesImagePanelAuth.dynamicFields({}),
     config: {
         name: 'Flairbilder',

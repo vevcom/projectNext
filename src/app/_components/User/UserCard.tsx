@@ -2,7 +2,7 @@ import UserDisplayName from './UserDisplayName'
 import styles from './UserCard.module.scss'
 import ProfilePicture from './ProfilePicture'
 import Link from 'next/link'
-import type { Image } from '@/prisma-generated-pn-types'
+import type { ExpandedImage } from '@/services/images/subservice/types'
 import type { UserFiltered } from '@/services/users/types'
 
 // TODO: Make nice and add picture
@@ -12,7 +12,7 @@ export default function UserCard({
     subText,
 }: {
     user: UserFiltered & {
-        image: Image
+        image: ExpandedImage
     },
     className?: string,
     subText?: string,

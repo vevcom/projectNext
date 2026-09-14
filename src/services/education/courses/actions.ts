@@ -1,9 +1,12 @@
 'use server'
 
 import { safeServerCall } from '@/services/actionError'
-import type { CreateCourseTypes } from '@/education/courses/validation'
+import type { z } from 'zod'
+import type { courseSchemas } from './schemas'
 
-export async function createCourseAction(rawdata: FormData | CreateCourseTypes['Type']) {
+// NOTE: still a stub — course creation is not implemented yet. Once it is, translate this into a
+// defineOperation (operations.ts) + makeAction here, the way the other education services are built.
+export async function createCourseAction(rawdata: FormData | z.input<typeof courseSchemas.create>) {
     console.log('createCourseAction', rawdata)
     return safeServerCall(async () => ({ success: false }))
 }

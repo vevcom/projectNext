@@ -2,26 +2,13 @@ import styles from './page.module.scss'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { readCommitteeApplicationsInPeriodAction } from '@/services/applications/committeeParticipation/actions'
 import ProfilePicture from '@/components/User/ProfilePicture'
-import { readStandardImageAction } from '@/services/images/standard/actions'
 import Link from 'next/link'
-import type { Image as ImageT } from '@/prisma-generated-pn-types'
-import { StandardImage } from '@/prisma-generated-pn-types'
+
 export type PropTypes = {
     params: Promise<{
         shortName: string,
         participationId: string,
     }>
-}
-
-
-async function getFallbackImageIfNoImage(image: ImageT | null) {
-    return image ? image : await readStandardImageAction({
-        params: {
-            standardImage: StandardImage.DEFAULT_PROFILE_IMAGE
-        } }).then(res => {
-        if (!res.success) throw new Error('Kunne ikke finne standard profilbilde')
-        return res.data
-    })
 }
 
 
@@ -34,13 +21,13 @@ export default async function PeriodeCommitteePage({ params }: PropTypes) {
     const sortedApplications = applications.sort((a, b) => a.priority - b.priority)
     return (
         <div className={styles.applicationsContainer}>
-            {sortedApplications.map(async (application, index) => (
+            {sortedApplications.map((application, index) => (
                 <div className={styles.applicationContainer} key={index}>
                     <div className={styles.headingContainer}>
                         <h3>{application.priority}.</h3>
                         <ProfilePicture
                             width={50}
-                            profileImage={(await getFallbackImageIfNoImage(application.user.image))}
+                            profileImage={application.user.image}
                             className={styles.profilePicture}
                         />
                         <Link className={styles.applicantName} href={`/users/${application.user.username}`}>
