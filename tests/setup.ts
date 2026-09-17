@@ -1,4 +1,4 @@
-import seed from '@/prisma/seeder/src/seeder'
+import seed from '@/prisma/seeder/src/seed'
 import { beforeAll, jest } from '@jest/globals'
 
 // React email rendering uses dynamic imports which are not supported in Jest by default.
@@ -7,7 +7,9 @@ jest.mock('@react-email/render', () => ({
     render: jest.fn().mockImplementation(() => 'Email rendering is disabled during tests.'),
 }))
 
+const timeout = 60 * 1000
+
 beforeAll(
     async () => await seed(false, false, false),
-    30 * 1000 // Timeout 30 seconds
+    timeout,
 )

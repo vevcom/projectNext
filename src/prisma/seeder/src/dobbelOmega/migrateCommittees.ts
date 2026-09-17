@@ -1,4 +1,5 @@
-import { convertMdToHtml } from '@/seeder/src/seedCms'
+import { owIdToPnId } from './IdMapper'
+import { cmsParagraphOperations } from '@/services/cms/paragraphs/operations'
 import { readFile } from 'fs/promises'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
@@ -6,42 +7,56 @@ import type { PrismaClient as PrismaClientPn } from '@/prisma-generated-pn-clien
 import type { Prisma } from '@/prisma-generated-pn-types'
 import type { PrismaClient as PrismaClientOw } from '@/prisma-generated-ow-basic/client'
 import type { UserMigrator } from './migrateUsers'
+import type { IdMapper } from './IdMapper'
 
 const fileName = fileURLToPath(import.meta.url)
 const directoryName = dirname(fileName)
 
-async function readCommitteParagraph(filename: string): Promise<Prisma.CmsParagraphCreateInput> {
+async function readCommitteMarkdown(filename: string): Promise<string> {
     const filepath = join(directoryName, '..', '..', 'cms_paragraphs', 'committees', filename)
     try {
-        const content = await readFile(filepath, 'utf-8')
-
-        return {
-            contentMd: content,
-            contentHtml: await convertMdToHtml(content),
-        }
+        return await readFile(filepath, 'utf-8')
     } catch {
-        return {}
+        return ''
     }
 }
 
-async function readCommitteArticle(filename: string): Promise<{ create: Prisma.ArticleSectionCreateInput } | undefined> {
-    const paragraph = await readCommitteParagraph(filename)
-    if (paragraph.contentMd) {
-        return {
-            create: {
-                cmsParagraph: {
-                    create: paragraph,
-                },
+/**
+ * Creates a CmsParagraph with rendered contentHtml by delegating to the same
+ * cmsParagraphOperations.updateContent used by the live app, instead of duplicating
+ * the markdown->html pipeline here.
+ */
+async function createCmsParagraph(pnPrisma: PrismaClientPn, markdown: string) {
+    const paragraph = await pnPrisma.cmsParagraph.create({ data: {} })
+    await cmsParagraphOperations.updateContent.internalCall({
+        prisma: pnPrisma,
+        params: { paragraphId: paragraph.id },
+        data: { markdown },
+    })
+    return paragraph
+}
+
+async function createCommitteArticleSection(
+    pnPrisma: PrismaClientPn,
+    filename: string
+): Promise<{ create: Prisma.ArticleSectionCreateInput } | undefined> {
+    const markdown = await readCommitteMarkdown(filename)
+    if (!markdown) return undefined
+    const cmsParagraph = await createCmsParagraph(pnPrisma, markdown)
+    return {
+        create: {
+            cmsParagraph: {
+                connect: { id: cmsParagraph.id },
             },
-        }
+        },
     }
-    return undefined
 }
 
 export default async function migrateCommittees(
     pnPrisma: PrismaClientPn,
     owPrisma: PrismaClientOw,
     userMigrator: UserMigrator,
+    imageIdMap: IdMapper,
 ) {
     const committees = await owPrisma.committees.findMany({
         include: {
@@ -50,36 +65,29 @@ export default async function migrateCommittees(
         }
     })
 
-    // const latestOrder = (await pnPrisma.omegaOrder.findFirstOrThrow({
-    //     orderBy: {
-    //         order: 'desc',
-    //     },
-    //     select: {
-    //         order: true,
-    //     }
-    // })).order
-
     await Promise.all(committees.map(async committee => {
-        const committeeParagraph = await readCommitteParagraph(`${committee.shortname}_p.md`)
-        const committeArticle = await readCommitteArticle(`${committee.shortname}_a.md`)
+        const committeeParagraph = await createCmsParagraph(
+            pnPrisma, await readCommitteMarkdown(`${committee.shortname}_p.md`)
+        )
+        const applicationParagraph = await createCmsParagraph(pnPrisma, committee.applicationText || '')
+        const committeArticle = await createCommitteArticleSection(pnPrisma, `${committee.shortname}_a.md`)
+        const logoImageId = owIdToPnId(imageIdMap, committee.ImageId)
 
         const newCommittee = await pnPrisma.committee.create({
             data: {
                 name: committee.name,
                 shortName: committee.shortname,
                 videoLink: committee.applicationVideo,
-                logoImage: {
-                    create: {
-                        name: `Logo for ${committee.name}`
+                logoImage: logoImageId ? {
+                    connect: {
+                        id: logoImageId
                     }
-                },
+                } : undefined,
                 paragraph: {
-                    create: committeeParagraph
+                    connect: { id: committeeParagraph.id }
                 },
                 applicationParagraph: {
-                    create: {
-                        contentMd: committee.applicationText || undefined,
-                    }
+                    connect: { id: applicationParagraph.id }
                 },
                 committeeArticle: {
                     create: {

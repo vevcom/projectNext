@@ -5,7 +5,6 @@ import { makeAction } from '@/services/serverAction'
 export const readPublicArticle = makeAction(
     publicArticleOperations.read
 )
-
 export const updatePublicArticleAction = makeAction(
     publicArticleOperations.update.update
 )

@@ -24,10 +24,7 @@ export default function SchoolList({ serverRendered }: PropTypes) {
         <div className={styles.SchoolList}>
             {serverRendered}
             <EndlessScroll renderer={
-                schoolListRenderer(
-                    true,
-                    session.loading ? Session.empty() : session.session
-                )
+                schoolListRenderer(session.loading ? Session.empty() : session.session)
             } pagingContext={SchoolPagingContext} />
         </div>
     )

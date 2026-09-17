@@ -8,8 +8,14 @@ import type { ScreenPage } from '@/prisma-generated-pn-types'
 
 export async function createPage(rawdata: CreatePageTypes['Detailed']): Promise<ScreenPage> {
     const { name } = createPageValidation.detailedValidate(rawdata)
-    const cmsImage = await cmsImageOperations.create.internalCall({ data: {} })
-    const cmsParagraph = await cmsParagraphOperations.create.internalCall({ data: {} })
+    const cmsImage = await cmsImageOperations.create.internalCall({
+        data: {},
+        operationImplementationFields: { special: null }
+    })
+    const cmsParagraph = await cmsParagraphOperations.create.internalCall({
+        data: {},
+        operationImplementationFields: { special: null }
+    })
 
     return await prismaCall(() => prisma.screenPage.create({
         data: {

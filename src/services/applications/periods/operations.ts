@@ -3,6 +3,7 @@ import { applicationPeriodAuth } from './auth'
 import { applicationPeriodSchemas } from './schemas'
 import { committeesParticipatingincluder } from './constants'
 import { applicationOperations } from '@/services/applications/operations'
+import { standardImageCollectionOperations } from '@/services/images/standard/operations'
 import { ServerError } from '@/services/error'
 import { defineOperation } from '@/services/serviceOperation'
 import { z } from 'zod'
@@ -18,10 +19,29 @@ export const applicationPeriodOperations = {
         paramsSchema: z.object({
             name: z.string()
         }),
-        operation: async ({ prisma, params }) => prisma.applicationPeriod.findUniqueOrThrow({
-            where: { name: params.name },
-            include: committeesParticipatingincluder,
-        })
+        operation: async ({ prisma, params }) => {
+            // committee.logoImage is null unless the committee has its own uploaded logo -
+            // resolve it to the shared default here so callers never see a null logo.
+            const defaultCommitteeLogo = await standardImageCollectionOperations.readStandardImage({
+                params: { standardImage: 'DEFAULT_COMMITTEE_LOGO' },
+            })
+
+            const period = await prisma.applicationPeriod.findUniqueOrThrow({
+                where: { name: params.name },
+                include: committeesParticipatingincluder,
+            })
+
+            return {
+                ...period,
+                committeesParticipating: period.committeesParticipating.map(participation => ({
+                    ...participation,
+                    committee: {
+                        ...participation.committee,
+                        logoImage: participation.committee.logoImage ?? defaultCommitteeLogo
+                    }
+                }))
+            }
+        }
     }),
 
     create: defineOperation({

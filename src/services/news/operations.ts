@@ -4,7 +4,6 @@ import { defaultNewsArticleOldCutoff, newsArticleRealtionsIncluder, simpleNewsAr
 import { newsAuth } from './auth'
 import { articleOperations } from '@/cms/articles/operations'
 import { defineOperation } from '@/services/serviceOperation'
-import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { ServerError } from '@/services/error'
 import { implementUpdateArticleOperations } from '@/cms/articles/implement'
@@ -37,7 +36,11 @@ export const newsOperations = {
             const backupEndDateTime = new Date()
             backupEndDateTime.setDate(backupEndDateTime.getDate() + defaultNewsArticleOldCutoff)
 
-            const article = await articleOperations.create.internalCall({ data: { name } })
+            const article = await articleOperations.create.internalCall({
+                data: { name },
+                dataSchemaImplementationFields: { maxNameLength: 30 },
+                operationImplementationFields: { special: null }
+            })
 
             const news = await prisma.newsArticle.create({
                 data: {
@@ -89,13 +92,7 @@ export const newsOperations = {
         }
     }),
     readOldPage: defineOperation({
-        paramsSchema: readPageInputSchemaObject(
-            z.number(),
-            z.object({
-                id: z.number(),
-            }),
-            z.undefined()
-        ), // Converted from ReadPageInput<number, EventArchiveCursor, EventArchiveDetails>
+        paramsSchema: newsSchemas.readOldPage,
         authorizer: () => newsAuth.readOldPage.dynamicFields({}),
         operation: async ({ prisma, params }) => {
             const news = await prisma.newsArticle.findMany({

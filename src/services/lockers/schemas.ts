@@ -1,3 +1,4 @@
+import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { z } from 'zod'
 
 const baseSchema = z.object({
@@ -17,4 +18,12 @@ export const lockersSchemas = {
         building: true,
         floor: true,
     }),
+
+    readPage: readPageInputSchemaObject(
+        z.number(),
+        z.object({
+            id: z.number(),
+        }),
+        z.any(),
+    ),
 }

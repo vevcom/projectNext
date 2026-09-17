@@ -1,4 +1,5 @@
 import { Zpn } from '@/lib/fields/zpn'
+import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { EventCanView } from '@/prisma-generated-pn-types'
 import { z } from 'zod'
 
@@ -57,4 +58,15 @@ export const eventSchemas = {
         tagIds: true,
         waitingList: true,
     }).refine(waitingListRefiner, waitingListMessage),
+
+    readManyArchivedPage: readPageInputSchemaObject(
+        z.number(),
+        z.object({
+            id: z.number(),
+        }),
+        z.object({
+            name: z.string().optional(),
+            tags: z.array(z.string()).nullable(),
+        }),
+    ),
 }

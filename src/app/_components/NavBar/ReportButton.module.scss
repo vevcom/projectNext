@@ -1,10 +1,10 @@
 @use '@/styles/ohma';
 
 .reportButton {
-    margin: ohma.$gap;
     // padding: ;
     cursor: pointer;
     // margin-top: .5em;
+    margin: 0 ohma.$gap;
     
     
     .reportPicture {
@@ -16,8 +16,8 @@
         // background-color: ohma.$colors-red;
         // filter: saturate(0);
         color: ohma.$colors-white;
+        transition: 0.5s;
         &:hover{
-            transition: 0.5s;
             background-color: ohma.$colors-red;
             // background-color: rgb(211, 0, 0);
         }

@@ -1,8 +1,8 @@
-enum SpecialImage {
+enum StandardImage {
   DEFAULT_IMAGE
   DEFAULT_IMAGE_COLLECTION_COVER
   DEFAULT_PROFILE_IMAGE
-  DAFAULT_COMMITTEE_LOGO
+  DEFAULT_COMMITTEE_LOGO
   LOGO_SIMPLE
   LOGO_WHITE
   LOGO_WHITE_TEXT
@@ -12,6 +12,7 @@ enum SpecialImage {
   REALFAGSBYGGET
   MACHINE
   FAIR
+  PWA
 }
 
 model Image {
@@ -33,8 +34,11 @@ model Image {
   licenseName             String?
   licenseLink             String?
   cmsImages               CmsImage[]
-  special                 SpecialImage?    @unique
-  User                    User[]
+  standardImage           StandardImage?   @unique
+  user                    User?
+  flair                   Flair?
+  committee               Committee?
+  ombul                   Ombul?
 }
 
 model License {
@@ -66,10 +70,10 @@ model ImageCollection {
   createdAt    DateTime           @default(now())
   updatedAt    DateTime           @updatedAt
 
-  visibilityAdmin   Visibility @relation(name: "ImageCollectionAdminVisibility", fields: [visibilityAdminId], references: [id], onDelete: Restrict)
-  visibilityAdminId Int        @unique
-  visibilityRead    Visibility @relation(name: "ImageCollectionReadVisibility", fields: [visibilityReadId], references: [id], onDelete: Restrict)
-  visibilityReadId  Int        @unique
+  visibilityAdmin     Visibility @relation(name: "ImageCollectionAdminVisibility", fields: [visibilityAdminId], references: [id], onDelete: Restrict)
+  visibilityAdminId   Int        @unique
+  visibilityRegular   Visibility @relation(name: "ImageCollectionReadVisibility", fields: [visibilityRegularId], references: [id], onDelete: Restrict)
+  visibilityRegularId Int        @unique
 }
 
 enum ImageSize {

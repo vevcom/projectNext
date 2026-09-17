@@ -8,7 +8,7 @@ export default async function seedDevJobAds(prisma: PrismaClient) {
 
     const image = await prisma.image.findUniqueOrThrow({
         where: {
-            special: 'FAIR',
+            standardImage: 'FAIR',
         }
     })
 

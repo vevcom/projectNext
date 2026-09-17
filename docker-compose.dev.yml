@@ -12,6 +12,7 @@ services:
             - ${PROJECT_ROOT:-.}/logs:/usr/src/app/logs
             - devstore:/usr/src/app/store
             - dotnext:/usr/src/app/.next
+            - dobbelOmegaManifest:/usr/src/app/dobbelOmegaManifest
 
     db:
         extends:

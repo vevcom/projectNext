@@ -2,6 +2,7 @@
 
 .CreateOrUpdateEventForm {
     min-width: 50vw;
+    padding: 2 * ohma.$gap;
     .canBeViewdBy {
         max-width: 300px;
     }

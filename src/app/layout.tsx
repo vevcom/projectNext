@@ -6,8 +6,9 @@ import Footer from '@/components/Footer/Footer'
 import { authOptions } from '@/auth/nextAuth/authOptions'
 import EditModeProvider from '@/contexts/EditMode'
 import PopUpProvider from '@/contexts/PopUp'
-import DefaultPermissionsProvider from '@/contexts/DefaultPermissions'
+import ClientDataProvider from '@/contexts/ClientData'
 import { readDefaultPermissionsAction } from '@/services/permissions/actions'
+import { readAllStandardImagesAction } from '@/services/images/standard/actions'
 import { Inter } from 'next/font/google'
 import '@/styles/globals.scss'
 import { config } from '@fortawesome/fontawesome-svg-core'
@@ -19,6 +20,7 @@ import { unwrapActionReturn } from './redirectToErrorPage'
 import { frontpageAuth } from '@/services/frontpage/auth'
 import { ServerSession } from '@/auth/session/ServerSession'
 import type { Metadata } from 'next'
+import ThemeEnabler from '@/UI/ThemeEnabler'
 
 config.autoAddCss = false
 
@@ -38,41 +40,49 @@ type PropTypes = {
 }
 
 export default async function RootLayout({ children }: PropTypes) {
-    const session = await getServerSession(authOptions)
+    const nextAuthSession = await getServerSession(authOptions)
+    const serverSession = await ServerSession.fromNextAuth()
 
     const defaultPermissionsRes = await readDefaultPermissionsAction()
-    const defaultPermissions = defaultPermissionsRes.success ? defaultPermissionsRes.data : []
-    const profile = session?.user ?
-        unwrapActionReturn(await readUserProfileAction({ params: { username: session.user.username } })) : null
+    const defaultPermissions = defaultPermissionsRes.success ? defaultPermissionsRes.data : undefined
+    const standardImagesRes = await readAllStandardImagesAction()
+    const standardImages = standardImagesRes.success ? standardImagesRes.data : undefined
+    const profile = serverSession?.user ?
+        unwrapActionReturn(await readUserProfileAction({ params: { username: serverSession.user.username } })) : null
 
     const canEditSpecialCmsImage = frontpageAuth.updateSpecialCmsImage.dynamicFields({}).auth(
-        await ServerSession.fromNextAuth()
+        serverSession
     ).toJsObject()
 
     return (
         <html lang="en">
             <body className={`${inter.className} ${styles.body}`}>
-                <SessionProvider session={session}>
-                    <DefaultPermissionsProvider defaultPermissions={defaultPermissions}>
+                <SessionProvider session={nextAuthSession}>
+                    <ClientDataProvider
+                        session={serverSession.toJsObject()}
+                        defaultPermissions={defaultPermissions}
+                        standardImages={standardImages}
+                    >
+                        <ThemeEnabler />
                         <EditModeProvider>
                             <PopUpProvider>
                                 <div className={styles.wrapper}>
                                     <div className={styles.navBar}>
-                                        <NavBar profile={profile} canEditSpecialCmsImage={canEditSpecialCmsImage} />
+                                        <NavBar profile={profile} />
                                     </div>
-                                    <div className={styles.content}>
+                                    <main className={styles.content}>
                                         {children}
-                                    </div>
+                                    </main>
                                     <div className={styles.footer}>
                                         <Footer canEditSpecialCmsImage={canEditSpecialCmsImage} />
                                     </div>
                                     <div className={styles.mobileNavBar}>
-                                        <MobileNavBar profile={profile} canEditSpecialCmsImage={canEditSpecialCmsImage} />
+                                        <MobileNavBar profile={profile} />
                                     </div>
                                 </div>
                             </PopUpProvider>
                         </EditModeProvider>
-                    </DefaultPermissionsProvider>
+                    </ClientDataProvider>
                 </SessionProvider>
             </body>
         </html>

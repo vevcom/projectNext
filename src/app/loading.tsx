@@ -1,13 +1,10 @@
 import styles from './loading.module.scss'
-import { ServerSession } from '@/auth/session/ServerSession'
 import Loader from '@/components/Loader/Loader'
 
-export default async function loading() {
-    const session = await ServerSession.fromNextAuth()
-
+export default function loading() {
     return (
         <div className={styles.wrapper}>
-            <Loader session={session} />
+            <Loader />
         </div>
     )
 }

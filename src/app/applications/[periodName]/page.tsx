@@ -23,7 +23,6 @@ import {
     removeAllApplicationTextsAction,
     readApplicationPeriodAction
 } from '@/services/applications/periods/actions'
-import { readSpecialImageAction } from '@/services/images/actions'
 import { ServerSession } from '@/auth/session/ServerSession'
 import { configureAction } from '@/services/configureAction'
 import { committeeAuth } from '@/services/groups/committees/auth'
@@ -42,9 +41,6 @@ export default async function ApplicationPeriod({ params }: PropTypes) {
     const userId = session.user?.id
     const period = unwrapActionReturn(
         await readApplicationPeriodAction({ params: { name: (await params).periodName } })
-    )
-    const defaultCommitteeLogo = unwrapActionReturn(
-        await readSpecialImageAction({ params: { special: 'DAFAULT_COMMITTEE_LOGO' } })
     )
     const applications = userId ? unwrapActionReturn(
         await readApplicationsForUserAction({ params: { userId, periodId: period.id } })
@@ -159,7 +155,7 @@ export default async function ApplicationPeriod({ params }: PropTypes) {
                         .map(part => (
                             <li key={part.committee.id}>
                                 <BackdropImage
-                                    image={part.committee.logoImage?.image ?? defaultCommitteeLogo}
+                                    image={part.committee.logoImage}
                                     imageSize={230}
                                 >
                                     <h1>{part.committee.name}</h1>

@@ -18,6 +18,10 @@
 
         > a {
             font-size: ohma.$fonts-m;
+            color: ohma.$colors-text;
+            &:hover {
+                color: ohma.$colors-text-muted;
+            }
         }
     }
 

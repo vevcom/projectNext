@@ -44,14 +44,15 @@ export default async function Event({ params }: PropTypes) {
 
     const ownRegistration = event.eventRegistrations.length ? event.eventRegistrations[0] : undefined
 
+    const session = await ServerSession.fromNextAuth()
     const canEditCmsCoverImage = eventAuth.updateCmsCoverImage.dynamicFields({}).auth(
-        await ServerSession.fromNextAuth()
+        session
     ).toJsObject()
     const canEditCmsParagraph = eventAuth.updateParagraphContent.dynamicFields({}).auth(
-        await ServerSession.fromNextAuth()
+        session
     ).toJsObject()
     const canDestroy = eventAuth.destroy.dynamicFields({}).auth(
-        await ServerSession.fromNextAuth()
+        session
     ).toJsObject()
 
     return (

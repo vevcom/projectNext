@@ -21,7 +21,7 @@ export default function CompanyList({ serverRenderedData, disableEditing }: Prop
             {serverRenderedData}
             <EndlessScroll
                 pagingContext={CompanyPagingContext}
-                renderer={data => companyListRenderer({ asClient: true, session: session.session, disableEditing })(data)}
+                renderer={data => companyListRenderer({ session: session.session, disableEditing })(data)}
             />
         </div>
     )

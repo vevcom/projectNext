@@ -41,7 +41,7 @@ export default async function dobbelOmega(pnPrisma: PrismaClientPn) {
     await migrateOmegaquotes(pnPrisma, owPrisma, userMigrator, limits)
     await migrateArticles(pnPrisma, owPrisma, imageIdMap, limits)
     await migrateMailAliases(pnPrisma, owPrisma, limits)
-    await migrateCommittees(pnPrisma, owPrisma, userMigrator)
+    await migrateCommittees(pnPrisma, owPrisma, userMigrator, imageIdMap)
     await migrateEvents(pnPrisma, owPrisma, imageIdMap, userMigrator, limits)
 
     await seedProdPermissions(pnPrisma)

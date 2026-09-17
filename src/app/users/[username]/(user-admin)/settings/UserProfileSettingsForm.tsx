@@ -1,4 +1,5 @@
 'use client'
+import styles from './UserProfileSettingsForm.module.scss'
 import Form from '@/components/Form/Form'
 import Checkbox from '@/components/UI/Checkbox'
 import TextInput from '@/components/UI/TextInput'
@@ -45,6 +46,7 @@ export default function UserProfileSettingsForm({ user } : PropTypes) {
                 label="Kjønn"
                 name="sex"
                 options={sexOptions}
+                className={styles.selectBox}
                 defaultValue={user.sex ?? SEX.OTHER}
             />
             <Textarea label="bio" name="bio" defaultValue={user.bio} />
@@ -57,6 +59,7 @@ export default function UserProfileSettingsForm({ user } : PropTypes) {
                 label="Sivilstatus"
                 name="relationshipStatus"
                 options={relationshipOptions}
+                className={styles.selectBox}
                 defaultValue={user.relationshipStatus}
             />
             <Checkbox

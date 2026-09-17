@@ -1,3 +1,4 @@
+import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { z } from 'zod'
 
 export const baseSchemas = z.object({
@@ -9,6 +10,13 @@ export const omegaquoteSchemas = {
     create: baseSchemas.pick({
         quote: true,
         author: true,
-    })
+    }),
+    readPage: readPageInputSchemaObject(
+        z.number(),
+        z.object({
+            id: z.number(),
+        }),
+        z.undefined()
+    ),
 }
 

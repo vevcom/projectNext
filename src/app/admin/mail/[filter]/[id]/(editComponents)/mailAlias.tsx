@@ -4,7 +4,9 @@ import Form from '@/components/Form/Form'
 import { SelectNumber } from '@/components/UI/Select'
 import { createAliasMailingListRelationAction } from '@/services/mail/actions'
 import { updateMailAliasAction, destroyMailAliasAction } from '@/services/mail/alias/actions'
-import { useSession } from '@/auth/session/useSession'
+import { mailAliasAuth } from '@/services/mail/alias/auth'
+import { mailAuth } from '@/services/mail/auth'
+import useAuthorizer from '@/hooks/useAuthorizer'
 import { useRouter } from 'next/navigation'
 import type { MailFlowObject } from '@/services/mail/types'
 import type { MailingList } from '@/prisma-generated-pn-types'
@@ -24,13 +26,12 @@ export default function EditMailAlias({
         throw Error('Could not find alias')
     }
 
-    const session = useSession()
-    const permissions = !session.loading ? session.session.permissions : []
+    const canAdmin = useAuthorizer({ authorizer: mailAliasAuth.update.dynamicFields({}) }).authorized
+    const canAddToList = useAuthorizer({ authorizer: mailAuth.createAliasMailingListRelation.dynamicFields({}) }).authorized
 
     return <>
         <h2>{focusedAlias.address}</h2>
-        { /** TODO: Call authorizer */ }
-        { permissions.includes('MAILALIAS_UPDATE') && <div>
+        { canAdmin && <div>
             <Form
                 title="Alias"
                 submitText="Oppdater"
@@ -41,9 +42,9 @@ export default function EditMailAlias({
                 <TextInput name="description" label="Beskrivelse" defaultValue={focusedAlias.description} />
             </Form>
         </div>}
-        { permissions.includes('MAILALIAS_DESTROY') && <div>
+        { canAdmin && <div>
             <Form
-                action={destroyMailAliasAction.bind(null, focusedAlias.id)}
+                action={destroyMailAliasAction.bind(null, { params: { id: focusedAlias.id } })}
                 successCallback={() => push('/admin/mail')}
                 submitText="Slett"
                 submitColor="red"
@@ -53,7 +54,7 @@ export default function EditMailAlias({
                 }}
             />
         </div> }
-        { permissions.includes('MAILINGLIST_ALIAS_CREATE') && <div>
+        { canAddToList && <div>
             <Form
                 title="Legg til mailliste"
                 submitText="Legg til"

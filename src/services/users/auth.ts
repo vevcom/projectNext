@@ -5,6 +5,8 @@ import { RequireUserId } from '@/auth/authorizer/RequireUserId'
 import { RequireUserIdOrPermission } from '@/auth/authorizer/RequireUserIdOrPermission'
 import { RequireUsernameOrPermission } from '@/auth/authorizer/RequireUsernameOrPermission'
 
+export const profileImagesImagePanelAuth = RequirePermission.staticFields({ permission: 'USERS_UPDATE' })
+
 export const userAuth = {
     readProfile: RequireUsernameOrPermission.staticFields({ permission: 'USERS_READ' }),
     read: RequireUserFieldOrPermission.staticFields({ permission: 'USERS_READ' }),
@@ -16,7 +18,7 @@ export const userAuth = {
     updatePassword: RequireUserIdOrPermission.staticFields({ permission: 'USERS_UPDATE' }),
     update: RequirePermission.staticFields({ permission: 'USERS_UPDATE' }),
     updateProfile: RequireUsernameOrPermission.staticFields({ permission: 'USERS_UPDATE' }),
-
+    updateProfileImage: RequireUsernameOrPermission.staticFields({ permission: 'USERS_UPDATE' }),
     register: RequireUserId.staticFields({}),
     destroy: RequirePermission.staticFields({ permission: 'USERS_DESTROY' }),
-}
+} as const

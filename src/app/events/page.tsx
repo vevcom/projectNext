@@ -7,6 +7,7 @@ import { readCurrentEventsAction } from '@/services/events/actions'
 import EventCard from '@/components/Event/EventCard'
 import { readEventTagsAction } from '@/services/events/tags/actions'
 import { eventTagAuth } from '@/services/events/tags/auth'
+import { eventAuth } from '@/services/events/auth'
 import { QueryParams } from '@/lib/queryParams/queryParams'
 import { ServerSession } from '@/auth/session/ServerSession'
 import { faArchive } from '@fortawesome/free-solid-svg-icons'
@@ -38,6 +39,7 @@ export default async function Events({
     const canUpdate = eventTagAuth.update.dynamicFields({}).auth(session)
     const canCreate = eventTagAuth.create.dynamicFields({}).auth(session)
     const canDestroy = eventTagAuth.destroy.dynamicFields({}).auth(session)
+    const canEditEventCmsImage = eventAuth.updateCmsCoverImage.dynamicFields({}).auth(session).toJsObject()
 
     return (
         <EventsLandingLayout page="EVENT" title="Hvad Der Hender" headerLinks={[
@@ -67,7 +69,7 @@ export default async function Events({
         >
             {
                 currentEvents.map(event =>
-                    <EventCard event={event} key={event.id} />
+                    <EventCard event={event} key={event.id} canEdit={canEditEventCmsImage} />
                 )
             }
         </EventsLandingLayout>

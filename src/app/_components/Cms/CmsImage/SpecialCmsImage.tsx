@@ -9,7 +9,7 @@ export type PropTypes = Omit<CmsImageProps, 'cmsImage'> & {
     readSpecialCmsImageAction: ReadSpecialCmsImageAction
 }
 /**
- * WARNING: This component is only meant for the server - use SpecialCmsImageClient for the client
+ * WARNING: This component is only meant for the server
  * A component that fetches a special cms image and displays it
  * @param special - the special cms image to display
  * @returns

@@ -28,7 +28,7 @@ model User {
   mobile                 String?
   emailVerified          DateTime?
   image                  Image?             @relation(fields: [imageId], references: [id])
-  imageId                Int?
+  imageId                Int?               @unique
   studentCard            String?            @unique
 
   createdAt DateTime @default(now())

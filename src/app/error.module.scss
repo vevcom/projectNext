@@ -12,15 +12,12 @@
         justify-content: center;
         align-items: center;
         h3 {
-            color: ohma.$colors-black;
+            color: ohma.$colors-text;
         }
         .imageContainer {
             border-right: solid 2px ohma.$colors-secondary;
             padding-right: 20px;
             margin-right: 20px;
-            img {
-                filter: invert(100%);
-            }
         }
     }
     > button {

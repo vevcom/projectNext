@@ -1,20 +1,15 @@
-import { owIdToPnId } from './IdMapper'
-import { v4 as uuid } from 'uuid'
-import { fileURLToPath } from 'url'
-import { dirname, join } from 'path'
-import { writeFile, mkdir } from 'fs/promises'
+import { owIdToPnId, type IdMapper } from './IdMapper'
+import { ombulStore } from '@/services/ombul/operations'
+import { File } from 'node:buffer'
 import type { PrismaClient as PrismaClientOw } from '@/prisma-generated-ow-basic/client'
 import type { PrismaClient as PrismaClientPn } from '@/prisma-generated-pn-client'
-import type { IdMapper } from './IdMapper'
 import type { Limits } from './migrationLimits'
-
-const fileName = fileURLToPath(import.meta.url)
-const directoryName = dirname(fileName)
 
 /**
  * This function migrates ombul from OW to PN, by creating a new ombul in PN for
- * each ombul in OW, adding the correct relations to the coverimage and fetching the
- * pdf from the old location and storing it in the new location
+ * each ombul in OW, connecting it to its cover image (already migrated by migrateImages,
+ * which places any OW image with an Ombul relation into the OMBULCOVERS collection), and
+ * fetching the pdf from the old location and storing it via the ombul store.
  * @param pnPrisma - PrismaClientPn
  * @param owPrisma - PrismaClientOw
  * @param imageIdMap - IdMapper - A map of the old and new id's of the images to
@@ -26,55 +21,43 @@ export default async function migrateOmbul(
     imageIdMap: IdMapper,
     limits: Limits,
 ) {
-    const ombuls = await owPrisma.ombul.findMany({
+    const allOmbuls = await owPrisma.ombul.findMany({
         take: limits.ombul ? limits.ombul : undefined,
     })
 
-    //First write files concurrently for speed
-    const fsLocations = await Promise.all(ombuls.map(async (ombul) => {
+    const ombuls = allOmbuls.flatMap(ombul => {
+        const coverImageId = owIdToPnId(imageIdMap, ombul.ImageId)
+        if (!coverImageId) {
+            console.warn(`Ombul "${ombul.title}" (${ombul.year}) has no resolvable cover image, skipping`)
+            return []
+        }
+        return [{ ...ombul, coverImageId }]
+    })
+
+    //First fetch pdfs and write them to the store concurrently for speed
+    const fsLocations = await Promise.all(ombuls.map(async (ombul): Promise<string | null> => {
         const fsLocationOldVev = `${process.env.OW_STORE_URL}/ombul/${ombul.fileName}.pdf/${ombul.originalName}`
 
         // Get pdf served at old location
         const res = await fetch(fsLocationOldVev, {
             method: 'GET',
-        })
+        }).catch(() => null)
+        if (!res || !res.ok) {
+            console.error(`Failed to fetch ombul pdf from ${fsLocationOldVev}`)
+            return null
+        }
+
         const pdfBuffer = Buffer.from(await res.arrayBuffer())
+        const pdfFile = new File([new Uint8Array(pdfBuffer)], ombul.originalName, { type: 'application/pdf' })
 
-        const store = join(directoryName, '..', '..', 'store', 'ombul')
-
-        const fsLocation = `${uuid()}.pdf`
-
-        await mkdir(store, { recursive: true })
-
-        await writeFile(join(store, fsLocation), pdfBuffer)
-
+        const { fsLocation } = await ombulStore.createFile(pdfFile)
         return fsLocation
     }))
 
     for (let ombulIdx = 0; ombulIdx < ombuls.length; ombulIdx++) {
         const ombul = ombuls[ombulIdx]
         const fsLocation = fsLocations[ombulIdx]
-
-        const coverName = `${ombul.title.split(' ').join('_')}_cover${uuid()}`
-
-        const coverImageId = owIdToPnId(imageIdMap, ombul.ImageId)
-
-        const coverImage = await pnPrisma.cmsImage.upsert({
-            where: {
-                name: coverName,
-            },
-            update: {
-
-            },
-            create: {
-                name: coverName,
-                image: coverImageId ? {
-                    connect: {
-                        id: coverImageId
-                    }
-                } : undefined
-            }
-        })
+        if (!fsLocation) continue
 
         const ombulsWithSameYearAndName = await pnPrisma.ombul.findMany({
             where: {
@@ -95,8 +78,11 @@ export default async function migrateOmbul(
             create: {
                 coverImage: {
                     connect: {
-                        id: coverImage.id
+                        id: ombul.coverImageId
                     }
+                },
+                paragraph: {
+                    create: {}
                 },
                 name,
                 description: ombul.lead,

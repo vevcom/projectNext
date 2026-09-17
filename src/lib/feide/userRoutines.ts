@@ -1,14 +1,14 @@
 import '@pn-server-only'
 import { fetchStudyProgrammesFromFeide } from './api'
 import { upsertStudyProgrammes } from '@/services/groups/studyProgrammes/create'
-import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
+import { omegaOrderOperations } from '@/services/omegaOrder/operations'
 import { prisma } from '@/prisma-pn-client-instance'
 
 export async function updateUserStudyProgrammes(userId: number, accessToken: string) {
     const feideStudyProgrammes = await fetchStudyProgrammesFromFeide(accessToken)
     const studyProgrammes = await upsertStudyProgrammes(feideStudyProgrammes)
 
-    const { order } = await readCurrentOmegaOrder()
+    const { order } = await omegaOrderOperations.readCurrent({ bypassAuth: true })
 
     // Find current user study programmes
     const memberships = await prisma.membership.findMany({

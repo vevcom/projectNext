@@ -1,0 +1,10 @@
+model NewsArticle {
+  id          Int      @id @default(autoincrement())
+  description String?
+  endDateTime DateTime //when the article is no longer considered current
+  article     Article  @relation(fields: [articleId, articleName], references: [id, name], onDelete: Restrict)
+  articleId   Int      @unique
+  articleName String
+
+  @@unique([articleId, articleName])
+}

@@ -6,15 +6,13 @@ import Speedlines from './Speedlines'
 import FinalCountdown from './FinalCountdown'
 import useInterval from '@/hooks/useInterval'
 import { useState } from 'react'
-import type { Image } from '@/prisma-generated-pn-types'
 import type { ExpandedApplicationPeriod } from '@/services/applications/periods/types'
 
 type PropTypes = {
     period: ExpandedApplicationPeriod
-    defaultCommitteeLogo: Image
 }
 
-export default function Countdown({ period, defaultCommitteeLogo }: PropTypes) {
+export default function Countdown({ period }: PropTypes) {
     const [showCommitteeRoll, setShowComitteeRoll] = useState(true)
     const [finalCountdown, setFinalCountdown] = useState(false)
 
@@ -39,7 +37,7 @@ export default function Countdown({ period, defaultCommitteeLogo }: PropTypes) {
                 {showCommitteeRoll && (
                     <CommitteeLogoRoll periodName={period.name} committees={period.committeesParticipating.map(part => ({
                         shortName: part.committee.shortName,
-                        logo: part.committee.logoImage.image || defaultCommitteeLogo
+                        logo: part.committee.logoImage
                     }))} />
                 )}
                 {finalCountdown && (

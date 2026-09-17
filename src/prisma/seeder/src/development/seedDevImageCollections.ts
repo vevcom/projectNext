@@ -1,0 +1,24 @@
+import type { PrismaClient } from '@/prisma-generated-pn-client'
+
+export default async function seedDevImageCollections(prisma: PrismaClient) {
+    for (let i = 0; i < 10; i++) {
+        await prisma.imageCollection.upsert({
+            where: {
+                name: `test_collection_${i}`
+            },
+            update: {
+
+            },
+            create: {
+                name: `test_collection_${i}`,
+                description: 'just a test',
+                visibilityAdmin: {
+                    create: {}
+                },
+                visibilityRegular: {
+                    create: {}
+                }
+            }
+        })
+    }
+}

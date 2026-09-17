@@ -1,3 +1,4 @@
+import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { z } from 'zod'
 
 const dotSchema = z.object({
@@ -20,4 +21,14 @@ export const dotSchemas = {
         value: true,
         reason: true,
     }),
+    readPage: readPageInputSchemaObject(
+        z.number(),
+        z.object({
+            id: z.number(),
+        }),
+        z.object({
+            userId: z.number().nullable(),
+            onlyActive: z.boolean(),
+        }),
+    ),
 }

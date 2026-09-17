@@ -1,0 +1,8 @@
+@use '@/styles/ohma';
+
+.VisibilityAdmin {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    min-width: 350px;
+}

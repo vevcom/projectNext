@@ -1,0 +1,13 @@
+@use '@/styles/ohma';
+
+.settingForm {
+    padding: ohma.$cardPadding;
+    border-radius: ohma.$cardRounding;
+    @include ohma.boxShadow('');
+    @include ohma.layer;
+}
+
+.selectBox > select {
+    background-color: ohma.$colors-secondary;
+    color: ohma.$colors-text;
+}

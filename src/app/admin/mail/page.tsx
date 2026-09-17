@@ -1,21 +1,24 @@
-'use server' //todo: why is this use server???
 import styles from './page.module.scss'
 import CreateMailAlias from './createMailAliasForm'
 import CreateMailingList from './createMailingListForm'
 import CreateMailaddressExternal from './createMailaddressExternalForm'
 import MailListView from './mailListView'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
-import { readMailAliases } from '@/services/mail/alias/read'
-import { readMailingLists } from '@/services/mail/list/read'
-import { readMailAddressExternal } from '@/services/mail/mailAddressExternal/read'
+import { readMailAliasesAction } from '@/services/mail/alias/actions'
+import { readMailingListsAction } from '@/services/mail/list/actions'
+import { readMailAddressExternalAction } from '@/services/mail/mailAddressExternal/actions'
+import { mailAliasAuth } from '@/services/mail/alias/auth'
+import { mailingListAuth } from '@/services/mail/list/auth'
+import { mailAddressExternalAuth } from '@/services/mail/mailAddressExternal/auth'
+import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { ServerSession } from '@/auth/session/ServerSession'
 
 export default async function MailSettings() {
-    const { permissions } = await ServerSession.fromNextAuth()
+    const session = await ServerSession.fromNextAuth()
 
-    const createMailAlias = permissions.includes('MAILALIAS_CREATE')
-    const createMailingList = permissions.includes('MAILINGLIST_CREATE')
-    const createMailaddressExternal = permissions.includes('MAILADDRESS_EXTERNAL_CREATE')
+    const createMailAlias = mailAliasAuth.create.dynamicFields({}).auth(session).authorized
+    const createMailingList = mailingListAuth.create.dynamicFields({}).auth(session).authorized
+    const createMailaddressExternal = mailAddressExternalAuth.create.dynamicFields({}).auth(session).authorized
 
     const showAdminPanel = createMailAlias || createMailingList || createMailaddressExternal
 
@@ -24,9 +27,9 @@ export default async function MailSettings() {
         mailingLists,
         mailAddressesExternal,
     ] = await Promise.all([
-        readMailAliases(),
-        readMailingLists(),
-        readMailAddressExternal(),
+        readMailAliasesAction().then(unwrapActionReturn),
+        readMailingListsAction().then(unwrapActionReturn),
+        readMailAddressExternalAction().then(unwrapActionReturn),
     ])
 
     return (

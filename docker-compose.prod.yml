@@ -8,6 +8,7 @@ services:
         volumes:
             - store:/usr/src/app/store
             - logs:/usr/src/app/logs
+            - dobbelOmegaManifest:/usr/src/app/dobbelOmegaManifest
         deploy:
             replicas: 2
         restart: always

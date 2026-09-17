@@ -19,9 +19,7 @@ export default async function upsertOrderBasedOnDate(
         where: {
             order: orderPublished,
         },
-        update: {
-            order: orderPublished,
-        },
+        update: { },
         create: {
             order: orderPublished,
         }

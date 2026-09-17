@@ -1,0 +1,77 @@
+@use '@/styles/ohma';
+
+// sub page nav bar item
+
+.container {
+    border: 1px solid ohma.$colors-text;
+    border-radius: ohma.$rounding;
+    padding: 12px;
+    color: ohma.$colors-text-muted;
+    transition: 0.3s;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    @include ohma.boxShadow('');
+    padding: 0px;
+    height: ohma.$nav-height;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+}
+.container:hover {
+    color: ohma.$colors-text;
+}
+.linkContainer > a {
+    text-decoration: none;
+}
+.linkContainer {
+    margin-bottom: 10px;
+    flex-grow: 1;
+}
+.linkContainer:last-child {
+    margin-bottom: 0px;
+}
+.selected {
+    color: ohma.$colors-primary;
+}
+.selected * {
+    color: ohma.$colors-primary;
+}
+.icon {
+    width: 25px;
+    height: 25px;
+}
+.text {
+    line-height: calc(ohma.$nav-height - (2 * 16px));
+    text-align: center;
+    padding-left: 16px;
+}
+
+@media (max-width: ohma.$mobileBreakpoint) {
+    .text {
+        display: none;
+    }
+}
+
+// Sub page nav bar
+
+.navBarContainer {
+    display: flex;
+    position: fixed;
+    padding: 0px calc(16px - ohma.$gap);
+    border-radius: ohma.$rounding;
+    background-color: ohma.$colors-black;
+    width: calc(100vw - 2 * ohma.$gap);
+    max-width: 900px;
+    left: max(ohma.$gap, calc((100dvw - 900px) / 2));
+    top: calc(100dvh - 2 * ohma.$nav-height - ohma.$gap);
+    flex-direction: row;
+    z-index: 2;
+    height: ohma.$nav-height;
+}
+
+@media (min-width: ohma.$mobileBreakpoint) {
+    .navBarContainer {
+        top: calc(100dvh - ohma.$nav-height - ohma.$gap);
+    }
+}

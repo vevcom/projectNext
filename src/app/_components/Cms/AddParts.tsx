@@ -51,7 +51,7 @@ export default function AddParts({
                     <BorderButton
                         key={i}
                         onClick={() => onClick(part.part)}
-                        color="secondary"
+                        color="primary"
                     >
                         <FontAwesomeIcon icon={faPlus} />
                         {part.text}

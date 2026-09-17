@@ -1,21 +1,11 @@
 enum SpecialCmsImage {
-  FRONTPAGE_LOGO
   FRONTPAGE_1
   FRONTPAGE_2
   FRONTPAGE_3
   FRONTPAGE_4
-  SERVER_ERROR
-  NOT_FOUND
-  AUTH_ICON
-  FOOTER_LOGO
-  FOOTER_1
-  FOOTER_2
-  FOOTER_3
-  LOADER_IMAGE
-  MOBILE_NAV_LOGIN_BUTTON
-  MOBILE_NAV_PRIMARY_BUTTON
-  NAV_LOGIN_BUTTON
-  NAV_PRIMARY_BUTTON
+  FOOTER_SPONSOR_1
+  FOOTER_SPONSOR_2
+  FOOTER_SPONSOR_3
 }
 
 model CmsImage {
@@ -29,14 +19,11 @@ model CmsImage {
   articleSection       ArticleSection?  @relation(fields: [articleSectionId], references: [id], onDelete: Cascade)
   articleSectionId     Int?             @unique
   coverImageforArticle Article?
-  Ombul                Ombul?
-  committee            Committee?
   special              SpecialCmsImage? @unique
   screenPage           ScreenPage?
   school               School?
   event                Event?
   company              Company?
-  flairs               Flair?
 }
 
 enum SpecialCmsParagraph {
@@ -67,6 +54,7 @@ model CmsParagraph {
   Event               Event?
   Committee           Committee?           @relation(name: "committeeParagraph")
   CommitteApplication Committee?           @relation(name: "applicationParagraph")
+  Ombul               Ombul?
 }
 
 enum SpecialCmsLink {
@@ -136,26 +124,5 @@ model Article {
   special             SpecialCmsArticle? @unique
 
   @@unique([name, id])
-}
-
-model NewsArticle {
-  id          Int      @id @default(autoincrement())
-  description String?
-  endDateTime DateTime //when the article is no longer considered current
-  article     Article  @relation(fields: [articleId, articleName], references: [id, name], onDelete: Restrict)
-  articleId   Int      @unique
-  articleName String
-
-  @@unique([articleId, articleName])
-}
-
-model ArticleCategory {
-  id          Int       @id @default(autoincrement())
-  name        String    @unique
-  description String?
-  articles    Article[]
-  createdAt   DateTime  @default(now()) @map("created_at")
-  updatedAt   DateTime  @updatedAt @map("updated_at")
-
-  @@unique([id, name])
+  @@unique([articleCategoryId, name])
 }

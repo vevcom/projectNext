@@ -1,75 +1,71 @@
+import { defineSeedOperation } from '@/seeder/src/defineSeedOperation'
 import type { PrismaClient } from '@/prisma-generated-pn-client'
 
-export default async function seedDevNews(prisma: PrismaClient) {
+const OLD_NEWS_COUNT = 60
+const ACTIVE_NEWS_COUNT = 10
+
+export const seedDevNews = defineSeedOperation(async (prisma: PrismaClient) => {
     const order = await prisma.omegaOrder.findFirst()
     if (!order) throw new Error('No omega order found to seed news to')
 
     const image = await prisma.image.findUniqueOrThrow({
-        where: {
-            special: 'REALFAGSBYGGET',
-        }
+        where: { standardImage: 'REALFAGSBYGGET' }
     })
 
-    // seed old news
-    const date = new Date()
-    date.setDate(date.getDate() - 365) // Subtract 365 days from the current date
-    for (let i = 2000; i < 2060; i++) {
-        await prisma.newsArticle.upsert({
-            where: {
-                id: i,
-            },
-            update: {
+    const oldEndDateTime = new Date()
+    oldEndDateTime.setDate(oldEndDateTime.getDate() - 365)
 
-            },
-            create: {
-                description: 'hei gå til helvete',
-                article: {
-                    create: {
-                        name: 'Test artikkel',
-                        coverImage: {
-                            create: {
-                                image: {
-                                    connect: {
-                                        id: image.id
-                                    }
-                                }
+    const activeEndDateTime = new Date()
+    activeEndDateTime.setDate(activeEndDateTime.getDate() + 7)
+
+    // Dev seed data is keyed as dev_<service>_<index> (here: dev_news_old_<index> /
+    // dev_news_active_<index>) so re-seeding can find-or-create it by name instead of relying on
+    // magic ids.
+    await Promise.all([
+        ...Array.from({ length: OLD_NEWS_COUNT }).map((_, index) => upsertTestNews(prisma, {
+            name: `dev_news_old_${index}`,
+            description: 'PN lanserer neste uke',
+            endDateTime: oldEndDateTime,
+            imageId: image.id,
+        })),
+        ...Array.from({ length: ACTIVE_NEWS_COUNT }).map((_, index) => upsertTestNews(prisma, {
+            name: `dev_news_active_${index}`,
+            description: 'PN lanserer neste uke',
+            endDateTime: activeEndDateTime,
+            imageId: image.id,
+        })),
+    ])
+})
+
+async function upsertTestNews(
+    prisma: PrismaClient,
+    news: { name: string, description: string, endDateTime: Date, imageId: number }
+) {
+    const existingNews = await prisma.newsArticle.findFirst({
+        where: { articleName: news.name },
+        select: { id: true }
+    })
+
+    return prisma.newsArticle.upsert({
+        where: { id: existingNews?.id ?? -1 },
+        update: {
+            endDateTime: news.endDateTime,
+        },
+        create: {
+            description: news.description,
+            endDateTime: news.endDateTime,
+            article: {
+                create: {
+                    name: news.name,
+                    coverImage: {
+                        create: {
+                            image: {
+                                connect: { id: news.imageId }
                             }
                         }
                     }
-                },
-                endDateTime: date,
+                }
             }
-        })
-    }
-    // seed current news
-    const activeDate = new Date()
-    activeDate.setDate(activeDate.getDate() + 7)
-    for (let i = 2060; i < 2070; i++) {
-        await prisma.newsArticle.upsert({
-            where: {
-                id: i,
-            },
-            update: {
-
-            },
-            create: {
-                description: 'hei gå til helvete',
-                article: {
-                    create: {
-                        name: 'En aktiv nyhet',
-                        coverImage: {
-                            create: {
-                                image: {
-                                    connect: {
-                                        id: image.id
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                endDateTime: activeDate,
-            }
-        })
-    }
+        }
+    })
 }

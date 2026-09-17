@@ -7,7 +7,10 @@ $imageWidth: 300px;
     display: flex;
     background-color: ohma.$colors-secondary;
     @include ohma.card();
-    @include ohma.boxShadow();
+    @include ohma.boxShadow('');
+    &:hover {
+        @include ohma.boxShadow('hover');
+    }
     overflow: hidden;
     min-height: calc($imageWidth + 3em);
     .cmsImage {

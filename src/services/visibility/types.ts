@@ -1,3 +1,5 @@
+import type { visibilityOperations } from './operations'
+import type { ActionFromSubServiceOperation } from '@/services/actionTypes'
 import type { VisibilityRequirementGroupType } from '@/prisma-generated-pn-types'
 
 export type VisibilityCondition = {
@@ -16,3 +18,15 @@ export type VisibilityRequirement = {
 export type VisibilityMatrix = {
     requirements: VisibilityRequirement[]
 }
+
+export type DoubleLevelVisibilityMatrix = {
+    regularLevel: VisibilityMatrix,
+    adminLevel: VisibilityMatrix
+}
+
+/**
+ * The shape any owning service's `updateRegularLevel`/`updateAdminLevel` action has once its
+ * implementationParams is bound (e.g. a collectionId) - still expecting `params: { visibilityId }`
+ * to be bound.
+ */
+export type UpdateVisibilityAction = ActionFromSubServiceOperation<typeof visibilityOperations.update>

@@ -34,11 +34,12 @@ $selectionBtnSize: 25px;
     > .list {
         height: 100%;
         overflow-y: scroll;
-        border-radius: ohma.$rounding;
-        background-color: ohma.$colors-white;
+        border-radius: calc(ohma.$rounding + ohma.$gap);
+        @include ohma.layer();
+        @include ohma.boxShadow('');
         width: 100%;
-        padding: 0 .5em;
-        padding-top: .3em;
+        padding: 0 ohma.$gap;
+        padding-top: ohma.$gap;
         .row {
             display: flex;
             justify-content: space-between;
@@ -63,10 +64,10 @@ $selectionBtnSize: 25px;
             position: sticky;
             top: 0;
             left: 0;
-            box-shadow: 0 0 10px 0 ohma.$colors-gray-800;
             padding: 2*ohma.$gap 2*ohma.$gap;
             border-radius: ohma.$rounding;
-            background-color: ohma.$colors-secondary;
+            @include ohma.layer();
+            @include ohma.boxShadow('');
         }
         .head, .userRow {
             display: grid;

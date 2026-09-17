@@ -1,6 +1,7 @@
 import styles from './page.module.scss'
 import getCommittee from '@/app/committees/[shortName]/getCommittee'
-import CmsImage from '@/components/Cms/CmsImage/CmsImage'
+import Image from '@/components/Image/Image'
+import ImageUploader from '@/components/Image/ImageUploader'
 import { configureAction } from '@/services/configureAction'
 import { updateCommitteeLogoAction } from '@/services/groups/committees/actions'
 import { committeeAuth } from '@/services/groups/committees/auth'
@@ -12,22 +13,26 @@ export default async function ComitteeAdmin({ params }: PropTypes) {
 
     const canEditLogo = committeeAuth.updateLogo.dynamicFields({ groupId: committee.groupId }).auth(
         await ServerSession.fromNextAuth()
-    ).toJsObject()
+    )
 
     return (
         <div className={styles.wrapper}>
             <h2>Admin</h2>
-            <CmsImage
-                canEdit={canEditLogo}
-                cmsImage={committee.logoImage}
-                width={300}
-                updateCmsImageAction={
-                    configureAction(
-                        updateCommitteeLogoAction,
-                        { implementationParams: { shortName: committee.shortName } }
+            <div className={styles.logo}>
+                <Image image={committee.logoImage} width={300} />
+                {
+                    canEditLogo.authorized && (
+                        <ImageUploader
+                            title="Endre komitelogo"
+                            refreshOnSuccess
+                            uploadImageAction={configureAction(
+                                updateCommitteeLogoAction,
+                                { params: { shortName: committee.shortName } }
+                            )}
+                        />
                     )
                 }
-            />
+            </div>
         </div>
     )
 }

@@ -52,7 +52,6 @@ export default async function Committee({ params }: PropTypes) {
                     key={i}
                     user={member.user}
                     subText={member.title}
-                    asClient={false}
                 />)}
             </div>
         </div>

@@ -8,5 +8,9 @@
         margin-top: 0.5em;
         max-height: 300px;
         font-size: ohma.$fonts-s;
+        @include ohma.layer();
+        color: ohma.$colors-text;
+        border-radius: ohma.$rounding;
+        padding: ohma.$gap;
     }
 }

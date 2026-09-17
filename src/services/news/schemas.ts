@@ -1,4 +1,5 @@
 import { Zpn } from '@/lib/fields/zpn'
+import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { z } from 'zod'
 
 const baseSchema = z.object({
@@ -17,5 +18,12 @@ export const newsSchemas = {
         name: true,
         description: true,
         endDateTime: true
-    }).partial()
+    }).partial(),
+    readOldPage: readPageInputSchemaObject(
+        z.number(),
+        z.object({
+            id: z.number(),
+        }),
+        z.undefined()
+    ),
 } as const

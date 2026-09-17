@@ -1,7 +1,6 @@
 import { omegaQuotesAuth } from './auth'
 import { omegaquoteSchemas } from './schemas'
 import { omegaQuoteFilterSelection } from './constants'
-import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { notificationOperations } from '@/services/notifications/operations'
 import { defineOperation } from '@/services/serviceOperation'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
@@ -39,13 +38,7 @@ export const omegaquoteOperations = {
         }
     }),
     readPage: defineOperation({
-        paramsSchema: readPageInputSchemaObject(
-            z.number(),
-            z.object({
-                id: z.number(),
-            }),
-            z.undefined()
-        ),
+        paramsSchema: omegaquoteSchemas.readPage,
         authorizer: () => omegaQuotesAuth.readPage.dynamicFields({}),
         operation: async ({ prisma, params }) =>
             prisma.omegaQuote.findMany({

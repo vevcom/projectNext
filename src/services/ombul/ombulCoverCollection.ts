@@ -1,0 +1,16 @@
+import '@pn-server-only'
+import { ombulCoversImagePanelAuth } from './auth'
+import { implementSpecialCollection } from '@/services/images/subservice/special/implement'
+
+export const {
+    internalOperations: ombulCoverImageOperations,
+    specialCollectionPanelOperations: ombulCoversImagePanelOperations,
+    generateCollectionFromConfig: generateOmbulCoversCollectionFromConfig
+} = implementSpecialCollection({
+    special: 'OMBULCOVERS',
+    imagePanelAuther: ombulCoversImagePanelAuth.dynamicFields({}),
+    config: {
+        name: 'Ombulforsider',
+        description: 'Bilder brukt som forsider for ombul. Hvert bilde i denne samlingen tilhører nøyaktig én ombul.',
+    }
+})

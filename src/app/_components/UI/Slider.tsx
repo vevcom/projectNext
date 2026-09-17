@@ -10,7 +10,7 @@ type PropTypes = Omit<TextInputPropTypes, 'type'> & { name: string }
  * @param name - The name of the slider
  * @returns
  */
-export default function Slider({ label, name, color = 'secondary', ...props }: PropTypes) {
+export default function Slider({ label, name, color = 'primary', ...props }: PropTypes) {
     return (
         <label className={`${styles.Slider} ${styles[color]}`}>
             <p className={styles.label}>{label}</p>

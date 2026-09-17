@@ -36,7 +36,6 @@ export default async function CommiteeMembers({ params }: PropTypes) {
                             key={i}
                             user={member.user}
                             subText={member.title}
-                            asClient={false}
                         />
                     ))}
                 </div>

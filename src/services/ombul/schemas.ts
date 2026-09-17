@@ -1,5 +1,5 @@
-import { imageFileSchema } from '@/services/images/schemas'
-import { maxOmbulFileSize } from '@/services/ombul/ConfigVars'
+import { imageFileSchema, imageSchemas } from '@/services/images/subservice/schemas'
+import { maxOmbulFileSize } from '@/services/ombul/constants'
 import { z } from 'zod'
 import { File } from 'node:buffer'
 
@@ -34,5 +34,6 @@ export const ombulSchemas = {
     }),
     updateFile: baseSchema.pick({
         ombulFile: true
-    })
-}
+    }),
+    updateCoverImage: imageSchemas.uploadImage,
+} as const

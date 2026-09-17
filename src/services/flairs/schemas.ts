@@ -1,4 +1,5 @@
 import { Zpn } from '@/lib/fields/zpn'
+import { imageSchemas } from '@/services/images/subservice/schemas'
 import { z } from 'zod'
 
 const baseSchema = z.object({
@@ -10,10 +11,10 @@ export const flairSchema = {
     create: baseSchema.pick({
         name: true,
         color: true,
-    }),
+    }).merge(imageSchemas.uploadImage),
     update: baseSchema.partial().pick({
         name: true,
         color: true,
     }),
+    updateImage: imageSchemas.uploadImage,
 } as const
-

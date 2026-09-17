@@ -10,18 +10,22 @@
 }
 
 .selection {
+    @include ohma.layer;
     margin-top: 1em;
     border-radius: ohma.$rounding ohma.$rounding 0 0;
     padding: ohma.$rounding;
-    background-color: ohma.$colors-gray-300;
     display: flex;
     flex-flow: row wrap;
     align-items: center;
 
+    p {
+        flex-grow: 1;
+    }
+
     .openUserList {
         @include ohma.btn(ohma.$colors-primary);
         font-weight: ohma.$fonts-weight-s;
-        margin-right: 2em;
+        flex-grow: 0;
     }
 
     .userSelected {

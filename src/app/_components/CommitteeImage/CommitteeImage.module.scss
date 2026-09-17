@@ -2,7 +2,7 @@
 
 @use "sass:color";
 
-$background: color.adjust(ohma.$colors-secondary, $lightness: 15%);
+$background: color-mix(in srgb, ohma.$colors-secondary, white 15%);
 
 .CommitteeImage {
   position: relative;

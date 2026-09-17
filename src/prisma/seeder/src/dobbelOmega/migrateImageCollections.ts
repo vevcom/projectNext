@@ -34,7 +34,7 @@ export default async function migrateImageCollections(pnPrisma: PrismaClientPn, 
                 createdAt: imageCollection.updatedAt,
                 updatedAt: imageCollection.updatedAt,
                 //TODO: Link to right committee through visibility
-                visibilityRead: {
+                visibilityRegular: {
                     create: {} //Assuming all collections from omegaweb-basic to be public on migration is probably fine
                 },
                 visibilityAdmin: {

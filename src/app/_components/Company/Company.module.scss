@@ -1,6 +1,9 @@
 @use '@/styles/ohma';
 
 .Company {
+    @include ohma.neumorphism(var(--secondary-l), var(--secondary-c), var(--secondary-h),5px,10px);
+    border-radius: ohma.$cardRounding;
+    padding: ohma.$gap;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -8,19 +11,21 @@
     .logo, .logoSq {
         overflow: hidden;
         display: flex;
-        justify-content: center;
         align-items: center;
-        margin-bottom: 1em; 
+        margin-bottom: ohma.$gap;
+        border-radius: calc(#{ohma.$cardRounding} - #{ohma.$gap});
     }
     .logoSq {
         aspect-ratio: 1/1;
     }
     .info {
+        margin: 0 ohma.$gap;
         position: relative;
         h2 {
             font-size: ohma.$fonts-xl;
         }
         .showSettings {
+            color: ohma.$colors-text;
             position: absolute;
             top: 50%;
             right: 0;

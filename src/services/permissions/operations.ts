@@ -3,7 +3,8 @@ import { permissionsAuth } from './auth'
 import { defineOperation, defineSubOperation } from '@/services/serviceOperation'
 import { invalidateAllUserSessionData, invalidateManyUserSessionData } from '@/services/auth/invalidateSession'
 import { groupsWithRelationsIncluder } from '@/services/groups/constants'
-import { checkGroupValidity, inferGroupName } from '@/services/groups/operations'
+import { assertGroupValidity } from '@/services/groups/operations'
+import { inferGroupName } from '@/lib/groups/inferGroupName'
 import { Permission } from '@/prisma-generated-pn-types'
 import { z } from 'zod'
 
@@ -71,7 +72,7 @@ export const permissionOperations = {
 
             return groupsPermission.map(group => ({
                 ...group,
-                name: inferGroupName(checkGroupValidity(group)),
+                name: inferGroupName(assertGroupValidity(group)),
                 permissions: group.permissions.map(permission => permission.permission)
             }))
         }

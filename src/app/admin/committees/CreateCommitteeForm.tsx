@@ -1,35 +1,25 @@
-'use client'
 import styles from './CreateCommitteeForm.module.scss'
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
+import FileInput from '@/components/UI/FileInput'
+import LicenseChooser from '@/components/LicenseChooser/LicenseChooser'
 import { createCommitteeAction } from '@/services/groups/committees/actions'
-import { ImageSelectionContext } from '@/contexts/ImageSelection'
-import { useContext } from 'react'
 
 /**
- * WARNING: The component expects to be rendered inside a ImageSelectionProvider, so the form can
- * be submitted with a committee logo.
- * A component to create a committee
- * @param defaultImage - The default image to use as a committee logo if no logo is selected
- * @returns committee form JSX
+ * A form to create a committee. The logo fields are optional - if left empty the committee falls
+ * back to the shared default committee logo, which can be replaced later from the committee's own
+ * admin page.
  */
 export default function CreateCommitteeForm() {
-    const imageSelection = useContext(ImageSelectionContext)
-    if (!imageSelection) throw new Error('No context')
-
-    const createCommittee = (data: FormData) => {
-        if (imageSelection.selectedImage) {
-            data.append('logoImageId', imageSelection.selectedImage.id.toString())
-        }
-
-        return createCommitteeAction(data)
-    }
-
     return (
         <div className={styles.CreateCommitteeForm}>
-            <Form action={createCommittee}>
-                <TextInput name="name" label="Navn"/>
-                <TextInput name="shortName" label="Kortnavn"/>
+            <Form action={createCommitteeAction}>
+                <TextInput name="name" label="Navn" />
+                <TextInput name="shortName" label="Kortnavn" />
+                <FileInput label="Logo" name="imageFile" color="primary" />
+                <TextInput label="Alternativ tekst for logo" name="imageAlt" />
+                <TextInput label="Kreditert" name="imageCredit" />
+                <LicenseChooser name="imageLicenseId" />
             </Form>
         </div>
     )

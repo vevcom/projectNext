@@ -20,9 +20,7 @@ type PropTypes = {
 type PreviewKey = keyof PropTypesPreview
 
 /**
- * This component is for creating ombul issues. Since it needs to be able to choose a image
- * it must be able to consume ImageSelectionContext, so it **must** be rendered inside
- * ImageSelectionProvider.
+ * This component is for creating ombul issues.
  * @param latestOmbul - The latest ombul issue, used to set default values for year and issueNumber of next ombul
  */
 export default function CreateOmbul({ latestOmbul }: PropTypes) {

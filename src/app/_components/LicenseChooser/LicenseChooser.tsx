@@ -7,14 +7,15 @@ import { useCallback, useEffect, useState, useEffectEvent } from 'react'
 
 type PropTypes = {
     defaultLicenseName?: string | null
+    name?: string
 }
 
 /**
  * A component to choose a license. It makes a CLIENT SIDE request to the server to get the licenses
- * The selection has the name "licenseId"
+ * @param name - the form field name of the selection (defaults to "licenseId")
  * @returns A component to choose a license
  */
-export default function LicenseChooser({ defaultLicenseName }: PropTypes) {
+export default function LicenseChooser({ defaultLicenseName, name = 'licenseId' }: PropTypes) {
     const action = useCallback(() => readAllLicensesAction(), [])
     const { data } = useActionCall(action)
 
@@ -34,7 +35,7 @@ export default function LicenseChooser({ defaultLicenseName }: PropTypes) {
 
     return (
         <SelectNumberPossibleNULL
-            name="licenseId"
+            name={name}
             label="Lisens"
             className={styles.LicenseChooser}
             options={

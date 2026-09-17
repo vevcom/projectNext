@@ -4,7 +4,6 @@ import { lockersSchemas } from './schemas'
 import { lockerAuth } from './auth'
 import { defineOperation } from '@/services/serviceOperation'
 import { ServerError } from '@/services/error'
-import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { z } from 'zod'
 import type { Prisma } from '@/prisma-generated-pn-types'
@@ -86,13 +85,7 @@ export const lockerOperations = {
      */
     readPage: defineOperation({
         authorizer: () => lockerAuth.readPage.dynamicFields({}),
-        paramsSchema: readPageInputSchemaObject(
-            z.number(),
-            z.object({
-                id: z.number(),
-            }),
-            z.any(),
-        ),
+        paramsSchema: lockersSchemas.readPage,
         operation: async ({ prisma, params }) => {
             const lockers = await prisma.locker.findMany({
                 ...cursorPageingSelection(params.paging.page),

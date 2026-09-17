@@ -14,8 +14,9 @@ import { ServerSession } from '@/auth/session/ServerSession'
 export default async function StudyProgrammes() {
     const studyprogrammes = unwrapActionReturn(await readStudyProgrammesAction())
 
-    const showCreateButton = studyProgrammeAuth.create.dynamicFields({}).auth(await ServerSession.fromNextAuth())
-    const canEdit = studyProgrammeAuth.update.dynamicFields({}).auth(await ServerSession.fromNextAuth())
+    const session = await ServerSession.fromNextAuth()
+    const showCreateButton = studyProgrammeAuth.create.dynamicFields({}).auth(session)
+    const canEdit = studyProgrammeAuth.update.dynamicFields({}).auth(session)
 
 
     return <PageWrapper

@@ -5,11 +5,7 @@ export const committeesParticipatingincluder = {
         include: {
             committee: {
                 include: {
-                    logoImage: {
-                        include: {
-                            image: true
-                        }
-                    },
+                    logoImage: true,
                     paragraph: true
                 }
             }

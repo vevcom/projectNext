@@ -1,24 +1,26 @@
 import styles from './page.module.scss'
-import BorderButton from '@/components/UI/BorderButton'
+import ProfileButton from '@/components/UI/ProfileButton'
 import { userAuth } from '@/services/users/auth'
 import ProfilePicture from '@/components/User/ProfilePicture'
 import UserDisplayName from '@/components/User/UserDisplayName'
 import { readUserProfileAction } from '@/services/users/actions'
-import { readSpecialImageAction } from '@/services/images/actions'
 import { ServerSession } from '@/auth/session/ServerSession'
 import { sexConfig } from '@/services/users/constants'
 import { readUserFlairsAction } from '@/services/flairs/actions'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { RelationshipStatus } from '@/prisma-generated-pn-types'
 import Link from 'next/link'
+import { faCog, faSignOut } from '@fortawesome/free-solid-svg-icons'
 import { notFound, redirect } from 'next/navigation'
 import { v4 as uuid } from 'uuid'
 import React from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
     title: 'Profil',
 }
+
 
 export type PropTypes = {
     params: Promise<{
@@ -53,14 +55,6 @@ export default async function User({ params }: PropTypes) {
     const flairs = unwrapActionReturn(await readUserFlairsAction({ params: { userId: profile.user.id } })).sort(
         (a, b) => a.rank - b.rank
     )
-
-    const profileImage = profile.user.image ? profile.user.image : await readSpecialImageAction.bind(
-        null, { params: { special: 'DEFAULT_PROFILE_IMAGE' } }
-    )().then(res => {
-        if (!res.success) throw new Error('Kunne ikke finne standard profilbilde')
-        return res.data
-    })
-
 
     const { authorized: canAdministrate } = userAuth.updateProfile.dynamicFields(
         { username: profile.user.username }
@@ -102,13 +96,12 @@ export default async function User({ params }: PropTypes) {
                 />
 
                 <div className={styles.profileContent} style={borderColour}>
-                    <ProfilePicture width={240} profileImage={profileImage} className={styles.profilePicture}/>
+                    <ProfilePicture width={240} profileImage={profile.user.image} className={styles.profilePicture}/>
                     <div className={styles.header}>
                         <div className={styles.nameAndId}>
                             <h1><UserDisplayName
                                 user={profile.user}
                                 width={40}
-                                asClient={false}
                             /></h1>
                         </div>
                         {studyProgrammes.map((studyProgramme, i) =>
@@ -138,18 +131,19 @@ export default async function User({ params }: PropTypes) {
                     </div>
                     <div className={styles.leftSection}>
                         <div className={styles.buttons}>
-                            {canAdministrate && <Link href={`/users/${profile.user.username}/settings`}>
-                                <BorderButton color="secondary">
+                            {canAdministrate &&
+                                <ProfileButton href={`/users/${profile.user.username}/settings`}>
+                                    <FontAwesomeIcon icon={faCog} />
                                     <p>Innstillinger</p>
-                                </BorderButton>
-                            </Link>}
+                                </ProfileButton>
+                            }
                             {profile.user.id === session?.user?.id && (
-                                <Link href="/logout">
-                                    <BorderButton color="secondary">
-                                        <p>Logg ut</p>
-                                    </BorderButton>
-                                </Link>
-                            )}
+                                <ProfileButton href={'/logout'}>
+                                    <FontAwesomeIcon icon={faSignOut} />
+                                    <p>Logg ut</p>
+                                </ProfileButton>
+                            )
+                            }
                         </div>
                     </div>
                     <div className={styles.profileMain}>
@@ -193,10 +187,13 @@ export default async function User({ params }: PropTypes) {
                             <h2>Medlemsskap</h2>
                             {committeeMemberships.map((membership, i) => (
                                 <Link
+                                    className={styles.memberShipInCommitteeLink}
                                     href={`/committees/${membership.group.committee?.shortName}`}
                                     key={i}
                                 >
-                                    <p>{membership.title} i {membership.group.committee?.name}</p>
+                                    <p className={styles.memberShipInCommittee}>
+                                        {membership.title} i {membership.group.committee?.name}
+                                    </p>
                                 </Link>
                             ))}
                         </div>}

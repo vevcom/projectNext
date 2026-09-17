@@ -4,7 +4,6 @@ import { dotSchemas } from './schemas'
 import { dotBaseDuration, dotsIncluder } from './constants'
 import { defineOperation } from '@/services/serviceOperation'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
-import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { z } from 'zod'
 
 /**
@@ -96,16 +95,7 @@ const readWrappersForUser = defineOperation({
 
 const readPage = defineOperation({
     authorizer: () => dotAuth.readPage.dynamicFields({}),
-    paramsSchema: readPageInputSchemaObject(
-        z.number(),
-        z.object({
-            id: z.number(),
-        }),
-        z.object({
-            userId: z.number().nullable(),
-            onlyActive: z.boolean(),
-        }),
-    ),
+    paramsSchema: dotSchemas.readPage,
     operation: async ({ prisma, params }) => (await prisma.dotWrapper.findMany({
         ...cursorPageingSelection(params.paging.page),
         where: {

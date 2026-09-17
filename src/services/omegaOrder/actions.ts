@@ -1,14 +1,7 @@
 'use server'
-import { safeServerCall } from '@/services/actionError'
-import { createOmegaOrder } from '@/services/omegaOrder/create'
-import { readCurrentOmegaOrder } from '@/services/omegaOrder/read'
-import type { ActionReturn } from '@/services/actionTypes'
-import type { OmegaOrder } from '@/prisma-generated-pn-types'
+import { omegaOrderOperations } from './operations'
+import { makeAction } from '@/services/serverAction'
 
-export async function createOmegaOrderAction(): Promise<ActionReturn<void>> {
-    return safeServerCall(createOmegaOrder)
-}
-
-export async function readCurrentOmegaOrderAction(): Promise<ActionReturn<OmegaOrder>> {
-    return await safeServerCall(() => readCurrentOmegaOrder())
-}
+export const createOmegaOrderAction = makeAction(omegaOrderOperations.create)
+export const readCurrentOmegaOrderAction = makeAction(omegaOrderOperations.readCurrent)
+export const readAllOmegaOrdersAction = makeAction(omegaOrderOperations.readAll)

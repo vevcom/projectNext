@@ -1,5 +1,5 @@
 import styles from './page.module.scss'
-import { readSchoolsPageAction } from '@/services/education/schools/actions'
+import { readExpandedSchoolsPageAction } from '@/services/education/schools/actions'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { SchoolPagingProvider } from '@/contexts/paging/SchoolPaging'
 import SchoolList from '@/components/School/SchoolList'
@@ -14,9 +14,13 @@ export default async function Schools() {
     const isSchoolAdmin = schoolAuth.create.dynamicFields({}).auth(session).authorized
 
     const pageSizeSchool: PageSizeSchool = 8
-    const res = await readSchoolsPageAction({
-        page: { pageSize: pageSizeSchool, page: 0, cursor: null },
-        details: undefined,
+    const res = await readExpandedSchoolsPageAction({
+        params: {
+            paging: {
+                page: { pageSize: pageSizeSchool, page: 0, cursor: null },
+                details: undefined,
+            },
+        },
     })
     if (!res.success) throw new Error(res.error?.length ? res.error[0].message : 'Ukjent feil')
     const serverRenderedData = res.data
@@ -36,7 +40,7 @@ export default async function Schools() {
                 startPage={{ pageSize: pageSizeSchool, page: 1 }}
             >
                 <div className={styles.wrapper}>
-                    <SchoolList serverRendered={serverRenderedData.map(schoolListRenderer(false, session.toJsObject()))} />
+                    <SchoolList serverRendered={serverRenderedData.map(schoolListRenderer(session.toJsObject()))} />
                 </div>
             </SchoolPagingProvider>
         </PageWrapper>
