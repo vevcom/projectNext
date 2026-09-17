@@ -19,7 +19,8 @@ export const omegaOrderOperations = {
         operation: async ({ prisma }) => {
             const { order: oldOrder } = await omegaOrderOperations.readCurrent({ bypassAuth: true })
 
-            //TODO: Check that all groups are on current (old) order or retired before incrementing
+            //TODO: Read the same requirements as shown on the state of omega page (admin/stateOfOmega)
+            // through a readRequirements operation, and throw if not all of them are fulfilled.
             const newOrder = oldOrder + 1
             const updatePromises = Object.values(GroupType).reduce((acc, type) => {
                 if (!AutomaticallyIncreaseOrder[type]) return acc

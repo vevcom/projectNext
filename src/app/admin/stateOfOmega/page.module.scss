@@ -1,5 +1,65 @@
 @use '@/styles/ohma';
 
 .wrapper {
-    
+    @include ohma.pagePadding(1100px);
+    padding: 2 * ohma.$gap ohma.$minimalPagePadding;
+
+    h1 {
+        margin-bottom: 0;
+    }
+    > p {
+        color: ohma.$colors-text-muted;
+        margin-top: calc(ohma.$gap / 2);
+    }
+}
+
+.main {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 3 * ohma.$gap;
+    align-items: stretch;
+    margin-top: 3 * ohma.$gap;
+
+    @include ohma.screenMobile {
+        grid-template-columns: 1fr;
+    }
+}
+
+.order {
+    @include ohma.card;
+    @include ohma.layer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: ohma.$gap;
+    padding: 3 * ohma.$gap;
+    min-width: 12em;
+
+    .label {
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-size: ohma.$fonts-s;
+        color: ohma.$colors-text-muted;
+    }
+    .number {
+        font-family: ohma.$fonts-secondary;
+        font-size: 5em;
+        font-weight: ohma.$fonts-weight-l;
+        line-height: 1;
+    }
+}
+
+.currentOrder .number {
+    color: ohma.$colors-primary;
+}
+
+.nextOrder .number {
+    color: ohma.$colors-text-muted;
+}
+
+.requirements {
+    @include ohma.card;
+    @include ohma.layer;
+    padding: 3 * ohma.$gap;
 }

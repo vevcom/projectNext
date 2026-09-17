@@ -4,7 +4,11 @@ import Form from '@/components/Form/Form'
 import { useRouter } from 'next/navigation'
 import React from 'react'
 
-export default function CreateOrder() {
+type PropTypes = {
+    allRequirementsFulfilled: boolean
+}
+
+export default function CreateOrder({ allRequirementsFulfilled }: PropTypes) {
     const { refresh } = useRouter()
 
     return (
@@ -12,6 +16,7 @@ export default function CreateOrder() {
             action={createOmegaOrderAction}
             successCallback={refresh}
             submitText="Inkrementer omega"
+            submitColor={allRequirementsFulfilled ? 'primary' : 'red'}
             confirmation={{
                 confirm: true,
                 text: 'Dette er en alvorlig operasjon å gjøre, er du sikker på at du vil fortsette?'
