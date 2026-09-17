@@ -11,8 +11,6 @@ import { PopUpContext } from '@/contexts/PopUp'
 import { UserSelectionContext } from '@/contexts/UserSelection'
 import { configureAction } from '@/services/configureAction'
 import { useContext } from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus } from '@fortawesome/free-solid-svg-icons'
 
 export default function CreateDotForm() {
     const session = useSession()
@@ -28,16 +26,15 @@ export default function CreateDotForm() {
 
     return (
         <div className={styles.CreateDotForm}>
-            <FontAwesomeIcon icon={faPlus} />
-            <h2>
-                Gi ny prikk
-            </h2>
+            <div className={styles.header}>
+                <h2>Gi ny prikk</h2>
+            </div>
             <div className={styles.userSelected}>
                 <p>
                     {
                         userSelectionContext.user ?
                             `${userSelectionContext.user.firstname} ${userSelectionContext.user.lastname}` :
-                            'ingen bruker valgt'
+                            'Ingen bruker valgt'
                     }
                 </p>
                 <PopUp popUpKey="selectUserDot" showButtonClass={styles.openUserList} showButtonContent={
@@ -47,12 +44,13 @@ export default function CreateDotForm() {
                 </PopUp>
             </div>
             <Form
+                className={styles.form}
                 action={configureAction(createDotAction, { params: { accuserId: session.session.user.id } })}
                 submitText="Lag prikk"
                 refreshOnSuccess
             >
-                <TextInput name="reason" label="Grunn" />
-                <NumberInput name="value" label="Antall prikker" />
+                <TextInput name="reason" label="Grunn" background="raised" />
+                <NumberInput name="value" label="Antall prikker" background="raised" />
                 <input type="hidden" name="userId" value={userSelectionContext.user?.id} />
             </Form>
         </div>

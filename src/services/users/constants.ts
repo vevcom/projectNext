@@ -29,6 +29,10 @@ export const userFilterSelection = {
     flairs: {
         select: {
             id: true,
+            rank: true,
+            colorR: true,
+            colorG: true,
+            colorB: true,
             image: { include: expandedImageIncluder },
         },
     },

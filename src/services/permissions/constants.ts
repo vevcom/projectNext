@@ -493,8 +493,18 @@ export const permissionConfig = {
     APPLICATION_WRITE: {
         name: 'Søknadsskriver',
         description: `
-            Kan skrive søknader til alle aktive søknadsperioder. 
+            Kan skrive søknader til alle aktive søknadsperioder.
         `,
         category: 'applications',
+    },
+    NEWS_CREATE: {
+        name: 'Lage nyhetsartikkel',
+        description: 'kan lage nyhetsartikler',
+        category: 'public',
+    },
+    NEWS_ADMIN: {
+        name: 'Nyhetsadministrator',
+        description: 'kan administrere alle nyhetsartikler uavhengig av synlighet',
+        category: 'public',
     },
 } satisfies Record<Permission, PermissionInfo>

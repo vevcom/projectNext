@@ -4,12 +4,17 @@ import CollectionAdminUpload from './CollectionAdminUpload'
 import Form from '@/components/Form/Form'
 import TextInput from '@/components/UI/TextInput'
 import ImageUploader from '@/components/Image/ImageUploader'
-import PopUp from '@/components/PopUp/PopUp'
+import {
+    SettingsHeaderItemPopUp,
+    UploadHeaderItemPopUp,
+    VisibilityHeaderItemPopUp,
+} from '@/components/HeaderItems/HeaderItemPopUp'
 import VisibilityAdmin from '@/components/Visibility/VisibilityAdmin/VisibilityAdmin'
 import useEditMode from '@/hooks/useEditMode'
 import { dynamicImageAuth } from '@/services/images/dynamic/auth'
 import Button from '@/components/UI/Button'
 import { configureAction } from '@/services/configureAction'
+import { EMPTY_VISIBILITY } from '@/auth/visibility/emptyVisibility'
 import {
     updateDynamicImageCollectionAction,
     destroyDynamicImageCollectionAction,
@@ -17,8 +22,6 @@ import {
     updateDynamicImageCollectionRegularLevelVisibilityAction,
     updateDynamicImageCollectionAdminLevelVisibilityAction,
 } from '@/services/images/dynamic/actions'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCog, faEye, faUpload } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import type { ExpandedImageCollection } from '@/services/images/subservice/types'
@@ -29,22 +32,12 @@ type PropTypes = {
     doubleLevelVisibility: DoubleLevelVisibilityMatrix | null,
     refreshImages: () => void,
 }
-/**
- * Fallback in case one was not able to read visibility. In this case,
- * the auths might be wrong, but this allows the admin to at least still render.
- */
-const UNREADABLE_VISIBILITY: DoubleLevelVisibilityMatrix = {
-    regularLevel: { requirements: [{ conditions: [] }] },
-    adminLevel: { requirements: [{ conditions: [] }] },
-}
 
 export default function CollectionAdmin({ collection, doubleLevelVisibility, refreshImages }: PropTypes) {
     const { id: collectionId } = collection
     const router = useRouter()
-    const doubleLevelMatrix = doubleLevelVisibility ?? UNREADABLE_VISIBILITY
+    const doubleLevelMatrix = doubleLevelVisibility ?? EMPTY_VISIBILITY
 
-    // One authorizer check per action - each button/form below is gated by the exact same
-    // authorizer its own action uses server-side, not a single blanket "can edit collection" check.
     const canUploadOne = useEditMode({
         authorizer: dynamicImageAuth.uploadImage.dynamicFields({ doubleLevelMatrix })
     })
@@ -76,60 +69,47 @@ export default function CollectionAdmin({ collection, doubleLevelVisibility, ref
         <div className={styles.CollectionAdmin}>
             {
                 canUpload && (
-                    <PopUp popUpKey="UploadImages" showButtonClass={styles.adminOption} showButtonContent={
-                        <FontAwesomeIcon icon={faUpload} />
-                    }>
+                    <UploadHeaderItemPopUp popUpKey="UploadImages">
                         <div className={styles.upload}>
                             {
                                 uploadOption === 'MANY' ? canUploadMany && (
-                                    <>
-                                        <CollectionAdminUpload collectionId={collectionId} refreshImages={refreshImages} />
-                                        {
-                                            canUploadOne && (
-                                                <Button
-                                                    className={styles.toggleUploadStyle}
-                                                    onClick={() => setUploadOption('ONE')}
-                                                    color="secondary"
-                                                >
-                                                Last opp ett bilde
-                                                </Button>
-                                            )
-                                        }
-                                    </>
+                                    <CollectionAdminUpload
+                                        collectionId={collectionId}
+                                        refreshImages={refreshImages}
+                                    />
                                 ) : canUploadOne && (
-                                    <>
-                                        <ImageUploader
-                                            title="Last opp bilde"
-                                            successCallback={refreshImages}
-                                            closePopUpOnSuccess="UploadImages"
-                                            uploadImageAction={configureAction(
-                                                uploadImageToDynamicCollectionAction,
-                                                { params: { collectionId } }
-                                            )}
-                                        />
-                                        {
-                                            canUploadMany && (
-                                                <Button
-                                                    className={styles.toggleUploadStyle}
-                                                    onClick={() => setUploadOption('MANY')}
-                                                    color="secondary"
-                                                >
-                                                Last opp mange
-                                                </Button>
-                                            )
-                                        }
-                                    </>
+                                    <ImageUploader
+                                        title="Last opp bilde"
+                                        successCallback={refreshImages}
+                                        closePopUpOnSuccess="UploadImages"
+                                        uploadImageAction={configureAction(
+                                            uploadImageToDynamicCollectionAction,
+                                            { params: { collectionId } }
+                                        )}
+                                    />
+                                )
+                            }
+                            {
+                                canUploadOne && canUploadMany && (
+                                    <Button
+                                        className={styles.toggleUpload}
+                                        onClick={() =>
+                                            setUploadOption(uploadOption === 'MANY' ? 'ONE' : 'MANY')}
+                                        color="secondary"
+                                    >
+                                        {uploadOption === 'MANY' ? 'Last opp ett bilde' : 'Last opp mange'}
+                                    </Button>
                                 )
                             }
                         </div>
-                    </PopUp>
+                    </UploadHeaderItemPopUp>
                 )
             }
             {
+                // The settings variant defaults to a smaller button than the other two, so it is
+                // matched to them explicitly.
                 canOpenEditPopUp && (
-                    <PopUp popUpKey="Edit" showButtonClass={styles.adminOption} showButtonContent={
-                        <FontAwesomeIcon icon={faCog} />
-                    }>
+                    <SettingsHeaderItemPopUp scale={40} popUpKey="Edit">
                         {
                             canUpdateCollection && (
                                 <Form
@@ -176,14 +156,12 @@ export default function CollectionAdmin({ collection, doubleLevelVisibility, ref
                                 />
                             )
                         }
-                    </PopUp>
+                    </SettingsHeaderItemPopUp>
                 )
             }
             {
                 doubleLevelVisibility && canOpenVisibilityPopUp && (
-                    <PopUp popUpKey="Visibility" showButtonClass={styles.adminOption} showButtonContent={
-                        <FontAwesomeIcon icon={faEye} />
-                    }>
+                    <VisibilityHeaderItemPopUp popUpKey="Visibility">
                         <div className={styles.visibility}>
                             {
                                 canUpdateRegularVisibility && (
@@ -216,7 +194,7 @@ export default function CollectionAdmin({ collection, doubleLevelVisibility, ref
                                 )
                             }
                         </div>
-                    </PopUp>
+                    </VisibilityHeaderItemPopUp>
                 )
             }
         </div>

@@ -1,17 +1,14 @@
 @use '@/styles/ohma';
 
 .UserCard {
-    @include ohma.round;
-    @include ohma.boxShadow('');
-    &:hover {
-        @include ohma.boxShadow('hover');
-    }
+    padding: ohma.$gap;
+    border-radius: ohma.$rounding;
     text-decoration: none;
-    margin: ohma.$gap;
-    margin-bottom: 0;
+    margin: ohma.$gap ohma.$gap 0;
     box-sizing: border-box;
-    @include ohma.layer;
     color: ohma.$colors-text;
+    background-color: ohma.$colors-surface-raised;
+    border: 4px solid var(--flairColor, ohma.$colors-surface-raised);
 
     display: flex;
     align-items: center;

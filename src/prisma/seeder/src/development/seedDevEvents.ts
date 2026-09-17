@@ -17,6 +17,12 @@ export default async function seedDevEvents(prisma: PrismaClient) {
         }
     })
 
+    const coverImage = await prisma.image.findUniqueOrThrow({
+        where: {
+            standardImage: 'FAIR',
+        }
+    })
+
     const bedpres = await eventOperations.create({
         prisma,
         bypassAuth: true,
@@ -37,7 +43,7 @@ export default async function seedDevEvents(prisma: PrismaClient) {
         }
     })
 
-    await eventOperations.create({
+    const examReading = await eventOperations.create({
         prisma,
         bypassAuth: true,
         data: {
@@ -69,6 +75,15 @@ export default async function seedDevEvents(prisma: PrismaClient) {
             registrationStart: today,
             registrationEnd: tomorrow,
             tagIds: [],
+        }
+    })
+
+    await prisma.cmsImage.updateMany({
+        where: {
+            id: { in: [bedpres.coverImageId, examReading.coverImageId, ohmaBirthday.coverImageId] }
+        },
+        data: {
+            imageId: coverImage.id
         }
     })
 

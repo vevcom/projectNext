@@ -192,10 +192,18 @@ export type ServiceOperationImplementationConfig<
  * inside a transaction. In that case, the prisma client is a Prisma.TransactionClient.
  * The caveat is that a Prisma.TransactionClient can't be used to open a new transaction
  * so if the service operation opens a transaction, the prisma client can only be a PrismaClient.
+ *
+ * The check is written as [OpensTransaction] extends [true] rather than the bare
+ * OpensTransaction extends true so that it does not distribute over a union. An operation that
+ * does not declare opensTransaction gets `boolean` here, and a distributing conditional turns that
+ * into PrismaClient | Prisma.TransactionClient - a union whose deeply generic method signatures tsc
+ * has to reconcile at every call site, which reaches the instantiation depth limit on some models.
+ * Not distributing resolves `boolean` to Prisma.TransactionClient, which is what an operation that
+ * has not claimed it opens a transaction is entitled to anyway.
  */
 export type PrismaPossibleTransaction<
     OpensTransaction extends boolean
-> = OpensTransaction extends true ? PrismaClient : Prisma.TransactionClient
+> = [OpensTransaction] extends [true] ? PrismaClient : Prisma.TransactionClient
 
 /**
  * In addition to custom data arguments, every service operation receives a context object.

@@ -7,6 +7,7 @@ import { faCopyright } from '@fortawesome/free-solid-svg-icons'
 import type { ImageResolution } from '@/lib/images/resolutionForWidth'
 import type { ExpandedImage } from '@/services/images/subservice/types'
 import type { ImageProps } from 'next/image'
+import type { CSSProperties } from 'react'
 
 export type PropTypes = Omit<ImageProps, 'src' | 'alt'> & {
     image: ExpandedImage,
@@ -18,6 +19,8 @@ export type PropTypes = Omit<ImageProps, 'src' | 'alt'> & {
     hideCredit?: boolean,
     hideCopyRight?: boolean,
     disableLinkingToLicense?: boolean,
+    tint?: string,
+    tintAspectRatio?: number,
 }
 
 /**
@@ -45,16 +48,33 @@ export default function Image({
     hideCredit = false,
     hideCopyRight = false,
     disableLinkingToLicense = false,
+    tint,
+    tintAspectRatio = 1,
     ...props
 }: PropTypes) {
     const url = imageSourceForResolution(image, resolution)
+    const imageWidthStyle = { '--image-width': `${width}px` } as CSSProperties
+
     return (
-        <div style={{ width: `${width}px` }} className={`${styles.Image} ${imageContainerClassName}`}>
-            <img {...props}
-                width={width}
-                alt={alt || image.alt}
-                src={url}
-            />
+        <div style={imageWidthStyle} className={`${styles.Image} ${imageContainerClassName}`}>
+            {tint && image.type === 'SVG' ? (
+                <div
+                    className={styles.tinted}
+                    style={{
+                        '--image-tint-mask': `url('${url}')`,
+                        '--image-tint-color': tint,
+                        aspectRatio: tintAspectRatio,
+                    } as CSSProperties}
+                    role="img"
+                    aria-label={alt || image.alt}
+                />
+            ) : (
+                <img {...props}
+                    width={width}
+                    alt={alt || image.alt}
+                    src={url}
+                />
+            )}
             {image.credit && !hideCredit && <p className={`${styles.credit} ${styles[creditPlacement]}`}>{image.credit}</p>}
             {!hideCopyRight && image.licenseLink && (
                 <div className={styles.license}>
@@ -82,8 +102,10 @@ type SrcImageProps = Omit<PropTypes, 'image' | 'resolution'> & {
  * @returns
  */
 export function SrcImage({ src, width, ...props }: SrcImageProps) {
+    const imageWidthStyle = { '--image-width': `${width}px` } as CSSProperties
+
     return (
-        <div style={{ width: `${width}px` }} className={styles.Image}>
+        <div style={imageWidthStyle} className={styles.Image}>
             <img {...props} width={width} src={src} />
         </div>
     )

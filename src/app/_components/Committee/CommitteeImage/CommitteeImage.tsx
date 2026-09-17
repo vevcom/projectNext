@@ -16,12 +16,6 @@ type PropTypes = {
     shortName: string
     canEditCoverImage: AuthResultTypeAny
 }
-/**
- * A component that renders a backdrop image with a content div on top of it
- * @param children - The content to render on top of the image
- * @param image - The image to render as a backdrop
- * @param grayScale - Whether the image should be rendered in grayscale (true by default)
- * */
 export default function CommitteeImage({
     children,
     logoImage,
@@ -32,17 +26,14 @@ export default function CommitteeImage({
 }: PropTypes) {
     return (
         <div className={styles.CommitteeImage}>
-            <div className={styles.content}>
-                {children}
+            <div className={styles.logoIsland}>
+                <CommitteeLogo
+                    className={grayScale ? styles.gray : ''}
+                    logoImage={logoImage}
+                    width={200}
+                />
             </div>
-            <div className={styles.images}>
-                <div className={styles.image}>
-                    <CommitteeLogo
-                        className={grayScale ? styles.gray : ''}
-                        logoImage={logoImage}
-                        width={350}
-                    />
-                </div>
+            <div className={styles.coverIsland}>
                 <CmsImage
                     canEdit={canEditCoverImage}
                     updateCmsImageAction={configureAction(
@@ -53,6 +44,9 @@ export default function CommitteeImage({
                     cmsImage={coverImage}
                     width={600}
                 />
+            </div>
+            <div className={styles.content}>
+                {children}
             </div>
         </div>
     )

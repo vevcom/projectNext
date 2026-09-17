@@ -1,7 +1,9 @@
+import styles from './page.module.scss'
 import CreateInterestGroupForm from './CreateInterestGroupForm'
 import InterestGroup from './InterestGroup'
 import SpecialCmsParagraph from '@/cms/CmsParagraph/SpecialCmsParagraph'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
+import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import { interestGroupAuth } from '@/services/groups/interestGroups/auth'
 import {
@@ -12,9 +14,7 @@ import {
 import { ServerSession } from '@/auth/session/ServerSession'
 
 export default async function InterestGroups() {
-    const interestGroupsRes = await readInterestGroupsAction()
-    if (!interestGroupsRes.success) return <div>Failed to load interest groups</div> //TODO: Change to unwrap?
-    const interestGroups = interestGroupsRes.data
+    const interestGroups = unwrapActionReturn(await readInterestGroupsAction())
 
     const session = await ServerSession.fromNextAuth()
     const canCreate = interestGroupAuth.create.dynamicFields({}).auth(session)
@@ -25,26 +25,29 @@ export default async function InterestGroups() {
     ).toJsObject()
 
     return (
-        <PageWrapper title="Interessegrupper" headerItem={
-            canCreate.authorized && (
-                <AddHeaderItemPopUp popUpKey="Create interest group">
-                    <CreateInterestGroupForm />
-                </AddHeaderItemPopUp>
-            )
-        }>
-            <SpecialCmsParagraph
-                canEdit={canEditGeneralInfo}
-                special="INTEREST_GROUP_GENERAL_INFO"
-                readSpecialCmsParagraphAction={readSpecialCmsParagraphGeneralInfoAction}
-                updateCmsParagraphAction={updateSpecialCmsParagraphContentGeneralInfoAction}
-            />
-            <main>
-                {
-                    interestGroups.map(interestGroup => (
-                        <InterestGroup session={session} key={interestGroup.id} interestGroup={interestGroup} />
-                    ))
-                }
-            </main>
+        <PageWrapper transparent title="Interessegrupper">
+            <div className={styles.content}>
+                <div className={styles.generalInfo}>
+                    {canCreate.authorized && (
+                        <AddHeaderItemPopUp popUpKey="Create interest group">
+                            <CreateInterestGroupForm/>
+                        </AddHeaderItemPopUp>
+                    )}
+                    <SpecialCmsParagraph
+                        canEdit={canEditGeneralInfo}
+                        special="INTEREST_GROUP_GENERAL_INFO"
+                        readSpecialCmsParagraphAction={readSpecialCmsParagraphGeneralInfoAction}
+                        updateCmsParagraphAction={updateSpecialCmsParagraphContentGeneralInfoAction}
+                    />
+                </div>
+                <main className={styles.islands}>
+                    {
+                        interestGroups.map(interestGroup => (
+                            <InterestGroup session={session} key={interestGroup.id} interestGroup={interestGroup} />
+                        ))
+                    }
+                </main>
+            </div>
         </PageWrapper>
     )
 }

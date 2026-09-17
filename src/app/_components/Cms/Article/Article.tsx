@@ -25,6 +25,8 @@ export type PropTypes = {
     noMargin?: boolean
     sideBarContent?: ReactNode
     sideBarClassName?: string
+    articleClassName?: string
+    addSectionClassName?: string
     actions: {
         updateCoverImageAction: UpdateCmsImageAction,
         updateArticleAction: UpdateArticleAction,
@@ -42,6 +44,8 @@ export default function Article({
     noMargin = false,
     sideBarContent,
     sideBarClassName,
+    articleClassName,
+    addSectionClassName,
     actions,
     canEdit,
 }: PropTypes) {
@@ -69,7 +73,7 @@ export default function Article({
                     </SlideInOnView>
                 </span>
             )}
-            <article className={noMargin ? styles.noMargin : undefined}>
+            <article className={`${noMargin ? styles.noMargin : ''} ${articleClassName ?? ''}`}>
                 {
                     article.articleSections.length ? (
                         article.articleSections.sort((a, b) => (a.order - b.order)).map((section, i) => (
@@ -110,7 +114,7 @@ export default function Article({
                     {sideBarContent}
                 </aside>
             )}
-            <div className={styles.addSection}>
+            <div className={`${styles.addSection} ${addSectionClassName ?? ''}`}>
                 <AddSection
                     canEdit={canEdit}
                     currentNumberSections={article.articleSections.length}

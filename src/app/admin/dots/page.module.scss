@@ -1,11 +1,14 @@
 @use '@/styles/ohma';
 
 .wrapper {
-    padding: 1em;
+    padding: calc(2 * #{ohma.$gap});
+    display: flex;
+    flex-direction: column;
+    gap: calc(2 * #{ohma.$gap});
+
     .createNew {
-        margin-top: 1em;
-        @include ohma.layer;
-        @include ohma.round();
-        min-height: 100px;
+        @include ohma.card;
+        background-color: ohma.$colors-surface-raised;
+        padding: calc(3 * #{ohma.$gap});
     }
 }

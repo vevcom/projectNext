@@ -1,12 +1,10 @@
 'use client'
 import styles from './MakeNewCollection.module.scss'
 import Form from '@/components/Form/Form'
-import PopUp from '@/components/PopUp/PopUp'
 import TextInput from '@/components/UI/TextInput'
+import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import VisibilityMatrixEditor from '@/components/Visibility/VisibilityMatrixEditor/VisibilityMatrixEditor'
 import { createDynamicImageCollectionAction } from '@/services/images/dynamic/actions'
-import { faPlus } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useState } from 'react'
 import type { VisibilityRequirement } from '@/services/visibility/types'
 
@@ -27,7 +25,7 @@ export default function MakeNewCollection() {
     }
 
     return (
-        <PopUp popUpKey={popUpKey} showButtonContent={<FontAwesomeIcon icon={faPlus} />}>
+        <AddHeaderItemPopUp popUpKey={popUpKey}>
             <div className={styles.MakeNewCollection}>
                 <Form
                     closePopUpOnSuccess={popUpKey}
@@ -55,6 +53,6 @@ export default function MakeNewCollection() {
                     </div>
                 </Form>
             </div>
-        </PopUp>
+        </AddHeaderItemPopUp>
     )
 }

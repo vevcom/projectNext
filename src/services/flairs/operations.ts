@@ -73,13 +73,14 @@ export const flairOperations = {
                         }
                     }
                 })
-                const fileCleanup =
-                    await flairImageOperations.destroyImageDbAndReturnCleanup.internalCall({
+                const fileCleanup = existingFlair.imageId
+                    ? await flairImageOperations.destroyImageDbAndReturnCleanup.internalCall({
                         prisma: tx,
                         params: { imageId: existingFlair.imageId }
                     })
+                    : async () => {}
                 return { image: uploadedImage, cleanup: fileCleanup }
-            })
+            }, { timeout: 20000 })
             await cleanup()
             return newImage
         }

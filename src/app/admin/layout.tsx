@@ -1,6 +1,7 @@
 'use client'
 import styles from './layout.module.scss'
 import SlideSidebar from './SlideSidebar'
+import PageTitleSetter from '@/contexts/PageTitleSetter'
 import React from 'react'
 import { usePathname } from 'next/navigation'
 
@@ -15,6 +16,7 @@ export default function AdminLayout({ children }: PropTypes) {
     const currentPath = pathname.split('/').length > 2 ? pathname.split('/')[2] : 'admin'
     return (
         <div className={styles.wrapper}>
+            <PageTitleSetter title={'Admin'} />
             <div className={styles.slideBar}>
                 <SlideSidebar currentPath={currentPath} />
             </div>

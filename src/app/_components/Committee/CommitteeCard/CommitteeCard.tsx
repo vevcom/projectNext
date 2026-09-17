@@ -1,5 +1,5 @@
 import styles from './CommitteeCard.module.scss'
-import Image from '@/components/Image/Image'
+import CommitteeLogo from '@/components/Committee/CommitteeLogo/CommitteeLogo'
 import Link from 'next/link'
 import type { ExpandedImage } from '@/services/images/subservice/types'
 import type { ReactNode } from 'react'
@@ -13,18 +13,20 @@ type PropTypes = {
 
 export default function CommitteeCard({ image, title, children, href }: PropTypes) {
     return (
-        <Link href={href} className={styles.CommitteeCard}>
-            <div className={styles.image}>
-                {
-                    image && (
-                        <Image width={240} image={image} />
-                    )
-                }
-            </div>
-            <div className={styles.content}>
-                <h2>{title}</h2>
-                {children}
-            </div>
-        </Link>
+        <div className={styles.CommitteeCard}>
+            <Link href={href} className={styles.mainLink}>
+                <div className={styles.image}>
+                    {
+                        image && (
+                            <CommitteeLogo width={128} logoImage={image} />
+                        )
+                    }
+                </div>
+                <div className={styles.content}>
+                    <h2>{title}</h2>
+                    {children}
+                </div>
+            </Link>
+        </div>
     )
 }

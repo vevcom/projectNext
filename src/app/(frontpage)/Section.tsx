@@ -13,6 +13,7 @@ import type {
     SpecialCmsParagraph as SpecialCmsParagraphT
 } from '@/prisma-generated-pn-types'
 import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
+import type { ReactNode } from 'react'
 
 type PropTypes = {
     specialCmsImage: SpecialCmsImageT,
@@ -23,6 +24,7 @@ type PropTypes = {
     position: 'left' | 'right',
     imgWidth: number,
     id?: string,
+    children?: ReactNode,
 }
 
 function Section({
@@ -33,7 +35,8 @@ function Section({
     readMore,
     position,
     imgWidth,
-    id
+    id,
+    children
 }: PropTypes) {
     const imgContainer = (
         <div style={{ width: imgWidth }} className={styles.imgContainer}>
@@ -58,6 +61,7 @@ function Section({
                     updateCmsParagraphAction={updateSpecialCmsParagraphFrontpageSection}
                 />
                 <Link className={styles.readMore} href={readMore}>Les mer</Link>
+                {children}
             </div>
             {position === 'right' && imgContainer}
         </div>

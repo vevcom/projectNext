@@ -5,5 +5,5 @@
 }
 
 .adminLink {
-    @include ohma.btn(ohma.$colors-primary);
+    @include ohma.btn(ohma.$colors-accent-blue);
 }

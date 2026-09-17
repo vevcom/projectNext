@@ -65,6 +65,12 @@ async function upsertTestNews(
                         }
                     }
                 }
+            },
+            visibilityRegular: {
+                create: {}
+            },
+            visibilityAdmin: {
+                create: {}
             }
         }
     })
