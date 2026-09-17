@@ -21,7 +21,7 @@ export default function DesktopSideBar({ profile }: PropTypes) {
     const isAdmin = user?.username === 'harambe'
 
     const navItems = getNavItems(isLoggedIn, isAdmin, applicationPeriod)
-
+        .filter(item => item.show !== 'admin')
     return (
         <aside className={styles.DesktopSideBar} data-expanded={expanded}>
             <nav className={styles.navIcons} aria-label="Desktop navigation">
