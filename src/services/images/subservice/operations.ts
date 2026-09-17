@@ -36,14 +36,7 @@ export const imageOperations = {
                     images: {
                         select: {
                             fsLocationOriginal: true,
-                            processedFiles: {
-                                select: {
-                                    fsLocationTinySize: true,
-                                    fsLocationSmallSize: true,
-                                    fsLocationMediumSize: true,
-                                    fsLocationLargeSize: true,
-                                }
-                            },
+                            processedFiles: true,
                         }
                     }
                 }
@@ -51,15 +44,7 @@ export const imageOperations = {
             if (!collection) throw new ServerError('NOT FOUND', 'Collection ikke funnet')
 
             // Extract all file locations before deleting from DB
-            const fileLocationsToDelete = collection.images.flatMap(image => [
-                image.fsLocationOriginal,
-                ...(image.processedFiles ? [
-                    image.processedFiles.fsLocationTinySize,
-                    image.processedFiles.fsLocationSmallSize,
-                    image.processedFiles.fsLocationMediumSize,
-                    image.processedFiles.fsLocationLargeSize,
-                ] : []),
-            ])
+            const fileLocationsToDelete = collection.images.flatMap(storedFileLocationsOfImage)
 
             await prisma.$transaction(async (tx) => {
                 await tx.imageCollection.delete({
@@ -76,19 +61,7 @@ export const imageOperations = {
             })
 
             // Clean up files after transaction succeeds
-            if (fileLocationsToDelete.length > 0) {
-                const results = await Promise.allSettled(
-                    fileLocationsToDelete.map(fsLocation =>
-                        imageStore.destroyFile(fsLocation, undefined, false)
-                    )
-                )
-                const errors = results.filter((result): result is PromiseRejectedResult => result.status === 'rejected')
-                if (errors.length > 0) {
-                    logger.error(`Failed to clean up ${errors.length} image file(s) after collection deletion`, {
-                        errors: errors.map(error => error.reason)
-                    })
-                }
-            }
+            await destroyStoredFiles(fileLocationsToDelete, 'collection deletion')
         }
     }),
     updateCollection: defineSubOperation({
@@ -200,7 +173,7 @@ export const imageOperations = {
 
     /**
      * Produces the real tiny/small/medium/large avif variants for an already-uploaded image.
-     * Called by the background worker container (src/worker.ts), never directly from a request.
+     * Called by the background worker container (src/lib/images/worker.ts), never directly from a request.
      */
     processImageVariants: defineSubOperation({
         paramsSchema: () => imageSchemas.paramsSchemaImage,
@@ -338,25 +311,7 @@ export const imageOperations = {
                 },
             })
             // Return a cleanup function that the caller invokes after the transaction succeeds
-            const cleanupFn = async () => {
-                const fileDeletions = [imageStore.destroyFile(image.fsLocationOriginal, undefined, false)]
-                if (image.processedFiles) {
-                    fileDeletions.push(
-                        imageStore.destroyFile(image.processedFiles.fsLocationTinySize, undefined, false),
-                        imageStore.destroyFile(image.processedFiles.fsLocationSmallSize, undefined, false),
-                        imageStore.destroyFile(image.processedFiles.fsLocationMediumSize, undefined, false),
-                        imageStore.destroyFile(image.processedFiles.fsLocationLargeSize, undefined, false),
-                    )
-                }
-                const results = await Promise.allSettled(fileDeletions)
-                const errors = results.filter((result): result is PromiseRejectedResult => result.status === 'rejected')
-                if (errors.length > 0) {
-                    logger.error(`Failed to clean up ${errors.length} image file(s) after deletion`, {
-                        errors: errors.map(error => error.reason)
-                    })
-                }
-            }
-            return cleanupFn
+            return async () => destroyStoredFiles(storedFileLocationsOfImage(image), 'image deletion')
         }
     }),
 
@@ -410,6 +365,38 @@ async function createResizedAvifInStore(buffer: Buffer, size: number) {
     const avifBuffer = await resizeToAvifBuffer(buffer, size)
     const avifFile = new File([new Uint8Array(avifBuffer)], 'image.avif', { type: 'image/avif' })
     return imageStore.createFile(avifFile, ['avif'])
+}
+
+/**
+ * Every file in the store belonging to an image: the original, plus the resized variants if the
+ * background worker has produced them yet (svgs never have any).
+ */
+function storedFileLocationsOfImage(image: Pick<ExpandedImage, 'fsLocationOriginal' | 'processedFiles'>): string[] {
+    if (!image.processedFiles) return [image.fsLocationOriginal]
+    return [
+        image.fsLocationOriginal,
+        image.processedFiles.fsLocationTinySize,
+        image.processedFiles.fsLocationSmallSize,
+        image.processedFiles.fsLocationMediumSize,
+        image.processedFiles.fsLocationLargeSize,
+    ]
+}
+
+/**
+ * Best-effort removal of files whose database rows are already gone. A missing file is not an
+ * error (it is the state we want), and one failure must not stop the rest from being attempted -
+ * so failures are logged rather than thrown.
+ */
+async function destroyStoredFiles(fsLocations: string[], context: string): Promise<void> {
+    const results = await Promise.allSettled(
+        fsLocations.map(fsLocation => imageStore.destroyFile(fsLocation, undefined, false))
+    )
+    const errors = results.filter((result): result is PromiseRejectedResult => result.status === 'rejected')
+    if (errors.length > 0) {
+        logger.error(`Failed to clean up ${errors.length} image file(s) after ${context}`, {
+            errors: errors.map(error => error.reason)
+        })
+    }
 }
 
 export function uniqueCollectionWhere(params: z.infer<typeof imageSchemas.paramsSchemaCollection>) {

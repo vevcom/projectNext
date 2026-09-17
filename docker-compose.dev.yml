@@ -20,7 +20,7 @@ services:
             service: projectnext
         build:
             target: dev
-        command: ["./node_modules/.bin/tsx", "src/worker.ts"]
+        command: ["./node_modules/.bin/tsx", "src/lib/images/worker.ts"]
         environment:
             IGNORE_SERVER_ONLY: 'true'
         volumes:
