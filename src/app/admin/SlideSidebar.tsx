@@ -263,9 +263,9 @@ export default function SlideSidebar({ currentPath }: PropTypes) {
     const sidebarRef = useClickOutsideRef(() => setOpen(false))
     useKeyPress('Escape', () => setOpen(false))
 
-    return <div className={open ? `${styles.SlideSidebar} ${styles.open}` : `${styles.SlideSidebar} ${styles.closed}`}>
+    return <div className={`${styles.SlideSidebar} ${open ? styles.open : ''}`}>
         <div className={styles.backdrop} />
-        <div ref={sidebarRef} className={styles.panelGroup}>
+        <div ref={sidebarRef}>
             <button
                 type="button"
                 className={styles.toggleButton}
@@ -279,7 +279,7 @@ export default function SlideSidebar({ currentPath }: PropTypes) {
                 {
                     navigations.map(navigation => (
                         <Fragment key={navigation.header.title}>
-                            <h3 className={styles.header}>
+                            <h3>
                                 <FontAwesomeIcon icon={navigation.header.icon} />
                                 {navigation.header.title}
                             </h3>

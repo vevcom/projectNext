@@ -131,7 +131,7 @@ export default function SearchableDropdown<ValueType extends string | number>({
                 aria-expanded={open}
                 aria-haspopup="listbox"
             />
-            <label htmlFor={domId} className={`${styles.labe} ${(open || selectedOption) ? styles.floated : ''}`}>
+            <label htmlFor={domId} className={`${styles.label} ${(open || selectedOption) ? styles.floated : ''}`}>
                 {label}
             </label>
             <FontAwesomeIcon icon={faChevronDown} className={styles.chevron} />
