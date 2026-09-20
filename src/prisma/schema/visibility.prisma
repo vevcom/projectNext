@@ -6,6 +6,9 @@ model Visibility {
 
   imageCollectionAdmin ImageCollection? @relation(name: "ImageCollectionAdminVisibility")
   imageCollectionRead  ImageCollection? @relation(name: "ImageCollectionReadVisibility")
+
+  newsArticleAdmin NewsArticle? @relation(name: "NewsArticleAdminVisibility")
+  newsArticleRead  NewsArticle? @relation(name: "NewsArticleReadVisibility")
 }
 
 model VisibilityRequirement {

@@ -5,16 +5,26 @@ import TextInput from '@/components/UI/TextInput'
 import useEditMode from '@/hooks/useEditMode'
 import Textarea from '@/components/UI/Textarea'
 import DateInput from '@/components/UI/DateInput'
-import { destroyNewsAction, updateNewsAction } from '@/services/news/actions'
+import VisibilityAdmin from '@/components/Visibility/VisibilityAdmin/VisibilityAdmin'
+import {
+    destroyNewsAction,
+    setNewsPublishedAction,
+    updateNewsAction,
+    updateNewsAdminLevelVisibilityAction,
+    updateNewsRegularLevelVisibilityAction,
+} from '@/services/news/actions'
 import { formatVevenUri } from '@/lib/urlEncoding'
 import { newsAuth } from '@/services/news/auth'
 import { configureAction } from '@/services/configureAction'
+import { EMPTY_VISIBILITY } from '@/auth/visibility/emptyVisibility'
 import { useRouter } from 'next/navigation'
+import type { DoubleLevelVisibilityMatrix } from '@/services/visibility/types'
 import type { ExpandedNewsArticle } from '@/services/news/types'
 import type { ReactNode } from 'react'
 
 type PropTypes = {
     news: ExpandedNewsArticle
+    doubleLevelVisibility: DoubleLevelVisibilityMatrix | null
     children?: ReactNode
 }
 
@@ -22,70 +32,149 @@ type PropTypes = {
  * This component renders children if editmode is off and news admin tools if editmode is on
  * pass it not: id of article to make sure not to display that article
  */
-export default function EditNews({ news, children }: PropTypes) {
+export default function EditNews({ news, doubleLevelVisibility, children }: PropTypes) {
     const { refresh, push } = useRouter()
-    //TODO: chack visibility
-    const canEdit = useEditMode({
-        authorizer: newsAuth.update.dynamicFields({})
-    })
-    if (!canEdit) return children
 
-    // TODO: VISINILITY ADMIN
+    const doubleLevelMatrix = doubleLevelVisibility ?? EMPTY_VISIBILITY
+    const canUpdate = useEditMode({
+        authorizer: newsAuth.update.dynamicFields({ doubleLevelMatrix })
+    })
+    const canDestroy = useEditMode({
+        authorizer: newsAuth.destroy.dynamicFields({ doubleLevelMatrix })
+    })
+    const canUpdateRegularVisibility = useEditMode({
+        authorizer: newsAuth.updateRegularLevel.dynamicFields({ doubleLevelMatrix })
+    })
+    const canUpdateAdminVisibility = useEditMode({
+        authorizer: newsAuth.updateAdminLevel.dynamicFields({ doubleLevelMatrix })
+    })
+    const canSetPublished = useEditMode({
+        authorizer: newsAuth.setPublished.dynamicFields({ doubleLevelMatrix })
+    })
+
+    // The editors are bound to doubleLevelVisibility rather than doubleLevelMatrix on purpose:
+    // saving the fallback would overwrite the real requirements with fabricated ones.
+    const canEditVisibility = doubleLevelVisibility !== null &&
+        (canUpdateRegularVisibility || canUpdateAdminVisibility)
+    if (!canUpdate && !canDestroy && !canEditVisibility && !canSetPublished) return children
 
     const updateAction = configureAction(
         updateNewsAction,
         { params: { id: news.id } }
     )
 
+    const setPublishedAction = configureAction(
+        setNewsPublishedAction,
+        { params: { id: news.id } }
+    )
+
     return (
         <div className={styles.EditNews}>
             <div className={styles.update}>
-                <Form
-                    action={updateAction}
-                    navigateOnSuccess={(data) => `/news/${data ? formatVevenUri(data.articleName, data.id) : ''}`}
-                    submitText="oppdater"
-                >
-                    <TextInput
-                        color="white"
-                        defaultValue={news.articleName}
-                        label="navn"
-                        name="name"
-                    />
-                    <DateInput
-                        color="white"
-                        defaultValue={news.endDateTime}
-                        label="sluttdato"
-                        name="endDateTime"
-                    />
-                    <Textarea defaultValue={news.description || ''} label="beskrivelse" name="description" />
-                </Form>
-                <Form
-                    action={
-                        configureAction(
-                            destroyNewsAction,
-                            { params: { id: news.id } }
-                        )
-                    }
-                    successCallback={() => {
-                        push('/news')
-                        refresh()
-                    }}
-                    submitText="slett nyhet"
-                    confirmation={{
-                        confirm: true,
-                        text: 'Er du sikker på at du vil slette denne nyheten? Dette kan ikke angres.'
-                    }}
-                    submitColor="red"
-                >
-                </Form>
+                {
+                    canUpdate && (
+                        <Form
+                            action={updateAction}
+                            navigateOnSuccess={(data) => `/news/${data ? formatVevenUri(data.articleName, data.id) : ''}`}
+                            submitText="oppdater"
+                        >
+                            <TextInput
+                                color="white"
+                                defaultValue={news.articleName}
+                                label="navn"
+                                name="name"
+                            />
+                            <DateInput
+                                color="white"
+                                defaultValue={news.endDateTime}
+                                label="sluttdato"
+                                name="endDateTime"
+                            />
+                            <Textarea defaultValue={news.description || ''} label="beskrivelse" name="description" />
+                        </Form>
+                    )
+                }
+                {
+                    canDestroy && (
+                        <Form
+                            action={
+                                configureAction(
+                                    destroyNewsAction,
+                                    { params: { id: news.id } }
+                                )
+                            }
+                            successCallback={() => {
+                                push('/news')
+                                refresh()
+                            }}
+                            submitText="slett nyhet"
+                            confirmation={{
+                                confirm: true,
+                                text: 'Er du sikker på at du vil slette denne nyheten? Dette kan ikke angres.'
+                            }}
+                            submitColor="red"
+                        >
+                        </Form>
+                    )
+                }
             </div>
-            <div className={styles.visibility}>
-                Her kommer visibility settings
-
-            </div>
+            {
+                doubleLevelVisibility && (
+                    <div className={styles.visibility}>
+                        {
+                            canUpdateRegularVisibility && (
+                                <div>
+                                    <h3>Vanlig visning</h3>
+                                    <VisibilityAdmin
+                                        visibility={doubleLevelVisibility.regularLevel}
+                                        visibilityId={news.visibilityRegularId}
+                                        updateVisibilityAction={configureAction(
+                                            updateNewsRegularLevelVisibilityAction,
+                                            { implementationParams: { id: news.id } }
+                                        )}
+                                    />
+                                </div>
+                            )
+                        }
+                        {
+                            canUpdateAdminVisibility && (
+                                <div>
+                                    <h3>Adminvisning</h3>
+                                    <VisibilityAdmin
+                                        visibility={doubleLevelVisibility.adminLevel}
+                                        visibilityId={news.visibilityAdminId}
+                                        updateVisibilityAction={configureAction(
+                                            updateNewsAdminLevelVisibilityAction,
+                                            { implementationParams: { id: news.id } }
+                                        )}
+                                    />
+                                </div>
+                            )
+                        }
+                    </div>
+                )
+            }
 
             <div className={styles.publish}>
-
+                <p>{news.published ? 'Publisert' : 'Ikke publisert'}</p>
+                {
+                    canSetPublished && (
+                        <Form
+                            action={() => setPublishedAction({ data: { published: !news.published } })}
+                            refreshOnSuccess
+                            submitText={news.published ? 'avpubliser' : 'publiser'}
+                            submitColor={news.published ? 'red' : 'green'}
+                            confirmation={{
+                                confirm: true,
+                                text: news.published
+                                    ? 'Er du sikker på at du vil avpublisere denne nyheten? ' +
+                                        'Den vil da bare være synlig for de som kan administrere den.'
+                                    : 'Er du sikker på at du vil publisere denne nyheten? ' +
+                                        'Det sender ut et varsel til alle som kan se den.'
+                            }}
+                        />
+                    )
+                }
             </div>
         </div>
     )
