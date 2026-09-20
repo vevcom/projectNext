@@ -50,6 +50,7 @@ function DetailedTable({
                 <tbody>
                     <EndlessScroll
                         pagingContext={EventRegistrationDetailedPagingContext}
+                        loadingInfoWrapper={loadingInfo => <tr><td colSpan={5}>{loadingInfo}</td></tr>}
                         renderer={row => {
                             const name = row.user ? <Link href={`/users/${row.user.username}`}>
                                 <UserDisplayName user={row.user} width={20} />

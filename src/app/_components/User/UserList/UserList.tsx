@@ -140,6 +140,13 @@ export default function UserList({
 
     const currentSort = userPaging.details.sort
 
+    // Navn, Brukernavn, Studie and Klasse are always there, the rest follow the same
+    // conditions as the header cells below. Used to span the loading row across the table.
+    const columnCount = 4 +
+        (usersSelection || userSelection ? 1 : 0) +
+        (displayForUser ? 1 : 0) +
+        (groupSelected ? 2 : 0)
+
     const handleChangeName = (e: ChangeEvent<HTMLInputElement>) => {
         userPaging.setDetails({ ...userPaging.details, partOfName: e.target.value })
     }
@@ -304,7 +311,9 @@ export default function UserList({
                         </tr>
                     </thead>
                     <tbody>
-                        <EndlessScroll pagingContext={UserPagingContext} renderer={user => (
+                        <EndlessScroll pagingContext={UserPagingContext} loadingInfoWrapper={loadingInfo => (
+                            <tr><td colSpan={columnCount}>{loadingInfo}</td></tr>
+                        )} renderer={user => (
                             <tr
                                 key={user.id}
                                 className={linksToUser ? styles.clickable : ''}

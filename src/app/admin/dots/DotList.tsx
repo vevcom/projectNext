@@ -72,7 +72,9 @@ export default function DotList({ onlyActive }: PropTypes) {
                     </tr>
                 </thead>
                 <tbody>
-                    <EndlessScroll pagingContext={DotPagingContext} renderer={
+                    <EndlessScroll pagingContext={DotPagingContext} loadingInfoWrapper={loadingInfo => (
+                        <tr><td colSpan={4}>{loadingInfo}</td></tr>
+                    )} renderer={
                         dotWrapper => <tr key={dotWrapper.id}>
                             <td>{dotWrapper.reason}</td>
                             <td>{dotWrapper.user.username}</td>
