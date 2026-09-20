@@ -49,6 +49,9 @@ export default async function RootLayout({ children }: PropTypes) {
     const standardImages = standardImagesRes.success ? standardImagesRes.data : undefined
     const profile = serverSession?.user ?
         unwrapActionReturn(await readUserProfileAction({ params: { username: serverSession.user.username } })) : null
+    // The nav components get the fields they actually render rather than the whole profile,
+    // so nothing beyond these reaches the client components among them.
+    const navUser = profile?.user ?? null
 
     return (
         <html lang="en">
@@ -66,18 +69,19 @@ export default async function RootLayout({ children }: PropTypes) {
                                     <div className={styles.wrapper}>
                                         <div className={styles.navBar}>
                                             <NavBar
-                                                profile={profile}
+                                                username={navUser?.username ?? null}
+                                                profileImage={navUser?.image ?? null}
                                             />
                                         </div>
                                         <aside className={styles.sideBar}>
-                                            <DesktopSideBar profile={profile} />
+                                            <DesktopSideBar username={navUser?.username ?? null} />
                                         </aside>
                                         <main className={styles.content}>
                                             {children}
                                         </main>
                                         <div className={styles.mobileNavBar}>
                                             <MobileNavBar
-                                                profile={profile}
+                                                isLoggedIn={navUser !== null}
                                             />
                                         </div>
                                     </div>

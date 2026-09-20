@@ -6,11 +6,12 @@ import StandardImageServer from '@/components/Image/StandardImageServer'
 import EditModeSwitch from '@/components/EditModeSwitch/EditModeSwitch'
 import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import type { PropTypes } from './NavBar'
 
-export default async function MobileNavBar({ profile }: PropTypes) {
-    const user = profile?.user ?? null
-    const isLoggedIn = user !== null
+type PropTypes = {
+    isLoggedIn: boolean
+}
+
+export default async function MobileNavBar({ isLoggedIn }: PropTypes) {
     const applicationPeriod = false //TODO
     const isAdmin = true //TODO
     const navItems = getNavItems(isLoggedIn, isAdmin, applicationPeriod)
@@ -43,10 +44,9 @@ export default async function MobileNavBar({ profile }: PropTypes) {
                     width={25}
                     height={25}
                     alt="log in button"
-                    className={styles.image}
                     tint="var(--text)"
                 />
-                <UserNavigation profile={profile} />
+                <UserNavigation isLoggedIn={isLoggedIn} />
             </div>
             <Menu
                 items={itemsForMenu}
