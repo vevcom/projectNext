@@ -37,6 +37,7 @@ export default function DepositModal({ ledgerAccountId, customerSessionClientSec
     // eslint-disable-next-line
     const [manualFees, setManualFees] = useState(0)
     const [selectedProvider, setSelectedProvider] = useState<PaymentProvider>(defaultPaymentProvider)
+    const [description, setDescription] = useState('')
 
     const stripePaymentRef = useRef<StripePaymentRef>(null)
 
@@ -68,7 +69,7 @@ export default function DepositModal({ ledgerAccountId, customerSessionClientSec
 
         // Call the server action to create the deposit
         const createResult = await createDepositAction({
-            params: { ledgerAccountId, funds, manualFees, provider: selectedProvider }
+            params: { ledgerAccountId, funds, manualFees, provider: selectedProvider, description: description || undefined }
         })
         if (!createResult.success) return createResult
 
@@ -138,9 +139,14 @@ export default function DepositModal({ ledgerAccountId, customerSessionClientSec
                             onChange={e => setManualFees(convertAmount(e.target.value))}
                             required
                         />
-                        <TextInput label="Kommentar" name="note"></TextInput>
                     </div>
                 )}
+
+                <TextInput
+                    label="Kommentar"
+                    name="description"
+                    onChange={e => setDescription(e.target.value)}
+                />
             </Form>
         </div>
     </PopUp>

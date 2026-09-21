@@ -70,10 +70,11 @@ enum LedgerTransactionState {
 // Either all or none ledger entries and payouts in a transaction are valid.
 // Payments track their own state as they depend on the external payment provider.
 model LedgerTransaction {
-  id      Int                      @id @default(autoincrement())
-  purpose LedgerTransactionPurpose
-  state   LedgerTransactionState
-  reason  String? // If the transaction failed, this is the reason why.
+  id          Int                      @id @default(autoincrement())
+  purpose     LedgerTransactionPurpose
+  state       LedgerTransactionState
+  reason      String? // If the transaction failed, this is the reason why.
+  description String? // Manual comment describing what the transaction was for, e.g. "Kjøp av kiogeskapsvarer".
 
   ledgerEntries LedgerEntry[]
   payment       Payment?      @relation(fields: [paymentId], references: [id])

@@ -248,6 +248,7 @@ export const ledgerTransactionOperations = {
                 ledgerAccountId: z.number(),
             }).array(),
             paymentId: z.number().optional(),
+            description: z.string().optional(),
         }),
         operation: async ({ prisma, params }) => {
             // Calculate the balance for all accounts which are going to be deducted.
@@ -285,6 +286,7 @@ export const ledgerTransactionOperations = {
                         create: entries,
                     },
                     paymentId: params.paymentId,
+                    description: params.description,
                 },
                 select: {
                     id: true,

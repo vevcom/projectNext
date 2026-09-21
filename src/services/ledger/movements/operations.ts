@@ -53,6 +53,7 @@ export const ledgerMovementOperations = {
                             funds: params.funds,
                         }],
                         paymentId: payment.id,
+                        description: 'Innskudd',
                     },
                     prisma: tx,
                 })
@@ -88,6 +89,7 @@ export const ledgerMovementOperations = {
             ledgerAccountId: z.number(),
             funds: z.number().nonnegative().default(0),
             fees: z.number().nonnegative().default(0),
+            description: z.string().optional(),
         }).refine((data) => data.funds || data.fees, 'Både beløp og avgifter kan ikke være 0 samtidig.'),
         opensTransaction: true,
         operation: async ({ prisma, params }) => prisma.$transaction(async tx => {
@@ -111,6 +113,7 @@ export const ledgerMovementOperations = {
                         fees: -params.fees,
                     }],
                     paymentId: payment.id,
+                    description: params.description,
                 },
                 prisma: tx,
             })

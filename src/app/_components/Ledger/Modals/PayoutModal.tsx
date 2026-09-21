@@ -5,6 +5,7 @@ import Form from '@/components/Form/Form'
 import PopUp from '@/components/PopUp/PopUp'
 import NumberInput from '@/components/UI/NumberInput'
 import Button from '@/components/UI/Button'
+import TextInput from '@/components/UI/TextInput'
 import { convertAmount } from '@/lib/currency/convert'
 import { configureAction } from '@/services/configureAction'
 import { createPayoutAction } from '@/services/ledger/movements/actions'
@@ -19,6 +20,7 @@ type Props = {
 export default function PayoutModal({ ledgerAccountId, defaultFunds = 0, defaultFees = 0 }: Props) {
     const [funds, setFunds] = useState(defaultFunds)
     const [fees, setFees] = useState(defaultFees)
+    const [description, setDescription] = useState('')
 
     return <PopUp
         popUpKey="payoutModal"
@@ -27,7 +29,9 @@ export default function PayoutModal({ ledgerAccountId, defaultFunds = 0, default
         <h2>Ny utbetaling</h2>
         <div className={styles.checkoutFormContainer}>
             <Form
-                action={configureAction(createPayoutAction, { params: { ledgerAccountId, fees, funds } })}
+                action={configureAction(createPayoutAction, {
+                    params: { ledgerAccountId, fees, funds, description: description || undefined }
+                })}
                 submitText="Registrer utbetaling"
                 buttonClassName={styles.submitButton}
                 refreshOnSuccess
@@ -46,6 +50,11 @@ export default function PayoutModal({ ledgerAccountId, defaultFunds = 0, default
                     step={1}
                     min={0}
                     onChange={(e) => setFees(convertAmount(e.target.value))}
+                />
+                <TextInput
+                    label="Kommentar"
+                    name="description"
+                    onChange={(e) => setDescription(e.target.value)}
                 />
             </Form>
         </div>

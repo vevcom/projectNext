@@ -19,7 +19,7 @@ export default function LedgerTransactionRow({ transaction, accountId, showFees 
 
     return <tr>
         <td>{transaction.createdAt.toLocaleString()}</td>
-        <td>{transaction.purpose}</td>
+        <td>{transaction.description ?? transaction.purpose}</td>
         <td>{transaction.state}</td>
         <td className={styles.rightAlign}><b>{displayAmount(totalFunds)}</b></td>
         <td className={styles.rightAlign}><b>{fundsChange !== null ? displayAmount(fundsChange) : '-'}</b></td>
