@@ -71,7 +71,7 @@ export default function MailList<T extends MailListTypes>({
             return String(item.id)
         }
 
-        console.warn('This code should never run. This mens that the argument passed to MailList is invalid.')
+        console.warn('This code should never run. This means that the argument passed to MailList is invalid.')
 
         return ''
     }

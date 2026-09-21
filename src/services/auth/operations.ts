@@ -8,6 +8,7 @@ import { ServerError } from '@/services/error'
 import { userOperations } from '@/services/users/operations'
 import { readJWTPayload } from '@/lib/jwt/jwtReadUnsecure'
 import { z } from 'zod'
+import logger from '@/lib/logger'
 
 export const authOperations = {
 
@@ -108,7 +109,6 @@ export const authOperations = {
         dataSchema: authSchemas.sendResetPasswordEmail,
         authorizer: () => authAuth.sendResetPasswordEmail.dynamicFields({}),
         operation: async ({ data }) => {
-            console.log(data)
             try {
                 const user = await userOperations.read({
                     params: {
@@ -119,7 +119,7 @@ export const authOperations = {
 
                 sendResetPasswordMail(user.email)
             } catch (err) {
-                console.log(err)
+                logger.error(`Failed to send reset password to email '${data.email}'`, { error: err })
                 return data.email
             }
 

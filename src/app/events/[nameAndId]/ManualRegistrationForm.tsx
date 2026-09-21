@@ -33,9 +33,6 @@ function ManualRegistrationFormInner({
             }
         }
 
-        console.log(eventId)
-        console.log(userSelectionContext.user.id)
-
         return await createEventRegistrationAction(
             {
                 params: {

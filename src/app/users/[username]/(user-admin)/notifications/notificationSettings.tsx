@@ -176,7 +176,6 @@ export default function NotificationSettings({
         }
 
         const submitTimestamp = (new Date().getTime())
-        console.log('last:', lastSubmit)
 
         setFormState({
             success: false,
