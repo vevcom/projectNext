@@ -76,11 +76,11 @@ export const dotOperations = {
     }),
 
     /**
-     * Reads the dots of a user, expanded with the expiery of each dot value. Since expiery is infered
+     * Reads the dots of a user, expanded with the expiry of each dot value. Since expiry is infered
      * from the whole queue of dots, all dots of the user are read even when only the active ones are
      * returned - an expired dot still decides when the dots after it start expiring.
      *
-     * @returns The dots in ascending order of expiery, i.e the dot that expires first comes first.
+     * @returns The dots in ascending order of expiry, i.e the dot that expires first comes first.
      */
     readForUser: defineOperation({
         paramsSchema: z.object({

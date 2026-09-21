@@ -15,7 +15,7 @@ type PropTypes = {
  * part of their profile, so it is only offered to an authorized user that is in edit mode.
  *
  * @param userId - The user the dots belong to.
- * @param dots - The dots of the user, in ascending order of expiery.
+ * @param dots - The dots of the user, in ascending order of expiry.
  */
 export default function UserDotsInEditMode({ userId, dots }: PropTypes) {
     const session = useSession()

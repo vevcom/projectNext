@@ -5,7 +5,7 @@ import type { DotFreezePeriod } from '@/prisma-generated-pn-types'
 type FreezePeriod = Pick<DotFreezePeriod, 'start' | 'end'>
 
 /**
- * Expands dots with their infered expiery. Expiery is never stored on a dot - it follows from when the
+ * Expands dots with their infered expiry. Expiry is never stored on a dot - it follows from when the
  * dot was given, how many dots the user already had queued up at that point, and which freeze periods
  * the queue has passed through.
  *
@@ -16,7 +16,7 @@ type FreezePeriod = Pick<DotFreezePeriod, 'start' | 'end'>
  * @param dots - The dots of a single user. May be in any order - they are served oldest first.
  * @param freezePeriods - All freeze periods. Time inside a freeze period does not serve any dot.
  * @param now - The point in time to measure {@link DotExpansion.valueLeft} against.
- * @returns The dots in the order they are served, i.e. in ascending order of expiery.
+ * @returns The dots in the order they are served, i.e. in ascending order of expiry.
  */
 export function expandDots<DotType extends { value: number, createdAt: Date }>(
     dots: DotType[],
@@ -28,21 +28,21 @@ export function expandDots<DotType extends { value: number, createdAt: Date }>(
     return [...dots]
         .sort((first, second) => first.createdAt.getTime() - second.createdAt.getTime())
         .reduce<(DotType & DotExpansion)[]>((expanded, dot) => {
-            const queueEnd = expanded.at(-1)?.expieryForEachDotValue.at(-1)
+            const queueEnd = expanded.at(-1)?.expiryForEachDotValue.at(-1)
             const servedFrom = queueEnd && queueEnd > dot.createdAt ? queueEnd : dot.createdAt
 
-            const expieryForEachDotValue = Array.from({ length: dot.value }).reduce<Date[]>(
-                expieries => [
-                    ...expieries,
-                    addUnfrozenTime(expieries.at(-1) ?? servedFrom, dotBaseDuration, disjointFreezePeriods)
+            const expiryForEachDotValue = Array.from({ length: dot.value }).reduce<Date[]>(
+                expiries => [
+                    ...expiries,
+                    addUnfrozenTime(expiries.at(-1) ?? servedFrom, dotBaseDuration, disjointFreezePeriods)
                 ],
                 []
             )
 
             return [...expanded, {
                 ...dot,
-                expieryForEachDotValue,
-                valueLeft: expieryForEachDotValue.filter(expiery => expiery > now).length,
+                expiryForEachDotValue,
+                valueLeft: expiryForEachDotValue.filter(expiry => expiry > now).length,
             }]
         }, [])
 }

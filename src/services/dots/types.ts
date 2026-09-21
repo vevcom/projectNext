@@ -10,7 +10,7 @@ export type DotExpansion = {
      * An array of dot value length with expiry time of each dot value.
      * The 0th index is the first dot value, the 1st index is the second dot value, and so on.
      */
-    expieryForEachDotValue: Date[],
+    expiryForEachDotValue: Date[],
     /**
      * between 0 and value of dot
     */

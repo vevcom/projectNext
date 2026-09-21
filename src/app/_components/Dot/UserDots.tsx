@@ -14,13 +14,13 @@ type PropTypes = {
 }
 
 /**
- * Displays the dots of a single user with the expiery infered for each of their dot values.
+ * Displays the dots of a single user with the expiry infered for each of their dot values.
  *
  * Choose which CRUD operations are offered using the show*Form props.
  * This should be linked to the authorizers.
  *
  * @param userId - The user the dots belong to. New dots are given to this user.
- * @param dots - The dots of the user, in ascending order of expiery.
+ * @param dots - The dots of the user, in ascending order of expiry.
  * @param showCreateForm - Whether to offer giving a new dot to the user.
  * @param showUpdateForm - Whether to offer changing the dots.
  * @param showDestroyForm - Whether to offer deleting the dots.

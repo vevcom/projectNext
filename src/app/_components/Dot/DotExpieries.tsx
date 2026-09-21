@@ -7,7 +7,7 @@ type PropTypes = {
 }
 
 /**
- * The expiery of every value of a dot. The values are served in order, so the ones that have already
+ * The expiry of every value of a dot. The values are served in order, so the ones that have already
  * expired are the first `value - valueLeft` of them.
  */
 export default function DotExpieries({ dot }: PropTypes) {
@@ -16,9 +16,9 @@ export default function DotExpieries({ dot }: PropTypes) {
     return (
         <div className={styles.DotExpieries}>
             {
-                dot.expieryForEachDotValue.map((expiery, index) => (
-                    <span key={expiery.toISOString()} className={index < expiredValues ? styles.expired : ''}>
-                        <DateDisplay date={expiery} includeTime={false} />
+                dot.expiryForEachDotValue.map((expiry, index) => (
+                    <span key={expiry.toISOString()} className={index < expiredValues ? styles.expired : ''}>
+                        <DateDisplay date={expiry} includeTime={false} />
                     </span>
                 ))
             }
