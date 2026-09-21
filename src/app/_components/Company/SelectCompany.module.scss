@@ -13,15 +13,15 @@
     position: absolute;
     top: 0;
     right: 0;
-    background-color: ohma.$colors-gray-300;
+    background-color: ohma.$colors-surface-raised;
     width: 1.5em;
     height: 1.5em;
-    color: ohma.$colors-black;
+    color: ohma.$colors-text-inv;
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
     &.selected {
-        background-color: ohma.$colors-primary;
+        background-color: ohma.$colors-accent-blue;
     }
 }

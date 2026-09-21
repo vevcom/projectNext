@@ -1,5 +1,5 @@
 import styles from './page.module.scss'
-import Reprioritize from './Reprioritize'
+import PrioritizedCommittees from './PrioritizedCommittees'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { default as DateComponent } from '@/components/Date/Date'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
@@ -65,26 +65,129 @@ export default async function ApplicationPeriod({ params }: PropTypes) {
         })
     }
 
-    const minPriority = periodWithApplications.committeesParticipating
-        .reduce((highest, part) => {
-            if (part.priority === null) return highest
-            if (highest === null || part.priority < highest) {
-                return part.priority
-            }
-            return highest
-        }, null as number | null) ?? 0
+    // The list is already sorted with the applied-to committees first, so the prioritized ones
+    // form a prefix that can be handed to the reorderable list as one block.
+    const appliedTo = periodWithApplications.committeesParticipating
+        .filter(part => part.priority !== null)
+    const notAppliedTo = periodWithApplications.committeesParticipating
+        .filter(part => part.priority === null)
 
-    const maxPriority = periodWithApplications.committeesParticipating
-        .reduce((lowest, part) => {
-            if (part.priority === null) return lowest
-            if (lowest === null || part.priority > lowest) {
-                return part.priority
-            }
-            return lowest
-        }, null as number | null) ?? 0
+    type CommitteeParticipation = typeof periodWithApplications.committeesParticipating[number]
+
+    const renderCommitteeCard = (part: CommitteeParticipation) => (
+        <BackdropImage
+            image={part.committee.logoImage}
+            imageSize={170}
+        >
+            <div className={styles.committeeCardContent}>
+                <h2>{part.committee.name}</h2>
+                <CmsParagraph
+                    className={styles.committeeParagraph}
+                    canEdit={
+                        committeeAuth.updateParagraphContent.dynamicFields(
+                            { groupId: part.committee.groupId }
+                        ).auth(
+                            session
+                        ).toJsObject()
+                    }
+                    cmsParagraph={part.committee.paragraph}
+                    updateCmsParagraphAction={
+                        configureAction(
+                            updateCommitteeParagraphAction,
+                            { implementationParams: { shortName: part.committee.shortName } }
+                        )
+                    }
+                />
+                <div className={styles.navigation}>
+                    {
+                        userId ? (
+                            <PopUp
+                                popUpKey={`committee-${part.committee.shortName}-apply`}
+                                showButtonContent={
+                                    <span>
+                                        {part.priority === null ? 'Søk nå!' : 'Endre søknad'}
+                                    </span>
+                                }
+                                showButtonClass={styles.applyButton}
+                            >
+                                <h1>Søknad til {part.committee.name}</h1>
+                                <Form
+                                    closePopUpOnSuccess={
+                                        `committee-${part.committee.shortName}-apply`
+                                    }
+                                    refreshOnSuccess
+                                    action={part.priority === null ?
+                                        createApplicationAction.bind(
+                                            null, {
+                                                params: { userId, commiteeParticipationId: part.id }
+                                            }
+                                        ) : updateApplicationAction.bind(
+                                            null, {
+                                                params: { userId, commiteeParticipationId: part.id }
+                                            }
+                                        )
+                                    }
+                                    submitText={
+                                        part.priority === null ? 'Send søknad' : 'Endre søknad'
+                                    }
+                                >
+                                    <Textarea
+                                        name="text"
+                                        label="Søknadstekst"
+                                        defaultValue={part.text}
+                                        className={styles.textarea}
+                                    />
+                                </Form>
+                                {
+                                    part.priority !== null && (
+                                        <Form
+                                            refreshOnSuccess
+                                            closePopUpOnSuccess={
+                                                `committee-${part.committee.shortName}-apply`
+                                            }
+                                            action={destroyApplicationAction.bind(null, {
+                                                params: {
+                                                    userId,
+                                                    commiteeParticipationId: part.id
+                                                }
+                                            })}
+                                            confirmation={{
+                                                confirm: true,
+                                                text: 'Er du sikker på at du vil slette søknaden?',
+                                            }}
+                                            submitColor="red"
+                                            submitText="Slett søknad"
+                                        />
+                                    )
+                                }
+                            </PopUp>
+                        ) : <Link href="/login" className={styles.applyButton}>
+                        Logg inn for å søke
+                        </Link>
+                    }
+                    <Link
+                        href={`/committees/${part.committee.shortName}`}
+                        className={styles.committeeLink}
+                    >
+                    Les mer
+                    </Link>
+                    <PopUp
+                        popUpKey={`committee-${part.committee.shortName}-video`}
+                        showButtonContent={
+                            <FontAwesomeIcon icon={faVideo} />
+                        }
+                        showButtonClass={styles.videoButton}
+                    >
+                        {/* TODO: Video saved on committee */}
+                        <h1>Komitévideo for {part.committee.name}</h1>
+                    </PopUp>
+                </div>
+            </div>
+        </BackdropImage>
+    )
 
     return (
-        <PageWrapper title={`Søknadsperiode: ${period.name}`} headerItem={
+        <PageWrapper title={'Søknadsperiode'} headerItem={
             <SettingsHeaderItemPopUp popUpKey={`period-${period.name}-settings`} scale={35}>
                 <CreateUpdateApplicationPeriodForm
                     committees={committees}
@@ -133,148 +236,60 @@ export default async function ApplicationPeriod({ params }: PropTypes) {
 
             </SettingsHeaderItemPopUp>
         }>
-            <p>
-                <b>Søknadsstart:</b> <DateComponent date={period.startDate} includeTime />
-                <br />
-                <b>Søknadsfrist:</b> <DateComponent date={period.endDate} includeTime />
-                <br />
-                <b>Frist for prioritering:</b> <DateComponent date={period.endPriorityDate} includeTime />
-            </p>
-            {
-                period.endDate.getTime() > (new Date()).getTime() && (
-                    <div className={styles.countDown}>
-                        <Link href={`/applications/${period.name}/countdown`}>
-                            <CountDown referenceDate={period.endDate} />
-                        </Link>
+            <div className={styles.periodContent}>
+                <div className={styles.top} />
+
+                <div className={styles.periodDates}>
+                    <div className={styles.periodDateItem}>
+                        <b>Søknadsstart:</b>
+                        <DateComponent date={period.startDate} includeTime />
                     </div>
-                )
-            }
-            <ul className={styles.committees}>
-                {
-                    periodWithApplications.committeesParticipating
-                        .map(part => (
-                            <li key={part.committee.id}>
-                                <BackdropImage
-                                    image={part.committee.logoImage}
-                                    imageSize={230}
-                                >
-                                    <h1>{part.committee.name}</h1>
-                                    <CmsParagraph
-                                        canEdit={
-                                            committeeAuth.updateParagraphContent.dynamicFields(
-                                                { groupId: part.committee.groupId }
-                                            ).auth(
-                                                session
-                                            ).toJsObject()
-                                        }
-                                        cmsParagraph={part.committee.paragraph}
-                                        updateCmsParagraphAction={
-                                            configureAction(
-                                                updateCommitteeParagraphAction,
-                                                { implementationParams: { shortName: part.committee.shortName } }
-                                            )
-                                        }
-                                    />
-                                    <div className={styles.navigation}>
-                                        {
-                                            userId ? (
-                                                <PopUp
-                                                    popUpKey={`committee-${part.committee.shortName}-apply`}
-                                                    showButtonContent={
-                                                        <span>{part.priority === null ? 'Søk nå!' : 'Endre søknad'}</span>
-                                                    }
-                                                    showButtonClass={styles.applyButton}
-                                                >
-                                                    <h1>Søknad til {part.committee.name}</h1>
-                                                    <Form
-                                                        closePopUpOnSuccess={`committee-${part.committee.shortName}-apply`}
-                                                        refreshOnSuccess
-                                                        action={part.priority === null ?
-                                                            createApplicationAction.bind(
-                                                                null, {
-                                                                    params: { userId, commiteeParticipationId: part.id }
-                                                                }
-                                                            ) : updateApplicationAction.bind(
-                                                                null, {
-                                                                    params: { userId, commiteeParticipationId: part.id }
-                                                                }
-                                                            )
-                                                        }
-                                                        submitText={part.priority === null ? 'Send søknad' : 'Endre søknad'}
-                                                    >
-                                                        <Textarea
-                                                            name="text"
-                                                            label="Søknadstekst"
-                                                            defaultValue={part.text}
-                                                            className={styles.textarea}
-                                                        />
-                                                    </Form>
-                                                    {
-                                                        part.priority !== null && (
-                                                            <Form
-                                                                refreshOnSuccess
-                                                                closePopUpOnSuccess={
-                                                                    `committee-${part.committee.shortName}-apply`
-                                                                }
-                                                                action={destroyApplicationAction.bind(null, {
-                                                                    params: {
-                                                                        userId,
-                                                                        commiteeParticipationId: part.id
-                                                                    }
-                                                                })}
-                                                                confirmation={{
-                                                                    confirm: true,
-                                                                    text: 'Er du sikker på at du vil slette søknaden?',
-                                                                }}
-                                                                submitColor="red"
-                                                                submitText="Slett søknad"
-                                                            />
-                                                        )
-                                                    }
-                                                </PopUp>
-                                            ) : <Link href="/login" className={styles.applyButton}>
-                                                Logg inn for å søke
-                                            </Link>
-                                        }
-                                        <Link
-                                            href={`/committees/${part.committee.shortName}`}
-                                            className={styles.committeeLink}
-                                        >
-                                            Les mer
-                                        </Link>
-                                        <PopUp
-                                            popUpKey={`committee-${part.committee.shortName}-video`}
-                                            showButtonContent={
-                                                <FontAwesomeIcon icon={faVideo} />
-                                            }
-                                            showButtonClass={styles.videoButton}
-                                        >
-                                            {/* TODO: Video saved on committee */}
-                                            <h1>Komitévideo for {part.committee.name}</h1>
-                                        </PopUp>
-                                    </div>
-                                    {
-                                        part.priority !== null && userId && (
-                                            <>
-                                                <div className={styles.priorityContainer}>
-                                                    <p className={styles.priority}>
-                                                        {part.priority}
-                                                    </p>
-                                                    <Reprioritize
-                                                        userId={userId}
-                                                        commiteeParticipationId={part.id}
-                                                        showUp={part.priority > minPriority}
-                                                        showDown={part.priority < maxPriority}
-                                                    />
-                                                </div>
-                                            </>
-                                        )
-                                    }
-                                </BackdropImage>
-                            </li>
+                    <div className={styles.periodDateItem}>
+                        <b>Søknadsfrist:</b>
+                        <DateComponent date={period.endDate} includeTime />
+                    </div>
+                    <div className={styles.periodDateItem}>
+                        <b>Frist for prioritering:</b>
+                        <DateComponent date={period.endPriorityDate} includeTime />
+                    </div>
+
+                    {
+                        period.endDate.getTime() > (new Date()).getTime() && (
+                            <div className={`${styles.periodDateItem} ${styles.countDownItem}`}>
+                                <b>Nedtelling:</b>
+                                <div className={styles.countDown}>
+                                    <Link href={`/applications/${period.name}/countdown`}>
+                                        <CountDown referenceDate={period.endDate} />
+                                    </Link>
+                                </div>
+                            </div>
+                        )
+                    }
+                </div>
+
+                <div className={styles.committees}>
+                    {
+                        userId !== undefined && appliedTo.length > 0 && (
+                            <PrioritizedCommittees
+                                userId={userId}
+                                items={appliedTo.map(part => ({
+                                    commiteeParticipationId: part.id,
+                                    card: renderCommitteeCard(part),
+                                }))}
+                            />
+                        )
+                    }
+                    {
+                        notAppliedTo.map(part => (
+                            <div key={part.committee.id} className={styles.committeeCard}>
+                                <div className={styles.committeeCardBody}>
+                                    {renderCommitteeCard(part)}
+                                </div>
+                            </div>
                         ))
-                }
-            </ul>
+                    }
+                </div>
+            </div>
         </PageWrapper>
     )
 }

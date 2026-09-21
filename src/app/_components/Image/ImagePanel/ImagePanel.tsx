@@ -3,6 +3,8 @@ import styles from './ImagePanel.module.scss'
 import ImagePanelImage from './ImagePanelImage'
 import ImageDisplay from './ImageDisplay'
 import Button from '@/components/UI/Button'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faImages } from '@fortawesome/free-solid-svg-icons'
 import { useEffect, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 import type { Page } from '@/lib/paging/types'
@@ -201,7 +203,13 @@ export default function ImagePanel<const PageSize extends number>({
     const renderLoadControlContent = () => {
         if (errorCode !== null) return <p>Noe gikk galt</p>
         if (fetchPending) return <i>{images.length > 0 ? 'Laster inn flere...' : 'Laster inn...'}</i>
-        if (allLoaded) return <i>Ingen flere å laste inn</i>
+        if (allLoaded) {
+            if (images.length > 0) return <i>Ingen flere å laste inn</i>
+            return <span className={styles.empty}>
+                <FontAwesomeIcon icon={faImages} />
+                <i>Ingen bilder i denne samlingen enda</i>
+            </span>
+        }
         return <Button onClick={() => setLoadRequest({ advanceDisplay: false })}>Last inn flere</Button>
     }
 

@@ -7,7 +7,7 @@
         width: 30%;
         height: 100%;
         top: -50%;
-        background-color: ohma.$colors-gray-800;
+        background-color: ohma.$colors-surface-raised;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -21,10 +21,10 @@
             translate: 10px 0;
         }
         &:hover {
-            background-color: ohma.$colors-gray-700;
+            background-color: ohma.$colors-surface-hover;
             cursor: pointer;
             svg {
-                color: ohma.$colors-primary;
+                color: ohma.$colors-accent-blue;
             }
         }
     }
@@ -40,7 +40,7 @@
     > .adjustSize {
         position: absolute;
         top: -100%;
-        background-color: ohma.$colors-gray-800;
+        background-color: ohma.$colors-surface-raised;
         padding: .5em;
 
         &.placeLeft {
@@ -62,7 +62,7 @@
             &:hover:not(.disabled) {
                 cursor: pointer;
                 svg {
-                    color: ohma.$colors-primary;
+                    color: ohma.$colors-accent-blue;
                 }
             }
             background-color: transparent;
@@ -70,7 +70,7 @@
             width: 25px;
             height: 25px;
             &:first-child {
-                margin-right: 2*ohma.$gap;
+                margin-right: calc(2 * #{ohma.$gap});
             }
             svg {
                 width: 100%;

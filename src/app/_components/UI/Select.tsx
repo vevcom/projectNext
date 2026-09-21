@@ -1,11 +1,15 @@
 'use client'
 import styles from './Select.module.scss'
 import { v4 as uuid } from 'uuid'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import { type SelectHTMLAttributes } from 'react'
 
 export type PropTypes<ValueType> = Omit<SelectHTMLAttributes<HTMLSelectElement>, 'onChange'> & {
     name: string,
     label?: string,
+    color?: 'primary' | 'secondary' | 'red' | 'black' | 'white',
+    background?: 'base' | 'raised',
     onChange?: (value: ValueType) => void,
     options: {
         value: ValueType,
@@ -26,16 +30,23 @@ export function SelectConstructor<ValueType extends string | number>(valueConver
         value,
         options,
         onChange,
+        color = 'black',
+        background = 'base',
         className,
         ...props
     }: PropTypes<ValueType>) {
         return (
-            <div className={`${styles.Select} ${className}`}>
-                <label htmlFor={name}>{label ?? name}</label>
+            <div
+                className={
+                    `${styles.Select} ${styles[color]} ` +
+                    `${background === 'raised' ? styles.onRaised : ''} ${className ?? ''}`
+                }
+            >
                 <select
                     {...props}
                     id={name}
                     name={name}
+                    className={styles.field}
                     {
                         ...(value ? { value } : { defaultValue })
                     }
@@ -57,6 +68,8 @@ export function SelectConstructor<ValueType extends string | number>(valueConver
                         )
                     }
                 </select>
+                <FontAwesomeIcon icon={faChevronDown} className={styles.chevron} />
+                <label htmlFor={name} className={styles.labe}>{label ?? name}</label>
             </div>
         )
     }

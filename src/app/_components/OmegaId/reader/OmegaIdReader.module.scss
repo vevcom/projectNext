@@ -6,7 +6,7 @@
 
 
     > .feedbackBox {
-        color: ohma.$colors-white;
+        color: ohma.$colors-text-inv;
         width: 100%;
         height: 3rem;
         border-radius: ohma.$cardRounding;
@@ -18,14 +18,14 @@
     }
 
     > .success {
-        background-color: ohma.$colors-green;
+        background-color: ohma.$colors-accent-green;
     }
 
     > .error {
-        background-color: ohma.$colors-red;
+        background-color: ohma.$colors-accent-red;
     }
 
     > .waiting {
-        background-color: ohma.$colors-yellow;
+        background-color: ohma.$colors-accent-yellow;
     }
 }

@@ -38,8 +38,11 @@ export default function SubscriptionItem({
                     '--depth': depth ?? 0,
                 } as React.CSSProperties}
             >
-                <b>{branch.name}</b><br />
-                {branch.description}
+                <span className={styles.name}>
+                    {depth ? <span className={styles.branch} aria-hidden="true" /> : null}
+                    <b>{branch.name}</b>
+                </span>
+                {branch.description && <span className={styles.description}>{branch.description}</span>}
             </td>
 
             {checkboxes.map(checkbox => <td

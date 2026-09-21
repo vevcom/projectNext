@@ -2,8 +2,8 @@ import styles from './page.module.scss'
 import AddNews from './AddNews'
 import CurrentNews from './CurrentNews'
 import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
+import ArchiveLink from '@/components/HeaderItems/ArchiveLink'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
-import Link from 'next/link'
 
 export default async function NewsArtilces() {
     //TODO: add can create news permission
@@ -13,7 +13,7 @@ export default async function NewsArtilces() {
         <PageWrapper title="Nyheter"
             headerItem={
                 <div className={styles.head}>
-                    <Link className={styles.archiveBtn} aria-label={'Gå til arkivet'} href="news/archive">Arkivet</Link>
+                    <ArchiveLink href="news/archive" />
                     {
                         canCreateNews && (
                             <AddHeaderItemPopUp popUpKey="createNewsPop">

@@ -71,8 +71,8 @@ model User {
   Event             Event[]
 
   // Which dots (a.k.a. "prikker") the user has received and given.
-  dots        DotWrapper[] @relation(name: "dot_user")
-  dotsAccused DotWrapper[] @relation(name: "dot_accuser")
+  dots        Dot[] @relation(name: "dot_user")
+  dotsAccused Dot[] @relation(name: "dot_accuser")
 
   // The queue used to determine who is registering cards at Kiogeskabet.
   registerStudentCardQueue RegisterStudentCardQueue[]

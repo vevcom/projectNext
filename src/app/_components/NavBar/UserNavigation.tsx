@@ -1,68 +1,18 @@
-'use client'
 import styles from './UserNavigation.module.scss'
-import ProfilePicture from '@/components/User/ProfilePicture'
-import BorderButton from '@/UI/BorderButton'
-import useClickOutsideRef from '@/hooks/useClickOutsideRef'
-import useOnNavigation from '@/hooks/useOnNavigation'
-import UserDisplayName from '@/components/User/UserDisplayName'
-import { faCog, faMoneyBillWave, faSignOut, faUser, faQrcode } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Link from 'next/link'
-import { useState } from 'react'
-import type { Profile } from '@/services/users/types'
 
 type PropTypes = {
-    profile: Profile | null
+    isLoggedIn: boolean
 }
 
 /**
- * This component either renders an empty link with a href to /login page if there is no profile
- * Else it renders a usefull component for a logged in user.
- * @param profile - The profile of the user
- * @returns
+ * Renders an invisible link over the avatar button: to the user's own
+ * profile page when logged in, or to /login when logged out. The profile
+ * page already exposes settings, Omega-ID, account and logout, so there's
+ * no need to duplicate those behind a popup here.
  */
-export default function UserNavigation({ profile }: PropTypes) {
-    const [isMenuOpen, setIsMenuOpen] = useState(false)
-    const ref = useClickOutsideRef(() => setIsMenuOpen(false))
-    useOnNavigation(() => setIsMenuOpen(false))
+export default function UserNavigation({ isLoggedIn }: PropTypes) {
+    const href = isLoggedIn ? '/users/me' : '/login'
 
-    if (!profile || !profile.user) {
-        return <Link className={styles.hidden} href="/login" />
-    }
-
-    if (!isMenuOpen) {
-        return <button className={styles.hidden} onClick={() => setIsMenuOpen(!isMenuOpen)} />
-    }
-
-    return (
-        <div ref={ref} className={styles.UserNavigation}>
-            <ProfilePicture profileImage={profile.user.image} width={180} />
-            <h2><UserDisplayName user={profile.user} width={26} /></h2>
-
-            <Link href="/logout" className={styles.logout}>
-                <BorderButton color="secondary">
-                    <FontAwesomeIcon icon={faSignOut} /> <p>Logg ut</p>
-                </BorderButton>
-            </Link>
-
-            <div className={styles.navs}>
-                <Link href="/users/me">
-                    <FontAwesomeIcon icon={faUser} />
-                    <p>Profil</p>
-                </Link>
-                <Link href="/users/me/omegaid">
-                    <FontAwesomeIcon icon={faQrcode} />
-                    <p>Omega-ID</p>
-                </Link>
-                <Link href="/users/me/account">
-                    <FontAwesomeIcon icon={faMoneyBillWave} />
-                    <p>Konto</p>
-                </Link>
-                <Link href="/users/me/settings">
-                    <FontAwesomeIcon icon={faCog} />
-                    <p>Innstillinger</p>
-                </Link>
-            </div>
-        </div>
-    )
+    return <Link className={styles.hidden} href={href} />
 }

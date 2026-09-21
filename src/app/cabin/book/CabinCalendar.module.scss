@@ -42,7 +42,7 @@
 .calendar {
   width: 100%;
   max-width: 30rem;
-  border: 2px solid black;
+  border: 2px solid ohma.$colors-surface-subtle;
   border-radius: ohma.$rounding;
   margin-top: 1rem;
   max-height: 30rem;
@@ -70,10 +70,10 @@
 
       >.front {
         z-index: 1;
-        @include rangeStyles(ohma.$colors-primary, 100%, 10px);
+        @include rangeStyles(ohma.$colors-accent-blue, 100%, 10px);
 
         &.inRange {
-          background-color: color-mix(in srgb, ohma.$colors-primary, white 30%); // TODO Perhaps change
+          background-color: color-mix(in srgb, ohma.$colors-accent-blue, white 30%); // TODO Perhaps change
         }
 
         >.dateNumber {
@@ -85,7 +85,7 @@
 
       >.behind {
         z-index: 0;
-        background-color: ohma.$colors-green;
+        background-color: ohma.$colors-accent-green;
 
         .left, .right {
           width: 50%;
@@ -102,23 +102,23 @@
 
         &.inRange {
           .left, .right {
-            background-color: ohma.$colors-red;
+            background-color: ohma.$colors-accent-red;
           }
         }
         &.start {
           .right {
-            background-color: ohma.$colors-red;
+            background-color: ohma.$colors-accent-red;
           }
         }
         &.end {
           .left {
-            background-color: ohma.$colors-red;
+            background-color: ohma.$colors-accent-red;
           }
         }
       }
 
       &.exists:hover {
-        background-color: ohma.$colors-gray-300;
+        background-color: ohma.$colors-surface-hover;
       }
     }
 

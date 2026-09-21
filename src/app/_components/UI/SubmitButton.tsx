@@ -1,6 +1,8 @@
 import styles from './SubmitButton.module.scss'
+import popUpStyles from '@/components/PopUp/PopUp.module.scss'
 import Button from '@/components/UI/Button'
-import React, { useState } from 'react'
+import { PopUpContext } from '@/contexts/PopUp'
+import React, { useContext, useEffect, useId, useRef, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCircleCheck, faX } from '@fortawesome/free-solid-svg-icons'
 import { useFormStatus } from 'react-dom'
@@ -41,8 +43,15 @@ export default function SubmitButton({
     }
 
     const [confirmedOpen, setConfirmedOpen] = useState(false)
+    const popUpKey = useId()
+    const popUpContext = useContext(PopUpContext)
+    // The real submit button must stay inside the <form>'s DOM tree. The popup
+    // itself is teleported out to the app-wide PopUpProvider (a sibling of the
+    // form, not a descendant), so a submit button rendered there has nothing
+    // to submit.
+    const realSubmitRef = useRef<HTMLButtonElement>(null)
 
-    const btnContent = () => {
+    const renderButtonContent = (label: ReactNode) => {
         if (pending) {
             return (
                 <div className={styles.loader}>
@@ -57,7 +66,7 @@ export default function SubmitButton({
                 <FontAwesomeIcon icon={faCircleCheck} />
             )
         }
-        return children
+        return label
     }
     const button = (
         <Button
@@ -68,31 +77,75 @@ export default function SubmitButton({
             onClick={onClick}
             disabled={disabled}
         >
-            {btnContent()}
+            {renderButtonContent(children)}
         </Button>
     )
 
-
-    const mainContent = () => (confirmedOpen ? (
-        <div className={styles.confirm}>
-            <p>{confirmation?.text || 'Er du sikker?'}</p>
-            <button className={styles.close} onClick={() => setConfirmedOpen(false)}>
-                <FontAwesomeIcon icon={faX} />
-            </button>
-            {button}
-        </div>
-    ) : (
-        <Button className={`${styles.submitButton} ${className ?? ''}`} color={color} onClick={() => setConfirmedOpen(true)}>
-            {children}
-        </Button>
-    ))
-
+    useEffect(() => {
+        if (!popUpContext) return
+        if (!confirmedOpen) {
+            popUpContext.remove(popUpKey)
+            return
+        }
+        popUpContext.teleport(
+            <div className={popUpStyles.PopUp}>
+                <div className={popUpStyles.main}>
+                    <div className={popUpStyles.overflow}>
+                        <button className={popUpStyles.closeBtn} onClick={() => setConfirmedOpen(false)}>
+                            <FontAwesomeIcon icon={faX} />
+                        </button>
+                        <div className={popUpStyles.content}>
+                            <p>{confirmation?.text || 'Er du sikker?'}</p>
+                            <div className={styles.confirmActions}>
+                                <Button
+                                    type="button"
+                                    color="secondary"
+                                    onClick={() => setConfirmedOpen(false)}
+                                >
+                                    Nei
+                                </Button>
+                                <Button
+                                    className={`${styles.submitButton} ${className ?? ''}`}
+                                    aria-disabled={pending || success}
+                                    color={success ? 'green' : color}
+                                    type="button"
+                                    disabled={disabled || pending || success}
+                                    onClick={() => realSubmitRef.current?.click()}
+                                >
+                                    {renderButtonContent('Ja')}
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>,
+            popUpKey
+        )
+    }, [confirmedOpen, pending, success, popUpKey])
 
     return (
         <div className={styles.submit}>
             {
                 (confirmation && confirmation.confirm) ? (
-                    mainContent()
+                    <>
+                        <Button
+                            className={`${styles.submitButton} ${className ?? ''}`}
+                            color={color}
+                            type="button"
+                            onClick={() => setConfirmedOpen(true)}
+                        >
+                            {children}
+                        </Button>
+                        <button
+                            ref={realSubmitRef}
+                            type="submit"
+                            onClick={onClick}
+                            disabled={disabled}
+                            aria-hidden="true"
+                            tabIndex={-1}
+                            className={styles.hiddenSubmit}
+                        />
+                    </>
                 ) : (
                     button
                 )

@@ -1,16 +1,17 @@
 import styles from './page.module.scss'
 import CreateOrUpdateEventForm from './CreateOrUpdateEventForm'
-import EventsLandingLayout from './EventsLandingLayout'
 import TagHeaderItem from './TagHeaderItem'
 import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
+import ArchiveLink from '@/components/HeaderItems/ArchiveLink'
+import PageWrapper from '@/components/PageWrapper/PageWrapper'
+import EventTag from '@/components/Event/EventTag'
 import { readCurrentEventsAction } from '@/services/events/actions'
 import EventCard from '@/components/Event/EventCard'
 import { readEventTagsAction } from '@/services/events/tags/actions'
 import { eventTagAuth } from '@/services/events/tags/auth'
-import { eventAuth } from '@/services/events/auth'
 import { QueryParams } from '@/lib/queryParams/queryParams'
 import { ServerSession } from '@/auth/session/ServerSession'
-import { faArchive } from '@fortawesome/free-solid-svg-icons'
+import Link from 'next/link'
 import type { SearchParamsServerSide } from '@/lib/queryParams/types'
 
 type PropTypes = SearchParamsServerSide
@@ -39,39 +40,55 @@ export default async function Events({
     const canUpdate = eventTagAuth.update.dynamicFields({}).auth(session)
     const canCreate = eventTagAuth.create.dynamicFields({}).auth(session)
     const canDestroy = eventTagAuth.destroy.dynamicFields({}).auth(session)
-    const canEditEventCmsImage = eventAuth.updateCmsCoverImage.dynamicFields({}).auth(session).toJsObject()
 
     return (
-        <EventsLandingLayout page="EVENT" title="Hvad Der Hender" headerLinks={[
-            {
-                href: tagNames?.length ? `/events/archive?${QueryParams.eventTags.encodeUrl(tagNames)}` : '/events/archive',
-                icon: faArchive
-            },
-        ]}
-        selectedTags={currentTags}
-        headerItem={
-            <>
-                <TagHeaderItem
-                    eventTags={eventTags}
-                    currentTags={currentTags}
-                    canUpdate={canUpdate.authorized}
-                    canCreate={canCreate.authorized}
-                    canDestroy={canDestroy.authorized}
-                    page="EVENT"
-                />
-                <AddHeaderItemPopUp popUpKey="CreateEventPopUp">
-                    <div className={styles.createEvent}>
-                        <CreateOrUpdateEventForm eventTags={eventTags} />
-                    </div>
-                </AddHeaderItemPopUp>
-            </>
-        }
-        >
-            {
-                currentEvents.map(event =>
-                    <EventCard event={event} key={event.id} canEdit={canEditEventCmsImage} />
-                )
-            }
-        </EventsLandingLayout>
+        <PageWrapper title="Hvad Der Hender" headerItem={
+            <div className={styles.header}>
+                <div className={styles.tags}>
+                    {currentTags.map(tag => {
+                        const remainingTags = currentTags
+                            .filter(currentTag => currentTag.name !== tag.name)
+                            .map(currentTag => currentTag.name)
+                        const href = currentTags.length === 1 ?
+                            '/events' :
+                            `/events?${QueryParams.eventTags.encodeUrl(remainingTags)}`
+
+                        return (
+                            <Link key={tag.name} href={href}>
+                                <EventTag eventTag={tag} />
+                            </Link>
+                        )
+                    })}
+                </div>
+                <div className={styles.actions}>
+                    <TagHeaderItem
+                        eventTags={eventTags}
+                        currentTags={currentTags}
+                        canUpdate={canUpdate.authorized}
+                        canCreate={canCreate.authorized}
+                        canDestroy={canDestroy.authorized}
+                        page="EVENT"
+                    />
+                    <AddHeaderItemPopUp popUpKey="CreateEventPopUp">
+                        <div className={styles.createEvent}>
+                            <CreateOrUpdateEventForm eventTags={eventTags} />
+                        </div>
+                    </AddHeaderItemPopUp>
+                    <ArchiveLink href={tagNames?.length ?
+                        `/events/archive?${QueryParams.eventTags.encodeUrl(tagNames)}`
+                        :
+                        '/events/archive'
+                    } />
+                </div>
+            </div>
+        }>
+            <div className={styles.wrapper}>
+                {
+                    currentEvents.map(event =>
+                        <EventCard event={event} key={event.id} />
+                    )
+                }
+            </div>
+        </PageWrapper>
     )
 }

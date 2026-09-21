@@ -36,7 +36,7 @@
                     &::after {
                         content: '✖';
                         font-size: 4em;
-                        color: ohma.$colors-black;
+                        color: ohma.$colors-text;
                         position: absolute;
                         left: 50%;
                         top: 50%;
@@ -55,6 +55,6 @@
         }
     }
     .update {
-        border-bottom: 3px solid ohma.$colors-gray-800;
+        border-bottom: 3px solid ohma.$colors-surface-subtle;
     }
 }

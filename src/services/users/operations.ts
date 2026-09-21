@@ -176,6 +176,18 @@ export const userOperations = {
         operation: async ({ prisma, params }): Promise<UserPagingReturn[]> => {
             const { page, details } = params.paging
             const words = details.partOfName.split(' ')
+            const sortDirection = details.sort?.direction ?? 'asc'
+            // The username is always included as the final tiebreaker so the
+            // ordering stays fully deterministic for cursor-based pagination.
+            const orderBy = details.sort?.field === 'username' ? [
+                { username: sortDirection },
+                { lastname: sortDirection },
+                { firstname: sortDirection },
+            ] : [
+                { lastname: sortDirection },
+                { firstname: sortDirection },
+                { username: sortDirection },
+            ]
 
             if (details.groups.length > maxNumberOfGroupsInFilter) {
                 throw new ServerError('BAD PARAMETERS', 'Too many groups in filter')
@@ -245,14 +257,10 @@ export const userOperations = {
                         }))
                     ],
                 },
-                orderBy: [
-                    { lastname: 'asc' },
-                    { firstname: 'asc' },
-                    // We have to sort with at least one unique field to have a
-                    // consistent order. Sorting rows by fieds that have the same
-                    // value is undefined behaviour in postgresql.
-                    { username: 'asc' },
-                ]
+                // We have to sort with at least one unique field to have a
+                // consistent order. Sorting rows by fieds that have the same
+                // value is undefined behaviour in postgresql.
+                orderBy
             })
             return users.map(user => {
                 const clas = user.memberships.find(
@@ -572,6 +580,9 @@ export const userOperations = {
         }),
         dataSchema: userSchemas.updateProfileImage,
         opensTransaction: true,
+        // uploadImage resizes to 3 sizes, converts to avif and writes several files to store
+        // before any db write happens - comfortably slower than the default 5000ms interactive
+        // transaction timeout under load, hence the raised timeout below.
         operation: async ({ prisma, params, data }) => {
             const { image: newImage, cleanup } = await prisma.$transaction(async tx => {
                 const existingUser = await tx.user.findUniqueOrThrow({
@@ -600,7 +611,7 @@ export const userOperations = {
                     : async () => {}
 
                 return { image: uploadedImage, cleanup: fileCleanup }
-            })
+            }, { timeout: 20000 })
             await cleanup()
             return newImage
         }
