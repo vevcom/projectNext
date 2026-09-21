@@ -23,6 +23,7 @@ import { decodeVevenUriHandleError } from '@/lib/urlEncoding'
 import { ServerSession } from '@/auth/session/ServerSession'
 import { configureAction } from '@/services/configureAction'
 import { jobAdAuth } from '@/services/career/jobAds/auth'
+import PageTitleSetter from '@/contexts/PageTitleSetter'
 import { notFound } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -58,11 +59,15 @@ export default async function JobAd({ params }: PropTypes) {
 
     return (
         <div className={styles.wrapper}>
-            <main>
+            <PageTitleSetter title={'Jobbannonse'} />
+            <main className={styles.main}>
                 <Article
                     canEdit={canEdit}
                     article={jobAd.article}
+                    coverImageClass={styles.coverImage}
                     sideBarClassName={styles.sideBar}
+                    articleClassName={styles.articleZone}
+                    addSectionClassName={styles.addSectionZone}
                     actions={{
                         updateArticleAction: configureAction(
                             updateJobAdArticleAction,

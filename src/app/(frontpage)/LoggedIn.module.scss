@@ -1,11 +1,19 @@
 @use '@/styles/ohma';
 
+// The surface-base panel moved onto the individual islands (see
+// LoggedInSection), so this part is transparent and the page background shows
+// through the gaps between them.
 .loggedInPart {
-    padding-left: ohma.$minimalPagePadding;
-    padding-right: ohma.$minimalPagePadding;
-
     >div {
         width: 100%;
         @include ohma.pagePadding();
     }
 }
+
+.islands {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: ohma.$gap;
+}
+

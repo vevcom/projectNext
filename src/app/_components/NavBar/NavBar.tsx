@@ -1,65 +1,71 @@
 import Item from './Item'
 import styles from './NavBar.module.scss'
-import Menu from './Menu'
 import getNavItems from './navDef'
 import UserNavigation from './UserNavigation'
 import ReportButton from './ReportButton'
-import EditModeSwitch from '@/components/EditModeSwitch/EditModeSwitch'
+import NavBarTitle from './NavBarTitle'
+import PageTitleSetter from '@/contexts/PageTitleSetter'
 import StandardImageServer from '@/components/Image/StandardImageServer'
+import ProfilePicture from '@/components/User/ProfilePicture'
 import Link from 'next/link'
-import type { Profile } from '@/services/users/types'
+import type { ExpandedImage } from '@/services/images/subservice/types'
 
 export type PropTypes = {
-    profile: Profile | null
+    username: string | null,
+    profileImage: ExpandedImage | null,
 }
 
-export default async function NavBar({ profile }: PropTypes) {
-    const user = profile?.user ?? null
-    const isLoggedIn = user !== null
-    // TODO: Actual application period check
+export default async function NavBar({ username, profileImage }: PropTypes) {
+    const isLoggedIn = username !== null
     const applicationPeriod = false
-    // TODO: Actual admin/auth check
-    const isAdmin = user?.username === 'harambe'
+    const isAdmin = username === 'harambe'
 
     const navSize = 4
     const navItems = getNavItems(isLoggedIn, isAdmin, applicationPeriod)
     const itemsForNav = navItems.slice(0, navSize - 1)
-    const itemsForMenu = navItems.slice(navSize - 1, navItems.length)
 
     return (
         <nav className={styles.NavBar}>
-            <ul>
-                <li className={styles.logo}>
-                    <StandardImageServer
-                        standardImage="LOGO_SIMPLE"
-                        width={30}
-                        alt="omega logo"
-                    >
-                        <Link aria-label={'Gå til hjemmesiden'} href="/" />
-                    </StandardImageServer>
+            <ul className={styles.list}>
+                <li className={styles.logoContainer}>
+                    <Link aria-label={'Go to homepage'} href="/" className={styles.logo}>
+                        <div className={styles.logoWrapper}>
+                            <StandardImageServer
+                                standardImage="LOGO_SIMPLE"
+                                width={30}
+                                alt="omega logo"
+                                tint="var(--surface-base)"
+                            />
+                        </div>
+                    </Link>
                 </li>
+
+                <PageTitleSetter title="" />
+                <li className={styles.pageTitleLi}>
+                    <NavBarTitle />
+                </li>
+                <li className={styles.grower}></li>
                 {
                     itemsForNav.map((item) => (
-                        <Item key={item.name} {...item} />
+                        <li className={styles.navItem} key={item.name}>
+                            <Item key={item.name} {...item} />
+                        </li>
                     ))
                 }
-                <li>
-                    <Menu
-                        openBtnVariant={'desktop'}
-                        items={itemsForMenu}
-                    />
-                </li>
                 <li className={styles.rightSide}>
-                    <EditModeSwitch />
                     <ReportButton/>
-                    <div className={styles.magicHat}>
-                        <StandardImageServer
-                            standardImage="MAGISK_HATT"
-                            width={25}
-                            height={25}
-                            alt="log in button"
-                        />
-                        <UserNavigation profile={profile} />
+                    <div className={`${styles.magicHat} ${isLoggedIn ? styles.loggedIn : styles.loggedOut}`}>
+                        {
+                            profileImage ? (
+                                <ProfilePicture
+                                    profileImage={profileImage}
+                                    width={48}
+                                />
+                            ) : (
+                                <span>Logg inn</span>
+                            )
+                        }
+                        <UserNavigation isLoggedIn={isLoggedIn} />
                     </div>
                 </li>
             </ul>

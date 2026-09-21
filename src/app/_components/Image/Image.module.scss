@@ -6,6 +6,10 @@
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
+    // Set from the `--image-width` custom property (see Image.tsx) rather than an inline
+    // `width` style, so consumers can override the rendered size with an ordinary CSS rule
+    // instead of needing `!important` to beat an inline style.
+    width: var(--image-width);
 
     > img {
         margin: 0;
@@ -13,9 +17,22 @@
         height: 100%;
     }
 
+    // A mask has no intrinsic size to take a height from, unlike the img it replaces - aspect-ratio
+    // is set inline per instance (see the `tintAspectRatio` prop). `contain` keeps the svg's own
+    // proportions inside that box, so a mismatched ratio letterboxes rather than stretching.
+    .tinted {
+        width: 100%;
+        mask-image: var(--image-tint-mask);
+        mask-size: contain;
+        mask-repeat: no-repeat;
+        mask-position: center;
+        background-color: var(--image-tint-color);
+    }
+
     .credit {
         position: absolute;
-        background-color: rgba(ohma.$colors-gray-300, .5);
+        background-color: ohma.$colors-surface-base;
+        opacity: 0.5;
         &.bottom {
             bottom: 0;
             left: 0;
@@ -32,14 +49,14 @@
         right: 0;
         top: 0;
         text-decoration: none;
-        color: ohma.$colors-black;
+        color: ohma.$colors-text;
         z-index: 2;
         display: flex;
         flex-direction: row;
         align-items: center;
         justify-content: space-around;
         svg {
-            color: ohma.$colors-white;
+            color: ohma.$colors-text;
             width: 20px;
             height: 20px;
             margin: .6em;
@@ -50,7 +67,8 @@
             margin-left: .5em;
         }
         &:hover {
-            background-color: rgba(ohma.$colors-gray-300, .9);
+            background-color: ohma.$colors-surface-base;
+            opacity: 0.8;
             a, p {
                 display: inline;
             }

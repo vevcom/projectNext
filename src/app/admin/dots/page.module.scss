@@ -1,17 +1,21 @@
 @use '@/styles/ohma';
 
 .wrapper {
-    padding: 1em;
+    padding: calc(2 * #{ohma.$gap});
+    display: flex;
+    flex-direction: column;
+    gap: calc(2 * #{ohma.$gap});
 
     .actions {
         display: flex;
         flex-flow: row wrap;
         align-items: center;
+        gap: ohma.$gap;
 
         .action {
-            @include ohma.btn(ohma.$colors-primary);
+            @include ohma.btn(ohma.$colors-accent-blue);
             font-weight: ohma.$fonts-weight-s;
-            margin: ohma.$gap 0;
+            margin: 0;
         }
     }
 }

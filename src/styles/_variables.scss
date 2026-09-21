@@ -1,4 +1,4 @@
-$gap: 8px;
+$gap: var(--gap);
 
 $mobileBreakpoint: 800px;
 
@@ -6,8 +6,8 @@ $rounding: var(--rounding);
 $cardRounding: calc(3 * $rounding);
 $cardPadding: calc(3 * $rounding);
 
-$transitionTime: 0.3s;
+$transitionTime: 300ms;
 
-$nav-height: 60px;
+$nav-height: 64px;
 
 $minimalPagePadding: min(4rem, 4vw);

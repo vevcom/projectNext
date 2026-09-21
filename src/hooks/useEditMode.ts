@@ -38,10 +38,15 @@ export default function useEditMode({
         addEditableContent: () => { },
         removeEditableContent: () => { },
     }
+    // authResult (and, when it's used, authorizer) is a freshly constructed object on every
+    // render of the caller - useAuthorizer calls authorizer.auth(...) unmemoized, and several
+    // callers construct their authorizer inline. Depending on the object itself would re-run
+    // this effect, and re-render every subscriber of EditModeContext, on every render of every
+    // component using this hook - depend on the primitive instead.
     useEffect(() => {
         if (authResult.authorized) addEditableContent(uniqueKey)
         if (!authResult.authorized) removeEditableContent(uniqueKey)
-    }, [authorizer, authResult, uniqueKey, addEditableContent, removeEditableContent])
+    }, [authResult.authorized, uniqueKey, addEditableContent, removeEditableContent])
     useEffect(() => () => {
         removeEditableContent(uniqueKey)
     }, [uniqueKey, removeEditableContent])

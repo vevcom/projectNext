@@ -1,3 +1,4 @@
+import styles from './page.module.scss'
 import UserDotsInEditMode from './UserDotsInEditMode'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { getProfileForAdmin } from '@/app/users/[username]/(user-admin)/getProfileForAdmin'
@@ -16,7 +17,7 @@ export default async function UserDotAdmin({ params }: PropTypes) {
     )
 
     return (
-        <div>
+        <div className={styles.wrapper}>
             <h2>Prikker</h2>
             <UserDotsInEditMode userId={profile.user.id} dots={dots} />
         </div>

@@ -1,7 +1,7 @@
 @use '@/styles/ohma';
 
 .error {
-    color: ohma.$colors-red;
+    color: ohma.$colors-accent-red;
     display: flex;
     flex-direction: column; 
     min-height: 1.15em;
@@ -12,10 +12,26 @@
 }
 
 .submitButton {
-    width: 150px;
+    width: calc(20 * #{ohma.$gap});
     margin: 0;
-    color: ohma.$colors-black;
-    transition: background-color 0.3s ease-in-out;
+    color: ohma.$colors-text-inv;
+    transition: background-color ohma.$transitionTime ease-in-out;
+}
+
+.hiddenSubmit {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+.confirmActions {
+    display: flex;
+    justify-content: center;
+    gap: ohma.$gap;
+    margin-top: calc(2 * #{ohma.$gap});
 }
 
 .loader {
@@ -23,7 +39,7 @@
     justify-content: space-between;
     padding: 1px 20px;
     > div {
-        background-color: ohma.$colors-black;
+        background-color: ohma.$colors-text-inv;
         width: 1em;
         height: 1em;
         border-radius: 50%;

@@ -2,8 +2,8 @@
 
 .EditJobAd {
     @include ohma.card;
-    background-color: ohma.$colors-gray-200;
-    color: ohma.$colors-secondary;
+    background-color: ohma.$colors-surface-raised;
+    color: ohma.$colors-text;
     display: grid;
     gap: 1em;
     @include ohma.screenLg {

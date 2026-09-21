@@ -14,17 +14,17 @@
     }
 
     .upcoming {
-        background-color: color-mix(in srgb, ohma.$colors-blue, white 50%);
-        color: ohma.$colors-blue;
+        background-color: color-mix(in srgb, ohma.$colors-accent-blue, white 50%);
+        color: ohma.$colors-accent-blue;
     }
 
     .active {
-        background-color: color-mix(in srgb, ohma.$colors-green, white 50%);
-        color: ohma.$colors-green;
+        background-color: color-mix(in srgb, ohma.$colors-accent-green, white 50%);
+        color: ohma.$colors-accent-green;
     }
 
     .finished {
-        background-color: color-mix(in srgb, ohma.$colors-gray-300, white 50%);
-        color: ohma.$colors-gray-700;
+        background-color: ohma.$colors-surface-subtle;
+        color: ohma.$colors-text-muted;
     }
 }

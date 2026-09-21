@@ -15,13 +15,13 @@
     }
 
     .hasDots {
-        background-color: color-mix(in srgb, ohma.$colors-red, white 50%);
-        color: ohma.$colors-red;
+        background-color: color-mix(in srgb, ohma.$colors-accent-red, white 50%);
+        color: ohma.$colors-accent-red;
     }
 
     .noDots {
-        background-color: color-mix(in srgb, ohma.$colors-green, white 50%);
-        color: ohma.$colors-green;
+        background-color: color-mix(in srgb, ohma.$colors-accent-green, white 50%);
+        color: ohma.$colors-accent-green;
     }
 
     .dots {
