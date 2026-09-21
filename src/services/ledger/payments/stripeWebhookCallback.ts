@@ -1,9 +1,10 @@
 import logger from '@/lib/logger'
 import { stripe } from '@/lib/stripe'
 import { prisma } from '@/prisma/client'
+import { ledgerTransactionOperations } from '@/services/ledger/transactions/operations'
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/client'
 import type Stripe from 'stripe'
 import type { PaymentState } from '@/prisma-generated-pn-types'
-import { ledgerTransactionOperations } from '@/services/ledger/transactions/operations'
 
 /**
  * Utility function to retrieve the Stripe fees for a given payment intent.
@@ -11,21 +12,21 @@ import { ledgerTransactionOperations } from '@/services/ledger/transactions/oper
 export async function retrieveStripeFees(paymentIntent: Stripe.PaymentIntent): Promise<number> {
     let totalFees = 0
 
-    const charges = await stripe.charges.list({
+    // Using `for await` here (rather than a single `.list()` call) so that
+    // we correctly sum fees across ALL charges on the payment intent, not
+    // just the first page (Stripe defaults to 10 per page).
+    for await (const charge of stripe.charges.list({
         payment_intent: paymentIntent.id,
-    })
-
-    for (const charge of charges.data) {
+    })) {
         if (!charge.balance_transaction) {
             logger.error(`Charge does not have a balance transaction: ${charge.id}`)
             continue
         }
 
-        const balanceTransactionId = typeof charge.balance_transaction === 'string'
-            ? charge.balance_transaction
-            : charge.balance_transaction.id
+        const balanceTransaction = typeof charge.balance_transaction === 'string'
+            ? await stripe.balanceTransactions.retrieve(charge.balance_transaction)
+            : charge.balance_transaction
 
-        const balanceTransaction = await stripe.balanceTransactions.retrieve(balanceTransactionId)
         totalFees += balanceTransaction.fee
     }
 
@@ -81,39 +82,56 @@ export async function stripeWebhookCallback(event: Stripe.Event): Promise<Respon
         fee = await retrieveStripeFees(paymentIntent)
     }
 
-    // Update the db model with the updated values
-    const stripePayment = await prisma.stripePayment.update({
-        where: {
-            paymentIntentId: paymentIntent.id,
-            payment: {
-                state: {
-                    // Guard against changing final state
-                    // This should never happen, but you can never be too careful
-                    in: ['PENDING', 'PROCESSING', paymentState]
+    // Update the db model with the updated values.
+    let stripePayment
+    try {
+        stripePayment = await prisma.stripePayment.update({
+            where: {
+                paymentIntentId: paymentIntent.id,
+                payment: {
+                    state: {
+                        // Guard against changing final state
+                        // This should never happen, but you can never be too careful
+                        in: ['PENDING', 'PROCESSING', paymentState]
+                    },
                 },
             },
-        },
-        data: {
-            payment: {
-                update: {
-                    fees: fee,
-                    state: paymentState,
-                },
-            }
-        },
-        select: {
-            payment: {
-                select: {
-                    id: true,
-                    ledgerTransaction: {
-                        select: {
-                            id: true,
+            data: {
+                payment: {
+                    update: {
+                        fees: fee,
+                        state: paymentState,
+                    },
+                }
+            },
+            select: {
+                payment: {
+                    select: {
+                        id: true,
+                        ledgerTransaction: {
+                            select: {
+                                id: true,
+                            },
                         },
                     },
                 },
             },
-        },
-    })
+        })
+    } catch (err) {
+        // A `P2025` here means the guard above didn't match, i.e. the payment is already
+        // in a final state that conflicts with this event (e.g. a stale/duplicate/out-of-order
+        // webhook delivery). There is nothing to advance, so we log and stop instead of
+        // throwing, which would otherwise cause Stripe to retry an event that can never succeed.
+        if (err instanceof PrismaClientKnownRequestError && err.code === 'P2025') {
+            logger.error(
+                `Ignoring Stripe event for payment intent ${paymentIntent.id}: `
+                + `payment is already in a state which conflicts with "${paymentState}".`
+            )
+            return new Response('', { status: 200 })
+        }
+
+        throw err
+    }
 
     if (stripePayment.payment.ledgerTransaction) {
         await ledgerTransactionOperations.advance({
@@ -127,14 +145,18 @@ export async function stripeWebhookCallback(event: Stripe.Event): Promise<Respon
 
     // We only allow one payment attempt per payment intent.
     // If this failed we cancel the payment intent to make sure it cannot be used in the future.
+    //
+    // Important: we deliberately let a failure here throw (instead of catching and logging).
+    // If the payment intent isn't actually canceled, it could still be paid later, and by then
+    // this payment will already be marked FAILED in the db - a state the success handler above
+    // refuses to transition out of. Throwing causes the route handler to return a 500, so Stripe
+    // retries the whole event until the cancellation actually succeeds.
     if (event.type === 'payment_intent.payment_failed') {
         await stripe.paymentIntents.cancel(
             paymentIntent.id,
             {},
             { idempotencyKey: `project-next-payment-id-${paymentIntent.id}` },
-        ).catch((err) => {
-            logger.error(`Failed to cancel payment intent ${paymentIntent.id}: ${err}`)
-        })
+        )
     }
 
     return new Response('', { status: 200 })

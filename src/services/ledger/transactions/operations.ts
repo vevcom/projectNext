@@ -6,10 +6,12 @@ import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { ServerError } from '@/services/error'
 import { defineOperation } from '@/services/serviceOperation'
 import { RequireNothing } from '@/auth/authorizer/RequireNothing'
+import logger from '@/lib/logger'
+import { LedgerTransactionPurpose } from '@/prisma-generated-pn-types'
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/client'
 import { z } from 'zod'
 import type { ExpandedLedgerTransaction } from './types'
 import type { Prisma } from '@/prisma-generated-pn-types'
-import { LedgerTransactionPurpose } from '@/prisma-generated-pn-types'
 
 export const ledgerTransactionOperations = {
     /**
@@ -110,22 +112,33 @@ export const ledgerTransactionOperations = {
                     },
                 })) satisfies Prisma.LedgerEntryUpdateWithWhereUniqueWithoutLedgerTransactionInput[] // X_x
 
-                // TODO: Figure out a way to not throw here.
-                await prisma.ledgerTransaction.update({
-                    where: {
-                        id: params.id,
-                        state: 'PENDING', // Protect against modifying a completed transaction.
-                    },
-                    data: {
-                        ledgerEntries: {
-                            update: ledgerEntryUpdateInput,
+                try {
+                    await prisma.ledgerTransaction.update({
+                        where: {
+                            id: params.id,
+                            state: 'PENDING', // Protect against modifying a completed transaction.
                         },
-                    },
-                })
+                        data: {
+                            ledgerEntries: {
+                                update: ledgerEntryUpdateInput,
+                            },
+                        },
+                    })
 
-                transaction.ledgerEntries.forEach(entry => {
-                    entry.fees = creditFees[entry.ledgerAccountId] ?? entry.fees
-                })
+                    transaction.ledgerEntries.forEach(entry => {
+                        entry.fees = creditFees[entry.ledgerAccountId] ?? entry.fees
+                    })
+                } catch (err) {
+                    // A `P2025` here means the transaction left the `PENDING` state concurrently
+                    // (e.g. a racing/duplicate call to `advance` for the same transaction).
+                    // There's nothing to update anymore - the final read below will return
+                    // whatever state the transaction actually settled into.
+                    if (!(err instanceof PrismaClientKnownRequestError) || err.code !== 'P2025') {
+                        throw err
+                    }
+
+                    logger.error(`Ledger transaction ${params.id} left the PENDING state before fees could be updated.`)
+                }
             }
 
             const balances = await ledgerAccountOperations.calculateBalances({

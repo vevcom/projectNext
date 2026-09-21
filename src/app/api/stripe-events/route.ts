@@ -14,9 +14,8 @@ export async function POST(req: Request) {
         return new Response('Stripe signature missing.', { status: 400 })
     }
 
-    const event = stripe.webhooks.constructEvent(body, stripeSignature, process.env.STRIPE_WEBHOOK_SECRET)
-
     try {
+        const event = stripe.webhooks.constructEvent(body, stripeSignature, process.env.STRIPE_WEBHOOK_SECRET)
         return await stripeWebhookCallback(event)
     } catch (e) {
         logger.error(`An error occurred during in Stripe webhook callback: ${e}`)
