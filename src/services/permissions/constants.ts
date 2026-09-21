@@ -497,4 +497,18 @@ export const permissionConfig = {
         `,
         category: 'applications',
     },
+    LEDGER_ADMIN: {
+        name: 'Hovedbokadministratør',
+        description: `
+            Kan skrive søknader til alle aktive søknadsperioder. 
+        `,
+        category: 'diverse admin',   
+    },
+    LEDGER_USE: {
+        name: 'Overføre og betale',
+        description: `
+            Tillater en bruker å utføre overføring av penger og betaling av varer og tjenester. 
+        `,
+        category: 'diverse admin',   
+    }
 } satisfies Record<Permission, PermissionInfo>

@@ -1,10 +1,10 @@
+import { paymentAuth } from './auth'
 import { stripe } from '@/lib/stripe'
 import { ServerError } from '@/services/error'
 import { defineOperation } from '@/services/serviceOperation'
-import { RequireNothing } from '@/auth/authorizer/RequireNothing'
 import { PaymentProvider } from '@/prisma-generated-pn-types'
-import { z } from 'zod'
 import { stripeCustomerOperations } from '@/services/stripeCustomers/operations'
+import { z } from 'zod'
 
 export const paymentOperations = {
     /**
@@ -13,7 +13,7 @@ export const paymentOperations = {
      * Call `initiate` to actually begin collecting the payment.
      */
     create: defineOperation({
-        authorizer: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO: Add proper auther
+        authorizer: () => paymentAuth.create.dynamicFields({}),
         paramsSchema: z.object({
             funds: z.number(),
             descriptionLong: z.string().optional(),
@@ -59,7 +59,7 @@ export const paymentOperations = {
      * @warning Do not call this method for manual payments! It will fail.
      */
     initiate: defineOperation({
-        authorizer: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO: Add proper auther
+        authorizer: () => paymentAuth.initiate.dynamicFields({}),
         paramsSchema: z.object({
             paymentId: z.number(),
         }),

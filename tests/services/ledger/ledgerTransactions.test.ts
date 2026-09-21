@@ -57,6 +57,7 @@ describe('ledger transactions', () => {
                         provider: 'MANUAL',
                         manualFees: INITIAL_BALANCE.fees,
                     },
+                    bypassAuth: true,
                 })
 
                 await ledgerTransactionOperations.create({
@@ -67,7 +68,8 @@ describe('ledger transactions', () => {
                             funds: INITIAL_BALANCE.amount,
                         }],
                         paymentId: manualPayment.id,
-                    }
+                    },
+                    bypassAuth: true,
                 })
             })
             )
@@ -90,6 +92,7 @@ describe('ledger transactions', () => {
                     ledgerEntries: entries.map((funds, i) => ({ funds, ledgerAccountId: testAccountIds[i] })),
                     purpose: 'DEPOSIT',
                 },
+                bypassAuth: true,
             })
 
             expect(transaction).toMatchObject({
@@ -98,6 +101,7 @@ describe('ledger transactions', () => {
 
             const balances = await ledgerAccountOperations.calculateBalances({
                 params: { ledgerAccountIds: testAccountIds },
+                bypassAuth: true,
             })
 
             entries.forEach((amount, i) => {
@@ -124,12 +128,14 @@ describe('ledger transactions', () => {
                     ledgerEntries: entries.map((funds, i) => ({ funds, ledgerAccountId: testAccountIds[i] })),
                     purpose: 'DEPOSIT',
                 },
+                bypassAuth: true,
             })
 
             await expect(transactionPromise).rejects.toThrow()
 
             const balances = await ledgerAccountOperations.calculateBalances({
                 params: { ledgerAccountIds: testAccountIds },
+                bypassAuth: true,
             })
 
             testAccountIds.forEach(accountId => {

@@ -1,13 +1,19 @@
 import { ledgerAccountSchemas } from './schemas'
+import { ledgerAccountAuth } from './auth'
+import { resolveAccountOwnership, resolveAccountsOwnership } from './ownership'
 import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { defineOperation } from '@/services/serviceOperation'
-import { RequireNothing } from '@/auth/authorizer/RequireNothing'
+import { andAuthorizers } from '@/auth/authorizer/andAuthorizers'
+import { LedgerAccountType } from '@/prisma-generated-pn-types'
 import { z } from 'zod'
 import type { LedgerAccount, Prisma } from '@/prisma-generated-pn-types'
-import { LedgerAccountType } from '@/prisma-generated-pn-types'
 import type { Balance, BalanceRecord } from './types'
 
+// Nested calls between these operations are not bypassed unless noted otherwise: the checks
+// involved are cheap (a session permission, or one indexed lookup), so checking access again
+// on each call is worth it. bypassAuth is used only where a nested operation's own policy would
+// otherwise reject a caller the outer check already allows.
 export const ledgerAccountOperations = {
     /**
      * Creates a new ledger account for given user or group.
@@ -20,7 +26,7 @@ export const ledgerAccountOperations = {
      * @returns The created account.
      */
     create: defineOperation({
-        authorizer: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO: Add proper auther
+        authorizer: () => ledgerAccountAuth.create.dynamicFields({}),
         dataSchema: ledgerAccountSchemas.create,
         operation: async ({ prisma, data }): Promise<LedgerAccount> => {
             const type = data.type ?? data.userId !== undefined ? 'USER' : 'GROUP'
@@ -55,7 +61,9 @@ export const ledgerAccountOperations = {
      * @returns The account details.
      */
     read: defineOperation({
-        authorizer: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO: Add proper auther
+        authorizer: async ({ params, prisma }) => ledgerAccountAuth.read.dynamicFields({
+            accounts: [await resolveAccountOwnership(prisma, params)],
+        }),
         paramsSchema: z.object({
             userId: z.number().optional(),
             ledgerAccountId: z.number().optional(),
@@ -72,10 +80,9 @@ export const ledgerAccountOperations = {
     }),
 
     /**
-     * Reads all ledger accounts matching any of the given filters.
-     * An account is included if it matches at least one of `ledgerAccountIds`, `userIds`
-     * or `groupIds` (i.e. the filters are OR'd together, not AND'd) - this is a batch
-     * fetch by heterogeneous keys, not a narrowing search.
+     * Reads all ledger accounts matching any of the given filters. An account is included if it
+     * matches at least one of `ledgerAccountIds`, `userIds` or `groupIds`: this is a batch fetch
+     * by several kinds of key, not a narrowing search, so the filters combine with OR, not AND.
      *
      * **Note**: The balance of the accounts are not included in the response.
      * Use the `calculateBalances` method to get the balances.
@@ -88,7 +95,9 @@ export const ledgerAccountOperations = {
      * matches more than one filter (e.g. it's shared by two requested groups).
      */
     readMany: defineOperation({
-        authorizer: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO: Add proper auther
+        authorizer: async ({ params, prisma }) => ledgerAccountAuth.readMany.dynamicFields({
+            accounts: await resolveAccountsOwnership(prisma, params),
+        }),
         paramsSchema: z.object({
             ledgerAccountIds: z.number().array().optional(),
             userIds: z.number().array().optional(),
@@ -129,7 +138,7 @@ export const ledgerAccountOperations = {
      * @returns The account details.
      */
     readOrCreate: defineOperation({
-        authorizer: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO: Add proper auther
+        authorizer: ({ params }) => ledgerAccountAuth.readOrCreate.dynamicFields({ userId: params.userId }),
         paramsSchema: z.object({
             userId: z.number(),
         }),
@@ -142,8 +151,11 @@ export const ledgerAccountOperations = {
 
             if (account) return account
 
+            // create requires LEDGER_USE, but readOrCreate is exempt from it for transparency.
+            // create's policy is genuinely stricter here, so this bypass isn't a shortcut.
             return ledgerAccountOperations.create({
                 session,
+                bypassAuth: true,
                 data: {
                     userId: params.userId,
                 },
@@ -152,7 +164,7 @@ export const ledgerAccountOperations = {
     }),
 
     readPage: defineOperation({
-        authorizer: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO: Add proper auther
+        authorizer: () => ledgerAccountAuth.readPage.dynamicFields({}),
         paramsSchema: readPageInputSchemaObject(
             z.number(),
             z.object({
@@ -187,7 +199,12 @@ export const ledgerAccountOperations = {
      * @returns The updated account.
      */
     update: defineOperation({
-        authorizer: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO: Add proper auther
+        authorizer: async ({ params, prisma }) => andAuthorizers(
+            ledgerAccountAuth.update.ledgerUse.dynamicFields({}),
+            ledgerAccountAuth.update.accountAccess.dynamicFields({
+                accounts: [await resolveAccountOwnership(prisma, params)],
+            }),
+        ),
         paramsSchema: z.object({
             userId: z.number().optional(),
             ledgerAccountId: z.number().optional(),
@@ -206,9 +223,9 @@ export const ledgerAccountOperations = {
                 },
                 data: {
                     ...scalarData,
-                    // `groupIds` isn't a real field on the model - it's the `groups` relation
-                    // (via the `GroupLedgerAccount` join table). Providing it replaces the
-                    // account's full group membership with exactly this list.
+                    // groupIds isn't a real field on the model. It's the groups relation, via
+                    // the GroupLedgerAccount join table. Setting it replaces the account's
+                    // group membership with exactly this list.
                     ...(groupIds && {
                         groups: {
                             deleteMany: {},
@@ -226,7 +243,7 @@ export const ledgerAccountOperations = {
      * Calculates the balance and fees of every ledger account matching any of the given filters.
      * Optionally takes a transaction ID to calculate the balance up until that transaction.
      *
-     * @warning Non-existent accounts will be treated as having a balance of zero.
+     * @warning An account that does not exist is treated as having a balance of zero.
      *
      * @param params.ledgerAccountIds IDs of specific ledger accounts to include.
      * @param params.userIds IDs of users whose account should be included.
@@ -236,7 +253,9 @@ export const ledgerAccountOperations = {
      * @returns The balances of the ledger accounts.
      */
     calculateBalances: defineOperation({
-        authorizer: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO: Add proper auther
+        authorizer: async ({ params, prisma }) => ledgerAccountAuth.calculateBalances.dynamicFields({
+            accounts: await resolveAccountsOwnership(prisma, params),
+        }),
         paramsSchema: z.object({
             ledgerAccountIds: z.number().array().optional(),
             userIds: z.number().array().optional(),
@@ -248,9 +267,8 @@ export const ledgerAccountOperations = {
             'Minst én av konto ID-er, bruker ID-er eller gruppe ID-er må være oppgitt.',
         ),
         operation: async ({ prisma, params }): Promise<BalanceRecord> => {
-            // `userIds`/`groupIds` need resolving to concrete ledger account IDs first. When only
-            // `ledgerAccountIds` is given (the common case - e.g. resolving balances for a known
-            // set of ledger entries), skip that lookup entirely and use them as-is.
+            // Skip resolving userIds/groupIds to ledger account IDs when ledgerAccountIds
+            // alone was given, since there is then nothing to resolve.
             const ids = params.userIds?.length || params.groupIds?.length
                 ? (await ledgerAccountOperations.readMany({
                     params: {
@@ -327,7 +345,9 @@ export const ledgerAccountOperations = {
      * @returns The balance of the ledger account.
      */
     calculateBalance: defineOperation({
-        authorizer: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO: Add proper auther
+        authorizer: async ({ params, prisma }) => ledgerAccountAuth.calculateBalance.dynamicFields({
+            accounts: [await resolveAccountOwnership(prisma, params)],
+        }),
         paramsSchema: z.object({
             userId: z.number().optional(),
             ledgerAccountId: z.number().optional(),

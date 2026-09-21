@@ -12,9 +12,8 @@ import type { PaymentState } from '@/prisma-generated-pn-types'
 export async function retrieveStripeFees(paymentIntent: Stripe.PaymentIntent): Promise<number> {
     let totalFees = 0
 
-    // Using `for await` here (rather than a single `.list()` call) so that
-    // we correctly sum fees across ALL charges on the payment intent, not
-    // just the first page (Stripe defaults to 10 per page).
+    // for await pages through all results automatically, so this sums fees across every
+    // charge, not just the first page (Stripe defaults to 10 per page).
     for await (const charge of stripe.charges.list({
         payment_intent: paymentIntent.id,
     })) {
@@ -118,10 +117,9 @@ export async function stripeWebhookCallback(event: Stripe.Event): Promise<Respon
             },
         })
     } catch (err) {
-        // A `P2025` here means the guard above didn't match, i.e. the payment is already
-        // in a final state that conflicts with this event (e.g. a stale/duplicate/out-of-order
-        // webhook delivery). There is nothing to advance, so we log and stop instead of
-        // throwing, which would otherwise cause Stripe to retry an event that can never succeed.
+        // A P2025 here means the payment is already in a final state that conflicts with this
+        // event, for example a stale or duplicate webhook delivered out of order. Log and stop
+        // instead of throwing, which would make Stripe retry an event that can never succeed.
         if (err instanceof PrismaClientKnownRequestError && err.code === 'P2025') {
             logger.error(
                 `Ignoring Stripe event for payment intent ${paymentIntent.id}: `
@@ -134,10 +132,13 @@ export async function stripeWebhookCallback(event: Stripe.Event): Promise<Respon
     }
 
     if (stripePayment.payment.ledgerTransaction) {
+        // No user session exists here. Stripe's signature verification, already checked by the
+        // route handler, is what authorizes this call.
         await ledgerTransactionOperations.advance({
             params: {
                 id: stripePayment.payment.ledgerTransaction.id,
             },
+            bypassAuth: true,
         })
     } else {
         logger.error(`Stripe payment is not part of a ledger transaction: ${stripePayment.payment.id}`)
@@ -146,11 +147,10 @@ export async function stripeWebhookCallback(event: Stripe.Event): Promise<Respon
     // We only allow one payment attempt per payment intent.
     // If this failed we cancel the payment intent to make sure it cannot be used in the future.
     //
-    // Important: we deliberately let a failure here throw (instead of catching and logging).
-    // If the payment intent isn't actually canceled, it could still be paid later, and by then
-    // this payment will already be marked FAILED in the db - a state the success handler above
-    // refuses to transition out of. Throwing causes the route handler to return a 500, so Stripe
-    // retries the whole event until the cancellation actually succeeds.
+    // A failure here is left to throw on purpose. If the cancel does not go through, the
+    // payment intent could still be paid later, but the payment is already marked FAILED, a
+    // state the success handler above refuses to leave. Throwing makes Stripe retry the event
+    // until the cancel actually succeeds.
     if (event.type === 'payment_intent.payment_failed') {
         await stripe.paymentIntents.cancel(
             paymentIntent.id,

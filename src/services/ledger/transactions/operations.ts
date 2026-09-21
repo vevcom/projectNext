@@ -1,11 +1,13 @@
 import { calculateCreditFees, calculateDebitFees } from './calculateFees'
 import { determineTransactionState } from './determineTransactionState'
+import { ledgerTransactionAuth } from './auth'
 import { ledgerAccountOperations } from '@/services/ledger/accounts/operations'
+import { resolveAccountOwnership, resolveAccountsOwnership } from '@/services/ledger/accounts/ownership'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { readPageInputSchemaObject } from '@/lib/paging/schema'
 import { ServerError } from '@/services/error'
 import { defineOperation } from '@/services/serviceOperation'
-import { RequireNothing } from '@/auth/authorizer/RequireNothing'
+import { andAuthorizers } from '@/auth/authorizer/andAuthorizers'
 import logger from '@/lib/logger'
 import { LedgerTransactionPurpose } from '@/prisma-generated-pn-types'
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/client'
@@ -13,12 +15,34 @@ import { z } from 'zod'
 import type { ExpandedLedgerTransaction } from './types'
 import type { Prisma } from '@/prisma-generated-pn-types'
 
+// Nested calls to other operations are not bypassed unless noted: the checks involved are cheap,
+// so it is worth checking access again rather than assuming the outer check already covered it.
 export const ledgerTransactionOperations = {
     /**
      * Reads a single transaction including its ledger entries, payment and manual transfer (if any).
      */
     read: defineOperation({
-        authorizer: () => RequireNothing.staticFields({}).dynamicFields({}),
+        authorizer: async ({ params, prisma }) => {
+            const transaction = await prisma.ledgerTransaction.findUnique({
+                where: { id: params.id },
+                select: {
+                    ledgerEntries: {
+                        select: {
+                            ledgerAccount: {
+                                select: { userId: true, groups: { select: { groupId: true } } },
+                            },
+                        },
+                    },
+                },
+            })
+
+            const accounts = (transaction?.ledgerEntries ?? []).map(entry => ({
+                userId: entry.ledgerAccount?.userId ?? null,
+                groupIds: entry.ledgerAccount?.groups.map(group => group.groupId) ?? [],
+            }))
+
+            return ledgerTransactionAuth.read.dynamicFields({ accounts })
+        },
         paramsSchema: z.object({
             id: z.number(),
         }),
@@ -46,7 +70,9 @@ export const ledgerTransactionOperations = {
      * Read several ledger transactions including its ledger entries, payment and manual transfer (if any).
      */
     readPage: defineOperation({
-        authorizer: () => RequireNothing.staticFields({}).dynamicFields({}),
+        authorizer: async ({ params, prisma }) => ledgerTransactionAuth.readPage.dynamicFields({
+            accounts: [await resolveAccountOwnership(prisma, { ledgerAccountId: params.paging.details.accountId })],
+        }),
         paramsSchema: readPageInputSchemaObject(
             z.number(),
             z.object({
@@ -86,13 +112,18 @@ export const ledgerTransactionOperations = {
      * Also, updates the fees if possible.
      */
     advance: defineOperation({
-        authorizer: () => RequireNothing.staticFields({}).dynamicFields({}),
+        authorizer: () => ledgerTransactionAuth.advance.dynamicFields({}),
         paramsSchema: z.object({
             id: z.number(),
         }),
         operation: async ({ prisma, params }) => {
+            // advance recomputes the whole transaction, which can span two unrelated parties
+            // (e.g. a purchase debits the buyer and credits a shop group). Every call below is
+            // bypassed for that reason: an ownership check would reject whichever side isn't
+            // the actual caller.
             let transaction: ExpandedLedgerTransaction = await ledgerTransactionOperations.read({
                 params: { id: params.id },
+                bypassAuth: true,
             })
 
             const creditFees = calculateCreditFees(transaction.ledgerEntries, transaction.payment)
@@ -129,10 +160,9 @@ export const ledgerTransactionOperations = {
                         entry.fees = creditFees[entry.ledgerAccountId] ?? entry.fees
                     })
                 } catch (err) {
-                    // A `P2025` here means the transaction left the `PENDING` state concurrently
-                    // (e.g. a racing/duplicate call to `advance` for the same transaction).
-                    // There's nothing to update anymore - the final read below will return
-                    // whatever state the transaction actually settled into.
+                    // A P2025 here means the transaction left PENDING concurrently, e.g. a
+                    // racing duplicate call to advance. The final read below returns whatever
+                    // state it actually settled into, so there is nothing more to do here.
                     if (!(err instanceof PrismaClientKnownRequestError) || err.code !== 'P2025') {
                         throw err
                     }
@@ -146,6 +176,7 @@ export const ledgerTransactionOperations = {
                     ledgerAccountIds: transaction.ledgerEntries.map(entry => entry.ledgerAccountId),
                     atTransactionId: transaction.id,
                 },
+                bypassAuth: true,
             })
 
             // Find frozen accounts, if any, among the involved ledger accounts.
@@ -173,6 +204,7 @@ export const ledgerTransactionOperations = {
 
             transaction = await ledgerTransactionOperations.read({
                 params: { id: params.id },
+                bypassAuth: true,
             })
 
             return transaction
@@ -188,7 +220,26 @@ export const ledgerTransactionOperations = {
      * The lifecycle of the transaction is automatically handled by the system.
      */
     create: defineOperation({
-        authorizer: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO,
+        // A transaction with no debit entries at all (e.g. a deposit, where the debit side is an
+        // external payment, not a ledger entry) has nothing for rule 1 to check, so LEDGER_USE
+        // alone is sufficient for it.
+        authorizer: async ({ params, prisma }) => {
+            const ledgerUse = ledgerTransactionAuth.create.ledgerUse.dynamicFields({})
+
+            const debitLedgerAccountIds = params.ledgerEntries
+                .filter(entry => entry.funds < 0)
+                .map(entry => entry.ledgerAccountId)
+
+            if (debitLedgerAccountIds.length === 0) {
+                return ledgerUse
+            }
+
+            const accountAccess = ledgerTransactionAuth.create.accountAccess.dynamicFields({
+                accounts: await resolveAccountsOwnership(prisma, { ledgerAccountIds: debitLedgerAccountIds }),
+            })
+
+            return andAuthorizers(ledgerUse, accountAccess)
+        },
         paramsSchema: z.object({
             purpose: z.nativeEnum(LedgerTransactionPurpose),
             ledgerEntries: z.object({
@@ -201,9 +252,13 @@ export const ledgerTransactionOperations = {
         operation: async ({ prisma, params }) => {
             // Calculate the balance for all accounts which are going to be deducted.
             const debitEntries = params.ledgerEntries.filter(entry => entry.funds < 0)
-            const balances = await ledgerAccountOperations.calculateBalances({
-                params: { ledgerAccountIds: debitEntries.map(entry => entry.ledgerAccountId) },
-            })
+            // calculateBalances rejects an empty filter, so skip it when there are no debit
+            // entries, as with deposits.
+            const balances = debitEntries.length > 0
+                ? await ledgerAccountOperations.calculateBalances({
+                    params: { ledgerAccountIds: debitEntries.map(entry => entry.ledgerAccountId) },
+                })
+                : {}
 
             // Check that the relevant accounts have enough balance to do the transaction.
             // NOTE: This is check is only to avoid calling the db unnecessarily.
@@ -240,6 +295,7 @@ export const ledgerTransactionOperations = {
                 params: {
                     id,
                 },
+                bypassAuth: true,
             })
 
             if (transaction.state === 'FAILED') {

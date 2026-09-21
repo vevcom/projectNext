@@ -1,15 +1,19 @@
+import { ledgerMovementAuth } from './auth'
 import { ledgerTransactionOperations } from '@/services/ledger/transactions/operations'
 import { paymentOperations } from '@/services/ledger/payments/operations'
+import { resolveAccountOwnership } from '@/services/ledger/accounts/ownership'
 import { defineOperation } from '@/services/serviceOperation'
-import { RequireNothing } from '@/auth/authorizer/RequireNothing'
-import { z } from 'zod'
+import { andAuthorizers } from '@/auth/authorizer/andAuthorizers'
 import { PaymentProvider } from '@/prisma-generated-pn-types'
+import { z } from 'zod'
 
 // `ledgerMovementOperations` provides functions to orchestrate account related actions,
 // such as depositing funds or creating payouts. If the ledger is needed for
 // other purposes, such as creating a transaction, it should be done through
 // `ledgerTransactionOperations`.
-
+//
+// Nested calls below are not bypassed: the checks they run are cheap, so it is worth
+// checking access again rather than assuming the outer check already covered it.
 export const ledgerMovementOperations = {
     /**
      * Creates a deposit transaction, which is a deposit of funds into the ledger.
@@ -20,7 +24,7 @@ export const ledgerMovementOperations = {
      * @return The created transaction representing the deposit operation.
      */
     createDeposit: defineOperation({
-        authorizer: () => RequireNothing.staticFields({}).dynamicFields({}),
+        authorizer: ({ params }) => ledgerMovementAuth.createDeposit(params.provider),
         opensTransaction: true,
         paramsSchema: z.object({
             ledgerAccountId: z.number(),
@@ -74,7 +78,12 @@ export const ledgerMovementOperations = {
      * @returns The created transaction representing the payout operation.
      */
     createPayout: defineOperation({
-        authorizer: () => RequireNothing.staticFields({}).dynamicFields({}),
+        authorizer: async ({ params, prisma }) => andAuthorizers(
+            ledgerMovementAuth.createPayout.ledgerUse.dynamicFields({}),
+            ledgerMovementAuth.createPayout.accountAccess.dynamicFields({
+                accounts: [await resolveAccountOwnership(prisma, { ledgerAccountId: params.ledgerAccountId })],
+            }),
+        ),
         paramsSchema: z.object({
             ledgerAccountId: z.number(),
             funds: z.number().nonnegative().default(0),
