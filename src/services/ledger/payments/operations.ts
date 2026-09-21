@@ -89,7 +89,7 @@ export const paymentOperations = {
             }
 
             if (payment.provider === 'STRIPE') {
-                // Get timestamp of when the payment was created so that it 
+                // Get timestamp of when the payment was created so that it
                 // can be used as part of the idempotency key.
                 const createdAt = (await prisma.payment.findUniqueOrThrow({
                     where: {
@@ -98,7 +98,7 @@ export const paymentOperations = {
                     select: {
                         createdAt: true,
                     },
-                })).createdAt.getTime();
+                })).createdAt.getTime()
 
                 const customerId = session.user
                     ? (await stripeCustomerOperations.readOrCreate({
