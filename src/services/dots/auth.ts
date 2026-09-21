@@ -7,6 +7,4 @@ export const dotAuth = {
     update: RequirePermission.staticFields({ permission: 'DOTS_ADMIN' }),
     destroy: RequirePermission.staticFields({ permission: 'DOTS_ADMIN' }),
     readForUser: RequireUserIdOrPermission.staticFields({ permission: 'DOTS_ADMIN' }),
-    readPage: RequirePermission.staticFields({ permission: 'DOTS_ADMIN' }),
-    readWrapperForUser: RequireUserIdOrPermission.staticFields({ permission: 'DOTS_ADMIN' }),
 }
