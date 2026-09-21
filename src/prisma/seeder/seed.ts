@@ -1,3 +1,4 @@
+import logger from '@/lib/logger'
 import seed from './src/seed'
 import { prisma } from '@/prisma-pn-client-instance'
 import { exit } from 'process'
@@ -12,7 +13,7 @@ seed(
         await prisma.$disconnect()
     })
     .catch(async (e) => {
-        console.error(e)
+        logger.error(e)
         await prisma.$disconnect()
         exit(1)
-    }).then(() => console.log('Seeding finished'))
+    }).then(() => logger.info('Seeding finished.'))

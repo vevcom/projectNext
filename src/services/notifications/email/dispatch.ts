@@ -15,14 +15,6 @@ export async function dispatchEmailNotifications(
     notificaion: Notification,
     users: UserFiltered[]
 ) {
-    console.log('Email')
-
-    console.log(channel)
-
-    console.log(notificaion)
-
-    console.log(users)
-
     const results = await prismaCall(() => prisma.notificationChannel.findUniqueOrThrow({
         where: {
             id: channel.id,
@@ -55,8 +47,6 @@ export async function dispatchEmailNotifications(
             }
         }
     }))
-
-    console.log(mails)
 
     await sendBulkMail(mails)
 }

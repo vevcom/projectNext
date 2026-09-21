@@ -4,6 +4,7 @@ import nodemailer from 'nodemailer'
 import type SMTPPool from 'nodemailer/lib/smtp-pool'
 import type SMTPTransport from 'nodemailer/lib/smtp-transport'
 import type Mail from 'nodemailer/lib/mailer'
+import logger from '../logger'
 
 const isProd = process.env.NODE_ENV === 'production'
 const isTest = process.env.NODE_ENV === 'test'
@@ -47,7 +48,7 @@ class MailHandler {
         if (isProd) {
             this.transporter = nodemailer.createTransport(TRANSPORT_OPTIONS)
             this.resolveSetup()
-            console.log('Email setup in production')
+            logger.debug('Email setup for production.')
             return
         }
 
@@ -65,8 +66,7 @@ class MailHandler {
         })
 
         this.resolveSetup()
-        console.log('Email setup in development. Test account details:')
-        console.log(this.testAccount)
+        logger.debug('Email setup for development.', { testAccount: this.testAccount })
     }
 
     async getTestAccount(): Promise<nodemailer.TestAccount> {
@@ -104,11 +104,10 @@ class MailHandler {
         const responses = await Promise.all(responsePromises)
 
         responses.forEach(response => {
-            console.log(`MAIL SENT: ${response.envelope.from} -> (${response.envelope.to.join(' ')})`)
-            console.log(response.response)
+            logger.debug('Mail sent.', { response })
 
-            if (!isProd) {
-                console.log(`Preview: ${nodemailer.getTestMessageUrl(response as SMTPTransport.SentMessageInfo)}`)
+            if (!PROD) {
+                logger.info(`Mail preview: ${nodemailer.getTestMessageUrl(response as SMTPTransport.SentMessageInfo)}`)
             }
         })
     }

@@ -43,7 +43,6 @@ export const cabinPricePeriodOperations = {
                         pricePeriodId: latestPricePeriod.id,
                     }
                 })
-                console.log(products)
 
                 await prisma.cabinProductPrice.createMany({
                     data: products.map(product => ({

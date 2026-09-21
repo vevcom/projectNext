@@ -132,7 +132,6 @@ const create = defineSubOperation({
         })
 
         const totalPrice = calculateTotalCabinBookingPrice(priceObjects)
-        console.log('TOTAL PRICE FOR THE BOOKING:', totalPrice)
 
         return await prisma.booking.create({
             data: {

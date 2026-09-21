@@ -1,3 +1,5 @@
+import logger from "@/lib/logger"
+
 /**
  * @returns Limits for the migration process to test without going crazy
  * null means no limit and happens if the env variable MIGRATION_WITH_LIMITS is set to "false"
@@ -25,8 +27,8 @@ export function getLimits() {
     }
 
     const limitsOn = process.env.MIGRATION_WITH_LIMITS !== 'false'
-    console.log(limitsOn ? 'Limits on' : '!!!!Limits off!!!!')
-    if (limitsOn) console.log('Limits:', limits)
+    logger.info(limitsOn ? `Limits on. Set to: ${limits}` : 'Limits off!!!')
+    
     return limitsOn ? limits : nullObj
 }
 

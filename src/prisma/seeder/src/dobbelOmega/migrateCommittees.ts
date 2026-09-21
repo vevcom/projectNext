@@ -8,6 +8,7 @@ import type { Prisma } from '@/prisma-generated-pn-types'
 import type { PrismaClient as PrismaClientOw } from '@/prisma-generated-ow-basic/client'
 import type { UserMigrator } from './migrateUsers'
 import type { IdMapper } from './IdMapper'
+import logger from '@/lib/logger'
 
 const fileName = fileURLToPath(import.meta.url)
 const directoryName = dirname(fileName)
@@ -111,8 +112,7 @@ export default async function migrateCommittees(
 
         await Promise.all(committee.CommitteeMembers.map(async member => {
             if (member.UserId === null) {
-                console.warn(`${committee.shortname} has a member that is not connected to a user!`)
-                console.warn(member)
+                logger.warn(`${committee.shortname} has a member that is not connected to a user!`, { committee, member })
                 return
             }
             const pnUserId = await userMigrator.getPnUserId(member.UserId)

@@ -4,6 +4,7 @@ import { File } from 'node:buffer'
 import type { PrismaClient as PrismaClientOw } from '@/prisma-generated-ow-basic/client'
 import type { PrismaClient as PrismaClientPn } from '@/prisma-generated-pn-client'
 import type { Limits } from './migrationLimits'
+import logger from '@/lib/logger'
 
 /**
  * This function migrates ombul from OW to PN, by creating a new ombul in PN for
@@ -28,7 +29,7 @@ export default async function migrateOmbul(
     const ombuls = allOmbuls.flatMap(ombul => {
         const coverImageId = owIdToPnId(imageIdMap, ombul.ImageId)
         if (!coverImageId) {
-            console.warn(`Ombul "${ombul.title}" (${ombul.year}) has no resolvable cover image, skipping`)
+            logger.warn(`Ombul "${ombul.title}" (${ombul.year}) has no resolvable cover image, skipping.`)
             return []
         }
         return [{ ...ombul, coverImageId }]
@@ -43,7 +44,7 @@ export default async function migrateOmbul(
             method: 'GET',
         }).catch(() => null)
         if (!res || !res.ok) {
-            console.error(`Failed to fetch ombul pdf from ${fsLocationOldVev}`)
+            logger.error(`Failed to fetch ombul pdf from ${fsLocationOldVev}`)
             return null
         }
 
