@@ -1,8 +1,8 @@
 'use client'
 
 import styles from './PaymentMethodModal.module.scss'
-import PopUp from '@/app/_components/PopUp/PopUp'
-import Button from '@/app/_components/UI/Button'
+import PopUp from '@/components/PopUp/PopUp'
+import Button from '@/components/UI/Button'
 import Form from '@/components/Form/Form'
 import StripePayment from '@/components/Stripe/StripePayment'
 import StripeProvider from '@/components/Stripe/StripeProvider'

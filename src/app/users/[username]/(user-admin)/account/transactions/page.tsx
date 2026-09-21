@@ -1,13 +1,14 @@
+import { redirectToErrorPage, unwrapActionReturn } from '@/app/redirectToErrorPage'
+import { readLedgerAccountAction } from '@/services/ledger/accounts/actions'
 import TransactionList from '@/components/Ledger/Transactions/LedgerTransactionList'
-// import { getUser } from '@/auth/session/getUser'
+import { ServerSession } from '@/auth/session/ServerSession'
 
 export default async function Transactions() {
-    // const { user } = await getUser({
-    //     userRequired: true,
-    //     shouldRedirect: true,
-    // })
+    const session = await ServerSession.fromNextAuth()
 
-    const account = { id: 2 }
+    if (!session.user) redirectToErrorPage('UNAUTHORIZED')
 
-    return <TransactionList accountId={account.id} showFees/>
+    const ledgerAccount = unwrapActionReturn(await readLedgerAccountAction({ params: { userId: session.user.id } }))
+
+    return <TransactionList accountId={ledgerAccount.id} showFees/>
 }

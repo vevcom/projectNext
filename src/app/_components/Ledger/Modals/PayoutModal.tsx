@@ -1,62 +1,44 @@
 'use client'
 
-import styles from './PayoutModal.module.scss'
-import Form from '@/components/Form/Form'
-import PopUp from '@/components/PopUp/PopUp'
+import LedgerTransactionModal from './LedgerTransactionModal'
 import NumberInput from '@/components/UI/NumberInput'
-import Button from '@/components/UI/Button'
-import TextInput from '@/components/UI/TextInput'
 import { convertAmount } from '@/lib/currency/convert'
-import { configureAction } from '@/services/configureAction'
 import { createPayoutAction } from '@/services/ledger/movements/actions'
 import { useState } from 'react'
 
 type Props = {
     ledgerAccountId: number,
-    defaultFunds?: number,
-    defaultFees?: number,
 }
 
-export default function PayoutModal({ ledgerAccountId, defaultFunds = 0, defaultFees = 0 }: Props) {
-    const [funds, setFunds] = useState(defaultFunds)
-    const [fees, setFees] = useState(defaultFees)
-    const [description, setDescription] = useState('')
+export default function PayoutModal({ ledgerAccountId }: Props) {
+    const [funds, setFunds] = useState(0)
 
-    return <PopUp
+    return <LedgerTransactionModal
         popUpKey="payoutModal"
-        customShowButton={(open) => <Button onClick={open} color="primary">Registrer utbetaling</Button>}
+        triggerLabel="Registrer utbetaling"
+        title="Ny utbetaling"
+        submitText="Registrer utbetaling"
+        funds={funds}
+        showTotal={false}
+        availablePaymentMethods={['MANUAL']}
+        refreshOnSuccess
+        onSubmitAction={({ manualFees, description }) => createPayoutAction({
+            params: {
+                ledgerAccountId,
+                funds,
+                fees: manualFees ?? 0,
+                description,
+            }
+        })}
     >
-        <h2>Ny utbetaling</h2>
-        <div className={styles.checkoutFormContainer}>
-            <Form
-                action={configureAction(createPayoutAction, {
-                    params: { ledgerAccountId, fees, funds, description: description || undefined }
-                })}
-                submitText="Registrer utbetaling"
-                buttonClassName={styles.submitButton}
-                refreshOnSuccess
-                closePopUpOnSuccess="payoutModal"
-            >
-                <NumberInput
-                    label="Beløp"
-                    defaultValue={defaultFunds / 100}
-                    step={1}
-                    min={0}
-                    onChange={(e) => setFunds(convertAmount(e.target.value))}
-                />
-                <NumberInput
-                    label="Avgifter"
-                    defaultValue={defaultFees / 100}
-                    step={1}
-                    min={0}
-                    onChange={(e) => setFees(convertAmount(e.target.value))}
-                />
-                <TextInput
-                    label="Kommentar"
-                    name="description"
-                    onChange={(e) => setDescription(e.target.value)}
-                />
-            </Form>
-        </div>
-    </PopUp>
+        <NumberInput
+            label="Beløp"
+            name="funds"
+            step={1}
+            min={0}
+            defaultValue={0}
+            onChange={e => setFunds(convertAmount(e.target.value))}
+            required
+        />
+    </LedgerTransactionModal>
 }

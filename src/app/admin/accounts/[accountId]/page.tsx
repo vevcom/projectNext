@@ -20,8 +20,15 @@ export default async function LedgerAccount({ params }: Props) {
     const ledgerAccount = unwrapActionReturn(await readLedgerAccountAction({ params: { ledgerAccountId: accountId } }))
 
     return <div>
-        <LedgerAccountOverview ledgerAccount={ledgerAccount} showPayoutButton showDeactivateButton showFees />
+        <LedgerAccountOverview
+            ledgerAccount={ledgerAccount}
+            showDepositButton
+            depositPaymentMethods={['MANUAL']}
+            showPayoutButton
+            showDeactivateButton
+            showFees
+        />
         {/* Add link to products overview */}
-        <LedgerAccountTransactionSummary ledgerAccountId={accountId} transactionsHref={`${accountId}/transactions`} />
+        <LedgerAccountTransactionSummary transactionsHref={`${accountId}/transactions`} />
     </div>
 }

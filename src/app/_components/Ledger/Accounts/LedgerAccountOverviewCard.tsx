@@ -9,11 +9,16 @@ import { ServerSession } from '@/auth/session/ServerSession'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faWarning } from '@fortawesome/free-solid-svg-icons'
 import type { LedgerAccount } from '@/prisma-generated-pn-types'
+import type { LedgerTransactionPaymentMethod } from '@/components/Ledger/Modals/LedgerTransactionModal'
 
 type Props = {
     ledgerAccount: LedgerAccount,
     showFees?: boolean,
     showDepositButton?: boolean,
+    // Overrides DepositModal's own admin-based default. Used by the admin accounts page, where a
+    // Stripe checkout would incorrectly charge the viewing admin's own card rather than the
+    // viewed account's owner.
+    depositPaymentMethods?: LedgerTransactionPaymentMethod[],
     showPayoutButton?: boolean,
     showDeactivateButton?: boolean,
 }
@@ -38,9 +43,11 @@ export default async function LedgerAccountOverview({
     ledgerAccount,
     showPayoutButton,
     showDepositButton,
+    depositPaymentMethods,
     showDeactivateButton,
 }: Props) {
-    const customerSessionClientSecret = showDepositButton
+    const stripeAvailable = depositPaymentMethods === undefined || depositPaymentMethods.includes('STRIPE')
+    const customerSessionClientSecret = showDepositButton && stripeAvailable
         ? await getCustomerSessionClientSecret()
         : undefined
 
@@ -56,7 +63,11 @@ export default async function LedgerAccountOverview({
         <div className={styles.ledgerAccountOverviewButtons}>
             {
                 showDepositButton &&
-                <DepositModal ledgerAccountId={ledgerAccount.id} customerSessionClientSecret={customerSessionClientSecret} />
+                <DepositModal
+                    ledgerAccountId={ledgerAccount.id}
+                    customerSessionClientSecret={customerSessionClientSecret}
+                    availablePaymentMethods={depositPaymentMethods}
+                />
             }
             { showPayoutButton && <PayoutModal ledgerAccountId={ledgerAccount.id} /> }
             {

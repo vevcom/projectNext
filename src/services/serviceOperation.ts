@@ -418,7 +418,7 @@ export function defineSubOperation<
                 const dataParse = zfd.formData(dataSchema).safeParse(args.data)
                 if (!dataParse.success) {
                     if (process.env.NODE_ENV !== 'test') {
-                        logger.debug('Service operation params failed validation.', { dataParse })
+                        logger.debug('Service operation data failed validation.', { dataParse })
                     }
                     throw new ParseError(dataParse)
                 }

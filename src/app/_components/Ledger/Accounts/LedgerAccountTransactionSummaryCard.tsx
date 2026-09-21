@@ -4,7 +4,6 @@ import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
 
 type Props = {
-    ledgerAccountId: number,
     transactionsHref?: string,
 }
 

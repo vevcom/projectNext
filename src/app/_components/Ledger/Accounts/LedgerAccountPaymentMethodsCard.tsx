@@ -1,4 +1,4 @@
-import PaymentMethodList from '@/components/Ledger/Modals/PaymentMethodList'
+import PaymentMethodList from '@/components/Ledger/Accounts/PaymentMethodList'
 import PaymentMethodModal from '@/components/Ledger/Modals/PaymentMethodModal'
 import Card from '@/components/UI/Card'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'

@@ -1,0 +1,35 @@
+@use "@/styles/ohma";
+
+.transactionModalContainer {
+    width: 500px;
+    margin: ohma.$gap * 3;
+}
+
+.totalRow {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+}
+
+.balanceRow {
+    display: flex;
+    justify-content: space-between;
+    color: ohma.$colors-text-muted;
+}
+
+.manualFields {
+    display: flex;
+    flex-direction: column;
+    gap: ohma.$gap;
+}
+
+.paymentMethodChooser {
+    display: flex;
+    flex-direction: column;
+}
+
+.paymentMethodChooserLabel {
+    font-size: 14px;
+    margin-bottom: 5px;
+    color: #666;
+}

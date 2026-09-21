@@ -1,6 +1,7 @@
 import styles from './LedgerAccountBalance.module.scss'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { displayAmount } from '@/lib/currency/convert'
+import { currencySymbol } from '@/lib/currency/config'
 import { calculateLedgerAccountBalanceAction } from '@/services/ledger/accounts/actions'
 
 type Props = {
@@ -15,12 +16,12 @@ export default async function LedgerAccountBalance({ ledgerAccountId: accountId,
         <div className={styles.amountRow}>
             <div>Saldo</div>
             <div className={styles.total}>{displayAmount(balance.amount)}</div>
-            <div className={styles.currencySymbol}>Muenter</div>
+            <div className={styles.currencySymbol}>{currencySymbol}</div>
         </div>
         {showFees && <div className={styles.feesRow}>
             <div>Avgifter</div>
             <div className={styles.total}>{displayAmount(balance.fees)}</div>
-            <div className={styles.currencySymbol}>Muenter</div>
+            <div className={styles.currencySymbol}>{currencySymbol}</div>
         </div>}
     </div>
 }

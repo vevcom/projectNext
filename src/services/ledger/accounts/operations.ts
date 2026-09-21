@@ -174,9 +174,8 @@ export const ledgerAccountOperations = {
                 accountType: z.nativeEnum(LedgerAccountType).optional(),
             }),
         ),
-        operation: async ({ params: { paging }, prisma }) =>
-            // TODO: Add balance to each account
-            await prisma.ledgerAccount.findMany({
+        operation: async ({ params: { paging }, prisma }): Promise<(LedgerAccount & { balance: Balance })[]> => {
+            const accounts = await prisma.ledgerAccount.findMany({
                 where: {
                     type: paging.details.accountType,
                 },
@@ -187,6 +186,14 @@ export const ledgerAccountOperations = {
                 ...cursorPageingSelection(paging.page),
             })
 
+            const balances = accounts.length > 0
+                ? await ledgerAccountOperations.calculateBalances({
+                    params: { ledgerAccountIds: accounts.map(account => account.id) },
+                })
+                : {}
+
+            return accounts.map(account => ({ ...account, balance: balances[account.id] }))
+        }
     }),
 
     /**

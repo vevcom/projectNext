@@ -4,10 +4,20 @@ import styles from './LedgerTransactionList.module.scss'
 import LedgerTransactionRow from './LedgerTransactionRow'
 import EndlessScroll from '@/components/PagingWrappers/EndlessScroll'
 import { LedgerTransactionPagingProvider, LedgerTransactionPagingContext } from '@/contexts/paging/LedgerTransactionPaging'
+import { useContext } from 'react'
 
 type Props = {
     accountId: number,
     showFees?: boolean,
+}
+
+function EmptyState() {
+    const context = useContext(LedgerTransactionPagingContext)
+    if (!context) throw new Error('No context')
+
+    if (!context.state.allLoaded || context.state.data.length > 0) return null
+
+    return <p>Her var det tomt! Hva med å ta seg en tur innom Kiogeskapet?</p>
 }
 
 export default function TransactionList({ accountId, showFees }: Props) {
@@ -15,6 +25,7 @@ export default function TransactionList({ accountId, showFees }: Props) {
         startPage={{ page: 0, pageSize: 10 }}
         details={{ accountId }} serverRenderedData={[]}
     >
+        <EmptyState />
         <EndlessScroll
             pagingContext={LedgerTransactionPagingContext}
             renderer={
@@ -43,6 +54,5 @@ export default function TransactionList({ accountId, showFees }: Props) {
                 </table>
             }
         />
-        {/* TODO: Add message "Her var det tomt! Hva med å ta seg en tur innom Kiogeskapet?" when no transaksjons exist. */}
     </LedgerTransactionPagingProvider>
 }

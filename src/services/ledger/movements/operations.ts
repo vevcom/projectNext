@@ -31,6 +31,10 @@ export const ledgerMovementOperations = {
             provider: z.nativeEnum(PaymentProvider),
             funds: z.coerce.number().nonnegative(),
             manualFees: z.coerce.number().nonnegative().default(0),
+            // Only honored for MANUAL deposits, which already require LEDGER_ADMIN (see auth.ts).
+            // For every other provider the transaction's description is left unset so that it
+            // falls back to a translated purpose label instead (see LedgerTransactionRow).
+            description: z.string().optional(),
         }),
         operation: async ({ prisma, params }) => {
             const transaction = await prisma.$transaction(async tx => {
@@ -53,7 +57,7 @@ export const ledgerMovementOperations = {
                             funds: params.funds,
                         }],
                         paymentId: payment.id,
-                        description: 'Innskudd',
+                        description: params.provider === 'MANUAL' ? params.description : undefined,
                     },
                     prisma: tx,
                 })
@@ -92,7 +96,7 @@ export const ledgerMovementOperations = {
             description: z.string().optional(),
         }).refine((data) => data.funds || data.fees, 'Både beløp og avgifter kan ikke være 0 samtidig.'),
         opensTransaction: true,
-        operation: async ({ prisma, params }) => prisma.$transaction(async tx => {
+        operation: async ({ prisma, params, session }) => prisma.$transaction(async tx => {
             const payment = await paymentOperations.create({
                 params: {
                     provider: 'MANUAL',
@@ -104,6 +108,11 @@ export const ledgerMovementOperations = {
                 prisma: tx,
             })
 
+            // A payout is always implicitly manual, so it isn't itself LEDGER_ADMIN-gated (any
+            // account owner can self-serve one). A caller-supplied description is only honored
+            // for admins; everyone else falls back to a translated purpose label instead.
+            const isAdmin = session.permissions.includes('LEDGER_ADMIN')
+
             const transaction = await ledgerTransactionOperations.create({
                 params: {
                     purpose: 'PAYOUT',
@@ -113,7 +122,7 @@ export const ledgerMovementOperations = {
                         fees: -params.fees,
                     }],
                     paymentId: payment.id,
-                    description: params.description,
+                    description: isAdmin ? params.description : undefined,
                 },
                 prisma: tx,
             })

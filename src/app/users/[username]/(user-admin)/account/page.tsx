@@ -21,6 +21,6 @@ export default async function Account() {
             showFees
         />
         <LedgerAccountPaymentMethods userId={session.user.id} />
-        <LedgerAccountTransactionSummary ledgerAccountId={ledgerAccount.id} transactionsHref="account/transactions" />
+        <LedgerAccountTransactionSummary transactionsHref="account/transactions" />
     </div>
 }
