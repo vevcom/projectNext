@@ -1,5 +1,5 @@
 import styles from './page.module.scss'
-import CommitteeCard from '@/components/CommitteeCard/CommitteeCard'
+import CommitteeCard from '@/components/Committee/CommitteeCard/CommitteeCard'
 import { readAllCommitteesAction } from '@/services/groups/committees/actions'
 
 export default async function Committees() {

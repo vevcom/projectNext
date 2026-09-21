@@ -7,6 +7,7 @@ import { specialImagePanels } from '@/services/images/specialPanels/constants'
 import { ServerError, Smorekopp } from '@/services/error'
 import { SpecialCmsImage } from '@/prisma-generated-pn-types'
 import logger from '@/lib/logger'
+import { expandedImageIncluder } from '@/services/images/subservice/constants'
 import { z } from 'zod'
 import type { PrismaPossibleTransaction } from '@/services/serviceOperation'
 import type { SessionMaybeUser } from '@/auth/session/Session'
@@ -73,7 +74,7 @@ const create = defineSubOperation({
             } : undefined
         },
         include: {
-            image: true
+            image: { include: expandedImageIncluder }
         }
     })
 })
@@ -104,7 +105,7 @@ export const cmsImageOperations = {
                     special: params.special
                 },
                 include: {
-                    image: true
+                    image: { include: expandedImageIncluder }
                 }
             })
             if (image) return image
@@ -149,7 +150,7 @@ export const cmsImageOperations = {
                     } : undefined
                 },
                 include: {
-                    image: true
+                    image: { include: expandedImageIncluder }
                 }
             })
         }

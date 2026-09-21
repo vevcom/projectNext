@@ -1,9 +1,9 @@
 import styles from './ProfilePicture.module.scss'
 import Image from '@/components/Image/Image'
-import type { Image as ImageT } from '@/prisma-generated-pn-types'
+import type { ExpandedImage } from '@/services/images/subservice/types'
 
 type PropTypes = {
-    profileImage: ImageT,
+    profileImage: ExpandedImage,
     width: number,
     className?: string
 }

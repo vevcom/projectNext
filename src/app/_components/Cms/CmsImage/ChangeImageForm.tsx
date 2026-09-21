@@ -1,12 +1,12 @@
 'use client'
 import Form from '@/components/Form/Form'
 import { configureAction } from '@/services/configureAction'
-import type { Image as ImageT } from '@/prisma-generated-pn-types'
+import type { ExpandedImage } from '@/services/images/subservice/types'
 import type { UpdateCmsImageAction } from '@/cms/images/types'
 
 type PropTypes = {
     cmsImageId: number
-    selectedImage: ImageT
+    selectedImage: ExpandedImage
     className?: string
     updateCmsImageAction: UpdateCmsImageAction
 }

@@ -1,16 +1,16 @@
 import styles from './CommitteeImage.module.scss'
+import CommitteeLogo from '@/components/Committee/CommitteeLogo/CommitteeLogo'
 import CmsImage from '@/cms/CmsImage/CmsImage'
-import Image from '@/components/Image/Image'
 import { configureAction } from '@/services/configureAction'
 import { updateCommitteeArticleCoverImageAction } from '@/services/groups/committees/actions'
 import type { ReactNode } from 'react'
-import type { Image as ImageT } from '@/prisma-generated-pn-types'
+import type { ExpandedImage } from '@/services/images/subservice/types'
 import type { ExpandedCmsImage } from '@/cms/images/types'
 import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
 
 type PropTypes = {
     children?: ReactNode
-    logoImage: ImageT
+    logoImage: ExpandedImage
     coverImage: ExpandedCmsImage
     grayScale?: boolean,
     shortName: string
@@ -37,9 +37,9 @@ export default function CommitteeImage({
             </div>
             <div className={styles.images}>
                 <div className={styles.image}>
-                    <Image
+                    <CommitteeLogo
                         className={grayScale ? styles.gray : ''}
-                        image={logoImage}
+                        logoImage={logoImage}
                         width={350}
                     />
                 </div>

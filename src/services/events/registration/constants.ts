@@ -1,11 +1,12 @@
 import { userFilterSelection } from '@/services/users/constants'
+import { expandedImageIncluder } from '@/services/images/subservice/constants'
 import type { Prisma } from '@/prisma-generated-pn-types'
 
 export const eventRegistrationSelection = {
     user: {
         select: {
             ...userFilterSelection,
-            image: true,
+            image: { include: expandedImageIncluder },
         },
     },
     contact: {

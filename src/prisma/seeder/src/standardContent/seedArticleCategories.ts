@@ -19,7 +19,6 @@ export const seedArticleCategoriesConfig = [
                 name: 'om omega',
                 coverImage: {
                     image: { dynamicImageSeededForCmsName: 'ohma' },
-                    imageSize: 'LARGE'
                 },
                 articleSections: [
                     {
@@ -37,7 +36,6 @@ export const seedArticleCategoriesConfig = [
                         },
                         cmsImage: {
                             image: { dynamicImageSeededForCmsName: 'kappemann' },
-                            imageSize: 'LARGE'
                         }
                     }
                 ]
@@ -46,7 +44,6 @@ export const seedArticleCategoriesConfig = [
                 name: 'statutter',
                 coverImage: {
                     image: { dynamicImageSeededForCmsName: 'ov' },
-                    imageSize: 'MEDIUM'
                 },
                 articleSections: [
                     {
@@ -64,7 +61,6 @@ export const seedArticleCategoriesConfig = [
                         },
                         cmsImage: {
                             image: { dynamicImageSeededForCmsName: 'traktat' },
-                            imageSize: 'MEDIUM'
                         }
                     }
                 ]
@@ -79,7 +75,6 @@ export const seedArticleCategoriesConfig = [
                 name: 'prikkreglement',
                 coverImage: {
                     image: { dynamicImageSeededForCmsName: 'ov' },
-                    imageSize: 'MEDIUM'
                 },
                 articleSections: [
                     {
@@ -88,7 +83,6 @@ export const seedArticleCategoriesConfig = [
                         },
                         cmsImage: {
                             image: { dynamicImageSeededForCmsName: 'traktat' },
-                            imageSize: 'MEDIUM'
                         }
                     }
                 ]
@@ -97,7 +91,6 @@ export const seedArticleCategoriesConfig = [
                 name: 'søknadsguide',
                 coverImage: {
                     image: { dynamicImageSeededForCmsName: 'ov' },
-                    imageSize: 'MEDIUM'
                 },
                 articleSections: [
                     {
@@ -106,7 +99,6 @@ export const seedArticleCategoriesConfig = [
                         },
                         cmsImage: {
                             image: { dynamicImageSeededForCmsName: 'kappemann' },
-                            imageSize: 'MEDIUM'
                         }
                     }
                 ]

@@ -15,7 +15,6 @@ model CmsImage {
   imageId              Int?
   createdAt            DateTime         @default(now())
   updatedAt            DateTime         @updatedAt
-  imageSize            ImageSize        @default(MEDIUM)
   articleSection       ArticleSection?  @relation(fields: [articleSectionId], references: [id], onDelete: Cascade)
   articleSectionId     Int?             @unique
   coverImageforArticle Article?

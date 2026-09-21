@@ -9,7 +9,7 @@ import {
     uniqueCollectionWhere,
     expandImageCollection
 } from '@/services/images/subservice/operations'
-import { expandedImageCollectionIncluder } from '@/services/images/subservice/constants'
+import { allowedExtensions, expandedImageCollectionIncluder } from '@/services/images/subservice/constants'
 import { standardImageCollectionOperations } from '@/services/images/standard/operations'
 import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import type { Prisma } from '@/prisma-generated-pn-types'
@@ -167,7 +167,7 @@ export const dynamicImageOperations = {
                 }),
             }),
         ownershipCheck,
-        operationImplementationFields: { uploadAsStandardImage: null }
+        operationImplementationFields: { uploadAsStandardImage: null, allowedExtensions }
     }),
 
     uploadManyImages: imageOperations.uploadManyImages.implement({
@@ -179,6 +179,7 @@ export const dynamicImageOperations = {
                 }),
             }),
         ownershipCheck,
+        operationImplementationFields: { allowedExtensions }
     }),
 
     readPageOfImagesInCollection: imageOperations.readPageOfImagesInCollection.implement({

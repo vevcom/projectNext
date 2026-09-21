@@ -1,4 +1,5 @@
 import { licenseOperations } from '@/services/licenses/operations'
+import { mimeTypeForExtension } from '@/lib/store/fileExtensions'
 import { readFile } from 'fs/promises'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
@@ -26,8 +27,12 @@ const standardStoreFile = (config: {
     const file = async () => {
         const filePath = join(standardStoreRoot, config.location)
         const fileContents = await readFile(filePath)
-        const extension = config.location.split('.').pop()
-        return new File([fileContents], config.location, { type: `image/${extension}` })
+        const extension = config.location.split('.').pop() ?? ''
+        const mimeType = mimeTypeForExtension(extension)
+        if (!mimeType) {
+            throw new Error(`Standard store file ${config.location} has an extension with no known mime type`)
+        }
+        return new File([fileContents], config.location, { type: mimeType })
     }
 
     return {
