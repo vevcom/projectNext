@@ -106,7 +106,7 @@ class MailHandler {
         responses.forEach(response => {
             logger.debug('Mail sent.', { response })
 
-            if (!PROD) {
+            if (!isProd) {
                 logger.info(`Mail preview: ${nodemailer.getTestMessageUrl(response as SMTPTransport.SentMessageInfo)}`)
             }
         })
