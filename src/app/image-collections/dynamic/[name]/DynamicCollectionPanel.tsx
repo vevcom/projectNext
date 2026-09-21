@@ -1,6 +1,10 @@
 'use client'
+import styles from './page.module.scss'
 import CollectionAdmin from './CollectionAdmin'
 import ImagePanel from '@/components/Image/ImagePanel/ImagePanel'
+import PageWrapper from '@/components/PageWrapper/PageWrapper'
+import DoubleLevelVisibilityDescription
+    from '@/components/Visibility/DoubleLevelVisibilityDescription/DoubleLevelVisibilityDescription'
 import { readImagesPageInDynamicCollectionAction } from '@/services/images/dynamic/actions'
 import { useCallback, useState } from 'react'
 import type { ImagePanelCursor } from '@/components/Image/ImagePanel/ImagePanel'
@@ -18,8 +22,12 @@ type PropTypes = {
 /**
  * The client bridge between the server rendered collection page and the ImagePanel: binds the
  * collection into the dynamic pager (a lambda the server page cannot create itself) with a stable
- * identity per collection, and renders the collection admin beside the panel. Uploads remount the
- * panel through its key, since new images invalidate every loaded page.
+ * identity per collection. Uploads remount the panel through its key, since new images invalidate
+ * every loaded page.
+ *
+ * It owns the PageWrapper rather than the server page because the admin controls live in the
+ * wrapper's header slot while the panel they refresh lives in its body - the two slots have to sit
+ * inside the same client component to share the refresh callback.
  */
 export default function DynamicCollectionPanel({ collection, doubleLevelVisibility }: PropTypes) {
     const [panelGeneration, setPanelGeneration] = useState(0)
@@ -36,7 +44,22 @@ export default function DynamicCollectionPanel({ collection, doubleLevelVisibili
     )
 
     return (
-        <>
+        <PageWrapper
+            title={collection.name}
+            headerItem={
+                <CollectionAdmin
+                    collection={collection}
+                    doubleLevelVisibility={doubleLevelVisibility}
+                    refreshImages={() => setPanelGeneration(generation => generation + 1)}
+                />
+            }
+        >
+            <div className={styles.collectionHeader}>
+                {collection.description && <p className={styles.description}>{collection.description}</p>}
+                {doubleLevelVisibility && (
+                    <DoubleLevelVisibilityDescription doubleLevelVisibility={doubleLevelVisibility} />
+                )}
+            </div>
             <main>
                 <ImagePanel
                     key={panelGeneration}
@@ -45,11 +68,6 @@ export default function DynamicCollectionPanel({ collection, doubleLevelVisibili
                     withImageDisplay
                 />
             </main>
-            <CollectionAdmin
-                collection={collection}
-                doubleLevelVisibility={doubleLevelVisibility}
-                refreshImages={() => setPanelGeneration(generation => generation + 1)}
-            />
-        </>
+        </PageWrapper>
     )
 }

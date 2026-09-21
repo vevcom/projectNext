@@ -7,21 +7,21 @@ import AdminNav from './AdminNav'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons'
 import { useState } from 'react'
-import type { Profile } from '@/services/users/types'
 
 export type PropTypes = {
-    profile: Profile | null
+    // Only the username crosses into this client component: passing the whole profile would
+    // serialize the user's email, mobile, bio, memberships and permissions into the payload.
+    username: string | null
 }
 
-export default function DesktopSideBar({ profile }: PropTypes) {
+export default function DesktopSideBar({ username }: PropTypes) {
     const [expanded, setExpanded] = useState(false)
-    const user = profile?.user ?? null
-    const isLoggedIn = user !== null
+    const isLoggedIn = username !== null
     const applicationPeriod = false
-    const isAdmin = user?.username === 'harambe'
+    const isAdmin = username === 'harambe'
 
     const navItems = getNavItems(isLoggedIn, isAdmin, applicationPeriod)
-
+        .filter(item => item.show !== 'admin')
     return (
         <aside className={styles.DesktopSideBar} data-expanded={expanded}>
             <nav className={styles.navIcons} aria-label="Desktop navigation">

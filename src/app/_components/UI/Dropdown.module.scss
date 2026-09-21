@@ -54,7 +54,7 @@
     transition: transform ohma.$transitionTime, color ohma.$transitionTime;
 }
 
-.labe {
+.label {
     position: absolute;
     left: calc(2 * #{ohma.$gap});
     top: calc(3 * #{ohma.$gap});
@@ -144,4 +144,10 @@
 
 .white > .trigger, .white > .trigger .value {
     color: ohma.$colors-white;
+}
+
+// The default color. It repeats what .trigger already sets so that every value of the
+// color prop resolves to a real class instead of an undefined one.
+.black > .trigger, .black > .trigger .value {
+    color: ohma.$colors-ink-strong;
 }

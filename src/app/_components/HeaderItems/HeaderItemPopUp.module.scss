@@ -4,7 +4,9 @@
     display: grid;
     place-items: center;
     border: none;
-    border-radius: 50%;
+    // The same rounded square as the labelled .pill variant below, so an icon-only header item and
+    // a labelled one read as the same control rather than as a circle next to a pill.
+    border-radius: calc(#{ohma.$rounding} - #{ohma.$gap});
     background-color: ohma.$colors-surface-hover;
     color: ohma.$colors-text;
     cursor: pointer;
@@ -22,7 +24,6 @@
     align-items: center;
     gap: calc(1.5 * #{ohma.$gap});
     padding: 0 calc(1.75 * #{ohma.$gap}) 0 calc(2.5 * #{ohma.$gap});
-    border-radius: calc(#{ohma.$rounding} - #{ohma.$gap});
     color: ohma.$colors-ink-strong;
 
     svg {

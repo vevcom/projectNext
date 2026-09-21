@@ -121,7 +121,7 @@ export default function Dropdown<ValueType extends string | number>({
             </button>
             <label
                 htmlFor={domId}
-                className={`${styles.labe} ${(open || selectedOption) ? styles.floated : ''}`}
+                className={`${styles.label} ${(open || selectedOption) ? styles.floated : ''}`}
             >
                 {label}
             </label>

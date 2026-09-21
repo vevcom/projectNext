@@ -8,17 +8,17 @@ import PageTitleSetter from '@/contexts/PageTitleSetter'
 import StandardImageServer from '@/components/Image/StandardImageServer'
 import ProfilePicture from '@/components/User/ProfilePicture'
 import Link from 'next/link'
-import type { Profile } from '@/services/users/types'
+import type { ExpandedImage } from '@/services/images/subservice/types'
 
 export type PropTypes = {
-    profile: Profile | null
+    username: string | null,
+    profileImage: ExpandedImage | null,
 }
 
-export default async function NavBar({ profile }: PropTypes) {
-    const user = profile?.user ?? null
-    const isLoggedIn = user !== null
+export default async function NavBar({ username, profileImage }: PropTypes) {
+    const isLoggedIn = username !== null
     const applicationPeriod = false
-    const isAdmin = user?.username === 'harambe'
+    const isAdmin = username === 'harambe'
 
     const navSize = 4
     const navItems = getNavItems(isLoggedIn, isAdmin, applicationPeriod)
@@ -56,16 +56,16 @@ export default async function NavBar({ profile }: PropTypes) {
                     <ReportButton/>
                     <div className={`${styles.magicHat} ${isLoggedIn ? styles.loggedIn : styles.loggedOut}`}>
                         {
-                            user ? (
+                            profileImage ? (
                                 <ProfilePicture
-                                    profileImage={user.image}
+                                    profileImage={profileImage}
                                     width={48}
                                 />
                             ) : (
                                 <span>Logg inn</span>
                             )
                         }
-                        <UserNavigation profile={profile} />
+                        <UserNavigation isLoggedIn={isLoggedIn} />
                     </div>
                 </li>
             </ul>

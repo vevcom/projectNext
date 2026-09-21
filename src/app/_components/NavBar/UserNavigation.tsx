@@ -1,9 +1,8 @@
 import styles from './UserNavigation.module.scss'
 import Link from 'next/link'
-import type { Profile } from '@/services/users/types'
 
 type PropTypes = {
-    profile: Profile | null
+    isLoggedIn: boolean
 }
 
 /**
@@ -12,8 +11,8 @@ type PropTypes = {
  * page already exposes settings, Omega-ID, account and logout, so there's
  * no need to duplicate those behind a popup here.
  */
-export default function UserNavigation({ profile }: PropTypes) {
-    const href = profile?.user ? '/users/me' : '/login'
+export default function UserNavigation({ isLoggedIn }: PropTypes) {
+    const href = isLoggedIn ? '/users/me' : '/login'
 
     return <Link className={styles.hidden} href={href} />
 }

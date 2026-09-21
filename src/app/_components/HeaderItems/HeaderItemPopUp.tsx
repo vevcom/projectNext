@@ -3,7 +3,9 @@ import styles from './HeaderItemPopUp.module.scss'
 import PopUp from '@/components/PopUp/PopUp'
 import React from 'react'
 import { FontAwesomeIcon, type FontAwesomeIconProps } from '@fortawesome/react-fontawesome'
-import { faArchive, faCog, faPlus, faQuestionCircle, faTag, faUsers } from '@fortawesome/free-solid-svg-icons'
+import {
+    faArchive, faCog, faEye, faPlus, faQuestionCircle, faTag, faUpload, faUsers
+} from '@fortawesome/free-solid-svg-icons'
 import type { PropTypes as PopUpProps } from '@/components/PopUp/PopUp'
 
 type PropTypes = Omit<PopUpProps, 'showButtonContent'> & { scale?: number, label?: React.ReactNode }
@@ -56,6 +58,16 @@ export const HelpHeaderItemPopUp = createHeaderItemPopUp(faQuestionCircle, 18)
 export const SettingsHeaderItemPopUp = createHeaderItemPopUp(faCog, 18)
 
 export const UsersHeaderItemPopUp = createHeaderItemPopUp(faUsers, 18)
+
+/**
+ * Component that can be used to show an upload pop up for a page
+ */
+export const UploadHeaderItemPopUp = createHeaderItemPopUp(faUpload)
+
+/**
+ * Component that can be used to show a visibility pop up for a page
+ */
+export const VisibilityHeaderItemPopUp = createHeaderItemPopUp(faEye)
 
 /**
  * Component that can be used to show a tag pop up for a page

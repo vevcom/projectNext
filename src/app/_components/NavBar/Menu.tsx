@@ -46,7 +46,10 @@ export default function Menu({ items, openBtnVariant }: PropTypes) {
                 ) : null
             }
             <button
+                type="button"
                 className={styles.openBtn}
+                aria-label={isOpen ? 'Lukk meny' : 'Åpne meny'}
+                aria-expanded={isOpen}
                 onClick={() => (isOpen ? closeMenu(menuRef) : setIsOpen(true))}
             >
                 {openBtnVariant === 'mobile' &&

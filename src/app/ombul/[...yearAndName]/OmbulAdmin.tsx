@@ -124,7 +124,7 @@ export default function OmbulAdmin({ ombul }: PropTypes) {
                 {
                     canUpdateCover && (
                         <div className={styles.coverImage}>
-                            <Image image={ombul.coverImage} width={400} />
+                            <Image image={ombul.coverImage} width={200} />
                             <ImageUploader
                                 title="Endre forsidebilde"
                                 refreshOnSuccess

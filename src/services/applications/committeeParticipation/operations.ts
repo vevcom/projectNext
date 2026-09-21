@@ -2,6 +2,7 @@ import '@pn-server-only'
 import { committeeParticipationAuth } from './auth'
 import { defineOperation } from '@/services/serviceOperation'
 import { expandedImageIncluder } from '@/services/images/subservice/constants'
+import { standardImageCollectionOperations } from '@/services/images/standard/operations'
 import { z } from 'zod'
 
 export const committeeParticipationOperations = {
@@ -27,8 +28,11 @@ export const committeeParticipationOperations = {
                 }
             }).then((participation) => participation.committee.group.id)
         }),
-        operation: async ({ prisma, params }) => (
-            await prisma.committeeParticipationInApplicationPeriod.findUniqueOrThrow({
+        operation: async ({ prisma, params }) => {
+            const defaultProfileImage = await standardImageCollectionOperations.readStandardImage({
+                params: { standardImage: 'DEFAULT_PROFILE_IMAGE' },
+            })
+            const participation = await prisma.committeeParticipationInApplicationPeriod.findUniqueOrThrow({
                 where: {
                     id: params.participationId
                 },
@@ -49,8 +53,15 @@ export const committeeParticipationOperations = {
                         }
                     }
                 }
-            }).then((applications) => applications.applications)
-        )
+            })
+            return participation.applications.map(application => ({
+                ...application,
+                user: {
+                    ...application.user,
+                    image: application.user.image ?? defaultProfileImage,
+                }
+            }))
+        }
     }),
     readAll: defineOperation({
         paramsSchema: z.object({

@@ -17,14 +17,14 @@ export default async function Applications() {
                 <CreateUpdateApplicationPeriodForm committees={committees} closePopUpOnSuccess="addApplicationPeriod" />
             </AddHeaderItemPopUp>
         }>
-            <div className={styles.periods}>
+            <ol className={styles.periods}>
                 {periods.map((period) => (
-                    <div key={period.name}>
+                    <li key={period.name}>
                         <a href={`/applications/${period.name}`}>{period.name}</a>
                         <Date date={period.endDate} includeTime />
-                    </div>
+                    </li>
                 ))}
-            </div>
+            </ol>
         </PageWrapper>
     )
 }

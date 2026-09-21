@@ -107,7 +107,7 @@ const updateCoverImage = defineOperation({
                 })
 
             return { image: uploadedImage, cleanup: fileCleanup }
-        }, { timeout: 20000 })
+        },)
         await cleanup()
         return newImage
     }

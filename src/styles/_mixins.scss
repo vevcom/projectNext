@@ -24,6 +24,33 @@
     border-radius: variables.$rounding;
 }
 
+// The close affordance shared by the app's overlay surfaces (PopUp, ImageDisplay), so dismissing
+// one looks the same as dismissing the other. Placement is up to the consumer.
+@mixin closeBtn {
+    background-color: colors.$accent-red;
+    border: none;
+    border-radius: variables.$gap;
+    width: 48px;
+    height: 48px;
+    padding: variables.$gap;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: colors.$text-inv;
+    transition: background-color .5s;
+
+    &:hover {
+        background-color: color-mix(in srgb, colors.$accent-red, white 20%);
+    }
+
+    > svg {
+        width: 40%;
+        height: 40%;
+        color: colors.$text-inv;
+    }
+}
+
 @mixin layer {
     background: colors.$layer;
     backdrop-filter: blur(30px);

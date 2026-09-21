@@ -11,6 +11,7 @@ export default function Error404() {
                     <StandardImageServer
                         standardImage="LOGO_SIMPLE"
                         width={60}
+                        tint="var(--text)"
                     />
                 </div>
                 <h3>404 - Page not found</h3>

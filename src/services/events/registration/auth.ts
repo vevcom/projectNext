@@ -6,6 +6,7 @@ import { RequireUserIdOrPermission } from '@/auth/authorizer/RequireUserIdOrPerm
 export const eventRegistrationAuth = {
     // TODO: Fix authing
     create: RequireUserIdOrPermission.staticFields({ permission: 'EVENT_REGISTRATION_CREATE' }),
+    dotPunishmentOfUser: RequireUserIdOrPermission.staticFields({ permission: 'EVENT_ADMIN' }),
     createGuest: RequirePermission.staticFields({ permission: 'EVENT_ADMIN' }),
     readMany: RequirePermissionAndUser.staticFields({ permission: 'EVENT_REGISTRATION_READ' }),
     readManyDetailed: RequirePermissionAndUser.staticFields({ permission: 'EVENT_REGISTRATION_READ' }),

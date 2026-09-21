@@ -11,6 +11,9 @@
     position: relative;
     .info {
         margin-top: 1em;
+        // The intro otherwise runs the full width of the page - well past a comfortable measure on
+        // a wide screen.
+        max-width: 75ch;
     }
     .links {
         display: flex;
@@ -38,11 +41,36 @@
                 text-align: center;
                 font-size: ohma.$fonts-xl;
             }
+            // A fixed box rather than `flex: 1`: each standard image has its own aspect ratio, so
+            // letting the image decide its height made the three rows three different heights.
             > .linkImage {
-                flex: 1;
+                flex: 0 0 auto;
+                position: relative;
+                width: calc(34 * #{ohma.$gap});
+                height: calc(18 * #{ohma.$gap});
                 margin: ohma.$gap;
                 border-radius: calc(#{ohma.$rounding} - #{ohma.$gap});
                 overflow: hidden;
+
+                // The image components size their wrapper divs off the image's intrinsic width
+                // (--image-width) rather than off this box, at whatever nesting depth the fallback
+                // ends up rendering.
+                div {
+                    position: absolute;
+                    inset: 0;
+                    width: 100%;
+                    height: 100%;
+                }
+
+                img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                }
+
+                @include ohma.screenMobile {
+                    width: calc(100% - 2 * #{ohma.$gap});
+                }
             }
         }
     }

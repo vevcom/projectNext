@@ -24,27 +24,7 @@
 }
 
 .closeBtn {
-    background-color: ohma.$colors-accent-red;
-    border: none;
-    border-radius: ohma.$gap;
-    width: 48px;
-    height: 48px;
-    padding: ohma.$gap;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: ohma.$colors-text-inv;
-    transition: background-color .5s;
-
-    &:hover {
-        background-color: color-mix(in srgb, ohma.$colors-accent-red, white 20%);
-    }
-
-    > svg {
-        width: 40%;
-        height: 40%;
-    }
+    @include ohma.closeBtn;
 }
 
 .openBtn {

@@ -5,8 +5,10 @@
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: ohma.$gap;
     margin-top: ohma.$gap;
+    padding: 0;
+    list-style: none;
 
-    > div {
+    > li {
         @include ohma.layer;
         background-color: ohma.$colors-surface-raised;
         padding: ohma.$gap;
