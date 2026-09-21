@@ -7,8 +7,8 @@ import { defineOperation } from '@/services/serviceOperation'
 import { ServerError } from '@/services/error'
 import { userOperations } from '@/services/users/operations'
 import { readJWTPayload } from '@/lib/jwt/jwtReadUnsecure'
-import { z } from 'zod'
 import logger from '@/lib/logger'
+import { z } from 'zod'
 
 export const authOperations = {
 

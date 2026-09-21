@@ -9,10 +9,10 @@ import { readMembershipsOfUser } from '@/services/groups/memberships/read'
 import { updateEmailForFeideAccount } from '@/services/auth/feideAccounts/update'
 import { userOperations } from '@/services/users/operations'
 import { permissionOperations } from '@/services/permissions/operations'
+import logger from '@/lib/logger'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { encode, decode } from 'next-auth/jwt'
 import type { AuthOptions } from 'next-auth'
-import logger from '@/lib/logger'
 
 export const authOptions: AuthOptions = {
     providers: [
@@ -203,7 +203,7 @@ export const authOptions: AuthOptions = {
                 logger.warn(`NextAuth error: ${code}`, { code, metadata })
             } else {
                 logger.error(`NextAuth error: ${code}`, { code, metadata })
-            } 
+            }
         },
         warn(code) {
             logger.warn(`NextAuth warning: ${code}`, { code })

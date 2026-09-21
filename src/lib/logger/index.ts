@@ -6,7 +6,7 @@ const logger = winston.createLogger({
 })
 
 if (process.env.LOG_TO_CONSOLE === 'true') {
-    logger.add(new winston.transports.Console({ 
+    logger.add(new winston.transports.Console({
         level: process.env.LOG_CONSOLE_LEVEL ?? 'info',
         format: winston.format.combine(
             winston.format.colorize(),

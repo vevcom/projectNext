@@ -1,5 +1,6 @@
 import { owIdToPnId } from './IdMapper'
 import { cmsParagraphOperations } from '@/services/cms/paragraphs/operations'
+import logger from '@/lib/logger'
 import { readFile } from 'fs/promises'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
@@ -8,7 +9,6 @@ import type { Prisma } from '@/prisma-generated-pn-types'
 import type { PrismaClient as PrismaClientOw } from '@/prisma-generated-ow-basic/client'
 import type { UserMigrator } from './migrateUsers'
 import type { IdMapper } from './IdMapper'
-import logger from '@/lib/logger'
 
 const fileName = fileURLToPath(import.meta.url)
 const directoryName = dirname(fileName)

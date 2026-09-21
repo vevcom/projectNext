@@ -6,7 +6,6 @@ import { OmegaMembershipLevel, type Prisma } from '@/prisma-generated-pn-types'
 import { v4 as uuid } from 'uuid'
 import { randomInt } from 'crypto'
 import type { PrismaClient } from '@/prisma-generated-pn-client'
-import logger from '@/lib/logger'
 
 export const seedDevUsers = defineSeedOperation(async (prisma: PrismaClient) => {
     const firstNames = [

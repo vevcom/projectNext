@@ -1,4 +1,4 @@
-import logger from "@/lib/logger"
+import logger from '@/lib/logger'
 
 /**
  * @returns Limits for the migration process to test without going crazy
@@ -28,7 +28,7 @@ export function getLimits() {
 
     const limitsOn = process.env.MIGRATION_WITH_LIMITS !== 'false'
     logger.info(limitsOn ? `Limits on. Set to: ${limits}` : 'Limits off!!!')
-    
+
     return limitsOn ? limits : nullObj
 }
 

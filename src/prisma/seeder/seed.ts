@@ -1,5 +1,5 @@
-import logger from '@/lib/logger'
 import seed from './src/seed'
+import logger from '@/lib/logger'
 import { prisma } from '@/prisma-pn-client-instance'
 import { exit } from 'process'
 

@@ -1,10 +1,10 @@
 import '@pn-server-only'
+import logger from '@/lib/logger'
 import { TRANSPORT_OPTIONS } from '@/lib/email/constants'
 import nodemailer from 'nodemailer'
 import type SMTPPool from 'nodemailer/lib/smtp-pool'
 import type SMTPTransport from 'nodemailer/lib/smtp-transport'
 import type Mail from 'nodemailer/lib/mailer'
-import logger from '../logger'
 
 const isProd = process.env.NODE_ENV === 'production'
 const isTest = process.env.NODE_ENV === 'test'

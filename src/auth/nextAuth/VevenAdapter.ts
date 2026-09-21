@@ -4,10 +4,10 @@ import { createFeideAccount } from '@/services/auth/feideAccounts/create'
 import { readUserOrNullOfFeideAccount } from '@/services/auth/feideAccounts/read'
 import { userOperations } from '@/services/users/operations'
 import { userFilterSelection } from '@/services/users/constants'
+import logger from '@/lib/logger'
 import type { UserFiltered } from '@/services/users/types'
 import type { PrismaClient } from '@/prisma-generated-pn-client'
 import type { Adapter, AdapterUser, AdapterAccount } from 'next-auth/adapters'
-import logger from '@/lib/logger'
 
 /**
  * Utility function for converting a user object to
@@ -178,7 +178,10 @@ export default function VevenAdapter(prisma: PrismaClient): Adapter {
                 email: tokenData.email,
             })
 
-            logger.info(`Linking user account with ID '${account.id}' and email ${tokenData.email} to Feide account with ID ${feideAccount.id}.`)
+            logger.info(
+                `Linking user account with ID '${account.id}' and email ${tokenData.email} ` +
+                `to Feide account with ID ${feideAccount.id}.`
+            )
         },
         async deleteUser() {
             throw new Error('Delete user from next auth is not implemented')

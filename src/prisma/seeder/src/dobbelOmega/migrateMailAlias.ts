@@ -1,7 +1,7 @@
+import logger from '@/lib/logger'
 import type { PrismaClient as PrismaClientPn } from '@/prisma-generated-pn-client'
 import type { PrismaClient as PrismaClientOw } from '@/prisma-generated-ow-basic/client'
 import type { Limits } from './migrationLimits'
-import logger from '@/lib/logger'
 
 
 export default async function migrateMailAliases(
@@ -141,7 +141,10 @@ export default async function migrateMailAliases(
                 }
             })
         } catch (e) {
-            logger.error(`Encountered error when migrating mail alias with ID ${a.id} and address '${a.address}'.`, { error: e, alias: a })
+            logger.error(
+                `Encountered error when migrating mail alias with ID ${a.id} and address '${a.address}'.`,
+                { error: e, alias: a },
+            )
         }
     }
 }

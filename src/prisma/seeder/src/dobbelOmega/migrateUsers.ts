@@ -2,6 +2,7 @@ import upsertOrderBasedOnDate from './upsertOrderBasedOnDate'
 import { type IdMapper, owIdToPnId } from './IdMapper'
 import manifest from '@/prisma/seeder/src/dobbelOmega/manifest'
 import { Prisma, type PrismaClient as PrismaClientPn, type SEX } from '@/prisma-generated-pn-client'
+import logger from '@/lib/logger'
 import { v4 as uuid } from 'uuid'
 import type { User } from '@/prisma-generated-pn-client'
 import type {
@@ -11,7 +12,6 @@ import type {
 } from '@/prisma-generated-ow-basic/client'
 import type { Limits } from './migrationLimits'
 import type { Record } from '@prisma/client/runtime/client'
-import logger from '@/lib/logger'
 
 /**
  * TODO: Need migrate reservations (mail reservations) ?, and flairs

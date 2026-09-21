@@ -6,11 +6,11 @@ import { mimeTypeForExtension } from '@/lib/store/fileExtensions'
 import { ombulCoversImagePanelOperations } from '@/services/ombul/ombulCoverCollection'
 import { profileImagesImagePanelOperations } from '@/services/users/profileImageCollection'
 import { committeeLogosImagePanelOperations } from '@/services/groups/committees/committeeLogoCollection'
+import logger from '@/lib/logger'
 import { File } from 'node:buffer'
 import type { Limits } from './migrationLimits'
 import type { PrismaClient as PrismaClientPn } from '@/prisma-generated-pn-client'
 import type { PrismaClient as PrismaClientOw } from '@/prisma-generated-ow-basic/client'
-import logger from '@/lib/logger'
 
 /**
  * This function migrates images from Omegaweb-basic to PN and adds them to the correct image collection

@@ -1,7 +1,7 @@
+import logger from '@/lib/logger'
 import { deflate, inflate } from 'zlib'
 import { promisify } from 'util'
 import type { JWT } from 'next-auth/jwt'
-import logger from '@/lib/logger'
 
 // THIS WACKY COMPRESSING AND DECOMPRESSING STUFF IS TEMPORARY
 // TO REDUCE JWT SIZE UNTIL WE HAVE EITHER:
