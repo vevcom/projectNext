@@ -171,13 +171,15 @@ export const ledgerTransactionOperations = {
                 }
             }
 
-            const balances = await ledgerAccountOperations.calculateBalances({
-                params: {
-                    ledgerAccountIds: transaction.ledgerEntries.map(entry => entry.ledgerAccountId),
-                    atTransactionId: transaction.id,
-                },
-                bypassAuth: true,
-            })
+            const balances = transaction.ledgerEntries.length > 0
+                ? await ledgerAccountOperations.calculateBalances({
+                    params: {
+                        ledgerAccountIds: transaction.ledgerEntries.map(entry => entry.ledgerAccountId),
+                        atTransactionId: transaction.id,
+                    },
+                    bypassAuth: true,
+                })
+                : {}
 
             // Find frozen accounts, if any, among the involved ledger accounts.
             const frozenAccounts = await prisma.ledgerAccount.findMany({
