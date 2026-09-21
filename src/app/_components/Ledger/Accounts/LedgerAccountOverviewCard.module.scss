@@ -9,7 +9,7 @@
 }
 
 .ledgerAccountOverviewButtons {
-    margin-top: 3*ohma.$gap;
+    margin-top: calc(3 * #{ohma.$gap});
     display: flex;
     flex-direction: row;
 

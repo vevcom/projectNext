@@ -2,7 +2,7 @@
 
 .transactionModalContainer {
     width: 500px;
-    margin: ohma.$gap * 3;
+    margin: calc(3 * #{ohma.$gap});
 }
 
 .totalRow {

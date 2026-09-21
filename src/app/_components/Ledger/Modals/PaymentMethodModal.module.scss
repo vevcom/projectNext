@@ -2,7 +2,7 @@
 
 .bankCardFormContainer {
     width: 500px; // TODO: Is there a better way to do this?
-    margin: ohma.$gap * 3;
+    margin: calc(3 * #{ohma.$gap});
 }
 
 .paymentDetails {

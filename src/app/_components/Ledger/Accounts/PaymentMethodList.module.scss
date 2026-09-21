@@ -7,10 +7,10 @@
     border-radius: ohma.$rounding;
     border-width: 2px;
     border-style: solid;
-    border-color: ohma.$colors-gray-600;
-    
+    border-color: ohma.$colors-surface-subtle;
+
     margin: ohma.$gap 0;
-    padding: 2*ohma.$gap;
+    padding: calc(2 * #{ohma.$gap});
 
     font-size: ohma.$fonts-l;
     align-items: center;
@@ -18,7 +18,7 @@
 
 .deletePaymentMethodButton {
     font-size: ohma.$fonts-l;
-    color: ohma.$colors-gray-600;
+    color: ohma.$colors-text-muted;
     justify-self: end;
     @include ohma.roundBtn;
 }

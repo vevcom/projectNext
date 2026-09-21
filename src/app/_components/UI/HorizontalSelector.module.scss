@@ -11,7 +11,7 @@
 }
 
 .option {
-    @include ohma.btn(ohma.$colors-secondary, ohma.$colors-black);
+    @include ohma.secondaryBtn;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -25,12 +25,12 @@
     line-height: normal;
 
     &:not(:last-child) {
-        border-right: 1px solid ohma.$colors-gray-300;
+        border-right: 1px solid ohma.$colors-surface-subtle;
     }
 }
 
 .selected {
-    @include ohma.btn(ohma.$colors-primary, ohma.$colors-black);
+    @include ohma.btn(ohma.$colors-accent-blue);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -42,6 +42,6 @@
     line-height: normal;
 
     &:not(:last-child) {
-        border-right: 1px solid ohma.$colors-gray-300;
+        border-right: 1px solid ohma.$colors-surface-subtle;
     }
 }
