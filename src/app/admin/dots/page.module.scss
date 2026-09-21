@@ -6,9 +6,16 @@
     flex-direction: column;
     gap: calc(2 * #{ohma.$gap});
 
-    .createNew {
-        @include ohma.card;
-        background-color: ohma.$colors-surface-raised;
-        padding: calc(3 * #{ohma.$gap});
+    .actions {
+        display: flex;
+        flex-flow: row wrap;
+        align-items: center;
+        gap: ohma.$gap;
+
+        .action {
+            @include ohma.btn(ohma.$colors-accent-blue);
+            font-weight: ohma.$fonts-weight-s;
+            margin: 0;
+        }
     }
 }
