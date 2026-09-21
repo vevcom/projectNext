@@ -89,6 +89,17 @@ export const paymentOperations = {
             }
 
             if (payment.provider === 'STRIPE') {
+                // Get timestamp of when the payment was created so that it 
+                // can be used as part of the idempotency key.
+                const createdAt = (await prisma.payment.findUniqueOrThrow({
+                    where: {
+                        id: params.paymentId,
+                    },
+                    select: {
+                        createdAt: true,
+                    },
+                })).createdAt.getTime();
+
                 const customerId = session.user
                     ? (await stripeCustomerOperations.readOrCreate({
                         params: { userId: session.user.id },
@@ -111,7 +122,7 @@ export const paymentOperations = {
                     // The idempotency key makes it so that multiple requests with the
                     // same key return the same result. This is useful in case
                     // initiate payment is accidentally called twice.
-                    idempotencyKey: `project-next-payment-id-${params.paymentId}`,
+                    idempotencyKey: `project-next-payment-id-${params.paymentId}-created-at-${createdAt}`,
                 })
 
                 if (paymentIntent.client_secret === null) {
