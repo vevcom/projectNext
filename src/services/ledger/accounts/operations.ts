@@ -29,7 +29,7 @@ export const ledgerAccountOperations = {
         authorizer: () => ledgerAccountAuth.create.dynamicFields({}),
         dataSchema: ledgerAccountSchemas.create,
         operation: async ({ prisma, data }): Promise<LedgerAccount> => {
-            const type = data.type ?? data.userId !== undefined ? 'USER' : 'GROUP'
+            const type = data.type ?? (data.userId !== undefined ? 'USER' : 'GROUP')
 
             return prisma.ledgerAccount.create({
                 data: {
