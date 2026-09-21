@@ -500,7 +500,7 @@ export const permissionConfig = {
     LEDGER_ADMIN: {
         name: 'Hovedbokadministratør',
         description: `
-            Kan skrive søknader til alle aktive søknadsperioder. 
+            Kan opprette overføringer fra/til og endre alle kontoer. 
         `,
         category: 'diverse admin',
     },
