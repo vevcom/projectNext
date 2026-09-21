@@ -29,7 +29,7 @@ export default async function LedgerAccountPaymentMethods({ userId }: Props) {
             Du kan lagre kortinformasjonen din for senere betalinger.
             Kortinformasjonen lagres kun hos betalingsleverandøren vår, Stripe, og ikke på våre tjenere.
         </p>
-        <PaymentMethodList paymentMethods={savedPaymentMethods} />
+        <PaymentMethodList userId={userId} paymentMethods={savedPaymentMethods} />
         <PaymentMethodModal userId={userId} />
         <h3>NTNU-kort <BooleanIndicator value={hasStudentCard} /></h3>
         <p>For å benytte Kiogeskabet på Lophtet må et NTNU-kort være registrert.</p>

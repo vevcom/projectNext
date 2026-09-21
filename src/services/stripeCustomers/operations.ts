@@ -1,8 +1,7 @@
+import { stripeCustomerAuth } from './auth'
 import { ServerError } from '@/services/error'
 import { defineOperation } from '@/services/serviceOperation'
 import { stripe } from '@/lib/stripe'
-import { RequireUserId } from '@/auth/authorizer/RequireUserId'
-import { RequireNothing } from '@/auth/authorizer/RequireNothing'
 import { z } from 'zod'
 
 export const stripeCustomerOperations = {
@@ -11,8 +10,7 @@ export const stripeCustomerOperations = {
      * Otherwise, a new customer is created, associated in the DB, and returned.
      */
     readOrCreate: defineOperation({
-        // No one should ever be able to retrieve the customer id of another user. NOT EVEN ADMINS!
-        authorizer: ({ params: { userId } }) => RequireUserId.staticFields({}).dynamicFields({ userId }),
+        authorizer: ({ params: { userId } }) => stripeCustomerAuth.readOrCreate.dynamicFields({ userId }),
         paramsSchema: z.object({
             userId: z.number(),
         }),
@@ -109,7 +107,7 @@ export const stripeCustomerOperations = {
      * If the user does not have a Stripe customer associated it will be created automatically.
      */
     createSession: defineOperation({
-        authorizer: ({ params: { userId } }) => RequireUserId.staticFields({}).dynamicFields({ userId }),
+        authorizer: ({ params: { userId } }) => stripeCustomerAuth.createSession.dynamicFields({ userId }),
         paramsSchema: z.object({
             userId: z.number(),
         }),
@@ -157,7 +155,7 @@ export const stripeCustomerOperations = {
      * Creates a setup intent for adding a new payment method to the user's customer account in Stripe.
      */
     createSetupIntent: defineOperation({
-        authorizer: ({ params: { userId } }) => RequireUserId.staticFields({}).dynamicFields({ userId }),
+        authorizer: ({ params: { userId } }) => stripeCustomerAuth.createSetupIntent.dynamicFields({ userId }),
         paramsSchema: z.object({
             userId: z.number(),
         }),
@@ -183,12 +181,18 @@ export const stripeCustomerOperations = {
      * Returns a filtered list of saved payment methods for the user.
      */
     readSavedPaymentMethods: defineOperation({
-        authorizer: ({ params: { userId } }) => RequireUserId.staticFields({}).dynamicFields({ userId }),
+        authorizer: ({ params: { userId } }) => stripeCustomerAuth.readSavedPaymentMethods.dynamicFields({ userId }),
         paramsSchema: z.object({
             userId: z.number(),
         }),
-        operation: async ({ params: { userId } }) => {
-            const customerId: string = (await stripeCustomerOperations.readOrCreate({ params: { userId } })).customerId
+        operation: async ({ params: { userId }, session }) => {
+            // readOrCreate is strictly self-service, but this operation's own authorizer above
+            // already allows LEDGER_ADMIN, so bypass it here rather than blocking admins.
+            const customerId: string = (await stripeCustomerOperations.readOrCreate({
+                session,
+                bypassAuth: true,
+                params: { userId },
+            })).customerId
 
             const paymentMethods = await stripe.paymentMethods.list({
                 customer: customerId,
@@ -215,11 +219,26 @@ export const stripeCustomerOperations = {
      * Deletes (or "detaches" in Stripe lingo) a saved payment method from the user's customer account in Stripe.
      */
     deleteSavedPaymentMethod: defineOperation({
-        authorizer: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO: This should probably be authed?
+        authorizer: ({ params: { userId } }) => stripeCustomerAuth.deleteSavedPaymentMethod.dynamicFields({ userId }),
         paramsSchema: z.object({
+            userId: z.number(),
             paymentMethodId: z.string(),
         }),
-        operation: async ({ params: { paymentMethodId } }) => {
+        operation: async ({ params: { userId, paymentMethodId }, session }) => {
+            // readOrCreate is strictly self-service, but this operation's own authorizer above
+            // already allows LEDGER_ADMIN, so bypass it here rather than blocking admins.
+            const customerId: string = (await stripeCustomerOperations.readOrCreate({
+                session,
+                bypassAuth: true,
+                params: { userId },
+            })).customerId
+
+            // Confirm the payment method actually belongs to this user's Stripe customer before
+            // detaching it. The authorizer above only checks the caller's access to `userId`,
+            // not that the caller-supplied `paymentMethodId` is actually theirs - without this,
+            // any user could detach any other user's payment method by ID.
+            await stripe.customers.retrievePaymentMethod(customerId, paymentMethodId)
+
             await stripe.paymentMethods.detach(paymentMethodId)
 
             return {

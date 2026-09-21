@@ -8,10 +8,11 @@ import { useRouter } from 'next/navigation'
 import type { FilteredPaymentMethod } from '@/services/stripeCustomers/types'
 
 type Params = {
+    userId: number,
     paymentMethods: FilteredPaymentMethod[],
 }
 
-export default function PaymentMethodList({ paymentMethods }: Params) {
+export default function PaymentMethodList({ userId, paymentMethods }: Params) {
     const router = useRouter()
 
     const displayPaymentMethod = ({ type, card }: FilteredPaymentMethod) => {
@@ -28,7 +29,7 @@ export default function PaymentMethodList({ paymentMethods }: Params) {
     }
 
     const removePaymentMethod = async (id: string) => {
-        await deleteSavedPaymentMethodAction({ params: { paymentMethodId: id } })
+        await deleteSavedPaymentMethodAction({ params: { userId, paymentMethodId: id } })
         router.refresh()
     }
 
