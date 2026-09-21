@@ -1,4 +1,4 @@
-import manifest from '@/seeder/src/logger'
+import manifest from '@/prisma/seeder/src/dobbelOmega/manifest'
 import type { UserMigrator } from './migrateUsers'
 import type { PrismaClient as PrismaClientPn } from '@/prisma-generated-pn-client'
 import type { PrismaClient as PrismaClientOw } from '@/prisma-generated-ow-basic/client'

@@ -1,5 +1,5 @@
 import { owIdToPnId, type IdMapper } from './IdMapper'
-import manifest from '@/seeder/src/logger'
+import manifest from '@/prisma/seeder/src/dobbelOmega/manifest'
 import { imageOperations } from '@/services/images/subservice/operations'
 import { allowedExtensions } from '@/services/images/subservice/constants'
 import { mimeTypeForExtension } from '@/lib/store/fileExtensions'
@@ -10,6 +10,7 @@ import { File } from 'node:buffer'
 import type { Limits } from './migrationLimits'
 import type { PrismaClient as PrismaClientPn } from '@/prisma-generated-pn-client'
 import type { PrismaClient as PrismaClientOw } from '@/prisma-generated-ow-basic/client'
+import logger from '@/lib/logger'
 
 /**
  * This function migrates images from Omegaweb-basic to PN and adds them to the correct image collection
@@ -136,7 +137,7 @@ export default async function migrateImages(
         const ext = (image.originalName.split('.').pop() || '').toLowerCase()
         const mimeType = mimeTypeForExtension(ext)
         if (!mimeType) {
-            console.error(`Image ${image.originalName} has unsupported extension "${ext}", skipping`)
+            logger.error(`Image ${image.originalName} has unsupported extension "${ext}", skipping.`)
             return
         }
 
@@ -150,10 +151,10 @@ export default async function migrateImages(
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
                     + 'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3',
             },
-        }).catch(() => console.error(`Failed to fetch image from ${fsLocationOldVev}`))
+        }).catch(() => { logger.error(`Failed to fetch image from ${fsLocationOldVev}.`) })
 
         if (!res || !res.ok) {
-            console.error(`Failed to fetch image from ${fsLocationOldVev}`)
+            logger.error(`Failed to fetch image from ${fsLocationOldVev}.`)
             return
         }
 

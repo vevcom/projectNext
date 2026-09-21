@@ -43,7 +43,6 @@ export const lockerOperations = {
         authorizer: () => lockerAuth.create.dynamicFields({}),
         dataSchema: lockersSchemas.create,
         operation: async ({ prisma, data }) => {
-            console.log(data)
             return await prisma.locker.create({
                 data,
             })

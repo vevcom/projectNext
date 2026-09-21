@@ -24,7 +24,6 @@ export default async function Schools() {
     })
     if (!res.success) throw new Error(res.error?.length ? res.error[0].message : 'Ukjent feil')
     const serverRenderedData = res.data
-    console.log(serverRenderedData)
 
     return (
         <PageWrapper title="Skoler" headerItem={

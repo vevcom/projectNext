@@ -1,6 +1,7 @@
 import { checkForPermissionDuplicates, COMMITTEE_PERMISSIONS } from '@/seeder/src/seedPermissions'
 import { Permission } from '@/prisma-generated-pn-types'
 import type { PrismaClient as PrismaClientPn } from '@/prisma-generated-pn-client'
+import logger from '@/lib/logger'
 
 export default async function seedProdPermissions(prisma: PrismaClientPn) {
     const allPermissions = Object.values(Permission)
@@ -34,7 +35,7 @@ export default async function seedProdPermissions(prisma: PrismaClientPn) {
 
         const committee = allCommittess.find(com => com.shortName === shortName)
         if (!committee) {
-            console.warn(`Committee with shortName ${shortName} not found, skipping permissions creation.`)
+            logger.warn(`Committee with shortName ${shortName} not found, skipping permissions creation.`)
         }
     }
 
