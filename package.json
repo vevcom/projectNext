@@ -7,7 +7,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "worker": "IGNORE_SERVER_ONLY=true tsx src/worker.ts",
+    "worker": "IGNORE_SERVER_ONLY=true tsx src/lib/images/worker.ts",
     "lint": "eslint",
     "lint:style": "stylelint \"src/**/*.{css,scss}\"",
     "test": "IGNORE_SERVER_ONLY=true jest",

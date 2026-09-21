@@ -57,6 +57,10 @@ export const expandedImageIncluder = {
 
 export const expandedImageCollectionIncluder = {
     coverImage: { include: expandedImageIncluder },
-    images: { take: 1, include: expandedImageIncluder },
+    images: {
+        take: 1,
+        include: expandedImageIncluder,
+        orderBy: { createdAt: 'asc' }
+    },
     _count: { select: { images: true } },
 } satisfies Prisma.ImageCollectionInclude

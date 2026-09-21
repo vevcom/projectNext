@@ -21,6 +21,7 @@ import seedDevEvents from './development/seedDevEvents'
 import seedEvents from './seedEvent'
 import seedCabin from './seedCabin'
 import seedPermissions from './seedPermissions'
+import seedDevApplicationsAndPeriods from './development/seedDevApplicationsAndPeriods'
 import { seedArticleCategories } from './standardContent/seedArticleCategories'
 import { seedImages } from './standardContent/seedImages'
 import { seedSpecialCms } from './standardContent/seedSpecialCms'
@@ -88,6 +89,7 @@ export default async function seed(
         await seedDevJobAds(prisma)
         await seedDevShop(prisma)
         await seedDevEvents(prisma)
+        await seedDevApplicationsAndPeriods(prisma)
         if (enableLogging) console.log('seed dev done')
     })
 }
