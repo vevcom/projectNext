@@ -14,7 +14,7 @@ export default function LedgerAccountFreezeButton({
     const toggleFrozen = async () => {
         await updateLedgerAccountAction({
             params: {
-                id: ledgerAccount.id,
+                ledgerAccountId: ledgerAccount.id,
             },
         }, {
             data: {

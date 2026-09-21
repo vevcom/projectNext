@@ -143,7 +143,7 @@ export const ledgerTransactionOperations = {
 
             const balances = await ledgerAccountOperations.calculateBalances({
                 params: {
-                    ids: transaction.ledgerEntries.map(entry => entry.ledgerAccountId),
+                    ledgerAccountIds: transaction.ledgerEntries.map(entry => entry.ledgerAccountId),
                     atTransactionId: transaction.id,
                 },
             })
@@ -202,7 +202,7 @@ export const ledgerTransactionOperations = {
             // Calculate the balance for all accounts which are going to be deducted.
             const debitEntries = params.ledgerEntries.filter(entry => entry.funds < 0)
             const balances = await ledgerAccountOperations.calculateBalances({
-                params: { ids: debitEntries.map(entry => entry.ledgerAccountId) },
+                params: { ledgerAccountIds: debitEntries.map(entry => entry.ledgerAccountId) },
             })
 
             // Check that the relevant accounts have enough balance to do the transaction.

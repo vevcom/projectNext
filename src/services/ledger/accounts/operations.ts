@@ -4,7 +4,7 @@ import { cursorPageingSelection } from '@/lib/paging/cursorPageingSelection'
 import { defineOperation } from '@/services/serviceOperation'
 import { RequireNothing } from '@/auth/authorizer/RequireNothing'
 import { z } from 'zod'
-import type { LedgerAccount } from '@/prisma-generated-pn-types'
+import type { LedgerAccount, Prisma } from '@/prisma-generated-pn-types'
 import { LedgerAccountType } from '@/prisma-generated-pn-types'
 import type { Balance, BalanceRecord } from './types'
 
@@ -56,17 +56,14 @@ export const ledgerAccountOperations = {
      */
     read: defineOperation({
         authorizer: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO: Add proper auther
-        paramsSchema: z.union([
-            z.object({
-                userId: z.number(),
-                ledgerAccountId: z.undefined(),
-            }),
-            z.object({
-                userId: z.undefined(),
-                ledgerAccountId: z.number(),
-            }),
-        ]),
-        operation: async ({ prisma, params }): Promise<LedgerAccount> => await prisma.ledgerAccount.findUniqueOrThrow({
+        paramsSchema: z.object({
+            userId: z.number().optional(),
+            ledgerAccountId: z.number().optional(),
+        }).refine(
+            ({ userId, ledgerAccountId }) => userId !== undefined || ledgerAccountId !== undefined,
+            'Enten bruker ID eller konto ID må være oppgitt.',
+        ),
+        operation: async ({ prisma, params }): Promise<LedgerAccount> => await prisma.ledgerAccount.findFirstOrThrow({
             where: {
                 id: params.ledgerAccountId,
                 userId: params.userId,
@@ -75,31 +72,48 @@ export const ledgerAccountOperations = {
     }),
 
     /**
-     * Reads all ledger accounts associated with a group.
+     * Reads all ledger accounts matching any of the given filters.
+     * An account is included if it matches at least one of `ledgerAccountIds`, `userIds`
+     * or `groupIds` (i.e. the filters are OR'd together, not AND'd) - this is a batch
+     * fetch by heterogeneous keys, not a narrowing search.
      *
      * **Note**: The balance of the accounts are not included in the response.
-     * Use the `calculateBalance` method to get the balance.
+     * Use the `calculateBalances` method to get the balances.
      *
-     * @param params.groupId The ID of the group.
+     * @param params.ledgerAccountIds IDs of specific ledger accounts to include.
+     * @param params.userIds IDs of users whose account should be included.
+     * @param params.groupIds IDs of groups whose accounts should be included.
      *
-     * @returns List of account details.
+     * @returns List of account details, without duplicates even when an account
+     * matches more than one filter (e.g. it's shared by two requested groups).
      */
     readMany: defineOperation({
         authorizer: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO: Add proper auther
         paramsSchema: z.object({
-            groupId: z.number(),
-        }),
+            ledgerAccountIds: z.number().array().optional(),
+            userIds: z.number().array().optional(),
+            groupIds: z.number().array().optional(),
+        }).refine(
+            ({ ledgerAccountIds, userIds, groupIds }) =>
+                Boolean(ledgerAccountIds?.length || userIds?.length || groupIds?.length),
+            'Minst én av konto ID-er, bruker ID-er eller gruppe ID-er må være oppgitt.',
+        ),
         operation: async ({ prisma, params }): Promise<LedgerAccount[]> => {
-            const groupLedgerAccounts = await prisma.groupLedgerAccount.findMany({
-                where: {
-                    groupId: params.groupId,
-                },
-                select: {
-                    ledgerAccount: true,
-                },
-            })
+            const filters: Prisma.LedgerAccountWhereInput[] = []
 
-            return groupLedgerAccounts.map(account => account.ledgerAccount)
+            if (params.ledgerAccountIds?.length) {
+                filters.push({ id: { in: params.ledgerAccountIds } })
+            }
+            if (params.userIds?.length) {
+                filters.push({ userId: { in: params.userIds } })
+            }
+            if (params.groupIds?.length) {
+                filters.push({ groups: { some: { groupId: { in: params.groupIds } } } })
+            }
+
+            return await prisma.ledgerAccount.findMany({
+                where: { OR: filters },
+            })
         }
     }),
 
@@ -166,7 +180,8 @@ export const ledgerAccountOperations = {
     /**
      * Updates a ledger account with the given data.
      *
-     * @param params.id The ID of the account to update.
+     * @param params.userId The ID of the user whose account to update.
+     * @param params.ledgerAccountId The ID of the account to update.
      * @param data The data to update the account with.
      *
      * @returns The updated account.
@@ -174,24 +189,48 @@ export const ledgerAccountOperations = {
     update: defineOperation({
         authorizer: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO: Add proper auther
         paramsSchema: z.object({
-            id: z.number(),
-        }),
+            userId: z.number().optional(),
+            ledgerAccountId: z.number().optional(),
+        }).refine(
+            ({ userId, ledgerAccountId }) => userId !== undefined || ledgerAccountId !== undefined,
+            'Enten bruker ID eller konto ID må være oppgitt.',
+        ),
         dataSchema: ledgerAccountSchemas.update,
-        operation: async ({ prisma, params, data }) => prisma.ledgerAccount.update({
-            where: {
-                id: params.id,
-            },
-            data,
-        })
+        operation: async ({ prisma, params, data }): Promise<LedgerAccount> => {
+            const account = await ledgerAccountOperations.read({ params })
+            const { groupIds, ...scalarData } = data
+
+            return prisma.ledgerAccount.update({
+                where: {
+                    id: account.id,
+                },
+                data: {
+                    ...scalarData,
+                    // `groupIds` isn't a real field on the model - it's the `groups` relation
+                    // (via the `GroupLedgerAccount` join table). Providing it replaces the
+                    // account's full group membership with exactly this list.
+                    ...(groupIds && {
+                        groups: {
+                            deleteMany: {},
+                            createMany: {
+                                data: groupIds.map(groupId => ({ groupId })),
+                            },
+                        },
+                    }),
+                },
+            })
+        }
     }),
 
     /**
-     * Calculates the balance and fees of a ledger account.
+     * Calculates the balance and fees of every ledger account matching any of the given filters.
      * Optionally takes a transaction ID to calculate the balance up until that transaction.
      *
      * @warning Non-existent accounts will be treated as having a balance of zero.
      *
-     * @param params.ids The IDs of the accounts to calculate the balance for.
+     * @param params.ledgerAccountIds IDs of specific ledger accounts to include.
+     * @param params.userIds IDs of users whose account should be included.
+     * @param params.groupIds IDs of groups whose accounts should be included.
      * @param params.atTransactionId Optional transaction ID to calculate the balance up until that transaction.
      *
      * @returns The balances of the ledger accounts.
@@ -199,16 +238,35 @@ export const ledgerAccountOperations = {
     calculateBalances: defineOperation({
         authorizer: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO: Add proper auther
         paramsSchema: z.object({
-            ids: z.number().array(),
+            ledgerAccountIds: z.number().array().optional(),
+            userIds: z.number().array().optional(),
+            groupIds: z.number().array().optional(),
             atTransactionId: z.number().optional(),
-        }),
+        }).refine(
+            ({ ledgerAccountIds, userIds, groupIds }) =>
+                Boolean(ledgerAccountIds?.length || userIds?.length || groupIds?.length),
+            'Minst én av konto ID-er, bruker ID-er eller gruppe ID-er må være oppgitt.',
+        ),
         operation: async ({ prisma, params }): Promise<BalanceRecord> => {
+            // `userIds`/`groupIds` need resolving to concrete ledger account IDs first. When only
+            // `ledgerAccountIds` is given (the common case - e.g. resolving balances for a known
+            // set of ledger entries), skip that lookup entirely and use them as-is.
+            const ids = params.userIds?.length || params.groupIds?.length
+                ? (await ledgerAccountOperations.readMany({
+                    params: {
+                        ledgerAccountIds: params.ledgerAccountIds,
+                        userIds: params.userIds,
+                        groupIds: params.groupIds,
+                    },
+                })).map(account => account.id)
+                : params.ledgerAccountIds ?? []
+
             const balanceArray = await prisma.ledgerEntry.groupBy({
                 by: ['ledgerAccountId'],
                 where: {
                     // Select which accounts we want to calculate the balance for
                     ledgerAccountId: {
-                        in: params.ids,
+                        in: ids,
                     },
                     // Since transaction ids are sequential we can use the less than operator
                     // to filter for all the transactions that happened before the given one.
@@ -245,7 +303,7 @@ export const ledgerAccountOperations = {
             // replace all nulls with zeros to handle accounts with no entries yet.
             // Set the balance of accounts that have no entries to zero.
             const balanceRecord = Object.fromEntries([
-                ...params.ids.map(id => [id, { amount: 0, fees: 0 }]),
+                ...ids.map(id => [id, { amount: 0, fees: 0 }]),
                 ...balanceArray.map(balance => [
                     balance.ledgerAccountId,
                     {
@@ -262,28 +320,35 @@ export const ledgerAccountOperations = {
     /**
      * Calcultates the balance of a single account. Under the hood it simply uses `calculateBalances`.
      *
-     * @warning In case a ledger account with the provided id doesn't exist a balance of zero will be returned!
-     *
-     * @param params.id The ID of the account to calculate the balance for.
+     * @param params.userId The ID of the user whose account to calculate the balance for.
+     * @param params.ledgerAccountId The ID of the account to calculate the balance for.
      * @param params.atTransactionId Optional transaction ID to calculate the balance up until that transaction.
      *
-     * @returns The balances of the ledger accounts.
+     * @returns The balance of the ledger account.
      */
     calculateBalance: defineOperation({
         authorizer: () => RequireNothing.staticFields({}).dynamicFields({}), // TODO: Add proper auther
         paramsSchema: z.object({
-            id: z.number(),
+            userId: z.number().optional(),
+            ledgerAccountId: z.number().optional(),
             atTransactionId: z.number().optional(),
-        }),
+        }).refine(
+            ({ userId, ledgerAccountId }) => userId !== undefined || ledgerAccountId !== undefined,
+            'Enten bruker ID eller konto ID må være oppgitt.',
+        ),
         operation: async ({ params }): Promise<Balance> => {
+            const account = await ledgerAccountOperations.read({
+                params: { userId: params.userId, ledgerAccountId: params.ledgerAccountId },
+            })
+
             const balances = await ledgerAccountOperations.calculateBalances({
                 params: {
-                    ids: [params.id],
+                    ledgerAccountIds: [account.id],
                     atTransactionId: params.atTransactionId,
                 },
             })
 
-            return balances[params.id]
+            return balances[account.id]
         }
     }),
 }

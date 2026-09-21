@@ -97,7 +97,7 @@ describe('ledger transactions', () => {
             })
 
             const balances = await ledgerAccountOperations.calculateBalances({
-                params: { ids: testAccountIds },
+                params: { ledgerAccountIds: testAccountIds },
             })
 
             entries.forEach((amount, i) => {
@@ -129,7 +129,7 @@ describe('ledger transactions', () => {
             await expect(transactionPromise).rejects.toThrow()
 
             const balances = await ledgerAccountOperations.calculateBalances({
-                params: { ids: testAccountIds },
+                params: { ledgerAccountIds: testAccountIds },
             })
 
             testAccountIds.forEach(accountId => {

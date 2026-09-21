@@ -90,7 +90,7 @@ export const seedDevUsers = defineSeedOperation(async (prisma: PrismaClient) => 
     // Only uploaded the first time this dev user is created - re-seeding must not upload
     // (and immediately destroy) a fresh profile image on every run.
     const profileImageJobs = newDevUserSpecs
-        .filter(() => Math.random() < 0.25)
+        .filter(() => Math.random() < 0.10)
         .map(spec => async () => userOperations.updateProfileImage({
             params: { username: spec.username },
             data: await spec.devProfileImage.imageUploadData({
