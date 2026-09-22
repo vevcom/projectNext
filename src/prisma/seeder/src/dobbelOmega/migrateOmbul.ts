@@ -1,4 +1,5 @@
 import { owIdToPnId, type IdMapper } from './IdMapper'
+import { createProgressBar } from './progressBar'
 import { ombulStore } from '@/services/ombul/operations'
 import logger from '@/lib/logger'
 import { File } from 'node:buffer'
@@ -27,7 +28,7 @@ export default async function migrateOmbul(
     })
 
     const ombuls = allOmbuls.flatMap(ombul => {
-        const coverImageId = owIdToPnId(imageIdMap, ombul.ImageId)
+        const coverImageId = owIdToPnId(imageIdMap, ombul.ImageId, 'images')
         if (!coverImageId) {
             logger.warn(`Ombul "${ombul.title}" (${ombul.year}) has no resolvable cover image, skipping.`)
             return []
@@ -36,6 +37,7 @@ export default async function migrateOmbul(
     })
 
     //First fetch pdfs and write them to the store concurrently for speed
+    const fetchBar = createProgressBar('Fetching ombul pdfs', ombuls.length)
     const fsLocations = await Promise.all(ombuls.map(async (ombul): Promise<string | null> => {
         const fsLocationOldVev = `${process.env.OW_STORE_URL}/ombul/${ombul.fileName}.pdf/${ombul.originalName}`
 
@@ -45,6 +47,7 @@ export default async function migrateOmbul(
         }).catch(() => null)
         if (!res || !res.ok) {
             logger.error(`Failed to fetch ombul pdf from ${fsLocationOldVev}`)
+            fetchBar.increment()
             return null
         }
 
@@ -52,13 +55,19 @@ export default async function migrateOmbul(
         const pdfFile = new File([new Uint8Array(pdfBuffer)], ombul.originalName, { type: 'application/pdf' })
 
         const { fsLocation } = await ombulStore.createFile(pdfFile)
+        fetchBar.increment()
         return fsLocation
     }))
+    fetchBar.stop()
 
+    const createBar = createProgressBar('Creating ombuls', ombuls.length)
     for (let ombulIdx = 0; ombulIdx < ombuls.length; ombulIdx++) {
         const ombul = ombuls[ombulIdx]
         const fsLocation = fsLocations[ombulIdx]
-        if (!fsLocation) continue
+        if (!fsLocation) {
+            createBar.increment()
+            continue
+        }
 
         const ombulsWithSameYearAndName = await pnPrisma.ombul.findMany({
             where: {
@@ -94,5 +103,7 @@ export default async function migrateOmbul(
                 fsLocation,
             }
         })
+        createBar.increment()
     }
+    createBar.stop()
 }

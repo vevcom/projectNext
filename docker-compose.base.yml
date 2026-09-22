@@ -40,6 +40,9 @@ services:
             JWT_PUBLIC_KEY: ${JWT_PUBLIC_KEY}
             JWT_SECRET: ${JWT_SECRET}
             SERVER_LINK_PREFIX: ${SERVER_LINK_PREFIX}
+            SEED_ADMIN_USERNAME: ${SEED_ADMIN_USERNAME}
+            SEED_ADMIN_EMAIL: ${SEED_ADMIN_EMAIL}
+            SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD}
         healthcheck:
             # 127.0.0.1 rather than localhost: alpine tries ::1 first, and the
             # production server binds IPv4 only.
