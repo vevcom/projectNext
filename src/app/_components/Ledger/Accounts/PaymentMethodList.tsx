@@ -42,7 +42,7 @@ export default function PaymentMethodList({ userId, paymentMethods }: Params) {
                         <FontAwesomeIcon icon={faXmark}/>
                     </button>
                 </li>
-            )) : <p><em>Du har ingen lagrede betalingskort.</em></p>}
+            )) : <li><em>Du har ingen lagrede betalingskort.</em></li>}
         </ul>
     )
 }
