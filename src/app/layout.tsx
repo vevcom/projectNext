@@ -12,6 +12,7 @@ import { readAllStandardImagesAction } from '@/services/images/standard/actions'
 import { readUserProfileAction } from '@/services/users/actions'
 import { ServerSession } from '@/auth/session/ServerSession'
 import ThemeEnabler from '@/UI/ThemeEnabler'
+import ServiceWorkerRegister from '@/UI/ServiceWorkerRegister'
 import DesktopSideBar from '@/components/NavBar/DesktopSideBar'
 import { Inter } from 'next/font/google'
 import '@/styles/globals.scss'
@@ -19,12 +20,24 @@ import { config } from '@fortawesome/fontawesome-svg-core'
 import '@fortawesome/fontawesome-svg-core/styles.css'
 import { getServerSession } from 'next-auth'
 import type { ReactNode } from 'react'
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import NavBar from '@/components/NavBar/NavBar'
 
 config.autoAddCss = false
 
 const inter = Inter({ subsets: ['latin'] })
+
+export const viewport: Viewport = {
+    width: 'device-width',
+    initialScale: 1,
+    // Lets the page paint into the status bar and home indicator areas instead of
+    // being letterboxed between them. The safe-area insets in layout.module.scss
+    // are what then keep the nav bars clear of the system UI.
+    viewportFit: 'cover',
+    // Only the pre-hydration default, matching --surface-base in globals.scss;
+    // applyTheme() rewrites this meta to the active theme's surface-base.
+    themeColor: '#131316',
+}
 
 export const metadata: Metadata = {
     title: {
@@ -33,6 +46,14 @@ export const metadata: Metadata = {
     },
     description: 'Hjemmesiden for linjeforeningen Sanctus Omega Broderskab ved NTNU.',
     keywords: ['Sanctus Omega Broderskab', 'Sct. Omega Broderskab', 'Sanctus Omega', 'Sct. Omega', 'Omega'],
+    appleWebApp: {
+        capable: true,
+        title: 'Sct. Omega',
+        // The only iOS value that lets the page draw behind the status bar - the
+        // other two reserve an opaque strip for it. It forces light status bar
+        // text, which is why the light themes need a scrim (see PR notes).
+        statusBarStyle: 'black-translucent',
+    },
 }
 
 type PropTypes = {
@@ -56,13 +77,14 @@ export default async function RootLayout({ children }: PropTypes) {
     return (
         <html lang="en">
             <body className={`${inter.className} ${styles.body}`}>
+                <ThemeEnabler />
+                <ServiceWorkerRegister />
                 <SessionProvider session={nextAuthSession}>
                     <ClientDataProvider
                         session={serverSession.toJsObject()}
                         defaultPermissions={defaultPermissions}
                         standardImages={standardImages}
                     >
-                        <ThemeEnabler />
                         <EditModeProvider>
                             <PopUpProvider>
                                 <PageTitleProvider>

@@ -12,7 +12,14 @@
     grid-template-columns: ohma.$nav-height 1fr;
     grid-template-rows: ohma.$nav-height 1fr ohma.$nav-height;
     gap: ohma.$gap;
-    padding: ohma.$gap;
+    // viewport-fit=cover lets the grid extend under the system bars, so the gap
+    // has to grow by whatever the OS reserves on each edge; env() is 0 everywhere
+    // there is no inset (desktop, Android without gesture nav), leaving $gap alone.
+    padding:
+        calc(#{ohma.$gap} + env(safe-area-inset-top))
+        calc(#{ohma.$gap} + env(safe-area-inset-right))
+        calc(#{ohma.$gap} + env(safe-area-inset-bottom))
+        calc(#{ohma.$gap} + env(safe-area-inset-left));
     height: 100dvh;
     max-width: 2560px;
     margin: 0 auto;
