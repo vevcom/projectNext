@@ -16,13 +16,23 @@ import type { PagingContext } from '@/contexts/paging/PagingGenerator'
 type PropTypes<Data, Cursor, PageSize extends number, FetcherDetails> = {
     pagingContext: PagingContext<Data, Cursor, PageSize, FetcherDetails>,
     renderer: (data: Data, i: number) => React.ReactNode,
+    wrapper?: (children: React.ReactNode) => React.ReactNode,
     loadingInfoClassName?: string,
+    /**
+     * Wraps the loading indicator that trails the rendered items. Callers that render rows
+     * into a <tbody> must pass a wrapper producing a valid row, because the plain <span>
+     * this defaults to is not allowed there: the HTML parser moves it out of the table while
+     * parsing the server-rendered markup, and React then bails out of hydrating the whole table.
+     */
+    loadingInfoWrapper?: (loadingInfo: React.ReactNode) => React.ReactNode,
 }
 
 export default function EndlessScroll<Data, Cursor, const PageSize extends number, FetcherDetails>({
     pagingContext,
     loadingInfoClassName,
-    renderer
+    renderer,
+    wrapper = children => <>{children}</>,
+    loadingInfoWrapper
 }: PropTypes<Data, Cursor, PageSize, FetcherDetails>) {
     const context = useContext(pagingContext)
 
@@ -71,25 +81,29 @@ export default function EndlessScroll<Data, Cursor, const PageSize extends numbe
         }
     }, [state])
 
+    const loadingInfo = (
+        <span ref={ref} className={`${styles.loadingControl} ${loadingInfoClassName ?? ''}`}>
+            {
+                loading ? (
+                    <i>Laster inn flere...</i>
+                ) : (
+                    <>
+                        <i style={{ opacity: showButton ? 0 : 1 }}>
+                            Ingen flere å laste inn
+                        </i>
+                        <Button style={{ opacity: showButton ? 1 : 0 }} onClick={loadMoreCallback}>
+                            Last inn flere
+                        </Button>
+                    </>
+                )
+            }
+        </span>
+    )
+
     return (
         <>
-            {renderedPageData}
-            <span ref={ref} className={`${styles.loadingControl} ${loadingInfoClassName}`}>
-                {
-                    loading ? (
-                        <i>Laster inn flere...</i>
-                    ) : (
-                        <>
-                            <i style={{ opacity: showButton ? 0 : 1 }}>
-                                Ingen flere å laste inn
-                            </i>
-                            <Button style={{ opacity: showButton ? 1 : 0 }} onClick={loadMoreCallback}>
-                                Last inn flere
-                            </Button>
-                        </>
-                    )
-                }
-            </span>
+            {wrapper(renderedPageData)}
+            {loadingInfoWrapper ? loadingInfoWrapper(loadingInfo) : loadingInfo}
         </>
     )
 }

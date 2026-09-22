@@ -18,6 +18,7 @@ export const userFieldsToExpose = [
     'acceptedTerms',
     'sex',
     'allergies',
+    'studentCard',
     'imageConsent',
     'relationshipStatus',
     'relationshipStatusText',
@@ -29,6 +30,10 @@ export const userFilterSelection = {
     flairs: {
         select: {
             id: true,
+            rank: true,
+            colorR: true,
+            colorG: true,
+            colorB: true,
             image: { include: expandedImageIncluder },
         },
     },

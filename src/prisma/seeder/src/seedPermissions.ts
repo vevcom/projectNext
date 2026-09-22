@@ -31,6 +31,7 @@ export default async function seedPermissions(prisma: PrismaClientPn) {
         'COURSES_READ',
         'CABIN_CALENDAR_READ',
         'CABIN_BOOKING_CABIN_CREATE',
+        'LEDGER_USE',
     ]
 
     checkForPermissionDuplicates(defaultPermissions, 'default permissions')

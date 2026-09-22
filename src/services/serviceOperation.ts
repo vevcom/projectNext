@@ -4,6 +4,7 @@ import { prismaErrorWrapper } from './prismaCall'
 import { prisma as globalPrisma } from '@/prisma-pn-client-instance'
 import { RequireNothing } from '@/auth/authorizer/RequireNothing'
 import { Session } from '@/auth/session/Session'
+import logger from '@/lib/logger'
 import { zfd } from 'zod-form-data'
 import { AsyncLocalStorage } from 'async_hooks'
 import type { AuthorizerDynamicFieldsBound } from '@/auth/authorizer/Authorizer'
@@ -192,10 +193,18 @@ export type ServiceOperationImplementationConfig<
  * inside a transaction. In that case, the prisma client is a Prisma.TransactionClient.
  * The caveat is that a Prisma.TransactionClient can't be used to open a new transaction
  * so if the service operation opens a transaction, the prisma client can only be a PrismaClient.
+ *
+ * The check is written as [OpensTransaction] extends [true] rather than the bare
+ * OpensTransaction extends true so that it does not distribute over a union. An operation that
+ * does not declare opensTransaction gets `boolean` here, and a distributing conditional turns that
+ * into PrismaClient | Prisma.TransactionClient - a union whose deeply generic method signatures tsc
+ * has to reconcile at every call site, which reaches the instantiation depth limit on some models.
+ * Not distributing resolves `boolean` to Prisma.TransactionClient, which is what an operation that
+ * has not claimed it opens a transaction is entitled to anyway.
  */
 export type PrismaPossibleTransaction<
     OpensTransaction extends boolean
-> = OpensTransaction extends true ? PrismaClient : Prisma.TransactionClient
+> = [OpensTransaction] extends [true] ? PrismaClient : Prisma.TransactionClient
 
 /**
  * In addition to custom data arguments, every service operation receives a context object.
@@ -393,7 +402,8 @@ export function defineSubOperation<
                 const paramsParse = paramsSchema.safeParse(args.params)
 
                 if (!paramsParse.success) {
-                    console.log(paramsParse) // TODO: This needs to be returned to give good error message.
+                    // TODO: This needs to be returned to give good error message.
+                    logger.debug('Service operation params failed validation.', { paramsParse })
                     throw new Smorekopp('BAD PARAMETERS', 'Invalid params passed to service operation.')
                 }
 
@@ -416,7 +426,7 @@ export function defineSubOperation<
                 const dataParse = zfd.formData(dataSchema).safeParse(args.data)
                 if (!dataParse.success) {
                     if (process.env.NODE_ENV !== 'test') {
-                        console.log(dataParse)
+                        logger.debug('Service operation data failed validation.', { dataParse })
                     }
                     throw new ParseError(dataParse)
                 }
@@ -436,7 +446,7 @@ export function defineSubOperation<
                 )
                 if (!implementationParamsParse.success) {
                     // TODO: This needs to be returned to give good error message.
-                    console.log(implementationParamsParse)
+                    logger.info('Service operation implementation params failed validation.', { implementationParamsParse })
                     throw new Smorekopp('BAD PARAMETERS', 'Invalid implementation params passed to service operation.')
                 }
                 args.implementationParams = implementationParamsParse.data

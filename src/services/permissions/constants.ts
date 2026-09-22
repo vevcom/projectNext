@@ -493,8 +493,32 @@ export const permissionConfig = {
     APPLICATION_WRITE: {
         name: 'Søknadsskriver',
         description: `
-            Kan skrive søknader til alle aktive søknadsperioder. 
+            Kan skrive søknader til alle aktive søknadsperioder.
         `,
         category: 'applications',
+    },
+    LEDGER_ADMIN: {
+        name: 'Hovedbokadministratør',
+        description: `
+            Kan opprette overføringer fra/til og endre alle kontoer. 
+        `,
+        category: 'diverse admin',
+    },
+    LEDGER_USE: {
+        name: 'Overføre og betale',
+        description: `
+            Tillater en bruker å utføre overføring av penger og betaling av varer og tjenester. 
+        `,
+        category: 'diverse admin',
+    },
+    NEWS_CREATE: {
+        name: 'Lage nyhetsartikkel',
+        description: 'kan lage nyhetsartikler',
+        category: 'public',
+    },
+    NEWS_ADMIN: {
+        name: 'Nyhetsadministrator',
+        description: 'kan administrere alle nyhetsartikler uavhengig av synlighet',
+        category: 'public',
     },
 } satisfies Record<Permission, PermissionInfo>

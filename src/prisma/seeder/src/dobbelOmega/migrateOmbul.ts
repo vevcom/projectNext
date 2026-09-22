@@ -1,5 +1,6 @@
 import { owIdToPnId, type IdMapper } from './IdMapper'
 import { ombulStore } from '@/services/ombul/operations'
+import logger from '@/lib/logger'
 import { File } from 'node:buffer'
 import type { PrismaClient as PrismaClientOw } from '@/prisma-generated-ow-basic/client'
 import type { PrismaClient as PrismaClientPn } from '@/prisma-generated-pn-client'
@@ -28,7 +29,7 @@ export default async function migrateOmbul(
     const ombuls = allOmbuls.flatMap(ombul => {
         const coverImageId = owIdToPnId(imageIdMap, ombul.ImageId)
         if (!coverImageId) {
-            console.warn(`Ombul "${ombul.title}" (${ombul.year}) has no resolvable cover image, skipping`)
+            logger.warn(`Ombul "${ombul.title}" (${ombul.year}) has no resolvable cover image, skipping.`)
             return []
         }
         return [{ ...ombul, coverImageId }]
@@ -43,7 +44,7 @@ export default async function migrateOmbul(
             method: 'GET',
         }).catch(() => null)
         if (!res || !res.ok) {
-            console.error(`Failed to fetch ombul pdf from ${fsLocationOldVev}`)
+            logger.error(`Failed to fetch ombul pdf from ${fsLocationOldVev}`)
             return null
         }
 

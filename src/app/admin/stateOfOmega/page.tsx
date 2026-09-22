@@ -24,24 +24,17 @@ export default async function stateOfOmega() {
 
     return (
         <div className={styles.wrapper}>
-            <h1>Omega er i orden {currentOrder.order}</h1>
-            <p>
+            <div className={styles.plaque}>
+                <p className={styles.label}>Omega er i orden</p>
+                <h1 className={styles.order}>{ currentOrder.order }</h1>
+            </div>
+            <p className={styles.lastIncremented}>
                 Ordenen til Omega ble sist inkrementert <Date date={currentOrder.createdAt} includeTime={false} />
             </p>
-            <div className={styles.main}>
-                <div className={`${styles.order} ${styles.currentOrder}`}>
-                    <span className={styles.label}>Nåværende orden</span>
-                    <span className={styles.number}>{currentOrder.order}</span>
-                </div>
-                <div className={styles.requirements}>
-                    <Requirements requirements={requirements} />
-                </div>
-                <div className={`${styles.order} ${styles.nextOrder}`}>
-                    <span className={styles.label}>Neste orden</span>
-                    <span className={styles.number}>{currentOrder.order + 1}</span>
-                    <CreateOrder allRequirementsFulfilled={allRequirementsFulfilled} />
-                </div>
+            <div className={styles.requirements}>
+                <Requirements requirements={requirements} />
             </div>
+            <CreateOrder allRequirementsFulfilled={allRequirementsFulfilled} />
         </div>
     )
 }

@@ -1,7 +1,8 @@
 import upsertOrderBasedOnDate from './upsertOrderBasedOnDate'
 import { type IdMapper, owIdToPnId } from './IdMapper'
-import manifest from '@/seeder/src/logger'
+import manifest from '@/prisma/seeder/src/dobbelOmega/manifest'
 import { Prisma, type PrismaClient as PrismaClientPn, type SEX } from '@/prisma-generated-pn-client'
+import logger from '@/lib/logger'
 import { v4 as uuid } from 'uuid'
 import type { User } from '@/prisma-generated-pn-client'
 import type {
@@ -273,9 +274,9 @@ export class UserMigrator {
                     }
                 })
             } catch (e) {
-                console.error(
+                logger.error(
                     `Failed to conenct StudentCard to user. StudentCard: ${user.MoneySourceAccounts?.NTNUCard} `,
-                    `User: ${pnUser} Error: ${e}`
+                    { user: pnUser, error: e }
                 )
             }
         }
@@ -283,9 +284,10 @@ export class UserMigrator {
         // Add a flair
         if (user.flair > 0 && user.flair !== 6) {
             // I'm sorry wilhelwi100 and magnmaeh100 your Piinligheed Cringemeisteren dies in this migration
+            // Noooo!!! :(((
             const flairRank = flairMap[user.flair]
             if (!flairRank) {
-                console.error(`Unknown flair found: ${user.flair}`)
+                logger.error(`Unknown flair found: ${user.flair}.`)
             } else {
                 await this.pnPrisma.flair.update({
                     where: {

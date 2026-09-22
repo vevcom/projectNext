@@ -3,10 +3,10 @@
 $padding: ohma.$minimalPagePadding;
 
 .wrapper {
-    padding: 1em $padding;
     display: grid;
     grid-template-columns: auto 1fr;
     grid-template-rows: auto 1fr;
+    height: 100%;
 
     .coverImage {
         grid-column: 1 / 3;
@@ -15,8 +15,9 @@ $padding: ohma.$minimalPagePadding;
         justify-content: center;
         align-items: center;
         position: relative;
-        border-radius: ohma.$cardRounding;
+        border-radius: ohma.$rounding;
         overflow: hidden;
+        min-height: calc(40 * #{ohma.$gap});
 
         .settings {
             top: 1em;
@@ -30,7 +31,7 @@ $padding: ohma.$minimalPagePadding;
             position: absolute;
 
             >button {
-                margin-left: calc(2 * ohma.$gap);
+                margin-left: calc(2 * #{ohma.$gap});
             }
         }
 
@@ -73,18 +74,17 @@ $padding: ohma.$minimalPagePadding;
     }
 
     >aside {
-        color: ohma.$colors-text;
         grid-column: 1 / 2;
         grid-row: 2 / 3;
         min-width: 350px;
-        @include ohma.layer;
-        margin-top: 1em;
-        border-radius: ohma.$cardRounding;
+        background: ohma.$colors-surface-base;
+        margin-top: ohma.$gap;
+        border-radius: ohma.$rounding;
         padding: ohma.$cardRounding;
-        min-height: 300px;
+        min-height: fit-content;
         display: flex;
         flex-direction: column;
-        gap: 2em;
+        gap: calc(2*#{ohma.$gap});
 
         >p {
             display: flex;
@@ -102,13 +102,20 @@ $padding: ohma.$minimalPagePadding;
     >main {
         grid-column: 2 / 3;
         grid-row: 2 / 3;
-        margin: 1em 3em;
+        margin-left: ohma.$gap;
+        margin-top: ohma.$gap;
+        padding: calc(2 * #{ohma.$gap});
+        background: ohma.$colors-surface-base;
+        border-radius: ohma.$rounding;
     }
 
     >.registrationList {
+        background: ohma.$colors-surface-base;
+        padding: ohma.$gap;
+        border-radius: ohma.$rounding;
         grid-column: 1 / 3;
         grid-row: 4 / 4;
-        margin-top: calc(4 * ohma.$gap);
+        margin-top: ohma.$gap;
 
         >h4 {
             font-size: ohma.$fonts-xl;
@@ -125,12 +132,17 @@ $padding: ohma.$minimalPagePadding;
         >aside {
             grid-column: 1 / 2;
             grid-row: 2 / 3;
+            padding: calc(2 * #{ohma.$gap});
         }
 
         >main {
             grid-column: 1 / 2;
             grid-row: 3 / 4;
-            margin: 1em 0; // remove side margins on small screens
+            margin: ohma.$gap 0;
+        }
+
+        >.registrationList {
+            margin-top: 0;
         }
     }
 }

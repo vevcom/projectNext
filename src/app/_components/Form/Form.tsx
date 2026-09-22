@@ -143,7 +143,7 @@ export default function Form<GiveActionReturn>({
             setGeneralErrors([
                 {
                     path: [],
-                    message: 'error with input'
+                    message: 'Noe gikk galt. Prøv igjen.'
                 }
             ])
             return

@@ -9,10 +9,10 @@ import { readMembershipsOfUser } from '@/services/groups/memberships/read'
 import { updateEmailForFeideAccount } from '@/services/auth/feideAccounts/update'
 import { userOperations } from '@/services/users/operations'
 import { permissionOperations } from '@/services/permissions/operations'
+import logger from '@/lib/logger'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { encode, decode } from 'next-auth/jwt'
 import type { AuthOptions } from 'next-auth'
-import logger from '@/lib/logger'
 
 export const authOptions: AuthOptions = {
     providers: [
@@ -199,14 +199,17 @@ export const authOptions: AuthOptions = {
             // When in development mode JWT are invalidated at each restart,
             // thus producing a lot of noise in both the logs and in the browser.
             // Therefore, we log these as warnings instead of errors.
-            const logFunction = code === 'JWT_SESSION_ERROR' ? console.warn : console.error
-            logFunction(`NextAuth error: ${code}`, metadata)
+            if (code === 'JWT_SESSION_ERROR') {
+                logger.warn(`NextAuth error: ${code}`, { code, metadata })
+            } else {
+                logger.error(`NextAuth error: ${code}`, { code, metadata })
+            }
         },
         warn(code) {
-            console.warn(`NextAuth warning: ${code}`)
+            logger.warn(`NextAuth warning: ${code}`, { code })
         },
         debug(code, metadata) {
-            console.debug(`NextAuth debug: ${code}`, metadata)
+            logger.debug(`NextAuth debug: ${code}`, { code, metadata })
         },
     }
 }

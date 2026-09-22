@@ -11,6 +11,6 @@
   mask-position: center;
 
   /* The whole point of the mask: the logo takes this colour rather than whatever it was drawn in.
-     Set --committee-logo-color on any ancestor to theme it. */
-  background-color: var(--committee-logo-color, #{ohma.$colors-white});
+     Set --committee-logo-color on any ancestor to theme it; defaults to the theme's text colour. */
+  background-color: var(--committee-logo-color, #{ohma.$colors-text});
 }

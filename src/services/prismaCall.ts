@@ -35,7 +35,8 @@ export async function prismaCall<T>(call: () => T | Promise<T>): Promise<T> {
             && error.code === 'P2025'
 
         if (process.env.NODE_ENV !== 'test' && !isSeedExpectedNotFound) {
-            console.error(error) // TODO: Add the details from the error to the ServerError
+            // TODO: Add the details from the error to the ServerError
+            logger.error(error)
         }
 
         if (!(error instanceof PrismaClientKnownRequestError)) {

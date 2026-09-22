@@ -5,7 +5,7 @@ $imageWidth: 300px;
 .School {
     position: relative;
     display: flex;
-    background-color: ohma.$colors-secondary;
+    background-color: ohma.$colors-surface-base;
     @include ohma.card();
     @include ohma.boxShadow('');
     &:hover {

@@ -34,9 +34,9 @@ function newPrisma() {
     })
     prisma.$on('query', (e) => {
         const context = getContext()
-        if (e.query.includes('SELECT')) { // Sets select query to debug as it generates an unreasonable amount of logs
-            logger.debug('Prisma', {
-                type: 'Query',
+        // Sets select query to silly as it generates an unreasonable amount of logs.
+        if (e.query.includes('SELECT')) {
+            logger.silly('Prisma', {
                 params: e.params,
                 query: e.query,
                 duration: e.duration,
@@ -46,8 +46,7 @@ function newPrisma() {
                 bypassAuth: context?.bypassAuth
             })
         } else {
-            logger.info('Prisma', {
-                type: 'Query',
+            logger.debug('Prisma', {
                 params: e.params,
                 query: e.query,
                 duration: e.duration,
@@ -62,7 +61,6 @@ function newPrisma() {
     prisma.$on('error', (e) => {
         const context = getContext()
         logger.error('Prisma', {
-            type: 'Error',
             message: e.message,
             userName: context?.session.user?.username,
             userId: context?.session.user?.id,
@@ -74,7 +72,6 @@ function newPrisma() {
     prisma.$on('info', (e) => {
         const context = getContext()
         logger.info('Prisma', {
-            type: 'Info',
             message: e.message,
             userName: context?.session.user?.username,
             userId: context?.session.user?.id,
@@ -85,8 +82,7 @@ function newPrisma() {
 
     prisma.$on('warn', (e) => {
         const context = getContext()
-        logger.info('Prisma', {
-            type: 'Warn',
+        logger.warn('Prisma', {
             message: e.message,
             userName: context?.session.user?.username,
             userId: context?.session.user?.id,

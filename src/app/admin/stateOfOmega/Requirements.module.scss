@@ -45,10 +45,10 @@
     }
 
     .fulfilled {
-        color: ohma.$colors-green;
+        color: ohma.$colors-accent-green;
     }
     .unfulfilled {
-        color: ohma.$colors-red;
+        color: ohma.$colors-accent-red;
     }
     li span {
         color: ohma.$colors-text;

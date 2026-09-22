@@ -1,7 +1,7 @@
 @use '@/styles/ohma';
 
 .button {
-    @include ohma.btn(ohma.$colors-primary);
+    @include ohma.btn(ohma.$colors-accent-blue);
 }
 
 .table {
@@ -9,7 +9,7 @@
 }
 
 .deactivatedProduct {
-    color: ohma.$colors-gray-600;
+    color: ohma.$colors-text-muted;
     font-style: italic;
 }
 

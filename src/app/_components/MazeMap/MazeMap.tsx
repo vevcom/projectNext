@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
 import style from './MazeMap.module.scss'
+import { useEffect, useRef, useState } from 'react'
 
 type PropTypes = {
     height: string

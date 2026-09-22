@@ -1,7 +1,7 @@
 @use '@/styles/ohma';
 
 .Permission {
-    @include ohma.layer;
+    background-color: ohma.$colors-surface-raised;
     display: flex;
     @include ohma.round();
     align-items: center;

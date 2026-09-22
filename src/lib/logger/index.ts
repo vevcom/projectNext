@@ -2,15 +2,21 @@ import winston from 'winston'
 import 'winston-daily-rotate-file'
 
 const logger = winston.createLogger({
-    level: process.env.LOG_LEVEL,
-    format: winston.format.combine(
-        winston.format.timestamp(),
-        winston.format.json()
-    )
+    level: process.env.LOG_LEVEL ?? 'silly',
 })
 
 if (process.env.LOG_TO_CONSOLE === 'true') {
-    logger.add(new winston.transports.Console())
+    logger.add(new winston.transports.Console({
+        level: process.env.LOG_CONSOLE_LEVEL ?? 'info',
+        format: winston.format.combine(
+            winston.format.colorize(),
+            winston.format.timestamp(),
+            winston.format.printf(({ timestamp, level, message, ...meta }) => {
+                const metaString = Object.keys(meta).length > 0 ? ` ${JSON.stringify(meta)}` : ''
+                return `${timestamp} ${level}: ${message}${metaString}`
+            }),
+        ),
+    }))
 }
 
 if (process.env.LOG_TO_FILE === 'true') {
@@ -19,6 +25,10 @@ if (process.env.LOG_TO_FILE === 'true') {
         filename: '%DATE%.log',
         datePattern: 'YYYY-MM-DD',
         maxFiles: process.env.LOG_MAX_FILES,
+        format: winston.format.combine(
+            winston.format.timestamp(),
+            winston.format.json(),
+        ),
     }))
 }
 

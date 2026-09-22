@@ -1,3 +1,4 @@
+import logger from '@/lib/logger'
 import { deflate, inflate } from 'zlib'
 import { promisify } from 'util'
 import type { JWT } from 'next-auth/jwt'
@@ -17,7 +18,7 @@ async function compressField(data: any): Promise<any> {
         const buffer = await deflateAsync(JSON.stringify(data))
         return buffer.toString('base64')
     } catch (error) {
-        console.error('Failed to compress JWT field: ', error)
+        logger.error('Failed to compress JWT field.', { error })
 
         return null
     }
@@ -30,7 +31,7 @@ async function decompressField(data: any): Promise<any> {
         const inflated = await inflateAsync(buffer)
         return JSON.parse(inflated.toString())
     } catch (error) {
-        console.error('Failed to decompress JWT field: ', error)
+        logger.error('Failed to decompress JWT field.', { error })
 
         return null
     }

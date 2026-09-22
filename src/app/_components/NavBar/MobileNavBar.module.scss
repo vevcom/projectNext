@@ -1,11 +1,12 @@
 @use "@/styles/ohma";
 
 .MobileNavBar {
-    background-color: ohma.$colors-black;
+    position: relative;
+    background-color: ohma.$colors-surface-base;
     width: 100%;
     height: 100%;
-    color: ohma.$colors-white;
-    padding: 2*ohma.$gap;
+    color: ohma.$colors-text;
+    padding: calc(2 * #{ohma.$gap});
 
     display: none;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
@@ -17,15 +18,12 @@
             border-left: none;
         }
         .icon {
-            color: ohma.$colors-white;
+            color: ohma.$colors-text;
             width: 25px;
             height: 25px;
         }
         &.magicHat {
             position: relative;
-            > .image {
-                filter: invert(1);
-            }
         }
         > button {
             background: none;
@@ -43,9 +41,11 @@
     }
     overflow: hidden;
     .editMode {
+        width: 48px;
+        height: 48px;
         background-color: ohma.$colors-black;
         position: absolute;
-        bottom: calc(100% + 3*ohma.$gap);
+        bottom: calc(100% + 3*#{ohma.$gap});
         right: 0;
         border-start-start-radius: 50%;
         transform: translateY(50%);
