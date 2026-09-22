@@ -77,8 +77,8 @@ export default async function RootLayout({ children }: PropTypes) {
     return (
         <html lang="en">
             <body className={`${inter.className} ${styles.body}`}>
-                <ThemeEnabler></ThemeEnabler>
-                <ServiceWorkerRegister></ServiceWorkerRegister>
+                <ThemeEnabler />
+                <ServiceWorkerRegister />
                 <SessionProvider session={nextAuthSession}>
                     <ClientDataProvider
                         session={serverSession.toJsObject()}
