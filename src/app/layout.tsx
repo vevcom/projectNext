@@ -12,6 +12,7 @@ import { readAllStandardImagesAction } from '@/services/images/standard/actions'
 import { readUserProfileAction } from '@/services/users/actions'
 import { ServerSession } from '@/auth/session/ServerSession'
 import ThemeEnabler from '@/UI/ThemeEnabler'
+import ServiceWorkerRegister from '@/UI/ServiceWorkerRegister'
 import DesktopSideBar from '@/components/NavBar/DesktopSideBar'
 import { Inter } from 'next/font/google'
 import '@/styles/globals.scss'
@@ -56,13 +57,14 @@ export default async function RootLayout({ children }: PropTypes) {
     return (
         <html lang="en">
             <body className={`${inter.className} ${styles.body}`}>
+                <ThemeEnabler></ThemeEnabler>
+                <ServiceWorkerRegister></ServiceWorkerRegister>
                 <SessionProvider session={nextAuthSession}>
                     <ClientDataProvider
                         session={serverSession.toJsObject()}
                         defaultPermissions={defaultPermissions}
                         standardImages={standardImages}
                     >
-                        <ThemeEnabler />
                         <EditModeProvider>
                             <PopUpProvider>
                                 <PageTitleProvider>
