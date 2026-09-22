@@ -66,7 +66,7 @@ export function calculateCreditFees(
     return Object.fromEntries(creditLedgerEntries.map(entry => {
         const fees = feesFormula(entry.funds, totalFunds, totalFees)
 
-        // Subtract the from the totals to ensure
+        // Subtract the fees from the totals to ensure
         // that the sum of all fees ends up exactly
         // equal to `totalFees`.
         totalFunds -= entry.funds
