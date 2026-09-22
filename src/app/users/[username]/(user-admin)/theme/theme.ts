@@ -110,6 +110,10 @@ export function applyTheme(name: ThemeName): void {
     localStorage.setItem('theme', name)
     const colors = themes[name]
     const root = document.documentElement
+    // Keeps the Android/desktop browser chrome in step with the theme. The meta
+    // itself comes from the viewport export in layout.tsx; without that there is
+    // no node here to update.
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', colors['surface-base'])
     Object.entries(colors).forEach(([key, value]) => {
         root.style.setProperty(`--${key}`, value)
     })
