@@ -1,6 +1,12 @@
+import logger from '@/lib/logger'
 import { hashAndEncryptPassword } from '@/auth/passwordHash'
 import { Permission } from '@/prisma-generated-pn-types'
 import type { PrismaClient as PrismaClientPn } from '@/prisma-generated-pn-client'
+
+// The password .env.default ships, plus the obvious neighbours. A production
+// environment that inherited the example file unchanged is refused outright
+// rather than handed a guessable superuser holding every permission.
+const INSECURE_PASSWORDS = ['admin', 'password', 'passord', 'changeme', 'secret']
 
 /**
  * Seeds a single admin user with every permission, in its own ManualGroup, so there is
@@ -15,8 +21,16 @@ export default async function seedAdmin(prisma: PrismaClientPn) {
     const password = process.env.SEED_ADMIN_PASSWORD
 
     if (!username || !email || !password) {
-        console.log('SEED_ADMIN_USERNAME/EMAIL/PASSWORD not set, skipping admin seed')
+        logger.info('SEED_ADMIN_USERNAME/EMAIL/PASSWORD not set, skipping admin seed')
         return
+    }
+
+    if (process.env.NODE_ENV === 'production' && INSECURE_PASSWORDS.includes(password.toLowerCase())) {
+        throw new Error(
+            'SEED_ADMIN_PASSWORD is one of the known example values, which would create a '
+            + 'guessable account holding every permission. Set a real password, or unset '
+            + 'SEED_ADMIN_USERNAME/EMAIL/PASSWORD to skip the admin seed entirely.'
+        )
     }
 
     const latestOrder = await prisma.omegaOrder.findFirstOrThrow({
@@ -89,5 +103,5 @@ export default async function seedAdmin(prisma: PrismaClientPn) {
         },
     })
 
-    console.log(`Seeded admin user "${username}"`)
+    logger.info(`Seeded admin user "${username}"`)
 }

@@ -153,12 +153,19 @@ export default async function migrateImages(
                         + 'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3',
                 },
             }).catch(() => {
+                // The network-failure case is logged here and nowhere else: the
+                // !res check below is the same path, and logging in both printed
+                // every failure twice - especially noisy behind a progress bar.
                 logger.error(`Failed to fetch image from ${fsLocationOldVev}`)
                 return undefined
             })
 
             if (!res || !res.ok) {
-                logger.error(`Failed to fetch image from ${fsLocationOldVev}`)
+                // res is set only when the request completed but the status was bad,
+                // which the catch above never saw.
+                if (res) {
+                    logger.error(`Failed to fetch image from ${fsLocationOldVev}: HTTP ${res.status}`)
+                }
                 return
             }
 

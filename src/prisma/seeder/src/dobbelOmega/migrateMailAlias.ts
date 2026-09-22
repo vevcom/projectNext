@@ -33,24 +33,29 @@ export default async function migrateMailAliases(
 
 
     const mailingListBar = createProgressBar('Migrating mailing lists', aliases.length)
-    await Promise.all(aliases.map(a => pnPrisma.mailingList.create({
-        data: {
-            name: a.name,
-            id: a.id,
-            createdAt: a.createdAt,
-            updatedAt: a.updatedAt,
-            mailAliases: {
-                create: {
-                    mailAlias: {
-                        connect: {
-                            address: a.address,
+    // try/finally so a failing create still releases the bar - an abandoned
+    // cli-progress bar leaves the terminal without its cursor.
+    try {
+        await Promise.all(aliases.map(a => pnPrisma.mailingList.create({
+            data: {
+                name: a.name,
+                id: a.id,
+                createdAt: a.createdAt,
+                updatedAt: a.updatedAt,
+                mailAliases: {
+                    create: {
+                        mailAlias: {
+                            connect: {
+                                address: a.address,
+                            }
                         }
                     }
                 }
             }
-        }
-    }).finally(() => mailingListBar.increment())))
-    mailingListBar.stop()
+        }).finally(() => mailingListBar.increment())))
+    } finally {
+        mailingListBar.stop()
+    }
 
     const omegaFilter = (a: typeof externalAdrs[number]) => a.address.trim().endsWith('@omega.ntnu.no')
     const studNtnuFilter = (a: typeof externalAdrs[number]) => a.address.trim().endsWith('@stud.ntnu.no')
