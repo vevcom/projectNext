@@ -10,6 +10,9 @@ import { Readable } from 'stream'
 // single container and can't share nginx's mounted store volume.
 const STORE_ROOT = resolve(process.cwd(), 'store')
 
+// Kept in step with the `types` block in containers/nginx/nginx.internal.conf.
+// heic is in rasterExtensions (src/services/images/subservice/constants.ts), so
+// originals can legitimately be stored with that extension.
 const MIME_TYPES: Record<string, string> = {
     '.pdf': 'application/pdf',
     '.png': 'image/png',
@@ -17,6 +20,7 @@ const MIME_TYPES: Record<string, string> = {
     '.jpeg': 'image/jpeg',
     '.webp': 'image/webp',
     '.avif': 'image/avif',
+    '.heic': 'image/heic',
     '.gif': 'image/gif',
     '.svg': 'image/svg+xml',
 }
@@ -40,6 +44,11 @@ export async function GET(_request: Request, { params }: { params: Promise<{ pat
     return new Response(stream, {
         headers: {
             'Content-Type': contentType,
+            // Matches nginx's /store/ location: these are user uploads served from
+            // the app's own origin, so an uploaded SVG must not be able to run script
+            // as the site itself.
+            'Content-Security-Policy': 'sandbox',
+            'X-Content-Type-Options': 'nosniff',
         },
     })
 }

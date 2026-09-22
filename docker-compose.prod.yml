@@ -18,10 +18,16 @@ services:
             file: docker-compose.base.yml
             service: projectnext
         build:
-            target: prod
+            # tools, not prod: the worker runs src/lib/images/worker.ts through tsx,
+            # and prod carries neither src/ nor the dev dependencies - only the traced
+            # Next server. tools is the stage that has the full tree.
+            target: tools
         command: ["./node_modules/.bin/tsx", "src/lib/images/worker.ts"]
         environment:
             IGNORE_SERVER_ONLY: 'true'
+        # The inherited healthcheck probes :3000, which this service never listens on.
+        healthcheck:
+            disable: true
         volumes:
             - store:/usr/src/app/store
             - logs:/usr/src/app/logs
@@ -53,9 +59,15 @@ services:
 
     postfix:
         build: ${PROJECT_ROOT:-.}/containers/postfix/
-        ports:
-            - '587:587'
-            - '25:25'
+        # Reachable on the compose network only. TLS is disabled in
+        # containers/postfix/main.cf.tmpl (no cert is provisioned for the mail
+        # domain now that the certbot flow is gone), so publishing these to the
+        # host would expose plaintext SMTP - a regression on the old cert-backed
+        # setup. Postfix is not part of the Dokploy deployment either way; if it
+        # is ever exposed again it needs its own certificate first.
+        expose:
+            - '587'
+            - '25'
         environment:
             POSTGRES_HOST: ${POSTGRES_HOST}
             POSTGRES_DB: ${DB_NAME}
