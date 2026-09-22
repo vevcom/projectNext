@@ -59,15 +59,32 @@ inside projectnext-container
 
 ## Production
 
-To set up for production run this command. The command will not change the database, therefore some sort of seeding is needed such as dobbelOmega.
+Production runs on [Dokploy](https://dokploy.com/) as two independent resources - a managed Postgres database and a Git-deployed web application - rather than as a single Docker Compose stack.
+
+### Deploying with Dokploy
+
+1. **Database**: create a Dokploy Postgres database resource for `db`.
+2. **Web app**: create a Dokploy Application pointed at this repository (branch `feat/deployment` or whichever branch tracks prod), with Build Type set to Dockerfile. Dokploy builds straight from the repo's `Dockerfile` (`prod` is its last stage, so a plain build targets it).
+3. Configure the required environment variables on the web application (see `.env.default` for the full list and dev-appropriate example values - set real secrets for production, and point `DB_URI` at the Dokploy database). `NEXT_SERVER_ACTIONS_ENCRYPTION_KEY` in particular must stay the same value across every redeploy: Next.js bakes it into the build at `next build` time to encrypt Server Action IDs, and Dokploy rebuilds the image on every deploy, so a changed (or previously unset/randomly-generated) key breaks any Server Action referenced by a page a client still has open across the deploy ("Failed to find Server Action").
+4. In Dokploy's UI, set the web app's domain. A liveness endpoint is available at `/api/health` (also used by the app's own Docker healthcheck) if Dokploy asks for one.
+5. Ingress goes through a Cloudflare Tunnel app in Dokploy, which forwards to Dokploy's built-in Traefik; Traefik then routes to the web application. Nothing needs host ports 80/443 opened directly.
+
+Static `/store/` files are served by Next.js directly, so there's no separate nginx service in this setup. `postfix` (mail relay) is not part of the current Dokploy deployment.
+
+Set `BUILDX_NO_DEFAULT_ATTESTATIONS=1` in the build environment. BuildKit otherwise attaches a provenance attestation and packs the result as a multi-platform manifest list, which nothing here consumes and which shows up as extra `exporting attestation manifest` work on every deploy.
+
+### Running DobbelOmega
+
+To load data from Omegaweb-basic, run the `tools` image on the host. **This is a one-time bulk import, not a routine deploy step: it force-resets the database, deleting everything currently in it.** For ordinary schema changes once the site has real data, migrate the schema instead of re-importing.
+
 ```bash
-docker compose -f docker-compose.prod.yml up --build -d
+docker build --target tools -t pn-tools .
+docker run --rm --env-file .env pn-tools
 ```
 
-To load data from Omegaweb-basic run dobbelOmega from within a projectnext container using the command below. Keep in mind that the command will delete all the data in the database.
-```bash
-docker compose -f docker-compose.prod.yml exec projectnext npm run dobbelOmega:run
-```
+This is a separate image because the deployed web application no longer contains the toolchain. The `prod` stage ships only the modules the Next.js server actually imports (via `output: 'standalone'`), which takes it from 2.8 GB to under 500 MB - the difference between a ~6 minute rollout and about one. The seeder and DobbelOmega import the whole service layer, so they need the full dependency tree; keeping that in the deployed image would have put the 2.3 GB straight back.
+
+`tools` builds on the same cached layers as a normal deploy, so it is quick to produce on a host that has built the app before. It reads the same environment variables as the web application - point `DB_URI` at the database you actually mean to overwrite.
 
 ## Lint
 
