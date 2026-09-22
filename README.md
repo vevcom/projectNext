@@ -79,6 +79,32 @@ There is no nginx. Next serves `/store/` itself (`src/app/store/[...path]/route.
 
 Set `BUILDX_NO_DEFAULT_ATTESTATIONS=1` in the build environment. BuildKit otherwise attaches a provenance attestation and packs the result as a multi-platform manifest list, which nothing here consumes and which shows up as extra `exporting attestation manifest` work on every deploy.
 
+### Applying database schema migrations
+
+Production schema changes go through [Prisma Migrate](https://www.prisma.io/docs/orm/prisma-migrate), not `db push` - `db push --force-reset` (what `npm run seed` and DobbelOmega use, see below) drops and recreates every table, which is fine for a throwaway dev database but would destroy production data.
+
+Whenever you change a schema file under `src/prisma/schema/`, generate a migration for it locally and commit the result:
+
+```bash
+npm run migrate:dev
+```
+
+This runs against your dev database (via a Prisma shadow database) and writes a new folder under `src/prisma/migrations/` containing the SQL. Commit that folder. If the change requires backfilling existing rows - a new required column with no single sensible default, or a restructuring that has to carry data across - edit the generated `migration.sql` by hand before committing: `migrate diff` only ever emits plain DDL and will happily generate something that fails against a populated table.
+
+Committed migrations are applied **automatically on every deploy**. `docker-compose.prod.yml` has a one-shot `migrate` service that runs `migrate:deploy`, and `projectnext` declares `depends_on: migrate: condition: service_completed_successfully` - so the web app does not start until migrations have exited 0, and a failed migration fails the deploy instead of booting the app against a half-applied schema. `migrate:deploy` only runs migrations that have not been applied yet, never touches existing data outside of what a migration's SQL explicitly does, and is a no-op once everything is applied, so an ordinary deploy costs nothing.
+
+Migrations therefore run *before* the new code is serving, while the previous release may still be up. Keep each migration backward-compatible with the release before it: add columns nullable, backfill, and drop the old shape in a later release rather than in the same one.
+
+The `migrate` service builds the `migrate` stage, not `tools`. `migrate:deploy` needs only the Prisma CLI, `prisma.config.ts` and `src/prisma/migrations/` - all of which the shared `base` stage already carries apart from the migrations themselves - so it avoids dragging in the full service layer that DobbelOmega needs.
+
+To run it by hand against a database - the first deploy into an empty Dokploy Postgres resource, say:
+
+```bash
+docker compose -f docker-compose.prod.yml run --rm migrate
+```
+
+Tracked history starts at `20260922000000_init`, which creates the whole schema from empty. It carries no history from the `db push` era: anything merged before migrations existed is simply part of that initial snapshot rather than a migration of its own. It therefore expects an **empty database** - the Dokploy Postgres resource before its first deploy, or a database about to be filled by DobbelOmega. Run it against a database that already has these tables and it will fail on the first `CREATE TABLE`.
+
 ### Rehearsing the production stack locally
 
 ```bash
@@ -105,7 +131,7 @@ Deploying it:
 
 ### Running DobbelOmega
 
-To load data from Omegaweb-basic, run the `tools` service. **This is a one-time bulk import, not a routine deploy step: it force-resets the database, deleting everything currently in it.** For ordinary schema changes once the site has real data, migrate the schema instead of re-importing.
+To load data from Omegaweb-basic, run the `tools` service. **This is a one-time bulk import, not a routine deploy step: it force-resets the database, deleting everything currently in it.** For ordinary schema changes once the site has real data, the `migrate` service above already handles it.
 
 ```bash
 docker compose -f docker-compose.prod.yml --profile tools run --rm tools

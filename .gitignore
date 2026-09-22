@@ -45,9 +45,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# prisma
-src/prisma/migrations
-
 # environment variables, see .env.default for the needed env vars.
 .env
 
