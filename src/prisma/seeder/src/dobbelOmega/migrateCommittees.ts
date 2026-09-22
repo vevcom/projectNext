@@ -1,5 +1,6 @@
 import { owIdToPnId } from './IdMapper'
 import { cmsParagraphOperations } from '@/services/cms/paragraphs/operations'
+import logger from '@/lib/logger'
 import { readFile } from 'fs/promises'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
@@ -111,8 +112,7 @@ export default async function migrateCommittees(
 
         await Promise.all(committee.CommitteeMembers.map(async member => {
             if (member.UserId === null) {
-                console.warn(`${committee.shortname} has a member that is not connected to a user!`)
-                console.warn(member)
+                logger.warn(`${committee.shortname} has a member that is not connected to a user!`, { committee, member })
                 return
             }
             const pnUserId = await userMigrator.getPnUserId(member.UserId)

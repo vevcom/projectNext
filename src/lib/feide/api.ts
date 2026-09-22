@@ -37,7 +37,7 @@ export async function fetchExtendedUserInfoFromFeide(accessToken: string): Promi
     }
 
     const ret = await extendedUserInfoRequest.json()
-    console.log('Extended user info from Feide:', ret)
+
     return ret
 }
 

@@ -19,6 +19,7 @@ import {
     faHouse,
     faShop,
     faListDots,
+    faMoneyBillWave,
     faBars,
     faXmark,
 } from '@fortawesome/free-solid-svg-icons'
@@ -119,7 +120,7 @@ const navigations = [
                 href: '/admin/default-permissions'
             },
             {
-                title: 'Api Nøkler',
+                title: 'API Nøkler',
                 href: '/admin/api-keys'
             },
         ],
@@ -212,6 +213,18 @@ const navigations = [
             {
                 title: 'Produkter',
                 href: '/admin/product'
+            },
+        ]
+    },
+    {
+        header: {
+            title: 'Økonomi',
+            icon: faMoneyBillWave,
+        },
+        links: [
+            {
+                title: 'Kontoer',
+                href: '/admin/accounts'
             },
         ]
     },

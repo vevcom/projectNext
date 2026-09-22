@@ -108,7 +108,7 @@
     }
 }
 
-@mixin btn($color: colors.$white) {
+@mixin btn($color: colors.$white, $textColor: colors.$black) {
     text-align: center;
     text-decoration: none;
     font-size: fonts.$m;

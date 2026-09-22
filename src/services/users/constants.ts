@@ -18,6 +18,7 @@ export const userFieldsToExpose = [
     'acceptedTerms',
     'sex',
     'allergies',
+    'studentCard',
     'imageConsent',
     'relationshipStatus',
     'relationshipStatusText',

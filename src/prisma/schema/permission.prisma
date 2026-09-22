@@ -164,6 +164,10 @@ enum Permission {
   // Public articles
   PUBLIC_ARTICLE_ADMIN
 
+  // Ledger permissions
+  LEDGER_ADMIN
+  LEDGER_USE
+
   //Flair/badge/cape
   FLAIR_ADMIN
 

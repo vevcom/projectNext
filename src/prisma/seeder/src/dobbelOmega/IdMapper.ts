@@ -1,3 +1,5 @@
+import logger from '@/lib/logger'
+
 export type IdMapper = {
     owId: number
     pnId: number
@@ -14,7 +16,7 @@ export function owIdToPnId(mapper: IdMapper, owId: number | null): number | null
     if (!owId) return null
     const id = mapper.find(_id => _id.owId === owId)?.pnId
     if (!id) {
-        console.error(`No id found for owId: ${owId}. Are you sure you have migrated the image collections?`)
+        logger.error(`No id found for owId: ${owId}. Are you sure you have migrated the image collections?`)
         return null
     }
     return id

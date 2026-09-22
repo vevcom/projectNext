@@ -1,11 +1,13 @@
 import '@pn-server-only'
+import logger from '@/lib/logger'
 import { TRANSPORT_OPTIONS } from '@/lib/email/constants'
 import nodemailer from 'nodemailer'
 import type SMTPPool from 'nodemailer/lib/smtp-pool'
 import type SMTPTransport from 'nodemailer/lib/smtp-transport'
 import type Mail from 'nodemailer/lib/mailer'
 
-const PROD = process.env.NODE_ENV === 'production'
+const isProd = process.env.NODE_ENV === 'production'
+const isTest = process.env.NODE_ENV === 'test'
 
 type Transporter = nodemailer.Transporter<SMTPPool.SentMessageInfo | SMTPTransport.SentMessageInfo>
 
@@ -43,10 +45,10 @@ class MailHandler {
     }
 
     async setupTransporter() {
-        if (PROD) {
+        if (isProd) {
             this.transporter = nodemailer.createTransport(TRANSPORT_OPTIONS)
             this.resolveSetup()
-            console.log('Email setup in production')
+            logger.debug('Email setup for production.')
             return
         }
 
@@ -64,12 +66,11 @@ class MailHandler {
         })
 
         this.resolveSetup()
-        console.log('Email setup in development. Test account details:')
-        console.log(this.testAccount)
+        logger.debug('Email setup for development.', { testAccount: this.testAccount })
     }
 
     async getTestAccount(): Promise<nodemailer.TestAccount> {
-        if (PROD) {
+        if (isProd) {
             throw new Error('TestAccount should only be used in development')
         }
 
@@ -87,6 +88,8 @@ class MailHandler {
     }
 
     async handleNewMail() {
+        if (isTest) return
+
         const transporter = await this.getTransporter()
 
         const responsePromises = []
@@ -101,11 +104,10 @@ class MailHandler {
         const responses = await Promise.all(responsePromises)
 
         responses.forEach(response => {
-            console.log(`MAIL SENT: ${response.envelope.from} -> (${response.envelope.to.join(' ')})`)
-            console.log(response.response)
+            logger.debug('Mail sent.', { response })
 
-            if (!PROD) {
-                console.log(`Preview: ${nodemailer.getTestMessageUrl(response as SMTPTransport.SentMessageInfo)}`)
+            if (!isProd) {
+                logger.info(`Mail preview: ${nodemailer.getTestMessageUrl(response as SMTPTransport.SentMessageInfo)}`)
             }
         })
     }
@@ -115,7 +117,7 @@ class MailHandler {
     }
 
     async sendBulkMail(data: Mail.Options[]) {
-        const testSender = PROD ? null : (await this.getTestAccount()).user
+        const testSender = isProd ? null : (await this.getTestAccount()).user
 
         const queue = data
             .map(mailData => ({

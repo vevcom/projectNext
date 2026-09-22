@@ -16,6 +16,7 @@ import type { PagingContext } from '@/contexts/paging/PagingGenerator'
 type PropTypes<Data, Cursor, PageSize extends number, FetcherDetails> = {
     pagingContext: PagingContext<Data, Cursor, PageSize, FetcherDetails>,
     renderer: (data: Data, i: number) => React.ReactNode,
+    wrapper?: (children: React.ReactNode) => React.ReactNode,
     loadingInfoClassName?: string,
     /**
      * Wraps the loading indicator that trails the rendered items. Callers that render rows
@@ -29,8 +30,9 @@ type PropTypes<Data, Cursor, PageSize extends number, FetcherDetails> = {
 export default function EndlessScroll<Data, Cursor, const PageSize extends number, FetcherDetails>({
     pagingContext,
     loadingInfoClassName,
-    loadingInfoWrapper,
-    renderer
+    renderer,
+    wrapper = children => <>{children}</>,
+    loadingInfoWrapper
 }: PropTypes<Data, Cursor, PageSize, FetcherDetails>) {
     const context = useContext(pagingContext)
 
@@ -100,7 +102,7 @@ export default function EndlessScroll<Data, Cursor, const PageSize extends numbe
 
     return (
         <>
-            {renderedPageData}
+            {wrapper(renderedPageData)}
             {loadingInfoWrapper ? loadingInfoWrapper(loadingInfo) : loadingInfo}
         </>
     )

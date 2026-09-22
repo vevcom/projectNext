@@ -28,6 +28,7 @@ import { seedSpecialCms } from './standardContent/seedSpecialCms'
 import { seedFlairs } from './standardContent/seedFlairs'
 import { seedNews } from './standardContent/seedNews'
 import seedInterestGroups from './seedInterestGroups'
+import { createTimedStep } from './timedStep'
 import { withServiceContext } from '@/services/serviceOperation'
 import { Session } from '@/auth/session/Session'
 
@@ -36,60 +37,60 @@ export default async function seed(
     seedDevData: boolean,
     logging?: boolean,
 ) {
-    const enableLogging = logging ?? true
+    const { step, finish } = createTimedStep(logging ?? true)
 
     //TODO: Remove this outer withServiceContext.
     //TODO: When all seeders are refactored to use defineSeedOperation it will not
     //TODO: be neccesary as defineSeedOperation will handle the service context.
-    await withServiceContext({
+    await step('Upserting standard data', () => withServiceContext({
         bypassAuth: true,
         session: Session.empty(),
     }, true, async ({ prisma }) => {
-        if (enableLogging) console.log('upserting standard data....')
-        await seedOrders()
-        await seedImages()
-        await seedSpecialCms()
-        await seedArticleCategories()
-        await seedNews()
-        await seedMail(prisma)
-        await seedNotificationChannels(prisma)
-        await seedStudyProgramme(prisma)
-        await seedOmegaMembershipGroups(prisma)
-        await seedClasses(prisma)
-        await seedCabin(prisma)
-        await seedShop(prisma)
-        await seedEvents(prisma)
-        await seedPermissions(prisma)
-        await seedFlairs()
-        await seedInterestGroups(prisma)
-        if (enableLogging) console.log('upserting of standard done')
+        await step('Upserting standard orders', () => seedOrders())
+        await step('Upserting standard images', () => seedImages())
+        await step('Upserting standard special CMS', () => seedSpecialCms())
+        await step('Upserting standard article categories', () => seedArticleCategories())
+        await step('Upserting standard news', () => seedNews())
+        await step('Upserting standard mail', () => seedMail(prisma))
+        await step('Upserting standard notification channels', () => seedNotificationChannels(prisma))
+        await step('Upserting standard study programmes', () => seedStudyProgramme(prisma))
+        await step('Upserting standard omega membership groups', () => seedOmegaMembershipGroups(prisma))
+        await step('Upserting standard classes', () => seedClasses(prisma))
+        await step('Upserting standard cabins', () => seedCabin(prisma))
+        await step('Upserting standard shops', () => seedShop(prisma))
+        await step('Upserting standard events', () => seedEvents(prisma))
+        await step('Upserting standard permissions', () => seedPermissions(prisma))
+        await step('Upserting standard flairs', () => seedFlairs())
+        await step('Upserting standard interest groups', () => seedInterestGroups(prisma))
 
         if (!shouldMigrate) return
-        if (enableLogging) console.log(shouldMigrate ? 'migrating from veven' : 'not migrating from veven')
-        await dobbelOmega(prisma)
-    })
+        await step('Migrating from Veven', () => dobbelOmega(prisma))
+    }))
 
-    if (!seedDevData || shouldMigrate) return
+    if (!seedDevData || shouldMigrate) {
+        finish()
+        return
+    }
 
     //TODO: Remove this outer withServiceContext. (see above)
-    await withServiceContext({
+    await step('Seeding development data', () => withServiceContext({
         bypassAuth: true,
         session: Session.empty(),
     }, true, async ({ prisma }) => {
-        if (enableLogging) console.log('seeding dev data....')
-        await seedDevImages()
-        await seedDevGroups(prisma)
-        await seedDevUsers()
-        await seedDevPermissions(prisma)
-        await seedDevOmegaquotes(prisma)
-        await seedDevNews()
-        await seedDevLockers(prisma)
-        await seedDevSchools(prisma)
-        await seedDevCompanies(prisma)
-        await seedDevJobAds(prisma)
-        await seedDevShop(prisma)
-        await seedDevEvents(prisma)
-        await seedDevApplicationsAndPeriods(prisma)
-        if (enableLogging) console.log('seed dev done')
-    })
+        await step('Seeding development images', () => seedDevImages())
+        await step('Seeding development groups', () => seedDevGroups(prisma))
+        await step('Seeding development users', () => seedDevUsers())
+        await step('Seeding development permissions', () => seedDevPermissions(prisma))
+        await step('Seeding development omega quotes', () => seedDevOmegaquotes(prisma))
+        await step('Seeding development news', () => seedDevNews())
+        await step('Seeding development lockers', () => seedDevLockers(prisma))
+        await step('Seeding development schools', () => seedDevSchools(prisma))
+        await step('Seeding development companies', () => seedDevCompanies(prisma))
+        await step('Seeding development job ads', () => seedDevJobAds(prisma))
+        await step('Seeding development shops', () => seedDevShop(prisma))
+        await step('Seeding development events', () => seedDevEvents(prisma))
+        await step('Seeding development applications and periods', () => seedDevApplicationsAndPeriods(prisma))
+    }))
+
+    finish()
 }

@@ -143,7 +143,7 @@ export default async function User({ params }: PropTypes) {
                                                 <p>Omega-ID</p>
                                             </Button>
                                         </Link>
-                                        <Link href="/users/me/money">
+                                        <Link href="/users/me/account">
                                             <Button color="secondary" className={styles.actionButton}>
                                                 <FontAwesomeIcon icon={faMoneyBill} />
                                                 <p>Konto</p>

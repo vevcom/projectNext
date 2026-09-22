@@ -497,6 +497,20 @@ export const permissionConfig = {
         `,
         category: 'applications',
     },
+    LEDGER_ADMIN: {
+        name: 'Hovedbokadministratør',
+        description: `
+            Kan opprette overføringer fra/til og endre alle kontoer. 
+        `,
+        category: 'diverse admin',
+    },
+    LEDGER_USE: {
+        name: 'Overføre og betale',
+        description: `
+            Tillater en bruker å utføre overføring av penger og betaling av varer og tjenester. 
+        `,
+        category: 'diverse admin',
+    },
     NEWS_CREATE: {
         name: 'Lage nyhetsartikkel',
         description: 'kan lage nyhetsartikler',

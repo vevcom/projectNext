@@ -1,3 +1,4 @@
+import logger from '@/lib/logger'
 import type { PrismaClient as PrismaClientPn } from '@/prisma-generated-pn-client'
 import type { PrismaClient as PrismaClientOw } from '@/prisma-generated-ow-basic/client'
 import type { Limits } from './migrationLimits'
@@ -121,9 +122,6 @@ export default async function migrateMailAliases(
         }
     })
 
-    console.log(omegaForward)
-    let errors = 0
-
     for (let i = 0; i < omegaForward.length; i++) {
         const a = omegaForward[i]
 
@@ -143,9 +141,10 @@ export default async function migrateMailAliases(
                 }
             })
         } catch (e) {
-            console.error(e)
-            errors++
+            logger.error(
+                `Encountered error when migrating mail alias with ID ${a.id} and address '${a.address}'.`,
+                { error: e, alias: a },
+            )
         }
     }
-    console.log('Errors:', errors)
 }
