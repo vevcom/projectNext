@@ -10,6 +10,13 @@
     }
 }
 
+// Sits directly under the hero photo, at the same content width as the
+// islands below it.
+.promoBarPart {
+    width: 100%;
+    @include ohma.pagePadding();
+}
+
 .islands {
     display: flex;
     flex-wrap: wrap;

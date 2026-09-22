@@ -60,6 +60,13 @@ $taktlause: url("backgroundimages/taktlause.jpeg");
     display: grid;
     place-items: center;
     background: radial-gradient(ohma.$colors-black, transparent);
+
+    // Shrinks the hero by the promo bar's own height plus the gap that
+    // separates them, so the two together still fit where the hero alone
+    // used to.
+    &.withPromoBar {
+        min-height: calc(100dvh - #{ohma.$nav-height} - 3 * #{ohma.$gap} - 15 * #{ohma.$gap});
+    }
     > div {
         display: flex;
         flex-direction: column;
@@ -90,6 +97,10 @@ $taktlause: url("backgroundimages/taktlause.jpeg");
 
     @media (max-width: ohma.$mobileBreakpoint) {
         min-height: calc(100dvh - 2 * #{ohma.$nav-height} - 4 * #{ohma.$gap});
+
+        &.withPromoBar {
+            min-height: calc(100dvh - 2 * #{ohma.$nav-height} - 4 * #{ohma.$gap} - 15 * #{ohma.$gap});
+        }
     }
 }
 
