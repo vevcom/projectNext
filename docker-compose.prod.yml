@@ -43,9 +43,21 @@ services:
         command: ["./node_modules/.bin/tsx", "src/lib/images/worker.ts"]
         environment:
             IGNORE_SERVER_ONLY: 'true'
-        # The inherited healthcheck probes :3000, which this service never listens on.
+        # The inherited healthcheck probes :3000, which this service never listens on,
+        # so it needs one of its own. Checking that the worker process is alive is a
+        # thin signal - if the process dies the container exits and restart: always
+        # takes over - but it is a real one, and `disable: true` here is not inert:
+        # older compose versions (the CI runner's among them) fail `up --wait` with
+        # "has no healthcheck configured" on an explicitly disabled check, while
+        # tolerating a service that simply never had one (postfix).
         healthcheck:
-            disable: true
+            # Bracketed so the checking shell cannot match its own command line and
+            # report healthy after the worker has died.
+            test: ["CMD-SHELL", "pgrep -f \"[i]mages/worker.ts\" > /dev/null"]
+            interval: 10s
+            timeout: 3s
+            retries: 3
+            start_period: 15s
         networks:
             - dokploy-network
         # Shares the store volume with projectnext: the worker writes the resized
