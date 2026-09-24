@@ -1,3 +1,19 @@
+# The production stack as Dokploy deploys it: web + image worker + mail, with the
+# database deliberately left outside. Postgres is a Dokploy resource of its own so
+# its scheduled pg_dump backups and restore UI keep working, and so that tearing the
+# stack down (or a stray `down -v`) cannot take the data with it.
+#
+# Every service therefore joins `dokploy-network` explicitly. Dokploy only attaches
+# that network automatically to the one service a domain is configured on, and a
+# service that misses it cannot resolve the database's hostname at all - which shows
+# up as the worker failing to connect while the web app is perfectly healthy.
+#
+# The stack gets its own compose project name. Without it dev and prod share one
+# (both derive it from the directory), so rehearsing this file locally recreates the
+# running dev containers as prod ones - same names, different config. dev and test
+# keep the default name so no existing dev volume is orphaned.
+name: projectnext-prod
+
 services:
     projectnext:
         extends:
@@ -5,6 +21,8 @@ services:
             service: projectnext
         build:
             target: prod
+        networks:
+            - dokploy-network
         volumes:
             - store:/usr/src/app/store
             - logs:/usr/src/app/logs
@@ -28,34 +46,16 @@ services:
         # The inherited healthcheck probes :3000, which this service never listens on.
         healthcheck:
             disable: true
+        networks:
+            - dokploy-network
+        # Shares the store volume with projectnext: the worker writes the resized
+        # variants and the web app serves them back out of the same directory.
         volumes:
             - store:/usr/src/app/store
             - logs:/usr/src/app/logs
         deploy:
             replicas: 1
         restart: always
-        depends_on:
-            db:
-                condition: service_healthy
-
-    db:
-        extends:
-            file: docker-compose.base.yml
-            service: db
-        restart: always
-        volumes:
-            - proddb:/var/lib/postgresql/data
-
-    nginx:
-        extends:
-            file: docker-compose.base.yml
-            service: nginx
-        restart: always
-        expose:
-            - "80"
-        volumes:
-            - ./containers/nginx/nginx.internal.conf:/etc/nginx/nginx.conf:ro
-            - store:/usr/store:ro
 
     postfix:
         build: ${PROJECT_ROOT:-.}/containers/postfix/
@@ -63,8 +63,7 @@ services:
         # containers/postfix/main.cf.tmpl (no cert is provisioned for the mail
         # domain now that the certbot flow is gone), so publishing these to the
         # host would expose plaintext SMTP - a regression on the old cert-backed
-        # setup. Postfix is not part of the Dokploy deployment either way; if it
-        # is ever exposed again it needs its own certificate first.
+        # setup. If it is ever exposed again it needs its own certificate first.
         expose:
             - '587'
             - '25'
@@ -76,11 +75,61 @@ services:
             MY_HOSTNAME: ${MAIL_DOMAIN}
             MY_DOMAIN: ${DOMAIN}
             RELAY_HOST: ${MAIL_RELAY_HOST}
-        depends_on:
-            - db
-        links:
-            - db
+        networks:
+            - dokploy-network
         restart: always
+
+    # One-shot, never started with the stack. The migration/seed toolchain needs the
+    # full dependency tree (see the tools stage in the Dockerfile), so it ships as its
+    # own image and is run on demand:
+    #
+    #   docker compose -f docker-compose.prod.yml --profile tools run --rm tools
+    #
+    # The default command is DobbelOmega, which force-resets the database. Pass a
+    # different command for anything else.
+    tools:
+        extends:
+            file: docker-compose.base.yml
+            service: projectnext
+        build:
+            target: tools
+        profiles:
+            - tools
+        healthcheck:
+            disable: true
+        networks:
+            - dokploy-network
+        volumes:
+            - store:/usr/src/app/store
+            - logs:/usr/src/app/logs
+            - dobbelOmegaManifest:/usr/src/app/dobbelOmegaManifest
+        restart: "no"
+
+    # Local rehearsal only. Production's database is the external Dokploy resource, so
+    # this profile stays off there and `POSTGRES_HOST` points at that resource instead.
+    # Start a local run of this file with:
+    #
+    #   docker compose -f docker-compose.prod.yml --profile localdb up --build
+    #
+    # Nothing declares `depends_on: db` - it cannot, since the service is absent in
+    # production - so the app retries until postgres accepts connections.
+    db:
+        extends:
+            file: docker-compose.base.yml
+            service: db
+        profiles:
+            - localdb
+        networks:
+            - dokploy-network
+        restart: always
+        volumes:
+            - proddb:/var/lib/postgresql/data
+
+networks:
+    # Created and owned by Dokploy. `npm run docker:prod` creates it locally so a
+    # rehearsal of this file works on a machine that has never run Dokploy.
+    dokploy-network:
+        external: true
 
 volumes:
     proddb:

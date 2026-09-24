@@ -3,14 +3,13 @@ import { createReadStream, existsSync, statSync } from 'fs'
 import { extname, resolve, sep } from 'path'
 import { Readable } from 'stream'
 
-// Mirrors nginx's `location /store/ { alias /usr/store/; }` (see
-// containers/nginx/nginx.internal.conf) so the store volume can be served
-// directly by Next.js when there's no nginx in front - e.g. a standalone
-// Dokploy "Application" deploy or a preview deployment, which only run a
-// single container and can't share nginx's mounted store volume.
+// Serves the store volume over HTTP. This used to be an nginx `location /store/`
+// alias in front of the app; nginx is gone, so the app owns it in every environment
+// - dev, prod and preview deploys alike, all of which run the app container alone.
 const STORE_ROOT = resolve(process.cwd(), 'store')
 
-// Kept in step with the `types` block in containers/nginx/nginx.internal.conf.
+// The store holds only what the image and file systems put there, so this map covers
+// every extension either of them can write.
 // heic is in rasterExtensions (src/services/images/subservice/constants.ts), so
 // originals can legitimately be stored with that extension.
 const MIME_TYPES: Record<string, string> = {
@@ -44,9 +43,8 @@ export async function GET(_request: Request, { params }: { params: Promise<{ pat
     return new Response(stream, {
         headers: {
             'Content-Type': contentType,
-            // Matches nginx's /store/ location: these are user uploads served from
-            // the app's own origin, so an uploaded SVG must not be able to run script
-            // as the site itself.
+            // These are user uploads served from the app's own origin, so an uploaded
+            // SVG must not be able to run script as the site itself.
             'Content-Security-Policy': 'sandbox',
             'X-Content-Type-Options': 'nosniff',
         },

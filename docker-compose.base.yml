@@ -48,10 +48,10 @@ services:
             timeout: 3s
             retries: 5
             start_period: 30s
-        depends_on:
-            db:
-                condition: service_healthy
 
+    # Only dev and test run a database of their own - prod talks to an external one.
+    # `depends_on: db` therefore lives in the files that actually define the service:
+    # compose rejects a depends_on pointing at a service the project does not contain.
     db:
         image: postgres:16.0-alpine
         environment:
@@ -67,8 +67,3 @@ services:
             interval: 0.5s
             timeout: 0.5s
             retries: 60
-
-    nginx:
-        image: nginx:1.21.3-alpine
-        depends_on:
-            - projectnext

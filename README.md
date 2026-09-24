@@ -59,34 +59,47 @@ inside projectnext-container
 
 ## Production
 
-Production runs on [Dokploy](https://dokploy.com/) as two independent resources - a managed Postgres database and a Git-deployed web application - rather than as a single Docker Compose stack.
+Production runs on [Dokploy](https://dokploy.com/) as a **Docker Compose application** built from `docker-compose.prod.yml`, plus a **separate Dokploy Postgres resource** for the database.
+
+The stack itself holds `projectnext` (the Next.js server), `imageworker` (the background resize pipeline) and `postfix` (the mail relay). The database stays outside it on purpose: as a Dokploy resource it keeps its scheduled backups and restore UI, and its data is not attached to the lifecycle of a stack you redeploy on every push.
+
+There is no nginx. Next serves `/store/` itself (`src/app/store/[...path]/route.ts`), in dev and prod alike.
 
 ### Deploying with Dokploy
 
-1. **Database**: create a Dokploy Postgres database resource for `db`.
-2. **Web app**: create a Dokploy Application pointed at this repository (`main`, or whichever branch tracks prod), with Build Type set to Dockerfile. Dokploy builds straight from the repo's `Dockerfile` (`prod` is its last stage, so a plain build targets it).
-3. Configure the required environment variables on the web application (see `.env.default` for the full list and dev-appropriate example values - set real secrets for production, and point `DB_URI` at the Dokploy database).
-4. Set `NEXT_SERVER_ACTIONS_ENCRYPTION_KEY` as a **build argument**, not only a runtime environment variable. Next bakes it into the build during `next build` to encrypt Server Action IDs, and a runtime env var is not automatically passed to the build - so a build without it generates a fresh random key every time. Because Dokploy rebuilds the image on every deploy, that invalidates any Server Action referenced by a page a client still has open across the deploy ("Failed to find Server Action"). Set it in Dokploy's build-arguments field and keep the value identical across deploys.
-5. Add a **persistent volume** mounted at `/usr/src/app/store`. Uploaded images and files are written there and served from `/store/`; the image only creates an empty directory, so without a volume every redeploy replaces the container and silently loses all uploads. Mount `/usr/src/app/logs` too if you want logs to survive a deploy.
-6. In Dokploy's UI, set the web app's domain. A liveness endpoint is available at `/api/health` (also used by the app's own Docker healthcheck) if Dokploy asks for one.
-7. Ingress goes through a Cloudflare Tunnel app in Dokploy, which forwards to Dokploy's built-in Traefik; Traefik then routes to the web application. Nothing needs host ports 80/443 opened directly.
+1. **Database**: create a Dokploy Postgres resource. Note its internal hostname from the resource's connection tab, and configure its backup schedule there.
+2. **Stack**: create a Dokploy Docker Compose service pointed at this repository (`main`, or whichever branch tracks prod), with the compose path set to `docker-compose.prod.yml`.
+3. Configure the environment variables for the stack (see `.env.default` for the full list and dev-appropriate example values - set real secrets for production). Set `POSTGRES_HOST` to the database resource's internal hostname; `DB_URI` is built from it.
+4. Set `NEXT_SERVER_ACTIONS_ENCRYPTION_KEY` as a **build argument**, not only a runtime environment variable. Next bakes it into the build during `next build` to encrypt Server Action IDs, and a runtime env var is not automatically passed to the build - so a build without it generates a fresh random key every time. Because Dokploy rebuilds the image on every deploy, that invalidates any Server Action referenced by a page a client still has open across the deploy ("Failed to find Server Action"). `docker-compose.base.yml` already passes it through under `build.args`, so setting it as a stack environment variable is enough - but it must keep the same value across deploys.
+5. The `store` and `logs` volumes are declared in the compose file, so uploads and logs survive a redeploy without any extra setup. `store` is shared by `projectnext` and `imageworker` - the worker writes the resized variants and the app serves them back out.
+6. In Dokploy's UI, set the domain on the `projectnext` service. Dokploy injects the Traefik labels itself. A liveness endpoint is available at `/api/health` (also used by the compose healthcheck) if Dokploy asks for one.
+7. Ingress goes through a Cloudflare Tunnel app in Dokploy, which forwards to Dokploy's built-in Traefik; Traefik then routes to `projectnext`. Nothing needs host ports 80/443 opened directly.
 
-Static `/store/` files are served by Next.js directly, so there's no separate nginx service in this setup. `postfix` (mail relay) is not part of the current Dokploy deployment.
+**Every service joins `dokploy-network` explicitly**, and the compose file declares it `external: true`. Dokploy attaches that network automatically only to the service a domain is configured on, so without the explicit `networks:` entries `imageworker` and `postfix` cannot resolve the database's hostname at all - which presents as the worker failing to connect while the web app looks perfectly healthy.
 
 Set `BUILDX_NO_DEFAULT_ATTESTATIONS=1` in the build environment. BuildKit otherwise attaches a provenance attestation and packs the result as a multi-platform manifest list, which nothing here consumes and which shows up as extra `exporting attestation manifest` work on every deploy.
 
-### Running DobbelOmega
-
-To load data from Omegaweb-basic, run the `tools` image on the host. **This is a one-time bulk import, not a routine deploy step: it force-resets the database, deleting everything currently in it.** For ordinary schema changes once the site has real data, migrate the schema instead of re-importing.
+### Rehearsing the production stack locally
 
 ```bash
-docker build --target tools -t pn-tools .
-docker run --rm --env-file .env pn-tools
+npm run docker:prod
 ```
 
-This is a separate image because the deployed web application no longer contains the toolchain. The `prod` stage ships only the modules the Next.js server actually imports (via `output: 'standalone'`), which takes it from 2.8 GB to under 500 MB - the difference between a ~6 minute rollout and about one. The seeder and DobbelOmega import the whole service layer, so they need the full dependency tree; keeping that in the deployed image would have put the 2.3 GB straight back.
+This creates the `dokploy-network` network if it is missing (compose refuses to start otherwise, since the file declares it external) and enables the `localdb` profile, which adds a `db` service standing in for the Dokploy resource. Production never enables that profile.
 
-`tools` builds on the same cached layers as a normal deploy, so it is quick to produce on a host that has built the app before. It reads the same environment variables as the web application - point `DB_URI` at the database you actually mean to overwrite.
+The file also sets its own compose project name, `projectnext-prod`. Dev and prod otherwise derive the same project name from the directory, and a local rehearsal would recreate the running dev containers as prod ones - same names, different configuration. Dev and test keep the default name so no existing dev volume is orphaned.
+
+### Running DobbelOmega
+
+To load data from Omegaweb-basic, run the `tools` service. **This is a one-time bulk import, not a routine deploy step: it force-resets the database, deleting everything currently in it.** For ordinary schema changes once the site has real data, migrate the schema instead of re-importing.
+
+```bash
+docker compose -f docker-compose.prod.yml --profile tools run --rm tools
+```
+
+`tools` sits behind a profile so it never starts with the stack - it is a one-shot job, not a service. It is a separate image because the deployed web application no longer contains the toolchain: the `prod` stage ships only the modules the Next.js server actually imports (via `output: 'standalone'`), which takes it from 2.8 GB to under 500 MB - the difference between a ~6 minute rollout and about one. The seeder and DobbelOmega import the whole service layer, so they need the full dependency tree; keeping that in the deployed image would have put the 2.3 GB straight back.
+
+`tools` builds on the same cached layers as a normal deploy, so it is quick to produce on a host that has built the app before. It reads the same environment variables as the rest of the stack - point `POSTGRES_HOST` at the database you actually mean to overwrite.
 
 ## Lint
 
