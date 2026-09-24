@@ -30,6 +30,35 @@ services:
         deploy:
             replicas: 2
         restart: always
+        # Nothing serves traffic until migrations have exited 0. A failed migration
+        # fails the deploy instead of bringing the app up on a half-applied schema.
+        depends_on:
+            migrate:
+                condition: service_completed_successfully
+
+    # Applies committed migrations, then exits. `migrate:deploy` only runs what has
+    # not been applied yet and is a no-op otherwise, so an ordinary deploy pays
+    # nothing for it. It runs while the previous release may still be serving, so
+    # keep each migration backward-compatible with the release before it.
+    migrate:
+        extends:
+            file: docker-compose.base.yml
+            service: projectnext
+        build:
+            # tools, not a stage of its own: the weight is all in the shared base layer
+            # (npm ci with devDependencies, both generated Prisma clients), so a
+            # leaner stage would save around 10 MB of a 2.8 GB image and cost an
+            # extra build. This reuses exactly the image imageworker already builds.
+            target: tools
+        # tools defaults to DobbelOmega, which force-resets the database. Overriding the
+        # command is what makes this safe to run on every deploy.
+        command: ["npm", "run", "migrate:deploy"]
+        # The inherited healthcheck probes :3000, which this one-shot never listens on.
+        healthcheck:
+            disable: true
+        networks:
+            - dokploy-network
+        restart: "no"
 
     imageworker:
         extends:
@@ -68,6 +97,9 @@ services:
         deploy:
             replicas: 1
         restart: always
+        depends_on:
+            migrate:
+                condition: service_completed_successfully
 
     # No postfix service here. Mail is its own Dokploy application, built from
     # containers/postfix/ - see "Mail" in README.md. Inbound alias mail needs an SMTP

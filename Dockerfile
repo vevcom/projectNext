@@ -78,7 +78,8 @@ RUN rm -rf .next/standalone/standard_store standard_store/dev_profile_images
 # The migration/seed toolchain: DobbelOmega and the seeder pull in the whole
 # service layer, so they need the full dependency tree and cannot run against
 # prod's traced subset. This is a separate image rather than extra weight in
-# prod - see "Running DobbelOmega" in README.md for the command.
+# prod. Also the image the migrate one-shot runs, with the command overridden - see
+# "Applying database schema migrations" and "Running DobbelOmega" in README.md.
 FROM base AS tools
 
 ENV NODE_ENV=production

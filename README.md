@@ -95,7 +95,7 @@ Committed migrations are applied **automatically on every deploy**. `docker-comp
 
 Migrations therefore run *before* the new code is serving, while the previous release may still be up. Keep each migration backward-compatible with the release before it: add columns nullable, backfill, and drop the old shape in a later release rather than in the same one.
 
-The `migrate` service builds the `migrate` stage, not `tools`. `migrate:deploy` needs only the Prisma CLI, `prisma.config.ts` and `src/prisma/migrations/` - all of which the shared `base` stage already carries apart from the migrations themselves - so it avoids dragging in the full service layer that DobbelOmega needs.
+The `migrate` service runs the `tools` image with the command overridden. A dedicated leaner stage was measured and abandoned: at 2.80 GB against `tools`' 2.81 GB it saved nothing, because the weight is all in the shared `base` layer (`npm ci` with devDependencies, both generated Prisma clients) rather than in the source tree on top. Reusing `tools` means the one-shot is the same image `imageworker` already builds, so it adds no build time at all. Note that `tools` defaults to DobbelOmega, which force-resets the database - overriding the command is what makes this safe to run on every deploy.
 
 To run it by hand against a database - the first deploy into an empty Dokploy Postgres resource, say:
 

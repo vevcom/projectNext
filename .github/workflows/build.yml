@@ -19,7 +19,7 @@ jobs:
     - name: build
       run: docker compose --env-file .env.default -f docker-compose.prod.yml --profile localdb build
     # localdb stands in for the Dokploy Postgres resource, which lives outside the
-    # stack in production. --wait makes this step assert the stack actually comes up
-    # rather than just that compose accepted the file.
+    # stack in production. --wait makes this step assert the stack actually comes up:
+    # migrations have to exit 0 before the app starts, and the app has to go healthy.
     - name: up
       run: docker compose --env-file .env.default -f docker-compose.prod.yml --profile localdb up -d --wait --wait-timeout 300
