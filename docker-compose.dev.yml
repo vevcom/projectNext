@@ -19,9 +19,6 @@ services:
             - devstore:/usr/src/app/store
             - dotnext:/usr/src/app/.next
             - dobbelOmegaManifest:/usr/src/app/dobbelOmegaManifest
-        depends_on:
-            db:
-                condition: service_healthy
 
     imageworker:
         extends:
@@ -38,9 +35,6 @@ services:
             - ${PROJECT_ROOT:-.}/package-lock.json:/usr/src/app/package-lock.json
             - ${PROJECT_ROOT:-.}/logs:/usr/src/app/logs
             - devstore:/usr/src/app/store
-        depends_on:
-            db:
-                condition: service_healthy
 
     db:
         extends:

@@ -13,9 +13,6 @@ services:
         volumes:
             - ${PROJECT_ROOT:-.}/src:/usr/src/app/src
             - ${PROJECT_ROOT:-.}/tests:/usr/src/app/tests
-        depends_on:
-            db:
-                condition: service_healthy
     
     db:
         extends:

@@ -48,10 +48,17 @@ services:
             timeout: 3s
             retries: 5
             start_period: 30s
+        # required: false, because prod keeps its db behind the localdb profile - the
+        # real database is an external Dokploy resource. Compose tolerates a dependency
+        # filtered out by a profile when it is not required, and still waits for it
+        # wherever it is enabled, so dev, test and a local prod rehearsal all order
+        # correctly off this one declaration. Inherited through extends, which matters
+        # most for the one-shots: they exit rather than retry if postgres is not up yet.
+        depends_on:
+            db:
+                condition: service_healthy
+                required: false
 
-    # Only dev and test run a database of their own - prod talks to an external one.
-    # `depends_on: db` therefore lives in the files that actually define the service:
-    # compose rejects a depends_on pointing at a service the project does not contain.
     db:
         image: postgres:16.0-alpine
         environment:

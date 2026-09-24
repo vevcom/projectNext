@@ -111,8 +111,8 @@ services:
     #
     #   docker compose -f docker-compose.prod.yml --profile localdb up --build
     #
-    # Nothing declares `depends_on: db` - it cannot, since the service is absent in
-    # production - so the app retries until postgres accepts connections.
+    # The base file's `depends_on: db` is `required: false`, so with this profile off it
+    # is simply ignored, and with it on every service waits for postgres to be healthy.
     db:
         extends:
             file: docker-compose.base.yml
