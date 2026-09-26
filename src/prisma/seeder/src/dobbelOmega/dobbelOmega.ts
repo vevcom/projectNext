@@ -20,8 +20,10 @@ import type { PrismaClient as PrismaClientPn } from '@/prisma-generated-pn-clien
  * @param pnPrisma - PrismaClientPn
  */
 export default async function dobbelOmega(pnPrisma: PrismaClientPn) {
-    manifest.info('============================================')
-    manifest.info('==========!!!Dobbel Omega!!!================')
+    manifest.info('')
+    manifest.info('┌──────────────────────────────────┐')
+    manifest.info('│           Dobbel Omega           │')
+    manifest.info('└──────────────────────────────────┘')
     const owPrisma = new PrismaClientOw({
         adapter: new PrismaPg({
             connectionString: process.env.OW_DB_URI,
@@ -47,5 +49,7 @@ export default async function dobbelOmega(pnPrisma: PrismaClientPn) {
     await seedProdPermissions(pnPrisma)
 
     owPrisma.$disconnect()
-    manifest.info('=======Dobbel Omega ferdig, dagen derpå=======')
+    manifest.info('┌──────────────────────────────────┐')
+    manifest.info('│ Dobbel Omega ferdig, dagen derpå │')
+    manifest.info('└──────────────────────────────────┘')
 }

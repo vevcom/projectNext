@@ -21,6 +21,7 @@ import seedDevEvents from './development/seedDevEvents'
 import seedEvents from './seedEvent'
 import seedCabin from './seedCabin'
 import seedPermissions from './seedPermissions'
+import seedAdmin from './seedAdmin'
 import seedDevApplicationsAndPeriods from './development/seedDevApplicationsAndPeriods'
 import { seedArticleCategories } from './standardContent/seedArticleCategories'
 import { seedImages } from './standardContent/seedImages'
@@ -60,6 +61,7 @@ export default async function seed(
         await step('Upserting standard shops', () => seedShop(prisma))
         await step('Upserting standard events', () => seedEvents(prisma))
         await step('Upserting standard permissions', () => seedPermissions(prisma))
+        await step('Upserting admin user', () => seedAdmin(prisma))
         await step('Upserting standard flairs', () => seedFlairs())
         await step('Upserting standard interest groups', () => seedInterestGroups(prisma))
 

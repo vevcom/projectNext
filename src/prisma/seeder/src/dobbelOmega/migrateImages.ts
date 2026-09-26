@@ -1,4 +1,5 @@
 import { owIdToPnId, type IdMapper } from './IdMapper'
+import { createProgressBar } from './progressBar'
 import manifest from '@/prisma/seeder/src/dobbelOmega/manifest'
 import { imageOperations } from '@/services/images/subservice/operations'
 import { allowedExtensions } from '@/services/images/subservice/constants'
@@ -86,7 +87,7 @@ export default async function migrateImages(
 
     manifest.info(`Before filter: ${images.length} images`)
     const imagesWithCollection = images.map(image => {
-        let collectionId = owIdToPnId(migrateImageCollectionIdMap, image.ImageGroupId)
+        let collectionId = owIdToPnId(migrateImageCollectionIdMap, image.ImageGroupId, 'image collections')
         if (image.Ombul.length) {
             collectionId = ombulCollection.id
         } else if (committeeImageIds.has(image.id)) {
@@ -130,54 +131,67 @@ export default async function migrateImages(
     })
 
     const migrateImageIdMap: IdMapper = []
-    let imageCounter = 1
+    const bar = createProgressBar('Migrating images', imagesWithCorrectedName.length)
 
     const migrateOneImage = async (image: (typeof imagesWithCorrectedName)[number]) => {
-        manifest.info(`Migrating image number ${imageCounter++} of ${imagesWithCorrectedName.length}`)
-        const ext = (image.originalName.split('.').pop() || '').toLowerCase()
-        const mimeType = mimeTypeForExtension(ext)
-        if (!mimeType) {
-            logger.error(`Image ${image.originalName} has unsupported extension "${ext}", skipping.`)
-            return
+        try {
+            const ext = (image.originalName.split('.').pop() || '').toLowerCase()
+            const mimeType = mimeTypeForExtension(ext)
+            if (!mimeType) {
+                logger.error(`Image ${image.originalName} has unsupported extension "${ext}", skipping`)
+                return
+            }
+
+            const fsLocationOldVev = `${process.env.OW_STORE_URL}/image/default/${image.name}`
+                + `?url=/store/images/${image.name}.${ext}`
+
+            const res = await fetch(fsLocationOldVev, {
+                method: 'GET',
+                //This is to make the fetch request look like it comes from a browser. Not sure if it helps
+                headers: {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
+                        + 'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3',
+                },
+            }).catch(() => {
+                // The network-failure case is logged here and nowhere else: the
+                // !res check below is the same path, and logging in both printed
+                // every failure twice - especially noisy behind a progress bar.
+                logger.error(`Failed to fetch image from ${fsLocationOldVev}`)
+                return undefined
+            })
+
+            if (!res || !res.ok) {
+                // res is set only when the request completed but the status was bad,
+                // which the catch above never saw.
+                if (res) {
+                    logger.error(`Failed to fetch image from ${fsLocationOldVev}: HTTP ${res.status}`)
+                }
+                return
+            }
+
+            const buffer = Buffer.from(await res.arrayBuffer())
+            const imageFile = new File([new Uint8Array(buffer)], `${image.pnImageName}.${ext}`, { type: mimeType })
+
+            const pnImage = await imageOperations.uploadImage.internalCall({
+                prisma: pnPrisma,
+                params: { collectionId: image.collectionId },
+                data: {
+                    imageFile,
+                    imageName: image.pnImageName.slice(0, 50),
+                    imageAlt: image.pnImageName.split('_').join(' ').slice(0, 100),
+                },
+                operationImplementationFields: {
+                    uploadAsStandardImage: null,
+                    // Deliberately the full set rather than the per-collection subset: this migrates
+                    // what omegaweb-basic already has, including committee logos, raster over there.
+                    allowedExtensions,
+                },
+            })
+
+            migrateImageIdMap.push({ owId: image.id, pnId: pnImage.id })
+        } finally {
+            bar.increment()
         }
-
-        const fsLocationOldVev = `${process.env.OW_STORE_URL}/image/default/${image.name}`
-            + `?url=/store/images/${image.name}.${ext}`
-
-        const res = await fetch(fsLocationOldVev, {
-            method: 'GET',
-            //This is to make the fetch request look like it comes from a browser. Not sure if it helps
-            headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
-                    + 'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3',
-            },
-        }).catch(() => { logger.error(`Failed to fetch image from ${fsLocationOldVev}.`) })
-
-        if (!res || !res.ok) {
-            logger.error(`Failed to fetch image from ${fsLocationOldVev}.`)
-            return
-        }
-
-        const buffer = Buffer.from(await res.arrayBuffer())
-        const imageFile = new File([new Uint8Array(buffer)], `${image.pnImageName}.${ext}`, { type: mimeType })
-
-        const pnImage = await imageOperations.uploadImage.internalCall({
-            prisma: pnPrisma,
-            params: { collectionId: image.collectionId },
-            data: {
-                imageFile,
-                imageName: image.pnImageName.slice(0, 50),
-                imageAlt: image.pnImageName.split('_').join(' ').slice(0, 100),
-            },
-            operationImplementationFields: {
-                uploadAsStandardImage: null,
-                // Deliberately the full set rather than the per-collection subset: this migrates
-                // what omegaweb-basic already has, including committee logos, raster over there.
-                allowedExtensions,
-            },
-        })
-
-        migrateImageIdMap.push({ owId: image.id, pnId: pnImage.id })
     }
 
     //Batched to avoid hammering omegaweb-basic with too many concurrent requests at once
@@ -193,6 +207,7 @@ export default async function migrateImages(
     for (const imageBatch of imageBatches) {
         await Promise.all(imageBatch.map(migrateOneImage))
     }
+    bar.stop()
 
     return migrateImageIdMap
 }

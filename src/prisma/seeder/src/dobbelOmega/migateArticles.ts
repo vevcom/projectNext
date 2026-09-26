@@ -1,5 +1,6 @@
 import { owIdToPnId } from './IdMapper'
 import upsertOrderBasedOnDate from './upsertOrderBasedOnDate'
+import { createProgressBar } from './progressBar'
 import type { PrismaClient as PrismaClientPn } from '@/prisma-generated-pn-client'
 import type { PrismaClient as PrismaClientOw } from '@/prisma-generated-ow-basic/client'
 import type { IdMapper } from './IdMapper'
@@ -24,9 +25,10 @@ export default async function migrateArticles(
     limits: Limits,
 ) {
     const articles = await owPrisma.articles.findMany({ take: limits.articles ? limits.articles : undefined })
+    const bar = createProgressBar('Migrating articles', articles.length)
 
     const articlesPn = await Promise.all(articles.map(async (article, i) => {
-        const coverId = owIdToPnId(imageIdMap, article.ImageId) || undefined
+        const coverId = owIdToPnId(imageIdMap, article.ImageId, 'images') || undefined
 
 
         const coverName = `${article.title.split(' ').join('_')}_cover${i}`
@@ -88,12 +90,14 @@ export default async function migrateArticles(
 
         const orderPublished = await upsertOrderBasedOnDate(pnPrisma, article.createdAt)
 
+        bar.increment()
         return {
             ...articlePn,
             orderPublished,
             endDateTime: article.dateEnd || new Date(),
         }
     }))
+    bar.stop()
 
     for (let i = 0; i < articles.length; i++) {
         const articlePn = articlesPn[i]

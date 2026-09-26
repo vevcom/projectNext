@@ -1,3 +1,4 @@
+import { createProgressBar } from './progressBar'
 import logger from '@/lib/logger'
 import type { PrismaClient as PrismaClientPn } from '@/prisma-generated-pn-client'
 import type { PrismaClient as PrismaClientOw } from '@/prisma-generated-ow-basic/client'
@@ -31,23 +32,30 @@ export default async function migrateMailAliases(
     })
 
 
-    await Promise.all(aliases.map(a => pnPrisma.mailingList.create({
-        data: {
-            name: a.name,
-            id: a.id,
-            createdAt: a.createdAt,
-            updatedAt: a.updatedAt,
-            mailAliases: {
-                create: {
-                    mailAlias: {
-                        connect: {
-                            address: a.address,
+    const mailingListBar = createProgressBar('Migrating mailing lists', aliases.length)
+    // try/finally so a failing create still releases the bar - an abandoned
+    // cli-progress bar leaves the terminal without its cursor.
+    try {
+        await Promise.all(aliases.map(a => pnPrisma.mailingList.create({
+            data: {
+                name: a.name,
+                id: a.id,
+                createdAt: a.createdAt,
+                updatedAt: a.updatedAt,
+                mailAliases: {
+                    create: {
+                        mailAlias: {
+                            connect: {
+                                address: a.address,
+                            }
                         }
                     }
                 }
             }
-        }
-    })))
+        }).finally(() => mailingListBar.increment())))
+    } finally {
+        mailingListBar.stop()
+    }
 
     const omegaFilter = (a: typeof externalAdrs[number]) => a.address.trim().endsWith('@omega.ntnu.no')
     const studNtnuFilter = (a: typeof externalAdrs[number]) => a.address.trim().endsWith('@stud.ntnu.no')
@@ -59,9 +67,11 @@ export default async function migrateMailAliases(
 
     const alredyAdded = new Set<string>()
 
+    const externalAdrsBar = createProgressBar('Migrating external addresses', externalAdrs.length)
     for (let i = 0; i < externalAdrs.length; i++) {
         const a = externalAdrs[i]
         if (omegaFilter(a) || studNtnuFilter(a)) {
+            externalAdrsBar.increment()
             continue
         }
 
@@ -97,7 +107,9 @@ export default async function migrateMailAliases(
                 }
             })
         }
+        externalAdrsBar.increment()
     }
+    externalAdrsBar.stop()
 
     const omegaForward: {address: string, id: number}[] = []
 
@@ -122,6 +134,7 @@ export default async function migrateMailAliases(
         }
     })
 
+    const omegaForwardBar = createProgressBar('Migrating omega forwards', omegaForward.length)
     for (let i = 0; i < omegaForward.length; i++) {
         const a = omegaForward[i]
 
@@ -146,5 +159,7 @@ export default async function migrateMailAliases(
                 { error: e, alias: a },
             )
         }
+        omegaForwardBar.increment()
     }
+    omegaForwardBar.stop()
 }
