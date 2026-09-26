@@ -49,7 +49,7 @@ services:
         # takes over - but it is a real one, and `disable: true` here is not inert:
         # older compose versions (the CI runner's among them) fail `up --wait` with
         # "has no healthcheck configured" on an explicitly disabled check, while
-        # tolerating a service that simply never had one (postfix).
+        # tolerating a service that simply never had one.
         healthcheck:
             # Bracketed so the checking shell cannot match its own command line and
             # report healthy after the worker has died.
@@ -69,27 +69,11 @@ services:
             replicas: 1
         restart: always
 
-    postfix:
-        build: ${PROJECT_ROOT:-.}/containers/postfix/
-        # Reachable on the compose network only. TLS is disabled in
-        # containers/postfix/main.cf.tmpl (no cert is provisioned for the mail
-        # domain now that the certbot flow is gone), so publishing these to the
-        # host would expose plaintext SMTP - a regression on the old cert-backed
-        # setup. If it is ever exposed again it needs its own certificate first.
-        expose:
-            - '587'
-            - '25'
-        environment:
-            POSTGRES_HOST: ${POSTGRES_HOST}
-            POSTGRES_DB: ${DB_NAME}
-            POSTGRES_USER: ${DB_USERNAME}
-            POSTGRES_PASSWORD: ${DB_PASSWORD}
-            MY_HOSTNAME: ${MAIL_DOMAIN}
-            MY_DOMAIN: ${DOMAIN}
-            RELAY_HOST: ${MAIL_RELAY_HOST}
-        networks:
-            - dokploy-network
-        restart: always
+    # No postfix service here. Mail is its own Dokploy application, built from
+    # containers/postfix/ - see "Mail" in README.md. Inbound alias mail needs an SMTP
+    # route from the domain's MX, which the Cloudflare Tunnel ingress in front of this
+    # stack cannot carry, so mail gets a host of its own rather than a service that
+    # could only ever relay outbound. `MAIL_SERVER` points the app at it.
 
     # One-shot, never started with the stack. The migration/seed toolchain needs the
     # full dependency tree (see the tools stage in the Dockerfile), so it ships as its

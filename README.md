@@ -61,7 +61,7 @@ inside projectnext-container
 
 Production runs on [Dokploy](https://dokploy.com/) as a **Docker Compose application** built from `docker-compose.prod.yml`, plus a **separate Dokploy Postgres resource** for the database.
 
-The stack itself holds `projectnext` (the Next.js server), `imageworker` (the background resize pipeline) and `postfix` (the mail relay). The database stays outside it on purpose: as a Dokploy resource it keeps its scheduled backups and restore UI, and its data is not attached to the lifecycle of a stack you redeploy on every push.
+The stack itself holds `projectnext` (the Next.js server) and `imageworker` (the background resize pipeline). The database stays outside it on purpose: as a Dokploy resource it keeps its scheduled backups and restore UI, and its data is not attached to the lifecycle of a stack you redeploy on every push. Mail stays outside it too - see [Mail](#mail).
 
 There is no nginx. Next serves `/store/` itself (`src/app/store/[...path]/route.ts`), in dev and prod alike.
 
@@ -75,7 +75,7 @@ There is no nginx. Next serves `/store/` itself (`src/app/store/[...path]/route.
 6. In Dokploy's UI, set the domain on the `projectnext` service. Dokploy injects the Traefik labels itself. A liveness endpoint is available at `/api/health` (also used by the compose healthcheck) if Dokploy asks for one.
 7. Ingress goes through a Cloudflare Tunnel app in Dokploy, which forwards to Dokploy's built-in Traefik; Traefik then routes to `projectnext`. Nothing needs host ports 80/443 opened directly.
 
-**Every service joins `dokploy-network` explicitly**, and the compose file declares it `external: true`. Dokploy attaches that network automatically only to the service a domain is configured on, so without the explicit `networks:` entries `imageworker` and `postfix` cannot resolve the database's hostname at all - which presents as the worker failing to connect while the web app looks perfectly healthy.
+**Every service joins `dokploy-network` explicitly**, and the compose file declares it `external: true`. Dokploy attaches that network automatically only to the service a domain is configured on, so without the explicit `networks:` entries `imageworker` cannot resolve the database's hostname at all - which presents as the worker failing to connect while the web app looks perfectly healthy.
 
 Set `BUILDX_NO_DEFAULT_ATTESTATIONS=1` in the build environment. BuildKit otherwise attaches a provenance attestation and packs the result as a multi-platform manifest list, which nothing here consumes and which shows up as extra `exporting attestation manifest` work on every deploy.
 
@@ -88,6 +88,20 @@ npm run docker:prod
 This creates the `dokploy-network` network if it is missing (compose refuses to start otherwise, since the file declares it external) and enables the `localdb` profile, which adds a `db` service standing in for the Dokploy resource. Production never enables that profile.
 
 The file also sets its own compose project name, `projectnext-prod`. Dev and prod otherwise derive the same project name from the directory, and a local rehearsal would recreate the running dev containers as prod ones - same names, different configuration. Dev and test keep the default name so no existing dev volume is orphaned.
+
+### Mail
+
+Mail is **not** part of this compose stack. It runs as its own Dokploy application, built from `containers/postfix/` in this repository.
+
+It is separate because the two directions of mail need different things from the network. Outbound is simple - the app hands a message to Postfix, which relays it on through `MAIL_RELAY_HOST`. Inbound is what the `MailAlias` feature actually depends on: Postfix resolves every alias against the database (`virtual_alias_maps`, see `containers/postfix/pgsql-aliases.cf.tmpl`) and forwards it to the members behind it, which only works if the domain's MX can reach port 25. The stack's ingress is a Cloudflare Tunnel in front of Traefik and carries HTTP only, so a Postfix service inside it could never receive that mail - it would have quietly relayed outbound while every alias silently black-holed.
+
+Deploying it:
+
+1. Create a Dokploy application built from `containers/postfix/`, attached to `dokploy-network` so it can reach the database resource.
+2. Give it `POSTGRES_HOST`, `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD` (the alias lookups read the same database as the app), plus `MY_HOSTNAME` (`MAIL_DOMAIN`), `MY_DOMAIN` (`DOMAIN`) and `RELAY_HOST` (`MAIL_RELAY_HOST`).
+3. Expose port 25 on the host and point the mail domain's MX record at it.
+4. Provision a certificate for the mail domain and turn `smtpd_use_tls` back on in `containers/postfix/main.cf.tmpl`. It is `no` there because the old certbot flow lived in the nginx container that this setup removed, and pointing Postfix at cert files that don't exist stops it from starting. Inbound SMTP on a published port should not stay plaintext.
+5. Set `MAIL_SERVER` on the stack to this host, so the app relays through it.
 
 ### Running DobbelOmega
 
