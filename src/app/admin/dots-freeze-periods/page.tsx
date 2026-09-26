@@ -13,10 +13,16 @@ import {
     readDotFreezePeriodsAction,
     updateDotFreezePeriodAction,
 } from '@/services/dots/freezePeriods/actions'
+import { dotFreezePeriodAuth } from '@/services/dots/freezePeriods/auth'
+import { ServerSession } from '@/auth/session/ServerSession'
 
 const createPopUpKey = 'createDotFreezePeriod'
 
 export default async function DotsFreezePeriods() {
+    dotFreezePeriodAuth.update.dynamicFields({}).auth(
+        await ServerSession.fromNextAuth()
+    ).redirectOnUnauthorized({ returnUrl: '/admin/dots-freeze-periods' })
+
     const freezePeriods = unwrapActionReturn(await readDotFreezePeriodsAction())
     const now = new Date()
 

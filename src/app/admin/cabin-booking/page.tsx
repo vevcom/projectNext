@@ -1,11 +1,17 @@
 import { readCabinBookingsAction } from '@/services/cabin/actions'
+import { cabinBookingAuth } from '@/services/cabin/booking/auth'
 import PageWrapper from '@/app/_components/PageWrapper/PageWrapper'
 import SimpleTable from '@/app/_components/Table/SimpleTable'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { displayDate } from '@/lib/dates/displayDate'
+import { ServerSession } from '@/auth/session/ServerSession'
 
 
 export default async function CabinBooking() {
+    cabinBookingAuth.readMany.dynamicFields({}).auth(
+        await ServerSession.fromNextAuth()
+    ).redirectOnUnauthorized({ returnUrl: '/admin/cabin-booking' })
+
     const bookings = unwrapActionReturn(await readCabinBookingsAction())
 
     const displayNames = bookings.map(booking => {

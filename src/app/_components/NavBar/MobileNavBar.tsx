@@ -2,8 +2,10 @@ import getNavItems from './navDef'
 import styles from './MobileNavBar.module.scss'
 import Menu from './Menu'
 import UserNavigation from './UserNavigation'
+import { hasAnyAdminAccess } from './adminNavDef'
 import StandardImageServer from '@/components/Image/StandardImageServer'
 import EditModeSwitch from '@/components/EditModeSwitch/EditModeSwitch'
+import { ServerSession } from '@/auth/session/ServerSession'
 import Link from 'next/link'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
@@ -13,7 +15,8 @@ type PropTypes = {
 
 export default async function MobileNavBar({ isLoggedIn }: PropTypes) {
     const applicationPeriod = false //TODO
-    const isAdmin = true //TODO
+    const session = await ServerSession.fromNextAuth()
+    const isAdmin = hasAnyAdminAccess(session)
     const navItems = getNavItems(isLoggedIn, isAdmin, applicationPeriod)
     const itemsForNav = navItems.slice(0, 2)
     const itemsForMenu = navItems.slice(2, navItems.length)

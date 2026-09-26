@@ -7,11 +7,17 @@ import PageWrapper from '@/app/_components/PageWrapper/PageWrapper'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import { sortObjectsByName } from '@/lib/sortObjects'
 import { readProductsAction } from '@/services/shop/actions'
+import { productAuth } from '@/services/shop/product/auth'
+import { ServerSession } from '@/auth/session/ServerSession'
 import { v4 as uuid } from 'uuid'
 import Link from 'next/link'
 
 
 export default async function ProductPage() {
+    productAuth.read.dynamicFields({}).auth(
+        await ServerSession.fromNextAuth()
+    ).redirectOnUnauthorized({ returnUrl: '/admin/product' })
+
     const products = unwrapActionReturn(await readProductsAction())
 
     return <PageWrapper

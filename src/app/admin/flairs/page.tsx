@@ -1,6 +1,7 @@
 import FlairTable from './FlairTable'
 import styles from './page.module.scss'
 import { createFlairAction, readAllFlairsAction, updateFlairImageAction } from '@/services/flairs/actions'
+import { flairAuth } from '@/services/flairs/auth'
 import { unwrapActionReturn } from '@/app/redirectToErrorPage'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
@@ -13,10 +14,15 @@ import Flair from '@/components/Flair/Flair'
 import ImageUploader from '@/components/Image/ImageUploader'
 import PopUp from '@/components/PopUp/PopUp'
 import { configureAction } from '@/services/configureAction'
+import { ServerSession } from '@/auth/session/ServerSession'
 import type { FlairRow } from './FlairTable'
 
 
 export default async function FlairUpdatePage() {
+    flairAuth.update.dynamicFields({}).auth(
+        await ServerSession.fromNextAuth()
+    ).redirectOnUnauthorized({ returnUrl: '/admin/flairs' })
+
     const flairs = unwrapActionReturn(await readAllFlairsAction()).sort((a, b) => a.rank - b.rank)
 
     const rows: FlairRow[] = flairs.map(flair => ({

@@ -3,6 +3,8 @@ import CreateApiKeyForm from './CreateApiKeyForm'
 import PageWrapper from '@/components/PageWrapper/PageWrapper'
 import { AddHeaderItemPopUp } from '@/components/HeaderItems/HeaderItemPopUp'
 import { readApiKeysAction } from '@/services/apiKeys/actions'
+import { apiKeyAuth } from '@/services/apiKeys/auth'
+import { ServerSession } from '@/auth/session/ServerSession'
 import Date from '@/components/Date/Date'
 import { v4 as uuid } from 'uuid'
 import Link from 'next/link'
@@ -10,6 +12,10 @@ import Link from 'next/link'
 const popUpKey = 'createApiKey'
 
 export default async function ApiKeysAdmin() {
+    apiKeyAuth.readMany.dynamicFields({}).auth(
+        await ServerSession.fromNextAuth()
+    ).redirectOnUnauthorized({ returnUrl: '/admin/api-keys' })
+
     const res = await readApiKeysAction()
     if (!res.success) throw new Error(res.error?.length ? res.error[0].message : 'An error occurred')
     const apiKeys = res.data

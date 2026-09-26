@@ -1,9 +1,15 @@
 import { updateDefaultPermissionsAction, readDefaultPermissionsAction } from '@/services/permissions/actions'
+import { permissionsAuth } from '@/services/permissions/auth'
+import { ServerSession } from '@/auth/session/ServerSession'
 import Form from '@/components/Form/Form'
 import DisplayAllPermissions from '@/components/Permission/DisplayAllPermissions'
 import React from 'react'
 
 export default async function Defaults() {
+    permissionsAuth.updateDefaultPermissions.dynamicFields({}).auth(
+        await ServerSession.fromNextAuth()
+    ).redirectOnUnauthorized({ returnUrl: '/admin/default-permissions' })
+
     const defaultPermissionsRes = await readDefaultPermissionsAction()
 
     if (!defaultPermissionsRes.success) {

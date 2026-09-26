@@ -2,12 +2,18 @@ import styles from './page.module.scss'
 import GroupSelector from './GroupSelector'
 import { GroupTypeOrdering } from '@/services/groups/constants'
 import { readGroupsStructuredAction } from '@/services/groups/actions'
+import { groupAuth } from '@/services/groups/auth'
+import { ServerSession } from '@/auth/session/ServerSession'
 import { notFound } from 'next/navigation'
 
 /**
  * A page that displays memberships in all groups for admins
  */
 export default async function GroupsAdmin() {
+    groupAuth.admin.dynamicFields({}).auth(
+        await ServerSession.fromNextAuth()
+    ).redirectOnUnauthorized({ returnUrl: '/admin/groups' })
+
     const res = await readGroupsStructuredAction()
     if (!res.success) return notFound() //TODO: replace with better error page if error is e.g UNAUTHORIZED.
     const groups = res.data

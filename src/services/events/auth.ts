@@ -3,12 +3,11 @@ import { RequirePermission } from '@/auth/authorizer/RequirePermission'
 
 export const eventAuth = {
     create: RequirePermission.staticFields({ permission: 'EVENT_CREATE' }),
-    // TODO: Replace below with proper authorizers
     read: RequireNothing.staticFields({}),
     readManyCurrent: RequireNothing.staticFields({}),
     readManyArchivedPage: RequireNothing.staticFields({}),
-    update: RequireNothing.staticFields({}),
-    updateCmsCoverImage: RequireNothing.staticFields({}),
-    destroy: RequireNothing.staticFields({}),
-    updateParagraphContent: RequireNothing.staticFields({}),
+    update: RequirePermission.staticFields({ permission: 'EVENT_ADMIN' }),
+    updateCmsCoverImage: RequirePermission.staticFields({ permission: 'EVENT_ADMIN' }),
+    destroy: RequirePermission.staticFields({ permission: 'EVENT_ADMIN' }),
+    updateParagraphContent: RequirePermission.staticFields({ permission: 'EVENT_ADMIN' }),
 }

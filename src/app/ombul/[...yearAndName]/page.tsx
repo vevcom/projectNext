@@ -35,14 +35,14 @@ export default async function Ombul({ params }: PropTypes) {
     const path = `/store/ombul/${ombul.fsLocation}`
 
     const session = await ServerSession.fromNextAuth()
-    const canUpdate = ombulAuth.update.dynamicFields({}).auth(session)
+    const canUpdate = ombulAuth.update.dynamicFields({}).auth(session).toJsObject()
     const canUpdateParagraph = ombulAuth.updateParagraphContent.dynamicFields({}).auth(session).toJsObject()
 
     return (
         <PageWrapper title={ombul.name} hideTitle className={styles.ombulPage}>
             <div className={styles.header}>
                 <div className={styles.titleBlock}>
-                    <ChangeName editable={canUpdate.authorized} ombulId={ombul.id}>
+                    <ChangeName canEdit={canUpdate} ombulId={ombul.id}>
                         <h1>{ombul.name}</h1>
                     </ChangeName>
                     <p className={styles.issue}>{ombul.year} &middot; utgave {ombul.issueNumber}</p>

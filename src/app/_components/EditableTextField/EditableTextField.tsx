@@ -2,21 +2,16 @@
 import styles from './EditableTextField.module.scss'
 import Form from '@/components/Form/Form'
 import useEditMode from '@/hooks/useEditMode'
-import { RequireNothing } from '@/auth/authorizer/RequireNothing'
 import useKeyPress from '@/hooks/useKeyPress'
 import React, { useEffect, useState, useRef, useEffectEvent } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPencil } from '@fortawesome/free-solid-svg-icons'
 import type { PropTypes as FormPropTypes } from '@/components/Form/Form'
-
-// Hoisted so useEditMode's authorizer dependency stays referentially stable across renders -
-// RequireNothing.staticFields({}).dynamicFields({}) takes no dynamic args, so there's nothing
-// to recompute per render/instance.
-const requireNothingAuthorizer = RequireNothing.staticFields({}).dynamicFields({})
+import type { AuthorizerDynamicFieldsBound } from '@/auth/authorizer/Authorizer'
+import type { AuthResultTypeAny } from '@/auth/authorizer/AuthResult'
 
 type PropTypes<ReturnType> = {
     props?: Omit<React.HTMLAttributes<HTMLElement>, 'children' | 'contentEditable'>
-    editable: boolean,
     children: React.ReactNode,
     formProps: Omit<FormPropTypes<ReturnType>, 'title' | 'children' | 'submitText'>
     inputName: string,
@@ -24,18 +19,24 @@ type PropTypes<ReturnType> = {
         text: string,
         className?: string,
     }
-}
+} & (
+    { authorizer: AuthorizerDynamicFieldsBound, authResult?: undefined } |
+    { authorizer?: undefined, authResult: AuthResultTypeAny }
+)
 
 /**
  * A component that wraps a text element in a form that can be submitted to update the text
- * @param editable - Whether the text should be editable
+ * @param authorizer - The authorizer used to determine if the field may be edited. Alternatively,
+ * pass authResult when the auth decision must be made server side - see useEditMode.
+ * @param authResult - Precomputed auth result, alternative to authorizer - see useEditMode.
  * @param children - The text to display
  * @param formProps - The props to pass to the form (the component use Form internally)
  * @param submitButton - The props to pass to the submit button
  * @param props - further props to pass to the text element
  */
 export default function EditableTextField<ReturnType>({
-    editable,
+    authorizer,
+    authResult,
     children,
     formProps,
     submitButton,
@@ -44,10 +45,7 @@ export default function EditableTextField<ReturnType>({
 }: PropTypes<ReturnType>) {
     const [value, setValue] = useState('')
     const [noChange, setNoChange] = useState(true)
-    //TODO: Authorizer must be passed in....
-    const canEdit = useEditMode({
-        authorizer: requireNothingAuthorizer
-    })
+    const canEdit = useEditMode(authResult ? { authResult } : { authorizer })
     const ref = useRef<HTMLInputElement>(null)
     const submitRef = useRef<HTMLButtonElement>(null)
     useKeyPress('Enter', () => {
@@ -70,7 +68,7 @@ export default function EditableTextField<ReturnType>({
         ref.current?.setAttribute('value', value)
     }, [value])
 
-    if (!canEdit || !editable) {
+    if (!canEdit) {
         return (
             <>{children}</>
         )
