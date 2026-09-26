@@ -50,7 +50,7 @@ services:
             # leaner stage would save around 10 MB of a 2.8 GB image and cost an
             # extra build. This reuses exactly the image imageworker already builds.
             target: tools
-        # tools defaults to DobbelOmega, which force-resets the database. Overriding the
+        # tools defaults to DobbelOmega, which resets the whole database. Overriding the
         # command is what makes this safe to run on every deploy.
         command: ["npm", "run", "migrate:deploy"]
         # The inherited healthcheck probes :3000, which this one-shot never listens on.
@@ -113,8 +113,10 @@ services:
     #
     #   docker compose -f docker-compose.prod.yml --profile tools run --rm tools
     #
-    # The default command is DobbelOmega, which force-resets the database. Pass a
-    # different command for anything else.
+    # The default command is DobbelOmega, which resets the whole database. It resets
+    # through `prisma migrate reset` rather than `db push --force-reset`, so the
+    # _prisma_migrations table is rebuilt and the `migrate` service above still has a
+    # history to work from on the next deploy. Pass a different command for anything else.
     tools:
         extends:
             file: docker-compose.base.yml

@@ -141,6 +141,8 @@ docker compose -f docker-compose.prod.yml --profile tools run --rm tools
 
 `tools` builds on the same cached layers as a normal deploy, so it is quick to produce on a host that has built the app before. It reads the same environment variables as the rest of the stack - point `POSTGRES_HOST` at the database you actually mean to overwrite.
 
+The reset goes through `prisma migrate reset`, not `prisma db push --force-reset`. `db push` leaves behind a populated schema with no `_prisma_migrations` table, and the `migrate` service then fails on the next deploy (P3005, "the database schema is not empty") - which takes the whole stack with it, since every service waits for that one-shot to exit 0. `migrate reset` reapplies the committed migrations and records them, so an import leaves the database in a state ordinary deploys can carry forward.
+
 ## Lint
 
 To lint the project (TS/JS) run
