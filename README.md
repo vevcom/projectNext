@@ -79,6 +79,32 @@ There is no nginx. Next serves `/store/` itself (`src/app/store/[...path]/route.
 
 Set `BUILDX_NO_DEFAULT_ATTESTATIONS=1` in the build environment. BuildKit otherwise attaches a provenance attestation and packs the result as a multi-platform manifest list, which nothing here consumes and which shows up as extra `exporting attestation manifest` work on every deploy.
 
+### Applying database schema migrations
+
+Production schema changes go through [Prisma Migrate](https://www.prisma.io/docs/orm/prisma-migrate), not `db push` - `db push --force-reset` (what `npm run seed` and DobbelOmega use, see below) drops and recreates every table, which is fine for a throwaway dev database but would destroy production data.
+
+Whenever you change a schema file under `src/prisma/schema/`, generate a migration for it locally and commit the result:
+
+```bash
+npm run migrate:dev
+```
+
+This runs against your dev database (via a Prisma shadow database) and writes a new folder under `src/prisma/migrations/` containing the SQL. Commit that folder. If the change requires backfilling existing rows - a new required column with no single sensible default, or a restructuring that has to carry data across - edit the generated `migration.sql` by hand before committing: `migrate diff` only ever emits plain DDL and will happily generate something that fails against a populated table.
+
+Committed migrations are applied **automatically on every deploy**. `docker-compose.prod.yml` has a one-shot `migrate` service that runs `migrate:deploy`, and `projectnext` declares `depends_on: migrate: condition: service_completed_successfully` - so the web app does not start until migrations have exited 0, and a failed migration fails the deploy instead of booting the app against a half-applied schema. `migrate:deploy` only runs migrations that have not been applied yet, never touches existing data outside of what a migration's SQL explicitly does, and is a no-op once everything is applied, so an ordinary deploy costs nothing.
+
+Migrations therefore run *before* the new code is serving, while the previous release may still be up. Keep each migration backward-compatible with the release before it: add columns nullable, backfill, and drop the old shape in a later release rather than in the same one.
+
+The `migrate` service runs the `tools` image with the command overridden. A dedicated leaner stage was measured and abandoned: at 2.80 GB against `tools`' 2.81 GB it saved nothing, because the weight is all in the shared `base` layer (`npm ci` with devDependencies, both generated Prisma clients) rather than in the source tree on top. Reusing `tools` means the one-shot is the same image `imageworker` already builds, so it adds no build time at all. Note that `tools` defaults to DobbelOmega, which force-resets the database - overriding the command is what makes this safe to run on every deploy.
+
+To run it by hand against a database - the first deploy into an empty Dokploy Postgres resource, say:
+
+```bash
+docker compose -f docker-compose.prod.yml run --rm migrate
+```
+
+Tracked history starts at `20260922000000_init`, which creates the whole schema from empty. It carries no history from the `db push` era: anything merged before migrations existed is simply part of that initial snapshot rather than a migration of its own. It therefore expects an **empty database** - the Dokploy Postgres resource before its first deploy, or a database about to be filled by DobbelOmega. Run it against a database that already has these tables and it will fail on the first `CREATE TABLE`.
+
 ### Rehearsing the production stack locally
 
 ```bash
@@ -105,7 +131,7 @@ Deploying it:
 
 ### Running DobbelOmega
 
-To load data from Omegaweb-basic, run the `tools` service. **This is a one-time bulk import, not a routine deploy step: it force-resets the database, deleting everything currently in it.** For ordinary schema changes once the site has real data, migrate the schema instead of re-importing.
+To load data from Omegaweb-basic, run the `tools` service. **This is a one-time bulk import, not a routine deploy step: it force-resets the database, deleting everything currently in it.** For ordinary schema changes once the site has real data, the `migrate` service above already handles it.
 
 ```bash
 docker compose -f docker-compose.prod.yml --profile tools run --rm tools
@@ -114,6 +140,8 @@ docker compose -f docker-compose.prod.yml --profile tools run --rm tools
 `tools` sits behind a profile so it never starts with the stack - it is a one-shot job, not a service. It is a separate image because the deployed web application no longer contains the toolchain: the `prod` stage ships only the modules the Next.js server actually imports (via `output: 'standalone'`), which takes it from 2.8 GB to under 500 MB - the difference between a ~6 minute rollout and about one. The seeder and DobbelOmega import the whole service layer, so they need the full dependency tree; keeping that in the deployed image would have put the 2.3 GB straight back.
 
 `tools` builds on the same cached layers as a normal deploy, so it is quick to produce on a host that has built the app before. It reads the same environment variables as the rest of the stack - point `POSTGRES_HOST` at the database you actually mean to overwrite.
+
+The reset goes through `prisma migrate reset`, not `prisma db push --force-reset`. `db push` leaves behind a populated schema with no `_prisma_migrations` table, and the `migrate` service then fails on the next deploy (P3005, "the database schema is not empty") - which takes the whole stack with it, since every service waits for that one-shot to exit 0. `migrate reset` reapplies the committed migrations and records them, so an import leaves the database in a state ordinary deploys can carry forward.
 
 ## Lint
 
