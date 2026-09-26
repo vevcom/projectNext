@@ -1,3 +1,19 @@
+# The production stack as Dokploy deploys it: web + image worker + mail, with the
+# database deliberately left outside. Postgres is a Dokploy resource of its own so
+# its scheduled pg_dump backups and restore UI keep working, and so that tearing the
+# stack down (or a stray `down -v`) cannot take the data with it.
+#
+# Every service therefore joins `dokploy-network` explicitly. Dokploy only attaches
+# that network automatically to the one service a domain is configured on, and a
+# service that misses it cannot resolve the database's hostname at all - which shows
+# up as the worker failing to connect while the web app is perfectly healthy.
+#
+# The stack gets its own compose project name. Without it dev and prod share one
+# (both derive it from the directory), so rehearsing this file locally recreates the
+# running dev containers as prod ones - same names, different config. dev and test
+# keep the default name so no existing dev volume is orphaned.
+name: projectnext-prod
+
 services:
     projectnext:
         extends:
@@ -5,6 +21,8 @@ services:
             service: projectnext
         build:
             target: prod
+        networks:
+            - dokploy-network
         volumes:
             - store:/usr/src/app/store
             - logs:/usr/src/app/logs
@@ -18,74 +36,96 @@ services:
             file: docker-compose.base.yml
             service: projectnext
         build:
-            target: prod
+            # tools, not prod: the worker runs src/lib/images/worker.ts through tsx,
+            # and prod carries neither src/ nor the dev dependencies - only the traced
+            # Next server. tools is the stage that has the full tree.
+            target: tools
         command: ["./node_modules/.bin/tsx", "src/lib/images/worker.ts"]
         environment:
             IGNORE_SERVER_ONLY: 'true'
+        # The inherited healthcheck probes :3000, which this service never listens on,
+        # so it needs one of its own. Checking that the worker process is alive is a
+        # thin signal - if the process dies the container exits and restart: always
+        # takes over - but it is a real one, and `disable: true` here is not inert:
+        # older compose versions (the CI runner's among them) fail `up --wait` with
+        # "has no healthcheck configured" on an explicitly disabled check, while
+        # tolerating a service that simply never had one.
+        healthcheck:
+            # Bracketed so the checking shell cannot match its own command line and
+            # report healthy after the worker has died.
+            test: ["CMD-SHELL", "pgrep -f \"[i]mages/worker.ts\" > /dev/null"]
+            interval: 10s
+            timeout: 3s
+            retries: 3
+            start_period: 15s
+        networks:
+            - dokploy-network
+        # Shares the store volume with projectnext: the worker writes the resized
+        # variants and the web app serves them back out of the same directory.
         volumes:
             - store:/usr/src/app/store
             - logs:/usr/src/app/logs
         deploy:
             replicas: 1
         restart: always
-        depends_on:
-            db:
-                condition: service_healthy
 
+    # No postfix service here. Mail is its own Dokploy application, built from
+    # containers/postfix/ - see "Mail" in README.md. Inbound alias mail needs an SMTP
+    # route from the domain's MX, which the Cloudflare Tunnel ingress in front of this
+    # stack cannot carry, so mail gets a host of its own rather than a service that
+    # could only ever relay outbound. `MAIL_SERVER` points the app at it.
+
+    # One-shot, never started with the stack. The migration/seed toolchain needs the
+    # full dependency tree (see the tools stage in the Dockerfile), so it ships as its
+    # own image and is run on demand:
+    #
+    #   docker compose -f docker-compose.prod.yml --profile tools run --rm tools
+    #
+    # The default command is DobbelOmega, which force-resets the database. Pass a
+    # different command for anything else.
+    tools:
+        extends:
+            file: docker-compose.base.yml
+            service: projectnext
+        build:
+            target: tools
+        profiles:
+            - tools
+        healthcheck:
+            disable: true
+        networks:
+            - dokploy-network
+        volumes:
+            - store:/usr/src/app/store
+            - logs:/usr/src/app/logs
+            - dobbelOmegaManifest:/usr/src/app/dobbelOmegaManifest
+        restart: "no"
+
+    # Local rehearsal only. Production's database is the external Dokploy resource, so
+    # this profile stays off there and `POSTGRES_HOST` points at that resource instead.
+    # Start a local run of this file with:
+    #
+    #   docker compose -f docker-compose.prod.yml --profile localdb up --build
+    #
+    # The base file's `depends_on: db` is `required: false`, so with this profile off it
+    # is simply ignored, and with it on every service waits for postgres to be healthy.
     db:
         extends:
             file: docker-compose.base.yml
             service: db
+        profiles:
+            - localdb
+        networks:
+            - dokploy-network
         restart: always
         volumes:
             - proddb:/var/lib/postgresql/data
 
-    nginx:
-        extends:
-            file: docker-compose.base.yml
-            service: nginx
-        restart: always
-        ports:
-            - 80:80
-            - 443:443
-        environment:
-            DOMAIN: ${DOMAIN}
-            PROXY_PASS: 'projectnext:3000'
-        volumes:
-            - ./containers/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-            - ./containers/nginx/default.conf:/etc/nginx/templates/default.conf.template:ro
-            - store:/usr/store:ro
-            - ./certs/conf:/etc/letsencrypt:ro
-            - ./certs/www/:/var/www/certbot:ro
-
-    certbot:
-        image: certbot/certbot:latest
-        volumes:
-            - ./certs/www:/var/www:rw
-            - ./certs/conf:/etc/letsencrypt:rw
-        entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 14d & wait $${!}; done;'"
-        restart: always
-
-    postfix:
-        build: ${PROJECT_ROOT:-.}/containers/postfix/
-        ports:
-            - '587:587'
-            - '25:25'
-        environment:
-            POSTGRES_HOST: 'db'
-            POSTGRES_DB: ${DB_NAME}
-            POSTGRES_USER: ${DB_USERNAME}
-            POSTGRES_PASSWORD: ${DB_PASSWORD}
-            MY_HOSTNAME: ${MAIL_DOMAIN}
-            MY_DOMAIN: ${DOMAIN}
-            RELAY_HOST: ${MAIL_RELAY_HOST}
-        volumes:
-            - ./certs/conf:/etc/letsencrypt:ro
-        depends_on:
-            - db
-        links:
-            - db
-        restart: always
+networks:
+    # Created and owned by Dokploy. `npm run docker:prod` creates it locally so a
+    # rehearsal of this file works on a machine that has never run Dokploy.
+    dokploy-network:
+        external: true
 
 volumes:
     proddb:

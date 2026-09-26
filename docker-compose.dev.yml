@@ -5,6 +5,12 @@ services:
             service: projectnext
         build:
             target: dev
+        # Published on 80 rather than 3000 because there is no nginx in front of it
+        # any more: NEXTAUTH_URL and SERVER_LINK_PREFIX in .env.default point at
+        # http://localhost, and /store/ is now served by the app itself
+        # (src/app/store/[...path]/route.ts) instead of statically by nginx.
+        ports:
+            - 80:3000
         volumes:
             - ${PROJECT_ROOT:-.}/src:/usr/src/app/src
             - ${PROJECT_ROOT:-.}/package.json:/usr/src/app/package.json
@@ -29,9 +35,6 @@ services:
             - ${PROJECT_ROOT:-.}/package-lock.json:/usr/src/app/package-lock.json
             - ${PROJECT_ROOT:-.}/logs:/usr/src/app/logs
             - devstore:/usr/src/app/store
-        depends_on:
-            db:
-                condition: service_healthy
 
     db:
         extends:
@@ -42,21 +45,9 @@ services:
         volumes:
             - devdb:/var/lib/postgresql/data
 
-    nginx:
-        extends:
-            file: docker-compose.base.yml
-            service: nginx
-        ports:
-            - 80:80
-        volumes:
-            - ${PROJECT_ROOT:-.}/containers/nginx/nginx.dev.conf:/etc/nginx/nginx.conf
-            - devstore:/usr/store
-        depends_on:
-            - projectnext
-    
     stripe:
         image: stripe/stripe-cli:v1.37.3
-        command: listen --forward-to http://nginx:80/api/stripe-events --skip-verify
+        command: listen --forward-to http://projectnext:3000/api/stripe-events --skip-verify
         environment:
             STRIPE_API_KEY: ${STRIPE_SECRET_KEY} 
 

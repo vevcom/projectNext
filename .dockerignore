@@ -15,7 +15,6 @@ build
 .env 
 .env.default
 next-env.default.d.ts
-nginx.conf
 
 # info
 README.md
