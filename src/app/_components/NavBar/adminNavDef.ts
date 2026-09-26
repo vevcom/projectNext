@@ -13,6 +13,7 @@ import { mailingListAuth } from '@/services/mail/list/auth'
 import { mailAddressExternalAuth } from '@/services/mail/mailAddressExternal/auth'
 import { schoolAuth } from '@/services/education/schools/auth'
 import { dotAuth } from '@/services/dots/auth'
+import { dotFreezePeriodAuth } from '@/services/dots/freezePeriods/auth'
 import { cabinBookingAuth } from '@/services/cabin/booking/auth'
 import { cabinProductAuth } from '@/services/cabin/product/auth'
 import { cabinPricePeriodAuth } from '@/services/cabin/pricePeriod/auth'
@@ -221,12 +222,12 @@ export const adminNavigations = [
             {
                 title: 'Prikker',
                 href: '/admin/dots',
-                requiredAuthorizer: dotAuth.readPage.dynamicFields({}),
+                requiredAuthorizer: dotAuth.update.dynamicFields({}),
             },
             {
                 title: 'Frysperioder',
                 href: '/admin/dots-freeze-periods',
-                requiredAuthorizer: dotAuth.readPage.dynamicFields({}),
+                requiredAuthorizer: dotFreezePeriodAuth.update.dynamicFields({}),
             },
         ]
     },

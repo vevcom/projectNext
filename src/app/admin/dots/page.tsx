@@ -16,7 +16,7 @@ import type { SearchParamsServerSide } from '@/lib/queryParams/types'
 type PropTypes = SearchParamsServerSide
 
 export default async function Dots({ searchParams }: PropTypes) {
-    dotAuth.readPage.dynamicFields({}).auth(
+    dotAuth.update.dynamicFields({}).auth(
         await ServerSession.fromNextAuth()
     ).redirectOnUnauthorized({ returnUrl: '/admin/dots' })
 
