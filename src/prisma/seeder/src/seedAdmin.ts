@@ -41,6 +41,21 @@ export default async function seedAdmin(prisma: PrismaClientPn) {
         where: { shortName: 'admin' },
     })
 
+    // Reusing a group that DobbelOmega (or an earlier seed) already created keeps
+    // whatever permissions it came with, which is not necessarily all of them.
+    // readPermissionsOfUser resolves permissions through the membership's groups, so a
+    // reused group missing e.g. EVENT_CREATE - not a default permission - produces an
+    // "admin" that half the site still refuses. Fill in the gaps.
+    if (existingGroup) {
+        await prisma.groupPermission.createMany({
+            data: Object.values(Permission).map(permission => ({
+                groupId: existingGroup.groupId,
+                permission,
+            })),
+            skipDuplicates: true,
+        })
+    }
+
     const adminGroup = existingGroup ?? await prisma.group.create({
         data: {
             groupType: 'MANUAL_GROUP',
@@ -75,13 +90,27 @@ export default async function seedAdmin(prisma: PrismaClientPn) {
             email,
             firstname: 'Admin',
             lastname: 'Admin',
-            credentials: {
-                create: {
-                    passwordHash: await hashAndEncryptPassword(password),
-                },
-            },
             emailVerified: new Date(),
             acceptedTerms: new Date(),
+        },
+    })
+
+    // Upserted rather than nested in the create above, which only ever ran for a brand
+    // new user. A migrated account matching SEED_ADMIN_USERNAME has no credentials at
+    // all - DobbelOmega brings over Feide accounts only - so it would have been handed
+    // an admin membership with no way to log in to it. Writing the hash on every run
+    // also makes the env var the source of truth, so rotating SEED_ADMIN_PASSWORD
+    // takes effect instead of silently keeping the old password.
+    const passwordHash = await hashAndEncryptPassword(password)
+
+    await prisma.credentials.upsert({
+        where: { userId: user.id },
+        update: { passwordHash },
+        create: {
+            // connect, not the raw userId: Credentials keys off (userId, username,
+            // email), and connecting fills all three from the user being connected.
+            user: { connect: { id: user.id } },
+            passwordHash,
         },
     })
 

@@ -7,6 +7,13 @@ import cliProgress from 'cli-progress'
  */
 export function createProgressBar(label: string, total: number) {
     const bar = new cliProgress.SingleBar({
+        // cli-progress emits nothing at all on a non-TTY stream unless this is on, and
+        // the import that most needs a progress signal - the one-shot tools container in
+        // production - is exactly the non-TTY case. The schedule is deliberately coarse:
+        // every redraw is its own log line there, so a TTY-like cadence would bury the
+        // rest of the seeder's output.
+        noTTYOutput: true,
+        notTTYSchedule: 30_000,
         format: `${label.padEnd(28)} |{bar}| {value}/{total} ({percentage}%) | ETA: {eta}s`,
         barCompleteChar: '█',
         barIncompleteChar: '░',
